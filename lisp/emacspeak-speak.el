@@ -2310,7 +2310,7 @@ if `emacspeak-speak-message-again-should-copy-to-kill-ring' is set."
    (t (save-excursion
         (set-buffer "*Messages*")
         (goto-char (point-max))
-        (skip-syntax-backward " ")
+        (skip-chars-backward " \n\t")
         (emacspeak-speak-line)
         (when (and (interactive-p)
                    emacspeak-speak-message-again-should-copy-to-kill-ring)
