@@ -1,9 +1,11 @@
-;;;$Id: emacspeak-w3m.el,v 17.0 2002/11/23 01:29:01 raman Exp $;;; emacspeak-w3m.el --- speech-enables w3m-el
-;;; This file is not part of Emacspeak, but the same terms and
+;;;$Id: emacspeak-w3m.el,v 18.0 2003/04/29 21:18:29 raman Exp $;;; emacspeak-w3m.el --- speech-enables w3m-el
+;;{{{ Copyright
+
+;;; This file is not part of Emacs, but the same terms and
 ;;; conditions apply.
 ;; Copyright (C) 2001,2002  Dimitri V. Paduchih
 
-;; Author: Dimitri Paduchih <paduch@imm.uran.ru>
+;; Initial version: Author: Dimitri Paduchih <paduch@imm.uran.ru>
 ;;;author: T. V. Raman (integration with Emacspeak, and sections marked TVR)
 ;; Keywords: emacspeak, w3m
 
@@ -26,25 +28,17 @@
 
 ;; 
 
+;;}}}
 
 ;;; Code:
 ;;{{{  required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
+(require 'emacspeak-preamble)
 (require 'w3m nil t)
-(require 'w3m-form nil t)
-(require 'dtk-speak)
-(require 'emacspeak-speak)
-(require 'voice-lock)
-(require 'emacspeak-sounds)
-(require 'emacspeak-wizards)
-
 ;;}}}
 ;;{{{ keybindings 
-(declaim (special w3m-mode-map))
-(define-key w3m-mode-map "\C-e" 'emacspeak-prefix-command)
+(declaim (special w3m-mode-map
+                  emacspeak-prefix))(define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command)
 (define-key w3m-mode-map [M-tab] 'w3m-previous-anchor)
 (define-key w3m-mode-map [backtab] 'w3m-previous-anchor)
 (define-key w3m-mode-map [tab] 'w3m-next-anchor)
@@ -79,13 +73,6 @@
 		       'personality personality
 		       newstring)
     newstring))
-
-;;}}}
-;;{{{ personalities
-
-(defvar emacspeak-w3m-form-personality 'paul-animated)
-(defvar emacspeak-w3m-button-personality 'harry)
-(defvar emacspeak-w3m-disabled-personality 'harry)
 
 ;;}}}
 ;;{{{ anchors
@@ -130,7 +117,10 @@
 ;;}}}
 ;;{{{  forms 
 
-(defun emacspeak-w3m-speak-form-input (form name type width maxlength value)
+(defun emacspeak-w3m-speak-form-input (form name type width maxlength
+                                            value)
+  "Speak form input"
+  (declare (special emacspeak-w3m-form-personality))
   (dtk-speak
    (format "%s input %s  %s"
 	   type
@@ -141,6 +131,7 @@
 
 (defun emacspeak-w3m-speak-form-input-password (form name)
   "Speech-enable password form element."
+  (declare (special emacspeak-w3m-form-personality))
   (dtk-speak
    (format "password input %s  %s"
 	   name
@@ -149,6 +140,8 @@
 	    emacspeak-w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-submit (form &optional name value)
+  "Speak submit button."
+  (declare (special emacspeak-w3m-button-personality))
   (dtk-speak
    (if (equal value "")
        "submit button"
@@ -158,11 +151,12 @@
 	      emacspeak-w3m-button-personality)))))
 
 (defun emacspeak-w3m-speak-form-input-radio (form name value)
+  "speech enable radio buttons."
+  (declare (special emacspeak-w3m-form-personality))
   (and dtk-stop-immediately (dtk-stop))
   (let* ((active (equal value (emacspeak-w3m-form-get form name)))
 	 (personality (if active
-			  emacspeak-w3m-form-personality
-			emacspeak-w3m-disabled-personality))
+			  emacspeak-w3m-form-personality))
 	 (dtk-stop-immediately nil))
     (emacspeak-auditory-icon (if active 'on 'off))
     (dtk-speak
@@ -177,6 +171,8 @@
 	       name)))))
 
 (defun emacspeak-w3m-speak-form-input-select (form name)
+  "speech enable select control."
+  (declare (special emacspeak-w3m-form-personality))
   (dtk-speak
    (format "select %s  %s"
 	   name
@@ -185,6 +181,8 @@
 	    emacspeak-w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-input-textarea (form hseq)
+  "speech enable text area."
+  (declare (special emacspeak-w3m-form-personality))
   (dtk-speak
    (format "text area %s  %s"
 	   (or (get-text-property (point) 'w3m-form-name) "")
@@ -193,6 +191,8 @@
 	    emacspeak-w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-reset (form)
+  "Reset button."
+  (declare (special emacspeak-w3m-button-personality))
   (dtk-speak
    (format "button %s"
 	   (emacspeak-w3m-personalize-string
@@ -218,8 +218,7 @@
   (cond
    ((interactive-p)
     (let ((emacspeak-speak-messages nil))
-      ad-do-it)
-    (when (interactive-p)
+      ad-do-it
       (emacspeak-auditory-icon 'large-movement)
       (emacspeak-w3m-speak-this-anchor)))
    (t ad-do-it))
@@ -230,8 +229,7 @@
   (cond
    ((interactive-p)
     (let ((emacspeak-speak-messages nil))
-      ad-do-it)
-    (when (interactive-p)
+      ad-do-it
       (emacspeak-auditory-icon 'large-movement)
       (emacspeak-w3m-speak-this-anchor)))
    (t ad-do-it))
@@ -377,39 +375,68 @@
 ;;}}}
 ;;{{{ tvr: mapping font faces to personalities 
 
-   
-        
-  
+(def-voice-font  w3m-arrived-anchor-personality
+  voice-lighten
+  'w3m-arrived-anchor-face
+  "w3m-arrived-anchor-face")
 
-(voice-setup-set-voice-for-face 'w3m-arrived-anchor-face 'betty)
-(voice-setup-set-voice-for-face 'w3m-anchor-face 'harry)
-(voice-setup-set-voice-for-face 'w3m-bold-face 'bold)
-(voice-setup-set-voice-for-face 'w3m-underline-face 'underlined)
-(voice-setup-set-voice-for-face 'w3m-header-line-location-title-face
-                                'harry)
-(voice-setup-set-voice-for-face 'w3m-header-line-location-content-face
-                                'paul-animated)
-(voice-setup-set-voice-for-face 'w3m-form-button-face
-                                'paul-smooth)
-(voice-setup-set-voice-for-face 'w3m-form-button-pressed-face
-                                'paul-animated)
-(voice-setup-set-voice-for-face 'w3m-tab-unselected-face
-                                'paul-monotone)
-(voice-setup-set-voice-for-face 'w3m-tab-selected-face 'paul-animated)
+(def-voice-font  w3m-anchor-personality
+  voice-bolden
+  'w3m-anchor-face
+  "w3m-anchor-face")
 
-(defun emacspeak-w3m-voiceify-faces-in-buffer ()
-  "Map base fonts to voices."
-  (interactive )
-  (declare (special voice-lock-mode))
-  (setq voice-lock-mode t)
-  (voice-setup-face-to-voice (point-min) (point-max)))
+(def-voice-font emacspeak-w3m-bold-personality
+  voice-bolden
+  'w3m-bold-face
+  "w3m-bold-face")
+
+(def-voice-font  emacspeak-w3m-underline-personality
+  voice-brighten
+  'w3m-underline-face
+  "w3m-underline-face")
+
+(def-voice-font  emacspeak-w3m-header-line-location-title-personality
+  voice-bolden
+  'w3m-header-line-location-title-face
+  "w3m-header-line-location-title-face")
+
+(def-voice-font  w3m-header-line-location-content-personality
+  voice-animate
+  'w3m-header-line-location-content-face
+  "w3m-header-line-location-content-face")
+
+(def-voice-font  emacspeak-w3m-button-personality
+  voice-smoothen
+  'w3m-form-button-face
+  "w3m-form-button-face")
+
+(def-voice-font  emacspeak-w3m-form-button-pressed-personality
+  voice-animate
+  'w3m-form-button-pressed-face
+  "w3m-form-button-pressed-face")
+
+(def-voice-font  emacspeak-w3m-tab-unselected-personality
+  voice-monotone
+  'w3m-tab-unselected-face
+  "w3m-tab-unselected-face")
+
+(def-voice-font  emacspeak-w3m-tab-selected-personality
+  voice-animate-extra
+  'w3m-tab-selected-face
+  "w3m-tab-selected-face")
+(def-voice-font emacspeak-w3m-form-personality voice-brighten
+  'w3m-form-face
+  "Personality for forms.")
+(def-voice-font emacspeak-w3m-image-personality
+  voice-brighten
+  'w3m-image-face
+  "Image personality.")
 
 (defadvice w3m-mode (after emacspeak pre act comp)
   "Set punctuation mode."
   (declare (special dtk-punctuation-mode))
-  (setq dtk-punctuation-mode "some"))
-
-(add-hook 'w3m-fontify-after-hook 'emacspeak-w3m-voiceify-faces-in-buffer)
+  (setq dtk-punctuation-mode "some")
+  (define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command))
 
 ;;}}}
 (provide 'emacspeak-w3m)
