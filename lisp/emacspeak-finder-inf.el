@@ -110,6 +110,12 @@
     ("emacspeak-custom.el"
         "Speech enable interactive Emacs customization "
         (emacspeak  speak  spoken output  custom))
+    ("emacspeak-cyclebuffer.el"
+        "Speech-enable cyclebuffer.el"
+        nil)
+    ("emacspeak-edb.el"
+        "Speech interface for the EDB package"
+        (emacspeak  database speech interface))
     ("emacspeak-daisy.el"
         "daisy Front-end for emacspeak desktop"
         (emacspeak  daisy digital talking books))
