@@ -57,6 +57,7 @@
   (require 'backquote))
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
+(require 'time-date)
 
 (require 'voice-setup)
 (require 'thingatpt)
