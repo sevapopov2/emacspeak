@@ -431,6 +431,7 @@ functions for details.   "
   (emacspeak-export-environment)
   (dtk-initialize)
   (require 'emacspeak-redefine)
+  (require 'emacspeak-personality)
   (require 'emacspeak-fix-interactive)
   (require 'emacspeak-keymap)
   (require 'emacspeak-advice)
