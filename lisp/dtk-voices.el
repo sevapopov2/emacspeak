@@ -603,6 +603,7 @@ and TABLE gives the values along that dimension."
   (fset 'tts-get-voice-command 'dtk-get-voice-command)
   (fset 'tts-voice-defined-p 'dtk-voice-defined-p)
   (fset 'tts-define-voice-from-speech-style 'dtk-define-voice-from-speech-style)
+  (setq tts-default-voice 'paul)
   (setq tts-default-speech-rate dtk-default-speech-rate))
 
 ;;}}}
