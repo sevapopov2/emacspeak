@@ -105,6 +105,21 @@
     (emacspeak-speak-text-range 'link-function)))
 
 ;;}}}
+;;{{{ mapping font faces to personalities 
+
+(def-voice-font emacspeak-dictionary-button-personality voice-bolden
+  'dictionary-button-face
+  "Personality for dictionary-button-face")
+
+(def-voice-font emacspeak-dictionary-word-entry-personality voice-animate
+  'dictionary-word-entry-face
+  "Personality for dictionary-word-entry-face")
+
+(def-voice-font emacspeak-dictionary-reference-personality voice-bolden
+  'dictionary-reference-face
+  "Personality for dictionary-reference-face")
+
+;;}}}
 (provide 'emacspeak-dictionary)
 ;;{{{ end of file
 
