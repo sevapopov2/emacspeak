@@ -68,7 +68,7 @@
   "Set to T if you dont want to see notification  messages from the
 server."
   :type 'boolean
-  :group 'eamcspeak-erc)
+  :group 'emacspeak-erc)
 
 (def-voice-font emacspeak-erc-direct-msg-personality
   voice-animate
