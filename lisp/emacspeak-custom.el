@@ -1,5 +1,5 @@
 ;;; emacspeak-custom.el --- Speech enable interactive Emacs customization 
-;;; $Id: emacspeak-custom.el,v 18.0 2003/04/29 21:16:57 raman Exp $
+;;; $Id: emacspeak-custom.el,v 19.0 2003/11/22 19:06:15 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to custom
 ;;; Keywords: Emacspeak, Speak, Spoken Output, custom
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:57 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:15 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -179,6 +179,56 @@
 (def-voice-font emacspeak-custom-state-face voice-smoothen
   'custom-state-face
   "Personality used for showing custom state.")
+(def-voice-font emacspeak-custom-button-personality voice-bolden
+  'custom-button-face
+  "Personality for custom-button-face")
+
+(def-voice-font emacspeak-custom-button-pressed-personality  voice-bolden-extra
+  'custom-button-pressed-face
+  "Personality for custom-button-pressed-face")
+
+(def-voice-font emacspeak-custom-changed-personality  voice-smoothen
+  'custom-changed-face
+  "Personality for custom-changed-face")
+
+(def-voice-font emacspeak-custom-comment-personality  voice-monotone-medium
+  'custom-comment-face
+  "Personality for custom-comment-face")
+
+(def-voice-font emacspeak-custom-comment-tag-personality  voice-monotone
+  'custom-comment-tag-face
+  "Personality for custom-comment-tag-face")
+
+(def-voice-font emacspeak-custom-documentation-personality
+  voice-brighten-medium
+  'custom-documentation-face
+  "Personality for custom-documentation-face")
+
+(def-voice-font emacspeak-custom-personality  voice-lighten
+  'custom-face
+  "Personality for custom-face")
+(def-voice-font emacspeak-custom-group-tag-personality  voice-bolden
+  'custom-group-tag-face
+  "Personality for custom-group-tag-face")
+
+(def-voice-font emacspeak-custom-invalid-personality  voice-animate-extra
+  'custom-invalid-face
+  "Personality for custom-invalid-face")
+(def-voice-font emacspeak-custom-modified-personality  voice-lighten-medium
+  'custom-modified-face
+  "Personality for custom-modified-face")
+(def-voice-font emacspeak-custom-saved-personality  voice-smoothen-extra
+  'custom-saved-face
+  "Personality for custom-saved-face")
+(def-voice-font emacspeak-custom-set-personality  voice-smoothen-medium
+  'custom-set-face
+  "Personality for custom-set-face")
+(def-voice-font emacspeak-custom-variable-button-personality  voice-animate
+  'custom-variable-button-face
+  "Personality for custom-variable-button-face")
+(def-voice-font emacspeak-custom-variable-tag-personality  voice-bolden-medium
+  'custom-variable-tag-face
+  "Personality for custom-variable-tag-face")
 
 ;;}}}
 ;;{{{  custom navigation

@@ -1,5 +1,5 @@
 ;;; emacspeak-pcl-cvs.el --- Speech enabled CVS access 
-;;; $Id: emacspeak-pcl-cvs.el,v 18.0 2003/04/29 21:17:44 raman Exp $
+;;; $Id: emacspeak-pcl-cvs.el,v 19.0 2003/11/22 19:06:19 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech-enable CVS
 ;;; access 
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:44 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:19 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -39,10 +39,6 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{ required modules
-
-(require 'emacspeak-preamble)
-;;}}}
 ;;{{{  Introduction:
 
 ;;; Commentary:
@@ -52,8 +48,45 @@
 ;;; Code:
 
 ;;}}}
-;;{{{  speech enable interactive commands 
+;;{{{ required modules
 
+(require 'emacspeak-preamble)
+;;}}}
+;;{{{  define voices 
+(def-voice-font emacspeak-pcl-cvs-filename-face voice-bolden
+  'cvs-filename-face
+  "Personality used for file names in CVS buffers.")
+
+(def-voice-font emacspeak-pcl-cvs-handled-face
+  voice-monotone-medium
+  'cvs-handled-face
+  "Personality to match cvs-handle-face.")
+
+(def-voice-font emacspeak-pcl-cvs-header-face voice-bolden
+  'cvs-header-face
+  "Personality for CVS header lines.")
+
+(def-voice-font emacspeak-pcl-cvs-marked-face
+  voice-brighten-medium
+  'cvs-marked-face
+  "Personality for marked lines in CVS.")
+
+(def-voice-font emacspeak-pcl-cvs-msg-face voice-monotone-medium
+  'cvs-msg-face
+  "Personality for CVS messages.")
+
+(def-voice-font emacspeak-pcl-cvs-need-action-face voice-brighten
+  'cvs-need-action-face
+  "Personality for CVS lines needing an action.")
+
+;;}}}
+
+;;{{{  speech enable interactive commands 
+(defadvice cvs-mode-add (after emacspeak pre act comp)
+  "Provide spoken feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 (defadvice cvs-mode-kill-buffers (after emacspeak pre act
                                         comp)
   "Produce an auditory icon."

@@ -1,5 +1,5 @@
 ;;; emacspeak-load-path.el -- Setup Emacs load-path for compiling Emacspeak
-;;; $Id: emacspeak-load-path.el,v 18.0 2003/04/29 21:17:40 raman Exp $
+;;; $Id: emacspeak-load-path.el,v 19.0 2003/11/22 19:06:18 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Sets up load-path for emacspeak compilation and installation
 ;;; Keywords: Emacspeak, Speech extension for Emacs
@@ -7,8 +7,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:40 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:18 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<!--$Id: exchange-rate-convertor.xml,v 18.0 2003/04/29 21:19:01 raman Exp $-->
+<!--$Id: exchange-rate-convertor.xml,v 19.0 2003/11/22 19:06:41 raman Exp $-->
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>Currency Convertor</title>
@@ -17,7 +17,7 @@
             <select name="From" size="5">
               <option value="CAD">CAD Canada Dollars</option>
               <option selected="selected" value="USD">USD United States
-Dollars</option>
+              Dollars</option>
               <option value="EUR">EUR Euro</option>
               <option value="GBP">GBP United Kingdom Pounds</option>
               <option value="DEM">DEM Germany Deutsche Marks</option>
@@ -111,7 +111,7 @@ Dollars</option>
           <td>
             <select name="To" size="5" onchange="CheckMore()">
               <option value="USD" selected="selected">USD United States
-Dollars</option>
+              Dollars</option>
               <option value="CAD">CAD Canada Dollars</option>
               <option value="EUR">EUR Euro</option>
               <option value="GBP">GBP United Kingdom Pounds</option>

@@ -1,5 +1,5 @@
 ;;; emacspeak-xml-shell.el --- Implements a simple XML browser
-;;; $Id: emacspeak-xml-shell.el,v 18.0 2003/04/29 21:18:35 raman Exp $
+;;; $Id: emacspeak-xml-shell.el,v 19.0 2003/11/22 19:06:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains  xml-shell
 ;;; Keywords: Emacspeak,  Audio Desktop Xml-Shell
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:18:35 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:22 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -263,7 +263,9 @@ region of text to process."
 
 (defcustom emacspeak-xml-shell-xslt nil
   "XSL transform to apply when displaying current node."
-  :type 'string
+  :type '(choice
+          (const :tag "None" nil)
+          (string :tag "Command"))
   :group 'emacspeak-xml-shell)
 
 (defsubst emacspeak-xml-shell-setup-html-base (base)

@@ -1,5 +1,5 @@
 ;;; emacspeak-imcom.el --- Emacspeak interface to IMCom/Jabber
-;;; $Id: emacspeak-imcom.el,v 18.0 2003/04/29 21:17:30 raman Exp $
+;;; $Id: emacspeak-imcom.el,v 19.0 2003/11/22 19:06:17 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains convenience imcom
 ;;; Keywords: Emacspeak,  Audio Desktop Imcom
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:30 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:17 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -58,7 +58,7 @@
 (defcustom emacspeak-imcom-client "imcom"
   "Name of IMCom command-line client."
   :type 'string
-  :group 'emacspeak)
+  :group 'emacspeak-imcom)
 
 (defcustom emacspeak-imcom-personal-directory
   (expand-file-name "~/.imcom/")
@@ -68,7 +68,9 @@
 
 (defcustom emacspeak-imcom-default-jabber-server nil
   "Name of jabber server that is used by default."
-  :type 'string
+  :type '(choice
+	  (const :tag "None" nil)
+	  (string :tag "Server"))
   :group 'emacspeak-imcom)
 
 ;;}}}

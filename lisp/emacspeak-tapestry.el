@@ -1,5 +1,5 @@
 ;;; emacspeak-tapestry.el --- Speak information about current layout of windows
-;;; $Id: emacspeak-tapestry.el,v 18.0 2003/04/29 21:18:11 raman Exp $
+;;; $Id: emacspeak-tapestry.el,v 19.0 2003/11/22 19:06:21 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak module to speak window tapestries
 ;;; Keywords:emacspeak, audio interface to emacs tapestry
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:18:11 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:21 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -104,6 +104,23 @@ displayed buffers."
                                     (mapconcat #'identity
                                                windows
                                                " "))))))
+
+;;;###autoload
+(defun emacspeak-tapestry-select-window-by-name (buffer-name)
+  "Select window by the name of the buffer it displays.
+This is useful when using modes like ECB or the new GDB UI where
+  you want to preserve the window layout 
+but quickly switch to a window by name."
+  (interactive
+   (list
+    (completing-read 
+     "Select window: "
+     (mapcar 
+      #'(lambda (w)
+	  (list (buffer-name (window-buffer w))))
+      (tapestry-window-list))
+     nil 'must-match)))
+  (pop-to-buffer buffer-name))
 
 ;;}}}
 (provide  'emacspeak-tapestry)

@@ -1,5 +1,5 @@
 ;;; emacspeak-dismal.el --- Speech enable Dismal -- An Emacs Spreadsheet program
-;;; $Id: emacspeak-dismal.el,v 18.0 2003/04/29 21:16:58 raman Exp $
+;;; $Id: emacspeak-dismal.el,v 19.0 2003/11/22 19:06:15 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: spread sheet extension
 ;;; Keywords:emacspeak, audio interface to emacs spread sheets
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:58 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:15 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -44,7 +44,7 @@
 
 ;;}}}
 ;;{{{  requires 
-
+(require 'cl)
 (require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ custom
@@ -198,8 +198,10 @@ emacspeak-dismal-row-summarizer-list"
                 (cond
                  ((stringp token) token)
                  ((numberp token)
-                  (setq value (emacspeak-dismal-cell-value
-                               dismal-current-row token))
+                  (setq value
+                        (format "%s"
+				(emacspeak-dismal-cell-value
+				 dismal-current-row token)))
                   (put-text-property  0   (length value)
                                       'personality  emacspeak-dismal-value-personality 
                                       value )
@@ -207,9 +209,11 @@ emacspeak-dismal-row-summarizer-list"
                  ((and (listp token)
                        (numberp (first token))
                        (numberp (second token )))
-                  (setq value (emacspeak-dismal-cell-value
-                               (first token)
-                               (second token)))
+                  (setq value
+                        (format "%s"
+				(emacspeak-dismal-cell-value
+				 (first token)
+				 (second token))))
                   (put-text-property 0   (length value )
                                      'personality emacspeak-dismal-value-personality 
                                      value)
@@ -241,8 +245,10 @@ emacspeak-dismal-col-summarizer-list"
                 (cond
                  ((stringp token) token)
                  ((numberp token)
-                  (setq value (emacspeak-dismal-cell-value token
-                                                           dismal-current-col))
+                  (setq value
+                        (format "%s"
+                                (emacspeak-dismal-cell-value token
+							     dismal-current-col)))
                   (put-text-property 0 (length value)
                                      'personality
                                      emacspeak-dismal-value-personality value)
@@ -250,9 +256,11 @@ emacspeak-dismal-col-summarizer-list"
                  ((and (listp token)
                        (numberp (first token))
                        (numberp (second token )))
-                  (setq value (emacspeak-dismal-cell-value
-                               (first token)
-                               (second token)))
+                  (setq value
+                        (format "%s"
+                                (emacspeak-dismal-cell-value
+				 (first token)
+				 (second token))))
                   (put-text-property 0 (length value)
                                      'personality
                                      emacspeak-dismal-value-personality value)

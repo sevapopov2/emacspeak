@@ -1,4 +1,4 @@
-# $Id: Makefile,v 18.0 2003/04/29 21:20:16 raman Exp $
+# $Id: Makefile,v 19.0 2003/11/22 19:06:44 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak, Dectalk, Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2003/04/29 21:20:16 $ |
-#  $Revision: 18.0 $ | 
+# $Date: 2003/11/22 19:06:44 $ |
+#  $Revision: 19.0 $ | 
 # Location undetermined
 #
 
@@ -37,9 +37,11 @@
 # the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 # }}}
+all: #fix perms
+	chmod 755 *.pl
 # {{{xml -> html 
 %.html: %.xml
-	xsltproc --stringparam html.stylesheet docbook.css  $< > $@
+	xsltproc    $< > $@
 
 # }}}
 # {{{ User level target--  config 

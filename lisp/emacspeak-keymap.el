@@ -1,5 +1,5 @@
 ;;; emacspeak-keymap.el --- Setup all keymaps and keybindings provided by Emacspeak
-;;; $Id: emacspeak-keymap.el,v 18.0 2003/04/29 21:17:35 raman Exp $
+;;; $Id: emacspeak-keymap.el,v 19.0 2003/11/22 19:06:17 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Module for setting up emacspeak keybindings
 ;;; Keywords: Emacspeak
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:35 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:17 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -38,7 +38,7 @@
 ;;}}}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 ;;{{{  Introduction:
 
@@ -68,8 +68,7 @@
 (define-prefix-command  'emacspeak-dtk-submap-command
   'emacspeak-dtk-submap )
 (global-set-key emacspeak-prefix 'emacspeak-prefix-command)
-;;; put it on hypre as well --use the windows key for hyper
-(global-set-key "\C-x@h" 'emacspeak-prefix-command)
+
 (define-key emacspeak-keymap "d"  'emacspeak-dtk-submap-command)
 
 ;;; fix what we just broke:-
@@ -85,16 +84,7 @@
 
 (define-prefix-command 'emacspeak-personal-keymap   'emacspeak-personal-keymap)
 
-(defcustom emacspeak-personal-keys
-  (when emacspeak-personal-keymap
-    (mapcar
-     (lambda (binding)
-       (cond
-        ((numberp (car binding))
-         (cons (format "%c" (car binding))
-               (cdr binding)))
-        (t binding)))
-     (cdr emacspeak-personal-keymap)))
+(defcustom emacspeak-personal-keys nil
   "*Specifies personal key bindings for the audio desktop.
 Bindings specified here are available on prefix key C-e x
 for example, if you bind 
@@ -110,7 +100,55 @@ desired modified keystroke. For example, to enter C-s
 field in the customization buffer.  You can use the notation
 [f1], [f2], etc., to specify function keys. "
   :group 'emacspeak
-  :type '(repeat
+  :type '(repeat :tag "Emacspeak Personal Keymap"
+	  (cons  :tag "Key Binding"
+		(string :tag "Key")
+		(symbol :tag "Command")))
+  :set '(lambda (sym val)
+          (mapc
+           (lambda (binding)
+             (let ((key (car binding))
+                   (command (cdr binding )))
+               (when (string-match "\\[.+]" key)
+                 (setq key  (car (read-from-string key))))
+               (define-key emacspeak-personal-keymap  key command)))
+           val)
+	  (set-default sym val)))
+
+(define-key  emacspeak-keymap "x"
+  'emacspeak-personal-keymap)
+
+;;}}}
+;;{{{ Create a super keymap that users can put personal commands
+
+;;; I use the right windows menu key for super
+;;on
+;;; Adding keys using custom:
+(defvar  emacspeak-super-keymap nil
+  "Emacspeak super keymap")
+
+(define-prefix-command 'emacspeak-super-keymap   'emacspeak-super-keymap)
+
+(defcustom emacspeak-super-keys nil
+  "*Specifies super key bindings for the audio desktop.
+You can turn the right `windows menu' keys on your Linux PC keyboard into a `super' key
+on Linux by having it emit the sequence `C-x@s'.
+
+Bindings specified here are available on prefix key `super'
+for example, if you bind 
+`s' to command emacspeak-emergency-tts-restart 
+then that command will be available on key `super  s'
+
+The value of this variable is an association list. The car
+of each element specifies a key sequence. The cdr specifies
+an interactive command that the key sequence executes. To
+enter a key with a modifier, type C-q followed by the
+desired modified keystroke. For example, to enter C-s
+(Control s) as the key to be bound, type C-q C-s in the key
+field in the customization buffer.  You can use the notation
+[f1], [f2], etc., to specify function keys. "
+  :group 'emacspeak
+  :type '(repeat :tag "Emacspeak Super Keymap"
 	  (cons  :tag "Key Binding"
 		(string :tag "Key")
 		(symbol :tag "Command")))
@@ -121,16 +159,65 @@ field in the customization buffer.  You can use the notation
                    (command (cdr binding )))
                (when (string-match "\\[.+]" key)
                  (setq key (car (read-from-string key))))
-               (define-key emacspeak-personal-keymap key command)))
+               (define-key emacspeak-super-keymap key command)))
            val)
 	  (set-default sym val)))
 
-(define-key  emacspeak-keymap "x"
-  'emacspeak-personal-keymap)
+(global-set-key "\C-x@s"
+		'emacspeak-super-keymap)
+
+;;}}}
+;;{{{ Create a hyper keymap that users can put personal commands
+
+;;; I use the windows key for hyper
+;;on
+;;; Adding keys using custom:
+(defvar  emacspeak-hyper-keymap nil
+  "Emacspeak hyper keymap")
+
+(define-prefix-command 'emacspeak-hyper-keymap   'emacspeak-hyper-keymap)
+
+(defcustom emacspeak-hyper-keys nil
+  "*Specifies hyper key bindings for the audio desktop.
+Emacs can use the `hyper' key as a modifier key.
+You can turn the `windows' keys on your Linux PC keyboard into a `hyper' key
+on Linux by having it emit the sequence `C-x@h'.
+
+Bindings specified here are available on prefix key  `hyper'
+for example, if you bind 
+`b' to command `bbdb '
+then that command will be available on key `hyper b'.
+
+The value of this variable is an association list. The car
+of each element specifies a key sequence. The cdr specifies
+an interactive command that the key sequence executes. To
+enter a key with a modifier, type C-q followed by the
+desired modified keystroke. For example, to enter C-s
+(Control s) as the key to be bound, type C-q C-s in the key
+field in the customization buffer.  You can use the notation
+[f1], [f2], etc., to specify function keys. "
+  :group 'emacspeak
+  :type '(repeat :tag "Emacspeak Hyper Keys"
+	  (cons  :tag "Key Binding"
+		(string :tag "Key")
+		(symbol :tag "Command")))
+  :set '(lambda (sym val)
+          (mapc
+           (lambda (binding)
+             (let ((key (car binding))
+                   (command (cdr binding )))
+               (when (string-match "\\[.+]" key)
+                 (setq key (car (read-from-string key))))
+               (define-key emacspeak-hyper-keymap key command)))
+           val)
+	  (set-default sym val)))
+
+(global-set-key "\C-x@h"
+		'emacspeak-hyper-keymap)
 
 ;;}}}
 ;;{{{  The actual bindings.
-(define-key help-map "e"
+(define-key help-map "E"
   'emacspeak-websearch-emacspeak-archive)
 (define-key help-map "V" 'customize-variable)
 (define-key help-map " " 'customize-group)
@@ -162,7 +249,7 @@ field in the customization buffer.  You can use the notation
 (define-key emacspeak-keymap "v" 'emacspeak-view-register)
 (define-key emacspeak-keymap "w" 'emacspeak-speak-word)
 (define-key emacspeak-keymap "W"
-  'emacspeak-speak-spell-current-word)
+  'emacspeak-tapestry-select-window-by-name)
 (define-key emacspeak-keymap "u" 'emacspeak-url-template-fetch)
 (define-key emacspeak-keymap "\C-u" 'emacspeak-rss-browse)
 (define-key emacspeak-keymap "U" 'emacspeak-websearch-usenet)
@@ -295,7 +382,7 @@ field in the customization buffer.  You can use the notation
 (define-key emacspeak-dtk-submap "z" 'emacspeak-zap-tts)
 (define-key emacspeak-dtk-submap "t" 'emacspeak-dial-dtk)
 (define-key emacspeak-dtk-submap "w" 'emacspeak-toggle-word-echo)
-(define-key emacspeak-dtk-submap "V" 'emacspeak-dtk-speak-version)
+(define-key emacspeak-dtk-submap "V" 'tts-speak-version)
 (define-key emacspeak-dtk-submap "v" 'voice-lock-mode)
 (define-key emacspeak-dtk-submap "n" 'dtk-toggle-speak-nonprinting-chars)
 (define-key emacspeak-dtk-submap "s" 'dtk-toggle-split-caps)
@@ -305,7 +392,6 @@ field in the customization buffer.  You can use the notation
 (define-key emacspeak-dtk-submap "R" 'dtk-reset-state)
 (define-key emacspeak-dtk-submap "q" 'dtk-toggle-quiet )
 (define-key emacspeak-dtk-submap "p" 'dtk-set-punctuations)
-(define-key emacspeak-dtk-submap "m" 'dtk-set-pronunciation-mode)
 (define-key emacspeak-dtk-submap "l" 'emacspeak-toggle-line-echo)
 (define-key emacspeak-dtk-submap "k" 'emacspeak-toggle-character-echo)
 (define-key emacspeak-dtk-submap "i"
@@ -337,6 +423,7 @@ field in the customization buffer.  You can use the notation
 (global-set-key  '[27 next]  'emacspeak-owindow-scroll-up)
 (global-set-key  '[27 select]  'emacspeak-owindow-speak-line)
 (define-key help-map "\C-m" 'man)
+(define-key help-map "\C-i" 'emacspeak-info-wizard)
 (global-set-key '[left] 'emacspeak-backward-char)
 (global-set-key '[right] 'emacspeak-forward-char)
 (define-key emacspeak-keymap '[insert] 'emacspeak-emergency-tts-)

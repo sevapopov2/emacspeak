@@ -1,5 +1,5 @@
 ;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java 
-;;; $Id: emacspeak-c.el,v 18.0 2003/04/29 21:16:55 raman Exp $
+;;; $Id: emacspeak-c.el,v 19.0 2003/11/22 19:06:14 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for C and C++ mode
 ;;; Keywords:emacspeak, audio interface to emacs C, C++
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:55 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:14 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-solitaire.el --- Speech enable Solitaire game
-;;; $Id: emacspeak-solitaire.el,v 18.0 2003/04/29 21:17:57 raman Exp $
+;;; $Id: emacspeak-solitaire.el,v 19.0 2003/11/22 19:06:21 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to solitaire
 ;;; Keywords: Emacspeak, Speak, Spoken Output, solitaire
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:57 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:21 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 

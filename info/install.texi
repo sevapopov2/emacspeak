@@ -1,4 +1,4 @@
-@c $Id: install.texi,v 18.0 2003/04/29 21:21:37 raman Exp $
+@c $Id: install.texi,v 19.0 2003/11/22 19:06:50 raman Exp $
 @node Installation
 @chapter Installation Instructions
 

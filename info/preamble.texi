@@ -1,4 +1,4 @@
-@c $Id: preamble.texi,v 18.0 2003/04/29 21:21:42 raman Exp $
+@c $Id: preamble.texi,v 19.0 2003/11/22 19:06:51 raman Exp $
 
 @node Top
 @top Emacspeak
@@ -16,8 +16,9 @@ manual is divided into the following chapters.
 * Audio Desktop: Audio Desktop.
 * Using Online Help: Using Online Help.
 * Emacs Packages:  Emacs Packages.
-* Running Terminal Based Applications: Running Terminal Based Applications
+* Running Terminal Based Applications: Running Terminal Based Applications.
 * Emacspeak Commands:  Emacspeak Commands.
+* Emacspeak Customizations:  Emacspeak Customizations.
 * Acknowledgements: Acknowledgements.
 
 Indices:

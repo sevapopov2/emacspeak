@@ -1,4 +1,4 @@
-/*$Id: tcleci.cpp,v 18.0 2003/04/29 21:21:21 raman Exp $*/
+/*$Id: tcleci.cpp,v 19.0 2003/11/22 19:06:48 raman Exp $*/
 /* Tcl ViaVoiceOutloud Interface program
    (c) Copyright 1999 by Paige Phault
 
@@ -47,6 +47,8 @@ eciSynthesize and say doesn't.  You can put as many text blocks as
 you like after a command.
 */
 #include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -65,13 +67,12 @@ you like after a command.
 #define EXPORT
 #endif
 
-#define ECILIBRARYNAME "/usr/lib/libibmeci50.so"
+#define ECILIBRARYNAME "libibmeci.so"
 
-/* ugly ugly */
 #define DSP "/dev/dsp"
 int  dsp = -1;
-//.1 second using 11025k samples.
-//note that in the tcl server we select for 0.09 seconds so
+//.04  second using 11025k samples.
+//note that in the tcl server we select for 0.02 seconds so
 //that we dont queue up too many speech samples,
 //This is important for stopping speech immediately.
 #define BUFSIZE 512
@@ -104,7 +105,7 @@ typedef enum {
   eciPhrasePrediction,
   eciNumParams
 } ECIParam;
-
+static void (*_eciVersion) (char*);
 static void *(*_eciNew)();
 static void (*_eciDelete)(void *);
 static int (*_eciReset)(void *);
@@ -126,6 +127,7 @@ static int openDSP();
 extern "C" EXPORT int Tcleci_Init(Tcl_Interp *interp);
 int SetRate(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
 int GetRate(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
+int getTTSVersion(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
 int Say(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
 int Stop(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
 int SpeakingP(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
@@ -156,7 +158,8 @@ int Tcleci_Init(Tcl_Interp *interp) {
                      NULL);
     return TCL_ERROR;
   }
-		
+
+		_eciVersion = (void(*)(char*)) dlsym(eciLib, "eciVersion");
   _eciNew = (void *(*)()) dlsym(eciLib, "eciNew");
   _eciDelete = (void(*)(void*)) dlsym(eciLib, "eciDelete");
   _eciReset = (int (*)(void*)) dlsym(eciLib, "eciReset");
@@ -242,6 +245,7 @@ int Tcleci_Init(Tcl_Interp *interp) {
   Tcl_CreateObjCommand(interp, "setRate", SetRate,
                        (ClientData) eciHandle, TclEciFree);
   Tcl_CreateObjCommand(interp, "getRate", GetRate, (ClientData) eciHandle, TclEciFree);
+  Tcl_CreateObjCommand(interp, "ttsVersion", getTTSVersion, (ClientData) eciHandle, TclEciFree);
   Tcl_CreateObjCommand(interp, "say", Say, (ClientData) eciHandle, TclEciFree);
   Tcl_CreateObjCommand(interp, "synth", Say, (ClientData)
                        eciHandle, NULL);
@@ -528,6 +532,18 @@ int setOutput(ClientData eciHandle, Tcl_Interp *interp, int objc, Tcl_Obj *CONST
   fprintf(stderr, "Set output to %s\n", output);
   return TCL_OK;
 }
+
+int getTTSVersion(ClientData eciHandle, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  char* version= (char*)malloc(16);
+  if (objc!=1) {
+    Tcl_AppendResult(interp, "Usage: ttsVersion   ", TCL_STATIC);
+    return TCL_ERROR;
+  }
+   _eciVersion(version);
+  Tcl_SetResult( interp,  version, TCL_STATIC);
+  return TCL_OK;
+}
+
 //<end of file 
 //local variables:
 //folded-file: t

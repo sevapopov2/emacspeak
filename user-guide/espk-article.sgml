@@ -45,7 +45,7 @@
 <title>Legal Notice</title>
 
 	<para>
-	This document is Copyright &copy 2001 IBM. Permission is
+	This document is Copyright &copy; 2001 IBM. Permission is
 	granted to copy, distribute and/or modify this document under
 	the terms of the GNU Free Documentation License, Version 1.1
 	or any later version published by the Free Software Foundation with no Invariant Sections, no
@@ -66,9 +66,9 @@
 	text editor -- it is actually a desktop, in some ways like the
 	graphical desktops that many use today. As a
 	desktop, Emacs comes with all kinds of built-in functions, much
-	like the Windows &trade desktop, including an e-mail
+	like the Windows &trade; desktop, including an e-mail
 	application, calendar/appointment program, cd-player, games,
-	and more. And like Windows &trade, there are many additional
+	and more. And like Windows &trade;, there are many additional
 	applications that you can download and add to Emacs that
 	expand its functionality -- web browsers, the LaTeX text
 	editor, mp3 players, and others. Unlike Windows, all of these powerful
@@ -1008,7 +1008,7 @@
 	Alternatively, you can start an Emacs shell using <command>M-x
 	shell</command> and use FTP from the command line.  There is a
 	short tutorial on using the command line FTP at <ulink
-	url="http://unix.about.com/library/weekly/aa121800a.htm?once=true&"></ulink>.
+	url="http://unix.about.com/library/weekly/aa121800a.htm"></ulink>.
 	</para>
 </sect2>
 
@@ -1456,7 +1456,7 @@
 		</varlistentry>
 		
 		<varlistentry>
-			<term><command><</command></term>
+			<term><command></command></term>
 				<listitem>
 					<para>
 					Goes to the beginning of the

@@ -1,5 +1,5 @@
 ;;; emacspeak-sgml-mode.el --- Speech enable psgml package
-;;; $Id: emacspeak-psgml.el,v 18.0 2003/04/29 21:17:46 raman Exp $
+;;; $Id: emacspeak-psgml.el,v 19.0 2003/11/22 19:06:19 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for psgml
 ;;; Keywords:emacspeak, audio interface to emacs psgml
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:46 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:19 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -44,8 +44,8 @@
 
 ;;; Speech-enable psgml --a powerful SGML support package.
 ;;; psgml can be found at 
-;;;
 
+;;; Code:
 ;;}}}
 ;;{{{ requires
 (require 'emacspeak-preamble)
@@ -339,15 +339,11 @@ window")))
  'sgml-mode-hook
  (function
   (lambda ()
-    (declare (special sgml-mode-map
-                      sgml-set-face))
-    (setq sgml-set-face nil)
+    (declare (special sgml-mode-map))
     (emacspeak-setup-programming-mode)
     (define-key sgml-mode-map "\C-c\C-b"
       'emacspeak-xml-browse-mode))))
-                                    
            
-             
 ;;}}}
 ;;{{{ psgml based voice locking 
 
@@ -375,17 +371,6 @@ sgml	- SGML declaration
 start-tag
 entity  - general entity reference
 shortref- short reference")
-
-(defadvice sgml-set-face-for (after emacspeak pre act comp)
-  "Apply voice locking as well."
-  (let* ((start (ad-get-arg 0))
-	 (end (ad-get-arg 1))
-	 (type (ad-get-arg 2))
-         (voice (cdr (assq type
-                           emacspeak-sgml-markup-voices))))
-    (ems-modify-buffer-safely
-     (put-text-property start end
-                        'personality voice ))))
 
 ;;}}}
 ;;{{{ additional interactive commands 
@@ -421,6 +406,11 @@ shortref- short reference")
 (define-key emacspeak-xml-browse-mode-map "\C-cu" 'sgml-show-tags)
 ;;}}}
 ;;{{{  toggle interactive parse:
+;;; silence psgml messages
+(defadvice sgml-message (around emacspeak pre act comp)
+  "Silence messages."
+  (let ((emacspeak-speak-messages nil))
+    ad-do-it))
 (defun emacspeak-psgml-toggle-interactive-font-lock()
   "Toggles variable sgml-set-face.
 When turned on, the  buffer is font locked interactively.

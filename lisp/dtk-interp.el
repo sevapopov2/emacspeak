@@ -1,5 +1,5 @@
 ;;; dtk-interp.el --- Language specific (e.g. TCL) interface to speech server
-;;; $Id: dtk-interp.el,v 18.0 2003/04/29 21:16:46 raman Exp $
+;;; $Id: dtk-interp.el,v 19.0 2003/11/22 19:06:13 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Interfacing to the speech server
 ;;; Keywords: TTS, Dectalk, Speech Server
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:46 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:13 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -53,7 +53,7 @@
 
 ;;;Code:
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 
 ;;}}}
@@ -113,7 +113,7 @@
                                       &optional target step force)
   (declare (special dtk-speaker-process))
   (process-send-string dtk-speaker-process
-                       (format "n %s %s %s %s %s%s\n"
+                       (format "n %s %s %s %s %s %s\n"
                                instrument pitch duration
                                (or target 0)
                                (or step 5)
@@ -193,6 +193,11 @@
 
 ;;}}}
 ;;{{{  rate
+
+(defsubst dtk-interp-say-version ()
+  "Speak version."
+  (declare (special dtk-speaker-process))
+  (process-send-string dtk-speaker-process "version\n"))
 
 (defsubst dtk-interp-set-rate (rate)
   (declare (special dtk-speaker-process))

@@ -62,7 +62,7 @@
 <title>Legal Notice</title>
 
 	<para>
-	This document is Copyright &copy 2001 IBM. Permission is
+	This document is Copyright &copy; 2001 IBM. Permission is
 	granted to copy, distribute and/or modify this document under
 	the terms of the GNU Free Documentation License, Version 1.1
 	or any later version published by the Free Software Foundation with no Invariant Sections, no
@@ -1314,7 +1314,7 @@
 	a null-modem cable. As with the other instructions in this
 	HOWTO, I tried, unfortunately without success, to duplicate this procedure. However, I have provided the information
 	gathered during testing in the following section.  If you
-	successfully install Linux from a Windows&trade or DOS&trade
+	successfully install Linux from a Windows&trade; or DOS&trade;
 	machine over a null-modem cable,
 	please let me know the procedure you followed and I'll include
 	it here.

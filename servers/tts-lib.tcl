@@ -1,11 +1,11 @@
-#$Id: tts-lib.tcl,v 18.0 2003/04/29 21:21:18 raman Exp $
+#$Id: tts-lib.tcl,v 19.0 2003/11/22 19:06:47 raman Exp $
 # {{{ LCD Entry: 
 
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2003/04/29 21:21:18 $ |
-#  $Revision: 18.0 $ | 
+# $Date: 2003/11/22 19:06:47 $ |
+#  $Revision: 19.0 $ | 
 # Location undetermined
 #
 

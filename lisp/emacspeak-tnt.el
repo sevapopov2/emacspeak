@@ -1,5 +1,5 @@
 ;;; emacspeak-tnt.el --- Instant Messenger 
-;;; $Id: emacspeak-tnt.el,v 18.0 2003/04/29 21:18:18 raman Exp $
+;;; $Id: emacspeak-tnt.el,v 19.0 2003/11/22 19:06:21 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Speech-enable AOL Instant Messenger Client TNT
 ;;; Keywords: Emacspeak, Instant Messaging 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:18:18 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:21 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -272,6 +272,22 @@ automatically."
 ;;{{{  Activate pronunciations 
 (add-hook 'tnt-buddy-list-mode-hook
           'emacspeak-pronounce-refresh-pronunciations)
+
+;;}}}
+;;{{{ avoid chatter
+(defadvice tnt-handle-closed(around emacspeak pre act comp)
+  "Silence messages."
+  (let ((emacspeak-speak-messages nil))
+    ad-do-it))
+
+(defadvice tnt-handle-opened(around emacspeak pre act comp)
+  "Silence messages."
+  (let ((emacspeak-speak-messages nil))
+    ad-do-it))
+(defadvice tnt-handle-sign-on(around emacspeak pre act comp)
+  "Silence messages."
+  (let ((emacspeak-speak-messages nil))
+    ad-do-it))
 
 ;;}}}
 (provide 'emacspeak-tnt)

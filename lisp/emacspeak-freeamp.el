@@ -1,5 +1,5 @@
 ;;; emacspeak-freeamp.el --- Control freeamp from Emacs
-;;; $Id: emacspeak-freeamp.el,v 18.0 2003/04/29 21:17:19 raman Exp $
+;;; $Id: emacspeak-freeamp.el,v 19.0 2003/11/22 19:06:17 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling freeamp from emacs 
 ;;; Keywords: Emacspeak, freeamp
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:19 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:17 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -38,10 +38,6 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  Required modules
-
-(require 'emacspeak-preamble)
-;;}}}
 ;;{{{ Introduction:
 
 ;;; Commentary:
@@ -53,6 +49,12 @@
 ;;; put the buffer containing freeamp in freeamp-mode.
 ;;; freeamp navigation commands then work via single keystrokes.
 
+;;; Code:
+
+;;}}}
+;;{{{  Required modules
+
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ define a derived mode for freeamp interaction 
 (defvar emacspeak-freeamp-process nil

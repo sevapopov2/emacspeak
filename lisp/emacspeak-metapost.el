@@ -1,5 +1,5 @@
 ;;; emacspeak-metapost.el --- speech-enable metapost mode
-;;; $Id: emacspeak-metapost.el,v 18.0 2003/04/29 21:17:41 raman Exp $
+;;; $Id: emacspeak-metapost.el,v 19.0 2003/11/22 19:06:18 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for speech-enabling
 ;;; metapost mode
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:41 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:18 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 

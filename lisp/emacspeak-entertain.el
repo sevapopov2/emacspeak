@@ -1,5 +1,5 @@
 ;;; emacspeak-entertain.el --- Speech enable misc games
-;;; $Id: emacspeak-entertain.el,v 18.0 2003/04/29 21:17:04 raman Exp $
+;;; $Id: emacspeak-entertain.el,v 19.0 2003/11/22 19:06:15 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to diversions
 ;;; Keywords: Emacspeak, Speak, Spoken Output, games
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:04 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:15 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -38,18 +38,19 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  Required modules
-
-(require 'emacspeak-preamble)
-;;}}}
 ;;{{{  Introduction 
 
 ;;; Commentary:
 
 ;;; Auditory interface to misc games
 
+;;; Code:
+
 ;;}}}
-            
+;;{{{  Required modules
+
+(require 'emacspeak-preamble)
+;;}}}
 ;;{{{ doctar
 
 (defadvice doctor-txtype (after emacspeak pre act )
@@ -63,15 +64,11 @@
 ;;}}}
 ;;{{{ mpuz
 
-(declaim (special mpuz-silent ))
-(setq mpuz-silent t )
-(defadvice mpuz-correct-guess (after emacspeak pre act )
-  "Provide an auditory icon"
-  (emacspeak-auditory-icon 'search-hit ))
-
-(defadvice mpuz-congratulate (after emacspeak pre act )
-  "Produce auditory icon"
-  (emacspeak-auditory-icon 'alarm ))
+(def-voice-font emacspeak-mpuz-trivial-personality voice-monotone  'mpuz-trivial-face "")
+(def-voice-font emacspeak-mpuz-unsolved-personality voice-bolden  'mpuz-unsolved-face "")
+(def-voice-font emacspeak-mpuz-unsolved-personality voice-lighten  'mpuz-unsolved-face "")
+(def-voice-font emacspeak-mpuz-solved-personality voice-animate
+  'mpuz-solved-face "")
 
 ;;}}}
 ;;{{{ dunnet 

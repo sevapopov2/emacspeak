@@ -1,5 +1,5 @@
 ;;; emacspeak-widget.el --- Speech enable Emacs' native GUI widget library
-;;; $Id: emacspeak-widget.el,v 18.0 2003/04/29 21:18:31 raman Exp $
+;;; $Id: emacspeak-widget.el,v 19.0 2003/11/22 19:06:21 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extensions to widgets
 ;;; Keywords:emacspeak, audio interface to emacs customized widgets
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:18:31 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:21 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -49,21 +49,15 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
 (require 'voice-setup)
-(eval-when-compile (require 'dtk-speak)
-                   (condition-case nil
-                       (progn (require 'widget)
-                              (require 'wid-edit)
-                              (message "Compiling against widget libraries %s %s"
-                                       (locate-library "widget")
-                                       (locate-library "wid-edit")))
-                     (error
-                      (message  "Widget libraries not found, widget support may not work correctly.")))
-                   (require 'emacspeak-speak)
-                   (require 'emacspeak-sounds))
+(require 'dtk-speak)
+(require 'widget)
+(require 'wid-edit)
+(require 'emacspeak-speak)
+(require 'emacspeak-sounds)
 
 ;;}}}
 ;;{{{  Customize global behavior
@@ -117,17 +111,21 @@
 (defsubst emacspeak-widget-label (w)
   "Construct a label for a widget.
 Returns a string with appropriate personality."
-  (let ((type   (widget-type w))
+  (let ((inhibit-read-only t)
+        (type   (widget-type w))
         (tag (widget-get w :tag)))
-    (unless tag (setq tag (format " %s " type)))
+    (setq tag     
+	  (format " %s "
+		  (or tag type)))
     (put-text-property 0 (length tag)
-                       'personality emacspeak-widget-button-personality tag)
+		       'personality emacspeak-widget-button-personality tag)
     tag))
 
 (defsubst emacspeak-widget-help-echo (w)
   "Return help-echo with appropriate personality."
   (declare (special voice-animate))
-  (let ((h (widget-get w :help-echo))
+  (let ((inhibit-read-only t)
+        (h (widget-get w :help-echo))
         (help nil))
     (setq help
           (cond
@@ -176,8 +174,7 @@ Returns a string with appropriate personality."
 (defun emacspeak-widget-summarize(widget)
   "Summarize specified widget."
   (let ((emacspeak-help (widget-get widget :emacspeak-help))
-        (emacspeak-speak-messages nil)
-        (voice-lock-mode t))
+        (emacspeak-speak-messages nil))
     (cond
      ((and emacspeak-help
            (fboundp emacspeak-help))
@@ -193,7 +190,8 @@ Returns a string with appropriate personality."
 ;;;###autoload 
 (defun emacspeak-widget-default-summarize (widget)
   "Fall back summarizer for all widgets"
-  (let* ((label (emacspeak-widget-label widget))
+  (let* ((inhibit-read-only t)
+         (label (emacspeak-widget-label widget))
          (help-echo (emacspeak-widget-help-echo widget))
          (v  (widget-value widget ))
          (value
@@ -233,7 +231,7 @@ Returns a string with appropriate personality."
 ;;{{{ item 
 
 (defun emacspeak-widget-help-item (widget)
-  "Summarize a  item"
+  "Summarize an   item"
   (let* ((value  (widget-value widget))
          (label (emacspeak-widget-label widget))
          (help-echo (emacspeak-widget-help-echo widget)))
@@ -391,8 +389,7 @@ Returns a string with appropriate personality."
 
 (defun emacspeak-widget-help-menu-choice  (widget)
   "Summarize a pull down list"
-  (let* (
-         (help-echo (emacspeak-widget-help-echo widget))(label (emacspeak-widget-label widget))
+  (let* ((help-echo (emacspeak-widget-help-echo widget))(label (emacspeak-widget-label widget))
          (value (format " %s " (widget-get widget :value)))
          (child (car (widget-get widget :children))))
     (concat label
@@ -426,7 +423,8 @@ Returns a string with appropriate personality."
 
 (defun emacspeak-widget-help-checklist  (widget)
   "Summarize a check list"
-  (let* ((label (emacspeak-widget-label widget))
+  (let* ((inhibit-read-only t)
+         (label (emacspeak-widget-label widget))
          (value (widget-value widget))
          (selections (cond
                       (value (prin1-to-string value))
@@ -503,7 +501,8 @@ Returns a string with appropriate personality."
 
 (defun emacspeak-widget-help-radio-button-choice  (widget)
   "Summarize a radio group "
-  (let* ((value (widget-value widget))
+  (let* ((inhibit-read-only t)
+         (value (widget-value widget))
          (label (emacspeak-widget-label widget))
          (choice (widget-get widget :choice))
          (selected
@@ -526,7 +525,8 @@ Returns a string with appropriate personality."
 
 (defun emacspeak-widget-help-editable-list (widget)
   "Summarize a editable list"
-  (let ((value (prin1-to-string (widget-value widget)))
+  (let ((inhibit-read-only t)
+        (value (prin1-to-string (widget-value widget)))
         (label (emacspeak-widget-label widget))
         (help-echo (emacspeak-widget-help-echo widget)))
     (when value
@@ -666,7 +666,8 @@ widget before summarizing."
 
 (defadvice widget-convert-text (around emacspeak pre act comp)
   "Protect value of personality if set originally"
-  (let ((start (ad-get-arg 1))
+  (let ((inhibit-read-only t)
+        (start (ad-get-arg 1))
         (end (ad-get-arg 2))
         (orig nil ))
     (setq orig (get-text-property start 'personality))
@@ -727,14 +728,19 @@ widget before summarizing."
   "Widget for selecting a voice.")
 (define-widget 'personality 'item
   "Individual voice in a voice selector.")
+;;; We rely on dectalk-voice-table as our default voice table.
+;;; Names defined in this --- and other voice tables --- are
+;;; generic --and  not device specific.
+;;;
+
 (defun emacspeak-widget-create-voice-selector ()
   "Create a suitable voice selector widget."
-  (declare (special dtk-voice-table))
+  (declare (special dectalk-voice-table))
   (let ((w
          (widget-create 'voice
                         :tag "voices")))
     (widget-put w :args 
-                (loop for key being the hash-keys of dtk-voice-table 
+                (loop for key being the hash-keys of dectalk-voice-table 
                       collect
                       (list 'personality :value key )))
     w))

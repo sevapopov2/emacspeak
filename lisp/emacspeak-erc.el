@@ -1,5 +1,5 @@
 ;;; emacspeak-erc.el --- speech-enable erc irc client
-;;; $Id: emacspeak-erc.el,v 18.0 2003/04/29 21:17:05 raman Exp $
+;;; $Id: emacspeak-erc.el,v 19.0 2003/11/22 19:06:15 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for speech-enabling erc.el
 ;;; Keywords: Emacspeak, erc
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:05 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:15 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -38,9 +38,6 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{ required modules
-(require 'emacspeak-preamble)
-;;}}}
 ;;{{{  Introduction:
 
 ;;; Commentary:
@@ -49,6 +46,11 @@
 ;;; erc.el - an Emacs IRC client (by Alexander L. Belikoff)
 ;;; http://www.cs.cmu.edu/~berez/irc/erc.el
 
+;;; Code:
+
+;;}}}
+;;{{{ required modules
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  variables
 
@@ -63,7 +65,7 @@
   :prefix "emacspeak-erc-")
 
 (defcustom emacspeak-erc-ignore-notices nil
-  "Set to T if you dont want to see notifcation messages from the
+  "Set to T if you dont want to see notification  messages from the
 server."
   :type 'boolean
   :group 'eamcspeak-erc)
@@ -86,7 +88,7 @@ server."
   voice-lighten-extra  'erc-inverse-face
   "Inverse highlight in ERC.")
 
-(def-voice-font emacsepak-erc-underline 'underline
+(def-voice-font emacsepak-erc-underline voice-brighten-medium
   'erc-underline-face
   "Underline in ERC.")
 
@@ -95,7 +97,7 @@ server."
   "Personality for prompts.")
 
 (def-voice-font emacspeak-erc-notice-personality
-  'inaudible
+  voice-monotone
   'erc-notice-face
   "Personality for notices.")
 
@@ -172,7 +174,7 @@ spoken.")
 
 (make-variable-buffer-local 'emacspeak-erc-monitor-my-messages)
 
-(defcustom emacspeak-erc-my-nick nil
+(defcustom emacspeak-erc-my-nick ""
   "My IRC nick."
   :type 'string
   :group 'emacspeak-erc)
@@ -223,16 +225,24 @@ spoken.")
   (message "monitoring %s"
            (mapconcat #'identity 
                       emacspeak-erc-people-to-monitor " ")))
+(defcustom emacspeak-erc-speak-all-participants nil
+  "Speak all things said if t."
+  :type 'boolean
+  :group 'emacspeak-erc)
+
+(make-variable-buffer-local 'emacspeak-erc-speak-all-participants)
 
 (defun emacspeak-erc-compute-message (string buffer)
   "Uses environment of buffer to decide what message to
 display. String is the original message."
   (declare (special emacspeak-erc-people-to-monitor
                     emacspeak-erc-my-nick
+                    emacspeak-erc-speak-all-participants
                     emacspeak-erc-monitor-my-messages))
   (let ((who-from (car (split-string string )))
         (case-fold-search t))
     (cond
+     (emacspeak-erc-speak-all-participants string)
      ((and
        (not (string-match "^\\*\\*\\*" who-from))
        emacspeak-erc-people-to-monitor
@@ -246,6 +256,14 @@ display. String is the original message."
            (string-match emacspeak-erc-my-nick string))
       string)
      (t nil))))
+
+(ems-generate-switcher
+ 'emacspeak-erc-toggle-speak-all-participants
+ 'emacspeak-erc-speak-all-participants
+ "Toggle state of ERC speak all participants..
+Interactive 
+PREFIX arg means toggle the global default value, and then
+set the current local value to the result.")
 
 (defadvice erc-display-line-buffer  (after emacspeak pre act
                                            comp)
@@ -288,53 +306,18 @@ display. String is the original message."
             (tts-with-punctuations dtk-punctuation-mode
 				   (dtk-speak  msg))))))))
 
-(defun emacspeak-erc-toggle-room-monitor  (&optional prefix)
-  "Toggle state of ERC room monitor.
+(ems-generate-switcher 'emacspeak-erc-toggle-room-monitor
+		       'emacspeak-erc-room-monitor
+		       "Toggle state of ERC room monitor.
 Interactive 
 PREFIX arg means toggle the global default value, and then
-set the current local value to the result."
+set the current local value to the result.")
 
-  (interactive  "P")
-  (declare  (special  emacspeak-erc-room-monitor))
-  (cond
-   (prefix
-    (setq-default  emacspeak-erc-room-monitor
-                   (not  (default-value 'emacspeak-erc-room-monitor )))
-    (setq emacspeak-erc-room-monitor (default-value 'emacspeak-comint-autospeak )))
-   (t
-    (setq emacspeak-erc-room-monitor
-          (not emacspeak-erc-room-monitor ))))
-  (and emacspeak-erc-room-monitor
-       
-       )
-  (emacspeak-auditory-icon
-   (if emacspeak-erc-room-monitor 'on 'off))
-  (message "Turned %s room monitor  %s "
-           (if emacspeak-erc-room-monitor "on" "off" )
-	   (if prefix "" "locally")))
-
-(defun emacspeak-erc-toggle-my-monitor  (&optional prefix)
-  "Toggle state of ERC  monitor of my messages.
+(ems-generate-switcher 'emacspeak-erc-toggle-my-monitor
+                       'emacspeak-erc-monitor-my-messages
+                       "Toggle state of ERC  monitor of my messages.
 Interactive PREFIX arg means toggle the global default value, and then
-set the current local value to the result."
-  (interactive  "P")
-  (declare  (special  emacspeak-erc-monitor-my-messages))
-  (cond
-   (prefix
-    (setq-default  emacspeak-erc-monitor-my-messages
-                   (not  (default-value 'emacspeak-erc-monitor-my-messages )))
-    (setq emacspeak-erc-monitor-my-messages (default-value 'emacspeak-comint-autospeak )))
-   (t
-    (setq emacspeak-erc-monitor-my-messages
-          (not emacspeak-erc-monitor-my-messages ))))
-  (and emacspeak-erc-monitor-my-messages
-       
-       )
-  (emacspeak-auditory-icon
-   (if emacspeak-erc-monitor-my-messages 'on 'off))
-  (message "Turned %s messages monitor  %s "
-           (if emacspeak-erc-monitor-my-messages "on" "off" )
-	   (if prefix "" "locally")))
+set the current local value to the result.")
 
 ;;}}}
 ;;{{{ silence server messages 
@@ -356,6 +339,8 @@ set the current local value to the result."
 ;;}}}
 ;;{{{ define emacspeak keys
 (declaim (special erc-mode-map))
+(define-key erc-mode-map "\C-c "
+  'emacspeak-erc-toggle-speak-all-participants)
 (define-key erc-mode-map "\C-cm"
   'emacspeak-erc-toggle-my-monitor)
 (define-key erc-mode-map "\C-c\C-m"

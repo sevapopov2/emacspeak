@@ -1,5 +1,5 @@
 ;;; emacspeak-ispell.el --- Speech enable Ispell -- Emacs' interactive spell checker
-;;; $Id: emacspeak-ispell.el,v 18.0 2003/04/29 21:17:33 raman Exp $
+;;; $Id: emacspeak-ispell.el,v 19.0 2003/11/22 19:06:17 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable ispell
 ;;; Keywords: Emacspeak, Ispell, Spoken Output, Ispell version 2.30
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:33 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:17 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 

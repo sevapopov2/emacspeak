@@ -1,5 +1,5 @@
 ;;; emacspeak-jde.el --- Speech enable JDE -- An integrated Java Development Environment
-;;; $Id: emacspeak-jde.el,v 18.0 2003/04/29 21:17:34 raman Exp $
+;;; $Id: emacspeak-jde.el,v 19.0 2003/11/22 19:06:17 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to JDE
 ;;; Keywords: Emacspeak, Speak, Spoken Output, Java
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:34 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:17 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -73,17 +73,17 @@
   'jde-java-font-lock-package-face
   "Personality used for package names.")
 
-(def-voice-font emacspeak-jde-italic-personality 'italic
+(def-voice-font emacspeak-jde-italic-personality voice-animate
   'jde-java-font-lock-italic-face
   "Personality used for italics."
   :group 'emacspeak-jde)
 
-(def-voice-font emacspeak-jde-underline-personality 'underline
+(def-voice-font emacspeak-jde-underline-personality voice-brighten-medium
   'jde-java-font-lock-underline-face
   "Underline personality."
   :group 'emacspeak-jde)
 
-(def-voice-font emacspeak-jde-bold-personality 'bold
+(def-voice-font emacspeak-jde-bold-personality voice-bolden
   'jde-java-font-lock-bold-face
   "Personality used for bold."
   :group 'emacspeak-jde)

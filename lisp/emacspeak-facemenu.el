@@ -1,5 +1,5 @@
 ;;; emacspeak-facemenu.el --- Map default Emacs faces like bold to appropriate speech personalities 
-;;; $Id: emacspeak-facemenu.el,v 18.0 2003/04/29 21:17:07 raman Exp $
+;;; $Id: emacspeak-facemenu.el,v 19.0 2003/11/22 19:06:16 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak module to map standard faces to voices
 ;;; Keywords:emacspeak, audio interface to emacs rich text
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:07 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:16 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-sounds.el --- Defines Emacspeak auditory icons
-;;; $Id: emacspeak-sounds.el,v 18.0 2003/04/29 21:17:57 raman Exp $
+;;; $Id: emacspeak-sounds.el,v 19.0 2003/11/22 19:06:21 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Module for adding sound cues to emacspeak
 ;;; Keywords:emacspeak, audio interface to emacs, auditory icons
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:57 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:21 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -63,7 +63,7 @@
 ;;{{{ required modules
 
 ;;; Code:
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
 (eval-when (compile)
@@ -353,7 +353,7 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
   "Association between symbols and midi notes.
 When producing midi icons, other modules should use names defined here.")
 
-(defvar emacspeak-default-midi-note nil
+(defvar emacspeak-default-midi-note '(100 100 .1)
   "Default note to play if requested icon not found.")
 
 (defun emacspeak-define-midi (midi-name midi-note)

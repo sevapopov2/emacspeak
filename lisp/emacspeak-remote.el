@@ -1,5 +1,5 @@
 ;;; emacspeak-remote.el --- Enables running remote Emacspeak sessions
-;;; $Id: emacspeak-remote.el,v 18.0 2003/04/29 21:17:52 raman Exp $
+;;; $Id: emacspeak-remote.el,v 19.0 2003/11/22 19:06:20 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to remote speech server
 ;;; Keywords: Emacspeak, Speak, Spoken Output, remote server
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:52 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:20 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -151,6 +151,7 @@ Use this once you are sure the guesses are usually correct."
   (emacspeak-remote-connect-to-server
    (emacspeak-remote-get-current-remote-hostname)
    (string-to-number  emacspeak-remote-default-port-to-connect)))
+
 ;;;###autoload
 (defun emacspeak-remote-ssh-to-server(login)
   "Open ssh session to where we came from."
@@ -177,8 +178,8 @@ host is listening on for speech requests."
    (list
     (completing-read "Remote host: "
                      emacspeak-eterm-remote-hosts-table	;completion table
-                     nil                ;predicate
-                     nil                ;must-match
+                     nil				;predicate
+                     nil				;must-match
                      (emacspeak-remote-get-current-remote-hostname) ;initial input
                      )
     (read-minibuffer "Remote port: "

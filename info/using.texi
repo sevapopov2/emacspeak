@@ -1,4 +1,4 @@
-@c $Id: using.texi,v 18.0 2003/04/29 21:21:42 raman Exp $
+@c $Id: using.texi,v 19.0 2003/11/22 19:06:51 raman Exp $
 @node Basic Usage
 @chapter Basic Usage.
 
@@ -160,7 +160,7 @@ emacspeak-speak-word
 With prefix ARG, speaks the rest of the word from point.
 Negative prefix arg speaks from start of word to point.
 If executed  on the same buffer position a second time, the word is
-spelt instead of being spoken.
+spelled instead of being spoken.
 
 
 @findex  emacspeak-speak-line

@@ -1,5 +1,5 @@
 ;;; cd-tool.el --- Play  CDs from Emacs
-;;;$Id: cd-tool.el,v 18.0 2003/04/29 21:16:45 raman Exp $
+;;;$Id: cd-tool.el,v 19.0 2003/11/22 19:06:13 raman Exp $
 ;;;Emacs front-end to CDTool
 ;;{{{  Copyright:
 
@@ -35,17 +35,23 @@
 ;;; clips from a CD if you have cdda2wav installed.
 ;;; cdda2wav is a cd to wav convertor.
 ;;;
-
+;;; Code:
 ;;}}}
 ;;{{{ required packages
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 
 ;;}}}
 ;;{{{ top level 
 
 ;;; Code:
+
+(defcustom cd-tool-start-command "cdstart"
+  "*Name of cdstart command; most likely either \"cdstart\" or \"cdplay\"."
+  :options '("cdstart" "cdplay")
+  :group 'cd-tool
+  :type 'string)
 
 (defvar cd-tool-message
   " +Next  - Previous  p play s stop = shuffle i info e eject t track"
@@ -77,20 +83,19 @@ cap C   Save clip to disk
     (while (null command)
       (setq command
             (case (read-char "CD Action? ")
-              (?+ "cdstart +")
-              (?> "cdstart +")
-              (?. "cdstart +")
-              (?- "cdstart -")
-              (?< "cdstart -")
-              (?, "cdstart -")
-              (?t (format "cdstart %s"
-                          (read-from-minibuffer "Enter track
-number: ")))
-              (?p "cdstart")
+              (?+ (concat cd-tool-start-command " +"))
+              (?> (concat cd-tool-start-command " +"))
+              (?. (concat cd-tool-start-command " +"))
+              (?- (concat cd-tool-start-command " -"))
+              (?< (concat cd-tool-start-command " -"))
+              (?, (concat cd-tool-start-command " -"))
+              (?t (format (concat cd-tool-start-command " %s")
+                          (read-from-minibuffer "Enter track number: ")))
+              (?p cd-tool-start-command)
               (?s "cdstop")
               (?= "cdshuffle")
               (?\ "cdpause")
-              (?r "cdstart")
+              (?r cd-tool-start-command)
               (?i "cdir ")
               (?e "cdeject")
               (?c (cd-tool-get-clip-command))

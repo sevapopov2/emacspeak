@@ -1,5 +1,5 @@
 ;;; emacspeak-eterm.el --- Speech enable eterm -- Emacs' terminal emulator  term.el
-;;; $Id: emacspeak-eterm.el,v 18.0 2003/04/29 21:17:06 raman Exp $
+;;; $Id: emacspeak-eterm.el,v 19.0 2003/11/22 19:06:16 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable eterm. 
 ;;; Keywords: Emacspeak, Eterm, Terminal emulation, Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:06 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:16 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -123,9 +123,13 @@
   (define-key emacspeak-eterm-keymap "\C-p"
     'emacspeak-eterm-toggle-pointer-mode)
   (define-key emacspeak-eterm-keymap "\C-w" 'emacspeak-eterm-define-window)
-  (define-key emacspeak-eterm-keymap "\C-y" 'emacspeak-eterm-yank-window)
+  (define-key emacspeak-eterm-keymap "\C-y"
+    'emacspeak-eterm-yank-window)
+  (define-key emacspeak-eterm-keymap "f"
+    'emacspeak-eterm-set-filter-window)
   (define-key emacspeak-eterm-keymap "\C-f"
     'emacspeak-eterm-set-focus-window)
+  (define-key emacspeak-eterm-keymap "A" 'emacspeak-eterm-toggle-filter-window)
   (define-key emacspeak-eterm-keymap "\C-a" 'emacspeak-eterm-toggle-focus-window)
   (define-key emacspeak-eterm-keymap "\C-d" 'emacspeak-eterm-describe-window)
   (define-key emacspeak-eterm-keymap "\C-m" 'emacspeak-eterm-speak-window)
@@ -179,7 +183,7 @@ Useful when eterm is in review mode.")
   :group 'emacspeak-eterm)
 
 (defcustom emacspeak-eterm-bold-personality voice-bolden
-  "Persnality to indicate terminal bold."
+  "Personality to indicate terminal bold."
   :type 'symbol
   :group 'emacspeak-eterm)
 
@@ -911,6 +915,7 @@ and bottom right at %s %s"
 
 (defvar emacspeak-eterm-focus-window nil
   "Current window that emacspeak eterm focuses on")
+(make-variable-buffer-local 'emacspeak-eterm-filter-window)
 
 (defun emacspeak-eterm-set-focus-window (flag)
   "Prompt for the id of a predefined window,
@@ -938,7 +943,39 @@ non-negative integer ")
         (setq emacspeak-eterm-focus-window nil))
        (t 
         (setq emacspeak-eterm-focus-window window-id )
-        (message "Set emacspeak eterm focus window  to %d " window-id )))))))
+        (message "Set emacspeak eterm focus window  to %d "
+                 window-id )))))))
+
+(defvar emacspeak-eterm-filter-window nil
+  "Window id used to filter screen activity.")
+
+(make-variable-buffer-local 'emacspeak-eterm-filter-window)
+(defun emacspeak-eterm-set-filter-window (flag)
+  "Prompt for the id of a predefined window,
+and set the `filter' window to it.
+Non-nil interactive prefix arg `unsets' the filter window;
+this is equivalent to having the entire terminal as the filter window (this is
+what eterm starts up with).
+Setting the filter window results in emacspeak  only monitoring screen
+activity within the filter window."
+  (interactive "P")
+  (declare (special emacspeak-eterm-filter-window ))
+  (let  ((window-id nil))
+    (cond
+     ( flag (setq emacspeak-eterm-filter-window nil)
+            (message "Emacspeak eterm filter set to entire screen "))
+     (t
+      (setq window-id
+            (read-minibuffer  "Specify eterm window to filter on "))
+      (assert (numberp window-id) t
+              "Please specify a valid window id, a non-negative integer ")
+      (cond
+       ((= 0 window-id)
+        (message "Unset filter window.")
+        (setq emacspeak-eterm-filter-window nil))
+       (t 
+        (setq emacspeak-eterm-filter-window window-id )
+        (message "Set emacspeak eterm filter window  to %d " window-id )))))))
 
 (defun emacspeak-eterm-toggle-focus-window ()
   "Toggle active state of focus window."
@@ -950,6 +987,18 @@ non-negative integer ")
   (dtk-stop)
   (emacspeak-auditory-icon
    (if emacspeak-eterm-focus-window
+       'on 'off)))
+
+(defun emacspeak-eterm-toggle-filter-window ()
+  "Toggle active state of filter window."
+  (interactive)
+  (declare (special emacspeak-eterm-filter-window))
+  (if emacspeak-eterm-filter-window
+      (setq emacspeak-eterm-filter-window nil)
+    (setq emacspeak-eterm-filter-window 1))
+  (dtk-stop)
+  (emacspeak-auditory-icon
+   (if emacspeak-eterm-filter-window
        'on 'off)))
 
 (defun emacspeak-eterm-speak-predefined-window ()
@@ -1013,27 +1062,13 @@ Use command emacspeak-toggle-eterm-autospeak bound to
   
 (make-variable-buffer-local 'emacspeak-eterm-autospeak)
   
-(defun emacspeak-toggle-eterm-autospeak (&optional prefix)
-  "Toggle state of eterm autospeak.
+(ems-generate-switcher 'emacspeak-toggle-eterm-autospeak
+                       'emacspeak-eterm-autospeak
+		       "Toggle state of eterm autospeak.
 When eterm autospeak is turned on and the terminal is in line mode,
 all output to the terminal is automatically spoken. 
   Interactive prefix arg means toggle  the global default value, and then set the
-  current local  value to the result. "
-  (interactive  "P")
-  (declare (special emacspeak-eterm-autospeak))
-  (let ((dtk-stop-immediately nil ))
-    (cond
-     (prefix
-      (setq-default  emacspeak-eterm-autospeak
-                     (not  (default-value 'emacspeak-eterm-autospeak )))
-      (setq emacspeak-eterm-autospeak (default-value 'emacspeak-eterm-autospeak )))
-     (t (setq emacspeak-eterm-autospeak 
-              (not emacspeak-eterm-autospeak ))))
-    (message "Turned %s eterm autospeak %s"
-             (if emacspeak-eterm-autospeak "on" "off")
-             (if prefix "globally" "locally"))
-    (emacspeak-auditory-icon
-     (if emacspeak-eterm-autospeak 'on 'off))))
+  current local  value to the result. ")
 
 (defvar eterm-line-mode nil 
   "T if eterm is in line mode.")
@@ -1050,9 +1085,10 @@ Use command emacspeak-eterm-toggle-pointer-mode bound to
 (defadvice  term-emulate-terminal (around emacspeak pre act compile )
   "Record position, emulate, then speak what happened.
 Also keep track of terminal highlighting etc.
+Feedback is limited to current window 
 If a `current window`
-is set (see command emacspeak-eterm-set-focus-window
-bound to \\[emacspeak-eterm-set-focus-window].
+is set (see command emacspeak-eterm-set-filter-window
+bound to \\[emacspeak-eterm-set-filter-window].
 How output is spoken  depends on whether the terminal is in
 character or line mode.
 When in character mode, output is spoken like off a real terminal.
@@ -1064,7 +1100,8 @@ See command emacspeak-toggle-eterm-autospeak bound to
 \\[emacspeak-toggle-eterm-autospeak]"
   (declare (special emacspeak-eterm-row emacspeak-eterm-column
                     eterm-line-mode eterm-char-mode
-                    emacspeak-eterm-focus-window emacspeak-eterm-pointer-mode
+                    focus
+                    emacspeak-eterm-filter-window emacspeak-eterm-pointer-mode
                     emacspeak-eterm-autospeak 
                     term-current-row term-current-column))
   (let ((emacspeak-eterm-row (term-current-row ))
@@ -1089,8 +1126,22 @@ See command emacspeak-toggle-eterm-autospeak bound to
                            emacspeak-eterm-focus-window )
                           (emacspeak-eterm-coordinate-within-window-p
                            (cons (term-current-column) (term-current-row))
-                           emacspeak-eterm-focus-window ))))
+                           emacspeak-eterm-focus-window ))
+                     (and (emacspeak-eterm-coordinate-within-window-p
+                           (cons new-column new-row )
+                           emacspeak-eterm-filter-window )
+                          (emacspeak-eterm-coordinate-within-window-p
+                           (cons (term-current-column) (term-current-row))
+                           emacspeak-eterm-filter-window ))))
       (cond
+       ((and eterm-char-mode
+             emacspeak-eterm-filter-window
+             (not (and (emacspeak-eterm-coordinate-within-window-p
+                        (cons new-column new-row )
+                        emacspeak-eterm-filter-window )
+                       (emacspeak-eterm-coordinate-within-window-p
+                        (cons (term-current-column) (term-current-row))
+                        emacspeak-eterm-filter-window )))) nil)
        ((and  eterm-line-mode
               emacspeak-eterm-autospeak)
         (setq dtk-stop-immediately nil)
@@ -1129,21 +1180,13 @@ See command emacspeak-toggle-eterm-autospeak bound to
                  emacspeak-eterm-pointer)
         (emacspeak-eterm-pointer-to-cursor)))))
 
-(defun emacspeak-eterm-toggle-pointer-mode (flag)
-  "Toggle emacspeak eterm pointer mode.
+(ems-generate-switcher 'emacspeak-eterm-toggle-pointer-mode
+		       'emacspeak-eterm-pointer-mode
+		       "Toggle emacspeak eterm pointer mode.
 With optional interactive prefix  arg, turn it on.
 When emacspeak eterm is in pointer mode, the eterm read pointer
 stays where it is rather than automatically moving to the terminal cursor when
-there is terminal activity."
-  (interactive "P")
-  (declare (special emacspeak-eterm-pointer-mode ))
-  (cond
-   (flag (setq emacspeak-eterm-pointer-mode t ))
-   (t (setq emacspeak-eterm-pointer-mode
-            (not emacspeak-eterm-pointer-mode ))))
-  (message "Turned %s emacspeak eterm pointer mode"
-           (if emacspeak-eterm-pointer-mode
-               "on" "off")))
+there is terminal activity.")
 
    
 (defadvice term-dynamic-complete (around emacspeak pre act)

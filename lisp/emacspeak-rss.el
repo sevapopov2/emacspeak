@@ -1,5 +1,5 @@
 ;;; emacspeak-rss.el --- Emacspeak RSS Wizard
-;;; $Id: emacspeak-rss.el,v 18.0 2003/04/29 21:17:54 raman Exp $
+;;; $Id: emacspeak-rss.el,v 19.0 2003/11/22 19:06:21 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  RSS Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop RSS
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:54 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:21 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -55,14 +55,14 @@
 
 (defcustom emacspeak-rss-feeds
   '(
-    ("Wired News" ."http://www.wired.com/news_drop/netcenter/netcenter.rdf")
-    ("BBC News" . "http://www.bbc.co.uk/syndication/feeds/news/ukfs_news/front_page/rss091.xml")
-    ("CNet Tech News" . "http://rss.com.com/2547-12-0-5.xml")
-    ("XML.COM" . "http://www.xml.com/xml/news.rss")
+    ("Wired News" "http://www.wired.com/news_drop/netcenter/netcenter.rdf")
+    ("BBC News"  "http://www.bbc.co.uk/syndication/feeds/news/ukfs_news/front_page/rss091.xml")
+    ("CNet Tech News"  "http://rss.com.com/2547-12-0-5.xml")
+    ("XML.COM"  "http://www.xml.com/xml/news.rss")
     )
   "Table of RSS feeds."
   :type '(repeat
-	  (cons :tag "RSS Feed"
+	  (list :tag "RSS Feed"
 		(string :tag "Title")
 		(string :tag "URI")))
   :group 'emacspeak-rss)
@@ -82,8 +82,7 @@
     (add-hook 'emacspeak-w3-post-process-hook
 	      'emacspeak-speak-buffer))
   (emacspeak-w3-browse-xml-url-with-style
-   (expand-file-name "rss.xsl"
-                     emacspeak-xslt-directory)
+   (expand-file-name "rss.xsl" emacspeak-xslt-directory)
    rss-url
    'unescape-charent))
 
@@ -95,7 +94,7 @@
     (let ((completion-ignore-case t))
       (completing-read "Feed:"
 		       emacspeak-rss-feeds))))
-  (let ((uri (cdr
+  (let ((uri (cadr
               (assoc feed emacspeak-rss-feeds))))
     (emacspeak-rss-display uri 'speak)))
 

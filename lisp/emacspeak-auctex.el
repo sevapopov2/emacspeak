@@ -1,5 +1,5 @@
 ;;; emacspeak-auctex.el --- Speech enable AucTeX -- a powerful TeX/LaTeX authoring environment
-;;; $Id: emacspeak-auctex.el,v 18.0 2003/04/29 21:16:50 raman Exp $
+;;; $Id: emacspeak-auctex.el,v 19.0 2003/11/22 19:06:13 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for auctex-mode
 ;;; Keywords:emacspeak, audio interface to emacs AUCTEX
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:50 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:13 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -47,12 +47,12 @@
 ;;}}}
 ;;{{{ voice locking:
 ;;; faces from AUCTeX 11
-(def-voice-font emacspeak-latex-italic-face 'italic
+(def-voice-font emacspeak-latex-italic-face voice-animate
   'font-latex-italic-face
   "Face used for italics."
   :group 'emacspeak-auctex)
 
-(def-voice-font emacspeak-latex-bold-face 'bold
+(def-voice-font emacspeak-latex-bold-face voice-bolden
   'font-latex-bold-face
   "Face used for bold."
 
