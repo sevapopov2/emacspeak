@@ -154,11 +154,15 @@
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
+(defadvice message-newline-and-reformat (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-speak-line)))
+
 (defadvice message-send (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-auditory-icon 'task-done)))
 
 (defadvice message-send-and-exit (after emacspeak pre act comp)
   "Provide auditory feedback"
