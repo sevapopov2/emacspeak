@@ -203,7 +203,7 @@
 	    (emacspeak-w3m-anchor-text)
 	    emacspeak-w3m-form-personality))))
 
-(defun emacspeak-w3m-speak-form-input-textarea (form hseq)
+(defun emacspeak-w3m-speak-form-input-textarea (form &optional hseq)
   "speech enable text area."
   (declare (special emacspeak-w3m-form-personality))
   (dtk-speak
