@@ -41,11 +41,11 @@
 (require 'custom)
 (eval-when (compile)
   (require 'emacspeak-speak))
-(defvar emacspeak-unibyte t
+(defvar emacspeak-unibyte nil
   "Emacspeak will force emacs to unibyte unless this
 variable is set to nil.
-To use emacspeak with emacs running in multibyte mode, this
-variable should be set to nil *before* 
+To use emacspeak with emacs running in unibyte mode, this
+variable should be set to t *before* 
 emacspeak is compiled or started.")
 ;;;###autoload
 (defvar emacspeak-directory
@@ -80,6 +80,11 @@ pronunciation dictionaries are stored. ")
 
 (defcustom outloud-default-speech-rate 50
   "Default speech rate for outloud."
+  :group 'tts
+  :type 'integer)
+
+(defcustom multispeech-default-speech-rate 225
+  "Default speech rate for multispeech."
   :group 'tts
   :type 'integer)
 

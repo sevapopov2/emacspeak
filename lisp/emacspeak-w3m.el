@@ -34,7 +34,9 @@
 ;;{{{  required modules
 
 (require 'emacspeak-preamble)
+(require 'emacspeak-w3)
 (require 'w3m nil t)
+(require 'w3m-form nil t)
 ;;}}}
 ;;{{{ keybindings 
 (declaim (special w3m-mode-map
@@ -89,11 +91,13 @@
 
 (defun emacspeak-w3m-anchor-text (&optional default)
   "Return string containing text of anchor under point."
-  (save-excursion
-    (forward-char 1)
-    (if (get-text-property (point) 'w3m-anchor-sequence)
-	(message(emacspeak-speak-get-text-range 'w3m-anchor-sequence))
-      (message (or default "")))))
+  (if (get-text-property (point) 'w3m-anchor-sequence)
+      (buffer-substring
+       (previous-single-property-change
+	(1+ (point)) 'w3m-anchor-sequence nil (point-min))
+       (next-single-property-change
+	(point) 'w3m-anchor-sequence nil (point-max)))
+    (or default "")))
 
 (defun emacspeak-w3m-speak-cursor-anchor ()
   (dtk-speak (emacspeak-w3m-anchor-text "Not found")))
@@ -334,7 +338,7 @@
 	    (emacspeak-speak-line)))
 
 (defadvice w3m-form-input-select-set (after emacspeak pre act comp)
-  (when (and (interactive-p) (w3m-cursor-anchor))
+  (when (and (interactive-p) (w3m-anchor-sequence))
     (emacspeak-w3m-speak-this-anchor)))
 
 (defadvice w3m-form-input-select-exit (after emacspeak pre act comp)
@@ -363,7 +367,6 @@
 
 (defadvice  w3m-w3m-dump-head-source (after emacspeak pre act comp)
   "Apply requested transform if any after grabbing the HTML. "
-  (require 'emacspeak-w3)
   (when (and emacspeak-w3-xsl-p emacspeak-w3-xsl-transform)
     (emacspeak-xslt-region
      emacspeak-w3-xsl-transform
