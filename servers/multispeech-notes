@@ -46,7 +46,7 @@ Proceed to this step *only*
 after successfully completing all of the previous steps.
 You can either make the Multispeech your default
 speech server by setting environment variable 
-DTK_PROGRAM as follows befoer launching Emacs:
+DTK_PROGRAM as follows before launching Emacs:
 export DTK_PROGRAM=multispeech
 
 Alternatively,  you can switch to the multispeech while
@@ -58,18 +58,17 @@ C-e d d ret multispeech ret
 Alternatively start emacspeak with the "-m" option.
 
 
-* Using dtk-soft as the default synthesizer:
+* Using multispeech as the default synthesizer:
 
 Once you've confirmed that everything is working with the
 Multispeech and Emacspeak, you can make multispeech your
 default synthesizer by:
 ** If you have emacspeak launched from inside your .emacs:
 
-set variable dtk-program to "dtk-soft" 
+set variable dtk-program to "multispeech" 
 before you load emacspeak-setup.el
 
 
-* Known Problems:
 
 
 Local variables: 

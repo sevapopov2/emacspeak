@@ -458,6 +458,9 @@
 				      ("emacspeak-websearch.el"
 				       "search utilities"
 				       (emacspeak  www interaction))
+				      ("emacspeak-wget.el"
+				       "Speech-enable Wget"
+				       (emacspeak  wget  www  ftp  download manager))
 				      ("emacspeak-widget.el"
 				       "Speech enable Emacs' native GUI widget library"
 				       (emacspeak  audio interface to emacs customized widgets))

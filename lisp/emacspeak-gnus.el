@@ -318,6 +318,11 @@ the previous group was closed."
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)))
 
+(defadvice gnus-summary-resend-message (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'task-done)))
+
 (defadvice gnus-summary-exit (around emacspeak pre act comp)
   "Speak the line in group buffer."
   (if (interactive-p)

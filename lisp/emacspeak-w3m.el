@@ -379,6 +379,11 @@
 	(message "%s" w3m-current-title))))
    (t ad-do-it))ad-return-value)
 
+(defadvice w3m-process-stop (after emacspeak pre act comp)
+  "Produce auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)))
+
 (defadvice w3m-close-window (after emacspeak pre act comp)
   "Produce auditory feedback."
   (when (interactive-p)

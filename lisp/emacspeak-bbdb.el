@@ -120,7 +120,7 @@
 (defadvice bbdb (after emacspeak pre act )
   "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'search-hit)))
 
 (defadvice bbdb-bury-buffer (after emacspeak pre act )
   "Provide auditory feedback"
