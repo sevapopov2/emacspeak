@@ -6,7 +6,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Initial version: Author: Igor B. Poretsky <root@goga.energo.ru>
+;;; Initial version: Author: Igor B. Poretsky <master@goga.energo.ru>
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
