@@ -1,5 +1,5 @@
 ;;; emacspeak-speak.el --- Implements Emacspeak's core speech services
-;;; $Id: emacspeak-speak.el,v 19.0 2003/11/22 19:06:21 raman Exp $
+;;; $Id: emacspeak-speak.el,v 20.0 2004/05/01 01:16:23 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains the functions for speaking various chunks of text
 ;;; Keywords: Emacspeak,  Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:21 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:23 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -57,7 +57,7 @@
   (require 'backquote))
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
-
+(require 'time-date)
 (require 'voice-setup)
 (require 'thingatpt)
 (eval-when-compile
@@ -683,7 +683,7 @@ the sense of the filter. "
     (message "Unset column filter")
     (setq emacspeak-speak-line-column-filter nil))))
 
-;;}}}
+;;}}}					; ;
 
 (defcustom emacspeak-speak-space-regexp
   "^[ \t\r]+$"
@@ -1733,7 +1733,8 @@ See the documentation for function
 Optional second arg `set' sets the TZ environment variable as well."
   (interactive
    (list
-    (let ((completion-ignore-case t))
+    (let ((completion-ignore-case t)
+          (ido-case-fold t))
       (substring
        (read-file-name
 	"Timezone: "
@@ -1775,7 +1776,7 @@ Second interactive prefix sets clock to new timezone."
                             
  
 (defconst emacspeak-codename
-  "WorkDog"
+  "LeapDog"
   "Code name of present release.")
 
 (defun emacspeak-speak-version ()
@@ -2948,6 +2949,43 @@ See documentation for command run-at-time for details on time-spec."
                    (message m)
                    (emacspeak-auditory-icon 'alarm))
                message))
+
+;;}}}
+;;{{{ Directory specific settings
+(defcustom  emacspeak-speak-load-directory-settings-quietly t
+  "*User option that affects loading of directory specific settings.
+If set to T,Emacspeak will not prompt before loading
+directory specific settings."
+  :group 'emacspeak-speak
+  :type 'boolean)
+
+(defcustom emacspeak-speak-directory-settings
+  ".espeak.el"
+  "*Name of file that holds directory specific settings."
+  :group 'emacspeak-speak
+  :type 'string)
+
+(defsubst emacspeak-speak-get-directory-settings ()
+  "Return directory specific settings file."
+  (declare (special emacspeak-speak-directory-settings))
+  (concat default-directory
+          emacspeak-speak-directory-settings))
+;;;###autoload
+(defun emacspeak-speak-load-directory-settings ()
+  "Load a directory specific Emacspeak settings file.
+This is typically used to load up settings that are specific to
+an electronic book consisting of many files in the same
+directory."
+  (interactive)
+  (let ((settings (emacspeak-speak-get-directory-settings)))
+    (when (and (file-exists-p  settings)
+               (or emacspeak-speak-load-directory-settings-quietly
+                   (y-or-n-p "Load directory settings? ")
+                   "Load  directory specific Emacspeak
+settings? "))
+      (condition-case nil
+          (load-file settings)
+        (error (message "Error loading settings %s" settings))))))
 
 ;;}}}
 (provide 'emacspeak-speak )

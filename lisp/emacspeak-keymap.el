@@ -1,5 +1,5 @@
 ;;; emacspeak-keymap.el --- Setup all keymaps and keybindings provided by Emacspeak
-;;; $Id: emacspeak-keymap.el,v 19.0 2003/11/22 19:06:17 raman Exp $
+;;; $Id: emacspeak-keymap.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Module for setting up emacspeak keybindings
 ;;; Keywords: Emacspeak
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:17 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -77,6 +77,7 @@
 
 ;;}}}
 ;;{{{ Create a keymap that users can put personal commands
+
 ;;on
 ;;; Adding keys using custom:
 (defvar  emacspeak-personal-keymap nil
@@ -101,19 +102,22 @@ field in the customization buffer.  You can use the notation
 [f1], [f2], etc., to specify function keys. "
   :group 'emacspeak
   :type '(repeat :tag "Emacspeak Personal Keymap"
-	  (cons  :tag "Key Binding"
-		(string :tag "Key")
-		(symbol :tag "Command")))
+                 (cons  :tag "Key Binding"
+                        (string :tag "Key")
+                        (symbol :tag "Command")))
   :set '(lambda (sym val)
-          (mapc
-           (lambda (binding)
-             (let ((key (car binding))
-                   (command (cdr binding )))
-               (when (string-match "\\[.+]" key)
-                 (setq key  (car (read-from-string key))))
-               (define-key emacspeak-personal-keymap  key command)))
-           val)
-	  (set-default sym val)))
+(let ((values (sort val
+                    #'(lambda (a b)
+                        (string-lessp(car a) (car b))))))
+  (mapc
+   (lambda (binding)
+     (let ((key (car binding))
+           (command (cdr binding )))
+       (when (string-match "\\[.+]" key)
+         (setq key  (car (read-from-string key))))
+       (define-key emacspeak-personal-keymap  key command)))
+   values)
+  (set-default sym values))))
 
 (define-key  emacspeak-keymap "x"
   'emacspeak-personal-keymap)
@@ -149,22 +153,77 @@ field in the customization buffer.  You can use the notation
 [f1], [f2], etc., to specify function keys. "
   :group 'emacspeak
   :type '(repeat :tag "Emacspeak Super Keymap"
-	  (cons  :tag "Key Binding"
-		(string :tag "Key")
-		(symbol :tag "Command")))
+                 (cons  :tag "Key Binding"
+                        (string :tag "Key")
+                        (symbol :tag "Command")))
   :set '(lambda (sym val)
-          (mapc
-           (lambda (binding)
-             (let ((key (car binding))
-                   (command (cdr binding )))
-               (when (string-match "\\[.+]" key)
-                 (setq key (car (read-from-string key))))
-               (define-key emacspeak-super-keymap key command)))
-           val)
-	  (set-default sym val)))
+(let ((values (sort val
+                    #'(lambda (a b)
+                        (string-lessp (car a) (car b ))))))
+  (mapc
+   (lambda (binding)
+     (let ((key (car binding))
+           (command (cdr binding )))
+       (when (string-match "\\[.+]" key)
+         (setq key (car (read-from-string key))))
+       (define-key emacspeak-super-keymap key command)))
+   values)
+  (set-default sym values))))
 
 (global-set-key "\C-x@s"
 		'emacspeak-super-keymap)
+
+;;}}}
+;;{{{ Create a alt keymap that users can put personal commands
+
+;;; I use the "pause" key to produce C-x@a -- which gives alt-
+;;on
+;;; Adding keys using custom:
+(defvar  emacspeak-alt-keymap nil
+  "Emacspeak alt keymap")
+
+(define-prefix-command 'emacspeak-alt-keymap   'emacspeak-alt-keymap)
+
+(defcustom emacspeak-alt-keys nil
+  "*Specifies alt key bindings for the audio desktop.
+You can turn the `Pause' key  on your Linux PC keyboard into a `alt' key
+on Linux by having it emit the sequence `C-x@a'.
+
+Bindings specified here are available on prefix key `alt'
+(not to be confused with alt==meta)
+for example, if you bind 
+`s' to command emacspeak-emergency-tts-restart 
+then that command will be available on key `ALT  s'
+
+The value of this variable is an association list. The car
+of each element specifies a key sequence. The cdr specifies
+an interactive command that the key sequence executes. To
+enter a key with a modifier, type C-q followed by the
+desired modified keystroke. For example, to enter C-s
+(Control s) as the key to be bound, type C-q C-s in the key
+field in the customization buffer.  You can use the notation
+[f1], [f2], etc., to specify function keys. "
+  :group 'emacspeak
+  :type '(repeat :tag "Emacspeak Alt Keymap"
+                 (cons  :tag "Key Binding"
+                        (string :tag "Key")
+                        (symbol :tag "Command")))
+  :set '(lambda (sym val)
+(let ((values (sort val
+                    #'(lambda (a b)
+                        (string-lessp (car a) (car b))))))
+  (mapc
+   (lambda (binding)
+     (let ((key (car binding))
+           (command (cdr binding )))
+       (when (string-match "\\[.+]" key)
+         (setq key (car (read-from-string key))))
+       (define-key emacspeak-alt-keymap key command)))
+   values)
+  (set-default sym values))))
+
+(global-set-key "\C-x@a"
+		'emacspeak-alt-keymap)
 
 ;;}}}
 ;;{{{ Create a hyper keymap that users can put personal commands
@@ -198,19 +257,22 @@ field in the customization buffer.  You can use the notation
 [f1], [f2], etc., to specify function keys. "
   :group 'emacspeak
   :type '(repeat :tag "Emacspeak Hyper Keys"
-	  (cons  :tag "Key Binding"
-		(string :tag "Key")
-		(symbol :tag "Command")))
+                 (cons  :tag "Key Binding"
+                        (string :tag "Key")
+                        (symbol :tag "Command")))
   :set '(lambda (sym val)
-          (mapc
-           (lambda (binding)
-             (let ((key (car binding))
-                   (command (cdr binding )))
-               (when (string-match "\\[.+]" key)
-                 (setq key (car (read-from-string key))))
-               (define-key emacspeak-hyper-keymap key command)))
-           val)
-	  (set-default sym val)))
+(let ((values (sort val
+                    #'(lambda (a b)
+                        (string-lessp (car a) (car b))))))
+  (mapc
+   (lambda (binding)
+     (let ((key (car binding))
+           (command (cdr binding )))
+       (when (string-match "\\[.+]" key)
+         (setq key (car (read-from-string key))))
+       (define-key emacspeak-hyper-keymap key command)))
+   values)
+  (set-default sym values))))
 
 (global-set-key "\C-x@h"
 		'emacspeak-hyper-keymap)
@@ -415,8 +477,8 @@ field in the customization buffer.  You can use the notation
 (global-set-key '[pause] 'dtk-stop)
 (global-set-key '[(control down)] 'emacspeak-mark-forward-mark)
 (global-set-key '[(control up)] 'emacspeak-mark-backward-mark)
-(global-set-key '[(shift up)] 'emacspeak-skip-blank-lines-backward)
-(global-set-key '[(shift down)] 'emacspeak-skip-blank-lines-forward)
+(global-set-key '[shift up] 'emacspeak-skip-blank-lines-backward)
+(global-set-key '[shift down] 'emacspeak-skip-blank-lines-forward)
 (global-set-key '[27 up]  'emacspeak-owindow-previous-line)
 (global-set-key  '[27 down]  'emacspeak-owindow-next-line)
 (global-set-key  '[27 prior]  'emacspeak-owindow-scroll-down)
@@ -472,8 +534,7 @@ relief."
 ;;;###autoload 
 (defun emacspeak-keymap-remove-emacspeak-edit-commands
   (keymap)
-  "We define keys that invoke editting commands to be
-undefined"
+  "We define keys that invoke editting commands to be undefined"
   (loop for k in
         (where-is-internal 'emacspeak-self-insert-command
                            keymap)
@@ -486,7 +547,7 @@ undefined"
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end: 
 
 ;;}}}

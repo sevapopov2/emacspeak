@@ -1,5 +1,5 @@
 ;;; emacspeak-rss.el --- Emacspeak RSS Wizard
-;;; $Id: emacspeak-rss.el,v 19.0 2003/11/22 19:06:21 raman Exp $
+;;; $Id: emacspeak-rss.el,v 20.0 2004/05/01 01:16:23 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  RSS Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop RSS
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:21 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:23 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -46,6 +46,7 @@
 ;;{{{  Required modules
 
 (require 'emacspeak-preamble)
+(require 'browse-url)
 ;;}}}
 ;;{{{ RSS feed cache
 ;;;###autoload
@@ -104,7 +105,7 @@
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

@@ -1,4 +1,4 @@
-# $Id: Makefile,v 19.0 2003/11/22 19:06:53 raman Exp $
+# $Id: Makefile,v 20.0 2004/05/01 01:16:26 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak,  TTS,Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2003/11/22 19:06:53 $ |
-#  $Revision: 19.0 $ | 
+# $Date: 2004/05/01 01:16:26 $ |
+#  $Revision: 20.0 $ | 
 # Location undetermined
 #
 
@@ -310,6 +310,7 @@ LABEL=
 MSG="Releasing ${LABEL}" 
 
 label: $(DISTFILES)
+	rm -f lisp/emacspeak-loaddefs.el lisp/emacspeak-cus-load.el
 	cvs commit -r ${LABEL} -m ${MSG}  $(DISTFILES)
 
 release: #supply LABEL=NN.NN
@@ -338,6 +339,8 @@ sed "s@<version>@$(LABEL)@g" \
 # {{{ rpm 
 
 rpm: emacspeak.spec
+	rpm --erase emacspeak || echo ""
+	/bin/rm -rf /usr/share/emacs/site-lisp/emacspeak || echo ""
 	@cp emacspeak.tar.bz2 /usr/src/redhat/SOURCES/
 	@cp emacspeak.spec /usr/src/redhat/SPECS/
 	rpm  -ba --sign --clean   /usr/src/redhat/SPECS/emacspeak.spec

@@ -1,5 +1,5 @@
 ;;; emacspeak-eterm.el --- Speech enable eterm -- Emacs' terminal emulator  term.el
-;;; $Id: emacspeak-eterm.el,v 19.0 2003/11/22 19:06:16 raman Exp $
+;;; $Id: emacspeak-eterm.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable eterm. 
 ;;; Keywords: Emacspeak, Eterm, Terminal emulation, Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:16 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -169,7 +169,7 @@ Useful when eterm is in review mode.")
       (concat emacspeak-eterm-prefix emacspeak-eterm-prefix) 'emacspeak-eterm-maybe-send-raw)
     (define-key emacspeak-eterm-keymap emacspeak-eterm-raw-prefix
       term-raw-map)
-    ;;; handle emacs 21 wierdness 
+;;; handle emacs 21 wierdness 
     (local-unset-key "\eO")
     (local-unset-key "\e[")
     ))
@@ -669,24 +669,25 @@ sent to the terminal as if it were typed by the user."
 (defun  emacspeak-eterm-coordinate-within-window-p (coordinate id  )
   "Predicate to test if COORDINATE is within window.
 Argument ID specifies the window."
-  (let*  ((window  (emacspeak-eterm-get-window id ))
-          (row (cdr coordinate))
-          (column (car coordinate ))
-          (left-stretch (emacspeak-eterm-window-left-stretch window ))
-          (right-stretch (emacspeak-eterm-window-right-stretch window ))
-          (top-left-row (cdr
-                         (emacspeak-eterm-window-top-left window )))
-          (top-left-column (car
-                            (emacspeak-eterm-window-top-left window)))
-          (bottom-right-row (cdr 
-                             (emacspeak-eterm-window-bottom-right window )))
-          (bottom-right-column (car
-                                (emacspeak-eterm-window-bottom-right window  ))))
-    (not
-     (or  (< row top-left-row )
-          (> row bottom-right-row )
-          (and (not left-stretch ) (< column top-left-column ))
-          (and (not right-stretch ) (> column bottom-right-column ))))))
+  (when coordinate
+    (let*  ((window  (emacspeak-eterm-get-window id ))
+	    (row (cdr coordinate))
+	    (column (car coordinate ))
+	    (left-stretch (emacspeak-eterm-window-left-stretch window ))
+	    (right-stretch (emacspeak-eterm-window-right-stretch window ))
+	    (top-left-row (cdr
+			   (emacspeak-eterm-window-top-left window )))
+	    (top-left-column (car
+			      (emacspeak-eterm-window-top-left window)))
+	    (bottom-right-row (cdr 
+			       (emacspeak-eterm-window-bottom-right window )))
+	    (bottom-right-column (car
+				  (emacspeak-eterm-window-bottom-right window  ))))
+      (not
+       (or  (< row top-left-row )
+	    (> row bottom-right-row )
+	    (and (not left-stretch ) (< column top-left-column ))
+	    (and (not right-stretch ) (> column bottom-right-column )))))))
  
 ;;; Translate a screen position to a buffer position
 
@@ -1315,6 +1316,7 @@ completions for filename at point")))
 
 ;;}}}
 ;;{{{  Launch remote terminals
+;;;###autoload
 (defvar emacspeak-eterm-remote-hosts-table
   (make-vector 127 0)
   "obarray used for completing hostnames when prompting for a remote

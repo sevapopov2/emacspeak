@@ -1,5 +1,5 @@
 ;;; emacspeak-m-player.el --- Control mplayer from Emacs
-;;; $Id: emacspeak-m-player.el,v 19.0 2003/11/22 19:06:18 raman Exp $
+;;; $Id: emacspeak-m-player.el,v 20.0 2004/05/01 01:16:23 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, m-player streaming media 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:18 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:23 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -70,7 +70,7 @@
   'emacspeak-m-player-mode-map)
 (declaim (special emacspeak-aumix-multichannel-capable-p
                   emacspeak-use-auditory-icons))
-(define-derived-mode emacspeak-m-player-mode fundamental-mode 
+(define-derived-mode emacspeak-m-player-mode comint-mode 
   "M-Player Interaction"
   "Major mode for m-player interaction. \n\n
 \\{emacspeak-m-player-mode-map}"
@@ -112,9 +112,10 @@ The player is placed in a buffer in emacspeak-m-player-mode."
       (emacspeak-pronounce-define-local-pronunciation
        emacspeak-realaudio-shortcuts-directory " shortcuts/ ")
       (read-file-name "Media resource: "
-                      emacspeak-realaudio-shortcuts-directory
-                      emacspeak-realaudio-last-url))))
-  (declare (special emacspeak-m-player-process
+                      emacspeak-realaudio-shortcuts-directory))))
+  (declare (special comint-output-filter-functions
+                    emacspeak-realaudio-history emacspeak-realaudio-shortcuts-directory
+		    emacspeak-m-player-process
                     emacspeak-m-player-program
                     emacspeak-m-player-options))
   (unless (string-match "^http:"  resource)
@@ -137,11 +138,13 @@ The player is placed in a buffer in emacspeak-m-player-mode."
 		     (list "-playlist" resource)
 		   (list resource))))
     (setq emacspeak-m-player-process
-          (apply 'start-process
-                 "m-player" "m-player" emacspeak-m-player-program
-                 options))
+          (get-buffer-process
+           (apply 'make-comint
+                  "m-player" emacspeak-m-player-program
+                  nil options)))
     (switch-to-buffer (process-buffer emacspeak-m-player-process))
     (emacspeak-m-player-mode)
+    (setq comint-output-filter-functions (list 'comint-carriage-motion))
     (ansi-color-for-comint-mode-on)))
 
 ;;}}}

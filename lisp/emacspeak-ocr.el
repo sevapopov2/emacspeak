@@ -1,5 +1,5 @@
 ;;; emacspeak-ocr.el --- ocr Front-end for emacspeak desktop
-;;; $Id: emacspeak-ocr.el,v 19.0 2003/11/22 19:06:19 raman Exp $
+;;; $Id: emacspeak-ocr.el,v 20.0 2004/05/01 01:16:23 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for OCR
 ;;; Keywords: Emacspeak, ocr
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:19 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:23 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -448,7 +448,7 @@ The scanned image is converted to JPEG."
             (read-from-minibuffer "Enter picture description: "))
       (let ((tempfile (format "temp%s.jpg" (gensym))))
         (shell-command
-         (format  "mv %s %s; wrjpgcom -c '%s' %s > %s; rm -f %s"
+         (format  "mv %s %s; %s -c '%s' %s > %s; rm -f %s"
                   jpg  tempfile
                   emacspeak-ocr-jpeg-metadata-writer metadata 
                   tempfile jpg

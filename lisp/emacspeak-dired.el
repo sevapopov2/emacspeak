@@ -1,5 +1,5 @@
 ;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
-;;; $Id: emacspeak-dired.el,v 19.0 2003/11/22 19:06:15 raman Exp $
+;;; $Id: emacspeak-dired.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech enable dired
 ;;; Keywords: Emacspeak, Dired, Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:15 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -52,6 +52,56 @@
 (require 'emacspeak-preamble)
 (require 'dired)
 ;;}}}
+;;{{{ Define personalities 
+
+(def-voice-font emacspeak-dired-header-personality
+  voice-lock-type-personality
+  'dired-header
+  "Personality for dired header line."
+  :group 'emacspeak-dired)
+
+(def-voice-font emacspeak-dired-mark-personality
+  voice-lock-constant-personality
+  'dired-mark
+  "Personality for dired mark."
+  :group 'emacspeak-dired)
+
+(def-voice-font emacspeak-dired-marked-personality
+  voice-lock-warning-personality
+  'dired-marked
+  "Personality for marked files in dired."
+  :group 'emacspeak-dired)
+
+(def-voice-font emacspeak-dired-flag-personality
+  voice-lock-warning-personality
+  'dired-flag
+  "Personality for flag in dired."
+  :group 'emacspeak-dired)
+
+(def-voice-font emacspeak-dired-warning-personality
+  voice-lock-comment-personality
+  'dired-warning
+  "Personality for dired warnings."
+  :group 'emacspeak-dired)
+(def-voice-font emacspeak-dired-directory-personality
+  voice-lock-function-name-personality
+  'dired-directory
+  "Personality for directories in dired."
+  :group 'emacspeak-dired)
+
+(def-voice-font emacspeak-dired-symlink-personality
+  voice-lock-keyword-personality
+  'dired-symlink
+  "Personality for symlinks."
+  :group 'emacspeak-group)
+
+(def-voice-font emacspeak-dired-ignored-personality
+  voice-lock-string-personality
+  'dired-ignored
+  "Personality for ignored lines in dired."
+  :group 'emacspeak-dired)
+
+;;}}}
 ;;{{{  configure dired
 
 (declaim (special dired-listing-switches ))
@@ -74,9 +124,9 @@ pronunciations only once.")
   (unless emacspeak-dired-pronunciations-defined
     (setq emacspeak-dired-pronunciations-defined t)
     (emacspeak-pronounce-add-dictionary-entry 'dired-mode "Dired"
-  " DirEd  ")
+					      " DirEd  ")
     (emacspeak-pronounce-add-dictionary-entry 'dired-mode "dired"
-  " DirEd  "))
+					      " DirEd  "))
   (when (or (not (boundp 'emacspeak-pronounce-pronunciation-table))
             (not emacspeak-pronounce-pronunciation-table))
     (emacspeak-pronounce-toggle-use-of-dictionaries)))
@@ -130,14 +180,16 @@ pronunciations only once.")
       (emacspeak-dired-label-fields)
       (emacspeak-auditory-icon 'open-object )
       (emacspeak-speak-mode-line))))
-(defadvice dired (after emacspeak pre act)
-  "Produce an auditory icon."
-  (when (interactive-p)
-    (let ((emacspeak-speak-messages nil))
-      (voice-lock-mode 1)
-      (emacspeak-dired-label-fields)
-      (emacspeak-auditory-icon 'open-object )
-      (emacspeak-speak-mode-line))))
+(defun emacspeak-dired-initialize ()
+  "Set up emacspeak dired."
+  (font-lock-mode 1)
+  (emacspeak-dired-label-fields)
+  (emacspeak-auditory-icon 'open-object )
+  (emacspeak-speak-mode-line))
+
+(defadvice dired (after emacspeak pre act comp)
+  "Hook is not reliable."
+  (emacspeak-dired-initialize))
 
 (defadvice dired-find-file  (around  emacspeak pre act)
   "Produce an auditory icon."
@@ -293,17 +345,29 @@ unless `dired-listing-switches' contains -al"
 
 ;;}}}
 ;;{{{ Additional status speaking commands
-(if (fboundp 'dired-show-file-type)
-    (defalias 'emacspeak-dired-show-file-type 'dired-show-file-type)
-  (defun emacspeak-dired-show-file-type ()
-    "Displays type of current file by running command file."
-    (interactive)
-    (let ((filename (dired-get-filename t t)))
-      (if filename 
-	  (shell-command 
-	   (format "file %s"
-		   filename))
-	(message "No file on this line")))))
+(defcustom emacspeak-dired-file-cmd-options "-b"
+  "Options passed to Unix builtin `file' command."
+  :type '(choice
+          (const :tag "Brief" "-b")
+          (const :tag "Detailed" nil))
+  :group 'emacspeak-dired)
+
+(defun emacspeak-dired-show-file-type (&optional file deref-symlinks)
+  "Displays type of current file by running command file.
+Like Emacs' built-in dired-show-file-type but allows user to customize
+options passed to command `file'."
+  (interactive (list (dired-get-filename t) current-prefix-arg))
+  (declare (special emacspeak-dired-file-cmd-options))
+  (with-temp-buffer 
+    (if deref-symlinks
+	(call-process "file" nil t t  "-l"
+                      emacspeak-dired-file-cmd-options  file)
+      (call-process "file" nil t t
+                    emacspeak-dired-file-cmd-options file))
+    (when (bolp)
+      (backward-delete-char 1))
+    (message (buffer-string))))
+    
 
 (defun emacspeak-dired-speak-header-line()
   "Speak the header line of the dired buffer. "
@@ -324,7 +388,7 @@ On a directory line, run du -s on the directory to speak its size."
      ((and filename
            (file-directory-p filename))
       (emacspeak-auditory-icon 'progress)
-      (shell-command (format "du -s %s" filename )))
+      (shell-command (format "du -s \'%s\'" filename )))
      (filename
       (setq size (nth 7 (file-attributes filename )))
                                         ; check for ange-ftp
@@ -400,10 +464,10 @@ On a directory line, run du -s on the directory to speak its size."
   (define-key  dired-mode-map "a" 'emacspeak-dired-speak-file-access-time)
   (define-key dired-mode-map "c" 'emacspeak-dired-speak-file-modification-time)
   (define-key dired-mode-map "z" 'emacspeak-dired-speak-file-size)
-  (define-key dired-mode-map "t" 'emacspeak-dired-speak-symlink-target)
+  (define-key dired-mode-map "\C-t" 'emacspeak-dired-speak-symlink-target)
   (define-key dired-mode-map "\C-i" 'emacspeak-speak-next-field)
   (define-key dired-mode-map  "," 'emacspeak-speak-previous-field))
-
+(add-hook 'dired-mode-hook 'emacspeak-dired-initialize 'append)
 (add-hook 'dired-mode-hook 'emacspeak-dired-setup-keys)
 (add-hook 'dired-mode-hook 'emacspeak-dired-define-pronunciations)
 ;;}}}

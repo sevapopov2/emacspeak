@@ -1,5 +1,5 @@
 ;;; emacspeak-sawfish.el --- speech-enable sawfish mode
-;;; $Id: emacspeak-sawfish.el,v 19.0 2003/11/22 19:06:21 raman Exp $
+;;; $Id: emacspeak-sawfish.el,v 20.0 2004/05/01 01:16:23 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech-enable
 ;;; sawfish mode
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:21 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:23 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 

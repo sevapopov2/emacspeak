@@ -7,8 +7,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:15 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -60,35 +60,36 @@
     (emacspeak-speak-line)))
 
 ;;}}}
-;;{{{  advice 
+;;{{{  advice  interactive commands
+(loop for f in 
+      '(
+	next-error previous-error
+	compilation-next-file compilation-previous-file
+	compile-goto-error compile-mouse-goto-error
+	)
+      do
+      (eval
+       (`
+	(defadvice (, f) (after  emacspeak pre act )
+	  "Speak the line containing the error. "
+	  (when (interactive-p)
+            (dtk-stop)
+	    (emacspeak-compilation-speak-error))))))
 
-(defadvice next-error (after  emacspeak pre act )
-  "Speak the line containing the error. "
-  (when (interactive-p)
-    (emacspeak-compilation-speak-error)))
-  
-
-(defadvice previous-error (after emacspeak pre act )
-  "Speak the line containing the error. "
-  (when (interactive-p)
-    (emacspeak-compilation-speak-error)))
-  
-
-(defadvice compile-goto-error (after emacspeak pre act)
-  "Speak the compilation error. "
-  (when (interactive-p)
-    (emacspeak-compilation-speak-error)))
-
-(defadvice compilation-next-file (after emacspeak pre act)
-  "Speak the error line. "
-  (when (interactive-p) (emacspeak-compilation-speak-error ))
-  )
-
-(defadvice compilation-previous-file (after emacspeak pre act)
-  "Speak the error line. "
-  (when (interactive-p) (emacspeak-compilation-speak-error ))
-  )
-
+(loop for f in 
+      '(
+	compilation-next-error
+	compilation-previous-error
+	next-error-no-select
+	previous-error-no-select)
+      do
+      (eval
+       (`
+        (defadvice (, f) (after emacspeak pre act comp)
+          "Provide spoken feedback."
+          (when (interactive-p)
+            (emacspeak-speak-line)
+            (emacspeak-auditory-icon 'select-object))))))
 ;;}}}
 ;;{{{ advise process filter and sentinels
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-imenu.el --- Speech enable Imenu -- produce buffer-specific table of contents
-;;; $Id: emacspeak-imenu.el,v 19.0 2003/11/22 19:06:17 raman Exp $
+;;; $Id: emacspeak-imenu.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface buffer indices
 ;;; Keywords: Emacspeak, Speak, Spoken Output, indices
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:17 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -156,7 +156,9 @@
       (emacspeak-auditory-icon 'large-movement)
       (if emacspeak-imenu-autospeak
 	  (emacspeak-imenu-speak-this-section)
-	(emacspeak-speak-line)))))
+	(emacspeak-speak-line))
+      (when (overlays-at (point))
+        (goto-char (overlay-end (car (overlays-at (point)))))))))
 
 (defun emacspeak-imenu-goto-previous-index-position ()
   "Goto the previous index position in current buffer"

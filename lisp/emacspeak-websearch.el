@@ -1,5 +1,5 @@
 ;;; emacspeak-websearch.el --- search utilities
-;;; $Id: emacspeak-websearch.el,v 19.0 2003/11/22 19:06:21 raman Exp $
+;;; $Id: emacspeak-websearch.el,v 20.0 2004/05/01 01:16:24 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to make Web searching convenient
 ;;; Keywords: Emacspeak, WWW interaction
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:21 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:24 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -41,7 +41,10 @@
 ;;{{{ required modules
 
 (require 'emacspeak-preamble)
-(eval-when-compile (require  'emacspeak-w3))
+(eval-when-compile
+  (condition-case nil
+      (require  'emacspeak-w3)
+    (error nil)))
 (require 'webjump)
 ;;}}}
 ;;{{{  Introduction:
@@ -103,7 +106,7 @@
         (loop for m in map 
               do 
               (princ (key-description (list (car m))))
-              (move-to-column-force 16 )
+              (move-to-column 16 )
               (princ "`")
               (princ (emacspeak-websearch-get-searcher (cdr m)))
               (princ "'")
@@ -561,7 +564,7 @@ emacspeak-websearch-quotes-yahoo-options to an appropriate string."
                          (webjump-url-encode (format "%s" query))))
             (results "*quotes-table*")
             (process nil))
-        ;;; nuke old results if any
+;;; nuke old results if any
         (when (get-buffer results )
           (kill-buffer results))
         (setq process
@@ -807,10 +810,6 @@ Optional second arg as-html processes the results as HTML rather than data."
    "search results"
    'emacspeak-speak-line))
 
-
-
-
-
 (defvar emacspeak-websearch-ctan-search-uri 
   "http://www.ctan.org/tools/filesearch?action=/search/&filename="
   "URI for searching CTAN archives for tex and latex utilities. ")
@@ -868,8 +867,6 @@ Optional second arg as-html processes the results as HTML rather than data."
       (?s (call-interactively 'emacspeak-websearch-sourceforge-search))
       (?t (call-interactively 'emacspeak-websearch-ctan-search))
       (otherwise (message emacspeak-websearch-software-sites )))))
-
-
 
 ;;}}}
 ;;{{{  Encyclopeadia Britannica 
@@ -972,7 +969,6 @@ Meaning of the `lucky' flag can be inverted by setting option emacspeak-websearc
                "query ")))
     current-prefix-arg))
   (declare (special emacspeak-websearch-google-uri
-                    emacspeak-w3-xsl-p
                     emacspeak-websearch-google-feeling-lucky-p emacspeak-websearch-google-number-of-results))
   (let ((lucky-flag (if emacspeak-websearch-google-feeling-lucky-p
                         (not lucky)
@@ -1047,13 +1043,13 @@ Meaning of the `lucky' flag can be inverted by setting option emacspeak-websearc
    (list
     (emacspeak-websearch-read-query "Froogle Search: ")))
   (declare (special emacspeak-websearch-froogle-uri))
-  (let ((emacspeak-w3-xsl-p nil))
-    (browse-url 
-     (format emacspeak-websearch-froogle-uri
-             (webjump-url-encode query)))
-    (emacspeak-websearch-post-process
-     query
-     'emacspeak-speak-line)))
+  (emacspeak-w3-without-xsl
+   (browse-url 
+    (format emacspeak-websearch-froogle-uri
+	    (webjump-url-encode query)))
+   (emacspeak-websearch-post-process
+    query
+    'emacspeak-speak-line)))
 
 ;;}}}
 ;;{{{ teoma
@@ -1236,7 +1232,7 @@ With optional interactive prefix arg MAP shows the location map instead."
 		      emacspeak-w3-url-rewrite-rule
 		      '("$" "&printer=1"))))
   (emacspeak-w3-xslt-filter
-   "(/descendant::table[8]//td[1])//td[1]"
+   "//ol"
    (concat emacspeak-websearch-news-yahoo-uri
            (format "p=%s&n=20&c=news"
                    (webjump-url-encode query)))
@@ -1483,11 +1479,27 @@ Light for: ")))
                     emacspeak-lisp-directory)
   "Form for performing currency conversion.")
 
-(defun emacspeak-websearch-exchange-rate-convertor ()
+(defvar emacspeak-websearch-exchange-rate-convertor-uri
+  "http://www.xe.com/ucc/convert.cgi?Amount=1&From=%s&To=%s&submit=Perform+Conversion"
+  "URI template  for currency conversion.")
+
+(defun emacspeak-websearch-exchange-rate-convertor (conversion-spec)
   "Currency convertor."
-  (interactive)
-  (declare (special emacspeak-websearch-exchange-rate-form))
-  (emacspeak-websearch-display-form emacspeak-websearch-exchange-rate-form))
+  (interactive
+   (list
+    (read-from-minibuffer
+     "Currency Convertor: FROM|TO:")))
+  (declare (special emacspeak-websearch-exchange-rate-convertor-uri))
+  (let ((fields (split-string conversion-spec "|"))
+        (url nil))
+    (setq url
+          (format emacspeak-websearch-exchange-rate-convertor-uri
+                  (upcase (first fields))
+                  (upcase (second fields))))
+    (emacspeak-w3-extract-table-by-match
+     (format "%s" (upcase  (first fields)))
+     url 'speak)))
+      
 
 ;;}}}
 ;;{{{ my rss

@@ -1,4 +1,4 @@
-/*$Id: tcldtk.c,v 19.0 2003/11/22 19:06:48 raman Exp $*/
+/*$Id: tcldtk.c,v 20.0 2004/05/01 01:16:25 raman Exp $*/
 /* <copyright*/
 /**
  *Copyright (C) 1995 -- 2003, T. V. Raman 
@@ -22,7 +22,6 @@
  */
 /* > */
 /* <headers*/
-
 #include <tcl.h>
 #include <dtk/ttsapi.h>
 #define PACKAGENAME "tts"
@@ -69,26 +68,26 @@ int Tcldtk_Init(Tcl_Interp *interp) {
   fprintf(stderr, "tts startup returned %d\n", status);
   switch (status) {
   case MMSYSERR_NODRIVER:
-    Tcl_AppendResult(interp, "TTS: Could not find any
- wave devices\n", NULL);
+    Tcl_AppendResult(interp,
+                     "TTS: Could not find any wave devices\n", NULL);
     return TCL_ERROR;
     break;
   case MMSYSERR_NOTENABLED:
-    Tcl_AppendResult(interp,"TTS: DECtalk license not
- found.\n", NULL);
+    Tcl_AppendResult(interp,
+                     "TTS: DECtalk license not found.\n", NULL);
     return TCL_ERROR;
     break;
   case MMSYSERR_ALLOCATED:
-    Tcl_AppendResult(interp,"TTS: DECtalk has exceeded
- license quota.\n", NULL);
+    Tcl_AppendResult(interp,
+                     "TTS: DECtalk has exceeded license quota.\n", NULL);
     return TCL_ERROR;
     break;
   case MMSYSERR_NOERROR:
     break;
 
   default:
-    Tcl_AppendResult(interp,"\n%s: TextToSpeechStartup
- failed, \n", NULL);
+    Tcl_AppendResult(interp,
+                     "\n%s: TextToSpeechStartup failed, \n", NULL);
     return TCL_ERROR;
   }
   if (dtkHandle == NULL) { 
@@ -167,13 +166,16 @@ int Stop(ClientData dtkHandle, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv
 /* < pause and resume */
 
 int Pause(ClientData dtkHandle, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  if (TextToSpeechPause(dtkHandle)) return TCL_OK;
-  Tcl_SetResult(interp, "Could not pause synthesis", TCL_STATIC);
-  return TCL_ERROR;
+  if (TextToSpeechPause(dtkHandle) == 0) { /*paused successfully */
+    return TCL_OK;
+  } else {
+    Tcl_SetResult(interp, "Could not pause synthesis", TCL_STATIC);
+    return TCL_ERROR;
+  }
 }
 
 int Resume(ClientData dtkHandle, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  if (TextToSpeechResume(dtkHandle)) return TCL_OK;
+  if (TextToSpeechResume(dtkHandle) == 0) return TCL_OK;
   Tcl_SetResult(interp, "Could not resume synthesis", TCL_STATIC);
   return TCL_ERROR;
 }

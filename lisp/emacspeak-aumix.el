@@ -1,5 +1,5 @@
 ;;; emacspeak-aumix.el --- Setting Audio Mixer
-;;; $Id: emacspeak-aumix.el,v 19.0 2003/11/22 19:06:13 raman Exp $
+;;; $Id: emacspeak-aumix.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to conveniently set audio display
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:13 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -142,7 +142,8 @@ display."
    (format "%s %s"
            emacspeak-aumix-program
            emacspeak-aumix-reset-options))
-  (emacspeak-auditory-icon 'close-object))
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)))
 (eval-when-compile (require 'emacspeak-forms))
 (defun emacspeak-aumix-edit ()
   "Edit aumix settings interactively. 
@@ -180,6 +181,8 @@ you are done."
        ((and description
              (string-equal "reset" description))
         (emacspeak-aumix-reset)
+        (when (interactive-p)
+          (emacspeak-auditory-icon 'close-object))
         (setq done t))
        (description
         (setq setting

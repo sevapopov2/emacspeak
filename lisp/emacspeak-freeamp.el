@@ -1,5 +1,5 @@
 ;;; emacspeak-freeamp.el --- Control freeamp from Emacs
-;;; $Id: emacspeak-freeamp.el,v 19.0 2003/11/22 19:06:17 raman Exp $
+;;; $Id: emacspeak-freeamp.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling freeamp from emacs 
 ;;; Keywords: Emacspeak, freeamp
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:17 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -93,7 +93,11 @@
 (defun emacspeak-freeamp-freeamp-call-command ()
   "Call appropriate freeamp command."
   (interactive)
-  (emacspeak-freeamp-freeamp-command last-input-char))
+  (emacspeak-freeamp-freeamp-command last-input-char)
+  (when (char-equal last-input-char ?q)
+    (emacspeak-aumix-reset)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 (define-key emacspeak-freeamp-mode-map  "o" 'emacspeak-freeamp)
 (loop for c in emacspeak-freeamp-freeamp-keys

@@ -1,5 +1,5 @@
 ;;; acss-structure.el --- CSS -- Cascaded Speech Style structure
-;;; $Id: acss-structure.el,v 19.0 2003/11/22 19:06:13 raman Exp $
+;;; $Id: acss-structure.el,v 20.0 2004/05/01 01:16:21 raman Exp $
 ;;; $Author: raman $
 ;;; Description: DTK Interface for Cascaded Speech Style Sheets
 ;;; Keywords:emacspeak, audio interface to emacs CSS
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:13 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:21 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -150,7 +150,6 @@ Finally return the symbol"
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
 ;;; byte-compile-dynamic: nil
 ;;; end:
 

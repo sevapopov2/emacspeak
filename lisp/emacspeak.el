@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el,v 19.0 2003/11/22 19:06:15 raman Exp $
+;;; $Id: emacspeak.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:15 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -94,7 +94,7 @@
 ;;{{{  Setting up things:
 
 (defconst emacspeak-version
-  (let ((x "$Revision: 19.0 $"))
+  (let ((x "$Revision: 20.0 $"))
     (string-match "[0-9.]+" x)
     (substring x (match-beginning 0)
                (match-end 0)))
@@ -152,9 +152,9 @@ functions for details.   "
                     emacspeak-unibyte
                     emacspeak-play-program
                     emacspeak-sounds-directory))
-  ;;; fixes transient mark mode in emacspeak 
+;;; fixes transient mark mode in emacspeak 
   (setq mark-even-if-inactive t)
-  ;;; force unibyte
+;;; force unibyte
   (when emacspeak-unibyte
     (setq default-enable-multibyte-characters nil))
   (emacspeak-export-environment)
@@ -281,8 +281,10 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "hyperbole" 'emacspeak-hyperbole)
 (emacspeak-do-package-setup "imenu" 'emacspeak-imenu)
 (emacspeak-do-package-setup "ibuffer" 'emacspeak-ibuffer)
+(emacspeak-do-package-setup "ido" 'emacspeak-ido)
 (emacspeak-do-package-setup "info" 'emacspeak-info)
 (emacspeak-do-package-setup "ispell" 'emacspeak-ispell)
+(emacspeak-do-package-setup "iswitchb" 'emacspeak-iswitchb)
 (emacspeak-do-package-setup "jde" 'emacspeak-jde)
 (emacspeak-do-package-setup "kmacro" 'emacspeak-kmacro)
 (emacspeak-do-package-setup "kotl" 'emacspeak-kotl)
@@ -304,6 +306,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "pcvs" 'emacspeak-pcl-cvs)
 (emacspeak-do-package-setup "psgml" 'emacspeak-psgml)
 (emacspeak-do-package-setup "python-mode" 'emacspeak-python)
+(emacspeak-do-package-setup "re-builder" 'emacspeak-re-builder)
 (emacspeak-do-package-setup "reftex" 'emacspeak-reftex)
 (emacspeak-do-package-setup "rmail" 'emacspeak-rmail)
 (emacspeak-do-package-setup "rpm-spec-mode" 'emacspeak-rpm-spec)

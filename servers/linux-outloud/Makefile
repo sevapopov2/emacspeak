@@ -1,9 +1,10 @@
-#$Id: Makefile,v 19.0 2003/11/22 19:06:48 raman Exp $
+#$Id: Makefile,v 20.0 2004/05/01 01:16:25 raman Exp $
 CC=g++
 INSTALL = install
 PREFIX = /usr
 libparentdir = ${PREFIX}/share/emacs/site-lisp
 libdir =$(libparentdir)/emacspeak/linux-outloud
+CFLAGS=-g -fpic  -pedantic -ansi -Wall
 TTS=tcleci.so eci.ini VIAVOICE
 
 all: tcleci.so 

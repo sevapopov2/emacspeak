@@ -1,5 +1,5 @@
 ;;; emacspeak-wizards.el --- Implements Emacspeak  convenience wizards
-;;; $Id: emacspeak-wizards.el,v 19.0 2003/11/22 19:06:21 raman Exp $
+;;; $Id: emacspeak-wizards.el,v 20.0 2004/05/01 01:16:24 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains convenience wizards
 ;;; Keywords: Emacspeak,  Audio Desktop Wizards
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:21 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:24 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -63,7 +63,11 @@
 (require 'term)
 (require 'cus-edit)
 (require 'emacspeak-xslt)
-(eval-when-compile (require 'emacspeak-w3))
+(eval-when-compile
+  (condition-case nil
+      (require 'emacspeak-w3)
+    (error nil)))
+
 ;;}}}
 ;;{{{ custom
 
@@ -118,9 +122,9 @@ navigate this document."
   (interactive)
   (declare (special emacspeak-etc-directory))
   (emacspeak-w3-without-xsl
-  (browse-url
-   (format "file:///%stips.html"
-           emacspeak-etc-directory)))
+   (browse-url
+    (format "file:///%stips.html"
+	    emacspeak-etc-directory)))
   (emacspeak-auditory-icon 'help)
   (emacspeak-speak-mode-line))
 
@@ -308,43 +312,6 @@ command `emacspeak-table-display-table-in-region' normally bound to
          (progn
            (message "Output could not be tabulated correctly")
            (switch-to-buffer buffer-name)))))))
-
-;;}}}
-;;{{{ Directory specific settings
-(defcustom  emacspeak-speak-load-directory-settings-quietly t
-  "*User option that affects loading of directory specific settings.
-If set to T,Emacspeak will not prompt before loading
-directory specific settings."
-  :group 'emacspeak-speak
-  :type 'boolean)
-
-(defcustom emacspeak-speak-directory-settings
-  ".espeak.el"
-  "*Name of file that holds directory specific settings."
-  :group 'emacspeak-speak
-  :type 'string)
-
-(defsubst emacspeak-speak-get-directory-settings ()
-  "Return directory specific settings file."
-  (declare (special emacspeak-speak-directory-settings))
-  (concat default-directory
-          emacspeak-speak-directory-settings))
-;;;###autoload
-(defun emacspeak-speak-load-directory-settings ()
-  "Load a directory specific Emacspeak settings file.
-This is typically used to load up settings that are specific to
-an electronic book consisting of many files in the same
-directory."
-  (interactive)
-  (let ((settings (emacspeak-speak-get-directory-settings)))
-    (when (and (file-exists-p  settings)
-               (or emacspeak-speak-load-directory-settings-quietly
-                   (y-or-n-p "Load directory settings? ")
-                   "Load  directory specific Emacspeak
-settings? "))
-      (condition-case nil
-          (load-file settings)
-        (error (message "Error loading settings %s" settings))))))
 
 ;;}}}
 ;;{{{ linux howtos
@@ -676,6 +643,34 @@ See /etc/sudoers for how to set up sudo."
   (emacspeak-auditory-icon 'open-object))
 
 ;;}}}
+;;{{{ edit file as root using sudo vi 
+(defun emacspeak-wizards-vi-as-su-file (file)
+  "Launch sudo vi on specified file in a terminal."
+  (interactive
+   (list
+    (expand-file-name
+     (read-file-name "SU Edit File: "))))
+  (require 'term)
+  (delete-other-windows)
+  (switch-to-buffer
+   (term-ansi-make-term
+    (generate-new-buffer-name
+     (format "vi-%s"
+             (file-name-nondirectory file)))
+    "sudo"
+    nil
+    "vi"
+    file))
+  (emacspeak-eterm-record-window   1 
+                                   (cons 0 1)
+                                   (cons 79 20)
+                                   'right-stretch 'left-stretch)
+  (emacspeak-eterm-set-filter-window 1)
+  (term-char-mode)
+  (emacspeak-auditory-icon 'open-object)
+  (emacspeak-speak-line))
+
+;;}}}
 ;;{{{ setup CVS access to sourceforge 
 
 (defcustom emacspeak-cvs-local-directory
@@ -889,8 +884,9 @@ To leave, press \\[keyboard-quit]."
 ;;{{{  Generate documentation:
 (defsubst ems-variable-symbol-file (o)
   "Locate file that defines a variable."
-  (or (symbol-fileo)
+  (or (symbol-file o)
       (symbol-file (cons 'defvar o))))
+
 (defsubst emacspeak-list-emacspeak-options ()
   "List all Emacspeak customizable options."
   (let ((options nil ))
@@ -906,19 +902,20 @@ To leave, press \\[keyboard-quit]."
                       (string-match "tts" (symbol-name symbol))))
            (push symbol options))))
     (setq options
-          (sort options
-                #'(lambda (a b )
-                    (cond
-                     ((string-lessp
-		       (ems-variable-symbol-file  a)
-		       (ems-variable-symbol-file  b))
-                      t)
-                     ((string-equal (symbol-file  a) (symbol-file  b))
-                      (string-lessp
-                       (symbol-name a)
-                       (symbol-name b)))
-                     (t nil)))))
+          (sort
+           options
+           #'(lambda (a b )
+               (cond
+		((string-lessp
+		  (ems-variable-symbol-file a)
+		  (ems-variable-symbol-file b))
+		 t)
+		((string-equal (ems-variable-symbol-file a)
+			       (ems-variable-symbol-file b))
+		 (string-lessp a b))
+		(t nil)))))
     options))
+           
 
 (defsubst emacspeak-list-emacspeak-commands ()
   "List all Emacspeak commands."
@@ -947,9 +944,7 @@ To leave, press \\[keyboard-quit]."
                       t)
                      ((string-equal (symbol-file a)
                                     (symbol-file b))
-                      (string-lessp
-                       (symbol-name a)
-                       (symbol-name b)))
+                      (string-lessp a b))
                      (t nil)))))
     commands))
 ;;;###autoload
@@ -962,7 +957,7 @@ Warning! Contents of file filename will be overwritten."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (insert "DOC --- Automatically generated by command emacspeak-generate-documentation\n\$Id: emacspeak-wizards.el,v 19.0 2003/11/22 19:06:21 raman Exp $\n")
+      (insert "DOC --- Automatically generated by command emacspeak-generate-documentation\n\$Id: emacspeak-wizards.el,v 20.0 2004/05/01 01:16:24 raman Exp $\n")
       (mapcar
        (function
         (lambda (f)
@@ -1029,7 +1024,7 @@ Warning! Contents of file commands.texi will be overwritten."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (insert"@c $Id: emacspeak-wizards.el,v 19.0 2003/11/22 19:06:21 raman Exp $\n")
+      (insert"@c $Id: emacspeak-wizards.el,v 20.0 2004/05/01 01:16:24 raman Exp $\n")
       (insert
        "@node Emacspeak Commands\n@chapter Emacspeak Commands\n\n")
       (insert
@@ -1115,7 +1110,7 @@ Warning! Contents of file filename will be overwritten."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (insert"@c $Id: emacspeak-wizards.el,v 19.0 2003/11/22 19:06:21 raman Exp $\n")
+      (insert"@c $Id: emacspeak-wizards.el,v 20.0 2004/05/01 01:16:24 raman Exp $\n")
       (insert
        "@node Emacspeak Customizations\n@chapter Emacspeak Customizations \n\n")
       (insert
@@ -1195,8 +1190,7 @@ With optional PREFIX argument, label current frame."
   (cond
    (prefix
     (call-interactively 'set-frame-name))
-   (t (select-frame-by-name
-       (emacspeak-frame-read-frame-label))))
+   (t (call-interactively 'select-frame-by-name)))
   (when (interactive-p)
     (emacspeak-speak-mode-line)
     (emacspeak-auditory-icon 'select-object)))
@@ -1975,23 +1969,24 @@ visiting the ppt file."
   (interactive)
   (declare (special emacspeak-wizards-ppthtml-program
                     emacspeak-wizards-ppt-preview-buffer))
-  (cond
-   ((null emacspeak-wizards-ppthtml-program)
-    (message "Not using Emacspeak PPTHTML wizard."))
-   (t 
-    (let ((filename (buffer-file-name))
-          (ppt-buffer (current-buffer))
-          (buffer (get-buffer-create " *ppt scratch*")))
-      (save-excursion
-        (set-buffer buffer)
-        (shell-command
-         (format "%s  %s"
-                 emacspeak-wizards-ppthtml-program filename)
-         'replace
-         (current-buffer))
-        (call-interactively 'emacspeak-w3-preview-this-buffer))
-      (kill-buffer buffer)
-      (kill-buffer ppt-buffer)))))
+  (emacspeak-w3-without-xsl
+   (cond
+    ((null emacspeak-wizards-ppthtml-program)
+     (message "Not using Emacspeak PPTHTML wizard."))
+    (t 
+     (let ((filename (buffer-file-name))
+	   (ppt-buffer (current-buffer))
+	   (buffer (get-buffer-create " *ppt scratch*")))
+       (save-excursion
+	 (set-buffer buffer)
+	 (shell-command
+	  (format "%s  %s"
+		  emacspeak-wizards-ppthtml-program filename)
+	  'replace
+	  (current-buffer))
+	 (call-interactively 'emacspeak-w3-preview-this-buffer))
+       (kill-buffer buffer)
+       (kill-buffer ppt-buffer))))))
 
 (emacspeak-wizards-augment-auto-mode-alist
  "\\.ppt$"
@@ -2365,7 +2360,7 @@ Use with caution."
   :type 'string
   :group 'emacspeak-wizards)
 
-(define-derived-mode emacspeak-wizards-vc-viewer-mode  view-mode
+(define-derived-mode emacspeak-wizards-vc-viewer-mode  fundamental-mode
   "VC Viewer  Interaction"
   "Major mode for interactively viewing virtual console contents.\n\n
 \\{emacspeak-wizards-vc-viewer-mode-map}")
@@ -2374,16 +2369,16 @@ Use with caution."
   "Buffer local value specifying console we are viewing.")
 
 (make-variable-buffer-local 'emacspeak-wizards-vc-console)
+
 ;;;###autoload
 (defun emacspeak-wizards-vc-viewer (console)
   "View contents of specified virtual console."
-  (interactive
-   (list
-    (read-from-minibuffer "Virtual Console: ")))
+  (interactive "nConsole:")
   (declare (special emacspeak-wizards-vc-viewer-command
                     emacspeak-wizards-vc-console
                     temporary-file-directory))
-  (let ((command
+  (let ((emacspeak-speak-messages nil)
+        (command
          (format emacspeak-wizards-vc-viewer-command
                  console
                  (expand-file-name
@@ -2393,6 +2388,7 @@ Use with caution."
                  (format "*vc-%s*" console))))
     (shell-command command buffer)
     (switch-to-buffer buffer)
+    (kill-all-local-variables)
     (insert-file
      (expand-file-name
       (format "vc-%s.dump" console)
@@ -2401,8 +2397,8 @@ Use with caution."
     (emacspeak-wizards-vc-viewer-mode)
     (setq emacspeak-wizards-vc-console console)
     (goto-char (point-min))
-    (when (interactive-p)
-      (emacspeak-speak-line))))
+    (when (interactive-p) (emacspeak-speak-line))))
+
 ;;;###autoload
 (defun emacspeak-wizards-vc-viewer-refresh ()
   "Refresh view of VC we're viewing."
@@ -2435,6 +2431,15 @@ Use with caution."
     (setq emacspeak-wizards-vc-console console)
     (when (interactive-p)
       (emacspeak-speak-line))))
+
+;;;###autoload
+(defun emacspeak-wizards-vc-n ()
+  "Accelerator for VC viewer."
+  (interactive)
+  (declare (special last-input-char))
+  (emacspeak-wizards-vc-viewer (format "%c" last-input-char))
+  (emacspeak-speak-line)
+  (emacspeak-auditory-icon 'open-object))
 
 (declaim (special emacspeak-wizards-vc-viewer-mode-map))
 
@@ -2668,6 +2673,59 @@ dates.")
            (if emacspeak-wizards-mm-dd-yyyy-date-pronounce "" "
   not ")))
     
+;;}}}
+;;{{{ units wizard
+
+(defun emacspeak-wizards-units ()
+  "Run units in a comint sub-process."
+  (interactive)
+  (make-comint "units" "units"
+               nil "--verbose")
+  (switch-to-buffer "*units*")
+  (emacspeak-auditory-icon 'select-object)
+  (goto-char (point-max))
+  (unless emacspeak-comint-autospeak
+    (emacspeak-toggle-comint-autospeak))
+  (emacspeak-speak-mode-line))
+      
+;;}}}
+;;{{{ rivo
+
+(defvar emacspeak-wizards-rivo-program
+  (expand-file-name "rivo.pl" emacspeak-etc-directory)
+  "Rivo script used by emacspeak.")
+
+(defun emacspeak-wizards-rivo (when channel length output directory)
+  "Rivo wizard.
+Prompts for relevant information and schedules a rivo job using
+  UNIX AT scheduling facility.
+RIVO is implemented by rivo.pl ---
+ a Perl script  that can be used to launch realaudio and record
+   streaming media for  a specified duration."
+  (interactive
+   (list
+    (read-from-minibuffer "At Time: hh:mm Month Day")
+    (let ((completion-ignore-case t)
+          (emacspeak-speak-messages nil)
+          (minibuffer-history emacspeak-realaudio-history))
+      (emacspeak-pronounce-define-local-pronunciation
+       emacspeak-realaudio-shortcuts-directory " shortcuts/ ")
+      (read-file-name "RealAudio resource: "
+                      emacspeak-realaudio-shortcuts-directory
+                      (if (eq major-mode 'dired-mode)
+                          (dired-get-filename)
+                        emacspeak-realaudio-last-url)))
+    (read-minibuffer "Length:" "00:30:00")
+    (read-minibuffer "Output Name:")
+    (read-directory-name "Output Directory:")))
+  (let ((command
+         (format "%s -c %s -l %s -o %s -d %s\n"
+                 emacspeak-wizards-rivo-program
+                 channel length output directory)))
+    (shell-command
+     (format "echo '%s' | at %s"
+             command when ))))
+
 ;;}}}
 (provide 'emacspeak-wizards)
 ;;{{{ end of file

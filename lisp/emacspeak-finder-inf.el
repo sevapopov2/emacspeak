@@ -1,4 +1,4 @@
-;;;$Id: emacspeak-finder-inf.el,v 19.0 2003/11/22 19:06:16 raman Exp $
+;;;$Id: emacspeak-finder-inf.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; emacspeak-finder-inf.el --- keyword-to-package mapping
 ;; Keywords: help
 ;;; Commentary:
@@ -221,6 +221,9 @@
     ("emacspeak-ibuffer.el"
         "speech-enable ibuffer buffer selection"
         (emacspeak  audio desktop))
+    ("emacspeak-ido.el"
+        "speech-enable ido"
+        (emacspeak  audio desktop))
     ("emacspeak-imcom.el"
         "Emacspeak interface to IMCom/Jabber"
         (emacspeak   audio desktop imcom))
@@ -233,6 +236,9 @@
     ("emacspeak-ispell.el"
         "Speech enable Ispell -- Emacs' interactive spell checker"
         (emacspeak  ispell  spoken output  ispell version 2.30))
+    ("emacspeak-iswitchb.el"
+        "speech-enable iswitchb buffer selection"
+        (emacspeak  audio desktop))
     ("emacspeak-jde.el"
         "Speech enable JDE -- An integrated Java Development Environment"
         (emacspeak  speak  spoken output  java))
@@ -314,6 +320,9 @@
     ("emacspeak-python.el"
         "Speech enable Python development environment"
         (emacspeak  speak  spoken output  python))
+    ("emacspeak-re-builder.el"
+        "speech-enable re-builder"
+        (emacspeak  audio desktop))
     ("emacspeak-realaudio.el"
         "Play realaudio from Emacs"
         (emacspeak  realaudio))

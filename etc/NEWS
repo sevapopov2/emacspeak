@@ -1,102 +1,73 @@
 Emacspeak News --History Of User-Visible Changes
-$Id: NEWS,v 19.0 2003/11/22 19:06:45 raman Exp $
+$Id: NEWS,v 20.0 2004/05/01 01:16:25 raman Exp $
 Author: T. V. Raman <raman@cs.cornell.edu>
 
-* Emacspeak 19.0 Additions And Changes:
+* Emacspeak 20.0 Additions And Changes:
 
-Emacspeak 19.0 provides the following user level enhancements:
+Emacspeak 20.0 provides the following user level enhancements:
 
-* New Emacspeak Features:
+* user Visible Changes:
 
-** emacspeak-newsticker.el:
+** emacspeak-ecb.el:
 
-Speech-enables package newsticker, a native Emacs RSS  agent.
+Enhanced support for ECB within and outside X Windows.
 
+** emacspeak-jde.el
 
-** emacspeak-nxml.el:
-
-Speech-enables James Clark's nxml-mode --- a powerful  XML editing mode.
-
-
-** emacspeak-ocr.el:
-
-etc/ocr-client.pl implements the Emacspeak OCR interface 
-for OCRXTR from Vividata.
-
-** emacspeak-eperiodic.el
-
-Extended to speech-enable new functionality in eperiodic.
-
+Speech-enables code browsing and following cross-references.
 
 ** emacspeak-wizards.el:
 
-New productivity wizards.
+Additional wizrds.
 
-** emacspeak-websearch.el:
+** emacspeak-websearch.el
 
-Updated websearch templates.
+ Additional search tools.
 
-** emacspeak-url-template.el:
+** emacspeak-url-template.el
 
-Additional smart URL templates.
+ New URL templates.
+
+** emacspeak-w3.el:
+
+ Enhanced XSLT support.
+Added new custom options.
+
+** emacspeak-iswitchb.el
+
+Speech-enables iswitchb.el
+
+** emacspeak-ido.el
+
+Speech-enables ido.el
+
+** emacspeak-m-player.el
+
+MPlayer output is handled using comint features.
 
 ** emacspeak-daisy.el:
 
-Updated to handle the bookshare variant of Daisy3 files.
+Added outline and bookmark support.
 
-** flite-voices.el:
+** emacspeak-gud.el:
 
-Place-holder for eventual FLite support.
+Speech-enables the new full screen GDB interface under Emacs
+(emacs 21.3.50)
 
-** emacspeak-kmacro.el:
+** emacspeak-re-builder.el:
 
-Speech-enables kmacro --- a new keyboard macro package.
+Speech-enables re-builder.
 
-** world clock:
-Command  emacspeak-speak-time implements a world clock when
-called                                 with an interactive
-prefix                                 arg (C-u).
-When called with two prefix args i.e. C-u twice, it sets the
-timezone                                 as well --- useful for
-international                                 travel.
+** Console keymaps:
 
-** Browsing buffers:
-Command emacspeak-speak-browse-buffer now browses by personality
-chunks rather than by paragraphs.
-The older functionality of browsing by paragraphs is still
-accessible through emacspeak-speak-continuously 
+The CVS repository has been updated with keymap files
+that configure ALT Super and Hyper modifier  keys.
 
-**emacspeak-sigbegone.el
+** emacspeak-keymap.el:
 
-Speech-enables sigbegone --- a package for  recognizing email
-signatures.
+Custom settings for binding commands to the ALT Hyper and Super
+keymaps.
 
-
-** emacspeak-ediary.el:
-
-Speech-enables ediary --- a special mode for working with the
-.diary file.
-
-
-** emacspeak-damlite.el:
-Speech-enables damlite-mode --- a special mode for creating and
-maintaining  DAML ontologies using RDF.
-
-** emacspeak-pronounce:
-
-User defined pronunciations have been augmented.
-Pronunciations can now be specified either as a string,
-or in more complex situations as a cons (matcher . pronouncer).
-For examples of use, see emacspeak-vm.el
-which uses this feature to define an appropriate pronunciation
-rule for ISO DateTime values.
-
-** TTS Support:
-
-TTS specific code is now restricted in modules of the form
-<synth-name>-voices.el.
-Support for additional  TTS engines 
-should be modeled on the code in dectalk-voices.el and outloud-voices.el
 
 
 Local variables:

@@ -1,5 +1,5 @@
 ;;; emacspeak-fix-interactive.el --- Tools to make  Emacs' builtin prompts   speak
-;;; $Id: emacspeak-fix-interactive.el,v 19.0 2003/11/22 19:06:17 raman Exp $
+;;; $Id: emacspeak-fix-interactive.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Fixes functions that use interactive to prompt for args.
 ;;; Approach suggested by hans@cs.buffalo.edu
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:17 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -68,7 +68,8 @@
 ;;; The Search for emacspeak-xemacs-p to see the test used.
 
 ;;}}}
-;;{{{  functions that are  fixed. 
+;;{{{  functions that are  fixed.
+;;;###autoload
 (defvar emacspeak-commands-dont-fix-regexp 
   (concat 
    "^ad-Orig\\|^mouse\\|^scroll-bar"
@@ -182,7 +183,7 @@ Memoizes call in emacspeak-load-history-pointer to memoize this call. "
       (while (and lh
                   (not (eq lh
                            emacspeak-load-history-pointer)))
-      ;;; fix commands in this module
+;;; fix commands in this module
         (dolist (item (rest (first lh)))
           (and (symbolp item)
                (commandp item)
