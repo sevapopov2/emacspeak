@@ -451,6 +451,7 @@ and TABLE gives the values along that dimension."
   "Configure TTS environment to use ViaVoice  family of synthesizers."
   (declare (special tts-default-speech-rate
                     outloud-default-speech-rate
+		    emacspeak-need-tcl
                     emacspeak-use-auditory-icons
                     emacspeak-aumix-midi-available-p
                     emacspeak-aumix-multichannel-capable-p))
@@ -461,6 +462,7 @@ and TABLE gives the values along that dimension."
   (fset 'tts-define-voice-from-speech-style 'outloud-define-voice-from-speech-style)
   (setq tts-default-voice 'paul)
   (setq tts-default-speech-rate outloud-default-speech-rate)
+  (setq emacspeak-need-tcl t)
   (when (and emacspeak-use-auditory-icons
              (not emacspeak-aumix-multichannel-capable-p)
              (not (emacspeak-using-midi-p))

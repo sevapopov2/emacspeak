@@ -457,6 +457,7 @@ and TABLE gives the values along that dimension."
   "Configure TTS environment to use multilingual speech server."
   (declare (special tts-default-speech-rate
                     multispeech-default-speech-rate
+		    emacspeak-need-tcl
 		    dtk-speaker-process
 		    emacspeak-unspeakable-rule
 		    emacspeak-speak-default-os-coding-system))
@@ -467,6 +468,7 @@ and TABLE gives the values along that dimension."
   (setq tts-default-voice nil)
   (setq tts-default-speech-rate multispeech-default-speech-rate)
   (set-default 'tts-default-speech-rate multispeech-default-speech-rate)
+  (setq emacspeak-need-tcl nil)
   (setq default-enable-multibyte-characters t)
   (setq emacspeak-speak-default-os-coding-system 'cyrillic-koi8)
   (set-process-coding-system dtk-speaker-process 'cyrillic-koi8 'cyrillic-koi8)
