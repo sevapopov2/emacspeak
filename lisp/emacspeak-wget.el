@@ -87,6 +87,11 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)))
 
+(defadvice w3m-wget (after emacspeak pre act comp)
+  "provide auditory confirmation"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)))
+
 ;;}}}
 (provide 'emacspeak-wget)
 ;;{{{ end of file 
