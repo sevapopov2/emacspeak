@@ -36,6 +36,10 @@
 (require 'emacspeak-preamble)
 (require 'emacspeak-w3)
 
+(eval-when (load)
+  (require 'w3m-util)
+  (require 'w3m-form))
+
 ;;}}}
 ;;{{{ keybindings 
 (declaim (special w3m-mode-map
@@ -75,7 +79,7 @@
       (if (functionp 'w3m-form-get-by-name)
 	  'w3m-form-get-by-name
 	(byte-compile '(lambda (form name)
-			 (w3m-form-get-by-name form name)))))
+			 (w3m-form-get form name)))))
 
 (defsubst emacspeak-w3m-personalize-string (string personality)
   (let ((newstring (copy-sequence string)))
