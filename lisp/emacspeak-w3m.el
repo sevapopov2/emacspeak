@@ -401,6 +401,11 @@
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
+(defadvice w3m-wget (after emacspeak pre act comp)
+  "provide auditory confirmation"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)))
+
 ;;}}}
 ;;{{{ displaying pages
 
