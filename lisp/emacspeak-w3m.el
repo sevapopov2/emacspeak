@@ -39,7 +39,8 @@
 ;;}}}
 ;;{{{ keybindings 
 (declaim (special w3m-mode-map
-                  emacspeak-prefix))(define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command)
+                  emacspeak-prefix))
+(define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command)
 (define-key w3m-mode-map [M-tab] 'w3m-previous-anchor)
 (define-key w3m-mode-map [backtab] 'w3m-previous-anchor)
 (define-key w3m-mode-map [tab] 'w3m-next-anchor)
