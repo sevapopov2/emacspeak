@@ -1,5 +1,5 @@
 ;;; emacspeak-windmove.el --- speech-enable windmove 
-;;; $Id: emacspeak-windmove.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: emacspeak-windmove.el,v 17.0 2002/11/23 01:29:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for WINDMOVE
 ;;; Keywords: Emacspeak, windmove
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:29:01 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -42,7 +42,6 @@
 
 ;;; Commentary:
 
-
 ;;; Package  windmove (bundled with Emacs 21)
 ;;; provides commands for navigating to windows based on
 ;;; relative position.
@@ -67,17 +66,15 @@
             'windmove-up
             'windmove-down)
       do
-(eval
- (`
-  (defadvice  (, f) (after emacspeak pre act comp)
-    "Provide auditory feedback."
-    (when (interactive-p)
-      (emacspeak-auditory-icon 'select-object)
-      (emacspeak-speak-mode-line))))))
+      (eval
+       (`
+	(defadvice  (, f) (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'select-object)
+	    (emacspeak-speak-mode-line))))))
 
 ;;}}}
-
-
 
 (provide 'emacspeak-windmove)
 ;;{{{ end of file

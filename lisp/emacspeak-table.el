@@ -1,5 +1,5 @@
 ;;; emacspeak-table.el --- Implements data model for table browsing
-;;; $Id: emacspeak-table.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-table.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -59,8 +59,8 @@
             (:constructor cons-emacspeak-table))
   row-header                            ;pointer to column  0
   column-header                         ;pointer to row 0
-current-row ;row containing point 
-current-column ;column containing point 
+  current-row				;row containing point 
+  current-column			;column containing point 
   elements                              ;  vector of  elements 
   )
 
@@ -88,14 +88,14 @@ current-column ;column containing point
 
 (defsubst emacspeak-table-this-element (table row column)
   (let ((elements (emacspeak-table-elements  table)))
-            (aref
+    (aref
      (aref elements row)
      column)))
 
 (defsubst emacspeak-table-current-element (table)
   (emacspeak-table-this-element table 
-   (emacspeak-table-current-row table )
-   (emacspeak-table-current-column table)))
+				(emacspeak-table-current-row table )
+				(emacspeak-table-current-column table)))
 
 (defsubst emacspeak-table-this-row (table index)
   (aref  (emacspeak-table-elements table) index))
@@ -193,9 +193,9 @@ Calls callback once per column."
           (<= 0 column)
           (>= column column-count))
       (setf (emacspeak-table-current-row table) row)
-        (setf (emacspeak-table-current-column table) column))
+      (setf (emacspeak-table-current-column table) column))
      (t (error "Current table has %s rows and %s columns"
-             row-count column-count )))))
+	       row-count column-count )))))
         
 
 (defun emacspeak-table-move-up (table &optional count)
@@ -245,8 +245,6 @@ Calls callback once per column."
                count current )))))
 
 ;;}}}
-
-
 
 (provide  'emacspeak-table)
 ;;{{{  emacs local variables 

@@ -1,5 +1,5 @@
 ;;; emacspeak-vm.el --- Speech enable VM -- A powerful mail agent (and the one I use)
-;;; $Id: emacspeak-vm.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: emacspeak-vm.el,v 17.0 2002/11/23 01:29:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enhance vm
 ;;; Keywords: Emacspeak, VM, Email, Spoken Output, Voice annotations
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:01 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -58,7 +58,6 @@
   :group 'emacspeak
   :group 'vm
   :prefix "emacspeak-vm-")
-
 
 (defcustom emacspeak-vm-voice-lock-messages nil
   "Set this to T if you want messages automatically voice locked.
@@ -175,6 +174,28 @@ Note that some badly formed mime messages  cause trouble."
 
 (defvar emacspeak-vm-user-login-name  (user-login-name)
   "Login name of this user")
+(defun emacspeak-vm-yank-header ()
+  "Yank specified header into kill ring."
+  (interactive)
+  (declare (special vm-message-pointer))
+  (cond
+   (vm-message-pointer
+    (dtk-stop)
+    (let*  ((message (car vm-message-pointer ))
+            (from (vm-su-from message ))
+            (subject (vm-so-sortable-subject message ))
+            (to (vm-su-to message ))
+            (header nil))
+      (while (not header)
+	(setq header 
+	      (case
+		  (read-char "f From s Subject t To")
+		(?s subject)
+		(?f from)
+		(?t to))))
+      (kill-new header)
+      (message header)))
+   (t (error "No current message." ))))
 
 (defun emacspeak-vm-summarize-message ()
   "Summarize the current vm message. "
@@ -208,7 +229,7 @@ Note that some badly formed mime messages  cause trouble."
         (emacspeak-auditory-icon 'item))
        (self-p                          ;mail to others including me
         (emacspeak-auditory-icon 'mark-object))
-       (t                               ;got it because of a mailing list
+       (t			     ;got it because of a mailing list
         (emacspeak-auditory-icon 'select-object ))))))
 
 (defun emacspeak-vm-speak-labels ()
@@ -310,6 +331,7 @@ Then speak the screenful. "
 
 (declaim (special vm-mode-map))
 (define-key vm-mode-map "\M-\C-m" 'widget-button-press)
+(define-key vm-mode-map "y" 'emacspeak-vm-yank-header)
 (define-key vm-mode-map "\M-\t"
   'emacspeak-vm-next-button)
 (define-key vm-mode-map  "j"
@@ -394,11 +416,23 @@ Then speak the screenful. "
 ;;}}}
 ;;{{{ quitting
 
-
 (defadvice vm-quit (after emacspeak pre act )
   "Provide an auditory icon if requested"
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)))
+
+;;}}}
+;;{{{ catching up on folders
+
+(defun emacspeak-vm-catch-up-all-messages ()
+  "Mark all messages in folder to be deleted. Use with caution."
+  (interactive)
+  (declare (special vm-ml-highest-message-number))
+  (vm-goto-message 1)
+  (vm-delete-message
+   (read vm-ml-highest-message-number))
+  (message "All messages have been marked as deleted.")
+  (emacspeak-auditory-icon 'delete-object))
 
 ;;}}}
 ;;{{{  Keybindings:
@@ -406,6 +440,7 @@ Then speak the screenful. "
                    global-map
                    emacspeak-prefix
                    emacspeak-keymap))
+(define-key vm-mode-map "C" 'emacspeak-vm-catch-up-all-messages)
 (define-key vm-mode-map "\M-j" 'emacspeak-vm-locate-subject-line)
 (define-key vm-mode-map "\M-l" 'emacspeak-vm-speak-labels)
 (define-key vm-mode-map
@@ -427,7 +462,6 @@ Then speak the screenful. "
        (t (emacspeak-auditory-icon 'search-miss)))))
    (t ad-do-it))
   ad-return-value)
-
 
 (defadvice vm-isearch-backward (around emacspeak pre act comp)
   "Provide auditory feedback"
@@ -493,7 +527,17 @@ Leave point at front of decoded attachment."
 (add-hook 'vm-presentation-mode-hook
           (function
            (lambda nil
-             (modify-syntax-entry 10 " "))))
+             (emacspeak-pronounce-refresh-pronunciations))))
+
+(emacspeak-pronounce-augment-pronunciations 'vm-presentation-mode
+                                            emacspeak-pronounce-internet-smileys-pronunciations)
+
+(add-hook 'mail-mode-hook
+          'emacspeak-pronounce-refresh-pronunciations)
+          
+
+(emacspeak-pronounce-augment-pronunciations 'mail-mode
+                                            emacspeak-pronounce-internet-smileys-pronunciations)
 
 ;;}}}
 ;;{{{ advice button motion 
@@ -502,7 +546,6 @@ Leave point at front of decoded attachment."
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-text-range  'w3-hyperlink-info)))
-
 
 ;;}}}
 ;;{{{  misc 
@@ -555,16 +598,19 @@ If N is negative, move backward instead."
   :type 'boolean
   :group 'emacspeak)
 
-
-
-
 (defun emacspeak-vm-use-raman-settings ()
   "Customization settings for VM used by the author of
 Emacspeak."
-  (declare (special 
+  (declare (special
+            vm-mime-charset-converter-alist
+            vm-mime-default-face-charsets 
+            vm-frame-per-folder 
+            vm-frame-per-composition 
+            vm-frame-per-edit 
+            vm-frame-per-help 
+            vm-frame-per-summary 
             vm-index-file-suffix
             vm-primary-inbox
-            vm-keep-sent-messages
             vm-folder-directory
             vm-forwarding-subject-format
             vm-startup-with-summary
@@ -575,9 +621,20 @@ Emacspeak."
             vm-confirm-new-folders
             vm-move-after-deleting
             emacspeak-vm-voice-lock-messages))
+  (setq vm-mime-charset-converter-alist
+	'(
+	  ("utf-8" "iso-8859-1" "iconv -f utf-8 -t iso-8859-1")
+	  )
+	)
+  (setq vm-mime-default-face-charsets t)
+  (setq vm-frame-per-folder nil
+	vm-frame-per-composition nil
+	vm-frame-per-edit nil
+	vm-frame-per-help nil
+	vm-frame-per-summary nil)
+
   (setq vm-index-file-suffix ".idx"
         vm-primary-inbox "~/mbox"
-        vm-keep-sent-messages t
         vm-folder-directory "~/Mail/"
         vm-forwarding-subject-format "[%s]"
         vm-startup-with-summary nil
@@ -613,7 +670,6 @@ text using wvText."
   :type 'string
   :group 'emacspeak-vm)
 
-
 (defcustom emacspeak-vm-xls2html
   (expand-file-name "xls2html" emacspeak-etc-directory)
   "Executable that converts MSXL documents on standard input to HTML
@@ -627,7 +683,6 @@ text using wvText."
  using xlhtml."
   :type 'string
   :group 'emacspeak-vm)
-
 
 (defsubst emacspeak-vm-add-mime-convertor (convertor)
   "Helper to add a convertor specification."

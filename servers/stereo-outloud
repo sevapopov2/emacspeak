@@ -5,8 +5,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2002/05/03 23:31:26 $ |
-#  $Revision: 16.0 $ | 
+# $Date: 2002/11/23 01:29:09 $ |
+#  $Revision: 17.0 $ | 
 # Location undetermined
 #
 
@@ -43,6 +43,7 @@ source $wd/tts-lib.tcl
 proc tts_set_punctuations {mode} {
     global tts
     set tts(punctuations) $mode
+    service
     return ""
 }
 
@@ -50,7 +51,8 @@ proc tts_set_speech_rate {rate} {
     global tts
     set factor $tts(char_factor) 
     set tts(speech_rate) $rate
-    synth "`vs$rate "
+    say "`vs$rate "
+    service
     return ""
 }
 
@@ -59,12 +61,13 @@ proc tts_set_character_scale {factor} {
     set tts(say_rate) [round \
                                        [expr $tts(speech_rate) * $factor ]]
     set tts(char_factor) $factor
+    service
     return ""
 }
 
 proc tts_say {text} {
     global    tts
-    s
+    service 
     set r $tts(speech_rate)
     set prefix "`v1 `vs$r "
     regsub -all {\[\*\]} $text { `p1 } text 
@@ -76,19 +79,20 @@ proc tts_say {text} {
 #formerly called tts_letter
 
 proc l {text} {
-    global tts 
+    global tts
     set r $tts(speech_rate)
     set prefix "`v1 `vs$r "
     if {[regexp  {[A-Z]} $text]} {
         set prefix "$prefix `vb80"
     }
-    synth "$prefix  `ts2 $text`ts0"
-    synchronize
+    synth "$prefix  `ts2 $text `ts0"
+    service
     return ""
 }
 
 #formerly called tts_speak
 proc d {} {
+    service
     speech_task
 }
 
@@ -96,19 +100,6 @@ proc tts_resume  {} {
         resume
     return ""
 }
-
-proc tts_repeat  {} {
-    global tts 
-    queue_rewind
-    if {[queue_empty?]} {
-        synth  {No speech to repeat.}
-        set tts(not_stopped) 1
-    } else {
-        speech_task
-    }
-    return ""
-}
-
 proc tts_pause {} {
     pause
     return ""
@@ -117,7 +108,7 @@ proc tts_pause {} {
 #formerly called tts_stop 
 
 proc s {} {
-    stop 
+    stop
     queue_clear
 }
 
@@ -133,12 +124,15 @@ proc t  {{pitch 440} {duration 50}} {
         n $inst $note $len
         return ""
     }
+    service
 }
+
 proc sh  {{duration 50}} {
     global tts queue 
     set silence "`p$duration "
     set queue($tts(q_tail)) [list t $silence]
     incr tts(q_tail)
+    service
     return ""
 }
 
@@ -146,18 +140,21 @@ proc sh  {{duration 50}} {
 proc tts_split_caps {flag} {
     global tts 
     set tts(split_caps) $flag
+    service
     return ""
 }
 
 proc tts_capitalize {flag} {
     global tts 
     set tts(capitalize) $flag
+    service
     return ""
 }
 
 proc tts_allcaps_beep {flag} {
     global tts 
     set tts(allcaps_beep) $flag
+    service
     return ""
 }
 
@@ -179,6 +176,7 @@ proc useStereoOutput {} {
     global tts
         setOutput buffer
 }
+
 # }}}
 # {{{ speech task 
 
@@ -191,7 +189,7 @@ proc service {} {
     global tts
     set talking [speakingP]
     while {$talking == 1} {
-        set status   [lsearch [select [list  stdin]  {} {} 0.01] stdin]
+        set status   [lsearch [select [list  stdin]  {} {} 0.075] stdin]
         if { $status >= 0} {
             set tts(talking?) 0
             set talking 0
@@ -211,7 +209,6 @@ proc speech_task {} {
     set r $tts(speech_rate)
     set length [queue_length]
     set prefix "`v1 `vs$r "
-    stop
     loop index 0 $length {
         set event   [queue_remove]
         set event_type [lindex $event 0]
@@ -220,6 +217,10 @@ proc speech_task {} {
                 set text [clean [lindex $event 1]]
                 synth "$prefix $text"
                 set retval [service]
+            }
+            a {
+                set sound [lindex $event 1]
+                playWave $sound
             }
             n {
                 if {$tts(midi)} {
@@ -231,7 +232,7 @@ proc speech_task {} {
         if {$tts(talking?) == 0} {break;} 
     }
     set tts(talking?) 0
-    synchronize
+    service
     return ""
 }
 
@@ -319,9 +320,8 @@ set env(ECIINI) $tclTTS/eci.ini
 load $tclTTS/tcleci.so
 set tts(stereo) 1
 useStereoOutput
-synth {`v1 Using stereo output Via  IBM  Via Voice,
-    `vb55 `vh55 `ar this `p20,  is   Eamakspeak! }
-synchronize
+synth {`v1 Via Voice.}
+service
 
 #Start the main command loop:
 

@@ -8,8 +8,7 @@ Param class specifies the class to extract.
 
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-  <xsl:output method="html" indent="yes"
-              encoding="iso8859-15"/>
+  <xsl:output method="html" indent="yes" encoding="iso8859-1"/>
   <xsl:param name="class"/>
   <xsl:param name="base"/>
   <xsl:include href="identity.xsl"/>
@@ -31,9 +30,21 @@ Param class specifies the class to extract.
     <xsl:element name="body">
       <xsl:apply-templates select="@*"/>
       <xsl:for-each select="//*[@class=$class]">
-<xsl:apply-templates/><br/>
-        
+<!--
+        <p>
+          <xsl:value-of select="name(.)"/>
+        </p>
+-->
+        <xsl:apply-templates/>
+        <br/>
       </xsl:for-each>
+      <h2>About This Document</h2>
+      <p> Found <xsl:value-of select="count(//*[@class=$class])"/>
+        nodes with <code>class</code> 
+<em><xsl:value-of select="$class"/></em> in
+<xsl:element name="a"><xsl:attribute name="href"><xsl:value-of select="$base"/></xsl:attribute>
+source document</xsl:element>
+    </p>
     </xsl:element>
   </xsl:template>
 <!-- } -->

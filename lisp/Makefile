@@ -1,4 +1,4 @@
-# $Id: Makefile,v 16.0 2002/05/03 23:31:24 raman Exp $
+# $Id: Makefile,v 17.0 2002/11/23 01:29:01 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak, Dectalk, Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2002/05/03 23:31:24 $ |
-#  $Revision: 16.0 $ | 
+# $Date: 2002/11/23 01:29:01 $ |
+#  $Revision: 17.0 $ | 
 # Location undetermined
 #
 
@@ -45,7 +45,7 @@ SRC=".."
 # How to run in batch mode
 BATCH = -batch -q -no-site-file
 # How to compile 
-COMPILE = -eval "(setq byte-compile-dynamic t)" -f batch-byte-compile
+COMPILE =  -f batch-byte-compile
 %.elc:  %.el
 	$(EMACS) $(BATCH)  -l $(SRC)/lisp/emacspeak-load-path.el $(COMPILE) $<
 
@@ -145,6 +145,7 @@ emacspeak-info.elc\
 emacspeak-ispell.elc \
 emacspeak-jde.elc \
 emacspeak-kotl.elc \
+emacspeak-m-player.elc \
 emacspeak-make-mode.elc \
 emacspeak-man.elc \
 emacspeak-message.elc \
@@ -162,6 +163,7 @@ emacspeak-psgml.elc \
 emacspeak-python.elc \
 emacspeak-realaudio.elc \
 emacspeak-reftex.elc \
+emacspeak-rpm-spec.elc \
 emacspeak-remote.elc \
 emacspeak-rmail.elc \
 emacspeak-rpm.elc  \
@@ -181,6 +183,7 @@ emacspeak-tempo.elc \
 emacspeak-tetris.elc \
 emacspeak-texinfo.elc \
 emacspeak-tnt.elc \
+emacspeak-todo-mode.elc \
 emacspeak-url-template.elc \
 emacspeak-view-process.elc \
 emacspeak-view.elc \
@@ -318,6 +321,7 @@ emacspeak-jde.elc: emacspeak-jde.el dtk-speak.elc
 emacspeak-keymap.elc: emacspeak-keymap.el 
 emacspeak-kotl.elc: emacspeak-kotl.el dtk-speak.elc
 emacspeak-load-path.elc: emacspeak-load-path.elc
+emacspeak-m-player.elc: emacspeak-m-player.el dtk-speak.elc
 emacspeak-make-mode.elc: emacspeak-make-mode.el dtk-speak.elc
 emacspeak-man.elc: emacspeak-man.el dtk-speak.elc
 emacspeak-message.elc: emacspeak-message.el dtk-speak.elc
@@ -337,6 +341,7 @@ emacspeak-python.elc: emacspeak-python.el dtk-speak.elc
 emacspeak-realaudio.elc: emacspeak-realaudio.el dtk-speak.elc
 emacspeak-redefine.elc: emacspeak-redefine.el  dtk-speak.elc
 emacspeak-reftex.elc: emacspeak-reftex.el dtk-speak.elc
+emacspeak-rpm-spec.elc: emacspeak-rpm-spec.el dtk-speak.elc
 emacspeak-remote.elc: emacspeak-remote.el
 emacspeak-replace.elc: emacspeak-replace.el dtk-speak.elc
 emacspeak-rmail.elc: emacspeak-rmail.el dtk-speak.elc
@@ -362,6 +367,7 @@ emacspeak-tempo.elc: emacspeak-tempo.el dtk-speak.elc
 emacspeak-tetris.elc: emacspeak-tetris.el dtk-speak.elc
 emacspeak-texinfo.elc: emacspeak-texinfo.el dtk-speak.elc
 emacspeak-tnt.elc: emacspeak-tnt.el dtk-speak.elc
+emacspeak-todo-mode.elc: emacspeak-todo-mode.el dtk-speak.elc
 emacspeak-url-template.elc: emacspeak-url-template.el dtk-speak.elc
 emacspeak-view-process.elc: emacspeak-view-process.el dtk-speak.elc
 emacspeak-view.elc: emacspeak-view.el dtk-speak.elc
@@ -378,6 +384,11 @@ emacspeak-xml-shell.elc: emacspeak-xml-shell.el dtk-speak.elc
 emacspeak-xslide.elc: emacspeak-xslide.el dtk-speak.elc
 emacspeak-xslt-process.elc: emacspeak-xslt-process.el dtk-speak.elc
 emacspeak.elc: emacspeak.el
+
+# }}}
+# {{{Development  target: indent 
+indent:
+	emacs -batch -q -l ../utils/indent-files.el
 
 # }}}
 # {{{  user level target-- clean

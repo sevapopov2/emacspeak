@@ -1,5 +1,5 @@
 ;;; emacspeak-fix-interactive.el --- Tools to make  Emacs' builtin prompts   speak
-;;; $Id: emacspeak-fix-interactive.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-fix-interactive.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Fixes functions that use interactive to prompt for args.
 ;;; Approach suggested by hans@cs.buffalo.edu
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -100,7 +100,6 @@ interactive prompts speak. ")
 
 ;;{{{  Understanding aid 
 
-
 (defun emacspeak-show-interactive (sym)
   "Auto-advice interactive command to speak its prompt.  Fix
 the function definition of sym to make its interactive form
@@ -163,7 +162,7 @@ speak its prompts. "
          (split-string
           (second (ad-interactive-form (symbol-function sym )))
           "\n")))
-    ;memoize call
+					;memoize call
     (put sym 'emacspeak-fixed t)
                                         ; advice if necessary
     (when
@@ -210,7 +209,6 @@ speak its prompts. "
   t)
 
 ;;; inline function for use from other modules:
-
 
 (defsubst  emacspeak-fix-interactive-command-if-necessary
   (command)

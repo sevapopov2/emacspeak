@@ -1,5 +1,5 @@
 ;;; emacspeak-keymap.el --- Setup all keymaps and keybindings provided by Emacspeak
-;;; $Id: emacspeak-keymap.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-keymap.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Module for setting up emacspeak keybindings
 ;;; Keywords: Emacspeak
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -223,7 +223,7 @@ field in the customization buffer.  You can use the notation
   'emacspeak-websearch-dispatch )
 (define-key emacspeak-keymap "," 'emacspeak-speak-browse-buffer )
 (define-key emacspeak-keymap ";" 'emacspeak-realaudio )
-(define-key emacspeak-keymap ":" 'emacspeak-realaudio-browse )
+(define-key emacspeak-keymap ":" 'emacspeak-m-player)
 (define-key emacspeak-keymap "C" 'emacspeak-customize)
 (define-key emacspeak-keymap "\C-o" 'emacspeak-ocr )
 (define-key emacspeak-keymap "\C-c"
@@ -236,6 +236,7 @@ field in the customization buffer.  You can use the notation
   'emacspeak-symlink-current-file)
 (define-key emacspeak-keymap "!"
   'emacspeak-speak-run-shell-command)
+(define-key emacspeak-keymap "@" 'emacspeak-speak-message-at-time)
 (define-key emacspeak-keymap "#" 'emacspeak-gridtext)
 (define-key emacspeak-keymap "\C-y" 'emacspeak-clipboard-paste)
 (define-key emacspeak-keymap "\C-p" 'emacspeak-speak-previous-window)
@@ -272,7 +273,6 @@ field in the customization buffer.  You can use the notation
 (define-key emacspeak-keymap "\C-d" 'emacspeak-toggle-show-point)
 ;;; speaking specific windows:
 
-
 (dotimes (i 10)
   (define-key emacspeak-keymap
     (format "%s" i )
@@ -294,6 +294,7 @@ field in the customization buffer.  You can use the notation
 (define-key emacspeak-dtk-submap "w" 'emacspeak-toggle-word-echo)
 (define-key emacspeak-dtk-submap "V" 'emacspeak-dtk-speak-version)
 (define-key emacspeak-dtk-submap "v" 'voice-lock-mode)
+(define-key emacspeak-dtk-submap "n" 'dtk-toggle-speak-nonprinting-chars)
 (define-key emacspeak-dtk-submap "s" 'dtk-toggle-split-caps)
 (define-key emacspeak-dtk-submap "r" 'dtk-set-rate)
 (define-key emacspeak-dtk-submap "\C-m" 'dtk-set-chunk-separator-syntax)
@@ -314,7 +315,6 @@ field in the customization buffer.  You can use the notation
 (define-key emacspeak-dtk-submap "b" 'dtk-toggle-debug)
 (define-key emacspeak-dtk-submap "\M-\C-b" 'tts-show-debug-buffer)
 (define-key emacspeak-dtk-submap "a" 'dtk-add-cleanup-pattern)
-
 
 (dotimes (i 10)
   (define-key emacspeak-dtk-submap

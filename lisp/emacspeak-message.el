@@ -1,5 +1,5 @@
 ;;; emacspeak-message.el --- Speech enable Message -- Used to compose news postings and replies
-;;; $Id: emacspeak-message.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-message.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extensions for posting
 ;;; Keywords:emacspeak, audio interface to emacs posting messages
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -48,7 +48,6 @@
 ;;}}}
 ;;{{{  advice interactive commands
 
-
 (defadvice message-goto-to (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
@@ -67,13 +66,11 @@
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
-
 (defadvice message-goto-cc (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
-
 
 (defadvice message-goto-bcc (after emacspeak pre act comp)
   "Provide auditory feedback"
@@ -110,7 +107,6 @@
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
-
 (defadvice message-goto-body (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
@@ -135,7 +131,6 @@
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
-
 (defadvice message-insert-to (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
@@ -152,7 +147,6 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
-
 
 (defadvice message-insert-courtesy-copy (after emacspeak pre act comp)
   "Provide auditory feedback"

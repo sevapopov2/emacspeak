@@ -1,5 +1,5 @@
 ;;; emacspeak-imenu.el --- Speech enable Imenu -- produce buffer-specific table of contents
-;;; $Id: emacspeak-imenu.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-imenu.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface buffer indices
 ;;; Keywords: Emacspeak, Speak, Spoken Output, indices
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -42,7 +42,6 @@
 
 (eval-when-compile (require 'cl))
 (declaim  (optimize  (safety 0) (speed 3)))
-
 
 (eval-when (compile)
   (require 'imenu))
@@ -81,7 +80,7 @@
 				name))))
 	(cond
 	 ((or (markerp pos) (numberp pos)
-(overlayp pos))
+	      (overlayp pos))
 	  (list (cons new-prefix pos)))
 	 (t
 	  (emacspeak-imenu-flatten-index-alist pos
@@ -126,11 +125,8 @@
                                      'paul-animated
                                      (emacspeak-speak-line))))
 
-
 ;;}}}
 ;;{{{  Navigation
-
-
 
 (defun emacspeak-imenu-goto-next-index-position ()
   "Goto the next index position in current buffer"
@@ -177,17 +173,16 @@
           (setq guess
                 (cond
                  ((overlayp (cdr item))
- (overlay-start (cdr item )))
+		  (overlay-start (cdr item )))
                  ((markerp (cdr item))
-                    (marker-position (cdr item )))
-                  (t (cdr item))))
+		  (marker-position (cdr item )))
+		 (t (cdr item))))
           (when (> position guess)
             (if (> guess target)
                 (setq target guess))))
     (goto-char target)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
-
 
 ;;}}}
 ;;{{{  speaking logical sections
@@ -213,7 +208,7 @@
 (declaim (special imenu-space-replacement
                   imenu-max-items))
 (setq imenu-space-replacement "."
-imenu-max-items 200)
+      imenu-max-items 200)
 
 ;;}}}
 (provide 'emacspeak-imenu )

@@ -1,5 +1,5 @@
 ;;; emacspeak-net-utils.el --- Speech enable net-utils
-;;; $Id: emacspeak-net-utils.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-net-utils.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable net-utils
 ;;; Keywords: Emacspeak, network utilities 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -70,7 +70,7 @@
           (when (interactive-p)
             (emacspeak-auditory-icon 'open-object)
             (message "Displayed results of %s in other window"
-                      (quote (, f))))))))
+		     (quote (, f))))))))
 
 ;;}}}
 (provide 'emacspeak-net-utils)

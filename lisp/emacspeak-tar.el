@@ -1,5 +1,5 @@
 ;;; emacspeak-tar.el --- Speech enable Tar Mode -- Manipulate tar archives from Emacs
-;;; $Id: emacspeak-tar.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: emacspeak-tar.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to tar mode
 ;;; Keywords: Emacspeak, Speak, Spoken Output, tar
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -63,9 +63,9 @@
    ((= (following-char) 0)
     (message "No file on this line"))
    (t(save-excursion
-     (end-of-line)
-    (skip-syntax-backward "^ ")
-    (emacspeak-speak-line 1)))))
+       (end-of-line)
+       (skip-syntax-backward "^ ")
+       (emacspeak-speak-line 1)))))
 
 ;;}}}
 ;;{{{ Advice
@@ -102,7 +102,6 @@
     (emacspeak-auditory-icon 'yank-object)
     (emacspeak-tar-speak-line)))
 
-
 (defadvice tar-extract (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
@@ -120,7 +119,6 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
-
 
 ;;}}}
 ;;{{{ additional interactive commands
@@ -178,9 +176,9 @@
       (message "No file on this line"))
      (t (message  "Modified on  %s "
                   (format-time-string
-                  emacspeak-speak-time-format-string
-                  (tar-header-date
-                   (tar-desc-tokens entry))))))))
+		   emacspeak-speak-time-format-string
+		   (tar-header-date
+		    (tar-desc-tokens entry))))))))
 
 (defun emacspeak-tar-setup-keys ()
   "Setup emacspeak keys for tar mode"
@@ -190,7 +188,6 @@
   (define-key tar-mode-map "/" 'emacspeak-tar-speak-file-permissions)
   (define-key tar-mode-map "c" 'emacspeak-tar-speak-file-date)
   )
-
 
 (eval-when (load)
   (emacspeak-tar-setup-keys))

@@ -1,5 +1,5 @@
 ;;; emacspeak-make-mode.el --- Speech enable make-mode
-;;; $Id: emacspeak-make-mode.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-make-mode.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable make-mode
 ;;; Keywords: Emacspeak, Make
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -69,19 +69,18 @@
       (emacspeak-auditory-icon 'large-movement))))
 
 (defadvice makefile-browser-next-line (after emacspeak pre act
-                                           comp)
+					     comp)
   "Speak line we moved to"
   (when (interactive-p)
-      (emacspeak-speak-line)
-      (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
 
 (defadvice makefile-browser-previous-line (after emacspeak pre act
-                                           comp)
+						 comp)
   "Speak line we moved to"
   (when (interactive-p)
-      (emacspeak-speak-line)
-      (emacspeak-auditory-icon 'select-object)))
-
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
 
 (defadvice makefile-previous-dependency (after emacspeak pre act comp)
   "Speak line we moved to"
@@ -103,12 +102,11 @@
 (defadvice makefile-backslash-region (after emacspeak pre
                                             act comp)
   "Speak how many lines we backslashed"
-(when (interactive-p)
-  (message "Backslashed region containing %s lines"
-(count-lines (region-beginning)
-             (region-end)))
-(emacspeak-auditory-icon 'select-object)))
-
+  (when (interactive-p)
+    (message "Backslashed region containing %s lines"
+	     (count-lines (region-beginning)
+			  (region-end)))
+    (emacspeak-auditory-icon 'select-object)))
 
 (defadvice makefile-browser-quit (after emacspeak pre act
                                         comp)
@@ -116,7 +114,6 @@
   (when (interactive-p)
     (emacspeak-speak-mode-line)
     (emacspeak-auditory-icon 'close-object)))
-
 
 (defadvice makefile-switch-to-browser (after emacspeak pre
                                              act comp)
@@ -133,7 +130,7 @@
                        (count-lines (point-min) (point))
                        1))
            (state nil))
-ad-do-it
+      ad-do-it
       (setq state
             (makefile-browser-get-state-for-line this-line))
       (emacspeak-auditory-icon
@@ -149,7 +146,7 @@ ad-do-it
   (when (interactive-p)
     (message
      "Inserted selections into client  %s"
-             (buffer-name makefile-browser-client))))
+     (buffer-name makefile-browser-client))))
 
 ;;}}}
 ;;{{{ setup mode hook:

@@ -1,5 +1,5 @@
 ;;; emacspeak-tcl.el --- Speech enable TCL development environment
-;;; $Id: emacspeak-tcl.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: emacspeak-tcl.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for tcl-mode
 ;;; Keywords:emacspeak, audio interface to emacs tcl
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -48,7 +48,6 @@
 
 ;;}}}
 ;;{{{ voice locking:
-
 
 (defvar tcl-voice-lock-keywords nil
   "Keywords to highlight in tcl mode")
@@ -123,28 +122,27 @@ is a Tcl expression, and the last argument is Tcl commands.")
 
 (setq tcl-voice-lock-keywords
       (list
-	 ;; Names of functions (and other "defining things").
-	 (list (concat tcl-proc-regexp "\\([^ \t\n]+\\)")
-	       2 'voice-lock-function-name-personality)
+       ;; Names of functions (and other "defining things").
+       (list (concat tcl-proc-regexp "\\([^ \t\n]+\\)")
+	     2 'voice-lock-function-name-personality)
 
-	 ;; Names of type-defining things.
-	 (list (concat "\\(\\s-\\|^\\)\\("
-		       ;; FIXME Use 'regexp-quote?
-		       (mapconcat 'identity tcl-typeword-list "\\|")
-		       "\\)\\(\\s-\\|$\\)")
-	       2 'voice-lock-type-personality)
+       ;; Names of type-defining things.
+       (list (concat "\\(\\s-\\|^\\)\\("
+		     ;; FIXME Use 'regexp-quote?
+		     (mapconcat 'identity tcl-typeword-list "\\|")
+		     "\\)\\(\\s-\\|$\\)")
+	     2 'voice-lock-type-personality)
 
-	 ;; Keywords.  Only recognized if surrounded by whitespace.
-	 ;; FIXME consider using "not word or symbol", not
-	 ;; "whitespace".
-	 (cons (concat "\\(\\s-\\|^\\)\\("
-		       ;; FIXME Use regexp-quote? 
-		       (mapconcat 'identity tcl-keyword-list "\\|")
-		       "\\)\\(\\s-\\|$\\)")
-	       2)
-	 )
-)
-
+       ;; Keywords.  Only recognized if surrounded by whitespace.
+       ;; FIXME consider using "not word or symbol", not
+       ;; "whitespace".
+       (cons (concat "\\(\\s-\\|^\\)\\("
+		     ;; FIXME Use regexp-quote? 
+		     (mapconcat 'identity tcl-keyword-list "\\|")
+		     "\\)\\(\\s-\\|$\\)")
+	     2)
+       )
+      )
 
 (voice-lock-set-major-mode-keywords 'tcl-mode 	    'tcl-voice-lock-keywords)
 
@@ -184,12 +182,12 @@ is a Tcl expression, and the last argument is Tcl commands.")
   (when (interactive-p)
     (let* ((start nil)
            (proc-line
-           (save-excursion
-             (tcl-beginning-of-defun)
-             (setq start (point))
-             (end-of-line)
-             (buffer-substring start (point)))))
-    (message "Evaluated  %s" proc-line ))))
+	    (save-excursion
+	      (tcl-beginning-of-defun)
+	      (setq start (point))
+	      (end-of-line)
+	      (buffer-substring start (point)))))
+      (message "Evaluated  %s" proc-line ))))
 
 (defadvice tcl-help-on-word (after emacspeak pre act comp)
   "Speak  the help."
@@ -223,7 +221,6 @@ is a Tcl expression, and the last argument is Tcl commands.")
   "Produce an auditory icon"
   (when (interactive-p)
     (emacspeak-auditory-icon 'fill-object)))
-
 
 (defadvice tcl-indent-line (after emacspeak pre act)
   "Speak the line"

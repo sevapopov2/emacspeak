@@ -1,5 +1,5 @@
 ;;; emacspeak-supercite.el --- Speech enable supercite
-;;; $Id: emacspeak-supercite.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-supercite.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable supercite
 ;;; Keywords: Emacspeak, supercite, mail
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -91,7 +91,7 @@
    (t ad-do-it))
   ad-return-value)
 (defadvice sc-insert-citation (after emacspeak pre act
-                                       comp)
+				     comp)
   "Speak what we inserted"
   (when (interactive-p)
     (emacspeak-speak-line)

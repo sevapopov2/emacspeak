@@ -1,6 +1,6 @@
 ;;; html-outline.el --- Extends html-helper-mode to provide outline and imenu support
 ;;; Author: T. V. Raman
-;;; $Id: html-outline.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: html-outline.el,v 17.0 2002/11/23 01:29:01 raman Exp $
 ;;; Description: Outlining for HTML helper mode
 ;;; Implements the necessary extensions to make outline minor mode recognize
 ;;; html markup.
@@ -38,14 +38,14 @@
  (function
   (lambda ()
     (declare (special imenu-generic-expression
-                    imenu-create-index-function))
+		      imenu-create-index-function))
     (require 'imenu)
     (setq imenu-create-index-function 'imenu-default-create-index-function)
-  (setq imenu-generic-expression
-        '(
-          (nil
-           "^ *<[hH][1-6] *><[aA][^>]+>\\(.*\\)</[aA]></[hH][1-6]>" 1)
-          (nil "^ *<[hH][1-6] *>\\([^<]*\\)</[hH][1-6]>" 1))))))
+    (setq imenu-generic-expression
+	  '(
+	    (nil
+	     "^ *<[hH][1-6] *><[aA][^>]+>\\(.*\\)</[aA]></[hH][1-6]>" 1)
+	    (nil "^ *<[hH][1-6] *>\\([^<]*\\)</[hH][1-6]>" 1))))))
 
 ;;}}}
 (provide 'html-outline)

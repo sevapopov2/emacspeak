@@ -1,5 +1,5 @@
 ;;; emacspeak-oo-browser.el --- Speech enable OO Browser -- For Browsing large OO Systems
-;;; $Id: emacspeak-oo-browser.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-oo-browser.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extensions for Bob Weiner's excellent OO-Browser.
 ;;; Keywords: Emacspeak, Speech Access, Browsing source code.
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -72,8 +72,6 @@
                          (end-of-line)
                          (buffer-substring start (point )))))))))
 
-
-
 (defadvice br-children (after emacspeak pre act )
   "Provide spoken feedback. "
   (when (and ad-return-value  (interactive-p))
@@ -115,8 +113,6 @@
                          (setq start (point ))
                          (end-of-line)
                          (buffer-substring start (point )))))))))
-
-
 
 (defadvice br-categories (after emacspeak pre act )
   "Provide spoken feedback. "
@@ -190,7 +186,6 @@
                          (end-of-line)
                          (buffer-substring start (point )))))))))
 
-
 (defadvice br-parents (after emacspeak pre act )
   "Provide spoken feedback. "
   (when (and ad-return-value  (interactive-p))
@@ -204,8 +199,6 @@
                          (setq start (point ))
                          (end-of-line)
                          (buffer-substring start (point )))))))))
-
-
 
 (defadvice br-unique (after emacspeak pre act )
   "Provide spoken feedback."

@@ -1,5 +1,5 @@
 ;;; emacspeak-finder.el --- Generate a database of keywords and descriptions for all Emacspeak  packages
-;;; $Id: emacspeak-finder.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-finder.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to speedbar
 ;;; Keywords: Emacspeak, Finder
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -48,7 +48,7 @@
 
 (defvar emacspeak-finder-preamble
   (concat 
-   ";;;$Id: emacspeak-finder.el,v 16.0 2002/05/03 23:31:23 raman Exp $\n"
+   ";;;$Id: emacspeak-finder.el,v 17.0 2002/11/23 01:28:59 raman Exp $\n"
    ";;; emacspeak-finder-inf.el --- keyword-to-package mapping\n"
    ";; Keywords: help\n"
    ";;; Commentary:\n"
@@ -67,7 +67,6 @@
    "(provide 'emacspeak-finder-inf)\n\n;;; emacspeak-finder-inf.el ends here\n")
   "Text to insert at the end of emacspeak-finder-inf")
 
-
 (defun emacspeak-finder-compile-keywords ()
   "Generate the keywords association list into the file
 emacspeak-finder-inf.el."
@@ -76,7 +75,7 @@ emacspeak-finder-inf.el."
   (save-excursion
     (let ((processed nil)
           (d emacspeak-lisp-directory))
-    (find-file emacspeak-finder-inf-file)
+      (find-file emacspeak-finder-inf-file)
       (erase-buffer)
       (insert emacspeak-finder-preamble)
       (mapcar
@@ -107,7 +106,7 @@ emacspeak-finder-inf.el."
        (directory-files (or d ".")))
       (insert emacspeak-finder-postamble)
       (kill-buffer "*finder-scratch*")
-      (eval-buffer);; So we get the new keyword list immediately
+      (eval-buffer) ;; So we get the new keyword list immediately
       (basic-save-buffer)
       (kill-buffer nil))))
 

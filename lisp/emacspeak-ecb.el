@@ -1,5 +1,5 @@
 ;;; emacspeak-ecb.el --- speech-enable Emacs Class Browser
-;;; $Id: emacspeak-ecb.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-ecb.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for speech-enabling Emacs
 ;;; Class Browser
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -70,7 +70,6 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'help)
     (emacspeak-speak-mode-line)))
-
 
 (loop for f in 
       '(
@@ -133,14 +132,13 @@ available."
             (search-forward tree-buffer-incr-searchpattern)
             (setq end (point))
             (ems-modify-buffer-safely
-            (ems-set-personality-temporarily
-beg end   'harry
+	     (ems-set-personality-temporarily
+	      beg end   'harry
               (emacspeak-speak-line)))
             (emacspeak-auditory-icon 'search-hit))))
        (t (emacspeak-auditory-icon 'search-miss)))))
    (t ad-do-it))
   ad-return-value)
-
 
 (defadvice tree-buffer-select (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -150,7 +148,7 @@ beg end   'harry
 (defadvice tree-node-toggle-expanded (after emacspeak pre
                                             act comp)
   "Provide auditory feedback."
-  (let ((node (ad-get-arg 0)));; note that logic is reversed
+  (let ((node (ad-get-arg 0))) ;; note that logic is reversed
     (cond
      ((tree-node-is-expanded node)
       (emacspeak-auditory-icon 'open-object))
@@ -159,7 +157,6 @@ beg end   'harry
 (defadvice tree-buffer-update (after emacspeak pre act comp)
   "Provide context speech feedback."
   (emacspeak-speak-line))
-
 
 (defadvice tree-buffer-nolog-message (after emacspeak pre
                                             act comp)
@@ -184,6 +181,40 @@ beg end   'harry
     (emacspeak-auditory-icon 'button)
     (emacspeak-speak-line)))
 
+;;}}}
+;;{{{ commands to speak ECB windows without  moving
+
+(defun emacspeak-ecb-speak-window-methods ()
+  "Speak contents of methods window."
+  (interactive)
+  (save-excursion
+    (save-window-excursion
+      (ecb-goto-window-methods)
+      (emacspeak-speak-buffer))))
+
+(defun emacspeak-ecb-speak-window-directories ()
+  "Speak contents of directories window."
+  (interactive)
+  (save-excursion
+    (save-window-excursion
+      (ecb-goto-window-directories)
+      (emacspeak-speak-buffer))))
+
+(defun emacspeak-ecb-speak-window-history ()
+  "Speak contents of history window."
+  (interactive)
+  (save-excursion
+    (save-window-excursion
+      (ecb-goto-window-history)
+      (emacspeak-speak-buffer))))
+
+(defun emacspeak-ecb-speak-window-sources ()
+  "Speak contents of sources window."
+  (interactive)
+  (save-excursion
+    (save-window-excursion
+      (ecb-goto-window-sources)
+      (emacspeak-speak-buffer))))
 
 ;;}}}
 (provide 'emacspeak-ecb)

@@ -1,5 +1,5 @@
 ;;; emacspeak-folding.el --- Speech enable Folding Mode -- enables structured editting
-;;; $Id: emacspeak-folding.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-folding.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for folding-mode
 ;;; Keywords:emacspeak, audio interface to emacs Folding editor
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -52,7 +52,6 @@
 ;;}}}
 ;;{{{ Advice
 
-
 (defadvice fold-goto-line (after emacspeak pre act)
   "Speak the line. "
   (when (interactive-p)
@@ -66,7 +65,7 @@
 
 (defadvice fold-enter (after emacspeak pre act)
   "Produce an auditory icon and then speak the line. "
-(when (interactive-p)
+  (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
@@ -78,10 +77,10 @@ Then speak the folded line."
     (emacspeak-speak-line)))
 
 (defadvice fold-fold-region (after emacspeak pre act)
-"Produce an auditory icon. "
-(when (interactive-p )
-(emacspeak-auditory-icon 'open-object)
-(message "Specify a meaningful name for the new fold ")))
+  "Produce an auditory icon. "
+  (when (interactive-p )
+    (emacspeak-auditory-icon 'open-object)
+    (message "Specify a meaningful name for the new fold ")))
 
 (defadvice fold-hide (after emacspeak pre act )
   "Provide auditory feedback"

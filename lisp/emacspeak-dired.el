@@ -1,5 +1,5 @@
 ;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
-;;; $Id: emacspeak-dired.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-dired.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech enable dired
 ;;; Keywords: Emacspeak, Dired, Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -210,10 +210,6 @@ pronunciations only once.")
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-dired-speak-line)))
 
-
-
-
-
 (defadvice dired-next-dirline (after emacspeak pre act)
   "Speak the filename name."
   (when (interactive-p )
@@ -307,16 +303,17 @@ unless `dired-listing-switches' contains -al"
 
 ;;}}}
 ;;{{{ Additional status speaking commands
-
-(defun emacspeak-dired-show-file-type ()
-  "Displays type of current file by running command file."
-  (interactive)
-  (let ((filename (dired-get-filename t t)))
-    (if filename 
-        (shell-command 
-         (format "file %s"
-                 filename))
-      (message "No file on this line"))))
+(if (fboundp 'dired-show-file-type)
+    (defalias 'emacspeak-dired-show-file-type 'dired-show-file-type)
+  (defun emacspeak-dired-show-file-type ()
+    "Displays type of current file by running command file."
+    (interactive)
+    (let ((filename (dired-get-filename t t)))
+      (if filename 
+	  (shell-command 
+	   (format "file %s"
+		   filename))
+	(message "No file on this line")))))
 
 (defun emacspeak-dired-speak-header-line()
   "Speak the header line of the dired buffer. "

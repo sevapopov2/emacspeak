@@ -1,5 +1,5 @@
 ;;; emacspeak-custom.el --- Speech enable interactive Emacs customization 
-;;; $Id: emacspeak-custom.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-custom.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to custom
 ;;; Keywords: Emacspeak, Speak, Spoken Output, custom
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -43,13 +43,13 @@
 (eval-when-compile (require 'cl))
 (declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile (require 'dtk-speak)
-  (require 'emacspeak-speak)
-  (require 'voice-lock)
-  (require 'emacspeak-keymap)
-  (require 'emacspeak-sounds)
-  (require 'widget)
-  (require 'wid-edit)
-  (require 'emacspeak-widget))
+		   (require 'emacspeak-speak)
+		   (require 'voice-lock)
+		   (require 'emacspeak-keymap)
+		   (require 'emacspeak-sounds)
+		   (require 'widget)
+		   (require 'wid-edit)
+		   (require 'emacspeak-widget))
 
 ;;}}}
 ;;{{{  Introduction
@@ -68,7 +68,7 @@
     (message "Saved customizations.")))
 
 (defadvice custom-save-all (after emacspeak pre
-                                            act comp)
+				  act comp)
   "Provide auditory feedback. "
   (when (interactive-p)
     (emacspeak-auditory-icon 'save-object)
@@ -78,7 +78,6 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'mark-object)
     (message "Set all updates.")))
-
 
 (defadvice customize (after emacspeak pre act comp)
   "Provide auditory feedback"
@@ -121,7 +120,6 @@
       (voice-lock-mode 1)
       (beginning-of-line)
       (emacspeak-speak-line))))
-
 
 (defadvice customize-variable (after emacspeak pre act comp)
   "Provide auditory feedback"
@@ -168,7 +166,6 @@
                        nil t)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
-
 
 (defcustom emacspeak-custom-toolbar-regexp
   "^Operate on everything in this buffer:"

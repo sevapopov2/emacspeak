@@ -1,5 +1,5 @@
 ;;; emacspeak-enriched.el --- Audio Formatting for Emacs' WYSIWYG RichText  mode
-;;; $Id: emacspeak-enriched.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-enriched.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak module to speak voicify rich text
 ;;; Keywords:emacspeak, audio interface to emacs rich text
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -51,7 +51,6 @@
 (defvar emacspeak-enriched-font-faces-to-voiceify
   (list 'bold 'italic   'bold-italic 'underlined)
   "List of font faces we voiceify")
-
 
 (defun emacspeak-enriched-voiceify-faces (start end)
   "Map base fonts to voices.
@@ -122,7 +121,7 @@ Useful in voicifying rich text."
   "Map faces to voices. "
   (cond
    (enriched-mode
-       (emacspeak-enriched-voiceify-faces (point-min) (point-max))))
+    (emacspeak-enriched-voiceify-faces (point-min) (point-max))))
   ad-return-value)
 
 ;;}}}

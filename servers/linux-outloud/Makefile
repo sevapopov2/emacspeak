@@ -1,4 +1,4 @@
-#$Id: Makefile,v 16.0 2002/05/03 23:31:27 raman Exp $
+#$Id: Makefile,v 17.0 2002/11/23 01:29:10 raman Exp $
 INSTALL = install
 PREFIX = /usr
 libparentdir = ${PREFIX}/share/emacs/site-lisp

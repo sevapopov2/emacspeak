@@ -1,4 +1,4 @@
-# $Id: Makefile,v 16.0 2002/05/03 23:31:27 raman Exp $
+# $Id: Makefile,v 17.0 2002/11/23 01:29:11 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak,  TTS,Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2002/05/03 23:31:27 $ |
-#  $Revision: 16.0 $ | 
+# $Date: 2002/11/23 01:29:11 $ |
+#  $Revision: 17.0 $ | 
 # Location undetermined
 #
 
@@ -149,7 +149,12 @@ IGUIDE=install-guide/*.html install-guide/*.sgml
 TABLE_SAMPLES=etc/tables/*.tab etc/tables/*.dat etc/tables/*.html
 FORMS =etc/forms/*.el
 REALAUDIO=realaudio
+SHOUTCAST=shoutcast
 ECI=servers/linux-outloud
+DTKTTS=servers/software-dtk/tcldtk.c \
+servers/software-dtk/DTK \
+servers/software-dtk/Makefile
+
 OUTLOUD=${ECI}/eci.ini \
 ${ECI}/tcleci.cpp  \
 ${ECI}/VIAVOICE \
@@ -162,6 +167,7 @@ SOUNDS=sounds/default-8k sounds/emacspeak.mp3
 TCL_PROGRAMS = servers/.servers \
 servers/dtk-exp \
 servers/dtk-mv \
+servers/dtk-soft \
 servers/outloud \
 servers/stereo-outloud \
 servers/tts-lib.tcl \
@@ -179,7 +185,7 @@ etc/emacspeak.xpm etc/emacspeak.jpg
 INFO = info/Makefile info/*.texi info/add-css.pl
 XSL=xsl
 DISTFILES =${ELISP}  ${TEMPLATES}     $(TCL_PROGRAMS) ${XSL} \
-${SAWFISH} ${OUTLOUD} \
+${SAWFISH} ${OUTLOUD} ${DTKTTS} \
 ${INFO} ${UGUIDE} ${IGUIDE} ${NEWS} ${MISC} Makefile 
 
 # }}}
@@ -217,7 +223,7 @@ tar:
 	@echo "To configure the source files. Then type make" >> $(ID)
 	@echo "See the Makefile for details. " >> $(ID)
 	tar cvf  emacspeak.tar $(EXCLUDES) $(DISTFILES)   $(ID) \
-	 		${TABLE_SAMPLES} ${REALAUDIO} ${FORMS} \
+	 		${TABLE_SAMPLES} ${REALAUDIO} ${SHOUTCAST} ${FORMS} \
 	${SOUNDS}   
 
 dist: $(DISTFILES)
@@ -255,6 +261,8 @@ install:
 	$(INSTALL) -d $(libdir)/servers
 	$(INSTALL) -d $(libdir)/servers/linux-outloud
 	$(INSTALL)  ${OUTLOUD}  $(libdir)/servers/linux-outloud
+	$(INSTALL) -d $(libdir)/servers/software-dtk
+	$(INSTALL)  ${DTKTTS}  $(libdir)/servers/software-dtk
 	$(INSTALL)  ${TCL_PROGRAMS}  $(libdir)/servers
 	$(INSTALL) -m 0644   ${NEWS}   $(libdir)/etc
 	cp   ${MISC}   $(libdir)/etc
@@ -262,6 +270,8 @@ install:
 	chmod -R go+rX  $(libdir)/sounds
 	$(CP) -r $(REALAUDIO) $(libdir)
 	chmod -R go+rX  $(libdir)/realaudio
+	$(CP) -r $(SHOUTCAST) $(libdir)
+	chmod -R go+rX  $(libdir)/shoutcast
 	$(INSTALL) -d $(libdir)/etc/forms
 	$(INSTALL)  -m 0644 $(FORMS) $(libdir)/etc/forms
 	$(INSTALL) -d $(libdir)/etc/tables
@@ -351,7 +361,7 @@ sourceforge:
 	  echo cd incoming;				\
 	  echo put ${TARBALL};			\
 	  echo put ${RPM};		\
-	  echo quit ) | ftp upload.sourceforge.net
+	  echo quit ) | /usr/bin/ftp upload.sourceforge.net
 	scp ${RPM} ${TARBALL} ${SF_HOME}
 
 # }}}

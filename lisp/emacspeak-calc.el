@@ -1,5 +1,5 @@
 ;;; emacspeak-calc.el --- Speech enable the Emacs Calculator -- a powerful symbolic algebra system
-;;; $Id: emacspeak-calc.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-calc.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: 
 ;;; Keywords:
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -64,13 +64,13 @@
 
 (defadvice  calc-do (after emacspeak pre act comp)
   "Speak previous line of output."
-    (emacspeak-read-previous-line)
-    (emacspeak-auditory-icon 'select-object))
+  (emacspeak-read-previous-line)
+  (emacspeak-auditory-icon 'select-object))
 
 (defadvice  calc-trail-here (after emacspeak pre act comp)
   "Speak previous line of output."
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object))
+  (emacspeak-speak-line)
+  (emacspeak-auditory-icon 'select-object))
 
 ;;}}}
 (provide 'emacspeak-calc)

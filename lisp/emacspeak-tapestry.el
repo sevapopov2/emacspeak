@@ -1,5 +1,5 @@
 ;;; emacspeak-tapestry.el --- Speak information about current layout of windows
-;;; $Id: emacspeak-tapestry.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: emacspeak-tapestry.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak module to speak window tapestries
 ;;; Keywords:emacspeak, audio interface to emacs tapestry
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -40,9 +40,9 @@
 (eval-when-compile (require 'cl))
 (declaim  (optimize  (safety 0) (speed 3)))
 (eval-when (compile) (require 'tapestry))
- (condition-case nil 
-     (require 'tapestry)
-   (error "Could not locate tapestry.el"))
+(condition-case nil 
+    (require 'tapestry)
+  (error "Could not locate tapestry.el"))
 (require 'emacspeak-sounds)
 (require 'emacspeak-speak)
 (require 'emacspeak-fix-interactive)
@@ -87,16 +87,15 @@
                                      'personality 'harry tl)
                   (put-text-property 0 (length br)
                                      'personality 'harry br)
-                        (concat w
-                                " with top left "
-                                tl
-                                " and bottom right "
-                                br))))
+		  (concat w
+			  " with top left "
+			  tl
+			  " and bottom right "
+			  br))))
     (tts-with-punctuations "some"
                            (dtk-speak
                             (concat description
                                     (apply 'concat windows ))))))
-
 
 ;;}}}
 (provide  'emacspeak-tapestry)

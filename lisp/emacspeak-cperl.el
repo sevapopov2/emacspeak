@@ -1,5 +1,5 @@
 ;;; emacspeak-perl.el --- Speech enable CPerl Mode 
-;;; $Id: emacspeak-cperl.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-cperl.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for CPerl mode
 ;;; Keywords:emacspeak, audio interface to emacs CPerl
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -40,16 +40,15 @@
 (eval-when-compile (require 'cl))
 (declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile (require 'dtk-speak)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(require 'voice-lock))
+		   (require 'emacspeak-speak)
+		   (require 'emacspeak-sounds)
+		   (require 'voice-lock))
 
 ;;{{{  Introduction:
 
 ;;; Commentary:
 
 ;;; Provide additional advice to CPerl mode 
-
 
 ;;; Code:
 
@@ -66,10 +65,10 @@
 
 (defvar emacspeak-cperl-electric-insertion-commands-to-advice
   '(cperl-electric-lbrace
-cperl-electric-paren
-cperl-electric-rparen
-cperl-electric-semi
-cperl-electric-terminator)
+    cperl-electric-paren
+    cperl-electric-rparen
+    cperl-electric-semi
+    cperl-electric-terminator)
   "Electric commands from CPerl to advice")
 
 (loop for e in emacspeak-cperl-electric-insertion-commands-to-advice
@@ -81,8 +80,8 @@ cperl-electric-terminator)
 Cue electric insertion with a tone."
           (when (interactive-p)
             (let ((emacspeak-speak-messages nil))
-                  (emacspeak-speak-this-char last-input-char)
-                  (dtk-tone 800 50 t)))))))
+	      (emacspeak-speak-this-char last-input-char)
+	      (dtk-tone 800 50 t)))))))
 
 (defadvice cperl-electric-backspace (around emacspeak pre act)
   "Speak character you're deleting."
@@ -133,13 +132,12 @@ Otherwise cue user to the line just created. "
     (message "Displayed info in other window")))
 
 (defadvice cperl-info-on-command (after emacspeak
-                                                pre act
-                                                comp)
+					pre act
+					comp)
   "Speak the displayed info"
   (when (interactive-p)
     (emacspeak-auditory-icon 'help)
     (message "Displayed help in other window.")))
-
 
 ;;}}}
 ;;{{{ structured editing
@@ -150,7 +148,6 @@ Otherwise cue user to the line just created. "
   (when (interactive-p)
     (emacspeak-speak-line)
     (emacspeak-auditory-icon 'select-object)))
-
 
 (defadvice cperl-comment-region (after emacspeak pre act )
   "Provide spoken feedback."
@@ -215,13 +212,13 @@ Otherwise cue user to the line just created. "
 
 (add-hook 'cperl-mode-hook
           (function (lambda ()
-                                    (voice-lock-mode 1)
-                                    (dtk-set-punctuations "all")
-                                    (or dtk-split-caps
-                                        (dtk-toggle-split-caps))
-                                    (or emacspeak-audio-indentation
-                                        (emacspeak-toggle-audio-indentation))
-                                    (emacspeak-dtk-sync))))
+		      (voice-lock-mode 1)
+		      (dtk-set-punctuations "all")
+		      (or dtk-split-caps
+			  (dtk-toggle-split-caps))
+		      (or emacspeak-audio-indentation
+			  (emacspeak-toggle-audio-indentation))
+		      (emacspeak-dtk-sync))))
 
 ;;}}}
 (provide  'emacspeak-cperl)

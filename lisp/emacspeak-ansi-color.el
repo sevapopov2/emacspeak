@@ -1,5 +1,5 @@
 ;;; emacspeak-ansi-color.el --- Voiceify ansi-color 
-;;; $Id: emacspeak-ansi-color.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-ansi-color.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for ansi-color
 ;;; Keywords: Emacspeak, ansi-color
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -105,11 +105,11 @@
          (start (overlay-start extent))
          (end (overlay-end extent))
          (voice (when (listp face)
-          (emacspeak-ansi-color-to-voice face))))
+		  (emacspeak-ansi-color-to-voice face))))
     (when voice
-    (ems-modify-buffer-safely
-     (put-text-property start end
-                        'personality voice)))))
+      (ems-modify-buffer-safely
+       (put-text-property start end
+			  'personality voice)))))
 
 ;;}}}
 ;;{{{ advice interactive commands
@@ -122,7 +122,7 @@
     (message "Ansi escape sequences will be processed.")))
 
 (defadvice ansi-color-for-comint-mode-off (after emacspeak
-                                                pre act comp)
+						 pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'off)

@@ -1,5 +1,5 @@
 ;;; html-voice.el --- Voice locking for html-helper-mode
-;;; $Id: html-voice.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: html-voice.el,v 17.0 2002/11/23 01:29:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Voice locking for html helper  mode. Cloned from html-font.el
 ;;; Keywords: voice lock, html-helper-mode, emacspeak, speech 
@@ -7,8 +7,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interpersonality to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:01 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -35,8 +35,6 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
-
-
 
 ;;; html-voice.el --- Adds voice-lock support to HTML helper mode in Emacs.
 ;; Copyright (C) 1995 Ulrik Dickow.
@@ -111,15 +109,13 @@
 (eval-when-compile (require 'cl))
 (eval-when (compile)
   (condition-case nil 
-(require 'html-helper-mode)  ; When we like to modify the syntax table
-(error (message "Looks like you dont have html-helper-mode installed."))))
+      (require 'html-helper-mode) ; When we like to modify the syntax table
+    (error (message "Looks like you dont have html-helper-mode installed."))))
 (require 'voice-lock)
 (declaim (special html-helper-mode-syntax-table))
 ;; Code for greater flexibility, especially for XEmacs compatibility.
 ;; Note that Emacs evaluates the personality entries in `voice-lock-keywords',
 ;; while XEmacs doesn't.
-
-
 
 ;; The following personality variable is introduced in Emacs 19.29's voice-lock.el.
 ;; For Emacs <19.29 we fall back to the doc string personality (obsoleted by
@@ -133,7 +129,7 @@
 (modify-syntax-entry ?\" "\"   " html-helper-mode-syntax-table)
 
 (defvar html-voice-lock-keywords
-  (let ((tword "\\(h1\\|title\\)")          ; Titles, like function defs
+  (let ((tword "\\(h1\\|title\\)")	; Titles, like function defs
 	(bword "\\(b\\|h[2-4]\\|strong\\)") ; Names of tags to boldify
 	(iword "\\(address\\|cite\\|em\\|i\\|var\\)") ; ... to italify
 	;; Regexp to match shortest sequence that surely isn't a bold end.
@@ -197,13 +193,13 @@
 ;; It can be done much more elegantly in Emacs 19.29+, but we'll keep it this
 ;; way to retain compatibility with older Emacsen.
 (add-hook 'html-helper-mode-hook
- '(lambda ()
-    (make-local-variable 'voice-lock-keywords-case-fold-search)
-    (make-local-variable 'voice-lock-keywords)
-;;  (make-local-variable 'voice-lock-no-comments)
-    ;; Regard the patterns in html-voice-lock-keywords as case-insensitive
-    (setq voice-lock-keywords-case-fold-search t)
-    (setq voice-lock-keywords html-voice-lock-keywords)))
+	  '(lambda ()
+	     (make-local-variable 'voice-lock-keywords-case-fold-search)
+	     (make-local-variable 'voice-lock-keywords)
+	     ;;  (make-local-variable 'voice-lock-no-comments)
+	     ;; Regard the patterns in html-voice-lock-keywords as case-insensitive
+	     (setq voice-lock-keywords-case-fold-search t)
+	     (setq voice-lock-keywords html-voice-lock-keywords)))
 ;;  (setq voice-lock-no-comments t)))
 
 (provide 'html-voice)

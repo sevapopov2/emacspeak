@@ -1,5 +1,5 @@
 ;;; emacspeak-ispell.el --- Speech enable Ispell -- Emacs' interactive spell checker
-;;; $Id: emacspeak-flyspell.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-flyspell.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable flyspell
 ;;; Keywords: Emacspeak, Ispell, Spoken Output, fly spell checking
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -50,9 +50,6 @@
 
 ;;; This module speech enables flyspell.
 
-
-
-
 ;;}}}
 ;;{{{  define personalities
 
@@ -65,10 +62,11 @@
 (defcustom emacspeak-flyspell-highlight-personality 'harry
   "Voice used to highlight spelling errors. "
   :type 'symbol
-:group 'emacspeak-flyspell)
+  :group 'emacspeak-flyspell)
 
 ;;}}}
 ;;{{{ advice
+
 (declaim (special flyspell-delayed-commands))
 (push 'emacspeak-self-insert-command flyspell-delayed-commands)
 (defadvice flyspell-auto-correct-word (around emacspeak pre act comp)
@@ -84,25 +82,27 @@
 (defadvice flyspell-unhighlight-at (before debug pre act comp)
 
   (let ((overlay-list (overlays-at pos))
-(o nil))
+	(o nil))
     (while overlay-list 
-(setq o (car overlay-list))
-          (when (flyspell-overlay-p o)
-          (put-text-property (overlay-start o)
-                             (overlay-end o)
-                             'personality  nil))
-(setq overlay-list (cdr overlay-list)))))
+      (setq o (car overlay-list))
+      (when (flyspell-overlay-p o)
+	(put-text-property (overlay-start o)
+			   (overlay-end o)
+			   'personality  nil))
+      (setq overlay-list (cdr overlay-list)))))
+
 ;;}}}
 ;;{{{  Highlighting the error 
 
-(defun emacspeak-flyspell-highlight-incorrect-word (beg end)
+(defun emacspeak-flyspell-highlight-incorrect-word (beg end ignore)
   "Put property personality with value
 `emacspeak-flyspell-highlight-personality' from beg to end"
   (declare (special emacspeak-flyspell-highlight-personality))
   (ems-modify-buffer-safely
    (put-text-property beg end 'personality
                       emacspeak-flyspell-highlight-personality))
-  (emacspeak-speak-region beg end))
+  (emacspeak-speak-region beg end)
+  nil)
 
 (add-hook 'flyspell-incorrect-hook 'emacspeak-flyspell-highlight-incorrect-word)
 

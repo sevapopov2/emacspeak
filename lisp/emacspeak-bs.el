@@ -1,5 +1,5 @@
 ;;; emacspeak-bs.el --- speech-enable bs buffer selection
-;;; $Id: emacspeak-bs.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-bs.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable bs
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -77,7 +77,7 @@
             this-buffer-modified-p
             this-buffer-size
             this-buffer-mode-name
-mode-name
+	    mode-name
             this-buffer-directory
             (dtk-stop-immediately nil))
         (put-text-property 0 (length document)
@@ -101,8 +101,8 @@ mode-name
         (when this-buffer-modified-p (dtk-tone 700 70))
         (when this-buffer-read-only (dtk-tone 250 50))
         (put-text-property 0 (length this-buffer-mode-name)
-'personality 'paul-smooth
-this-buffer-mode-name)
+			   'personality 'paul-smooth
+			   this-buffer-mode-name)
         (dtk-speak
          (concat 
           name
@@ -124,7 +124,7 @@ this-buffer-mode-name)
 
 (defadvice bs-mode (after emacspeak pre act comp)
   "Speech-enable bs mode"
-    (setq voice-lock-mode t))
+  (setq voice-lock-mode t))
 
 (defadvice bs-kill (after emacspeak pre act comp)
   "Speech-enable bs mode"
@@ -180,7 +180,6 @@ this-buffer-mode-name)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
-
 (defadvice bs-bury-buffer (after emacspeak pre act comp)
   "Speech-enable bs mode"
   (when (interactive-p)
@@ -221,7 +220,6 @@ this-buffer-mode-name)
     (emacspeak-auditory-icon 'delete-object)
     (emacspeak-bs-speak-buffer-line)))
 
-
 (defadvice bs-up (after emacspeak pre act comp)
   "Speech-enable bs mode"
   (when (interactive-p)
@@ -237,17 +235,15 @@ this-buffer-mode-name)
   "Speech-enable bs mode"
   (when (interactive-p)
     (let ((emacspeak-speak-messages nil))
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-mode-line))))
-
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-speak-mode-line))))
 
 (defadvice bs-cycle-previous (after emacspeak pre act comp)
   "Speech-enable bs mode"
   (when (interactive-p)
     (let ((emacspeak-speak-messages nil))
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-mode-line))))
-
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-speak-mode-line))))
 
 ;;}}}
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-daisy.el --- daisy Front-end for emacspeak desktop
-;;; $Id: emacspeak-daisy.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-daisy.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for DAISY Talking Books
 ;;; Keywords: Emacspeak, daisy Digital Talking Books
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -96,13 +96,6 @@
                     s)))
       (round
        (/ total   emacspeak-daisy-frame-seconds)))))
-
-
-
-
-
-
-
 
 (defsubst emacspeak-daisy-resolve-uri (relative book)
   "Resolve relative URI with respect to base URI of book."
@@ -218,14 +211,13 @@ after fetching it  if necessary."
   (let ((audio (xml-tag-child clip "audio"))
         (text (xml-tag-child clip "text"))
         (seq (xml-tag-child  clip "seq")))
-  (when (and (not audio)
-             seq)
-    (setq audio (xml-tag-child seq "audio")))
-  (when audio
-    (emacspeak-daisy-play-audio audio))
-  (when text
-    (emacspeak-daisy-play-text text))))
-
+    (when (and (not audio)
+	       seq)
+      (setq audio (xml-tag-child seq "audio")))
+    (when audio
+      (emacspeak-daisy-play-audio audio))
+    (when text
+      (emacspeak-daisy-play-text text))))
 
 (defun emacspeak-daisy-play-content (content)
   "Play SMIL content specified by content."
@@ -249,7 +241,6 @@ after fetching it  if necessary."
           (xml-find-tag-by-id smil fragment))
     (emacspeak-daisy-play-smil clip)))
 
-
 ;;}}}
 ;;{{{  table of handlers 
 
@@ -261,7 +252,7 @@ after fetching it  if necessary."
   (declare (special emacspeak-daisy-handler-table))
   (gethash
    (intern element)
- emacspeak-daisy-handler-table))
+   emacspeak-daisy-handler-table))
 
 (defsubst emacspeak-daisy-set-handler (element handler)
   "Set handler for element."
@@ -327,7 +318,6 @@ after fetching it  if necessary."
   (mapc #'emacspeak-daisy-apply-handler
         (xml-tag-children element )))
 
-
 (defun emacspeak-daisy-navObject-handler (element)
   "Handle navObject element."
   (let ((text (xml-tag-child element "text"))
@@ -357,7 +347,6 @@ after fetching it  if necessary."
 
 (declaim (special emacspeak-daisy-mode-map))
 
-
 (define-derived-mode emacspeak-daisy-mode text-mode 
   "Digital Talking Book\n"
   "A DAISY front-end for the Emacspeak desktop.
@@ -367,7 +356,6 @@ Pre-requisites:
 0) mpg123 for playing mp3 files
 1) libxml and libxslt packages 
 2) xml-parse.el for parsing XML in Emacs Lisp.
-
 
 The Emacspeak DAISY front-end is launched by command
 emacspeak-daisy bound to \\[emacspeak-daisy].  
@@ -435,7 +423,6 @@ Here is a list of all emacspeak DAISY commands along with their key-bindings:
              (emacspeak-daisy-book-title book)))
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
-
 
 ;;}}}
 ;;{{{ interactive commands

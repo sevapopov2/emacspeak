@@ -1,5 +1,5 @@
 ;;; emacspeak-imcom.el --- Emacspeak interface to IMCom/Jabber
-;;; $Id: emacspeak-imcom.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-imcom.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains convenience imcom
 ;;; Keywords: Emacspeak,  Audio Desktop Imcom
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -91,8 +91,6 @@
 ;;}}}
 ;;{{{ Create and launch IMCom process
 
-
-
 (defvar emacspeak-imcom-process nil
   "Handle to running IMCom process.")
 
@@ -112,9 +110,8 @@
       (set-buffer buffer)
       (emacspeak-imcom-mode)
       (run-hooks 'emacspeak-imcom-hooks)
-    (setq emacspeak-imcom-process
-          (get-buffer-process buffer)))))
-
+      (setq emacspeak-imcom-process
+	    (get-buffer-process buffer)))))
 
 (add-hook 'emacspeak-imcom-hooks
           'emacspeak-pronounce-refresh-pronunciations)
@@ -129,9 +126,9 @@
   (declare (special emacspeak-imcom-process))
   (unless
       (and (processp emacspeak-imcom-process)
-      (eq 'run 
-      (process-status  emacspeak-imcom-process)))
-  (emacspeak-imcom-start-process))
+	   (eq 'run 
+	       (process-status  emacspeak-imcom-process)))
+    (emacspeak-imcom-start-process))
   (emacspeak-auditory-icon 'open-object)
   (switch-to-buffer (process-buffer
                      emacspeak-imcom-process))
@@ -184,7 +181,7 @@ sessions.")
         (cons "session"
               (format "\"'%s'\""
                       session))))
-      (w3-preview-this-buffer)
+      (emacspeak-w3-preview-this-buffer)
       (kill-buffer buffer))))
 
 ;;}}}

@@ -1,5 +1,5 @@
 ;;; emacspeak-rmail.el --- Speech enable RMail -- Emacs' default mail agent
-;;; $Id: emacspeak-rmail.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-rmail.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for rmail
 ;;; Keywords:emacspeak, audio interface to emacs mail
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -40,9 +40,9 @@
 (eval-when-compile (require 'cl))
 (declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile (require 'dtk-speak)
-(require 'emacspeak-sounds)
-(require 'emacspeak-speak))
-  (require 'rmail)
+		   (require 'emacspeak-sounds)
+		   (require 'emacspeak-speak))
+(require 'rmail)
 (require 'rmailsort)
 ;;{{{  Introduction
 
@@ -72,12 +72,12 @@
                   (rmail-display-labels ))))
     (dtk-speak
      (format "%s %s   %s %s labelled %s "
-            (or from "")
-            (if (and to (< (length to) 80))
-                (format "to %s" to) "")
-            (if subject (format "on %s" subject) "")
-            (if lines (format "%s lines" lines) "")
-            labels))))
+	     (or from "")
+	     (if (and to (< (length to) 80))
+		 (format "to %s" to) "")
+	     (if subject (format "on %s" subject) "")
+	     (if lines (format "%s lines" lines) "")
+	     labels))))
 
 ;;}}}
 ;;{{{  Advice some commands.
@@ -129,7 +129,6 @@
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-rmail-summarize-message rmail-current-message)))
 
-
 (defadvice rmail-last-message (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
@@ -142,13 +141,11 @@
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-rmail-summarize-message rmail-current-message)))
 
-
 (defadvice rmail-next-message (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-rmail-summarize-message rmail-current-message)))
-
 
 (defadvice rmail-previous-undeleted-message (after emacspeak pre act comp)
   "Provide auditory feedback"
@@ -189,10 +186,9 @@
    (t ad-do-it))
   ad-return-value)
 
-
 (defadvice rmail-show-message (after emacspeak pre act comp)
   "Provide auditory feedback"
-(when (interactive-p)
+  (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-rmail-summarize-message rmail-current-message)))  
 
@@ -217,12 +213,11 @@
     (emacspeak-auditory-icon 'delete-object)
     (emacspeak-rmail-summarize-current-message)))
 
-
 (defadvice rmail-delete-backward (after emacspeak pre act comp)
   "provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'delete-object)
-    (emacspeak-rmail-summarize-current-message)));;}}}
+    (emacspeak-rmail-summarize-current-message))) ;;}}}
 
 ;;}}}
 ;;{{{  Additional interactive commands
@@ -237,7 +232,7 @@
   (interactive)
   (dtk-speak
    (format "Labels are %s"
-(rmail-display-labels))))
+	   (rmail-display-labels))))
 
 ;;}}}
 ;;{{{  key bindings

@@ -1,5 +1,5 @@
 ;;; emacspeak-ispell.el --- Speech enable Ispell -- Emacs' interactive spell checker
-;;; $Id: emacspeak-ispell.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-ispell.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable ispell
 ;;; Keywords: Emacspeak, Ispell, Spoken Output, Ispell version 2.30
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -65,21 +65,21 @@
 ;;{{{  first set up voice  highlighting in 2.30:
 (declaim (special ispell-version))
 (when  (string-lessp ispell-version "2.37")
-     (fset 'ispell-highlight-spelling-error
-           (symbol-function 'ispell-highlight-spelling-error-overlay))
+  (fset 'ispell-highlight-spelling-error
+	(symbol-function 'ispell-highlight-spelling-error-overlay))
 
- (defadvice ispell-highlight-spelling-error (after emacspeak act )
-   "Use voice locking to highlight the error.
+  (defadvice ispell-highlight-spelling-error (after emacspeak act )
+    "Use voice locking to highlight the error.
 Will clobber any existing personality property defined on start end"
-   (let ((start (ad-get-arg 0))
-         (end (ad-get-arg 1 ))
-         (highlight (ad-get-arg 2 )))
-     (if highlight
-         (put-text-property  start end
-                             'personality  ispell-highlight-personality )
-       (put-text-property start end
-                          'personality  nil ))))
-)
+    (let ((start (ad-get-arg 0))
+	  (end (ad-get-arg 1 ))
+	  (highlight (ad-get-arg 2 )))
+      (if highlight
+	  (put-text-property  start end
+			      'personality  ispell-highlight-personality )
+	(put-text-property start end
+			   'personality  nil ))))
+  )
 
 ;;}}}
 ;;{{{  ispell command loop:
@@ -91,32 +91,17 @@ Will clobber any existing personality property defined on start end"
 
 ;;; Advice speaks the line containing the error with the erroneous
 ;;; word highlighted.
-(if (string-lessp ispell-version "2.37")
-;;{{{  old version
 
-(defadvice ispell-command-loop (before emacspeak pre act )
-  "Speak the line containing the incorrect word.
- Then speak  the possible corrections. "
-  (let ((choices  (ad-get-arg 0 ))
-        (emacspeak-speak-messages nil)
-        (save-dtk-capitalize dtk-capitalize)
-        (position 0))
-    (or dtk-capitalize 
-        (dtk-toggle-capitalization))
-    (emacspeak-speak-line nil )
-    (unwind-protect
-        (progn
-          (dtk-toggle-splitting-on-white-space)
-          (while (and choices)
-            (dtk-say (format "%s %s" position (car choices )))
-            (incf position)
-            (setq choices (cdr choices ))))
-      (dtk-toggle-splitting-on-white-space)
-      (unless save-dtk-capitalize
-        (dtk-toggle-capitalization)))))
-
-;;}}}
 ;;{{{  new version
+(defgroup emacspeak-ispell nil
+  "Spell checking group."
+  :group  'emacspeak)
+
+(defcustom emacspeak-ispell-max-choices 10
+  "Emacspeak will not speak the choices if there are more than this
+many available corrections."
+  :type 'number
+  :group 'emacspeak-ispell)
 
 (defadvice ispell-command-loop (before emacspeak pre act )
   "Speak the line containing the incorrect word.
@@ -133,17 +118,24 @@ Will clobber any existing personality property defined on start end"
     (save-excursion
       (set-buffer scratch-buffer)
       (dtk-set-punctuations "all")
-      (modify-syntax-entry 10 ".")
       (erase-buffer)
       (insert line)
-      (loop for choice in choices
-            do
-            (insert (format "%s %s\n" position choice))
-            (incf position))
+      (cond
+       ((< (length choices)
+           emacspeak-ispell-max-choices)
+	(loop for choice in choices
+	      do
+	      (insert (format "%s %s\n" position choice))
+	      (incf position)))
+       (t (insert
+           (format "There were %s corrections available."
+                   (length choices)))))
+      (modify-syntax-entry 10 ">")
       (dtk-speak (buffer-string )))))
 
 ;;}}}
-)
+  
+
 (defadvice ispell-comments-and-strings (around emacspeak pre act comp) 
   "Stop chatter by turning off messages"
   (cond
@@ -157,7 +149,7 @@ Will clobber any existing personality property defined on start end"
 
 (defadvice ispell-help (before emacspeak pre act)
   "Speak the help message. "
-  (let ((dtk-stop-immediately t))
+  (let ((dtk-stop-immediately nil))
     (dtk-speak (documentation 'ispell-help ))))
 
 ;;}}}

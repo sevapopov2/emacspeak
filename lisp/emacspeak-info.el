@@ -1,5 +1,5 @@
 ;;; emacspeak-info.el --- Speech enable Info -- Emacs' online documentation viewer
-;;; $Id: emacspeak-info.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-info.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Module for customizing Emacs info
 ;;; Keywords:emacspeak, audio interface to emacs
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -59,8 +59,6 @@
 (defvar Info-voiceify-maximum-menu-size 30000
   "*Maximum size of menu to voiceify if `Info-voiceify' is non-nil.")
 
-
-
 ;;}}}
 ;;{{{  Voices 
 
@@ -72,7 +70,7 @@
 The alist key is the character the title is underlined with (?*, ?= or ?-).")
   
 (defvar emacspeak-info-node   'harry
-"Personality to indicate the node name.")
+  "Personality to indicate the node name.")
 
 (defvar emacspeak-info-xref
   'ursula
@@ -82,12 +80,12 @@ The alist key is the character the title is underlined with (?*, ?= or ?-).")
   'betty
   "Personality for menu items.")
 
-
 ;;}}}
 ;;{{{  Voiceify a node 
 
 ;;; Cloned from info.el Info-fontify-node 
 (defun Info-voiceify-node ()
+  "Voiceify node."
   (declare (special Info-title-personality-alist Info-current-node))
   (save-excursion
     (let ((buffer-read-only nil))
@@ -106,13 +104,7 @@ The alist key is the character the title is underlined with (?*, ?= or ?-).")
                                 nil t)
 	(put-text-property (match-beginning 1) (match-end 1)
 			   'personality
-			   (cdr (assq (preceding-char) Info-title-personality-alist)))
-	;; This is a serious problem for trying to handle multiple
-	;; frame types at once.  We want this text to be invisible
-	;; on frames that can display the voice above.
-	(if (memq (framep (selected-frame)) '(x pc w32))
-	    (put-text-property (match-end 1) (match-end 2)
-			       'invisible t)))
+			   (cdr (assq (preceding-char) Info-title-personality-alist))))
       (goto-char (point-min))
       (while (re-search-forward "\\*Note[ \n\t]+\\([^:]*\\):" nil t)
 	(if (= (char-after (1- (match-beginning 0))) ?\") ; hack
@@ -121,13 +113,14 @@ The alist key is the character the title is underlined with (?*, ?= or ?-).")
 			     'personality emacspeak-info-xref)))
       (goto-char (point-min))
       (if (and (search-forward "\n* Menu:" nil t)
+               Info-current-node
 	       (not (string-match "\\<Index\\>" Info-current-node))
 	       ;; Don't take time to annotate huge menus
 	       (< (- (point-max) (point)) Info-voiceify-maximum-menu-size))
 	  (let ((n 0))
 	    (while (re-search-forward "^\\* \\([^:\t\n]*\\):" nil t)
 	      (setq n (1+ n))
-	      (if (memq n '(5 9))       ; visual aids to help with 1-9 keys
+	      (if (memq n '(5 9))  ; visual aids to help with 1-9 keys
 		  (put-text-property (match-beginning 0)
 				     (1+ (match-beginning 0))
 				     'personality emacspeak-info-menu-5))
@@ -146,15 +139,14 @@ See variable `Info-voiceify`"
   (Info-voiceify-node))
 
 (defcustom  emacspeak-info-select-node-speak-chunk 'screenfull 
-"*Specifies how much of the selected node gets spoken.
+  "*Specifies how much of the selected node gets spoken.
 Possible values are:
 screenfull  -- speak the displayed screen
 node -- speak the entire node."
-:type '(menu-choice
-(const screenful)
-(const node))
-:group 'emacspeak)
-
+  :type '(menu-choice
+	  (const screenful)
+	  (const node))
+  :group 'emacspeak)
 
 (defsubst emacspeak-info-speak-current-window ()
   "Speak current window in info buffer."
@@ -180,13 +172,11 @@ emacspeak-info-select-node-speak-chunk"
       (emacspeak-speak-buffer ))
      (t (emacspeak-speak-line)))))
 
-
 (defadvice info (after emacspeak pre act)
   "Cue user that info is up."
   (when (interactive-p)
     (emacspeak-auditory-icon 'help)
     (emacspeak-speak-line)))
-
 
 (defadvice Info-scroll-up (after emacspeak pre act) 
   "Speak the screenful."
@@ -216,7 +206,6 @@ and then cue the next selected buffer."
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
-
 (defadvice Info-next-reference (after emacspeak pre act)
   "Speak the line. "
   (when (interactive-p)
@@ -234,16 +223,16 @@ and then cue the next selected buffer."
   "Speak info header line."
   (interactive)
   (declare (special Info-use-header-line
-Info-header-line))
+		    Info-header-line))
   (let ((voice-lock-mode t))
-  (cond
-   ((and (boundp 'Info-use-header-line)
-        (boundp 'Info-header-line)
-        Info-header-line)
-   (dtk-speak Info-header-line))
-   (t (save-excursion
-        (beginning-of-buffer)
-        (emacspeak-speak-line))))))
+    (cond
+     ((and (boundp 'Info-use-header-line)
+	   (boundp 'Info-header-line)
+	   Info-header-line)
+      (dtk-speak Info-header-line))
+     (t (save-excursion
+	  (beginning-of-buffer)
+	  (emacspeak-speak-line))))))
 
 ;;}}}
 ;;{{{  Emacs 21 

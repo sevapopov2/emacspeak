@@ -7,8 +7,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -50,7 +50,6 @@
 ;;; It is an example of how a little amount of code can make Emacspeak even better.
 ;;; Code:
 
-
 ;;}}}
 ;;{{{  functions
 
@@ -80,7 +79,6 @@
   (when (interactive-p)
     (emacspeak-compilation-speak-error)))
 
-
 (defadvice compilation-next-file (after emacspeak pre act)
   "Speak the error line. "
   (when (interactive-p) (emacspeak-compilation-speak-error ))
@@ -106,7 +104,6 @@
   (message "process %s %s"
            (process-name  (ad-get-arg 0))
            (ad-get-arg 1 )))
-
 
 ;;}}}
 (provide 'emacspeak-compile)

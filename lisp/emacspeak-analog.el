@@ -1,5 +1,5 @@
 ;;; emacspeak-analog.el --- Speech-enable
-;;; $Id: emacspeak-analog.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-analog.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for ANALOG log analyzer 
 ;;; Keywords: Emacspeak, analog 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -61,8 +61,8 @@
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)
+    (emacspeak-analog-update-edit-keys)
     (emacspeak-speak-mode-line)))
-
 
 (defadvice analog-quit (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -112,7 +112,6 @@ Nil means no field specified."
           'analog-entry-start)
          'fields)))))
 
-
 (defun emacspeak-analog-forward-field-or-char ()
   "Move forward to next field if field specification is available.
 Otherwise move to next char.
@@ -136,7 +135,6 @@ Speak field or char moved to."
              (emacspeak-analog-speak-field fields)
              (emacspeak-auditory-icon 'large-movement))
      (t (call-interactively 'emacspeak-backward-char)))))
-
 
 (defun emacspeak-analog-speak-field (fields)
   "Speak field containing point."
@@ -232,6 +230,19 @@ Speak field or char moved to."
 (define-key analog-mode-map '[right] 'emacspeak-analog-forward-field-or-char)
 (define-key analog-mode-map '[up] 'emacspeak-analog-previous-line)
 (define-key analog-mode-map '[down] 'emacspeak-analog-next-line)
+(defun emacspeak-analog-update-edit-keys ()
+  "We define keys that invoke editting commands to invoke
+emacspeak-speak-and-skip-extent-upto-char "
+  (declare (special analog-mode-map))
+  (mapcar 
+   #'(lambda (cmd)
+       (loop for k in
+	     (where-is-internal cmd)
+	     do
+	     (define-key analog-mode-map k
+	       'emacspeak-speak-and-skip-extent-upto-this-char )))
+   (list 'emacspeak-self-insert-command
+	 'completion-separator-self-insert-command)))
 
 ;;}}}
 (provide 'emacspeak-analog)

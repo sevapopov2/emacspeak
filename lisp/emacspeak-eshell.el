@@ -1,5 +1,5 @@
 ;;; emacspeak-eshell.el --- Speech-enable EShell - Emacs Shell
-;;; $Id: emacspeak-eshell.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-eshell.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   Speech-enable EShell
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -122,8 +122,6 @@ Provide an auditory icon if possible."
     (emacspeak-dtk-sync)
     (emacspeak-speak-line)))
 
-
-
 ;;}}}
 ;;{{{ advice em-hist 
 
@@ -153,7 +151,6 @@ Provide an auditory icon if possible."
   :group 'emacspeak
   :group 'eshell
   :prefix "emacspeak-eshell-")
-
 
 (defcustom emacspeak-eshell-ls-use-personalities t
   "Indicates if ls in eshell uses different voice
@@ -186,7 +183,7 @@ personalities."
   :type 'symbol
   :group 'emacspeak-eshell)
 
-(defcustom emacspeak-eshell-ls-special-personality 'ppaul-smooth 
+(defcustom emacspeak-eshell-ls-special-personality 'paul-smooth 
   "Personality for special files."
   :type 'symbol
   :group 'emacspeak-eshell)
@@ -215,7 +212,6 @@ personalities."
   "Personality for transients."
   :type 'symbol
   :group 'emacspeak-eshell)
-
 
 (defadvice  eshell-ls-decorated-name (around emacspeak pre act comp)
   "Voiceify the name if requested."
@@ -372,7 +368,6 @@ personalities."
       (emacspeak-speak-line))
      (t (emacspeak-speak-mode-line)))
     (emacspeak-auditory-icon 'select-object)))
-
 
 ;;}}}
 
