@@ -468,7 +468,6 @@ and TABLE gives the values along that dimension."
   (setq tts-default-voice nil)
   (setq tts-default-speech-rate multispeech-default-speech-rate)
   (set-default 'tts-default-speech-rate multispeech-default-speech-rate)
-  (setq default-enable-multibyte-characters t)
   (setq emacspeak-speak-default-os-coding-system 'cyrillic-koi8)
   (set-process-coding-system dtk-speaker-process 'cyrillic-koi8 'cyrillic-koi8)
   (setq emacspeak-unspeakable-rule "^[^0-9a-zA-Z\243\263\300-\377\xe30-\xe6f\xe21\xe71]+$")
