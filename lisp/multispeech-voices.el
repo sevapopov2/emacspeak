@@ -470,7 +470,6 @@ and TABLE gives the values along that dimension."
   (set-default 'tts-default-speech-rate multispeech-default-speech-rate)
   (setq emacspeak-speak-default-os-coding-system 'cyrillic-koi8)
   (set-process-coding-system dtk-speaker-process 'cyrillic-koi8 'cyrillic-koi8)
-  (setq emacspeak-unspeakable-rule "^[^0-9a-zA-Z\243\263\300-\377\xe30-\xe6f\xe21\xe71]+$")
   (setq-default dtk-speak-nonprinting-chars nil)
   (unless russian-spelling-data-loaded-p
     (let ((coding-system-for-read 'raw-text))
