@@ -450,6 +450,9 @@ and TABLE gives the values along that dimension."
 ;;}}}
 ;;{{{ Configurater 
 
+(defvar russian-spelling-data-loaded-p nil
+  "Indicates whether Russian spelling data have already been loaded.")
+
 (defun multispeech-configure-tts ()
   "Configure TTS environment to use multilingual speech server."
   (declare (special tts-default-speech-rate
@@ -469,10 +472,13 @@ and TABLE gives the values along that dimension."
   (set-process-coding-system dtk-speaker-process 'cyrillic-koi8 'cyrillic-koi8)
   (setq emacspeak-unspeakable-rule "^[^0-9a-zA-Z\243\263\300-\377\xe30-\xe6f\xe21\xe71]+$")
   (setq-default dtk-speak-nonprinting-chars nil)
-  (let ((coding-system-for-read 'raw-text))
-    (load-library "Russian-spelling"))
-  (let ((coding-system-for-read 'cyrillic-koi8))
-    (load-library "Russian-spelling")))
+  (unless russian-spelling-data-loaded-p
+    (progn
+      (let ((coding-system-for-read 'raw-text))
+	(load-library "Russian-spelling"))
+      (let ((coding-system-for-read 'cyrillic-koi8))
+	(load-library "Russian-spelling"))
+      (setq russian-spelling-data-loaded-p t))))
 
 ;;}}}
 (provide 'multispeech-voices)
