@@ -35,6 +35,7 @@
 
 (require 'emacspeak-preamble)
 (require 'w3m nil t)
+(require 'w3m-form nil t)
 ;;}}}
 ;;{{{ keybindings 
 (declaim (special w3m-mode-map
