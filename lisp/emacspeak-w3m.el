@@ -262,13 +262,15 @@
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice w3m-edit-current-url (after emacspeak pre act comp)
-  "Produce auditory icon."
+  "Provide auditory feedback."
   (when (interactive-p)
+    (emacspeak-speak-mode-line)
     (emacspeak-auditory-icon 'open-object)))
 
 (defadvice w3m-edit-this-url (after emacspeak pre act comp)
-  "Produce auditory icon."
+  "Provide auditory feedback."
   (when (interactive-p)
+    (emacspeak-speak-mode-line)
     (emacspeak-auditory-icon 'open-object)))
 
 (defadvice w3m-submit-form (after emacspeak pre act comp)
@@ -282,19 +284,22 @@
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice w3m-next-buffer (after emacspeak pre act comp)
-  "Produce auditory icon."
+  "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice w3m-previous-buffer (after emacspeak pre act comp)
-  "Produce auditory icon."
+  "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice w3m-delete-buffer (after emacspeak pre act comp)
-  "Produce auditory icon."
+  "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)))
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice w3m-delete-other-buffers (after emacspeak pre act comp)
   "Produce auditory icon."
@@ -507,6 +512,31 @@
    (t ad-do-it))
   ad-return-value)
 
+(defadvice w3m-scroll-left (after emacspeak pre act comp)
+  "Produce auditory icon."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'left)))
+
+(defadvice w3m-scroll-right (after emacspeak pre act comp)
+  "Produce auditory icon."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'right)))
+
+(defadvice w3m-shift-left (after emacspeak pre act comp)
+  "Produce auditory icon."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'left)))
+
+(defadvice w3m-shift-right (after emacspeak pre act comp)
+  "Produce auditory icon."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'right)))
+
+(defadvice w3m-horizontal-recenter (after emacspeak pre act comp)
+  "Produce auditory icon."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'center)))
+
 (defadvice w3m (around emacspeak pre act)
   "Speech-enable W3M."
   (cond
@@ -519,18 +549,18 @@
    (t ad-do-it))ad-return-value)
 
 (defadvice w3m-process-stop (after emacspeak pre act comp)
-  "Produce auditory feedback."
+  "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)))
 
 (defadvice w3m-close-window (after emacspeak pre act comp)
-  "Produce auditory feedback."
+  "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice w3m-quit (after emacspeak pre act comp)
-  "Produce auditory feedback."
+  "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
@@ -549,6 +579,68 @@
 	    (when (stringp w3m-current-title)
 	      (message "%s" w3m-current-title)))
 	  t)
+
+;;}}}
+;;{{{ buffer select mode
+
+(defadvice w3m-select-buffer (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'open-object)))
+
+(defadvice w3m-select-buffer-show-this-line (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'scroll)
+    (emacspeak-speak-other-window 1)))
+
+(defadvice w3m-select-buffer-show-this-line-and-down (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'scroll)
+    (emacspeak-speak-other-window 1)))
+
+(defadvice w3m-select-buffer-show-this-line-and-switch (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
+
+(defadvice w3m-select-buffer-show-this-line-and-quit (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
+
+(defadvice w3m-select-buffer-next-line (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
+
+(defadvice w3m-select-buffer-previous-line (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
+
+(defadvice w3m-select-buffer-delete-buffer (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'delete-object)
+    (emacspeak-speak-line)))
+
+(defadvice w3m-select-buffer-delete-other-buffers (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'delete-object)))
+
+(defadvice w3m-select-buffer-quit (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 ;;}}}
 ;;{{{ input select mode
