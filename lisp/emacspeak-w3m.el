@@ -228,12 +228,24 @@
   "Speech-enable W3M."
   (cond
    ((interactive-p)
+    (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
-      ad-do-it)
-    (emacspeak-auditory-icon 'open-object)
-    (when (stringp w3m-current-title)
-      (message "%s" w3m-current-title)))
+      ad-do-it))
    (t ad-do-it))ad-return-value)
+
+(defadvice w3m-redisplay-this-page (around emacspeak pre act)
+  "Speech-enable W3M."
+  (cond
+   ((interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (let ((emacspeak-speak-messages nil))
+      ad-do-it))
+   (t ad-do-it))ad-return-value)
+
+(defadvice w3m-search (after emacspeak pre act comp)
+  "Produce auditory icon."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)))
 
 (defadvice w3m-next-anchor (around emacspeak pre act)
   "Speech-enable W3M."
@@ -286,17 +298,18 @@
    ((interactive-p)
     (let ((url (emacspeak-w3m-anchor))
           (act (emacspeak-w3m-action)))
+      (when url
+	(emacspeak-auditory-icon 'select-object))
       ad-do-it
-      (if (and (not url)
-	       (consp act)
-	       (memq (car act)
-		     '(w3m-form-input
-		       w3m-form-input-radio
-		       w3m-form-input-checkbox
-		       w3m-form-input-password)))
-	  (progn (emacspeak-w3m-speak-this-anchor)
-		 (emacspeak-auditory-icon 'select-object))
-	(emacspeak-auditory-icon 'open-object))))
+      (when (and (not url)
+		 (consp act)
+		 (memq (car act)
+		       '(w3m-form-input
+			 w3m-form-input-radio
+			 w3m-form-input-checkbox
+			 w3m-form-input-password)))
+	(emacspeak-w3m-speak-this-anchor)
+	(emacspeak-auditory-icon 'select-object))))
    (t ad-do-it))
   ad-return-value)
 
@@ -304,33 +317,27 @@
   "Speech-enable W3M."
   (cond
    ((interactive-p)
+    (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
-      ad-do-it)
-    (emacspeak-auditory-icon 'open-object)
-    (when (stringp w3m-current-title)
-      (message "%s" w3m-current-title)))
+      ad-do-it))
    (t ad-do-it))ad-return-value)
 
 (defadvice w3m-view-previous-page (around emacspeak pre act)
   "Speech-enable W3M."
   (cond
    ((interactive-p)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it)
     (emacspeak-auditory-icon 'select-object)
-    (when (stringp w3m-current-title)
-      (message "%s" w3m-current-title)))
+    (let ((emacspeak-speak-messages nil))
+      ad-do-it))
    (t ad-do-it))ad-return-value)
 
 (defadvice w3m-bookmark-view (around emacspeak pre act)
   "Speech-enable W3M."
   (cond
    ((interactive-p)
+    (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
-      ad-do-it)
-    (emacspeak-auditory-icon 'open-object)
-    (when (stringp w3m-current-title)
-      (message "%s" w3m-current-title)))
+      ad-do-it))
    (t ad-do-it))ad-return-value)
 
 (defadvice w3m-scroll-up-or-next-url (around emacspeak pre act comp)
@@ -370,13 +377,11 @@
   "Speech-enable W3M."
   (cond
    ((interactive-p)
+    (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
       ad-do-it)
-    (if (eq (ad-get-arg 0) 'popup)
-	(emacspeak-speak-mode-line)
-      (emacspeak-auditory-icon 'open-object)
-      (when (stringp w3m-current-title)
-	(message "%s" w3m-current-title))))
+    (when (eq (ad-get-arg 0) 'popup)
+      (emacspeak-speak-mode-line)))
    (t ad-do-it))ad-return-value)
 
 (defadvice w3m-process-stop (after emacspeak pre act comp)
@@ -395,6 +400,16 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
+
+;;}}}
+;;{{{ displaying pages
+
+(add-hook 'w3m-display-hook
+	  (lambda (url)
+	    (emacspeak-auditory-icon 'open-object)
+	    (when (stringp w3m-current-title)
+	      (message "%s" w3m-current-title)))
+	  t)
 
 ;;}}}
 ;;{{{ input select mode
