@@ -1,5 +1,5 @@
 ;;; emacspeak-wizards.el --- Implements Emacspeak  convenience wizards
-;;; $Id: emacspeak-wizards.el,v 18.0 2003/04/29 21:18:34 raman Exp $
+;;; $Id: emacspeak-wizards.el,v 19.0 2003/11/22 19:06:21 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains convenience wizards
 ;;; Keywords: Emacspeak,  Audio Desktop Wizards
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:18:34 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:21 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -51,24 +51,19 @@
 
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
 (require 'lisp-mnt)
-(eval-when-compile (require 'dired))
+(require 'dired)
 (require 'derived)
 (require 'eldoc)
 (require 'find-dired)
-(require 'thingatpt)
-(eval-when-compile
-  (require 'dtk-speak)
-  (require 'emacspeak-speak)
-  (require 'emacspeak-sounds))
+(require 'emacspeak-preamble)
 (require 'emacspeak-table-ui)
 (require 'shell)
 (require 'texinfo)
 (require 'term)
-(eval-when-compile (require 'cus-edit))
+(require 'cus-edit)
 (require 'emacspeak-xslt)
-
+(eval-when-compile (require 'emacspeak-w3))
 ;;}}}
 ;;{{{ custom
 
@@ -122,11 +117,13 @@ navigate this document."
   "Browse  Emacspeak productivity tips."
   (interactive)
   (declare (special emacspeak-etc-directory))
+  (emacspeak-w3-without-xsl
   (browse-url
    (format "file:///%stips.html"
-           emacspeak-etc-directory))
+           emacspeak-etc-directory)))
   (emacspeak-auditory-icon 'help)
   (emacspeak-speak-mode-line))
+
 ;;;###autoload
 (defun emacspeak-view-emacspeak-faq ()
   "Browse the Emacspeak FAQ."
@@ -293,7 +290,6 @@ command `emacspeak-table-display-table-in-region' normally bound to
                           nil           ;read
                           'emacspeak-speak-run-shell-command-history)
     current-prefix-arg))
-  (declare (special emacspeak-wizards-root-buffer))
   (let ((buffer-name (format "*%s-output*" command))
         (start nil)
         (end nil))
@@ -303,6 +299,7 @@ command `emacspeak-table-display-table-in-region' normally bound to
                :test 'string-equal)
     (save-excursion
       (set-buffer buffer-name)
+      (untabify (point-min) (point-max))
       (setq start (point-min)
             end (1- (point-max)))
       (condition-case nil
@@ -601,6 +598,83 @@ default-directory after switching."
   (interactive)
   (emacspeak-sudo "tpctl --dull --sdi | tail -1"))
 
+;;{{{ ppp
+
+(defvar emacspeak-wizards-ppp-status-command
+  "/sbin/ifconfig | grep ^ppp"
+  "Command to obtain ppp status.")
+
+(defun emacspeak-wizards-ppp-status ()
+  "Return ppp status."
+  (declare (special emacspeak-wizards-ppp-status-command))
+  (zerop (shell-command emacspeak-wizards-ppp-status-command)))
+
+(defun emacspeak-wizards-ppp-toggle ()
+  "Bring up or bring down ppp."
+  (interactive)
+  (if (emacspeak-wizards-ppp-status)
+      (emacspeak-sudo "ifdown ppp0  1>&- 2>&- &")
+    (emacspeak-sudo "ifup ppp0  1>&- 2>&- &")))
+
+;;}}}
+;;{{{ vpn
+(defvar emacspeak-wizards-vpn-status-command
+  "/sbin/ifconfig | grep ^ipsec"
+  "Command to obtain vpn status.")
+
+(defcustom emacspeak-wizards-vpn-start-command nil
+  "Command that brings up a VPN connection."
+  :type '(choice
+          (const :tag "None" nil)
+          (string :tag "Command"))
+  :group 'emacspeak-wizards)
+
+(defcustom emacspeak-wizards-vpn-end-command nil
+  "Command that brings down a   VPN connection."
+  :type '(choice
+          (const :tag "None" nil)
+          (string :tag "Command"))
+  :group 'emacspeak-wizards)
+
+(defun emacspeak-wizards-vpn-status ()
+  "Return vpn status."
+  (zerop (shell-command emacspeak-wizards-vpn-status-command)))
+
+(defun emacspeak-wizards-vpn-toggle ()
+  "Bring up or bring down vpn."
+  (interactive)
+  (declare (special emacspeak-wizards-vpn-start-command
+                    emacspeak-wizards-vpn-end-command))
+  (if (emacspeak-wizards-vpn-status)
+      (shell-command
+       (format "%s &"
+	       emacspeak-wizards-vpn-end-command))
+    (shell-command 
+     (format  "%s&"
+	      emacspeak-wizards-vpn-start-command))))
+
+;;}}}
+;;;###autoload 
+(defun emacspeak-wizards-edit-file-as-root (filename)
+  "Edit file as root using sudo vi.
+See /etc/sudoers for how to set up sudo."
+  (interactive
+   (list
+    (read-file-name "Edit file as root: ")))
+  (require 'term)
+  (delete-other-windows)
+  (switch-to-buffer
+   (term-ansi-make-term
+    (generate-new-buffer-name
+     (format "vi-%s"
+             (file-name-nondirectory filename)))
+    "sudo" 
+    nil
+    "vi" 
+    filename))
+  (term-char-mode)
+  (emacspeak-auditory-icon 'open-object))
+
 ;;}}}
 ;;{{{ setup CVS access to sourceforge 
 
@@ -778,6 +852,26 @@ Typically %s is replaced by project name.")
                             'emacspeak-cvs-done-alert))))
 
 ;;}}}
+;;{{{ browse chunks 
+(defun emacspeak-wizards-move-and-speak (command count)
+  "Speaks a chunk of text bounded by point and a target position.
+Target position is specified using a navigation command and a
+count that specifies how many times to execute that command
+first.
+Point is left at the target position.
+Interactively, command is specified by pressing the key that
+;;invokes the command."
+  (interactive
+   (list
+    (lookup-key global-map
+                (read-key-sequence "Key:"))
+    (read-minibuffer "Count:")))
+  (let ((orig (point)))
+    (push-mark orig)
+    (funcall command count)
+    (emacspeak-speak-region orig (point))))
+
+;;}}}
 ;;{{{  Learn mode
 ;;;###autoload
 (defun emacspeak-learn-mode ()
@@ -793,6 +887,38 @@ To leave, press \\[keyboard-quit]."
 
 ;;}}}
 ;;{{{  Generate documentation:
+(defsubst ems-variable-symbol-file (o)
+  "Locate file that defines a variable."
+  (or (symbol-fileo)
+      (symbol-file (cons 'defvar o))))
+(defsubst emacspeak-list-emacspeak-options ()
+  "List all Emacspeak customizable options."
+  (let ((options nil ))
+    (mapatoms
+     #'(lambda (symbol)
+         (when
+             (and (symbolp symbol)
+                  (get symbol 'custom-type)
+                  (or (string-match "emacspeak" (symbol-name symbol))
+                      (string-match "cd-tool" (symbol-name symbol))
+                      (string-match "dtk" (symbol-name symbol))
+                      (string-match "voice" (symbol-name symbol))
+                      (string-match "tts" (symbol-name symbol))))
+           (push symbol options))))
+    (setq options
+          (sort options
+                #'(lambda (a b )
+                    (cond
+                     ((string-lessp
+		       (ems-variable-symbol-file  a)
+		       (ems-variable-symbol-file  b))
+                      t)
+                     ((string-equal (symbol-file  a) (symbol-file  b))
+                      (string-lessp
+                       (symbol-name a)
+                       (symbol-name b)))
+                     (t nil)))))
+    options))
 
 (defsubst emacspeak-list-emacspeak-commands ()
   "List all Emacspeak commands."
@@ -806,6 +932,7 @@ To leave, press \\[keyboard-quit]."
                  (not (string-match "ad-Orig" (symbol-name f)))
                  (not (eq f 'emacspeak))
                  (or (string-match "emacspeak" (symbol-name f))
+                     (string-match "cd-tool" (symbol-name f))
                      (string-match "dtk" (symbol-name f))
                      (string-match "voice-setup" (symbol-name f))
                      (string-match "dtk" (symbol-name f))))
@@ -835,7 +962,7 @@ Warning! Contents of file filename will be overwritten."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (insert "DOC --- Automatically generated by command emacspeak-generate-documentation\n\$Id: emacspeak-wizards.el,v 18.0 2003/04/29 21:18:34 raman Exp $\n")
+      (insert "DOC --- Automatically generated by command emacspeak-generate-documentation\n\$Id: emacspeak-wizards.el,v 19.0 2003/11/22 19:06:21 raman Exp $\n")
       (mapcar
        (function
         (lambda (f)
@@ -860,6 +987,7 @@ Local variables: mode: outline paragraph-separate: \"[ ]*$\"
 end:\n\n")
       (save-buffer)))
   (emacspeak-auditory-icon 'task-done))
+
 (defsubst ems-cleanup-commentary (commentary )
   "Cleanup commentary."
   (save-excursion
@@ -891,9 +1019,9 @@ end:\n\n")
 ;;;###autoload
 (defun emacspeak-generate-texinfo-command-documentation (filename)
   "Generate texinfo documentation  for all emacspeak
-commands into file commands.texi.
+commands  into file commands.texi.
 Warning! Contents of file commands.texi will be overwritten."
-  (interactive "FEnter filename to save DOC in: ")
+  (interactive "FEnter filename to save commands documentation  in: ")
   (let ((emacspeak-speak-messages nil)
         (dtk-quiet t)
         (buffer (find-file-noselect filename))
@@ -901,7 +1029,7 @@ Warning! Contents of file commands.texi will be overwritten."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (insert"@c $Id: emacspeak-wizards.el,v 18.0 2003/04/29 21:18:34 raman Exp $\n")
+      (insert"@c $Id: emacspeak-wizards.el,v 19.0 2003/11/22 19:06:21 raman Exp $\n")
       (insert
        "@node Emacspeak Commands\n@chapter Emacspeak Commands\n\n")
       (insert
@@ -914,13 +1042,13 @@ documentation.\n\n")
           (let ((key (where-is-internal f))
                 (key-description nil)
                 (commentary nil)
-                (this-module (symbol-file f)))
+                (this-module (symbol-file f))
+                (source-file nil))
             (when this-module
-              (setq commentary
-                    (lm-commentary
-                     (substring
-		      (locate-library this-module)
-		      0 -1)))
+              (setq source-file (locate-library this-module ))
+	      (if (char-equal (aref source-file (1- (length source-file))) ?c)
+		  (setq source-file (substring  source-file 0 -1)))
+              (setq commentary (lm-commentary source-file))
               (setq this-module
                     (file-name-sans-extension this-module))
               (when commentary
@@ -945,7 +1073,7 @@ documentation.\n\n")
                 "Automatically generated documentation
 for commands defined in module  %s.\n\n"
                 module)))
-            (insert (format "\n\n@deffn %s %s\n"
+            (insert (format "\n\n@deffn {Interactive Command} %s %s\n"
                             f
                             (eldoc-function-argstring f)))
             (if key
@@ -967,6 +1095,77 @@ for commands defined in module  %s.\n\n"
               ""))
             (insert "\n@end deffn\n\n"))))
        (emacspeak-list-emacspeak-commands))
+      (texinfo-all-menus-update)
+      (shell-command-on-region (point-min) (point-max)
+			       "cat -s"
+			       (current-buffer)
+			       'replace)
+      (save-buffer)))
+  (emacspeak-auditory-icon 'task-done))
+
+(defun emacspeak-generate-texinfo-option-documentation (filename)
+  "Generate texinfo documentation  for all emacspeak
+options  into file filename.
+Warning! Contents of file filename will be overwritten."
+  (interactive "FEnter filename to save options documentation in: ")
+  (let ((emacspeak-speak-messages nil)
+        (dtk-quiet t)
+        (buffer (find-file-noselect filename))
+        (module nil))
+    (save-excursion
+      (set-buffer buffer)
+      (erase-buffer)
+      (insert"@c $Id: emacspeak-wizards.el,v 19.0 2003/11/22 19:06:21 raman Exp $\n")
+      (insert
+       "@node Emacspeak Customizations\n@chapter Emacspeak Customizations \n\n")
+      (insert
+       "This chapter is generated automatically from the source-level documentation.
+Any errors or corrections should be made to the source-level
+documentation.\n\n")
+      (mapcar
+       #'(lambda (o)
+	   (let ((this-module (ems-variable-symbol-file  o))
+		 (commentary nil)
+		 (source-file nil))
+	     (when this-module
+	       (setq source-file (locate-library this-module ))
+	       (if (char-equal (aref source-file (1- (length source-file))) ?c)
+		   (setq source-file (substring  source-file 0 -1)))
+	       (setq commentary (lm-commentary source-file))
+	       (setq this-module
+		     (file-name-sans-extension this-module))
+	       (when commentary
+		 (setq commentary 
+		       (ems-cleanup-commentary commentary)))
+	       (setq this-module
+		     (file-name-nondirectory this-module)))
+	     (unless (string-equal module this-module)
+	       (if this-module 
+		   (setq module this-module)
+		 (setq module nil))
+	       (when module 
+		 (insert
+		  (format
+		   "@node %s Options\n@section %s Options\n\n\n"
+		   module module )))
+	       (insert
+		(format "\n\n%s\n\n" 
+			(or commentary "")))
+	       (insert
+		(format
+		 "Automatically generated documentation
+for options defined in module  %s.
+These options are customizable via Emacs' Custom interface.\n\n"
+		 module)))
+	     (insert (format "\n\n@defvar {User Option} %s\n"
+			     o))
+	     (insert
+	      (or
+	       (ems-texinfo-escape
+		(documentation-property  o 'variable-documentation))                        
+	       ""))
+	     (insert "\n@end defvar\n\n")))
+       (emacspeak-list-emacspeak-options))
       (texinfo-all-menus-update)
       (shell-command-on-region (point-min) (point-max)
 			       "cat -s"
@@ -1159,7 +1358,7 @@ meaning of `next'."
 (defcustom emacspeak-clipboard-file
   (concat emacspeak-resource-directory "/" "clipboard")
   "File used to save Emacspeak clipboard.
-The emacspeak clipboard provides a convenient mechnaism for exchanging
+The emacspeak clipboard provides a convenient mechanism for exchanging
 information between different Emacs sessions."
   :group 'emacspeak-speak
   :type 'string)
@@ -1280,7 +1479,7 @@ Argument VAR specifies variable whose value is to be displayed."
   "dtk-exp"
   "TTS server to use in an emergency.
 Set this to a TTS server that is known to work at all times.
-If you are debugging another speech servre and that server
+If you are debugging another speech server and that server
 gets wedged for some reason,
 you can use command emacspeak-emergency-tts-restart
 to get speech back using the reliable TTS server.
@@ -1341,8 +1540,18 @@ personal customizations."
 at point."
   (interactive )
   (let ((p (get-text-property (point) 'personality))
-        (f (get-text-property (point) 'face)))
-    (message "Personality %s Face %s" p f )))
+        (f (get-text-property (point) 'face))
+        (o
+         (delete nil
+		 (mapcar
+		  #'(lambda (overlay)
+		      (overlay-get overlay 'face))
+		  (overlays-at (point))))))
+    (message "Personality %s Face %s %s" p f
+	     (if o
+		 o
+	       " "))))
+
 ;;;###autoload
 (defun emacspeak-show-property-at-point (&optional property )
   "Show value of PROPERTY at point.
@@ -1444,12 +1653,18 @@ Signals beginning  of buffer."
 
 ;;}}}
 ;;{{{  launch lynx 
+(defcustom emacspeak-wizards-links-program "links"
+  "Name of links executable."
+  :type 'file
+  :group 'emacspeak-wizards)
+
 ;;;###autoload
 (defun emacspeak-links (url)
   "Launch links on  specified URL in a new terminal."
   (interactive
    (list
     (read-from-minibuffer "URL: ")))
+  (declare (special emacspeak-wizards-links-program))
   (require 'term)
   (delete-other-windows)
   (switch-to-buffer
@@ -1457,7 +1672,7 @@ Signals beginning  of buffer."
     (generate-new-buffer-name
      (format "links-%s"
              (substring url 7)))
-    "/usr/local/bin/links"
+    emacspeak-wizards-links-program
     nil
     url))
   (emacspeak-eterm-record-window   1 
@@ -1466,12 +1681,20 @@ Signals beginning  of buffer."
                                    'right-stretch 'left-stretch)
   (term-char-mode)
   (emacspeak-auditory-icon 'open-object))
+
+(defcustom emacspeak-wizards-lynx-program
+  "lynx"
+  "Lynx executable."
+  :type 'file
+  :group 'emacspeak-wizards)
+
 ;;;###autoload
 (defun emacspeak-lynx (url)
   "Launch lynx on  specified URL in a new terminal."
   (interactive
    (list
     (read-from-minibuffer "URL: ")))
+  (declare (special emacspeak-wizards-lynx-program))
   (require 'term)
   (delete-other-windows)
   (switch-to-buffer
@@ -1479,7 +1702,7 @@ Signals beginning  of buffer."
     (generate-new-buffer-name
      (format "lynx-%s"
              (substring url 7)))
-    "/usr/bin/lynx"
+    emacspeak-wizards-lynx-program
     nil
     "-show-cursor=yes"
     url))
@@ -1487,6 +1710,7 @@ Signals beginning  of buffer."
                                    (cons 0 1)
                                    (cons 79 20)
                                    'right-stretch 'left-stretch)
+  (emacspeak-eterm-set-filter-window 1)
   (term-char-mode)
   (emacspeak-auditory-icon 'open-object))
 
@@ -1824,7 +2048,6 @@ emacspeak-websearch-personal-portfolio."
                       (const "-ok")
                       (const "-newer")
                       (const "-anewer")
-                      (const "-newer")
                       (const "-cnewer")
                       (const "-used")
                       (const "-user")
@@ -1986,7 +2209,7 @@ directory to where find is to be launched."
 ;;}}}
 ;;{{{ display environment variable
 ;;;###autoload
-(defun emacspeak-wizards-show-environment-vvariable (v)
+(defun emacspeak-wizards-show-environment-variable (v)
   "Display value of specified environment variable."
   (interactive
    (list
@@ -2026,7 +2249,7 @@ emacspeak-wizards-occur-header-lines.")
   "If you define a file local variable 
 called `emacspeak-occur-pattern' that holds a regular expression 
 that matches  lines of interest, you can use this command to conveniently
-run `how-many'to count  matching header lines.
+run `how-many' to count  matching header lines.
 With interactive prefix arg, prompts for and remembers the file local pattern."
   (interactive "P")
   (declare (special emacspeak-occur-pattern))
@@ -2041,12 +2264,11 @@ With interactive prefix arg, prompts for and remembers the file local pattern."
       (how-many pattern)))))
 ;;;###autoload
 (defun emacspeak-wizards-occur-header-lines (prefix)
-  "If you define a file local variable 
-called `emacspeak-occur-pattern' that holds a regular expression 
-that matches header lines, you can use this command to conveniently
-run `occur' 
-to find matching header lines. With prefix arg, prompts for and sets
-value of the file local pattern."
+  "If you define a file local variable called
+`emacspeak-occur-pattern' that holds a regular expression that
+matches header lines, you can use this command to conveniently
+run `occur' to find matching header lines. With prefix arg,
+prompts for and sets value of the file local pattern."
   (interactive "P")
   (declare (special emacspeak-occur-pattern))
   (cond
@@ -2100,7 +2322,7 @@ for `word' and displays hits in a compilation buffer."
   (declare (special emacspeak-wizards-spot-words-extension))
   (compile 
    (format
-    "find . -name \"*%s\" | xargs grep -n -e \"\\b%s\\b\" "
+    "find . -type f -name '*%s' -print0 | xargs -0 -e grep -n -e \"\\b%s\\b\" "
     ext word))
   (setq emacspeak-wizards-spot-words-extension ext)
   (emacspeak-auditory-icon 'task-done)) 
@@ -2120,7 +2342,7 @@ Use with caution."
   (declare (special emacspeak-wizards-spot-words-extension))
   (compile 
    (format
-    "find . -name \"*%s\" | xargs perl -pi -e    \'s/%s/%s/g' "
+    "find . -type f -name '*%s' -print0 | xargs-0 -e  perl -pi -e    \'s/%s/%s/g' "
     ext word correction))
   (setq emacspeak-wizards-spot-words-extension ext)
   (emacspeak-auditory-icon 'task-done))
@@ -2134,6 +2356,7 @@ Use with caution."
   (let ((inhibit-read-only t))
     (put-text-property start end 
 		       'read-only nil)))
+
 ;;}}}
 ;;{{{ VC viewer 
 (defcustom emacspeak-wizards-vc-viewer-command
@@ -2196,7 +2419,8 @@ Use with caution."
                   (format "vc-%s.dump"
                           emacspeak-wizards-vc-console)
                   temporary-file-directory)))
-        (inhibit-read-only t))
+        (inhibit-read-only t)
+        (orig (point)))
     (shell-command command)
     (fundamental-mode)
     (erase-buffer)
@@ -2206,9 +2430,9 @@ Use with caution."
               console)
       temporary-file-directory))
     (set-buffer-modified-p nil)
+    (goto-char orig)
     (emacspeak-wizards-vc-viewer-mode)
     (setq emacspeak-wizards-vc-console console)
-    (goto-char (point-min))
     (when (interactive-p)
       (emacspeak-speak-line))))
 
@@ -2218,6 +2442,7 @@ Use with caution."
 
 ;;}}}
 ;;{{{ google hits 
+
 ;;;###autoload
 (defun emacspeak-wizards-google-hits ()
   "Filter Google results after performing search to show just the
@@ -2281,6 +2506,22 @@ Moves to the longest paragraph when called interactively."
     max))
 
 ;;}}}
+;;{{{ find grep using compile 
+
+(defun emacspeak-wizards-find-grep (glob pattern)
+  "Run compile using find and grep. 
+Interactive  arguments specify filename pattern and search pattern."
+  (interactive
+   (list
+    (read-from-minibuffer "Look in files: ")
+    (read-from-minibuffer "Look for: ")))
+  (compile
+   (format
+    "find . -type f -name '%s' -print0 | xargs -0 -e grep -n -e '%s'"
+    glob pattern))
+  (emacspeak-auditory-icon 'task-done))
+
+;;}}}
 ;;{{{ face wizard
 ;;;###autoload
 (defun emacspeak-wizards-show-face (face)
@@ -2327,6 +2568,7 @@ Moves to the longest paragraph when called interactively."
 		     'personality
 		     personality
 		     (emacspeak-speak-line)))
+
 ;;;###autoload
 (defun emacspeak-wizards-generate-voice-sampler  (step)
   "Generate a buffer that shows a sample line in all the ACSS settings
@@ -2356,6 +2598,76 @@ for the current voice family."
     (voice-lock-mode 1)
     (goto-char (point-min))))
 
+;;}}}
+;;{{{ tramp wizard 
+(defcustom emacspeak-wizards-tramp-locations nil
+  "Tramp locations used by Emacspeak tramp wizard.
+Locations added here via custom can be opened using command
+emacspeak-wizards-tramp-open-location
+bound to \\[emacspeak-wizards-tramp-open-location]."
+  :type '(repeat
+          (cons :tag "Tramp"
+		(string :tag "Name")
+		(string :tag "Location")))
+  :group 'emacspeak-wizards)
+
+;;;###autoload
+(defun emacspeak-wizards-tramp-open-location (name)
+  "Open specified tramp location.
+Location is specified by name."
+  (interactive
+   (list
+    (let ((completion-ignore-case t))
+      (completing-read "Location:"
+                       emacspeak-wizards-tramp-locations
+                       nil 'must-match))))
+  (declare (special emacspeak-wizards-tramp-locations))
+  (let ((location (cdr (assoc name
+                              emacspeak-wizards-tramp-locations))))
+    (find-file location)))
+
+;;}}}
+;;{{{ ISO dates 
+;;; implementation based on icalendar.el
+
+(defun emacspeak-wizards-speak-iso-datetime (iso)
+  "Make ISO date-time speech friendly."
+  (interactive
+   (list
+    (read-from-minibuffer "ISO DateTime:"
+                          (word-at-point))))
+  (let ((emacspeak-speak-messages nil)
+        (time (emacspeak-speak-decode-iso-datetime iso)))
+    (tts-with-punctuations "some"
+                           (dtk-speak time))
+    (message time)))
+
+;;}}}
+;;{{{ date pronouncer wizard
+(defvar emacspeak-wizards-mm-dd-yyyy-date-pronounce nil
+  "Toggled by wizard to record how we are pronouncing mm-dd-yyyy
+dates.")
+
+(defun emacspeak-wizards-toggle-mm-dd-yyyy-date-pronouncer ()
+  "Toggle pronunciation of mm-dd-yyyy dates."
+  (interactive)
+  (declare (special emacspeak-wizards-mm-dd-yyyy-date-pronounce
+                    emacspeak-pronounce-date-mm-dd-yyyy-pattern))
+  (cond
+   (emacspeak-wizards-mm-dd-yyyy-date-pronounce
+    (setq emacspeak-wizards-mm-dd-yyyy-date-pronounce nil)
+    (emacspeak-pronounce-remove-buffer-local-dictionary-entry
+     emacspeak-pronounce-date-mm-dd-yyyy-pattern))
+   (t (setq emacspeak-wizards-mm-dd-yyyy-date-pronounce t)
+      (emacspeak-pronounce-add-buffer-local-dictionary-entry
+       emacspeak-pronounce-date-mm-dd-yyyy-pattern
+       (cons 're-search-forward
+	     'emacspeak-pronounce-mm-dd-yyyy-date))))
+  (message "Will %s pronounce mm-dd-yyyy date strings in
+  English."
+           (if emacspeak-wizards-mm-dd-yyyy-date-pronounce "" "
+  not ")))
+    
 ;;}}}
 (provide 'emacspeak-wizards)
 ;;{{{ end of file

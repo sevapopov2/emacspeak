@@ -1,5 +1,5 @@
 ;;; emacspeak-ocr.el --- ocr Front-end for emacspeak desktop
-;;; $Id: emacspeak-ocr.el,v 18.0 2003/04/29 21:17:43 raman Exp $
+;;; $Id: emacspeak-ocr.el,v 19.0 2003/11/22 19:06:19 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for OCR
 ;;; Keywords: Emacspeak, ocr
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:43 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:19 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -54,7 +54,8 @@
 ;;; working ocr executable 
 ;;; by default this module assumes that the OCR executable
 ;;; is named "ocr"
-;;;
+
+;;; Code:
 
 ;;}}}
 ;;{{{ required modules
@@ -104,7 +105,8 @@ OCR engine for optical character recognition."
 
 (defcustom emacspeak-ocr-engine-options nil
   "Command line options to pass to OCR engine."
-  :type'string
+  :type'(repeat
+         (string :tag "Option"))
   :group 'emacspeak-ocr)
 
 (defcustom emacspeak-ocr-working-directory
@@ -166,8 +168,9 @@ will be placed."
 
 (defsubst emacspeak-ocr-get-buffer ()
   "Return OCR working buffer."
-  (declare (special emacspeak-ocr-buffer-name))
-  (get-buffer-create emacspeak-ocr-buffer-name))
+  (get-buffer-create
+   (format  "*%s-ocr*"
+	    (emacspeak-ocr-default-name))))
 
 (defsubst emacspeak-ocr-get-text-name ()
   "Return name of current text document."
@@ -178,7 +181,7 @@ will be placed."
   "Return name of current image."
   (declare (special emacspeak-ocr-document-name
                     emacspeak-ocr-last-page-number))
-  (format "%s-%s%s"
+  (format "%s-p%s%s"
           emacspeak-ocr-document-name
           (1+ emacspeak-ocr-last-page-number)
 	  extension))
@@ -187,7 +190,7 @@ will be placed."
   "Return name of current page."
   (declare (special emacspeak-ocr-document-name
                     emacspeak-ocr-current-page-number))
-  (format "%s-%s.txt"
+  (format "%s-p%s.txt"
           emacspeak-ocr-document-name
           emacspeak-ocr-current-page-number))
 
@@ -274,9 +277,10 @@ emacspeak-ocr-name-document bound to
 \\[emacspeak-ocr-name-document].  The document name is used
 in constructing the name of the image and text files.
 
-Here is a list of all emacspeak OCR commands along with their key-bindings:
+Key Bindings: 
 
-\\{emacspeak-ocr-mode-map}"
+See \\{emacspeak-ocr-mode-map}.
+"
   (progn
     (setq emacspeak-ocr-current-page-number 0
           emacspeak-ocr-last-page-number 0
@@ -319,6 +323,11 @@ Here is a list of all emacspeak OCR commands along with their key-bindings:
   (customize-group 'emacspeak-ocr)
   (emacspeak-auditory-icon 'open-object)
   (emacspeak-speak-mode-line))
+
+(defun emacspeak-ocr-default-name ()
+  "Return a default name for OCR document."
+  (format-time-string "%m-%d-%y"))
+
 ;;;###autoload
 (defun emacspeak-ocr ()
   "An OCR front-end for the Emacspeak desktop.  
@@ -331,9 +340,9 @@ suitable for browsing the results.
 For detailed help, invoke command emacspeak-ocr bound to
 \\[emacspeak-ocr] to launch emacspeak-ocr-mode, and press
 `?' to display mode-specific help for emacspeak-ocr-mode."
-
   (interactive)
   (declare (special emacspeak-ocr-working-directory
+                    emacspeak-ocr-document-name
                     buffer-read-only))
   (let  ((buffer (emacspeak-ocr-get-buffer )))
     (save-excursion
@@ -343,8 +352,8 @@ For detailed help, invoke command emacspeak-ocr bound to
         (cd emacspeak-ocr-working-directory))
       (switch-to-buffer buffer)
       (setq buffer-read-only t)
-      (emacspeak-ocr-name-document "untitled")
       (emacspeak-auditory-icon 'open-object)
+      (setq emacspeak-ocr-document-name (emacspeak-ocr-default-name))
       (emacspeak-speak-mode-line))))
 
 (defvar emacspeak-ocr-document-name nil
@@ -372,6 +381,7 @@ Pick a short but meaningful name."
   "Acquire page image."
   (interactive)
   (declare (special emacspeak-speak-messages
+                    emacspeak-ocr-last-page-number
                     emacspeak-ocr-image-extension
                     emacspeak-ocr-keep-uncompressed-image
                     emacspeak-ocr-scan-image
@@ -397,8 +407,12 @@ Pick a short but meaningful name."
             (format "echo \'Uncompressed image not removed.'")
           (format "rm -f temp%s"
                   emacspeak-ocr-image-extension)))))
+    (when (interactive-p)
+      (setq emacspeak-ocr-last-page-number
+	    (1+ emacspeak-ocr-last-page-number)))
     (message "Acquired  image to file %s"
              image-name)))
+
 (defun emacspeak-ocr-scan-photo (&optional metadata)
   "Scan in a photograph.
 The scanned image is converted to JPEG."
@@ -507,6 +521,7 @@ Prompts for image file if file corresponding to the expected
            (expand-file-name 
             (read-file-name "Image file to recognize: ")))))
     (goto-char (point-max))
+    (emacspeak-auditory-icon 'select-object)
     (setq emacspeak-ocr-last-page-number
           (1+ emacspeak-ocr-last-page-number))
     (aset emacspeak-ocr-page-positions
@@ -515,36 +530,28 @@ Prompts for image file if file corresponding to the expected
     (insert
      (format "\n%c\nPage %s\n" 12
              emacspeak-ocr-last-page-number))
-    (message "%s %s"
-             emacspeak-ocr-engine
-             image-name)
     (setq emacspeak-ocr-process
-          (start-process 
-           "ocr"
-           (current-buffer)
-           emacspeak-ocr-engine
-           image-name))
+          (apply 'start-process 
+		 "ocr"
+		 (current-buffer)
+		 emacspeak-ocr-engine
+		 image-name
+		 emacspeak-ocr-engine-options))
     (set-process-sentinel emacspeak-ocr-process
                           'emacspeak-ocr-process-sentinel)
     (message "Launched OCR engine.")))
+
 (defun emacspeak-ocr-scan-and-recognize ()
   "Scan in a page and run OCR engine on it.
 Use this command once you've verified that the separate
 steps of acquiring an image and running the OCR engine work
-corectly by themselves."
+correctly by themselves."
   (interactive)
   (emacspeak-ocr-scan-image)
   (emacspeak-ocr-recognize-image))
-(defun emacspeak-ocr-toggle-read-only ()
-  "Toggle read-only state of OCR buffer."
-  (interactive)
-  (declare (special buffer-read-only))
-  (setq buffer-read-only
-        (not buffer-read-only))
-  (emacspeak-auditory-icon 'button)
-  (emacspeak-speak-mode-line))
+
 (defun emacspeak-ocr-open-working-directory ()
-  "Launch dired on OCR workng directory."
+  "Launch dired on OCR working directory."
   (interactive)
   (declare (special emacspeak-ocr-working-directory))
   (switch-to-buffer

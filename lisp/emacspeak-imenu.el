@@ -1,5 +1,5 @@
 ;;; emacspeak-imenu.el --- Speech enable Imenu -- produce buffer-specific table of contents
-;;; $Id: emacspeak-imenu.el,v 18.0 2003/04/29 21:17:31 raman Exp $
+;;; $Id: emacspeak-imenu.el,v 19.0 2003/11/22 19:06:17 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface buffer indices
 ;;; Keywords: Emacspeak, Speak, Spoken Output, indices
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:31 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:17 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -121,11 +121,16 @@
 
 ;;}}}
 ;;{{{  Navigation
+(defcustom emacspeak-imenu-autospeak nil
+  "Speak contents of sections automatically if set."
+  :type 'boolean
+  :group 'emacspeak-imenu)
 
 (defun emacspeak-imenu-goto-next-index-position ()
   "Goto the next index position in current buffer"
   (interactive)
   (declare (special emacspeak-imenu-flattened-index-alist
+                    emacspeak-imenu-autospeak
                     imenu--index-alist))
   (let ((position (point))
         (guess 0)
@@ -147,13 +152,17 @@
             (if (< guess target)
                 (setq target guess))))
     (goto-char target)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
+    (when (interactive-p)
+      (emacspeak-auditory-icon 'large-movement)
+      (if emacspeak-imenu-autospeak
+	  (emacspeak-imenu-speak-this-section)
+	(emacspeak-speak-line)))))
 
 (defun emacspeak-imenu-goto-previous-index-position ()
   "Goto the previous index position in current buffer"
   (interactive)
   (declare (special emacspeak-imenu-flattened-index-alist
+                    emacspeak-imenu-autospeak
                     imenu--index-alist))
   (let ((position (point))
         (guess 0)
@@ -175,8 +184,11 @@
             (if (> guess target)
                 (setq target guess))))
     (goto-char target)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
+    (when (interactive-p)
+      (emacspeak-auditory-icon 'large-movement)
+      (if emacspeak-imenu-autospeak
+	  (emacspeak-imenu-speak-this-section)
+	(emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{  speaking logical sections

@@ -1,5 +1,5 @@
 ;;; emacspeak-find-dired.el --- Speech enable  find-dired
-;;; $Id: emacspeak-find-dired.el,v 18.0 2003/04/29 21:17:09 raman Exp $
+;;; $Id: emacspeak-find-dired.el,v 19.0 2003/11/22 19:06:16 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable find-dired 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:09 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:16 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 

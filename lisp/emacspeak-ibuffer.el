@@ -1,5 +1,5 @@
 ;;; emacspeak-ibuffer.el --- speech-enable ibuffer buffer selection
-;;; $Id: emacspeak-ibuffer.el,v 18.0 2003/04/29 21:17:29 raman Exp $
+;;; $Id: emacspeak-ibuffer.el,v 19.0 2003/11/22 19:06:17 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable ibuffer
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:29 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:17 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -63,10 +63,55 @@
   (emacspeak-speak-line))
 
 ;;}}}
+;;{{{ summarizers
+
+(defun emacspeak-ibuffer-summarize-line ()
+  "Summarize current line."
+  (emacspeak-speak-line))
+
+;;}}}
 ;;{{{ speech enable interactive commands 
 
-(defadvice ibuffer-visit-buffer (after emacspeak pre act
-                                       comp)
+(defadvice ibuffer-quit (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
+(defadvice ibuffer-backward-line (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-ibuffer-summarize-line)
+    (emacspeak-auditory-icon 'select-object)))
+(defadvice ibuffer-forward-line (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-ibuffer-summarize-line)
+    (emacspeak-auditory-icon 'select-object)))
+
+(defadvice ibuffer-backward-filter-group (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-ibuffer-summarize-line)
+    (emacspeak-auditory-icon 'select-object)))
+
+(defadvice ibuffer-forward-filter-group (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-ibuffer-summarize-line)
+    (emacspeak-auditory-icon 'select-object)))
+
+(defadvice ibuffer-backwards-next-marked (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-ibuffer-summarize-line)
+    (emacspeak-auditory-icon 'select-object)))
+(defadvice ibuffer-forward-next-marked (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-ibuffer-summarize-line)
+    (emacspeak-auditory-icon 'select-object)))
+
+(defadvice ibuffer-visit-buffer (after emacspeak pre act comp)
   "Provide spoken status information."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)

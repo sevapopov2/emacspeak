@@ -1,5 +1,5 @@
 ;;; emacspeak-pronounce.el --- Implements Emacspeak pronunciation dictionaries
-;;; $Id: emacspeak-pronounce.el,v 18.0 2003/04/29 21:17:46 raman Exp $
+;;; $Id: emacspeak-pronounce.el,v 19.0 2003/11/22 19:06:19 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Emacspeak pronunciation dictionaries
 ;;; Keywords:emacspeak, audio interface to emacs customized pronunciation
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:46 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:19 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -61,7 +61,7 @@
 ;;; Code:
 ;;{{{ required packages
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
 (eval-when-compile (require 'wid-edit)
@@ -116,7 +116,14 @@ Argument KEY specifies a dictionary key e.g. directory, mode etc."
      (t (emacspeak-pronounce-set-dictionary key
                                             (list (cons string
                                                         pronunciation)))))))
+(defun emacspeak-pronounce-remove-buffer-local-dictionary-entry (string)
+  "Remove pronunciation entry."
+  (when (and (boundp 'emacspeak-pronounce-pronunciation-table)
+             emacspeak-pronounce-pronunciation-table)
+    (remhash    string
+                emacspeak-pronounce-pronunciation-table)))
 
+  
 (defun emacspeak-pronounce-add-buffer-local-dictionary-entry  (string pronunciation)
   "Add specified pronunciation for current buffer.
 Arguments STRING and PRONUNCIATION specify what is being defined."
@@ -131,7 +138,7 @@ Arguments STRING and PRONUNCIATION specify what is being defined."
    (t                                   ;turn it on
     (setq emacspeak-pronounce-pronunciation-table
           (emacspeak-pronounce-compose-pronunciation-table))))
-  (setf (gethash  (intern string) emacspeak-pronounce-pronunciation-table) pronunciation)
+  (puthash    string pronunciation emacspeak-pronounce-pronunciation-table)
   (message "Added  local pronunciation in buffer %s"
            (buffer-name)))
 
@@ -165,48 +172,32 @@ Arguments STRING and PRONUNCIATION specify what is being defined."
 buffer. Handles inheritance of pronunciation dictionaries between
 modes."
   (setq buffer (or buffer (current-buffer )))
-  (let* ((table (make-hash-table))
+  (let* ((table (make-hash-table :test #'equal))
          (filename (buffer-file-name buffer))
-         (directory (and filename
-                         (file-name-directory  filename)))
+         (directory (and filename (file-name-directory  filename)))
          (mode  (save-excursion
                   (set-buffer buffer)
                   major-mode))
          (mode-supers (emacspeak-pronounce-get-supers mode))
-         (file-alist (and filename
-                          (emacspeak-pronounce-get-dictionary filename)))
-         (dir-alist (and directory
-                         (emacspeak-pronounce-get-dictionary directory)))
+         (file-alist (and filename (emacspeak-pronounce-get-dictionary filename)))
+         (dir-alist (and directory (emacspeak-pronounce-get-dictionary directory)))
          (mode-alist (emacspeak-pronounce-get-dictionary mode))
          (super-alist nil))
     (loop for super in mode-supers
           do
-          (setq super-alist
-                (emacspeak-pronounce-get-dictionary super))
+          (setq super-alist (emacspeak-pronounce-get-dictionary super))
           (loop for element in super-alist
                 do
-                (setf (gethash
-                       (intern (car element))
-                       table)
-                      (cdr element ))))
+                (puthash (car element) (cdr element ) table)))
     (loop for element in mode-alist
           do
-          (setf (gethash
-                 (intern (car element))
-                 table)
-                (cdr element )))
+          (puthash (car element) (cdr element ) table))
     (loop for element in dir-alist
           do
-          (setf (gethash
-                 (intern (car element))
-                 table)
-                (cdr element )))
+          (puthash (car element) (cdr element ) table))
     (loop for element in file-alist
           do
-          (setf (gethash
-                 (intern (car element))
-                 table)
-                (cdr element )))
+          (puthash (car element) (cdr element ) table))
     table))
 
 ;;}}}
@@ -228,7 +219,8 @@ modes."
 (emacspeak-pronounce-add-super 'text-mode 'latex-mode)
 (emacspeak-pronounce-add-super 'text-mode 'latex2e-mode)
 (emacspeak-pronounce-add-super 'text-mode 'plain-tex-mode)
-
+;;;xsl inherits from xml
+(emacspeak-pronounce-add-super 'xml-mode 'xsl-mode)
 ;;}}}
 ;;{{{  Composing and applying dictionaries:
 
@@ -259,26 +251,64 @@ applied."
   "Applies pronunciations specified in pronunciation table to current buffer.
 Modifies text and point in buffer."
   (declare (special emacspeak-pronounce-pronunciation-personality))
-  (loop for  key  being the hash-keys  of pronunciation-table
-        do
-        (let ((word (symbol-name key))
-              (pronunciation (gethash  key pronunciation-table ))
-              (personality nil))
-          (goto-char (point-min))
-          (while (search-forward  word nil t)
-            (setq personality
-                  (get-text-property (point) 'personality))
-            (replace-match  pronunciation t t  )
-            (if emacspeak-pronounce-pronunciation-personality
+  (let ((words
+         (sort 
+          (loop for  key  being the hash-keys  of pronunciation-table collect key)
+          #'(lambda (a b ) 
+              (> (length  a) (length  b))))))
+    (loop for key in words 
+          do
+          (let ((word  key)
+                (pronunciation (gethash  key pronunciation-table))
+                (pp nil)
+                (personality nil))
+            (goto-char (point-min))
+            (cond
+             ((stringp pronunciation)
+              (while (search-forward  word nil t)
+                (setq personality (get-text-property (point) 'personality))
+                (replace-match  pronunciation t t  )
                 (put-text-property
                  (match-beginning 0)
                  (+ (match-beginning 0) (length pronunciation))
                  'personality
-                 emacspeak-pronounce-pronunciation-personality)
-              (put-text-property
-               (match-beginning 0)
-               (+ (match-beginning 0) (length pronunciation))
-               'personality personality))))))
+                 (apply
+                  'append
+                  (mapcar
+                   #'(lambda (p)
+                       (when p
+                         (if (atom p) (list p) p)))
+                   (list emacspeak-pronounce-pronunciation-personality personality))))))
+             ((consp pronunciation )
+              (let ((matcher (car pronunciation))
+                    (pronouncer (cdr pronunciation))
+                    (pronunciation ""))
+                (while (funcall matcher   word nil t)
+                  (setq personality
+                        (get-text-property (point) 'personality))
+                  (setq pronunciation
+                        (save-match-data 
+			  (funcall pronouncer
+				   (buffer-substring 
+				    (match-beginning 0)
+				    (match-end 0)))))
+                  (replace-match pronunciation t t  )
+		  ;; get personality if any from pronunciation
+                  (setq pp
+                        (get-text-property (match-beginning 0) 'personality))
+                  (put-text-property
+                   (match-beginning 0)
+                   (+ (match-beginning 0) (length pronunciation))
+                   'personality
+                   (apply 'append
+                          (mapcar
+                           #'(lambda (p)
+                               (when p
+                                 (if (atom p) (list p) p)))
+                           (list
+                            emacspeak-pronounce-pronunciation-personality
+                            personality pp)))))))
+             (t nil))))))
 
 ;;}}}
 ;;{{{  loading, clearing  and saving dictionaries
@@ -309,6 +339,7 @@ Modifies text and point in buffer."
     (setq buffer (find-file-noselect filename))
     (save-excursion
       (set-buffer buffer)
+      (auto-fill-mode nil)
       (erase-buffer)
       (loop for key being the hash-keys  of emacspeak-pronounce-dictionaries
             do
@@ -316,10 +347,8 @@ Modifies text and point in buffer."
              (format "(emacspeak-pronounce-set-dictionary '%S\n '%S )\n"
                      key
                      (emacspeak-pronounce-get-dictionary key ))))
-      (goto-char (point-min))
-      (while (search-forward ")" nil t)
-        (replace-match ")\n" nil t))
       (save-buffer))))
+
 ;;;###autoload
 (defvar emacspeak-pronounce-dictionaries-loaded nil
   "Indicates if dictionaries already loaded.")
@@ -380,6 +409,11 @@ Optional argument FILENAME specifies the dictionary file."
     (insert string)
     (dtk-speak string)))
 
+(defsubst emacspeak-pronounce-read-pattern (key)
+  (declare (special emacspeak-pronounce-yank-word-point
+                    emacspeak-pronounce-current-buffer))
+  (eval (read-minibuffer "Pattern")))
+
 (defsubst emacspeak-pronounce-read-term (key)
   (declare (special emacspeak-pronounce-yank-word-point
                     emacspeak-pronounce-current-buffer))
@@ -399,7 +433,7 @@ Optional argument FILENAME specifies the dictionary file."
        now-map))))
 
 (defun emacspeak-pronounce-define-local-pronunciation (word  pronunciation )
-  "Define buffer local pronounciation.
+  "Define buffer local pronunciation.
 Argument WORD specifies the word which should be pronounced as specified by PRONUNCIATION."
   (interactive
    (list
@@ -409,17 +443,13 @@ Argument WORD specifies the word which should be pronounced as specified by PRON
   (emacspeak-pronounce-add-buffer-local-dictionary-entry
    word pronunciation))
 
-(defun emacspeak-pronounce-define-pronunciation ()
-  "Interactively define entries in the pronunciation dictionaries.
-Default term to define is delimited by region.
-First loads any persistent dictionaries if not already loaded."
-  (interactive)
-  (declare (special emacspeak-pronounce-dictionaries-loaded))
+(defsubst emacspeak-pronounce-get-key ()
+  "Collect key from user.
+Returns a pair of the form (key-type . key)."
+  (declare (special emacspeak-pronounce-pronunciation-keys))
   (let ((key nil)
-        (word nil)
-        (pronunciation nil)
-        (key-type (completing-read  "Define pronunciation that is specific to: "
-                                    emacspeak-pronounce-pronunciation-keys nil t )))
+        (key-type
+         (completing-read  "Define pronunciation that is specific to: " emacspeak-pronounce-pronunciation-keys nil t )))
     (cond
      ((string= key-type "buffer")
       (setq key (buffer-name )))        ;handled differently
@@ -442,17 +472,53 @@ First loads any persistent dictionaries if not already loaded."
             major-mode)
       (or key (error "No major mode found for current buffer")))
      (t (error "Cannot define pronunciations with key type %s" key-type)))
-    (setq word (emacspeak-pronounce-read-term key))
+    (cons key-type key)))
+
+(defun emacspeak-pronounce-define-template-pronunciation ()
+  "Interactively define template entries in the pronunciation dictionaries.
+Default term to define is delimited by region.
+First loads any persistent dictionaries if not already loaded."
+  (interactive)
+  (declare (special emacspeak-pronounce-dictionaries-loaded))
+  (let ((word nil)
+        (pronunciation nil)
+        (key-pair (emacspeak-pronounce-get-key)))
+    (setq word (emacspeak-pronounce-read-pattern (cdr key-pair)))
+    (setq pronunciation
+          (cons
+           (read-minibuffer
+            (format "Matcher for  %s: " word))
+           (read-minibuffer
+            (format "Pronouncer for  %s: " word))))
+    (when (and (not emacspeak-pronounce-dictionaries-loaded)
+               (y-or-n-p "Load pre existing  pronunciation dictionaries first? "))
+      (emacspeak-pronounce-load-dictionaries))
+    (unless  (string= (car key-pair)  "buffer")
+      (emacspeak-pronounce-add-dictionary-entry (cdr key-pair) word pronunciation)
+      (emacspeak-pronounce-refresh-pronunciations))
+    (when (string= (car key-pair)  "buffer")
+      (emacspeak-pronounce-add-buffer-local-dictionary-entry word pronunciation))))
+
+(defun emacspeak-pronounce-define-pronunciation ()
+  "Interactively define entries in the pronunciation dictionaries.
+Default term to define is delimited by region.
+First loads any persistent dictionaries if not already loaded."
+  (interactive)
+  (declare (special emacspeak-pronounce-dictionaries-loaded))
+  (let ((word nil)
+        (pronunciation nil)
+        (key-pair(emacspeak-pronounce-get-key)))
+    (setq word (emacspeak-pronounce-read-term (cdr key-pair)))
     (setq pronunciation
           (read-from-minibuffer
            (format "Pronounce %s as: " word)))
     (when (and (not emacspeak-pronounce-dictionaries-loaded)
                (y-or-n-p "Load pre existing  pronunciation dictionaries first? "))
       (emacspeak-pronounce-load-dictionaries))
-    (unless  (string= key-type  "buffer")
-      (emacspeak-pronounce-add-dictionary-entry key word pronunciation)
+    (unless  (string= (car key-pair)  "buffer")
+      (emacspeak-pronounce-add-dictionary-entry (cdr key-pair) word pronunciation)
       (emacspeak-pronounce-refresh-pronunciations))
-    (when (string= key-type  "buffer")
+    (when (string= (car key-pair)  "buffer")
       (emacspeak-pronounce-add-buffer-local-dictionary-entry  word pronunciation))))
 
 ;;}}}
@@ -466,7 +532,7 @@ Becomes automatically buffer local.")
 ;;;###autoload
 (defun emacspeak-pronounce-toggle-use-of-dictionaries (&optional state)
   "Toggle use of pronunciation dictionaries in current buffer.
-Pronunciations can be dfined on a per file, per directory and/or per
+Pronunciations can be defined on a per file, per directory and/or per
 mode basis.
 Pronunciations are activated on a per buffer basis.
 Turning on the use of pronunciation dictionaries results in emacspeak
@@ -476,7 +542,7 @@ After this, the pronunciations will be applied whenever text in the
 buffer is spoken.
 Optional argument state can be used from Lisp programs to
 explicitly turn pronunciations on or off."
-  (interactive)
+  (interactive "P")
   (declare (special emacspeak-pronounce-pronunciation-table))
   (cond
    ((or (eq state 'on)
@@ -556,6 +622,7 @@ See http://oz.uc.edu/~solkode/smileys.html for a full list."
     ("http://www.w3.org/1999/XSL/Transform" . " XSLT ")
     ("http://www.w3.org/2002/xforms" . " XForms ")
     ("http://www.w3.org/2001/xml-events" . " XEvents ")
+    ("http://www.w3.org/2001/vxml" . " vxml ")
     ("http://www.w3.org/2001/XMLSchema-instance". " XSchema Instance ")
     ("http://www.w3.org/2001/XMLSchema". " XSchema ")
     ("http://www.w3.org/1999/xhtml" . " xhtml ")
@@ -613,7 +680,11 @@ pronunciation dictionary for the specified key."
                      :notify notify
                      '(cons :tag "Dictionary Entry"
                             (string :tag "Phrase")
-                            (string :tag "Pronounce as")))
+                            (choice  :tag "Pronunciation"
+                                     (string :tag "Pronounce as")
+                                     (cons :tag "Pronouncer"
+                                           (symbol :tag "Matcher")
+                                           (symbol :tag "Pronouncer")))))
       (widget-insert "\n")
       (widget-create 'push-button
                      :tag "Save Dictionary"
@@ -679,6 +750,7 @@ specified pronunciation dictionary key."
       (?c (call-interactively 'emacspeak-pronounce-clear-dictionaries))
       (?d (call-interactively
            'emacspeak-pronounce-define-pronunciation t))
+      (?D (call-interactively 'emacspeak-pronounce-define-template-pronunciation t))
       (?e (call-interactively
            'emacspeak-pronounce-edit-pronunciations t))
       (?l (call-interactively 'emacspeak-pronounce-load-dictionaries))
@@ -689,6 +761,62 @@ specified pronunciation dictionary key."
     (emacspeak-auditory-icon 'close-object)))
 
 ;;}}}
+;;{{{ Helpers: pronouncers
+
+;;{{{ dates
+
+(defvar emacspeak-pronounce-date-mm-dd-yyyy-pattern
+  "[0-9]\\{2\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\([0-9]\\{2\\}\\)?"
+  "Pattern that matches dates of the form mm-dd-[cc]yy.")
+
+(defun emacspeak-pronounce-mm-dd-yyyy-date (string)
+  "Return pronunciation for mm-dd-yyyy dates."
+  (save-match-data
+    (let ((fields (mapcar #'read (split-string string "-"))))
+      (propertize
+       (calendar-date-string
+        (list (second fields)
+              (first fields)
+              (cond
+               ((< (third fields) 50)
+                (+ 2000 (third fields)))
+               ((< (third fields) 100)
+                (+ 1900 (third fields)))
+               (t (third fields)))))
+       'personality voice-punctuations-some))))
+                   
+;;}}}
+;;{{{ phone numbers
+
+(defvar emacspeak-pronounce-us-phone-number-pattern "1?[0-9]\\{3\\}-[0-9]\\{3}-[0-9]\\{4\\}"
+  "Pattern that matches US phone numbers.")
+
+(defun emacspeak-pronounce-us-phone-number (phone)
+  "Return pronunciation for US phone number."
+  (when (= 14 (length phone))
+    (setq phone (substring phone 2)))
+  (let ((area-code (substring  phone 0 3))
+        (prefix-code  (substring  phone 4 7))
+        (suffix-code  (substring  phone 8 12)))
+    (unless (string-equal "800" area-code)
+      (setq area-code
+            (replace-regexp-in-string
+             "[0-9]" " \\&" area-code)))
+    (setq prefix-code
+          (replace-regexp-in-string
+           "[0-9]" " \\&" prefix-code))
+    (setq suffix-code
+          (replace-regexp-in-string
+           "[0-9]\\{2\\}" " \\&"  suffix-code))
+    (propertize 
+     (format "(%s) %s, %s. "
+             area-code prefix-code suffix-code)
+     'personality voice-punctuations-some)))
+
+;;}}}
+
+;;}}}
+
 (provide  'emacspeak-pronounce)
 ;;{{{  emacs local variables
 

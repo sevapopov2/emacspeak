@@ -1,6 +1,6 @@
 \input texinfo
 @raggedright
-@c$Id: emacspeak.texi,v 18.0 2003/04/29 21:21:35 raman Exp $
+@c$Id: emacspeak.texi,v 19.0 2003/11/22 19:06:50 raman Exp $
 @setfilename./emacspeak.info 
 @settitle Emacspeak User's Manual --2nd Edition.
 @dircategory Accessibility
@@ -21,6 +21,7 @@
 @include packages.texi
 @include eterm.texi
 @include commands.texi
+@include options.texi
 @include acknowledge.texi
 @c trailer
      

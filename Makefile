@@ -1,4 +1,4 @@
-# $Id: Makefile,v 18.0 2003/04/29 21:21:56 raman Exp $
+# $Id: Makefile,v 19.0 2003/11/22 19:06:53 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak,  TTS,Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2003/04/29 21:21:56 $ |
-#  $Revision: 18.0 $ | 
+# $Date: 2003/11/22 19:06:53 $ |
+#  $Revision: 19.0 $ | 
 # Location undetermined
 #
 
@@ -169,7 +169,7 @@ servers/dtk-exp \
 servers/dtk-mv \
 servers/dtk-soft \
 servers/outloud \
-servers/stereo-outloud \
+servers/dsp-outloud \
 servers/tts-lib.tcl \
 servers/remote-tcl \
 servers/speech-server
@@ -180,6 +180,7 @@ TEMPLATES = etc/emacspeak.sh.def etc/Makefile
 MISC=etc/extract-table.pl etc/last-log.pl \
 etc/pdf2text etc/doc2text \
 etc/xls2html etc/ppt2html  \
+etc/ocr-client.pl \
 etc/emacspeak.xpm etc/emacspeak.jpg
 
 INFO = info/Makefile info/*.texi info/add-css.pl
@@ -193,9 +194,8 @@ ${INFO} ${UGUIDE} ${IGUIDE} ${NEWS} ${MISC} Makefile
 
 emacspeak:
 	cd lisp; $(MAKE)  SRC=$(SRC)
-	touch $(ID)
+	touch   $(ID)
 	chmod 644 $(ID)
-	@echo "Compiled on $(SNAPSHOT) by `whoami` on `hostname`" >> $(ID)
 	@echo "Now check installation of  the speech server. "  
 	@echo "See Makefile for instructions." 
 	@echo "See the NEWS file for a  summary of new features --control e cap n in Emacs" 
@@ -325,20 +325,20 @@ release: #supply LABEL=NN.NN
 	cd ..; \
 	rm -f emacspeak.tar ; \
 	tar cvf emacspeak.tar emacspeak-$(LABEL); \
-	gzip -9 emacspeak.tar; \
-	mv  emacspeak.tar.gz ../emacspeak.tar.gz; \
+	bzip2  -9 emacspeak.tar; \
+	mv  emacspeak.tar.bz2 ../; \
 	cd .. ; \
 	/bin/rm -rf release ; \
 	rm -f emacspeak.spec ; \
 sed "s@<version>@$(LABEL)@g" \
 	emacspeak.spec.in > emacspeak.spec
-	@echo "Prepared Emacspeak-$(LABEL) in emacspeak.tar.gz"
+	@echo "Prepared Emacspeak-$(LABEL) in emacspeak.tar.bz2"
 
 # }}}
 # {{{ rpm 
 
 rpm: emacspeak.spec
-	@cp emacspeak.tar.gz /usr/src/redhat/SOURCES/
+	@cp emacspeak.tar.bz2 /usr/src/redhat/SOURCES/
 	@cp emacspeak.spec /usr/src/redhat/SPECS/
 	rpm  -ba --sign --clean   /usr/src/redhat/SPECS/emacspeak.spec
 
@@ -349,13 +349,19 @@ list_dist:
 	ls -1  $(DISTFILES)
 
 # }}}
+# {{{create Changelog in working copy 
+changelog:
+	perl utils/cvs2cl.pl --distributed --prune --fsf
+
+# }}}
+
 # {{{upload to sourceforge 
 
-TARBALL=emacspeak-${LABEL}.tar.gz
+TARBALL=emacspeak-${LABEL}.tar.bz2
 RPM=/usr/src/redhat/RPMS/i386/emacspeak-${LABEL}-1.i386.rpm
 SF_HOME='raman@emacspeak.sf.net:~/www-emacspeak/htdocs'
 sourceforge: 
-	mv emacspeak.tar.gz ${TARBALL}
+	mv emacspeak.tar.bz2 ${TARBALL}
 	( echo 'anonymous';				\
 	  echo prompt;					\
 	  echo hash;					\

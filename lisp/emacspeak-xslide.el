@@ -1,5 +1,5 @@
 ;;; emacspeak-xslide.el --- Speech enable  XSL authoring 
-;;; $Id: emacspeak-xslide.el,v 18.0 2003/04/29 21:18:35 raman Exp $
+;;; $Id: emacspeak-xslide.el,v 19.0 2003/11/22 19:06:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable xslide 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:18:35 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:22 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -127,7 +127,6 @@
 
 (defvar xsl-xsl-main-personality voice-bolden 
   "Personality used for highlighting in XSL.")
-;;; keep byte compiler happy 
 
 ;;}}}
 (provide 'emacspeak-xslide)

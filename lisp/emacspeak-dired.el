@@ -1,5 +1,5 @@
 ;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
-;;; $Id: emacspeak-dired.el,v 18.0 2003/04/29 21:16:58 raman Exp $
+;;; $Id: emacspeak-dired.el,v 19.0 2003/11/22 19:06:15 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech enable dired
 ;;; Keywords: Emacspeak, Dired, Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:58 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:15 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -73,7 +73,10 @@ pronunciations only once.")
                     emacspeak-pronounce-pronunciation-table emacspeak-pronounce-dictionaries-loaded))
   (unless emacspeak-dired-pronunciations-defined
     (setq emacspeak-dired-pronunciations-defined t)
-    (emacspeak-pronounce-add-dictionary-entry 'dired-mode "dired" " Directory Sorted "))
+    (emacspeak-pronounce-add-dictionary-entry 'dired-mode "Dired"
+  " DirEd  ")
+    (emacspeak-pronounce-add-dictionary-entry 'dired-mode "dired"
+  " DirEd  "))
   (when (or (not (boundp 'emacspeak-pronounce-pronunciation-table))
             (not emacspeak-pronounce-pronunciation-table))
     (emacspeak-pronounce-toggle-use-of-dictionaries)))

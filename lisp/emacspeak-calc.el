@@ -1,5 +1,5 @@
 ;;; emacspeak-calc.el --- Speech enable the Emacs Calculator -- a powerful symbolic algebra system
-;;; $Id: emacspeak-calc.el,v 18.0 2003/04/29 21:16:54 raman Exp $
+;;; $Id: emacspeak-calc.el,v 19.0 2003/11/22 19:06:13 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: 
 ;;; Keywords:
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:54 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:13 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 

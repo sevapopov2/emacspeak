@@ -1,5 +1,5 @@
 ;;; emacspeak-realaudio.el --- Play realaudio from Emacs
-;;; $Id: emacspeak-realaudio.el,v 18.0 2003/04/29 21:17:50 raman Exp $
+;;; $Id: emacspeak-realaudio.el,v 19.0 2003/11/22 19:06:20 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Single click access to RealAudio from emacspeak
 ;;; Keywords: Emacspeak, RealAudio
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:50 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:20 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -79,12 +79,11 @@ icons once a realaudio stream is done playing."
   :type 'string)
 
 (defcustom emacspeak-realaudio-player-options 
-  (when (string= emacspeak-realaudio-player
-		 "/usr/bin/trplayer")
-    (list "-l" "-i" "-b" "-c" ))
+  (list "-l" "-i" "-b" "-c" )
   "*Options for realplayer."
   :group 'emacspeak-realaudio
-  :type 'string)
+  :type '(repeat :tag "RealAudio Options"
+                 (string :tag "Option")))
 
 (defvar emacspeak-realaudio-process nil
   "Process handle to running player")
@@ -247,7 +246,7 @@ completions. Hit space to use this completion list.
 If using TRPlayer, you can either give one-shot commands
 using command emacspeak-realaudio available from anywhere on
 the audio desktop as `\\[emacspeak-realaudio]'.
-Alternatively, switch to buffer *realaudo* using
+Alternatively, switch to buffer *realaudio* using
 `\\[emacspeak-realaudio];' if you wish to issue many
 navigation commands.  Note that buffer *realaudio* uses a
 special major mode that provides the various navigation

@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el,v 18.0 2003/04/29 21:17:00 raman Exp $
+;;; $Id: emacspeak.el,v 19.0 2003/11/22 19:06:15 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:00 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:15 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -42,7 +42,7 @@
 ;;;The complete audio desktop.
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'backquote)
 (require 'emacspeak-load-path)
@@ -94,7 +94,7 @@
 ;;{{{  Setting up things:
 
 (defconst emacspeak-version
-  (let ((x "$Revision: 18.0 $"))
+  (let ((x "$Revision: 19.0 $"))
     (string-match "[0-9.]+" x)
     (substring x (match-beginning 0)
                (match-end 0)))
@@ -248,6 +248,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "cperl-mode" 'emacspeak-cperl)
 (emacspeak-do-package-setup "ecb" 'emacspeak-ecb)
 (emacspeak-do-package-setup "cus-edit" 'emacspeak-custom)
+(emacspeak-do-package-setup "damlite" 'emacspeak-damlite)
 (emacspeak-do-package-setup "desktop" 'emacspeak-desktop )
 (emacspeak-do-package-setup "dired" 'emacspeak-dired )
 (emacspeak-do-package-setup "dismal" 'emacspeak-dismal)
@@ -273,6 +274,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "gnuplot" 'emacspeak-gnuplot)
 (emacspeak-do-package-setup "gomoku" 'emacspeak-gomoku)
 (emacspeak-do-package-setup "gud" 'emacspeak-gud)
+(emacspeak-do-package-setup "gdb-ui" 'emacspeak-gud)
 (emacspeak-do-package-setup "hangman" 'emacspeak-entertain)
 (emacspeak-do-package-setup "hideshow" 'emacspeak-hideshow)
 					;(emacspeak-do-package-setup "html-helper-mode" 'html-voice )
@@ -282,6 +284,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "info" 'emacspeak-info)
 (emacspeak-do-package-setup "ispell" 'emacspeak-ispell)
 (emacspeak-do-package-setup "jde" 'emacspeak-jde)
+(emacspeak-do-package-setup "kmacro" 'emacspeak-kmacro)
 (emacspeak-do-package-setup "kotl" 'emacspeak-kotl)
 (emacspeak-do-package-setup "make-mode" 'emacspeak-make-mode)
 (emacspeak-do-package-setup "man" 'emacspeak-man)
@@ -292,6 +295,8 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "mpuz" 'emacspeak-entertain)
 (emacspeak-do-package-setup "mspools" 'emacspeak-mspools)
 (emacspeak-do-package-setup "net-utils" 'emacspeak-net-utils)
+(emacspeak-do-package-setup "newsticker" 'emacspeak-newsticker)
+(emacspeak-do-package-setup "nxml-mode" 'emacspeak-nxml)
 (emacspeak-do-package-setup "oobr" 'emacspeak-oo-browser)
 (emacspeak-do-package-setup "outline" 'emacspeak-outline)
 (emacspeak-do-package-setup "perl-mode" 'emacspeak-perl)
@@ -304,9 +309,11 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "rpm-spec-mode" 'emacspeak-rpm-spec)
 (emacspeak-do-package-setup "sgml-mode" 'emacspeak-sgml-mode)
 (emacspeak-do-package-setup "sh-script" 'emacspeak-sh-script)
+(emacspeak-do-package-setup "sigbegone" 'emacspeak-sigbegone)
 (emacspeak-do-package-setup "solitaire" 'emacspeak-solitaire)
 (emacspeak-do-package-setup "speedbar" 'emacspeak-speedbar)
 (emacspeak-do-package-setup "sawfish" 'emacspeak-sawfish)
+(emacspeak-do-package-setup "ses" 'emacspeak-ses)
 (emacspeak-do-package-setup "sql-mode" 'emacspeak-sql)
 (emacspeak-do-package-setup "sql" 'emacspeak-sql)
 (emacspeak-do-package-setup "supercite" 'emacspeak-supercite)
@@ -375,7 +382,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
                   window-system-version
                   emacs-version
                   system-type
-                  emacspeak-version dtk-tcl dtk-program
+                  emacspeak-version  dtk-program
                   dtk-speech-rate dtk-character-scale
                   dtk-split-caps dtk-capitalize
                   dtk-punctuation-mode
@@ -445,7 +452,6 @@ Emacs 20.3"
 sets punctuation mode to all, activates the dictionary and turns on split caps."
   (declare (special dtk-split-caps
                     emacspeak-audio-indentation))
-  (voice-lock-mode 1)
   (dtk-set-punctuations "all")
   (or dtk-split-caps
       (dtk-toggle-split-caps))
@@ -462,6 +468,7 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
                          'emacspeak-setup-programming-mode)))
    (list 'c-mode-common-hook
          'py-mode-hook
+         'prolog-mode-hook
          'lisp-mode-hook
          'emacs-lisp-mode-hook
          'lisp-interaction-mode-hook
@@ -473,6 +480,8 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
          'sql-mode-hook
          'sgml-mode-hook
          'xml-mode-hook
+	 'nxml-mode-hook
+         'xsl-mode-hook
          'makefile-mode-hook
          'TeX-mode-hook
          'LaTeX-mode-hook

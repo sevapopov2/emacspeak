@@ -1,5 +1,5 @@
 ;;; emacspeak-sh-script.el --- Speech enable  sh-script mode
-;;; $Id: emacspeak-sh-script.el,v 18.0 2003/04/29 21:17:56 raman Exp $
+;;; $Id: emacspeak-sh-script.el,v 19.0 2003/11/22 19:06:21 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable sh-script 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:56 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:21 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 

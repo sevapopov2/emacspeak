@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<!--$Id: home-page-search.xml,v 18.0 2003/04/29 21:19:10 raman Exp $-->
+<!--$Id: home-page-search.xml,v 19.0 2003/11/22 19:06:41 raman Exp $-->
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>HPS --Home Page Search</title>
@@ -8,8 +8,8 @@
   <body>
     <p/>
     <form method="get" action="http://HPSearch.uni-trier.de/hp/cgi/hps.cgi">First- and
-Lastname: <input type="text" name="query" value="" size="25"/><input type="submit" value="Search"/><small>(Case
-Sensitive)</small><br/>
-<input type="submit" name="dbSearchLike" value="Search Like"/><input type="submit" name="Jump" value="Jump to best Page"/><input type="submit" name="feedback" value="Feedback"/><input type="reset" value="Reset"/></form>
+      Lastname: <input type="text" name="query" value="" size="25"/><input type="submit" value="Search"/><small>(Case
+      Sensitive)</small><br/>
+    <input type="submit" name="dbSearchLike" value="Search Like"/><input type="submit" name="Jump" value="Jump to best Page"/><input type="submit" name="feedback" value="Feedback"/><input type="reset" value="Reset"/></form>
   </body>
 </html>

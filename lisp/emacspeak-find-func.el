@@ -1,5 +1,5 @@
 ;;; emacspeak-find-func.el --- Speech enable emacs' code finder
-;;; $Id: emacspeak-find-func.el,v 18.0 2003/04/29 21:17:17 raman Exp $
+;;; $Id: emacspeak-find-func.el,v 19.0 2003/11/22 19:06:17 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable find-func
 ;;; Keywords: Emacspeak, find-func
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:17 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:17 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 

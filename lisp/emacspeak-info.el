@@ -1,5 +1,5 @@
 ;;; emacspeak-info.el --- Speech enable Info -- Emacs' online documentation viewer
-;;; $Id: emacspeak-info.el,v 18.0 2003/04/29 21:17:32 raman Exp $
+;;; $Id: emacspeak-info.el,v 19.0 2003/11/22 19:06:17 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Module for customizing Emacs info
 ;;; Keywords:emacspeak, audio interface to emacs
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:32 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:17 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -56,91 +56,64 @@
 ;;}}}
 ;;{{{  Voices 
 
-(defvar Info-title-personality-alist
-  '((?* bold)
-    (?= bold-italic)
-    (?-  underline))
-  "*Alist of personality or list of personalities to use for pseudo-underlined titles.
-The alist key is the character the title is underlined with (?*, ?= or ?-).")
   
-(defvar emacspeak-info-node   voice-bolden
-  "Personality to indicate the node name.")
 
-(defvar emacspeak-info-xref
-  'ursula
-  "Personality to indicate  cross-references.")
+(def-voice-font emacspeak-info-title-1-face voice-bolden
+  'Info-title-1-face
+  "Personality used for Info-title-1-face."
+  :group 'emacspeak-info)
 
-(defvar emacspeak-info-menu-5
-  voice-lighten-extra
-  "Personality for menu items.")
+(def-voice-font emacspeak-info-title-2-face voice-bolden
+  'Info-title-2-face
+  "Personality used for Info-title-2-face."
+  :group 'emacspeak-info)
+(def-voice-font emacspeak-info-title-3-face voice-bolden
+  'Info-title-3-face
+  "Personality used for Info-title-3-face."
+  :group 'emacspeak-info)
+(def-voice-font emacspeak-info-title-4-face voice-bolden
+  'Info-title-4-face
+  "Personality used for Info-title-4-face."
+  :group 'emacspeak-info)
 
-;;}}}
-;;{{{  Voiceify a node 
+(def-voice-font emacspeak-info-header-node voice-smoothen
+  'info-header-node
+  "Personality used for info-header-node."
+  :group 'emacspeak-info)
+(def-voice-font emacspeak-info-header-xref voice-brighten
+  'info-header-xref
+  "Personality used for info-header-xref."
+  :group 'emacspeak-info)
 
-;;; Cloned from info.el Info-fontify-node 
-(defun Info-voiceify-node ()
-  "Voiceify node."
-  (declare (special Info-title-personality-alist Info-current-node))
-  (save-excursion
-    (let ((buffer-read-only nil))
-      (goto-char (point-min))
-      (setq voice-lock-mode t)
-      (if (looking-at "^File: [^,: \t]+,?[ \t]+")
-	  (progn
-	    (goto-char (match-end 0))
-	    (while
-		(looking-at "[ \t]*[^:, \t\n]+:[ \t]+\\([^:,\t\n]+\\),?")
-	      (goto-char (match-end 0))
-	      (put-text-property (match-beginning 1) (match-end 1)
-				 'personality emacspeak-info-xref))))
-      (goto-char (point-min))
-      (while (re-search-forward "\n\\([^ \t\n].+\\)\n\\(\\*+\\|=+\\|-+\\)$"
-                                nil t)
-	(put-text-property (match-beginning 1) (match-end 1)
-			   'personality
-			   (cdr (assq (preceding-char) Info-title-personality-alist))))
-      (goto-char (point-min))
-      (while (re-search-forward "\\*Note[ \n\t]+\\([^:]*\\):" nil t)
-	(if (= (char-after (1- (match-beginning 0))) ?\") ; hack
-	    nil
-	  (put-text-property (match-beginning 1) (match-end 1)
-			     'personality emacspeak-info-xref)))
-      (goto-char (point-min))
-      (if (and (search-forward "\n* Menu:" nil t)
-               Info-current-node
-	       (not (string-match "\\<Index\\>" Info-current-node))
-	       ;; Don't take time to annotate huge menus
-	       (< (- (point-max) (point)) Info-voiceify-maximum-menu-size))
-	  (let ((n 0))
-	    (while (re-search-forward "^\\* \\([^:\t\n]*\\):" nil t)
-	      (setq n (1+ n))
-	      (if (memq n '(5 9))  ; visual aids to help with 1-9 keys
-		  (put-text-property (match-beginning 0)
-				     (1+ (match-beginning 0))
-				     'personality emacspeak-info-menu-5))
-	      (put-text-property (match-beginning 1) (match-end 1)
-				 'personality emacspeak-info-node))))
-      (set-buffer-modified-p nil))))
+(def-voice-font emacspeak-info-menu-5 voice-lighten
+  'info-menu-5
+  "Personality used for info-menu-5."
+  :group 'emacspeak-info)
+(def-voice-font emacspeak-info-menu-header voice-bolden-medium
+  'info-menu-header
+  "Personality used for info-menu-header."
+  :group 'emacspeak-info)
+(def-voice-font emacspeak-info-node voice-monotone
+  'info-node
+  "Personality used for info-node."
+  :group 'emacspeak-info)
+(def-voice-font emacspeak-info-xref voice-animate-extra
+  'info-xref
+  "Personality used for info-xref."
+  :group 'emacspeak-info)
 
 ;;}}}
 ;;{{{ advice
 
-;;; Advice Info mode to voice lock 
-
-(defadvice Info-mode (after emacspeak pre act)
-  "Set up voice locking if requested. 
-See variable `Info-voiceify`"
-  (Info-voiceify-node))
-
-(defcustom  emacspeak-info-select-node-speak-chunk 'screenfull 
+(defcustom  emacspeak-info-select-node-speak-chunk 'screenfull
   "*Specifies how much of the selected node gets spoken.
 Possible values are:
 screenfull  -- speak the displayed screen
 node -- speak the entire node."
   :type '(menu-choice
-	  (const screenful)
-	  (const node))
-  :group 'emacspeak)
+	  (const :tag "First screenfull" screenfull)
+	  (const :tag "Entire node" node))
+  :group 'emacspeak-info)
 
 (defsubst emacspeak-info-speak-current-window ()
   "Speak current window in info buffer."
@@ -150,14 +123,11 @@ node -- speak the entire node."
       (forward-line (window-height window))
       (emacspeak-speak-region start (point )))))
 
-(defadvice Info-select-node (after emacspeak pre act)
-  "Voiceify the Info node if requested. 
-Speak the selected node based on setting of
-emacspeak-info-select-node-speak-chunk"
+(defun emacspeak-info-visit-node()
+  "Apply requested action upon visiting a node."
   (declare (special emacspeak-info-select-node-speak-chunk))
   (let ((dtk-stop-immediately t ))
     (emacspeak-auditory-icon 'select-object)
-    (and Info-voiceify (Info-voiceify-node))
     (cond
      ((eq emacspeak-info-select-node-speak-chunk
           'screenfull)
@@ -165,6 +135,12 @@ emacspeak-info-select-node-speak-chunk"
      ((eq emacspeak-info-select-node-speak-chunk 'node)
       (emacspeak-speak-buffer ))
      (t (emacspeak-speak-line)))))
+
+(defadvice Info-select-node (after emacspeak pre act)
+  "Voiceify the Info node if requested. 
+Speak the selected node based on setting of
+emacspeak-info-select-node-speak-chunk"
+  (emacspeak-info-visit-node))
 
 (defadvice info (after emacspeak pre act)
   "Cue user that info is up."
@@ -243,6 +219,21 @@ and then cue the next selected buffer."
 (declaim (special Info-mode-map))
 (define-key Info-mode-map "T" 'emacspeak-info-speak-header)
 (define-key Info-mode-map "'" 'emacspeak-speak-rest-of-buffer)
+;;}}}
+;;{{{ info wizard
+;;;###autoload
+(defun emacspeak-info-wizard (node-spec )
+  "Read a node spec from the minibuffer and launch
+Info-goto-node.
+See documentation for command `Info-goto-node' for details on
+node-spec."
+  (interactive
+   (list
+    (read-from-minibuffer "Node: "
+			  "(")))
+  (Info-goto-node node-spec)
+  (emacspeak-info-visit-node))
+
 ;;}}}
 (provide  'emacspeak-info)
 ;;{{{  emacs local variables 

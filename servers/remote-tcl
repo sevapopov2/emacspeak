@@ -1,5 +1,5 @@
 #!/bin/sh
-#$Id: remote-tcl,v 18.0 2003/04/29 21:21:19 raman Exp $
+#$Id: remote-tcl,v 19.0 2003/11/22 19:06:47 raman Exp $
 #Description: Launch a dectalk server on a remote host.
 #Copyright (C) 1995 -- 2003, T. V. Raman 
 # {{{  documentation

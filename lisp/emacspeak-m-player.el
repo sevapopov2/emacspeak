@@ -1,5 +1,5 @@
 ;;; emacspeak-m-player.el --- Control mplayer from Emacs
-;;; $Id: emacspeak-m-player.el,v 18.0 2003/04/29 21:17:42 raman Exp $
+;;; $Id: emacspeak-m-player.el,v 19.0 2003/11/22 19:06:18 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, m-player streaming media 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:42 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:18 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -38,10 +38,6 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  Required modules
-
-(require 'emacspeak-preamble)
-;;}}}
 ;;{{{ Introduction:
 
 ;;; Commentary:
@@ -59,7 +55,12 @@
 ;;;http://www.mplayerhq.hu/DOCS/faq.html
 ;;; Mplayer docs at 
 ;;; http://www.mplayerhq.hu/DOCS/
+;;; Code:
 
+;;}}}
+;;{{{  Required modules
+
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ define a derived mode for m-player interaction 
 (defvar emacspeak-m-player-process nil
@@ -76,8 +77,9 @@
   (when (and (not  emacspeak-aumix-multichannel-capable-p)
              emacspeak-use-auditory-icons)
     (emacspeak-toggle-auditory-icons))
-  (setq emacspeak-m-player-process (get-buffer-process (current-buffer))))
-
+  (setq emacspeak-m-player-process (get-buffer-process
+                                    (current-buffer))))
+  
 (declaim (special emacspeak-m-player-mode-map))
 
 ;;}}}
@@ -139,7 +141,8 @@ The player is placed in a buffer in emacspeak-m-player-mode."
                  "m-player" "m-player" emacspeak-m-player-program
                  options))
     (switch-to-buffer (process-buffer emacspeak-m-player-process))
-    (emacspeak-m-player-mode)))
+    (emacspeak-m-player-mode)
+    (ansi-color-for-comint-mode-on)))
 
 ;;}}}
 ;;{{{ commands 

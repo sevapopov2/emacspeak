@@ -1,5 +1,5 @@
 ;;; emacspeak-redefine.el --- Redefines some key Emacs builtins to speak
-;;; $Id: emacspeak-redefine.el,v 18.0 2003/04/29 21:17:51 raman Exp $
+;;; $Id: emacspeak-redefine.el,v 19.0 2003/11/22 19:06:20 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak's redefinition of some key functions.
 ;;; Emacspeak does most of its work by advising other functions to speak.
@@ -10,8 +10,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:51 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:20 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -79,7 +79,7 @@
 ;;}}}
 ;;{{{  The new functions: 
 
-(defun emacspeak-self-insert-command (arg)
+(defun emacspeak-self-insert-command (&optional arg)
   "Insert a character.
 Speaks the character if emacspeak-character-echo is true.
 See  command emacspeak-toggle-word-echo bound to
@@ -87,6 +87,7 @@ See  command emacspeak-toggle-word-echo bound to
 Toggle variable dtk-stop-immediately-while-typing if you want to have
 speech flush as you type."
   (interactive "p")
+  (or arg (setq arg 1))
   (declare (special last-input-char
                     dtk-stop-immediately-while-typing dtk-program 
                     buffer-undo-list  buffer-read-only
@@ -117,22 +118,24 @@ speech flush as you type."
    auto-fill-function
    (funcall auto-fill-function)))
 
-(defun emacspeak-forward-char (arg)
+(defun emacspeak-forward-char (&optional arg)
   "Forward-char redefined to speak char moved to. "
   (interactive "p")
   (declare (special dtk-stop-immediately))
+  (or arg (setq arg 1))
   (cond
    ((<= (+ arg (point)) (point-max))
     (forward-char arg)
     (when (interactive-p)
       (and dtk-stop-immediately (dtk-stop))
-      (emacspeak-speak-char t )))
+      (emacspeak-speak-char t  )))
    (t(ding)
      (message "End of buffer"))))
 
-(defun emacspeak-backward-char (arg)
+(defun emacspeak-backward-char (&optional arg)
   "Backward-char redefined to speak char moved to. "
   (interactive "p")
+  (or arg (setq arg 1))
   (declare (special dtk-stop-immediately))
   (cond
    ((>= (- (point) arg) (point-min))
@@ -143,53 +146,28 @@ speech flush as you type."
    (t (ding)
       (message "Beginning of buffer"))))
 
-;;{{{  kill buffer for emacs 21
-
-;;;There is a bug in emacs 21
-;;; that causes the normal emacspeak advice  to fire too late
-;;; Interestingly enough  if you just bind the key again 
-;;; the emacspeak advice works, which indicates that perhaps 
-;;; the bug stems from how it gets bound in commands.c
-;;; also, note that emacspeak-fix-interactive gets fooled by emacs 21
-;;; into auto-advising kill-buffer
-
-(defun emacspeak-kill-buffer (buffer)
-  "Speech-enabled version of kill-buffer for Emacs 21."
-  (interactive
-   (list 
-    (read-buffer "Kill buffer: "
-                 (current-buffer))))
-  (kill-buffer buffer)
-  (emacspeak-auditory-icon 'close-object)
-  (emacspeak-speak-mode-line))
-
-;;}}}
-
 ;;}}}
 ;;{{{  Rebinding functions to keys:
 
-(defun emacspeak-rebind(old-fn new-fn)
+(defun emacspeak-rebind(old-fn new-fn &optional keymap)
   "Rebinds new-fn to all those keys that normally invoke old-fn"
   (let
-      ((keys (where-is-internal old-fn)))
-    (mapcar 
-     (function
-      (lambda (key)
-        (global-set-key key new-fn )))
-     keys ))
-  )
+      ((keys (where-is-internal old-fn keymap)))
+    (mapcar
+     (if keymap
+         (function
+	  (lambda (key)
+	    (define-key keymap  key new-fn )))
+       (function
+	(lambda (key)
+	  (global-set-key key new-fn ))))
+     keys )))
 
 (defvar emacspeak-functions-that-bypass-function-cell 
   (list 'backward-char 'forward-char 'self-insert-command )
   "These commands are activated directly through C,
 rather than through their function cell.
 They have to be redefined and rebound to make them talk. " )
-;;; for emacs 21 add kill-buffer to the above list:
-(declaim (special emacs-version))
-
-(when (string-match "^21" emacs-version)
-  (push 'kill-buffer 
-	emacspeak-functions-that-bypass-function-cell))
 (mapcar 
  (function
   (lambda (f)

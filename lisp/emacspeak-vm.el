@@ -1,5 +1,5 @@
 ;;; emacspeak-vm.el --- Speech enable VM -- A powerful mail agent (and the one I use)
-;;; $Id: emacspeak-vm.el,v 18.0 2003/04/29 21:18:27 raman Exp $
+;;; $Id: emacspeak-vm.el,v 19.0 2003/11/22 19:06:21 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enhance vm
 ;;; Keywords: Emacspeak, VM, Email, Spoken Output, Voice annotations
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:18:27 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:21 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -66,39 +66,14 @@ Note that some badly formed mime messages  cause trouble."
 
 (defun emacspeak-vm-mode-setup ()
   "Setup function placed on vm-mode-hook by Emacspeak."
-  (declare (special  dtk-punctuation-mode
-                     dtk-allcaps-beep
-                     emacspeak-vm-voice-lock-messages))
+  (declare (special  dtk-punctuation-mode emacspeak-vm-voice-lock-messages
+                     dtk-allcaps-beep))
   (setq dtk-punctuation-mode "some")
   (when dtk-allcaps-beep
     (dtk-toggle-allcaps-beep))
   (emacspeak-dtk-sync)
   (when emacspeak-vm-voice-lock-messages
-    (condition-case nil
-        (voice-lock-mode 1)
-      (error nil ))))
-
-;;}}}
-;;{{{  vm voices:
-
-(defcustom emacspeak-vm-from-voice  voice-bolden
-  "Personality for From field. "
-  :type 'symbol
-  :group 'emacspeak-vm)
-
-(defcustom emacspeak-vm-to-voice  voice-animate
-  "Personality for To field. "
-  :type 'symbol
-  :group 'emacspeak-vm)
-(defcustom emacspeak-vm-subject-voice  voice-brighten 
-  "Personality for Subject field. "
-  :type 'symbol
-  :group 'emacspeak-vm)
-
-(defcustom emacspeak-vm-cite-voice  voice-smoothen
-  "Personality for citation lines. "
-  :type 'symbol
-  :group 'emacspeak-vm)
+    (voice-lock-mode 1)))
 
 ;;}}}
 ;;{{{ inline helpers
@@ -269,7 +244,7 @@ Note that some badly formed mime messages  cause trouble."
 Useful when you're reading a message
 that has been forwarded multiple times."
   (interactive)
-  (re-search-forward "^Subject:" nil t )
+  (re-search-forward "^ *Subject:" nil t )
   (emacspeak-speak-line))
 
 (defadvice vm-scroll-forward (after emacspeak pre act)
@@ -471,7 +446,6 @@ Leave point at front of decoded attachment."
    ((interactive-p)
     (let ((orig (point )))
       ad-do-it
-      (emacspeak-auditory-icon 'task-done)
       (goto-char orig)
       (message "Decoded attachment")))
    (t ad-do-it))
@@ -504,15 +478,23 @@ Leave point at front of decoded attachment."
            (lambda nil
              (emacspeak-pronounce-refresh-pronunciations))))
 (declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
-(emacspeak-pronounce-augment-pronunciations 'vm-presentation-mode
-                                            emacspeak-pronounce-internet-smileys-pronunciations)
+(loop for hook in 
+      (list 'mail-mode-hook
+            'vm-presentation-mode-hook)
+      do 
+      (add-hook hook 'emacspeak-pronounce-refresh-pronunciations
+                'append ))
 
-(add-hook 'mail-mode-hook
-          'emacspeak-pronounce-refresh-pronunciations)
-          
-
-(emacspeak-pronounce-augment-pronunciations 'mail-mode
-                                            emacspeak-pronounce-internet-smileys-pronunciations)
+(loop for mode in 
+      '(vm-presentation-mode 
+        mail-mode)
+      do 
+      (emacspeak-pronounce-augment-pronunciations mode
+                                                  emacspeak-pronounce-internet-smileys-pronunciations)
+      (emacspeak-pronounce-add-dictionary-entry mode
+                                                emacspeak-speak-iso-datetime-pattern
+                                                (cons 're-search-forward
+                                                      'emacspeak-speak-decode-iso-datetime)))          
 
 ;;}}}
 ;;{{{ advice button motion 
@@ -571,7 +553,7 @@ If N is negative, move backward instead."
 (defcustom emacspeak-vm-use-raman-settings t
   "Should VM  use the customizations used by the author of Emacspeak."
   :type 'boolean
-  :group 'emacspeak)
+  :group 'emacspeak-vm)
 
 (defun emacspeak-vm-use-raman-settings ()
   "Customization settings for VM used by the author of
@@ -619,7 +601,7 @@ Emacspeak."
         vm-url-browser 'browse-url
         vm-confirm-new-folders t
         vm-move-after-deleting nil
-        emacspeak-vm-voice-lock-messages nil)
+        emacspeak-vm-voice-lock-messages t)
   t)
   
 (when emacspeak-vm-use-raman-settings
@@ -642,6 +624,12 @@ text using pdftotext."
   (expand-file-name "doc2text" emacspeak-etc-directory)
   "Executable that converts MSWord documents on standard input to plain
 text using wvText."
+  :type 'string
+  :group 'emacspeak-vm)
+(defcustom emacspeak-vm-cal2text
+  (expand-file-name "cal2text" emacspeak-etc-directory)
+  "Executable that converts calendar invitations    on
+  standard input to plain text."
   :type 'string
   :group 'emacspeak-vm)
 
@@ -672,21 +660,23 @@ text using wvText."
 
 (defun emacspeak-vm-customize-mime-settings ()
   "Customize VM mime settings."
-  (declare (special
-            vm-preview-lines
-            vm-infer-mime-types
-            vm-mime-decode-for-preview
-            vm-auto-decode-mime-messages
-            vm-auto-displayed-mime-content-type-exceptions
-            vm-mime-attachment-save-directory
-            vm-mime-base64-encoder-program
-            vm-mime-base64-decoder-program
-            vm-mime-attachment-auto-type-alist
-            vm-mime-type-converter-alist
-            emacspeak-vm-pdf2text
-            emacspeak-vm-ppt2html
-            emacspeak-vm-xls2html
-            emacspeak-vm-doc2text))
+  (declare (special vm-preview-lines
+		    vm-infer-mime-types
+		    vm-mime-decode-for-preview
+		    vm-auto-decode-mime-messages
+		    vm-auto-displayed-mime-content-type-exceptions
+		    vm-mime-attachment-save-directory
+		    vm-mime-base64-encoder-program
+		    vm-mime-base64-decoder-program
+		    vm-mime-attachment-auto-type-alist
+		    vm-mime-type-converter-alist
+		    emacspeak-vm-pdf2text
+		    emacspeak-vm-ppt2html
+		    emacspeak-vm-xls2html
+		    emacspeak-vm-doc2text
+		    emacspeak-vm-cal2text))
+  (emacspeak-vm-add-mime-convertor
+   (list "text/calendar" "text/plain" emacspeak-vm-cal2text))
   (emacspeak-vm-add-mime-convertor
    (list "application/pdf" "text/plain"
          emacspeak-vm-pdf2text))

@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-#$Id: last-log.pl,v 18.0 2003/04/29 21:20:53 raman Exp $
+#$Id: last-log.pl,v 19.0 2003/11/22 19:06:46 raman Exp $
 #Description: Print out hostname wher ewe logged in from:
 use strict;
 #see /usr/include/utmp.h

@@ -1,5 +1,5 @@
 ;;; emacspeak-gridtext.el --- gridtext
-;;; $Id: emacspeak-gridtext.el,v 18.0 2003/04/29 21:17:27 raman Exp $
+;;; $Id: emacspeak-gridtext.el,v 19.0 2003/11/22 19:06:17 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for laying grids on text
 ;;; Keywords: Emacspeak, gridtext
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:27 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:17 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -38,12 +38,6 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{ required modules
-
-(require 'emacspeak-preamble)
-(require 'emacspeak-table)
-(require 'emacspeak-table-ui)
-;;}}}
 ;;{{{  Introduction:
 
 ;;; Commentary:
@@ -63,7 +57,15 @@
 ;;; future if necessary. This module is useful for browsing
 ;;; structured text files and the output from programs that
 ;;; tabulate their output.
+;;; It's also useful for handling multicolumn text.
+;;; Code:
 
+;;}}}
+;;{{{ required modules
+
+(require 'emacspeak-preamble)
+(require 'emacspeak-table)
+(require 'emacspeak-table-ui)
 ;;}}}
 ;;{{{  variables
 
@@ -89,6 +91,7 @@ future  use."
 end   as specified by grid."
   (let ((result-grid (make-vector (count-lines start end) nil))
         (this-line nil)
+        (this-length 0)
         (this-row nil)
         (num-rows (count-lines start end ))
         (num-columns(1+  (length grid))))
@@ -101,20 +104,26 @@ end   as specified by grid."
         (loop for i from 0 to (1- num-rows)
               do
               (beginning-of-line)
-              (setq this-line (thing-at-point 'line))
+              (setq this-line
+                    (buffer-substring (line-beginning-position) (line-end-position)))
+              (setq this-length (length this-line))
               (setq this-row (make-vector num-columns ""))
               (loop for j from 0 to (1- (length grid))
-                    do 
-                    (aset  this-row j
-                           (substring
-                            this-line
-                            (if (= j 0 ) 
-                                0
-			      (nth  (1- j) grid))
-                            (1- (nth j grid )))))
+                    do
+                    (when (< (1- (nth j grid )) this-length)
+                      ;;; within bounds 
+                      (aset  this-row j
+                             (substring
+                              this-line
+                              (if (= j 0 ) 
+                                  0
+                                (nth  (1- j) grid))
+                              (1- (nth j grid ))))))
               (aset this-row (length grid)
-                    (substring this-line
-                               (nth (1- (length grid)) grid)))
+                    (if (< (nth (1- (length grid)) grid) this-length)
+                        (substring this-line
+                                   (nth (1- (length grid)) grid))
+                      ""))
               (aset result-grid i this-row)
               (forward-line 1))
         result-grid))))

@@ -1,5 +1,5 @@
 ;;; emacspeak-xslt.el --- Implements Emacspeak  xslt transform engine
-;;; $Id: emacspeak-xslt.el,v 18.0 2003/04/29 21:18:35 raman Exp $
+;;; $Id: emacspeak-xslt.el,v 19.0 2003/11/22 19:06:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  xslt transformation routines 
 ;;; Keywords: Emacspeak,  Audio Desktop XSLT
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:18:35 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:22 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -68,49 +68,24 @@
 (defcustom emacspeak-xslt-keep-errors  nil
   "If non-nil, xslt errors will be preserved in an errors buffer."
   :type 'boolean
-  :group 'emacspeak-wizards)
+  :group 'emacspeak-xslt)
+
+(defcustom emacspeak-xslt-nuke-null-char t
+  "If T null chars in the region will be nuked.
+This is useful when handling bad HTML."
+  :type 'boolean
+  :group 'emacspeak-xslt)
+
 ;;;###autoload
 (defun emacspeak-xslt-region (xsl start end &optional params )
   "Apply XSLT transformation to region and replace it with
 the result.  This uses XSLT processor xsltproc available as
 part of the libxslt package."
   (declare (special emacspeak-xslt-program
+                    emacspeak-xslt-nuke-null-char
                     emacspeak-xslt-keep-errors
                     modification-flag ))
-  (let ((parameters (when params 
-                      (mapconcat 
-                       #'(lambda (pair)
-                           (format "--param %s %s "
-                                   (car pair)
-                                   (cdr pair)))
-                       params
-                       " "))))
-    (shell-command-on-region start end
-                             (format
-                              "%s %s  --html --nonet --novalid %s - %s"
-			      emacspeak-xslt-program
-			      (or parameters "")
-			      xsl
-			      (if emacspeak-xslt-keep-errors
-				  ""
-				" 2>/dev/null "))
-                             (current-buffer)
-                             'replace
-                             (when emacspeak-xslt-keep-errors
-			       "*xslt errors*"))
-    (when (get-buffer  "*xslt errors*")
-      (bury-buffer "*xslt errors*"))
-    (setq modification-flag nil)))
-;;;###autoload
-(defun emacspeak-xslt-url (xsl url &optional params)
-  "Apply XSLT transformation to url
-and return the results in a newly created buffer.
-  This uses XSLT processor xsltproc available as
-part of the libxslt package."
-  (declare (special emacspeak-xslt-program
-                    modification-flag
-                    emacspeak-xslt-keep-errors))
-  (let ((result (get-buffer-create " *xslt result*"))
+  (let ((command nil)
         (parameters (when params 
                       (mapconcat 
                        #'(lambda (pair)
@@ -119,26 +94,103 @@ part of the libxslt package."
                                    (cdr pair)))
                        params
                        " "))))
+    (setq command (format
+		   "%s %s  --html --nonet --novalid %s - %s"
+		   emacspeak-xslt-program
+		   (or parameters "")
+		   xsl
+		   (if emacspeak-xslt-keep-errors
+		       ""
+		     " 2>/dev/null ")))
+    (when emacspeak-xslt-nuke-null-char
+      (goto-char start)
+      (while (search-forward
+	      ( format "%c" 0)
+	      end t)
+	(replace-match " ")))
+    (shell-command-on-region start end
+                             command 
+                             (current-buffer)
+                             'replace
+                             (when emacspeak-xslt-keep-errors
+			       "*xslt errors*"))
+    (when (get-buffer  "*xslt errors*")
+      (bury-buffer "*xslt errors*"))
+    (goto-char (point-max))
+    (insert
+     (format "<!--\n %s \n-->\n"
+	     command))
+    (setq modification-flag nil)))
+;;; uses wget in a pipeline to avoid libxml2 bug:
+;;;###autoload
+(defcustom  emacspeak-xslt-use-wget-to-download nil
+  "Set to T if you want to avoid URL downloader bugs in libxml2.
+There is a bug that bites when using Yahoo Maps that wget can
+work around."
+  :group 'emacspeak-xslt
+  :type 'boolean)
+
+;;;###autoload
+(defun emacspeak-xslt-url (xsl url &optional params dont-add-command-as-comment)
+  "Apply XSLT transformation to url
+and return the results in a newly created buffer.
+  This uses XSLT processor xsltproc available as
+part of the libxslt package."
+  (declare (special emacspeak-xslt-program
+                    emacspeak-xslt-use-wget-to-download
+                    modification-flag
+                    emacspeak-xslt-keep-errors))
+  (let ((result (get-buffer-create " *xslt result*"))
+        (command nil)
+        (parameters (when params 
+                      (mapconcat 
+                       #'(lambda (pair)
+                           (format "--param %s %s "
+                                   (car pair)
+                                   (cdr pair)))
+                       params
+                       " "))))
+    (if emacspeak-xslt-use-wget-to-download
+	(setq command (format
+		       "wget -q -O - '%s' | %s %s    --html --novalid %s '%s' %s"
+		       url
+		       emacspeak-xslt-program
+		       (or parameters "")
+		       xsl "-"
+		       (if emacspeak-xslt-keep-errors
+			   ""
+			 " 2>/dev/null ")))
+      (setq command (format
+		     "%s %s    --html --novalid %s '%s' %s"
+		     emacspeak-xslt-program
+		     (or parameters "")
+		     xsl url
+		     (if emacspeak-xslt-keep-errors
+			 ""
+		       " 2>/dev/null "))))
     (save-excursion
       (set-buffer result)
       (erase-buffer)
-      (shell-command
-       (format
-        "%s %s    --html --novalid %s '%s' %s"
-	emacspeak-xslt-program
-	(or parameters "")
-	xsl url
-	(if emacspeak-xslt-keep-errors
-	    ""
-	  " 2>/dev/null "))
-       (current-buffer)
-       (when emacspeak-xslt-keep-errors
-         "*xslt errors*"))
+      (shell-command command (current-buffer)
+		     (when emacspeak-xslt-keep-errors
+		       "*xslt errors*"))
+      (when emacspeak-xslt-nuke-null-char
+	(goto-char (point-min))
+	(while (search-forward
+		( format "%c" 0)
+		nil  t)
+	  (replace-match " ")))
       (when (get-buffer  "*xslt errors*")
         (bury-buffer "*xslt errors*"))
+      (unless  dont-add-command-as-comment
+	(goto-char (point-max))
+	(insert
+	 (format "<!--\n %s \n-->\n"
+		 command)))
       (setq modification-flag nil)
       (goto-char (point-min))
       result)))
+
 ;;;###autoload
 (defun emacspeak-xslt-xml-url (xsl url &optional params)
   "Apply XSLT transformation to XML url
@@ -149,6 +201,7 @@ part of the libxslt package."
                     modification-flag
                     emacspeak-xslt-keep-errors))
   (let ((result (get-buffer-create " *xslt result*"))
+        (command nil)
         (parameters (when params 
                       (mapconcat 
                        #'(lambda (pair)
@@ -157,23 +210,27 @@ part of the libxslt package."
                                    (cdr pair)))
                        params
                        " "))))
+    (setq command (format
+		   "%s %s    --novalid %s '%s' %s"
+		   emacspeak-xslt-program
+		   (or parameters "")
+		   xsl url
+		   (if emacspeak-xslt-keep-errors
+		       ""
+		     " 2>/dev/null ")))
     (save-excursion
       (set-buffer result)
       (erase-buffer)
-      (shell-command
-       (format
-        "%s %s    --novalid %s '%s' %s"
-	emacspeak-xslt-program
-	(or parameters "")
-	xsl url
-	(if emacspeak-xslt-keep-errors
-	    ""
-	  " 2>/dev/null "))
-       (current-buffer)
-       (when emacspeak-xslt-keep-errors
-         "*xslt errors*"))
+      (shell-command command
+		     (current-buffer)
+		     (when emacspeak-xslt-keep-errors
+		       "*xslt errors*"))
       (when (get-buffer  "*xslt errors*")
         (bury-buffer "*xslt errors*"))
+      (goto-char (point-max))
+      (insert
+       (format "<!--\n %s \n-->\n"
+               command))
       (setq modification-flag nil)
       (goto-char (point-min))
       result)))

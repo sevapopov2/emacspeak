@@ -1,5 +1,5 @@
 ;;; emacspeak-auto.el --- Emacspeak Autoload Generator
-;;; $Id: emacspeak-autoload.el,v 18.0 2003/04/29 21:16:52 raman Exp $
+;;; $Id: emacspeak-autoload.el,v 19.0 2003/11/22 19:06:13 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  RSS Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop RSS
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:52 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:13 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -45,7 +45,7 @@
 ;;}}}
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
 (load-library "cus-dep")
@@ -121,15 +121,24 @@ directory."
 ;;}}}
 ;;{{{ generate autoloadms
 
+(defvar emacspeak-update-autoloads-from-directories
+  (cond
+   ((fboundp 'update-autoloads-from-directories)
+    'update-autoloads-from-directories)
+   ((fboundp  'update-directory-autoloads)
+    'update-directory-autoloads))
+  "Function used to extract autoloads.")
+
 (defun emacspeak-auto-generate-autoloads ()
   "Generate emacspeak autoloads."
   (declare (special emacspeak-directory
-                    emacspeak-lisp-directory
-                    emacspeak-auto-autoloads-file))
+                    emacspeak-update-autoloads-from-directories emacspeak-lisp-directory
+                    emacspeak-auto-autoloads-file
+                    ))
   (let ((dtk-quiet t)
         (source-directory emacspeak-directory)
         (generated-autoload-file emacspeak-auto-autoloads-file))
-    (update-autoloads-from-directories emacspeak-lisp-directory)))
+    (funcall emacspeak-update-autoloads-from-directories emacspeak-lisp-directory)))
 
 ;;}}}
 (provide 'emacspeak-autoload)

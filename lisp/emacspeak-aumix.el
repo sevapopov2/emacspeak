@@ -1,5 +1,5 @@
 ;;; emacspeak-aumix.el --- Setting Audio Mixer
-;;; $Id: emacspeak-aumix.el,v 18.0 2003/04/29 21:16:50 raman Exp $
+;;; $Id: emacspeak-aumix.el,v 19.0 2003/11/22 19:06:13 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to conveniently set audio display
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:50 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:13 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -40,10 +40,10 @@
 
 ;;{{{ required modules
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-speak)
-(eval-when-compile (require 'emacspeak-forms))
+(require 'emacspeak-forms)
 (require 'emacspeak-sounds)
 ;;}}}
 ;;{{{  Introduction:
@@ -159,7 +159,7 @@ after saving the settings to have them take effect."
 
 (defun emacspeak-aumix ()
   "Setup output parameters of the auditory display.
-Luanch this tool while you have auditory output on
+ Launch this tool while you have auditory output on
 multiple channels playing so you can
 adjust the settings to your preference.  Hit q to quit when
 you are done."

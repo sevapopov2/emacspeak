@@ -1,5 +1,5 @@
 ;;; emacspeak-desktop.el ---  Speech-enable Emacspeak  desktop 
-;;; $Id: emacspeak-desktop.el,v 18.0 2003/04/29 21:16:57 raman Exp $
+;;; $Id: emacspeak-desktop.el,v 19.0 2003/11/22 19:06:15 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  desktop transformation routines 
 ;;; Keywords: Emacspeak,  Audio Desktop, DESKTOP
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:57 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:15 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 

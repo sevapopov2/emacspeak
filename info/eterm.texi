@@ -1,12 +1,12 @@
-@c $Id: eterm.texi,v 18.0 2003/04/29 21:21:36 raman Exp $
+@c $Id: eterm.texi,v 19.0 2003/11/22 19:06:50 raman Exp $
 
 @node  Running Terminal Based Applications
-@chapter Running Terminal Based Applications
+@chapter Running Terminal Based Applications.
 
 You can use the terminal emulator mode to run arbitrary terminal-based
 programs from within Emacs.  You open a terminal emulator buffer using
 M-x term, with an extra carriage return to accept the default shell
-(such as bash).  (Incidently, don't confuse this command with M-x
+(such as bash).  (Incidentally, don't confuse this command with M-x
 terminal-emulator, which starts an older terminal emulator mode not
 supported by Emacspeak.)
 
@@ -217,7 +217,7 @@ C-t > (to the bottom of the screen), C-t n (to the next line), C-t p (to
 the previous line), and C-t . (to the cursor).  Each of these also
 speaks the line the pointer moves to.  You can also search forward with
 C-t s.  
-@c , or search backwards with C-t r.
+@c , or search backward with C-t r.
 
 These commands speak without moving the pointer: C-t l (current line),
 C-t w (current word), C-t c (current character), and C-t [space] (from

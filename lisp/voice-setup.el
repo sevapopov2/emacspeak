@@ -1,13 +1,13 @@
 ;;; voice-setup.el --- Setup voices for voice-lock
-;;; $Id: voice-setup.el,v 18.0 2003/04/29 21:18:37 raman Exp $
+;;; $Id: voice-setup.el,v 19.0 2003/11/22 19:06:22 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Voice lock mode for Emacspeak
 ;;{{{  LCD Archive entry: 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:18:37 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:22 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -60,7 +60,7 @@
 ;;
 
 ;;; How faces map to voices:
-;;; TTS engine specific modules e.g., dtk-voices.el and
+;;; TTS engine specific modules e.g., dectalk-voices.el and
 ;;; outloud-voices.el 
 ;;; define a standard set of voice names.
 ;;; This module maps standard "personality" names to these pre-defined
@@ -91,7 +91,7 @@
 (require 'backquote)
 (require 'acss-structure)
 (require 'outloud-voices)
-(require 'dtk-voices)
+(require 'dectalk-voices)
 ;;}}}
 ;;{{{ customization group 
 (defgroup voice-fonts nil
@@ -102,7 +102,7 @@
 
 ;;{{{  helper for voice custom items:
 
-(defalias 'tts-list-voices 'dtk-list-voices)
+(defalias 'tts-list-voices 'dectalk-list-voices)
 (defun voice-setup-custom-menu ()
   "Return a choice widget used in selecting voices."
   (let ((v (tts-list-voices))
@@ -152,26 +152,40 @@
 ;;; voice-setup-face-voice-table
 
 ;;}}}
-;;{{{ color to voices 
-
-;;}}}
 ;;{{{ special form def-voice-font 
+;;; note that when defined, personalities are registered as observers
+;;; with the  voice they use
+;;; this gets unregistered when the mapping is changed via custom.
+;;; when  the personality is modified via the customize interface.
 
 (defmacro  def-voice-font (personality voice face doc &rest args)
   "Define personality and map it to specified face."
   (`
-   (defcustom (, personality)
-     (, voice)
-     (, doc)
-     :type (voice-setup-custom-menu)
-     :group 'voice-fonts
-     :set '(lambda  (sym val)
-             (voice-setup-set-voice-for-face (, face) '(, personality))
-             (set-default sym val))
-     (,@ args))))
+   (progn
+     (defcustom (, personality)
+       (, voice)
+       (, doc)
+       :type (voice-setup-custom-menu)
+       :group 'voice-fonts
+       :set '(lambda (sym val)
+               (let ((observing  (get sym 'observing)))
+                 (when (and (symbolp sym)
+                            (symbolp observing))
+		   (remprop observing sym))
+                 (set-default sym val)))
+       (,@ args))
+     ;;; other actions performed at define time 
+     (voice-setup-set-voice-for-face (, face) '(, personality))
+;;;record  personality as an
+;;;observer of  voice and vice versa
+     (when (symbolp '(, personality))
+       (put  '(, personality) 'observing '(, voice)))
+     (when (symbolp '(, voice))
+       (put  '(, voice) '(, personality) t)))))
 
 ;;}}}
 ;;{{{  special form defvoice 
+
 (defvar voice-setup-personality-table (make-hash-table)
   "Maps personality names to ACSS  settings.
 Keys are personality names.")
@@ -191,6 +205,23 @@ Keys are personality names.")
     (puthash  voice style-list voice-setup-personality-table)
     voice))
 
+(defsubst voice-setup-observing-personalities  (voice-name)
+  "Return a list of personalities that are `observing' VOICE-NAME.
+Observing personalities are automatically updated when settings for
+VOICE-NAME are  changed."
+  (let* ((plist (symbol-plist voice-name))
+         (l (1- (length plist))))
+    (loop for i from 0 to l by 2
+          collect (nth i plist))))
+
+(defun voice-setup-update-personalities (personality)
+  "Update  personalities  that use this voice to  new setting."
+  (let ((value (symbol-value personality))
+        (observers (voice-setup-observing-personalities personality)))
+    (loop for o in observers
+          do				;o is already quoted 
+          (set o value))))
+
 (defmacro defvoice (personality settings doc)
   "Define voice using CSS setting.  Setting is a list of the form
 (list paul 5 5 5 5 \"all\") which defines a standard male voice
@@ -203,40 +234,53 @@ command \\[customize-variable] on <personality>-settings."
      (, doc)
      :type  '(list
               (choice :tag "Family"
-               (const :tag "Unspecified" nil)
-               (symbol :tag "Name"))
+                      (const :tag "Unspecified" nil)
+                      (symbol :tag "Name"))
               (choice :tag "Average Pitch"
-               (const :tag "Unspecified" nil)
-               (integer :tag "Number"))
+                      (const :tag "Unspecified" nil)
+                      (integer :tag "Number"))
               (choice :tag "Pitch Range"
-               (const :tag "Unspecified" nil)
-               (integer :tag "Number"))
+                      (const :tag "Unspecified" nil)
+                      (integer :tag "Number"))
               (choice :tag "Stress"
-               (const :tag "Unspecified" nil)
-               (integer :tag "Number"))
+                      (const :tag "Unspecified" nil)
+                      (integer :tag "Number"))
               (choice :tag "Richness"
-               (const :tag "Unspecified" nil)
-               (integer :tag "Number"))
-(choice :tag "Punctuation Mode "
-	(const :tag "Unspecified" nil)
-	(const :tag "All punctuations" "all")
-	(const :tag "Some punctuations" "some")
-	(const :tag "No punctuations" "none")))
-:group 'voice-fonts
-:set
-'(lambda  (sym val)
-(let ((voice-name
-       (voice-setup-personality-from-style val)))
-  (setq (, personality) voice-name)
-  (set-default sym val))))))
+                      (const :tag "Unspecified" nil)
+                      (integer :tag "Number"))
+              (choice :tag "Punctuation Mode "
+                      (const :tag "Unspecified" nil)
+                      (const :tag "All punctuations" "all")
+                      (const :tag "Some punctuations" "some")
+                      (const :tag "No punctuations" "none")))
+     :group 'voice-fonts
+     :set
+     '(lambda  (sym val)
+        (let ((voice-name (voice-setup-personality-from-style val)))
+          (setq (, personality) voice-name)
+;;; update all observers
+          (voice-setup-update-personalities '(, personality))
+          (set-default sym val))))))
 
 ;;}}}
 ;;{{{ voices defined using ACSS.
 
 ;;; these voices are device independent.
-;;; they will eventually replace most of the device specific voices 
 
-  
+(defvoice  voice-punctuations-all
+  (list nil nil nil nil  nil "all")
+  "Turns current voice into one that  speaks all
+punctuations.")
+
+(defvoice  voice-punctuations-some
+  (list nil nil nil nil  nil "some")
+  "Turns current voice into one that  speaks some
+punctuations.")  
+
+(defvoice  voice-punctuations-none
+  (list nil nil nil nil  nil "none")
+  "Turns current voice into one that  speaks no punctuations.")
+
 (defvoice  voice-monotone (list nil nil 0 0 nil "all")
   "Turns current voice into a monotone and speaks all punctuations.")
 
@@ -323,10 +367,22 @@ command \\[customize-variable] on <personality>-settings."
 (def-voice-font voice-lock-highlight-personality voice-animate
   'highlight
   "Personality used for highlighting text.")
+(def-voice-font voice-lock-fixed-personality voice-monotone
+  'fixed
+  "Personality to use for fixed pitch  text.")
+
+(def-voice-font voice-lock-fixed-pitch-personality voice-monotone
+  'fixed-pitch
+  "Personality to use for fixed pitch  text.")
 
 (def-voice-font voice-lock-comment-personality voice-monotone
   'font-lock-comment-face
   "Personality to use for comments.")
+
+(def-voice-font voice-lock-doc-personality voice-monotone-medium
+  'font-lock-doc-face
+  "Personality to use for documentation.")
+
           
 (def-voice-font voice-lock-underline-personality voice-brighten-medium
   'underline
@@ -344,7 +400,8 @@ command \\[customize-variable] on <personality>-settings."
 (def-voice-font voice-lock-bold-italic-personality 
   voice-bolden-and-animate
   'bold-italic
-  "Personality to use for bold  text.")
+  "Personality to use for bold  italic text.")
+
   
 (def-voice-font voice-lock-doc-string-personality
   voice-smoothen-extra
@@ -367,11 +424,15 @@ command \\[customize-variable] on <personality>-settings."
   'font-lock-warning-face
   "Personality to use for warnings.")
 
-(def-voice-font voice-lock-keyword-personality 'ursula
+(def-voice-font voice-lock-preprocessor-personality voice-monotone-medium
+  'font-lock-preprocessor-face
+  "Personality to use for preprocessor directives.")
+
+(def-voice-font voice-lock-keyword-personality voice-animate-extra
   'font-lock-keyword-face
   "Personality to use for keywords.")
   
-(def-voice-font voice-lock-builtin-personality 'harry
+(def-voice-font voice-lock-builtin-personality voice-bolden
   'font-lock-builtin-face
   "Personality to use for built-in keywords.")
 
@@ -447,4 +508,10 @@ font-lock.  Voicification is effective only if font lock is on."
 ;;; end: 
 
 ;;}}}
+(def-voice-font voice-lock-button-personality voice-bolden
+  'button
+  "Personality for buttons.")
 
+(def-voice-font voice-lock-gui-button-personality voice-bolden
+  'gui-button
+  "Personality for buttons.")

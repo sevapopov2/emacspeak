@@ -1,5 +1,5 @@
 ;;; emacspeak-outline.el --- Speech enable Outline --   Browsing  Structured Documents
-;;; $Id: emacspeak-outline.el,v 18.0 2003/04/29 21:17:44 raman Exp $
+;;; $Id: emacspeak-outline.el,v 19.0 2003/11/22 19:06:19 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for outline-mode
 ;;; Keywords:emacspeak, audio interface to emacs Outlines
@@ -9,7 +9,7 @@
 ;;; emacspeak| T. V. Raman |raman@crl.dec.com 
 ;;; A speech interface to Emacs |
 ;;; $date: $ |
-;;;  $Revision: 18.0 $ | 
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -173,7 +173,7 @@
 (defcustom emacspeak-outline-dont-query-before-speaking t
   "*Option to control prompts when speaking  outline
 sections."
-  :group 'emacspeak
+  :group 'emacspeak-outline
   :type 'boolean)
 
 (defun emacspeak-outline-speak-heading (what direction)
@@ -279,6 +279,38 @@ except that the outline section is optionally spoken"
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-line)))
+
+;;}}}
+;;{{{ Personalities (emacs 21.4)
+(def-voice-font emacspeak-outline-1  voice-bolden-extra
+  'outline-1
+  "Level 1outline headings."
+  :group 'emacspeak-outline)
+
+(def-voice-font emacspeak-outline-2  voice-bolden
+  'outline-2
+  "Level 2 outline headings."
+  :group 'emacspeak-outline)
+
+(def-voice-font emacspeak-outline-3  voice-bolden-medium
+  'outline-3
+  "Level 3 outline headings."
+  :group 'emacspeak-outline)
+
+(def-voice-font emacspeak-outline-4  voice-lighten-extra
+  'outline-4
+  "Level 4outline headings."
+  :group 'emacspeak-outline)
+
+(def-voice-font emacspeak-outline-5  voice-lighten
+  'outline-5
+  "Level 5 outline headings."
+  :group 'emacspeak-outline)
+
+(def-voice-font emacspeak-outline-6  voice-lighten-medium
+  'outline-6
+  "Level 6 outline headings."
+  :group 'emacspeak-outline)
 
 ;;}}}
 ;;{{{ advise emacs 20's overlay oriented outliner to put

@@ -1,4 +1,4 @@
-@c $Id: documents.texi,v 18.0 2003/04/29 21:21:33 raman Exp $
+@c $Id: documents.texi,v 19.0 2003/11/22 19:06:50 raman Exp $
 @node Document Authoring
 @section Document Authoring 
 
@@ -24,7 +24,7 @@ computer.
 Before authoring a document, decide its primary audience 
 if the document contains relatively simple content e.g., no mathematical
 equations etc. 
-and is primarily targetted at the WWW,  you are probably better off
+and is primarily targeted at the WWW,  you are probably better off
 using HTML.
 You can create well-structured HTML documents with the help of package 
 @code{html-helper-mode} available from 
@@ -48,7 +48,7 @@ to format the document for good visual presentation.
 
 The auctex package is an Emacs extension that facilitates authoring and
 maintaining structured documents in TeX and LaTeX.  Package
-@code{bibtex} facilitates maintainance and use of @code{bibtex}
+@code{bibtex} facilitates maintenance and use of @code{bibtex}
 bibliography databases.  The Texinfo package allows creation of software
 documentation that is suitable for both printing as well as online
 viewing as hypertext.  Emacspeak speech-enables packages @code{auctex},
@@ -105,7 +105,7 @@ Package @code{psgml} can be downloaded from
 Incremental search, a process by which the system prompts the user for a
 search string and moves the selection to the next available match while
 allowing the user to add more characters to the search string, is the
-search technique of choice amongst most Emacs users.  As the system
+search technique of choice among most Emacs users.  As the system
 successively finds each match and provides the user the option of
 continuing the search.  Incremental search is a more complex instance of
 traditional search interaction because in addition to either stopping or
@@ -153,7 +153,7 @@ to the text being edited.  As an example, consider using command @emph{
  valid answers as described  in the online Emacs documentation.
 
 
-@unnumbered  Spell Checking
+@unnumberedsubsubsec Spell Checking
 
 A more complex instance of conversational gesture ``search and
 replace'' is exhibited by standard spell checking dialogues.  Spell

@@ -1,5 +1,5 @@
 ;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -- maintain a diary and appointments
-;;; $Id: emacspeak-calendar.el,v 18.0 2003/04/29 21:16:55 raman Exp $
+;;; $Id: emacspeak-calendar.el,v 19.0 2003/11/22 19:06:14 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extensions to speech enable the calendar.
 ;;; Keywords: Emacspeak, Calendar, Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:55 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:14 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -49,6 +49,15 @@
 (require 'calendar)
 ;;}}}
 ;;{{{  personalities
+
+(def-voice-font emacspeak-holiday-personality voice-brighten-extra
+  'holiday-face
+  "holiday personality for calendar.")
+
+(def-voice-font emacspeak-diary-personality voice-bolden
+  'diary-face
+  "Personality for header line in diary.")
+
 (defcustom emacspeak-calendar-mark-personality 'ursula
   "Personality to use when showing marked calendar entries."
   :type 'symbol
@@ -56,6 +65,14 @@
 
 ;;}}}
 ;;{{{  functions: 
+(defun emacspeak-calendar-sort-diary-entries ()
+  "Sort entries in diary entries list."
+  (when(and  (boundp 'diary-entries-list)
+	     diary-entries-list)
+    (setq diary-entries-list
+	  (sort  diary-entries-list
+		 #'(lambda (a b )
+		     (string-lessp (cadr a) (cadr b )))))))
 
 (defun calendar-entry-marked-p()
   "Check if diary entry is marked. "
@@ -100,22 +117,20 @@
 
 (declaim (special diary-display-hook))
 
-(unless (member 'fancy-diary-display diary-display-hook)
+(unless (memq 'fancy-diary-display diary-display-hook)
   (add-hook 'diary-display-hook 'fancy-diary-display))
 (defadvice view-diary-entries (after emacspeak pre act)
   "Speak the diary entries."
   (when (interactive-p)
-    (let ((emacspeak-speak-messages nil))
+    (let ((voice-lock-mode t)
+          (emacspeak-speak-messages nil))
       (cond
-       ((string= "Preparing diary...done"
-                 emacspeak-last-message)
-        (get-buffer "*Fancy Diary Entries*")
+       ((buffer-live-p (get-buffer "*Fancy Diary Entries*"))
         (save-excursion
           (set-buffer "*Fancy Diary Entries*")
-          (emacspeak-speak-buffer)))
-       (t (emacspeak-speak-message-again)
-          (and (get-buffer "*Fancy Diary Entries*" )
-               (kill-buffer "*Fancy Diary Entries*"))"*Fancy Diary Entries*")))))
+          (tts-with-punctuations "some"
+				 (emacspeak-speak-buffer))))
+       (t (dtk-speak "No diary entries."))))))
 
 (defadvice  mark-visible-calendar-date (after emacspeak pre act )
   "Use voice locking to mark date. "

@@ -1,4 +1,4 @@
-@c $Id: copyright.texi,v 18.0 2003/04/29 21:21:33 raman Exp $
+@c $Id: copyright.texi,v 19.0 2003/11/22 19:06:50 raman Exp $
 @node Copyright
 @chapter Copyright
 

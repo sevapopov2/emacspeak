@@ -1,5 +1,5 @@
 ;;; emacspeak-preamble.el --- standard  include for Emacspeak modules
-;;; $Id: emacspeak-preamble.el,v 18.0 2003/04/29 21:17:46 raman Exp $
+;;; $Id: emacspeak-preamble.el,v 19.0 2003/11/22 19:06:19 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for auctex-mode
 ;;; Keywords:emacspeak, audio interface to emacs AUCTEX
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:46 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:19 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
