@@ -77,14 +77,16 @@
 ;;; emacs can hang if too many message sfly by as gnus starts
 (defadvice gnus (around emacspeak pre act )
   "Temporarily deactivate advice on message"
-  (let ((startup (not (gnus-alive-p))))
+  (let ((startup (not (gnus-alive-p)))
+	(dtk-stop-immediately nil))
     (cond
      ((and startup (interactive-p))
       (dtk-speak  "Starting gnus")
       (let ((emacspeak-speak-messages nil))
 	ad-do-it)
       (emacspeak-auditory-icon 'news)
-      (message "Gnus is ready "))
+      (message "Gnus is ready ")
+      (emacspeak-speak-line))
      (t				; gnus alive or non-interactive call
       ad-do-it
       (when (interactive-p)
