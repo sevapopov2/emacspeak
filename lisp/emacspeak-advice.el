@@ -1,5 +1,5 @@
 ;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak intelligently
-;;; $Id: emacspeak-advice.el,v 19.0 2003/11/22 19:06:13 raman Exp $
+;;; $Id: emacspeak-advice.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Core advice forms that make emacspeak work
 ;;; Keywords: Emacspeak, Speech, Advice, Spoken  output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:13 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -612,6 +612,21 @@ before the message is spoken."
   :group 'emacspeak-speak
   :type 'boolean)
 
+(defadvice momentary-string-display (around emacspeak pre act
+                                            comp)
+  "Provide spoken feedback."
+  (let ((emacspeak-speak-messages nil)
+        (msg (ad-get-arg 0))
+        (exit (ad-get-arg 2)))
+    (dtk-speak
+     (format "%s %s"
+             msg
+             (format "Press %s to exit "
+                     (if exit
+                         (format "%c" exit)
+                       "space"))))
+    ad-do-it))
+
 (defadvice message (around  emacspeak pre act)
   "Speak the message."
   (declare (special emacspeak-last-message
@@ -658,11 +673,13 @@ before the message is spoken."
 
 (defadvice signal (before emacspeak pre act compile)
   "Speak the error message as well."
-  (let ((dtk-stop-immediately t)
-        (message (and (not (eq 'error (ad-get-arg 0)))
-                      (get (ad-get-arg 0) 'error-message))))
-    (when  message
-      (dtk-speak message))))
+  (declare (special emacspeak-speak-cue-errors))
+  (when emacspeak-speak-cue-errors
+    (let ((dtk-stop-immediately t)
+          (message (and (not (eq 'error (ad-get-arg 0)))
+                        (get (ad-get-arg 0) 'error-message))))
+      (when  message
+        (dtk-speak message)))))
 
 ;;}}}
 
@@ -1843,9 +1860,9 @@ Indicate change of selection with
         (shift-regexp "S-\\(.\\)")
         (ctrl-regexp "C-\\(.\\)")
         (meta-regexp "M-\\(.\\)")
-        (alt-regexp "A-\\(.\\)")
         (caps-regexp "\\b[A-Z]\\b")
         (hyper-regexp "C-x @ h")
+        (alt-regexp "C-x @ a")
         (super-regexp "C-x @ s"))
     (condition-case nil
         (progn
@@ -1868,6 +1885,9 @@ Indicate change of selection with
               (goto-char (point-min))
 	      (while (re-search-forward hyper-regexp  nil t )
 		(replace-match "hyper "))
+              (goto-char (point-min))
+              (while (re-search-forward alt-regexp  nil t )
+		(replace-match "alt "))
 	      (goto-char (point-min))
 	      (while (re-search-forward super-regexp  nil t )
 		(replace-match "super "))
@@ -2718,12 +2738,16 @@ Produce auditory icons if possible."
 
 ;;}}}
 ;;{{{ setup minibuffer hooks:
+(defvar emacspeak-minibuffer-enter-auditory-icon t
+  "Produce auditory icon when entering the minibuffer.")
 
 (defun emacspeak-minibuffer-setup-hook ()
   "Actions to take when entering the minibuffer with
 emacspeak running."
+  (declare (special emacspeak-minibuffer-enter-auditory-icon))
   (let ((inhibit-field-text-motion t))
-    (emacspeak-auditory-icon 'open-object)
+    (when emacspeak-minibuffer-enter-auditory-icon
+      (emacspeak-auditory-icon 'open-object))
     (unwind-protect
         (tts-with-punctuations "all"
                                (emacspeak-speak-buffer)))))

@@ -1,4 +1,4 @@
-# $Id: Makefile,v 19.0 2003/11/22 19:06:22 raman Exp $
+# $Id: Makefile,v 20.0 2004/05/01 01:16:24 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak, Dectalk, Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2003/11/22 19:06:22 $ |
-#  $Revision: 19.0 $ | 
+# $Date: 2004/05/01 01:16:24 $ |
+#  $Revision: 20.0 $ | 
 # Location undetermined
 #
 
@@ -72,10 +72,9 @@ CORE_OBJECTS =  \
 	emacspeak-advice.elc\
 	emacspeak-keymap.elc\
 	emacspeak-fix-interactive.elc\
-emacspeak-freeamp.elc \
+emacspeak-re-builder.elc \
 	emacspeak-redefine.elc\
 	emacspeak-replace.elc \
-emacspeak-rss.elc \
         emacspeak-table.elc \
         emacspeak-table-ui.elc \
 	emacspeak-tabulate.elc 
@@ -132,6 +131,7 @@ emacspeak-finder.elc \
 emacspeak-flyspell.elc \
 emacspeak-folding.elc \
 emacspeak-forms.elc \
+emacspeak-freeamp.elc \
 emacspeak-generic.elc \
 emacspeak-gnuplot.elc \
 emacspeak-gnus.elc\
@@ -142,10 +142,12 @@ emacspeak-hide.elc \
 emacspeak-hideshow.elc \
 emacspeak-hyperbole.elc \
 emacspeak-ibuffer.elc \
+emacspeak-ido.elc \
 emacspeak-imcom.elc \
 emacspeak-imenu.elc \
 emacspeak-info.elc\
 emacspeak-ispell.elc \
+emacspeak-iswitchb.elc \
 emacspeak-jde.elc \
 emacspeak-kmacro.elc  \
 emacspeak-kotl.elc \
@@ -167,12 +169,14 @@ emacspeak-pcl-cvs.elc \
 emacspeak-perl.elc \
 emacspeak-psgml.elc \
 emacspeak-python.elc \
+emacspeak-re-builder.elc \
 emacspeak-realaudio.elc \
 emacspeak-reftex.elc \
 emacspeak-rpm-spec.elc \
 emacspeak-remote.elc \
 emacspeak-rmail.elc \
 emacspeak-rpm.elc  \
+emacspeak-rss.elc \
 emacspeak-sawfish.elc \
 emacspeak-ses.elc \
 emacspeak-setup.el \
@@ -321,10 +325,12 @@ emacspeak-hide.elc: emacspeak-hide.el emacspeak-speak.elc
 emacspeak-hideshow.elc: emacspeak-hideshow.el dtk-speak.elc voice-setup.elc
 emacspeak-hyperbole.elc: emacspeak-hyperbole.el dtk-speak.elc voice-setup.elc
 emacspeak-ibuffer.elc: emacspeak-ibuffer.el dtk-speak.elc voice-setup.elc
+emacspeak-ido.elc: emacspeak-ido.el dtk-speak.elc voice-setup.elc
 emacspeak-imcom.elc: emacspeak-imcom.el dtk-speak.elc voice-setup.elc
 emacspeak-imenu.elc: emacspeak-imenu.el dtk-speak.elc voice-setup.elc
 emacspeak-info.elc: emacspeak-info.el dtk-speak.elc voice-setup.elc 
 emacspeak-ispell.elc: emacspeak-ispell.el dtk-speak.elc voice-setup.elc
+emacspeak-iswitchb.elc: emacspeak-iswitchb.el dtk-speak.elc voice-setup.elc
 emacspeak-jde.elc: emacspeak-jde.el dtk-speak.elc voice-setup.elc
 emacspeak-keymap.elc: emacspeak-keymap.el
 emacspeak-kmacro.elc: emacspeak-kmacro.el dtk-speak.elc voice-setup.elc
@@ -351,6 +357,7 @@ emacspeak-pronounce.elc: emacspeak-pronounce.el
 emacspeak-personality.elc: emacspeak-personality.el
 emacspeak-psgml.elc: emacspeak-psgml.el dtk-speak.elc voice-setup.elc
 emacspeak-python.elc: emacspeak-python.el dtk-speak.elc voice-setup.elc
+emacspeak-re-builder.elc: emacspeak-re-builder.el dtk-speak.elc voice-setup.elc
 emacspeak-realaudio.elc: emacspeak-realaudio.el dtk-speak.elc voice-setup.elc
 emacspeak-redefine.elc: emacspeak-redefine.el  dtk-speak.elc voice-setup.elc
 emacspeak-reftex.elc: emacspeak-reftex.el dtk-speak.elc voice-setup.elc
@@ -407,7 +414,7 @@ loaddefs: emacspeak-loaddefs.elc
 # }}}
 # {{{Development  target: indent 
 indent:
-	emacs -batch -q -no-site-file -l ../utils/indent-files.el
+	$(EMACS) -batch -q -no-site-file -l ../utils/indent-files.el
 
 # }}}
 # {{{  user level target-- clean

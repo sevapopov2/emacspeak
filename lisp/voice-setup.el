@@ -1,13 +1,13 @@
 ;;; voice-setup.el --- Setup voices for voice-lock
-;;; $Id: voice-setup.el,v 19.0 2003/11/22 19:06:22 raman Exp $
+;;; $Id: voice-setup.el,v 20.0 2004/05/01 01:16:24 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Voice lock mode for Emacspeak
 ;;{{{  LCD Archive entry: 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:22 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:24 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -175,7 +175,7 @@
 		   (remprop observing sym))
                  (set-default sym val)))
        (,@ args))
-     ;;; other actions performed at define time 
+;;; other actions performed at define time 
      (voice-setup-set-voice-for-face (, face) '(, personality))
 ;;;record  personality as an
 ;;;observer of  voice and vice versa
@@ -259,14 +259,14 @@ command \\[customize-variable] on <personality>-settings."
      '(lambda  (sym val)
         (let ((voice-name (voice-setup-personality-from-style val)))
           (setq (, personality) voice-name)
-;;; update all observers
+;;; update all observers		; ;
           (voice-setup-update-personalities '(, personality))
           (set-default sym val))))))
 
-;;}}}
-;;{{{ voices defined using ACSS.
+;;}}}					; ;
+;;{{{ voices defined using ACSS.	; ;
 
-;;; these voices are device independent.
+;;; these voices are device independent. ; ;
 
 (defvoice  voice-punctuations-all
   (list nil nil nil nil  nil "all")
@@ -362,6 +362,26 @@ punctuations.")
 (defvoice voice-annotate
   (list nil nil 4 0 4)
   "Indicate annotation.")
+;;}}}
+;;{{{ voice overlays 
+
+;;; these are suitable to use as "overlay voices".
+(defvoice voice-lock-overlay-0
+  (list nil 8 nil nil nil nil)
+  "Overlay voice that sets dimension 0 of ACSS structure to 8.")
+
+(defvoice voice-lock-overlay-1
+  (list nil nil 8 nil nil nil)
+  "Overlay voice that sets dimension 1 of ACSS structure to 8.")
+
+(defvoice voice-lock-overlay-2
+  (list nil nil nil 8 nil nil)
+  "Overlay voice that sets dimension 2 of ACSS structure to 8.")
+
+(defvoice voice-lock-overlay-3
+  (list nil  nil nil nil 8 nil)
+  "Overlay voice that sets dimension 3 of ACSS structure to 8.")
+
 ;;}}}
 ;;{{{  Define some voice personalities:
 

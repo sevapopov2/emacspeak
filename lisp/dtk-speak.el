@@ -1,5 +1,5 @@
 ;;; dtk-speak.el --- Provides Emacs Lisp interface to speech server
-;;;$Id: dtk-speak.el,v 19.0 2003/11/22 19:06:13 raman Exp $
+;;;$Id: dtk-speak.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacs interface to TTS
 ;;; Keywords: Dectalk Emacs Elisp
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:13 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -177,23 +177,32 @@ Do not modify this variable directly; use command  `dtk-set-rate'
 ;;{{{  Helpers to handle invisible text:
 
 (defsubst text-visible-p (position)
-  (not (get-text-property position 'invisible )))
+  (not (text-invisible-p position)))
 
 (defsubst text-invisible-p (position)
-  (get-text-property position 'invisible ))
+  "Check if text is invisible. Emacspeak helper."
+  (declare (special buffer-invisibility-spec))
+  (cond
+   ((consp buffer-invisibility-spec)
+    (memq
+     (get-text-property position 'invisible )
+     buffer-invisibility-spec))
+   (t (get-text-property  position 'invisible))))
 
 (defsubst skip-invisible-forward  ()
-  (and (text-invisible-p (point))
-       (goto-char
-        (next-single-property-change (point) 'invisible
-                                     (current-buffer) (point-max)))))
-;;; Delete invisible text from current buffer:
+  (while (and(not (eobp))
+	     (text-invisible-p (point)))
+    (goto-char
+     (next-single-property-change (point) 'invisible
+				  (current-buffer) (point-max)))))
+
 (defsubst skip-invisible-backward  ()
   "Move backwards over invisible text."
-  (and (text-invisible-p (point))
-       (goto-char
-        (previous-single-property-change (point) 'invisible
-                                         (current-buffer) (point-min)))))
+  (while (and(not (bobp))
+             (text-invisible-p (point)))
+    (goto-char
+     (previous-single-property-change (point) 'invisible
+                                      (current-buffer) (point-min)))))
 
 (defsubst delete-invisible-text ()
   "Delete invisible text."
@@ -274,7 +283,7 @@ Optional argument FORCE  flushes the command to the speech server."
 
 ;;; Quote the string in current buffer so tcl does not barf.
 ;;; Fix brackets by changing to text.
- ;;; This is necessary because
+;;; This is necessary because
 ;;;  [] marks dtk commands; {} is special to tcl
 ;;; Optionally post-process the text with cleanup function if one is specified.
 (defconst dtk-bracket-regexp
@@ -396,18 +405,18 @@ Argument MODE  specifies the current pronunciation mode."
         (put-text-property start (point)
                            'personality personality)))
     (goto-char (point-min))))
-
-(defsubst  dtk-quote(mode )
+(defsubst dtk-handle-repeating-patterns (mode)
   (declare (special dtk-cleanup-patterns))
   (goto-char (point-min))
-      ;;; First cleanup  repeated patterns:
   (mapc
-   (function (lambda (str)
-               (dtk-replace-duplicates str mode )))
-   dtk-cleanup-patterns )
-    ;;; dtk will think it's processing a command otherwise:
+   #'(lambda (str)
+       (dtk-replace-duplicates str mode ))
+   dtk-cleanup-patterns ))
+
+(defsubst  dtk-quote(mode )
+;;; dtk will think it's processing a command otherwise:
   (dtk-fix-brackets mode)
-  ;;; fix control chars
+;;; fix control chars
   (dtk-fix-control-chars))
 
 (defsubst dtk-fix-backslash ()
@@ -425,10 +434,10 @@ Argument MODE  specifies the current pronunciation mode."
     (erase-buffer)
     (insert string)
     (goto-char (point-min))
-    ;;; dtk will think it's processing a command otherwise:
+;;; dtk will think it's processing a command otherwise:
     (dtk-fix-brackets "all")
     (dtk-fix-backslash)
-  ;;; fix control chars
+;;; fix control chars
     (dtk-fix-control-chars)))
 
 ;;; Moving  across a chunk of text.
@@ -478,7 +487,9 @@ Argument COMPLEMENT  is the complement of separator."
 (defsubst dtk-speak-using-voice (voice text)
   "Use voice VOICE to speak text TEXT."
   (declare (special tts-voice-reset-code))
-  (unless (eq 'inaudible voice )
+  (unless (or (eq 'inaudible voice )
+              (and (listp voice)
+                   (member 'inaudible voice)))
     (dtk-interp-queue
      (format "%s%s %s \n"
              (tts-get-voice-command voice )
@@ -1546,6 +1557,7 @@ only speak upto the first ctrl-m."
              (setq text (substring  text 0 ctrl-m ))
              (emacspeak-auditory-icon 'ellipses))))
     (let ((inhibit-point-motion-hooks t)
+          (invisibility-spec buffer-invisibility-spec)
           (syntax-table (syntax-table ))
           (inherit-speaker-process dtk-speaker-process)
           (pronunciation-table emacspeak-pronounce-pronunciation-table)
@@ -1565,7 +1577,8 @@ only speak upto the first ctrl-m."
         (let ((inhibit-read-only t))
           (erase-buffer)
                                         ; inherit environment
-          (setq dtk-chunk-separator-syntax inherit-chunk-separator-syntax
+          (setq buffer-invisibility-spec invisibility-spec
+		dtk-chunk-separator-syntax inherit-chunk-separator-syntax
                 dtk-speaker-process inherit-speaker-process
                 dtk-speech-rate speech-rate
                 emacspeak-use-auditory-icons use-auditory-icons
@@ -1577,7 +1590,9 @@ only speak upto the first ctrl-m."
           (insert  text)
           (delete-invisible-text)
           (when pronunciation-table
-            (emacspeak-pronounce-apply-pronunciations pronunciation-table))
+            (emacspeak-pronounce-apply-pronunciations
+             pronunciation-table))
+          (dtk-handle-repeating-patterns mode)
           (dtk-quote mode))
         (goto-char (point-min))
         (skip-syntax-forward inherit-chunk-separator-syntax)
@@ -1622,7 +1637,7 @@ Argument TEXT  is the list of strings to speak."
              (insert "\n"))
       (setq contents (buffer-string)))
     (dtk-speak contents)))
-      ;;;###autoload
+;;;###autoload
 (defsubst dtk-letter (letter)
   "Speak a LETTER."
   (declare (special dtk-speaker-process
@@ -1653,7 +1668,6 @@ Argument TEXT  is the list of strings to speak."
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; byte-compile-dynamic: nil
 ;;; end:
 
 ;;}}}
