@@ -122,7 +122,6 @@ pronunciation dictionaries are stored. ")
 ;;; Use (add-hook 'emacspeak-startup-hook ...)
 ;;; to add your personal settings. 
 (emacspeak)
-(emacspeak-speak-version)
 (provide 'emacspeak-setup)
 ;;{{{  emacs local variables 
 
