@@ -1450,13 +1450,13 @@ in completion buffers"
 (defadvice center-line (after emacspeak pre act)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'center)
     (message"Centered current line")))
 
 (defadvice center-region (after emacspeak pre act)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'center)
     (message"Centered current region containing %s lines"
             (count-lines
              (region-beginning)
@@ -1465,7 +1465,7 @@ in completion buffers"
 (defadvice center-paragraph (after emacspeak pre act)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'center)
     (message"Centered current paragraph")))
 
 (defadvice fill-paragraph (after emacspeak pre act)
