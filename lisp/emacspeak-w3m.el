@@ -306,11 +306,6 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)))
 
-(defadvice w3m-antenna-add-current-url (after emacspeak pre act comp)
-  "Produce auditory icon."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'save-object)))
-
 (defadvice w3m-bookmark-add-current-url (after emacspeak pre act comp)
   "Produce auditory icon."
   (when (interactive-p)
