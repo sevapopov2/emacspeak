@@ -1,0 +1,6 @@
+@c $Id: acknowledge.texi,v 16.0 2002/05/03 23:31:27 raman Exp $
+@node Acknowledgements
+@chapter Acknowledgements.
+
+
+Thanks.
