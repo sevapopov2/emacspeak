@@ -16,7 +16,10 @@ for CL in $* ; do
 	if [ "$CL" = "-o" ]; then
 		DTK_PROGRAM=stereo-outloud
 		export DTK_PROGRAM
-                elif [ "$CL" = "-d" ]; then
+	elif [ "$CL" = "-m" ]; then
+		DTK_PROGRAM=multispeech
+		export DTK_PROGRAM
+	elif [ "$CL" = "-d" ]; then
 		DTK_PROGRAM=dtk-soft
 		export DTK_PROGRAM
 	elif [ "$CL" = "-q" ]; then
@@ -27,6 +30,4 @@ for CL in $* ; do
 done
 
 
-EMACS_UNIBYTE=1
-export EMACS_UNIBYTE
 exec emacs -q -l <emacspeak-dir>/emacspeak-setup.el $INITSTR $CL_ALL
