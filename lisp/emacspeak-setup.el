@@ -1,5 +1,5 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el,v 18.0 2003/04/29 21:17:55 raman Exp $
+;;; $Id: emacspeak-setup.el,v 19.0 2003/11/22 19:06:21 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
@@ -7,8 +7,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:17:55 $ |
-;;;  $Revision: 18.0 $ | 
+;;; $Date: 2003/11/22 19:06:21 $ |
+;;;  $Revision: 19.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -88,12 +88,12 @@ pronunciation dictionaries are stored. ")
   :group 'tts
   :type 'integer)
 
-(defcustom dtk-default-speech-rate 225
+(defcustom dectalk-default-speech-rate 225
   "*Default speech rate at which TTS is started. "
   :group 'tts
   :type 'integer)
 
-(defvar tts-default-speech-rate dtk-default-speech-rate
+(defvar tts-default-speech-rate dectalk-default-speech-rate
   "Setup on a per engine basis.")
 
 (unless (featurep 'emacspeak)

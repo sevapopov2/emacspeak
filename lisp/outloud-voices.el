@@ -1,5 +1,5 @@
 ;;; outloud-voices.el --- Define various device independent voices in terms of OutLoud tags
-;;; $Id: outloud-voices.el,v 18.0 2003/04/29 21:18:37 raman Exp $
+;;; $Id: outloud-voices.el,v 19.0 2003/11/22 19:06:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Module to set up Eloquent voices and personalities
 ;;; Keywords: Voice, Personality, IBM ViaVoice Outloud
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:18:37 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:22 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -49,7 +49,7 @@
 ;;{{{ Required modules
 
 ;;; Code:
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'acss-structure)
 
@@ -59,7 +59,7 @@
 (defvar tts-default-voice 'paul 
   "Default voice used. ")
 
-(defvar outloud-default-voice-string ""
+(defvar outloud-default-voice-string "`v1"
   "Default Outloud tag for  default voice --set to be a no-op.")
 
 (defvar outloud-voice-table (make-hash-table)
@@ -112,8 +112,9 @@ COMMAND-STRING to the TTS engine."
 
 ;;}}}
 ;;{{{  the inaudible voice
+;;; no special code needed --handled by Emacspeak engine.
 
-(outloud-define-voice 'inaudible " `vv0 ")
+(outloud-define-voice 'inaudible "")
 
 ;;}}}
 ;;{{{  Mapping css parameters to tts codes
@@ -341,26 +342,27 @@ and TABLE gives the values along that dimension."
 ;;{{{  stress
 
 ;;; On the outloud we map stress to roughness
+;;; we also use stress markers `00 .. `4 
 ;;{{{  paul stress
 
 (let ((table (make-vector 10 "")))
   (mapcar
-   (function
-    (lambda (setting)
-      (aset table (first setting)
-            (format " `vr%s " (second setting)))))
+   #'(lambda (setting)
+       (aset table (first setting)
+	     (format " `vr%s  "
+		     (second setting))))
+    ;;; stress markers not used for now.
    '(
-     (0 0 )
-     (1 0 )
-     (2  0)
-     (3  0)
-     (4  0 )
-     (5  0 )
-     (6  5)
-     (7  10)
-     (8  15)
-     (9  20)
-     ))
+     (0 0 "`00")
+     (1 5 "`00")
+     (2  10 "`0")
+     (3  15 "`0")
+     (4  20 "`1" )
+     (5  25 "`1" )
+     (6  30 "`v2")
+     (7  35 "`v2")
+     (8  40 "`v3")
+     (9  45 "`v4")))
   (outloud-css-set-code-table 'paul 'stress table)
   (outloud-css-set-code-table 'harry 'stress table)
   (outloud-css-set-code-table 'betty  'stress table))
@@ -384,19 +386,20 @@ and TABLE gives the values along that dimension."
     (lambda (setting)
       (aset table
             (first setting)
-            (format " `vv%s "
-                    (second setting)))))
+            (format " `vy%s  `vv%s "
+                    (second setting)
+                    (third setting)))))
    '(
-     (0 60)
-     (1 78)
-     (2 80)
-     (3 84)
-     (4 88)
-     (5 92)
-     (6 93)
-     (7 95)
-     (8 97 )
-     (9 100)))
+     (0 0 60)
+     (1 4 78)
+     (2 8 80)
+     (3 12 84)
+     (4 16 88)
+     (5 20 92)
+     (6 24 93)
+     (7 28 95)
+     (8 32 97 )
+     (9 36 100)))
   (outloud-css-set-code-table 'paul 'richness table)
   (outloud-css-set-code-table 'harry 'richness table)
   (outloud-css-set-code-table 'betty 'richness table))
@@ -415,7 +418,6 @@ and TABLE gives the values along that dimension."
 
 (defsubst outloud-get-punctuations-code (value)
   "Return string needed to set specified punctuations mode."
-  (declare (special dtk-punctuation-mode))
   "")
 
 ;;}}}
@@ -451,7 +453,6 @@ and TABLE gives the values along that dimension."
   "Configure TTS environment to use ViaVoice  family of synthesizers."
   (declare (special tts-default-speech-rate
                     outloud-default-speech-rate
-		    emacspeak-need-tcl
                     emacspeak-use-auditory-icons
                     emacspeak-aumix-midi-available-p
                     emacspeak-aumix-multichannel-capable-p))
@@ -462,7 +463,7 @@ and TABLE gives the values along that dimension."
   (fset 'tts-define-voice-from-speech-style 'outloud-define-voice-from-speech-style)
   (setq tts-default-voice 'paul)
   (setq tts-default-speech-rate outloud-default-speech-rate)
-  (setq emacspeak-need-tcl t)
+  (set-default 'tts-default-speech-rate outloud-default-speech-rate)
   (when (and emacspeak-use-auditory-icons
              (not emacspeak-aumix-multichannel-capable-p)
              (not (emacspeak-using-midi-p))

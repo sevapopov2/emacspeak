@@ -1,15 +1,15 @@
 ;;; dtk-speak.el --- Provides Emacs Lisp interface to speech server
-;;;$Id: dtk-speak.el,v 18.0 2003/04/29 21:16:46 raman Exp $
+;;;$Id: dtk-speak.el,v 19.0 2003/11/22 19:06:13 raman Exp $
 ;;; $Author: raman $
-;;; Description:  Emacs interface to the dectalk
+;;; Description:  Emacs interface to TTS
 ;;; Keywords: Dectalk Emacs Elisp
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:46 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:13 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -53,9 +53,10 @@
 
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
+(require 'backquote)
 (require 'custom)
 (require 'dtk-interp)
-(require 'dtk-voices)
+(require 'dectalk-voices)
 (require 'outloud-voices)
 (require 'multispeech-voices)
 
@@ -74,6 +75,8 @@ type.  You can use command
 \\[dtk-toggle-stop-immediately-while-typing] to toggle this setting."
   :group 'tts
   :type 'boolean)
+(make-variable-buffer-local 'dtk-stop-immediately-while-typing)
+
 (defcustom dtk-speech-rate-base 50
   "*Value of lowest tolerable speech rate."
   :type 'integer
@@ -103,26 +106,17 @@ outloud     For IBM ViaVoice Outloud
 multispeech For Multilingual speech server
 The default is dtk-exp.")
 
-(defvar emacspeak-need-tcl (not (string-match "multispeech" dtk-program))
-  "Needness of TCL interpreter.")
-
-(defvar dtk-tcl (and emacspeak-need-tcl
-		     (or (getenv "DTK_TCL" )
-			 "tcl"))
-  "Interpreter  used to run the speech server.
-Extended tcl --tcl-- for most of the currently available servers.
-nil means that the server is a stand-alone application
-and doesn't need an interpreter.")
-
 (defvar dtk-quiet nil
   "Switch indicating if the speech synthesizer is to keep quiet.
 Do not set this variable by hand.
 See command `dtk-toggle-quiet' bound to \\[dtk-toggle-quiet].")
+(make-variable-buffer-local 'dtk-quiet)
 
 (defvar dtk-split-caps t
   "Flag indicating whether to use split caps when speaking.
 Do not set this variable by hand, use command  `dtk-toggle-split-caps'
  bound to \\[dtk-toggle-split-caps].")
+(make-variable-buffer-local 'dtk-split-caps)
 
 (defcustom dtk-cleanup-patterns
   (list
@@ -152,6 +146,7 @@ Do not set this variable by hand, use command
   "Non-nil means produce a beep to indicate  capitalization.
 Do not set this variable by hand, use command dtk-toggle-capitalization
 bound to \\[dtk-toggle-capitalization].")
+(make-variable-buffer-local 'dtk-captialize)
 
 (defvar dtk-allcaps-beep nil
   "Option to indicate capitalization.
@@ -164,12 +159,6 @@ split caps Do not set this variable by hand, use command
     ("all" . "all")
     ("none" . "none"))
   "Alist of valid punctuation modes.")
-(defconst dtk-pronunciation-mode-alist
-  '(("math" . "math")
-    ("europe" . "europe")
-    ("spell" . "spell")
-    ("name" . "name"))
-  "Alist of valid pronunciation  modes.")
 
 (defvar dtk-last-output nil
   "Variable holding last output.")
@@ -263,6 +252,10 @@ Optional arguments target and step let you play chords."
   "Play a note immediately."
   (dtk-interp-note  instrument pitch duration
                     target step 'force))
+(defcustom dtk-use-tones t
+  "Allow tones to be turned off."
+  :type 'boolean
+  :group 'tts)
 
 (defsubst dtk-tone (pitch duration &optional force)
   "Produce a tone.
@@ -270,9 +263,11 @@ Argument PITCH   is specified in hertz.
 Argument DURATION  is specified in milliseconds.
 Optional argument FORCE  flushes the command to the speech server."
   (declare (special dtk-quiet dtk-speaker-process
+                    dtk-use-tones
                     dtk-speak-server-initialized))
   (unless dtk-quiet
-    (when dtk-speak-server-initialized
+    (when (and dtk-use-tones
+               dtk-speak-server-initialized)
       (dtk-interp-tone pitch duration force))))
 
 ;;; helper function:
@@ -294,43 +289,44 @@ Optional argument FORCE  flushes the command to the speech server."
   "Quote any delimiters that need special treatment.
 Argument MODE  specifies the current pronunciation mode."
   (declare  (special dtk-bracket-regexp ))
-  (goto-char (point-min))
-  (cond
-   ((string=  "all"  mode )
-    (let ((start nil)
-          (personality nil))
-      (while (re-search-forward dtk-bracket-regexp  nil t )
-        (setq start (1- (point)))
-        (setq personality
-              (get-text-property
-               start 'personality))
-        (cond
-         ((= ?| (char-after (match-beginning 0 )))
-          (replace-match " pipe "))
-         ((= ?< (char-after (match-beginning 0 )))
-          (replace-match " less than "))
-         ((= ?> (char-after (match-beginning 0 )))
-          (replace-match " greater than "))
-         ((= ?{ (char-after (match-beginning 0 )))
-          (replace-match " left brace "))
-         ((= ?} (char-after (match-beginning 0 )))
-          (replace-match " right brace "))
-         ((=  ?\] (char-after (match-beginning 0)))
-          (replace-match " right bracket "))
-         ((= ?\[ (char-after  (match-beginning 0)))
-          (replace-match " left bracket "))
-         ((= ?\\ (char-after (match-beginning 0 )))
-          (replace-match " backslash "))
-         ((= ?# (char-after (match-beginning 0 )))
-          (replace-match " pound "))
-         ((= ?` (char-after (match-beginning 0 )))
-          (replace-match " backquote ")))
-        (when personality
-          (put-text-property start (point)
-                             'personality personality)))))
-   (t
-    (while (re-search-forward dtk-bracket-regexp   nil t )
-      (replace-match " " nil t )))))
+  (let ((inhibit-read-only t))
+    (goto-char (point-min))
+    (cond
+     ((string=  "all"  mode )
+      (let ((start nil)
+	    (personality nil))
+	(while (re-search-forward dtk-bracket-regexp  nil t )
+	  (setq start (1- (point)))
+	  (setq personality
+		(get-text-property
+		 start 'personality))
+	  (cond
+	   ((= ?| (char-after (match-beginning 0 )))
+	    (replace-match " pipe "))
+	   ((= ?< (char-after (match-beginning 0 )))
+	    (replace-match " less than "))
+	   ((= ?> (char-after (match-beginning 0 )))
+	    (replace-match " greater than "))
+	   ((= ?{ (char-after (match-beginning 0 )))
+	    (replace-match " left brace "))
+	   ((= ?} (char-after (match-beginning 0 )))
+	    (replace-match " right brace "))
+	   ((=  ?\] (char-after (match-beginning 0)))
+	    (replace-match " right bracket "))
+	   ((= ?\[ (char-after  (match-beginning 0)))
+	    (replace-match " left bracket "))
+	   ((= ?\\ (char-after (match-beginning 0 )))
+	    (replace-match " backslash "))
+	   ((= ?# (char-after (match-beginning 0 )))
+	    (replace-match " pound "))
+	   ((= ?` (char-after (match-beginning 0 )))
+	    (replace-match " backquote ")))
+	  (when personality
+	    (put-text-property start (point)
+			       'personality personality)))))
+     (t
+      (while (re-search-forward dtk-bracket-regexp   nil t )
+	(replace-match " " nil t ))))))
 
 (defcustom dtk-speak-nonprinting-chars nil
   "*Option that specifies handling of non-printing chars.
@@ -340,9 +336,8 @@ Set this to t to avoid a dectalk bug that makes the speech box die if
 it seems some accented characters in certain contexts."
   :type 'boolean
   :group 'dtk)
-
 (make-variable-buffer-local 'dtk-speak-nonprinting-chars)
-
+(make-variable-buffer-local 'dtk-speak-nonprinting-chars)
 (defvar dtk-octal-chars 
   (if
       (and (boundp 'default-enable-multibyte-characters)
@@ -375,7 +370,8 @@ Set this once per emacspeak session for efficiency.")
   "Replace repeating patterns.
 Argument STRING  specifies the repeating string to replace.
 Argument MODE  specifies the current pronunciation mode."
-  (let* ((len (length string))
+  (let* ((inhibit-read-only t)
+         (len (length string))
          (pattern (regexp-quote string))
          (reg (concat
                pattern pattern
@@ -520,11 +516,13 @@ Argument COMPLEMENT  is the complement of separator."
   "Format and speak text.
 Arguments START and END specify region to speak."
   (declare (special voice-lock-mode dtk-speaker-process
+                    tts-voice-reset-code
                     emacspeak-use-auditory-icons))
   (when (and emacspeak-use-auditory-icons
              (get-text-property start 'auditory-icon))
     (emacspeak-queue-auditory-icon
      (get-text-property start 'auditory-icon)))
+  (dtk-interp-queue (format "%s\n" tts-voice-reset-code))
   (cond
    (voice-lock-mode
     (let ((last  nil)
@@ -540,7 +538,7 @@ Arguments START and END specify region to speak."
         (setq start  last
               personality
 	      (get-text-property last  'personality))) ; end while
-      ))                                ; end clause
+      ))					       ; end clause
    (t (dtk-interp-queue (buffer-substring start end  )))))
 
                                         ;Force the speech.
@@ -617,6 +615,30 @@ Argument OUTPUT is the newly arrived output."
 
 (defvar dtk-speak-skim-scale 1.2
   "*Scale factor applied to speech rate when skimming.")
+
+;;}}}
+;;{{{ helper --generate state switcher:
+;;;###autoload
+(defun ems-generate-switcher (command switch documentation )
+  "Generate desired command to switch the specified state."
+  (eval
+   `(defun ,command  (&optional prefix)
+      ,documentation
+      (interactive "P")
+      (declare (special dtk-speaker-process ,switch ))
+      (cond
+       (prefix
+	(setq-default  ,switch
+		       (not  (default-value  ',switch)))
+	(setq ,switch (default-value ',switch )))
+       (t  (make-local-variable ',switch)
+	   (setq ,switch (not ,switch ))))
+      (when (interactive-p)
+	(emacspeak-auditory-icon (if ,switch 'on 'off))
+	(message "Turned %s %s  %s."
+		 (if ,switch "on" "off" )
+		 ',switch 
+		 (if prefix "" " locally"))))))
 
 ;;}}}
 ;;{{{  sending commands
@@ -699,139 +721,57 @@ current local  value to the result."
              dtk-character-scale
              (if  prefix ""  "locally"))))
 
-(defun dtk-toggle-quiet (&optional prefix )
-  "Toggle state of the speech device between being quiet and talkative.
-Useful if you want to continue using an Emacs session that has
-emacspeak loaded but wish to make the speech shut up.
-Optional argument PREFIX specifies whether speech is turned off in the current buffer o rin all buffers."
-  (interactive "P")
-  (declare (special dtk-speaker-process dtk-quiet ))
-  (and (not dtk-quiet)
-       (message "Turning  off  speech synthesizer %s "
-                (if prefix "" " locally")))
-  (cond
-   (prefix
-    (setq-default  dtk-quiet
-                   (not  (default-value 'dtk-quiet )))
-    (setq dtk-quiet (default-value 'dtk-quiet )))
-   (t (make-local-variable 'dtk-quiet)
-      (setq dtk-quiet
-            (not dtk-quiet ))))
-  (and (not dtk-quiet)
-       (message "Turned   on  speech synthesizer %s"
-                (if prefix "" " locally"))))
+(ems-generate-switcher 'dtk-toggle-quiet
+		       'dtk-quiet
+		       "Toggles state of  dtk-quiet.
+Turning on this switch silences speech.
+Optional interactive prefix arg causes this setting to become global.")
 
-(defun dtk-toggle-stop-immediately-while-typing  (&optional prefix)
-  "Toggle state of variable `dtk-stop-immediately-while-typing'.
+(ems-generate-switcher 'dtk-toggle-stop-immediately-while-typing
+		       'dtk-stop-immediately-while-typing
+		       "Toggle state of variable `dtk-stop-immediately-while-typing'.
 As the name implies, if T then speech flushes immediately as you
-type.
-Optional argument PREFIX specifies if the setting applies to all buffers."
-  (interactive "P")
-  (declare (special dtk-speaker-process dtk-stop-immediately-while-typing ))
-  (cond
-   (prefix
-    (setq-default  dtk-stop-immediately-while-typing
-                   (not  (default-value 'dtk-stop-immediately-while-typing )))
-    (setq dtk-stop-immediately-while-typing (default-value 'dtk-stop-immediately-while-typing )))
-   (t (make-local-variable 'dtk-stop-immediately-while-typing)
-      (setq dtk-stop-immediately-while-typing
-            (not dtk-stop-immediately-while-typing ))))
-  (message "%s turned %s immediate flushing of speech when typing "
-           (if prefix "" " locally")
-           (if dtk-stop-immediately-while-typing "on" "off" )))
+type.  Optional argument PREFIX specifies if the setting applies
+to all buffers.")
 
-(defun dtk-toggle-split-caps (&optional prefix )
-  "Toggle split caps mode.
+(ems-generate-switcher 'dtk-toggle-split-caps
+		       'dtk-split-caps
+		       "Toggle split caps mode.
 Split caps mode is useful when reading
 Hungarian notation in program source code.  Interactive PREFIX arg
 means toggle the global default value, and then set the current local
-value to the result."
-  (interactive "P")
-  (declare (special dtk-speaker-process dtk-split-caps
-                    dtk-speak-server-initialized))
-  (when dtk-speak-server-initialized
-    (cond
-     (prefix
-      (setq-default  dtk-split-caps
-                     (not  (default-value 'dtk-split-caps )))
-      (setq dtk-split-caps (default-value 'dtk-split-caps )))
-     (t (make-local-variable 'dtk-split-caps)
-        (setq dtk-split-caps
-              (not dtk-split-caps ))))
-    (dtk-interp-toggle-split-caps dtk-split-caps )
-    (message "Turned %s split caps mode%s "
-             (if dtk-split-caps "on" "off" )
-             (if prefix "" " locally"))))
+value to the result.")
 
-(defun dtk-toggle-capitalization  (&optional prefix)
-  "Toggle capitalization.
+(ems-generate-switcher' dtk-toggle-capitalization
+			'dtk-capitalize
+			"Toggle capitalization.
 when set, capitalization is indicated by a
 short beep.  Interactive PREFIX arg means toggle the global default
-value, and then set the current local value to the result."
-  (interactive "P")
-  (declare (special dtk-speaker-process dtk-capitalize
-                    dtk-speak-server-initialized))
-  (when dtk-speak-server-initialized
-    (cond
-     (prefix
-      (setq-default  dtk-capitalize
-                     (not  (default-value 'dtk-capitalize )))
-      (setq dtk-capitalize (default-value 'dtk-capitalize )))
-     (t (make-local-variable 'dtk-capitalize)
-        (setq dtk-capitalize
-              (not dtk-capitalize ))))
-    (dtk-interp-toggle-capitalization dtk-capitalize  )
-    (message "Turned %s capitalization  mode%s "
-             (if dtk-capitalize  "on" "off" )
-             (if prefix "" " locally"))))
-(defun dtk-toggle-speak-nonprinting-chars  (&optional prefix)
-  "Toggle speak-nonprinting-chars.
+value, and then set the current local value to the result.")
+
+(ems-generate-switcher' dtk-toggle-speak-nonprinting-chars
+			'dtk-speak-nonprinting-chars
+			"Toggle speak-nonprinting-chars.
 Switches behavior of how characters with the high bit set are handled.
 Interactive PREFIX arg means toggle the global default
-value, and then set the current local value to the result."
-  (interactive "P")
-  (declare (special dtk-speaker-process dtk-speak-nonprinting-chars
-                    dtk-speak-server-initialized))
-  (when dtk-speak-server-initialized
-    (cond
-     (prefix
-      (setq-default  dtk-speak-nonprinting-chars
-                     (not  (default-value 'dtk-speak-nonprinting-chars )))
-      (setq dtk-speak-nonprinting-chars (default-value 'dtk-speak-nonprinting-chars )))
-     (t (make-local-variable 'dtk-speak-nonprinting-chars)
-        (setq dtk-speak-nonprinting-chars
-              (not dtk-speak-nonprinting-chars ))))
-    (emacspeak-auditory-icon
-     (if dtk-speak-nonprinting-chars
-         'on
-       'off))
-    (message "Turned %s speak-nonprinting-chars  mode%s "
-             (if dtk-speak-nonprinting-chars  "on" "off" )
-             (if prefix "" " locally"))))
+value, and then set the current local value to the result.")
 
-(defun dtk-toggle-allcaps-beep  (&optional prefix)
-  "Toggle allcaps-beep.
+(ems-generate-switcher'dtk-toggle-allcaps-beep
+ 'dtk-allcaps-beep
+ "Toggle allcaps-beep.
 when set, allcaps words  are  indicated by a
 short beep.  Interactive PREFIX arg means toggle the global default
 value, and then set the current local value to the result.
 Note that allcaps-beep is a very useful thing when programming.
-However it is irritating to have it on when reading documents."
-  (interactive "P")
-  (declare (special dtk-speaker-process dtk-allcaps-beep
-                    dtk-speak-server-initialized))
-  (when dtk-speak-server-initialized
-    (cond
-     (prefix
-      (setq-default  dtk-allcaps-beep
-                     (not  (default-value 'dtk-allcaps-beep )))
-      (setq dtk-allcaps-beep (default-value 'dtk-allcaps-beep )))
-     (t (make-local-variable 'dtk-allcaps-beep)
-        (setq dtk-allcaps-beep
-              (not dtk-allcaps-beep ))))
-    (dtk-interp-toggle-allcaps-beep dtk-allcaps-beep  )
-    (message "Turned %s allcaps-beep  mode%s "
-             (if dtk-allcaps-beep  "on" "off" )
-             (if prefix "" " locally"))))
+However it is irritating to have it on when reading documents.")
+
+(ems-generate-switcher 'dtk-toggle-debug
+		       'dtk-debug
+		       "Toggle state of the debug FLAG.
+When debugging is on, you can switch to the buffer
+*speaker* to examine the output from the process
+that talks to the speech device by using command \\[tts-show-debug-buffer].
+Note: *speaker* is a hidden buffer, ie it has a leading space in its name.")
 
 (defun dtk-set-punctuations  (mode &optional prefix )
   "Set punctuation mode to MODE.
@@ -889,24 +829,6 @@ Interactive PREFIX arg makes the new setting global."
              dtk-punctuation-mode
              (if prefix "" "locally"))))
 
-(defun dtk-set-pronunciation-mode  (mode state  )
-  "Set pronunciation MODE.
-This command is valid only for newer
-Dectalks, e.g.  the Dectalk Express.  Possible values are `math, name,
-europe, spell', all of which can be turned on or off.
-Argument STATE specifies new state."
-
-  (interactive
-   (list
-    (completing-read  "Enter pronunciation  mode: "
-                      dtk-pronunciation-mode-alist nil t)
-    (y-or-n-p "Turn it on? ")))
-  (declare (special dtk-pronunciation-mode-alist))
-  (dtk-dispatch
-   (format "[:mode %s %s]"
-           mode
-           (if state "on" "off"))))
-
 (defun dtk-reset-state ()
   "Restore sanity to the Dectalk.
 Typically used after the Dectalk has been power   cycled."
@@ -915,6 +837,11 @@ Typically used after the Dectalk has been power   cycled."
                      dtk-speak-server-initialized))
   (when dtk-speak-server-initialized
     (dtk-interp-reset-state)))
+
+(defun tts-speak-version ()
+  "Speak version."
+  (interactive)
+  (dtk-interp-say-version))
 
 ;;}}}
 ;;{{{  pause and resume
@@ -1437,7 +1364,7 @@ available TTS servers.")
 This is setup on a per engine basis.")
 
 ;;; will be reset on a per TTS engine basis.
-(defalias 'tts-get-voice-command 'dtk-get-voice-command)
+(defalias 'tts-get-voice-command 'dectalk-get-voice-command)
   
 (defun tts-configure-synthesis-setup (&optional tts-name)
   "Setup synthesis environment. "
@@ -1449,7 +1376,7 @@ This is setup on a per engine basis.")
     (outloud-configure-tts))
    ((string-match "multispeech" tts-name)
     (multispeech-configure-tts))
-   (t (dtk-configure-tts)))
+   (t (dectalk-configure-tts)))
   (load-library "voice-setup")
   (setq tts-voice-reset-code (tts-get-voice-command tts-default-voice)))
 
@@ -1468,12 +1395,9 @@ When called  interactively, The selected server is started immediately. "
            dtk-servers-alist))
      nil
      t  )))
-  (declare (special  dtk-tcl dtk-program dtk-servers-alist))
+  (declare (special   dtk-program dtk-servers-alist))
   (setq dtk-program program)
   (tts-configure-synthesis-setup dtk-program)
-  (setq dtk-tcl (and emacspeak-need-tcl
-		     (or (getenv "DTK_TCL" )
-			 "tcl")))
   (when (interactive-p)
     (dtk-initialize)))
 
@@ -1482,6 +1406,7 @@ When called  interactively, The selected server is started immediately. "
 
 (defvar dtk-debug nil
   "Set this to t if you want to debug the synthesizer server.")
+(make-variable-buffer-local 'dtk-debug)
 
 (defvar dtk-speak-server-initialized nil
   "Records if the server is initialized.")
@@ -1496,8 +1421,7 @@ Default is to use pipes.")
 
 (defun  dtk-initialize ()
   "Initialize speech system."
-  (declare (special dtk-program dtk-tcl
-                    tts-debug-buffer dtk-speak-process-connection-type
+  (declare (special dtk-program tts-debug-buffer dtk-speak-process-connection-type
                     dtk-speaker-process  dtk-debug
                     dtk-speak-server-initialized
                     dtk-startup-hook emacspeak-servers-directory))
@@ -1506,11 +1430,11 @@ Default is to use pipes.")
 	(dtk-program (expand-file-name dtk-program
 				       emacspeak-servers-directory)))
     (setq new-process
-          (apply 'start-process
-                 "speaker"
-                 (and dtk-debug tts-debug-buffer)
-                 (or dtk-tcl dtk-program)
-                 (when dtk-tcl (list dtk-program))))
+          (start-process
+           "speaker"
+           (and dtk-debug tts-debug-buffer)
+           (expand-file-name dtk-program
+                             emacspeak-servers-directory)))
     (process-kill-without-query new-process)
     (setq dtk-speak-server-initialized
           (or (eq 'run (process-status new-process ))
@@ -1540,27 +1464,6 @@ Default is to use pipes.")
   (declare (special tts-debug-buffer))
   (switch-to-buffer tts-debug-buffer))
   
-
-(defun dtk-toggle-debug (&optional flag )
-  "Toggle state of the debug FLAG.
-When debugging is on, you can switch to the buffer
-*speaker* to examine the output from the process
-that talks to the speech device by using command \\[tts-show-debug-buffer].
-Note: *speaker* is a hidden buffer, ie it has a leading space in its name."
-  (interactive "P")
-  (declare (special dtk-debug ))
-  (cond
-   (flag (setq dtk-debug t ))
-   (t (setq dtk-debug (not dtk-debug ))))
-  (message "Turned %s debugging of the synthesizer server %s"
-           (if dtk-debug "on" "off")
-           (if dtk-debug
-               (substitute-command-keys
-                "Restart the synthesizer server  by pressing
-\\[dtk-emergency-restart] to start debugging")
-             (substitute-command-keys
-              "Restart the synthesizer server  by pressing
-\\[dtk-emergency-restart] to stop  debugging"))))
 
 ;;}}}
 ;;{{{  interactively select how text is split:
@@ -1613,6 +1516,7 @@ No-op if variable `dtk-quiet' is set to t.
 If option `outline-minor-mode' is on and selective display is in effect,
 only speak upto the first ctrl-m."
   (declare (special dtk-speaker-process dtk-stop-immediately
+                    inhibit-point-motion-hooks
                     dtk-speak-server-initialized emacspeak-use-auditory-icons
                     dtk-speech-rate
                     dtk-speak-nonprinting-chars
@@ -1641,7 +1545,8 @@ only speak upto the first ctrl-m."
         (and ctrl-m
              (setq text (substring  text 0 ctrl-m ))
              (emacspeak-auditory-icon 'ellipses))))
-    (let ((syntax-table (syntax-table ))
+    (let ((inhibit-point-motion-hooks t)
+          (syntax-table (syntax-table ))
           (inherit-speaker-process dtk-speaker-process)
           (pronunciation-table emacspeak-pronounce-pronunciation-table)
           (use-auditory-icons emacspeak-use-auditory-icons)
@@ -1696,6 +1601,7 @@ only speak upto the first ctrl-m."
         (or  (= start (point-max))
              (dtk-format-text-and-speak start (point-max)))))
     (dtk-force)))
+
 ;;;###autoload
 (defun dtk-speak-list (text )
   "Speak a  list of strings.

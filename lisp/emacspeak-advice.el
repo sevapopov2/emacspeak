@@ -1,5 +1,5 @@
 ;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak intelligently
-;;; $Id: emacspeak-advice.el,v 18.0 2003/04/29 21:16:49 raman Exp $
+;;; $Id: emacspeak-advice.el,v 19.0 2003/11/22 19:06:13 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Core advice forms that make emacspeak work
 ;;; Keywords: Emacspeak, Speech, Advice, Spoken  output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/04/29 21:16:49 $ |
-;;;  $Revision: 18.0 $ |
+;;; $Date: 2003/11/22 19:06:13 $ |
+;;;  $Revision: 19.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -42,7 +42,6 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Commentary:
 ;;{{{  Introduction:
 
 ;;; Commentary:
@@ -58,7 +57,7 @@
 ;;{{{ Required modules
 
 (require 'advice)
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'voice-setup)
 (require 'dtk-speak)
@@ -618,16 +617,18 @@ before the message is spoken."
   (declare (special emacspeak-last-message
                     emacspeak-speak-messages-should-pause-ongoing-speech
                     emacspeak-speak-messages emacspeak-lazy-message-time))
-  (let ((dtk-stop-immediately t ))
+  (let ((dtk-stop-immediately t )
+        (inhibit-read-only t))
     ad-do-it
     (setq emacspeak-last-message ad-return-value )
     (put-text-property 0 (length emacspeak-last-message)
                        'personality voice-animate
                        emacspeak-last-message)
     (when (and   emacspeak-speak-messages ; speaking messages
-                 ad-return-value        ;we really do have a message
+                 ad-return-value	  ;we really do have a message
                  (/= emacspeak-lazy-message-time ;; previous message not recent
-                     (setq emacspeak-lazy-message-time  (nth 1 (current-time)))))
+                     (setq emacspeak-lazy-message-time
+			   (nth 1  (current-time)))))
       ;; so we really need to speak it
       (when
           emacspeak-speak-messages-should-pause-ongoing-speech
@@ -655,23 +656,6 @@ before the message is spoken."
   
 ;;{{{ advising signal
 
-                                        ; (defadvice signal (before emacspeak pre act compile)
-                                        ;   "Speak the error message as well."
-                                        ;   (let ((dtk-stop-immediately t))
-                                        ;     (dtk-speak
-                                        ;      (format "%s %s"
-                                        ;              (or (get (ad-get-arg 0) 'error-message)
-                                        ;                  "Peculiar error ")
-             
-                                        ;              (mapconcat
-                                        ;               (function 
-                                        ;                (lambda (x)
-                                        ;                  (format "%s" x)))
-                                        ;               (ad-get-arg 1)
-                                        ;               " ")))))
-
-;;; lighter weight version:
-
 (defadvice signal (before emacspeak pre act compile)
   "Speak the error message as well."
   (let ((dtk-stop-immediately t)
@@ -683,21 +667,30 @@ before the message is spoken."
 ;;}}}
 
  
-
+(defcustom emacspeak-speak-cue-errors t
+  "Specifies if error messages are cued."
+  :type 'boolean
+  :group 'emacspeak-spek)
 (defadvice error (before emacspeak pre act)
   "Speak the error message.
 Also produces an auditory icon if possible."
-  (let ((dtk-stop-immediately nil ))
-    (emacspeak-auditory-icon 'warn-user)
-    (tts-with-punctuations "all"
-                           (message
-                            (apply #'format
-                                   (ad-get-args  0))))))
+  (when emacspeak-speak-cue-errors
+    (let ((dtk-stop-immediately nil ))
+      (emacspeak-auditory-icon 'warn-user)
+      (tts-with-punctuations "all"
+			     (message
+			      (apply #'format
+				     (ad-get-args  0)))))))
 
 (defadvice eval-minibuffer (before emacspeak pre act com)
   "Speak the prompt."
   (tts-with-punctuations "all"
                          (dtk-speak (ad-get-arg 0))))
+
+(defadvice read-passwd (before emacspeak pre act comp)
+  "Speak the prompt."
+  (emacspeak-auditory-icon 'open-object)
+  (dtk-speak (ad-get-arg 0)))
 
 (defadvice read-from-minibuffer (around emacspeak pre act)
   "Prompt using speech as well."
@@ -1050,9 +1043,10 @@ in completion buffers"
     ad-do-it
     (setq emacspeak-last-message ad-return-value )
     (when (and   emacspeak-speak-messages ; speaking messages
-                 ad-return-value        ;we really do have a message
+                 ad-return-value	  ;we really do have a message
                  (/= emacspeak-lazy-message-time ;; previous message not recent
-                     (setq emacspeak-lazy-message-time  (nth 1 (current-time)))))
+                     (setq emacspeak-lazy-message-time
+			   (nth 1    (current-time)))))
       ;; so we really need to speak it
       (tts-with-punctuations "all"
                              (dtk-speak ad-return-value)))))
@@ -1079,7 +1073,8 @@ in completion buffers"
 (defadvice tmm-add-prompt (around emacspeak pre act comp)
   "Speaks the list of completions we have available."
   ad-do-it
-  (let ((cap "cap "))
+  (let ((inhibit-read-only t)
+        (cap "cap "))
     (put-text-property 0 (length cap)
                        'personality voice-animate  cap)
     (put-text-property 0  (length tmm-mid-prompt)
@@ -1109,7 +1104,18 @@ in completion buffers"
 
 ;;}}}
 ;;{{{  Advice comint:
-
+(defadvice comint-insert-previous-argument (around emacspeak pre
+                                                   act comp)
+  "Provide auditory feedback."
+  (cond
+   ((interactive-p)
+    (let ((orig (point)))
+      ad-do-it
+      (emacspeak-speak-region orig (point))
+      (emacspeak-auditory-icon 'select-object)))
+   (t ad-do-it))
+  ad-return-value)
+      
 (require 'shell)
 
 ;;; Customize comint:
@@ -1126,11 +1132,9 @@ in completion buffers"
   'comint-highlight-prompt
   "Personality used for highlighting comint prompts --emacs 21."
   :group 'comint)
-
-(defcustom emacspeak-comint-input-personality voice-animate
-  "Personality used for highlighting comint input --emacs 21."
-  :type  'symbol
-  :group 'emacspeak
+(def-voice-font  emacspeak-comint-input-personality voice-bolden-medium
+  'comint-highlight-input
+  "Personality used for highlighting comint inputs --emacs 21."
   :group 'comint)
 
 (add-hook 'shell-mode-hook 'emacspeak-pronounce-refresh-pronunciations)
@@ -1275,9 +1279,8 @@ in completion buffers"
                   (or monitor 
                       (eq (selected-window)
                           (get-buffer-window
-                           (process-buffer (ad-get-arg 0))))))
-
-        (when emacspeak-comint-split-speech-on-newline (modify-syntax-entry 10 ">"))
+                           (process-buffer (ad-get-arg 0))))))        
+	(when emacspeak-comint-split-speech-on-newline (modify-syntax-entry 10 ">"))
         (condition-case nil
             (emacspeak-speak-region prior (point ))
           (error (emacspeak-auditory-icon 'scroll)
@@ -1840,7 +1843,10 @@ Indicate change of selection with
         (shift-regexp "S-\\(.\\)")
         (ctrl-regexp "C-\\(.\\)")
         (meta-regexp "M-\\(.\\)")
-        (caps-regexp "\\b[A-Z]\\b"))
+        (alt-regexp "A-\\(.\\)")
+        (caps-regexp "\\b[A-Z]\\b")
+        (hyper-regexp "C-x @ h")
+        (super-regexp "C-x @ s"))
     (condition-case nil
         (progn
           ad-do-it
@@ -1860,6 +1866,12 @@ Indicate change of selection with
               (while (search-forward "RET"  nil t )
                 (replace-match "return"))
               (goto-char (point-min))
+	      (while (re-search-forward hyper-regexp  nil t )
+		(replace-match "hyper "))
+	      (goto-char (point-min))
+	      (while (re-search-forward super-regexp  nil t )
+		(replace-match "super "))
+	      (goto-char (point-min))
               (while (re-search-forward shift-regexp  nil t )
                 (replace-match "shift \\1"))
               (goto-char (point-min))
@@ -1868,6 +1880,9 @@ Indicate change of selection with
               (goto-char (point-min))
               (while (re-search-forward meta-regexp  nil t )
                 (replace-match "meta \\1"))
+	      (goto-char (point-min))
+              (while (re-search-forward alt-regexp  nil t )
+                (replace-match "alt \\1"))
               (goto-char (point-min))
               (while (re-search-forward caps-regexp nil t)
                 (replace-match " cap \\& " t)))
@@ -2238,6 +2253,14 @@ Provide an auditory icon if possible."
     (emacspeak-speak-mode-line )))
 
 ;;}}}
+;;{{{ view echo area
+(defadvice view-echo-area-messages (after emacspeak pre act comp)
+  "Speak mode-line and play auditory icon."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
+
+;;}}}
 ;;{{{ selective display
 
 (defadvice set-selective-display (after emacspeak pre act comp)
@@ -2334,7 +2357,16 @@ Also produce an auditory icon if possible."
 
 ;;}}}
 ;;{{{  customize isearch:
+;;{{{ fix isearch keys:
+(declaim (special isearch-mode-map 
+		  minibuffer-local-isearch-map
+		  emacspeak-prefix))
 
+(define-key minibuffer-local-isearch-map emacspeak-prefix
+  'emacspeak-prefix-command)
+(define-key isearch-mode-map emacspeak-prefix 'emacspeak-prefix-command)
+ 
+;;}}}
 ;;{{{  temporarily disable message advice during searches.
 (defvar emacspeak-isearch-save-syntax-table  nil
   "Saved syntax table before we enter isearch mode.")
@@ -2395,6 +2427,7 @@ Pause ongoing speech first."
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (dtk-pause)))
+
 (defadvice isearch-cancel (before emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
@@ -2404,6 +2437,10 @@ Pause ongoing speech first."
   "Speak the search hit.
 Produce auditory icons if possible."
   (emacspeak-speak-string isearch-string voice-bolden)
+  (when isearch-wrapped
+    (emacspeak-auditory-icon 'scroll)
+    (dtk-speak "W:")
+    (sit-for 0.5))
   (when  (sit-for 0.5)
     (ems-set-personality-temporarily
      (point)
@@ -2506,7 +2543,30 @@ Produce auditory icons if possible."
    (if isearch-regexp 'on 'off))
   (dtk-speak
    (if isearch-regexp "Regexp search" "text search")))
+;;{{{ advice non-incremental searchers 
+(defadvice search-forward (after emacspeak pre act comp)
+  "Speak line we land on."
+  (when (interactive-p)
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
+(defadvice search-backward (after emacspeak pre act comp)
+  "Speak line we land on."
+  (when (interactive-p)
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
 
+(defadvice word-search-forward (after emacspeak pre act comp)
+  "Speak line we land on."
+  (when (interactive-p)
+    (emacspeak-speak-line)this is last ))
+
+(defadvice word-search-backward (after emacspeak pre act comp)
+  "Speak line we land on."
+  (when (interactive-p)
+    (emacspeak-speak-line)this is last ))
+
+ 
+;;}}}
 ;;}}}
 ;;{{{  marking objects produces auditory icons
 
@@ -2662,14 +2722,11 @@ Produce auditory icons if possible."
 (defun emacspeak-minibuffer-setup-hook ()
   "Actions to take when entering the minibuffer with
 emacspeak running."
-  (declare (special emacspeak-last-command-needs-minibuffer-spoken))
   (let ((inhibit-field-text-motion t))
     (emacspeak-auditory-icon 'open-object)
-    (when  emacspeak-last-command-needs-minibuffer-spoken
-      (unwind-protect
-	  (tts-with-punctuations "all"
-				 (emacspeak-speak-buffer))
-	(setq emacspeak-last-command-needs-minibuffer-spoken nil)))))
+    (unwind-protect
+        (tts-with-punctuations "all"
+                               (emacspeak-speak-buffer)))))
 
 (add-hook  'minibuffer-setup-hook 'emacspeak-minibuffer-setup-hook)
 

@@ -1,4 +1,4 @@
-;;;$Id: emacspeak-finder-inf.el,v 18.0 2003/04/29 21:17:12 raman Exp $
+;;;$Id: emacspeak-finder-inf.el,v 19.0 2003/11/22 19:06:16 raman Exp $
 ;;; emacspeak-finder-inf.el --- keyword-to-package mapping
 ;; Keywords: help
 ;;; Commentary:
@@ -11,30 +11,27 @@
     ("acss-structure.el"
         "CSS -- Cascaded Speech Style structure"
         (emacspeak  audio interface to emacs css))
-    ("amphetadesk.el"
-        "Emacspeak News Portal Interface"
-        (emacspeak   audio desktop rss))
     ("cd-tool.el"
         "Play  CDs from Emacs"
         nil)
+    ("dectalk-voices.el"
+        "Define various device independent voices in terms of Dectalk codes."
+        (voice  personality  dectalk))
     ("dtk-interp.el"
         "Language specific (e.g. TCL) interface to speech server"
         (tts  dectalk  speech server))
     ("dtk-speak.el"
         "Provides Emacs Lisp interface to speech server"
         (dectalk emacs elisp))
-    ("dtk-voices.el"
-        "Define various device independent voices in terms of Dectalk codes."
-        (voice  personality  dectalk))
-    ("eflite-voices.el"
-        "Emacspeak EFLITE "
-        (emacspeak   audio desktop eflite))
     ("emacspeak-actions.el"
         "Emacspeak actions -- callbacks that can be associated with portions of a buffer"
         (emacspeak  audio interface to emacs actions))
     ("emacspeak-advice.el"
         "Advice all core Emacs functionality to speak intelligently"
         (emacspeak  speech  advice  spoken  output))
+    ("emacspeak-amphetadesk.el"
+        "Emacspeak News Portal Interface"
+        (emacspeak   audio desktop rss))
     ("emacspeak-analog.el"
         "Speech-enable"
         (emacspeak  analog ))
@@ -110,6 +107,9 @@
     ("emacspeak-daisy.el"
         "daisy Front-end for emacspeak desktop"
         (emacspeak  daisy digital talking books))
+    ("emacspeak-damlite.el"
+        "Speech-enable damlite"
+        (emacspeak  damlite ))
     ("emacspeak-desktop.el"
         "Speech-enable Emacspeak  desktop "
         (emacspeak   audio desktop  desktop))
@@ -239,6 +239,9 @@
     ("emacspeak-keymap.el"
         "Setup all keymaps and keybindings provided by Emacspeak"
         (emacspeak))
+    ("emacspeak-kmacro.el"
+        "Speech-enable kbd macro interface"
+        (emacspeak  kmacro ))
     ("emacspeak-kotl.el"
         "Speech enable KOtl -- Hyperbole's outlining editor"
         (emacspeak  speech access  hyperbole  outliner))
@@ -275,6 +278,12 @@
     ("emacspeak-net-utils.el"
         "Speech enable net-utils"
         (emacspeak  network utilities ))
+    ("emacspeak-newsticker.el"
+        "Speech-enable newsticker"
+        (emacspeak  newsticker ))
+    ("emacspeak-nxml.el"
+        "Speech enable nxml mode"
+        (emacspeak  nxml streaming media ))
     ("emacspeak-ocr.el"
         "ocr Front-end for emacspeak desktop"
         (emacspeak  ocr))
@@ -335,6 +344,9 @@
     ("emacspeak-sawfish.el"
         "speech-enable sawfish mode"
         (emacspeak  sawfish interaction ))
+    ("emacspeak-ses.el"
+        "Speech-enable ses spread-sheet"
+        (emacspeak  ses ))
     ("emacspeak-setup.el"
         "Setup Emacspeak environment --loaded to start Emacspeak"
         (emacspeak  setup  spoken output))
@@ -344,6 +356,9 @@
     ("emacspeak-sh-script.el"
         "Speech enable  sh-script mode"
         (emacspeak  audio desktop))
+    ("emacspeak-sigbegone.el"
+        "Speech-enable sigbegone"
+        (emacspeak  sigbegone ))
     ("emacspeak-solitaire.el"
         "Speech enable Solitaire game"
         (emacspeak  speak  spoken output  solitaire))
@@ -452,6 +467,9 @@
     ("emacspeak.el"
         "Emacspeak -- The Complete Audio Desktop"
         (emacspeak  speech  dectalk ))
+    ("flite-voices.el"
+        "Emacspeak FLite"
+        (emacspeak   audio desktop flite))
     ("html-outline.el"
         "Extends html-helper-mode to provide outline and imenu support"
         nil)
@@ -470,6 +488,9 @@
     ("xml-parse.el"
         "code to efficiently read/write XML data with Elisp"
         (convenience languages lisp xml parse data))
+    ("xml-sexp.el"
+        "Convert XML to S-Expressions"
+        (emacspeak  xml ))
 ))
 
 (loop for l  in (reverse emacspeak-finder-package-info) do
