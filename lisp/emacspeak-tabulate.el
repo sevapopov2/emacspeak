@@ -1,5 +1,5 @@
 ;;; emacspeak-tabulate.el --- Interpret tabulated information as a table
-;;; $Id: emacspeak-tabulate.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-tabulate.el,v 18.0 2003/04/29 21:18:09 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Utility to help emacspeak identify tabulated information
 ;;; Keywords: Emacspeak, Tabulated Data,  Visual layout gives structure
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:09 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -37,13 +37,14 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
 
 ;;{{{  Introduction:
 ;;; This module is a simple table recognizer.
 ;;; Can recognize the columns in tabulated output, e.g. ps, ls output
+
+;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{  helper functions:
@@ -157,7 +158,7 @@ Fields are assumed to be delimited by whitespace. "
 ;;; Invariants: (= (- tl tr) (- bl br))
 ;;; tl = start for first column
 ;;; br = end for last column
-
+;;;###autoload
 (defun emacspeak-tabulate-region (start end  &optional mark-fields)
   "Voicifies the white-space of a table if one found.  Optional interactive prefix
 arg mark-fields specifies if the header row information is used to mark fields
@@ -212,7 +213,7 @@ in the white-space."
 
 ;;}}}
 ;;{{{ Parse a region of tabular data
-
+;;;###autoload
 (defun ems-tabulate-parse-region (start end)
   "Parse  region as tabular data and return a vector of vectors"
   (let ((table nil)

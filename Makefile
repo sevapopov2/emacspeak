@@ -1,4 +1,4 @@
-# $Id: Makefile,v 17.0 2002/11/23 01:29:11 raman Exp $
+# $Id: Makefile,v 18.0 2003/04/29 21:21:56 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak,  TTS,Makefile 
@@ -7,15 +7,15 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2002/11/23 01:29:11 $ |
-#  $Revision: 17.0 $ | 
+# $Date: 2003/04/29 21:21:56 $ |
+#  $Revision: 18.0 $ | 
 # Location undetermined
 #
 
 # }}}
 # {{{ Copyright:  
 
-#Copyright (C) 1995 -- 2002, T. V. Raman 
+#Copyright (C) 1995 -- 2003, T. V. Raman 
 
 # Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 # All Rights Reserved. 
@@ -213,7 +213,7 @@ print:
 # }}}
 # {{{  Maintainance targets tar  dist 
 
-EXCLUDES=--exclude='*/CVS' --exclude='*/RCS'
+EXCLUDES=--exclude='*/CVS' --exclude='*.o' --exclude='*.so'
 tar:
 	rm -f $(ID)
 	@echo "This is Emacspeak from  `date`" > $(ID)
@@ -234,6 +234,7 @@ dist: $(DISTFILES)
 
 config:
 	cd etc; $(MAKE) config  SRC=$(SRC)
+	cd lisp; $(MAKE) config 
 	@echo "Configured emacspeak in directory $(SRC). Now type make emacspeak"
 
 # }}}

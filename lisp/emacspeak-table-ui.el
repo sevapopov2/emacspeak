@@ -1,5 +1,5 @@
 ;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
-;;; $Id: emacspeak-table-ui.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-table-ui.el,v 18.0 2003/04/29 21:18:07 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:07 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -37,18 +37,14 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(require 'emacspeak-table)
-(require 'emacspeak-tabulate)
-(eval-when-compile (require 'dtk-speak)
-		   (require 'emacspeak-speak)
-		   (require 'emacspeak-sounds))
-(require 'thingatpt)
 ;;{{{  Introduction
 
 ;;; User interface to tables
+
+;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
+(require 'emacspeak-table)
 
 ;;}}}
 ;;{{{ define personalities
@@ -58,12 +54,12 @@
   :group 'emacspeak
   :prefix "emacspeak-table-")
 
-(defcustom emacspeak-table-column-header-personality 'paul-smooth
+(defcustom emacspeak-table-column-header-personality voice-smoothen
   "personality for speaking column headers."
   :type 'symbol
   :group 'emacspeak-table)
 
-(defcustom emacspeak-table-row-header-personality 'harry
+(defcustom emacspeak-table-row-header-personality voice-bolden
   "Personality for speaking row headers"
   :type 'symbol
   :group 'emacspeak-table)
@@ -347,6 +343,8 @@ specifies the filter"
 Optional prefix arg prompts for a new filter."
   (interactive "P")
   (declare (special emacspeak-table-speak-row-filter
+                    voice-animate
+                    voice-smoothen
                     emacspeak-table))
   (unless (and  emacspeak-table-speak-row-filter
                 (listp emacspeak-table-speak-row-filter)
@@ -374,7 +372,7 @@ Optional prefix arg prompts for a new filter."
                     (emacspeak-table-current-row emacspeak-table)
                     token))
              (put-text-property 0 (length value)
-                                'personality 'paul-smooth value)
+                                'personality voice-smoothen  value)
              value)
             ((and (listp token)
                   (numberp (first token))
@@ -384,7 +382,7 @@ Optional prefix arg prompts for a new filter."
                     (first token)
                     (second token)))
              (put-text-property 0 (length value)
-                                'personality 'paul-smooth value)
+                                'personality voice-smoothen value)
              value)
             (t  (format "%s" token))))))
       emacspeak-table-speak-row-filter
@@ -441,7 +439,7 @@ Optional prefix arg prompts for a new filter."
 
 ;;}}}
 ;;{{{  opening a file of table data
-
+;;;###autoload 
 (defsubst emacspeak-table-prepare-table-buffer (table buffer
                                                       &optional filename)
   "Prepare tabular data."
@@ -489,7 +487,7 @@ Optional prefix arg prompts for a new filter."
   (switch-to-buffer buffer)
   (setq truncate-lines t)
   (message "Use Emacspeak Table UI to browse this table."))
-
+;;;###autoload
 (defun emacspeak-table-find-file (filename)
   "Open a file containing table data and display it in table mode.
 emacspeak table mode is designed to let you browse tabular data using
@@ -510,6 +508,7 @@ the documentation on the table browser."
     (kill-buffer data )
     (emacspeak-table-prepare-table-buffer table buffer filename )))
 
+;;;###autoload
 (defun emacspeak-table-find-csv-file (filename)
   "Process a csv (comma separated values) file. 
 The processed  data and presented using emacspeak table navigation. "
@@ -544,7 +543,7 @@ The processed  data and presented using emacspeak table navigation. "
     (kill-buffer scratch)
     (emacspeak-table-prepare-table-buffer table buffer
                                           filename )))    
-
+;;;###autoload
 (defun emacspeak-table-view-csv-buffer (&optional buffer-name)
   "Process a csv (comma separated values) data. 
 The processed  data and presented using emacspeak table
@@ -586,6 +585,7 @@ navigation. "
 
 ;;}}}
 ;;{{{ Processing a region of tabular data
+;;;###autoload
 (defun emacspeak-table-display-table-in-region (start end)
   "Recognize tabular data in current region and display it in table
 browsing mode in a a separate buffer.
@@ -996,7 +996,7 @@ table markup.")
 
 ;;}}}
 ;;{{{ copy and paste tables 
-
+;;;###autoload
 (defun emacspeak-table-copy-to-clipboard ()
   "Copy table in current buffer to the table clipboard.
 Current buffer must be in emacspeak-table mode."

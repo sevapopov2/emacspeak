@@ -1,5 +1,5 @@
 ;;; emacspeak-redefine.el --- Redefines some key Emacs builtins to speak
-;;; $Id: emacspeak-redefine.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-redefine.el,v 18.0 2003/04/29 21:17:51 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak's redefinition of some key functions.
 ;;; Emacspeak does most of its work by advising other functions to speak.
@@ -10,14 +10,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:51 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -40,11 +40,6 @@
 ;;}}}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-
 ;;{{{  Introduction:
 
 ;;; This module redefines a few vital functions,
@@ -57,6 +52,10 @@
 ;;; In the case of backward-char, forward-char, and self-insert-command
 ;;; mere redefinition of the function will not do:
 ;;; We will need to bind the new functions explicitly to the keys. 
+
+;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{  How to redefine and restore a function: 
@@ -121,10 +120,12 @@ speech flush as you type."
 (defun emacspeak-forward-char (arg)
   "Forward-char redefined to speak char moved to. "
   (interactive "p")
+  (declare (special dtk-stop-immediately))
   (cond
    ((<= (+ arg (point)) (point-max))
     (forward-char arg)
     (when (interactive-p)
+      (and dtk-stop-immediately (dtk-stop))
       (emacspeak-speak-char t )))
    (t(ding)
      (message "End of buffer"))))
@@ -132,10 +133,12 @@ speech flush as you type."
 (defun emacspeak-backward-char (arg)
   "Backward-char redefined to speak char moved to. "
   (interactive "p")
+  (declare (special dtk-stop-immediately))
   (cond
    ((>= (- (point) arg) (point-min))
     (backward-char arg)
     (when (interactive-p)
+      (and dtk-stop-immediately (dtk-stop))
       (emacspeak-speak-char t )))
    (t (ding)
       (message "Beginning of buffer"))))
@@ -196,9 +199,10 @@ They have to be redefined and rebound to make them talk. " )
 
 ;;}}}
 ;;{{{  fix ding 
-
+;;;###autoload
 (when (subrp (symbol-function 'ding))
   (fset 'orig-ding (symbol-function 'ding))
+
   (defun ding ( &optional arg)
     "Beep, or flash the screen.
 Also, unless an argument is given,

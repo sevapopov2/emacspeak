@@ -1,5 +1,5 @@
 ;;; emacspeak-xslt-process.el --- speech-enable xslt-process 
-;;; $Id: emacspeak-xslt-process.el,v 17.0 2002/11/23 01:29:01 raman Exp $
+;;; $Id: emacspeak-xslt-process.el,v 18.0 2003/04/29 21:18:37 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for speech-enabling
 ;;; xslt-process mode
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:01 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:18:37 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -41,14 +41,7 @@
 
 ;;{{{ required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(require 'emacspeak-speak)
-(require 'voice-lock)
-(require 'voice-settings)
-(require 'emacspeak-sounds)
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction:
 
@@ -112,7 +105,7 @@
          (put-text-property start end
                             'auditory-icon 'mark-object)
          (put-text-property start end
-                            'personality 'paul-animated))
+                            'personality voice-animate))
         (emacspeak-speak-line)
         (emacspeak-auditory-icon 'mark-object)))))
 (defadvice xslt-process-remove-breakpoint (after emacspeak pre

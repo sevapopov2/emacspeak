@@ -1,5 +1,5 @@
 ;;; emacspeak-perl.el --- Speech enable Perl Mode 
-;;; $Id: emacspeak-perl.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-perl.el,v 18.0 2003/04/29 21:17:44 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for perl-mode
 ;;; Keywords:emacspeak, audio interface to emacs perl
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:44 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -37,38 +37,13 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(require 'voice-lock)
-
 ;;{{{  Introduction:
 
 ;;; Provide additional advice to perl-mode 
 
 ;;}}}
-;;{{{ voice locking:
-(defvar perl-voice-lock-keywords
-  (list
-   (cons (concat "[ \n\t{]*\\("
-		 (mapconcat 'identity
-			    '("if" "until" "while" "elsif" "else" "unless" "for"
-			      "foreach" "continue" "exit" "die" "last" "goto" "next"
-			      "redo" "return" "local" "my"  "exec")
-			    "\\|")
-		 "\\)[ \n\t;(]") 1)
-   (mapconcat 'identity
-	      '("#endif" "#else" "#ifdef" "#ifndef" "#if" "#include"
-		"#define" "#undef")
-	      "\\|")
-   '("^[ \n\t]*sub[ \t]+\\([^ \t{]+\\)[ \t]*[{]" 1 voice-lock-function-name-personality)
-   '("[ \n\t{]*\\(eval\\)[ \n\t(;]" 1 voice-lock-function-name-personality)
-   '("\\(--- .* ---\\|=== .* ===\\)" . voice-lock-doc-string-personality)
-   )
-  "Additional expressions to highlight in Perl mode.")
-
-(voice-lock-set-major-mode-keywords 'perl-mode 'perl-voice-lock-keywords)
+;;{{{ requires
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{  Advice electric insertion to talk:

@@ -1,5 +1,5 @@
 ;;; emacspeak-tcl.el --- Speech enable TCL development environment
-;;; $Id: emacspeak-tcl.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-tcl.el,v 18.0 2003/04/29 21:18:13 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for tcl-mode
 ;;; Keywords:emacspeak, audio interface to emacs tcl
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:13 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -37,20 +37,17 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(require 'voice-lock)
 ;;{{{  Introduction:
 
 ;;; Provide additional advice to tcl-mode 
 
 ;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
+
+;;}}}
 ;;{{{ voice locking:
 
-(defvar tcl-voice-lock-keywords nil
-  "Keywords to highlight in tcl mode")
 ;;;  Snarfed from tcl.el /usr/local/lib/emacs/site-lisp/tcl.el
 
 (defvar tcl-proc-list
@@ -119,32 +116,6 @@ For example, the entry for the \"loop\" command is:
 This means that the \"loop\" command has three arguments.  The first
 argument is ignored (for indentation purposes).  The second argument
 is a Tcl expression, and the last argument is Tcl commands.")
-
-(setq tcl-voice-lock-keywords
-      (list
-       ;; Names of functions (and other "defining things").
-       (list (concat tcl-proc-regexp "\\([^ \t\n]+\\)")
-	     2 'voice-lock-function-name-personality)
-
-       ;; Names of type-defining things.
-       (list (concat "\\(\\s-\\|^\\)\\("
-		     ;; FIXME Use 'regexp-quote?
-		     (mapconcat 'identity tcl-typeword-list "\\|")
-		     "\\)\\(\\s-\\|$\\)")
-	     2 'voice-lock-type-personality)
-
-       ;; Keywords.  Only recognized if surrounded by whitespace.
-       ;; FIXME consider using "not word or symbol", not
-       ;; "whitespace".
-       (cons (concat "\\(\\s-\\|^\\)\\("
-		     ;; FIXME Use regexp-quote? 
-		     (mapconcat 'identity tcl-keyword-list "\\|")
-		     "\\)\\(\\s-\\|$\\)")
-	     2)
-       )
-      )
-
-(voice-lock-set-major-mode-keywords 'tcl-mode 	    'tcl-voice-lock-keywords)
 
 ;;}}}
 ;;{{{  Advice electric insertion to talk:

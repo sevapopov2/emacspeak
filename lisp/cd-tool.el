@@ -1,9 +1,9 @@
 ;;; cd-tool.el --- Play  CDs from Emacs
-;;;$Id: cd-tool.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;;$Id: cd-tool.el,v 18.0 2003/04/29 21:16:45 raman Exp $
 ;;;Emacs front-end to CDTool
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2002, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2003, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,6 +40,7 @@
 ;;{{{ required packages
 
 (eval-when-compile (require 'cl))
+(declaim  (optimize  (safety 0) (speed 3)))
 
 ;;}}}
 ;;{{{ top level 
@@ -49,7 +50,7 @@
 (defvar cd-tool-message
   " +Next  - Previous  p play s stop = shuffle i info e eject t track"
   "Short message to display if user hits invalid key.")              
-
+;;;###autoload
 (defun cd-tool ()
   "Front-end to CDTool.
 Bind this function to a convenient key-

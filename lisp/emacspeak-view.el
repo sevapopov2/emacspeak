@@ -1,5 +1,5 @@
 ;;; emacspeak-view.el --- Speech enable View mode -- Efficient browsing of read-only content
-;;; $Id: emacspeak-view.el,v 17.0 2002/11/23 01:29:01 raman Exp $
+;;; $Id: emacspeak-view.el,v 18.0 2003/04/29 21:18:23 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for view
 ;;; Keywords:emacspeak, audio interface to emacs, view-mode
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:01 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:23 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1996 by T. V. Raman 
 ;;; All Rights Reserved. 
 ;;;
@@ -37,14 +37,13 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'dtk-voices)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
 ;;{{{  Introduction:
 
 ;;; Provide additional advice to view-mode
+
+;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{  Setup view mode to work with emacspeak
@@ -236,7 +235,7 @@
                    (ad-get-arg 0 )))
           (voice-lock-mode t))
       (put-text-property 0 (length line-number)
-                         'personality 'annotation-voice line-number)
+                         'personality voice-annotate line-number)
       (emacspeak-auditory-icon 'large-movement)
       (dtk-speak
        (concat line-number

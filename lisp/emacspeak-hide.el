@@ -1,5 +1,5 @@
 ;;; emacspeak-hide.el --- Provides user commands for hiding and exposing blocks of text
-;;; $Id: emacspeak-hide.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-hide.el,v 18.0 2003/04/29 21:17:28 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Hide and expose blocks of text
 ;;; Keywords: Emacspeak, Speak, Spoken Output, hide
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:17:28 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -53,16 +53,14 @@
 
 ;;}}}
 ;;; Code:
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(eval-when-compile (require 'dtk-speak)
-		   (require 'emacspeak-speak))
+(require 'emacspeak-preamble)	   
 ;;}}}
 ;;{{{ voice locking for block header lines
 
-(defvar emacspeak-hidden-header-line-personality 'annotation-voice
-  "Personality used to identify header lines of blocks.")
+(defcustom emacspeak-hidden-header-line-personality voice-annotate
+  "Personality used to identify header lines of blocks."
+  :type 'symbol
+  :group 'emacspeak-hide)
 
 ;;; forcibly set this to t to avoid a possible Emacs bug:
 (declaim (special line-move-ignore-invisible))
@@ -323,7 +321,7 @@ Returns t if a block was found and hidden."
                 (list 'custom
                       (length block-prefix)
                       block-prefix))))))
-
+;;;###autoload
 (defun emacspeak-hide-or-expose-block (&optional prefix)
   "Hide or expose a block of text.
 This command either hides or exposes a block of text
@@ -356,7 +354,7 @@ blocks in current buffer to be hidden or exposed."
              (emacspeak-hide-get-block-prefix)))
         (when block-prefix
           (emacspeak-hide-current-block  block-prefix )))))))
-
+;;;###autoload
 (defun emacspeak-hide-or-expose-all-blocks ()
   "Hide or expose all blocks in buffer."
   (interactive)
@@ -365,6 +363,7 @@ blocks in current buffer to be hidden or exposed."
 ;;}}}
 ;;{{{  speaking blocks sans prefix
 
+;;;###autoload
 (defun emacspeak-hide-speak-block-sans-prefix ()
   "Speaks current block after stripping its prefix.
 If the current block is not hidden, it first hides it.
@@ -407,7 +406,6 @@ and when you have heard enough navigate easily  to move past the block."
        (t (message "Not on a hidden block"))))))
 
 ;;}}}
-
 (provide 'emacspeak-hide )
 ;;{{{ end of file
 

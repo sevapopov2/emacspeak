@@ -1,5 +1,5 @@
 ;;; emacspeak-auctex.el --- Speech enable AucTeX -- a powerful TeX/LaTeX authoring environment
-;;; $Id: emacspeak-auctex.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: emacspeak-auctex.el,v 18.0 2003/04/29 21:16:50 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for auctex-mode
 ;;; Keywords:emacspeak, audio interface to emacs AUCTEX
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:50 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -37,40 +37,31 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'voice-lock)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
+;;{{{ Required modules 
+(require 'emacspeak-preamble)
+;;}}}
 ;;{{{  Introduction:
 
 ;;; Provide additional advice to auctex
 
 ;;}}}
 ;;{{{ voice locking:
+;;; faces from AUCTeX 11
+(def-voice-font emacspeak-latex-italic-face 'italic
+  'font-latex-italic-face
+  "Face used for italics."
+  :group 'emacspeak-auctex)
 
-(defvar tex-voice-lock-keywords
-  (list
-   '("\\(\\\\\\([a-zA-Z@]+\\|.\\)\\)" 1 voice-lock-keyword-personality t)
-   '("{\\\\em\\([^}]+\\)}" 1 voice-lock-italic-personality t)
-   '("{\\\\bf\\([^}]+\\)}" 1 voice-lock-bold-personality t)
-   '("^[ \t\n]*\\\\def[\\\\@]\\(\\w+\\)" 1 voice-lock-function-name-personality t)
-   '("\\\\\\(begin\\|end\\){\\([a-zA-Z0-9\\*]+\\)}"
-     2 voice-lock-function-name-personality t)
-   '("[^\\\\]\\$\\([^$]*\\)\\$" 1 voice-lock-string-personality t)
-					;   '("\\$\\([^$]*\\)\\$" 1 voice-lock-string-personality t)
-   )
-  "Additional expressions to highlight in TeX mode.")
+(def-voice-font emacspeak-latex-bold-face 'bold
+  'font-latex-bold-face
+  "Face used for bold."
 
-(mapcar 
- (function
-  (lambda (mode)
-    (voice-lock-set-major-mode-keywords mode 'tex-voice-lock-keywords)))
- (list 
-  'plain-tex-mode  
-  'latex-mode      
-  'slitex-mode     
-  'latex2e-mode))
+  :group 'emacspeak-auctex)
+
+(def-voice-font emacspeak-latex-sedate-personality voice-smoothen
+  'font-latex-sedate-face                                          
+  "Personality used  on macro names."                              
+  :group 'emacspeak-auctex)                                        
 
 ;;}}}
 ;;{{{  Marking structured objects:
@@ -220,9 +211,12 @@ the opening line of the newly inserted environment. "
    ((interactive-p)
     (let ((orig (point)))
       ad-do-it
-      (emacspeak-speak-region orig (point))))
+      (if (ad-get-arg 0)
+          (emacspeak-speak-line)
+	(emacspeak-speak-region orig (point)))))
    (t ad-do-it))
   ad-return-value)
+
 ;;}}}
 (provide  'emacspeak-auctex)
 ;;{{{  emacs local variables 

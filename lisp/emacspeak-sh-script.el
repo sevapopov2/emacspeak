@@ -1,5 +1,5 @@
 ;;; emacspeak-sh-script.el --- Speech enable  sh-script mode
-;;; $Id: emacspeak-sh-script.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-sh-script.el,v 18.0 2003/04/29 21:17:56 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable sh-script 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:17:56 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2002, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2003, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,14 +40,7 @@
 
 ;;{{{ required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when-compile (require 'dtk-speak)
-                   (require 'emacspeak-speak)
-                   (require 'sh-script)
-                   (require 'voice-lock)
-                   (require 'emacspeak-sounds))
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction:
 
@@ -56,47 +49,6 @@
 ;;; This module speech-enables sh-script.el 
 
 ;;; Code:
-
-;;}}}
-;;{{{ voice locking 
-(defvar executable-voice-lock-keywords
-  '(("\\`#!.*/\\([^ \t\n]+\\)" 1 voice-lock-keyword-personality t))
-  "*Rules for highlighting executable scripts' magic number.
-This can be included in `voice-lock-keywords' by modes that call `executable'.")
-
-(defvar emacspeak-sh-voice-lock-keywords
-  nil
-  "Default expressions to highlight in Shell Script modes.
-See `sh-feature'.")
-
-(setq emacspeak-sh-voice-lock-keywords
-      '(t
-	("\\<\\([a-zA-Z0-9_]+\\)="
-	 (1 voice-lock-variable-name-personality))
-	("\\([;(){}`|&]\\|^\\)[ 	]*\\(\\(\\(do\\|elif\\|else\\|if\\|then\\|trap\\|type\\|until\\|while\\)[ 	]+\\)?\\(do\\|elif\\|else\\|if\\|then\\|trap\\|type\\|until\\|while\\|done\\|esac\\|fi\\|for\\|in\\|return\\|break\\|case\\|continue\\|exec\\|exit\\)[ 	]+\\)?\\(hash\\|test\\|type\\|eval\\|export\\|getopts\\|newgrp\\|pwd\\|read\\|readonly\\|times\\|ulimit\\|cd\\|echo\\|eval\\|set\\|shift\\|umask\\|unset\\|wait\\)\\>"
-	 (2 voice-lock-keyword-personality nil t)
-	 (6 voice-lock-builtin-personality))
-	("\\([;(){}`|&]\\|^\\)[ 	]*\\(\\(\\(do\\|elif\\|else\\|if\\|then\\|trap\\|type\\|until\\|while\\)[ 	]+\\)?\\(do\\|elif\\|else\\|if\\|then\\|trap\\|type\\|until\\|while\\|done\\|esac\\|fi\\|for\\|in\\|return\\|break\\|case\\|continue\\|exec\\|exit\\)\\)\\>"
-	 (2 voice-lock-keyword-personality))
-	("[ 	]in\\>"
-	 (0 voice-lock-keyword-personality))
-	("\\$\\({#?\\)?\\([A-Za-z_][A-Za-z0-9_]*\\|[-#?@!]\\)"
-	 (2 voice-lock-variable-name-personality))
-	("^\\(\\sw+\\)[ 	]*("
-	 (1 voice-lock-function-name-personality))
-	("\\<\\(function\\)\\>[ 	]*\\(\\sw+\\)?"
-	 (1 voice-lock-keyword-personality)
-	 (2 voice-lock-function-name-personality nil t))
-	("\\\\[^A-Za-z0-9]"
-	 (0 voice-lock-string-personality))
-	("\\${?\\([A-Za-z_][A-Za-z0-9_]*\\|[0-9]+\\|[$*_]\\)"
-	 (1 voice-lock-variable-name-personality))
-	("\\`#!.*/\\([^ 	\n]+\\)"
-	 (1 voice-lock-keyword-personality t))))
-
-(voice-lock-set-major-mode-keywords
- 'sh-mode
- 'emacspeak-sh-voice-lock-keywords )
 
 ;;}}}
 ;;{{{  advice interactive commands

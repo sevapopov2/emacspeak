@@ -1,5 +1,5 @@
 ;;; emacspeak-python.el --- Speech enable Python development environment
-;;; $Id: emacspeak-python.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-python.el,v 18.0 2003/04/29 21:17:50 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to python mode
 ;;; Keywords: Emacspeak, Speak, Spoken Output, python
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:50 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,17 +40,7 @@
 
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when (compile)
-  (require 'emacspeak-speak)
-  (require 'voice-lock)
-  (require 'emacspeak-keymap)
-  (require 'emacspeak-sounds))
-
-(eval-when (compile)
-  (require 'emacspeak-fix-interactive))
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction
 
@@ -73,11 +63,8 @@
   (cond
    ((interactive-p )
     (dtk-tone 500 30 'force)
-    (and emacspeak-backward-delete-char-speak-deleted-char
-	 (emacspeak-speak-this-char (preceding-char )))
-    ad-do-it
-    (and emacspeak-backward-delete-char-speak-current-char
-	 (emacspeak-speak-this-char (preceding-char ))))
+    (emacspeak-speak-this-char (preceding-char ))
+    ad-do-it)
    (t ad-do-it))
   ad-return-value)
 
@@ -86,11 +73,8 @@
   (cond
    ((interactive-p )
     (dtk-tone 500 30 'force)
-    (and emacspeak-backward-delete-char-speak-deleted-char
-	 (emacspeak-speak-this-char (preceding-char )))
-    ad-do-it
-    (and emacspeak-backward-delete-char-speak-current-char
-	 (emacspeak-speak-this-char (preceding-char ))))
+    (emacspeak-speak-this-char (preceding-char ))
+    ad-do-it)
    (t ad-do-it))
   ad-return-value)
 
@@ -142,7 +126,7 @@
 (defadvice py-newline-and-indent(after emacspeak pre act comp)
   "Speak line so we know current indentation"
   (when (interactive-p)
-    (dtk-speak-using-voice 'annotation-voice
+    (dtk-speak-using-voice voice-annotate
                            (format
                             "indent %s"
                             (current-column)))
@@ -291,41 +275,6 @@ If already at the beginning then move to previous block."
 
 (add-hook 'py-mode-hook
           'emacspeak-python-mode-hook)
-
-;;}}}
-;;{{{  voice locking 
-
-(defvar python-voice-lock-keywords
-  (let ((kw1 (mapconcat 'identity
-			'("and"      "assert"   "break"   "class"
-			  "continue" "def"      "del"     "elif"
-			  "else"     "except"   "exec"    "for"
-			  "from"     "global"   "if"      "import"
-			  "in"       "is"       "lambda"  "not"
-			  "or"       "pass"     "print"   "raise"
-			  "return"   "while"
-			  )
-			"\\|"))
-	(kw2 (mapconcat 'identity
-			'("else:" "except:" "finally:" "try:")
-			"\\|"))
-	)
-    (list
-     ;; keywords
-     (cons (concat "\\b\\(" kw1 "\\)\\b[ \n\t(]") 1)
-     ;; block introducing keywords with immediately following colons.
-     ;; Yes "except" is in both lists.
-     (cons (concat "\\b\\(" kw2 "\\)[ \n\t(]") 1)
-     ;; classes
-     '("\\bclass[ \t]+\\([a-zA-Z_]+[a-zA-Z0-9_]*\\)"
-       1 voice-lock-type-personality)
-     ;; functions
-     '("\\bdef[ \t]+\\([a-zA-Z_]+[a-zA-Z0-9_]*\\)"
-       1 voice-lock-function-name-personality)
-     ))
-  "Additional expressions to voiceify in Python mode.")
-(voice-lock-set-major-mode-keywords 'python-mode
-				    'python-voice-lock-keywords)
 
 ;;}}}
 ;;{{{ keybindings

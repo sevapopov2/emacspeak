@@ -1,5 +1,5 @@
 ;;; emacspeak-eterm.el --- Speech enable eterm -- Emacs' terminal emulator  term.el
-;;; $Id: emacspeak-eterm.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-eterm.el,v 18.0 2003/04/29 21:17:06 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable eterm. 
 ;;; Keywords: Emacspeak, Eterm, Terminal emulation, Spoken Output
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:06 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -52,26 +52,11 @@
 ;; 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(require 'custom)
-(eval-when-compile (require 'dtk-speak)
-                   (require 'dtk-voices )
-                   (require 'voice-lock)
-                   (require 'emacspeak-speak)
-                   (require 'emacspeak-sounds)
-                   (require 'emacspeak-keymap)
-                   (condition-case nil
-                       (progn
-                         (require 'term)
-                                        ;(require 'tshell)
-                         )
-                     (error nil )))
-
+(require 'emacspeak-preamble)
+(require 'term)
 ;;}}}
 ;;{{{ custom
-
+;;;###autoload
 (defgroup emacspeak-eterm nil
   "Terminal emulator for the Emacspeak Desktop."
   :group 'emacspeak
@@ -162,7 +147,8 @@ Useful when eterm is in review mode.")
 
 (defun emacspeak-eterm-setup-raw-keys ()
   "Setup emacspeak keys for raw terminal mode."
-  (declare (special term-raw-map 
+  (declare (special term-raw-map
+                    emacspeak-prefix term-raw-escape-map
                     emacspeak-eterm-keymap
                     emacspeak-eterm-raw-prefix))
   (when term-raw-map 
@@ -187,12 +173,12 @@ Useful when eterm is in review mode.")
 ;;}}}
 ;;{{{  voice definitions  for eterm  highlight, underline etc
 
-(defcustom emacspeak-eterm-highlight-personality 'harry
+(defcustom emacspeak-eterm-highlight-personality voice-bolden
   "Personality to show terminal highlighting."
   :type 'symbol
   :group 'emacspeak-eterm)
 
-(defcustom emacspeak-eterm-bold-personality 'paul-bold
+(defcustom emacspeak-eterm-bold-personality voice-bolden
   "Persnality to indicate terminal bold."
   :type 'symbol
   :group 'emacspeak-eterm)
@@ -804,7 +790,7 @@ Argument ETERM-WINDOW specifies a predefined eterm window."
   "Vector of window positions.
 A terminal window is recorded by the  positions of its top left
 and bottom right.")
-
+;;;###autoload
 (defun emacspeak-eterm-record-window  (window-id top-left bottom-right
                                                  &optional right-stretch left-stretch )
   "Insert this window definition into the table of terminal windows.
@@ -1090,12 +1076,7 @@ See command emacspeak-toggle-eterm-autospeak bound to
         (new-column nil )
         (old-point (point))
         (dtk-stop-immediately (not eterm-line-mode)))
-    (save-match-data 
-      (ad-enable-advice  'put-text-property 'after 'eterm )
-      (ad-activate 'put-text-property) 
-      ad-do-it
-      (ad-disable-advice  'put-text-property 'after 'eterm )
-      (ad-deactivate 'put-text-property))
+    ad-do-it
     (setq new-row (term-current-row )
           new-column (term-current-column )
           new-end (point-max))
@@ -1175,26 +1156,10 @@ there is terminal activity."
     ad-return-value )
   )
 
-(defadvice put-text-property (after eterm pre act) 
-  "Used by emacspeak to highlight successfully in eterm. "
-  (let ((start (ad-get-arg 0))
-        (end (ad-get-arg 1 ))
-        (prop (ad-get-arg 2))
-        (value (ad-get-arg 3 )))
-    (if (eq prop 'face) 
-        (save-match-data
-          (cond
-           ((eq value 'bold)
-            (put-text-property start end
-                               'personality emacspeak-eterm-bold-personality))
-           ((eq value 'highlight)
-            (put-text-property start end
-                               'personality emacspeak-eterm-highlight-personality ))
-           ((eq value 'term-underline-face )
-            (put-text-property start end
-                               'personality emacspeak-eterm-underline-personality))
-           (t  nil )))))
-  )
+(def-voice-font emacspeak-eterm-underline-personality
+  voice-lock-underline-personality
+  'term-underline
+  "Underline personality for eterm.")
 
 (defadvice term-line-mode (after emacspeak pre act)
   "Announce that you entered line mode. "
@@ -1340,7 +1305,7 @@ emacspeak-eterm-remote-hostnames")
 
 (eval-when (load)
   (emacspeak-eterm-load-remote-hosts-cache))
-
+;;;###autoload
 (defun emacspeak-eterm-cache-remote-host (host)
   "Add this hostname to cache of remote hostnames"
   (declare (special emacspeak-eterm-remote-hosts-table
@@ -1353,7 +1318,7 @@ emacspeak-eterm-remote-hostnames")
       (insert (format "%s\n" host))
       (save-buffer))
     (intern host emacspeak-eterm-remote-hosts-table)))
-
+;;;###autoload
 (defun emacspeak-eterm-remote-term (host )
   "Start a terminal-emulator in a new buffer."
   (interactive

@@ -1,5 +1,5 @@
 ;;; emacspeak-m-player.el --- Control mplayer from Emacs
-;;; $Id: emacspeak-m-player.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-m-player.el,v 18.0 2003/04/29 21:17:42 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, m-player streaming media 
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:42 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,17 +40,7 @@
 
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(require 'derived)
-
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when (compile)
-  (require 'emacspeak-fix-interactive))
-(require 'emacspeak-aumix)
-(require 'emacspeak-sounds)
-;;; eventually move common media related definitions.
-;;; Alternatively integrate realaudio and media player into a single module.
-(require 'emacspeak-realaudio)
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ Introduction:
 
@@ -77,7 +67,8 @@
 
 (define-prefix-command 'emacspeak-m-player-prefix-command
   'emacspeak-m-player-mode-map)
-
+(declaim (special emacspeak-aumix-multichannel-capable-p
+                  emacspeak-use-auditory-icons))
 (define-derived-mode emacspeak-m-player-mode fundamental-mode 
   "M-Player Interaction"
   "Major mode for m-player interaction. \n\n
@@ -91,7 +82,7 @@
 
 ;;}}}
 ;;{{{ emacspeak-m-player
-
+;;;###autoload
 (defgroup emacspeak-m-player nil
   "Emacspeak media player settings.")
 (defcustom emacspeak-m-player-program "mplayer"
@@ -106,7 +97,7 @@
   :type  '(repeat
 	   (string :tag "option"))
   :group 'emacspeak-m-player)
-
+;;;###autoload
 (defun emacspeak-m-player (resource )
   "Play specified resource using m-player.
 Resource is an  MP3 file or m3u playlist.
@@ -118,12 +109,15 @@ The player is placed in a buffer in emacspeak-m-player-mode."
           (minibuffer-history emacspeak-realaudio-history))
       (emacspeak-pronounce-define-local-pronunciation
        emacspeak-realaudio-shortcuts-directory " shortcuts/ ")
-      (expand-file-name
-       (read-file-name "Media resource: "
-                       emacspeak-realaudio-shortcuts-directory
-                       emacspeak-realaudio-last-url)))))
+      (read-file-name "Media resource: "
+                      emacspeak-realaudio-shortcuts-directory
+                      emacspeak-realaudio-last-url))))
   (declare (special emacspeak-m-player-process
-                    emacspeak-m-player-program emacspeak-m-player-options))
+                    emacspeak-m-player-program
+                    emacspeak-m-player-options))
+  (unless (string-match "^http:"  resource)
+    (setq resource
+          (expand-file-name resource)))
   (when (and emacspeak-m-player-process
              (eq 'run (process-status
                        emacspeak-m-player-process))
@@ -153,8 +147,9 @@ The player is placed in a buffer in emacspeak-m-player-mode."
 (defsubst emacspeak-m-player-dispatch (command)
   "Dispatch command to m-player."
   (declare (special emacspeak-m-player-process))
-  (process-send-string                                                                                                                   emacspeak-m-player-process
-																	 (format "%s\n" command)))
+  (process-send-string
+   emacspeak-m-player-process
+   (format "%s\n" command)))
 
 (defun emacspeak-m-player-play-tree-step (step)
   "Move within the play tree."
@@ -163,7 +158,6 @@ The player is placed in a buffer in emacspeak-m-player-mode."
     (read-from-minibuffer "Move by: ")))
   (emacspeak-m-player-dispatch
    (format "pt_step %d" step)))
-
 (defun emacspeak-m-player-play-tree-up (step)
   "Move within the play tree."
   (interactive
@@ -171,7 +165,6 @@ The player is placed in a buffer in emacspeak-m-player-mode."
     (read-from-minibuffer "Move by: ")))
   (emacspeak-m-player-dispatch
    (format "pt_up %d" step)))
-
 (defun emacspeak-m-player-alt-src-step (step)
   "Move within an ASF playlist."
   (interactive
@@ -179,7 +172,6 @@ The player is placed in a buffer in emacspeak-m-player-mode."
     (read-from-minibuffer "Move by: ")))
   (emacspeak-m-player-dispatch
    (format "alt_src_step %d" step)))
-
 (defun emacspeak-m-player-seek-relative (offset)
   "Seek  by offset into stream from current position."
   (interactive
@@ -187,7 +179,6 @@ The player is placed in a buffer in emacspeak-m-player-mode."
     (read-from-minibuffer "Offset: ")))
   (emacspeak-m-player-dispatch
    (format "seek %d" offset)))
-
 (defun emacspeak-m-player-seek-absolute (position)
   "Seek  to absolute specified position."
   (interactive
@@ -195,13 +186,11 @@ The player is placed in a buffer in emacspeak-m-player-mode."
     (read-from-minibuffer "Seek to percentage: ")))
   (emacspeak-m-player-dispatch
    (format "seek %d 1" position )))
-
 (defun emacspeak-m-player-pause ()
   "Pause or unpause media player."
   (interactive)
   (emacspeak-m-player-dispatch
    "pause"))
-
 (defun emacspeak-m-player-quit ()
   "Quit media player."
   (interactive)

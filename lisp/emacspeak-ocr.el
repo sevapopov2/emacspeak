@@ -1,5 +1,5 @@
 ;;; emacspeak-ocr.el --- ocr Front-end for emacspeak desktop
-;;; $Id: emacspeak-ocr.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-ocr.el,v 18.0 2003/04/29 21:17:43 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for OCR
 ;;; Keywords: Emacspeak, ocr
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:17:43 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -58,21 +58,10 @@
 
 ;;}}}
 ;;{{{ required modules
-
-;;; Code:
-
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(require 'emacspeak-speak)
-(require 'voice-lock)
-(require 'emacspeak-sounds)
-
-(require 'derived)
-(eval-when-compile (require 'emacspeak-keymap))
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Customization variables
-
+;;;###autoload
 (defgroup emacspeak-ocr nil
   "Emacspeak front end for scanning and OCR.
 Pre-requisites:
@@ -324,14 +313,13 @@ Here is a list of all emacspeak OCR commands along with their key-bindings:
 
 ;;}}}
 ;;{{{ interactive commands
-
 (defun emacspeak-ocr-customize ()
   "Customize OCR settings."
   (interactive)
   (customize-group 'emacspeak-ocr)
   (emacspeak-auditory-icon 'open-object)
   (emacspeak-speak-mode-line))
-
+;;;###autoload
 (defun emacspeak-ocr ()
   "An OCR front-end for the Emacspeak desktop.  
 
@@ -365,7 +353,6 @@ This name will be used as the prefix for naming image and
 text files produced in this scan.")
 
 (make-variable-buffer-local 'emacspeak-ocr-document-name)
-
 (defun emacspeak-ocr-name-document (name)
   "Name document being scanned in the current OCR buffer.
 Pick a short but meaningful name."
@@ -381,7 +368,6 @@ Pick a short but meaningful name."
   (emacspeak-ocr-update-mode-line)
   (emacspeak-auditory-icon 'select-object)
   (emacspeak-speak-mode-line))
-
 (defun emacspeak-ocr-scan-image ()
   "Acquire page image."
   (interactive)
@@ -413,7 +399,6 @@ Pick a short but meaningful name."
                   emacspeak-ocr-image-extension)))))
     (message "Acquired  image to file %s"
              image-name)))
-
 (defun emacspeak-ocr-scan-photo (&optional metadata)
   "Scan in a photograph.
 The scanned image is converted to JPEG."
@@ -460,7 +445,6 @@ The scanned image is converted to JPEG."
 
 (defvar emacspeak-ocr-process nil
   "Handle to OCR process.")
-
 (defun emacspeak-ocr-write-document ()
   "Writes out recognized text from all pages in current document."
   (interactive)
@@ -472,7 +456,6 @@ The scanned image is converted to JPEG."
        (point-max)
        (emacspeak-ocr-get-text-name))
       (emacspeak-auditory-icon 'save-object))))
-
 (defun emacspeak-ocr-save-current-page ()
   "Writes out recognized text from current page
 to an appropriately named file."
@@ -506,7 +489,6 @@ to an appropriately named file."
   (emacspeak-ocr-save-current-page)
   (emacspeak-ocr-update-mode-line)
   (emacspeak-speak-line))
-
 (defun emacspeak-ocr-recognize-image ()
   "Run OCR engine on current image.
 Prompts for image file if file corresponding to the expected
@@ -545,7 +527,6 @@ Prompts for image file if file corresponding to the expected
     (set-process-sentinel emacspeak-ocr-process
                           'emacspeak-ocr-process-sentinel)
     (message "Launched OCR engine.")))
-
 (defun emacspeak-ocr-scan-and-recognize ()
   "Scan in a page and run OCR engine on it.
 Use this command once you've verified that the separate
@@ -554,7 +535,6 @@ corectly by themselves."
   (interactive)
   (emacspeak-ocr-scan-image)
   (emacspeak-ocr-recognize-image))
-
 (defun emacspeak-ocr-toggle-read-only ()
   "Toggle read-only state of OCR buffer."
   (interactive)
@@ -563,7 +543,6 @@ corectly by themselves."
         (not buffer-read-only))
   (emacspeak-auditory-icon 'button)
   (emacspeak-speak-mode-line))
-
 (defun emacspeak-ocr-open-working-directory ()
   "Launch dired on OCR workng directory."
   (interactive)
@@ -572,7 +551,6 @@ corectly by themselves."
    (dired-noselect emacspeak-ocr-working-directory))
   (emacspeak-auditory-icon 'open-object)
   (emacspeak-speak-mode-line))
-
 (defun emacspeak-ocr-forward-page (&optional count-ignored)
   "Like forward page, but tracks page number of current document."
   (interactive "p")
@@ -595,7 +573,6 @@ corectly by themselves."
       (emacspeak-ocr-update-mode-line)
       (emacspeak-speak-line)
       (emacspeak-auditory-icon 'large-movement))))
-
 (defun emacspeak-ocr-backward-page (&optional count-ignored)
   "Like backward page, but tracks page number of current document."
   (interactive "p")
@@ -628,7 +605,6 @@ corectly by themselves."
   (emacspeak-auditory-icon 'large-movement)
   (emacspeak-speak-line)
   )
-
 (defun emacspeak-ocr-page ()
   "Move to specified page."
   (interactive )
@@ -648,7 +624,6 @@ corectly by themselves."
       (message "Not that many pages in document."))
      (t 
       (emacspeak-ocr-goto-page page)))))
-
 (defun emacspeak-ocr-read-current-page ()
   "Speaks current page."
   (interactive)

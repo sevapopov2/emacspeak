@@ -1,5 +1,5 @@
 ;;; emacspeak-todo-mode.el --- speech-enable todo-mode
-;;; $Id: emacspeak-todo-mode.el,v 17.0 2002/11/23 01:29:01 raman Exp $
+;;; $Id: emacspeak-todo-mode.el,v 18.0 2003/04/29 21:18:21 raman Exp $
 ;;; $Author: raman $
 ;;; Description: todo-mode  for maintaining todo lists 
 ;;; Keywords: Emacspeak, todo-mode 
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:01 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:21 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,15 +40,7 @@
 
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl)
-                   (require 'backquote))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when (compile)
-  (require 'emacspeak-fix-interactive))
-(require 'emacspeak-sounds)
-(require 'emacspeak-speak)
-(require 'advice)
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ Introduction:
 

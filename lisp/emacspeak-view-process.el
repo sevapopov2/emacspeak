@@ -1,5 +1,5 @@
 ;;; emacspeak-view-process.el --- Speech enable View Processes -- A powerful task manager
-;;; $Id: emacspeak-view-process.el,v 17.0 2002/11/23 01:29:01 raman Exp $
+;;; $Id: emacspeak-view-process.el,v 18.0 2003/04/29 21:18:24 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for flexible viewing of processes
 ;;; Keywords:emacspeak, audio interface to emacs administering processes
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:01 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:24 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -37,16 +37,13 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(eval-when-compile (require 'dtk-speak)
-                   (require 'emacspeak-speak)
-                   (require 'emacspeak-sounds)
-                   (require 'voice-lock))
 ;;{{{  Introduction
 
 ;;; Powerful speech interface to viewing and administering processes
+
+;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{  keybindings
@@ -89,7 +86,7 @@
   (let ((field-name (View-process-translate-field-position-to-name
                      (View-process-current-field-number))))
     (put-text-property 0 (length field-name)
-                       'personality 'annotation-voice field-name)
+                       'personality voice-annotate field-name)
     (dtk-speak
      (concat
       field-name
@@ -222,28 +219,28 @@
   :type 'symbol
   :group 'emacspeak-view-process)
 
-(defcustom View-process-parent-line-personality 'harry
+(defcustom View-process-parent-line-personality voice-bolden
   "Personality for parent "
   :type 'symbol
   :group 'emacspeak-view-process)
 
-(defcustom View-process-single-line-personality 'parul-monotone
+(defcustom View-process-single-line-personality voice-monotone
   "Personality for voice lock in view process mode"
   :type 'symbol
   :group 'emacspeak-view-process)
 
-(defcustom View-process-signal-line-personality 'paul-disgusted
+(defcustom View-process-signal-line-personality voice-smoothen
   "Indicate a signal"
   :type 'symbol
   :group 'emacspeak-view-process)
 
-(defcustom View-process-signaled-line-personality 'paul-animated
+(defcustom View-process-signaled-line-personality voice-animate
   "Personality for indicating a signalled process"
   :type 'symbol
   :group 'emacspeak-view-process)
 
 	 
-(defcustom View-process-renice-line-personality 'paul-smooth
+(defcustom View-process-renice-line-personality voice-monotone-medium
   "Indicate a reniced process"
   :type 'symbol
   :group 'emacspeak-view-process)
@@ -254,39 +251,6 @@
                   View-process-signaled-line-mark
                   View-process-signal-line-mark
                   View-process-renice-line-mark))
-
-(defvar View-process-voice-lock-keywords
-  (list
-   (cons (concat "^" 
-		 (char-to-string View-process-child-line-mark) 
-		 " .*")
-	 'View-process-child-line-personality)
-   (cons (concat "^" 
-		 (char-to-string View-process-parent-line-mark) 
-		 " .*")
-	 'View-process-parent-line-personality)
-   (cons (concat "^\\" 
-		 (char-to-string View-process-single-line-mark) 
-		 " .*")
-	 'View-process-single-line-personality)
-   (cons (concat "^" 
-		 (char-to-string View-process-signaled-line-mark) 
-		 " .*")
-	 'View-process-signaled-line-personality)
-   (cons (concat "^" 
-		 (char-to-string View-process-signal-line-mark) 
-		 " .*")
-	 'View-process-signal-line-personality)
-   (cons (concat "^" 
-		 (char-to-string View-process-renice-line-mark) 
-		 " .*")
-	 'View-process-renice-line-personality)
-   )
-  "The font lock keywords for the `View-process-mode'."
-  )
-
-(voice-lock-set-major-mode-keywords 'View-process-mode
-                                    'View-process-voice-lock-keywords)
 
 ;;}}}
 (provide  'emacspeak-view-process)

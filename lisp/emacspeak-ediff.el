@@ -1,5 +1,5 @@
 ;;; emacspeak-ediff.el --- Speech enable Emacs interface to diff and merge
-;;; $Id: emacspeak-ediff.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-ediff.el,v 18.0 2003/04/29 21:16:59 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for ediff
 ;;; Keywords:emacspeak, audio interface to emacs, Comparing files 
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:59 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by .
 ;;; All Rights Reserved. 
 ;;;
@@ -39,19 +39,7 @@
 
 ;;{{{  required 
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'backquote)
-(require 'custom)
-(eval-when-compile (require 'dtk-speak)
-		   (require 'emacspeak-speak)
-		   (require 'emacspeak-keymap)
-		   (require 'emacspeak-sounds)
-		   (require 'voice-lock)
-		   (require 'ediff)
-		   (require 'ediff-init))
-    
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction:
 
@@ -68,7 +56,7 @@
 ;;}}}
 ;;{{{  macros
 
-(defgroup  emacspeak-ediff nil
+(defgroup emacspeak-ediff nil
   "Emacspeak support for EDiff."
   :link '(custom-group-link :tag "ediff"
                             ediff)
@@ -91,24 +79,24 @@
 ;;}}}
 ;;{{{  Mapping faces to personalities:
 
-(defcustom emacspeak-ediff-A-personality 'paul-smooth
+(defcustom emacspeak-ediff-A-personality voice-smoothen
   "Personality used to voiceify difference chunk A"
   :type 'symbol
   :group 'emacspeak-ediff)
 
 (defcustom emacspeak-ediff-B-personality
-  'paul-monotone
+  voice-monotone
   "Personality used to voiceify difference chunk B"
   :type 'symbol
   :group 'emacspeak-ediff)
 
-(defcustom emacspeak-ediff-fine-A-personality 'harry
+(defcustom emacspeak-ediff-fine-A-personality voice-bolden
   "Personality used to voiceify difference chunk A"
   :type 'symbol
   :group 'emacspeak-ediff)
 
 (defcustom emacspeak-ediff-fine-B-personality
-  'harry
+  voice-bolden
   "Personality used to voiceify difference chunk B"
   :type 'symbol
   :group 'emacspeak-ediff)
@@ -146,6 +134,7 @@
 
 (defsubst emacspeak-ediff-difference-c-overlay (n)
   (declare (special ediff-difference-vector-B
+                    ediff-difference-vector-C
                     ediff-number-of-differences))
   (assert (< n ediff-number-of-differences) t
           "There are only %s differences"
@@ -170,6 +159,7 @@
 
 (defsubst emacspeak-ediff-fine-difference-c-overlays (n)
   (declare (special ediff-difference-vector-B
+                    ediff-difference-vector-C
                     ediff-number-of-differences))
   (assert (< n ediff-number-of-differences) t
           "There are only %s differences"
@@ -262,6 +252,7 @@
   "Voicify all the difference chunks"
   (declare (special ediff-buffer-A ediff-buffer-B
                     ediff-number-of-differences
+		    ediff-difference-vector-B ediff-difference-vector-A
                     emacspeak-ediff-A-personality
                     emacspeak-ediff-B-personality
                     emacspeak-ediff-fine-A-personality

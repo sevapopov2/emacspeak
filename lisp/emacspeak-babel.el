@@ -1,5 +1,5 @@
 ;;; emacspeak-babel.el --- Speech-enable BabelFish
-;;; $Id: emacspeak-babel.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: emacspeak-babel.el,v 18.0 2003/04/29 21:16:53 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to use BabelFish
 ;;; Keywords: Emacspeak, WWW interaction
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:16:53 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -40,13 +40,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;{{{ required modules
-
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction:
 

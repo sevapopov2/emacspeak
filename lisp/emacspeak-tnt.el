@@ -1,5 +1,5 @@
 ;;; emacspeak-tnt.el --- Instant Messenger 
-;;; $Id: emacspeak-tnt.el,v 17.0 2002/11/23 01:29:01 raman Exp $
+;;; $Id: emacspeak-tnt.el,v 18.0 2003/04/29 21:18:18 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Speech-enable AOL Instant Messenger Client TNT
 ;;; Keywords: Emacspeak, Instant Messaging 
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:01 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:18:18 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2002, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2003, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,15 +40,7 @@
 
 ;;{{{ required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(require 'emacspeak-speak)
-(require 'emacspeak-pronounce)
-(require 'voice-lock)
-(require 'emacspeak-fix-interactive)
-(require 'emacspeak-sounds)
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction:
 
@@ -66,6 +58,7 @@
   "Provide additional auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)))
+(declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
 (emacspeak-pronounce-augment-pronunciations 'tnt-im-mode
 					    emacspeak-pronounce-internet-smileys-pronunciations)
 (emacspeak-pronounce-augment-pronunciations 'tnt-chat-mode
@@ -248,7 +241,32 @@ automatically."
 ;;}}}
 ;;{{{ set up face to voice mapping
 
-(voice-setup-set-voice-for-face 'tnt-my-name-face 'paul-smooth)
+(def-voice-font emacspeak-tnt-my-name-personality
+  voice-smoothen
+  'tnt-my-name-face
+  "tnt-my-name-face")
+
+(def-voice-font  emacspeak-tnt-buddy-list-active-face voice-animate
+  'tnt-buddy-list-active-face
+  "Personality for active buddies.")
+(def-voice-font emacspeak-tnt-buddy-list-inactive-face
+  voice-monotone-medium
+  'tnt-buddy-list-inactive-face
+  "Personality for inactive buddies.")
+
+(def-voice-font emacspeak-tnt-buddy-list-idle-face
+  voice-smoothen-medium
+  'tnt-buddy-list-idle-face
+  "Personality for idle buddies.")
+
+(def-voice-font emacspeak-tnt-buddy-list-away-face
+  voice-monotone
+  'tnt-buddy-list-away-face
+  "Personality for away buddies.")
+(def-voice-font emacspeak-tnt-buddy-list-pounce-face
+  'ursula
+  'tnt-buddy-list-pounce-face
+  "Personality for pounce buddies.")
 
 ;;}}}
 ;;{{{  Activate pronunciations 

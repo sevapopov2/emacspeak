@@ -1,5 +1,5 @@
 ;;; emacspeak-speedbar.el --- Speech enable speedbar -- Tool for context-sensitive navigation
-;;; $Id: emacspeak-speedbar.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-speedbar.el,v 18.0 2003/04/29 21:18:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to speedbar
 ;;; Keywords: Emacspeak, Speedbar
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:01 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -56,17 +56,8 @@
 ;;}}}
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(require 'emacspeak-speak)
-(require 'voice-lock)
-(require 'emacspeak-keymap)
-(require 'emacspeak-sounds)
-					;(eval-when-compile (require 'speedbar))
-(eval-when (compile)
-  (require 'emacspeak-fix-interactive))
-
+(require 'emacspeak-preamble)
+(require 'speedbar nil t)
 ;;}}}
 ;;{{{ custom
 
@@ -272,17 +263,17 @@ An automatically updating speedbar consumes resources.")
 ;;{{{  voice locking 
 ;;; Map speedbar faces to voices
 ;;
-(defcustom emacspeak-speedbar-button-personality  'harry
+(defcustom emacspeak-speedbar-button-personality  voice-bolden
   "personality used for speedbar buttons"
   :type 'symbol
   :group 'emacspeak-speedbar)
 
-(defcustom emacspeak-speedbar-selected-personality  'paul-animated
+(defcustom emacspeak-speedbar-selected-personality  voice-animate
   "Personality used to indicate speedbar selection"
   :type 'symbol
   :group 'emacspeak-speedbar)
 
-(defcustom emacspeak-speedbar-directory-personality 'betty
+(defcustom emacspeak-speedbar-directory-personality voice-lock-function-name-personality
   "Speedbar personality for directory buttons"
   :type 'symbol
   :group 'emacspeak-speedbar)
@@ -292,12 +283,12 @@ An automatically updating speedbar consumes resources.")
   :type 'symbol
   :group 'emacspeak-speedbar)
 
-(defcustom emacspeak-speedbar-highlight-personality 'paul-animated
+(defcustom emacspeak-speedbar-highlight-personality voice-animate
   "Personality used for for speedbar highlight."
   :type 'symbol
   :group 'emacspeak-speedbar)
 
-(defcustom emacspeak-speedbar-tag-personality 'paul-monotonoe
+(defcustom emacspeak-speedbar-tag-personality voice-monotone
   "Personality used for speedbar tags"
   :type 'symbol
   :group 'emacspeak-speedbar)

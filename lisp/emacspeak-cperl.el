@@ -1,5 +1,5 @@
 ;;; emacspeak-perl.el --- Speech enable CPerl Mode 
-;;; $Id: emacspeak-cperl.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-cperl.el,v 18.0 2003/04/29 21:16:56 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for CPerl mode
 ;;; Keywords:emacspeak, audio interface to emacs CPerl
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:56 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -37,13 +37,10 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when-compile (require 'dtk-speak)
-		   (require 'emacspeak-speak)
-		   (require 'emacspeak-sounds)
-		   (require 'voice-lock))
+;;{{{ required modules 
 
+(require 'emacspeak-preamble)
+;;}}}
 ;;{{{  Introduction:
 
 ;;; Commentary:
@@ -57,8 +54,6 @@
 
 ;;; first pull in emacspeak-perl for voice lock definitions 
 (require 'emacspeak-perl)
-
-(voice-lock-set-major-mode-keywords 'cperl-mode 'perl-voice-lock-keywords)
 
 ;;}}}
 ;;{{{  Advice electric insertion to talk:
@@ -88,11 +83,8 @@ Cue electric insertion with a tone."
   (cond
    ((interactive-p )
     (dtk-tone 500 30 'force)
-    (and emacspeak-backward-delete-char-speak-deleted-char
-         (emacspeak-speak-this-char (preceding-char )))
-    ad-do-it
-    (and emacspeak-backward-delete-char-speak-current-char
-         (emacspeak-speak-this-char (preceding-char ))))
+    (emacspeak-speak-this-char (preceding-char ))
+    ad-do-it)
    (t ad-do-it))
   ad-return-value)
 
@@ -108,7 +100,7 @@ Otherwise cue user to the line just created. "
       (emacspeak-speak-line )
       ad-do-it)
      (t ad-do-it       
-        (dtk-speak-using-voice 'annotation-voice
+        (dtk-speak-using-voice voice-annotate
                                (format
                                 "indent %s"
                                 (current-column)))

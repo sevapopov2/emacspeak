@@ -1,5 +1,5 @@
 ;;; emacspeak-sgml-mode.el --- Speech enable psgml package
-;;; $Id: emacspeak-psgml.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-psgml.el,v 18.0 2003/04/29 21:17:46 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for psgml
 ;;; Keywords:emacspeak, audio interface to emacs psgml
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:46 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -38,15 +38,6 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-sounds)
-(eval-when-compile
-  (require 'emacspeak))
-(require 'derived)
-(require 'emacspeak-speak)
-(require 'emacspeak-fix-interactive)
-(require 'voice-lock)
 ;;{{{  Introduction
 
 ;;; Commentary:
@@ -54,6 +45,10 @@
 ;;; Speech-enable psgml --a powerful SGML support package.
 ;;; psgml can be found at 
 ;;;
+
+;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{  helpers 
@@ -331,6 +326,8 @@ window")))
 
 (emacspeak-pronounce-add-dictionary-entry 'sgml-mode"CDATA"
                                           "C DATA")
+(declaim (special emacspeak-pronounce-common-xml-namespace-uri-pronunciations))
+
 ;;; xml mode inherits from sgml mode
 (emacspeak-pronounce-augment-pronunciations 'xml-mode
                                             emacspeak-pronounce-common-xml-namespace-uri-pronunciations)
@@ -355,14 +352,15 @@ window")))
 ;;{{{ psgml based voice locking 
 
 (defvar emacspeak-sgml-markup-voices
-  '((start-tag 	. harry)
-    (end-tag 	. harry)
-    (comment 	. paul-monotone)
-    (pi 	. paul-animated)
-    (sgml 	. paul-animated)
-    (doctype 	. paul-italic)
-    (entity 	. paul-italic)
-    (shortref   . harry))
+  (list 
+   (cons 'start-tag 	  voice-bolden)
+   (cons 'end-tag 	  voice-bolden)
+   (cons 'comment 	  voice-monotone)
+   (cons 'pi 	   voice-animate)
+   (cons 'sgml 	  voice-animate)
+   (cons 'doctype 	  voice-lock-italic-personality)
+   (cons 'entity 	  voice-lock-italic-personality)
+   (cons 'shortref     voice-bolden))
   "*List of markup to personality mappings.
 Element are of the form (MARKUP-TYPE . personality).
 Possible values for MARKUP-TYPE is:
@@ -423,15 +421,13 @@ shortref- short reference")
 (define-key emacspeak-xml-browse-mode-map "\C-cu" 'sgml-show-tags)
 ;;}}}
 ;;{{{  toggle interactive parse:
-(defun emacspeak-psgml-toggle-interactive-voice-locking ()
+(defun emacspeak-psgml-toggle-interactive-font-lock()
   "Toggles variable sgml-set-face.
-When turned on, the  buffer is voice locked interactively.
+When turned on, the  buffer is font locked interactively.
 Leave this off in general while editting."
   (interactive)
   (declare (special sgml-set-face))
-  (if sgml-set-face
-      (setq sgml-set-face nil)
-    (setq sgml-set-face t))
+  (setq sgml-set-face (not sgml-set-face))
   (message "Turned %s sgml-set-face "
            (if sgml-set-face "on" "off")))
 

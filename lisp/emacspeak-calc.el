@@ -1,5 +1,5 @@
 ;;; emacspeak-calc.el --- Speech enable the Emacs Calculator -- a powerful symbolic algebra system
-;;; $Id: emacspeak-calc.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: emacspeak-calc.el,v 18.0 2003/04/29 21:16:54 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: 
 ;;; Keywords:
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:54 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -37,11 +37,6 @@
 
 ;;}}}
 
-(require 'advice)
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
 ;;{{{  Introduction:
 
 ;;; This module extends the Emacs Calculator.
@@ -51,7 +46,15 @@
 ;;; To fix all of calc's interactive functions
 
 ;;}}}
+;;{{{ required modules
+(require 'emacspeak-preamble)
+
+;;}}}
 ;;{{{  advice calc interaction 
+(defadvice calc-dispatch (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)))
 
 (defadvice calc-quit (after emacspeak pre act )
   "Announce the buffer that becomes current when calc is quit."
@@ -62,10 +65,28 @@
 ;;}}}
 ;;{{{  speak output 
 
-(defadvice  calc-do (after emacspeak pre act comp)
+(defadvice calc-call-last-kbd-macro (around emacspeak pre act)
+  "Provide spoken feedback."
+  (cond
+   ((interactive-p)
+    (let ((emacspeak-speak-messages nil)
+          (dtk-quiet t)
+          (emacspeak-use-auditory-icons nil))
+      ad-do-it)
+    (tts-with-punctuations "all"
+			   (emacspeak-read-previous-line))
+    (emacspeak-auditory-icon 'task-done))
+   (t ad-do-it))
+  ad-return-value )
+
+(defadvice  calc-do (around emacspeak pre act comp)
   "Speak previous line of output."
-  (emacspeak-read-previous-line)
-  (emacspeak-auditory-icon 'select-object))
+  (let ((emacspeak-speak-messages nil))
+    ad-do-it
+    (tts-with-punctuations "all"
+			   (emacspeak-read-previous-line))
+    (emacspeak-auditory-icon 'select-object))
+  ad-return-value)
 
 (defadvice  calc-trail-here (after emacspeak pre act comp)
   "Speak previous line of output."

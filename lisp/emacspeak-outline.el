@@ -1,5 +1,5 @@
 ;;; emacspeak-outline.el --- Speech enable Outline --   Browsing  Structured Documents
-;;; $Id: emacspeak-outline.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-outline.el,v 18.0 2003/04/29 21:17:44 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for outline-mode
 ;;; Keywords:emacspeak, audio interface to emacs Outlines
@@ -9,13 +9,13 @@
 ;;; emacspeak| T. V. Raman |raman@crl.dec.com 
 ;;; A speech interface to Emacs |
 ;;; $date: $ |
-;;;  $Revision: 17.0 $ | 
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -37,14 +37,6 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
-(require 'voice-lock)
-(require 'emacspeak-sounds)
-(require 'thingatpt)
-(eval-when (compile)
-  (require 'outline))
 ;;{{{  Introduction:
 
 ;;; Commentary:
@@ -54,43 +46,9 @@
 ;;; Code:
 
 ;;}}}
-;;{{{ voice locking in 20.3
-(defun outline-voice-lock-level ()
-  (save-excursion
-    (beginning-of-line)
-    (outline-level)))
-
-(defvar outline-voice-lock-keywords
-  nil
-  "Additional expressions to highlight in Outline mode.")
-(make-variable-buffer-local 'outline-regexp)
-
-(setq outline-voice-lock-keywords
-      '( ;;
-	;; Highlight headings according to the level.
-	(eval . (list (concat "^" outline-regexp ".+")
-		      0 '(or (cdr (assq (outline-voice-lock-level)
-					'((1 . voice-lock-function-name-personality)
-					  (2 . voice-lock-variable-name-personality)
-					  (3 . voice-lock-keyword-personality)
-					  (4 . voice-lock-builtin-personality)
-					  (5 . voice-lock-comment-personality)
-					  (6 . voice-lock-constant-personality)
-					  (7 . voice-lock-type-personality)
-					  (8 . voice-lock-string-personality))))
-			     voice-lock-warning-personality)
-		      nil t))))
-
-(defun emacspeak-outline-conditional-voice-lock-setup ()
-  "Conditionally setup voice locking for outline headers"
-  (unless voice-lock-keywords
-    (make-local-variable 'voice-lock-defaults)
-    (setq voice-lock-defaults '(outline-voice-lock-keywords t))))
-
-(defun emacspeak-outline-voice-lock-setup ()
-  "Setup voice locking for outline headers"
-  (make-local-variable 'voice-lock-defaults)
-  (setq voice-lock-defaults '(outline-voice-lock-keywords t)))
+;;{{{ requires
+(require 'emacspeak-preamble)
+(require 'outline)
 
 ;;}}}
 ;;{{{  Navigating through an outline:
@@ -287,6 +245,7 @@ except that the outline section is optionally spoken"
 
 (defun emacspeak-outline-setup-keys ()
   "Bind keys in outline minor mode map"
+  (declare (special outline-mode-prefix-map))
   (define-key outline-mode-prefix-map "p"
     'emacspeak-outline-speak-previous-heading)
   (define-key outline-mode-prefix-map "n"
@@ -299,9 +258,6 @@ except that the outline section is optionally spoken"
 
 (add-hook 'outline-mode-hook 'emacspeak-outline-setup-keys)
 (add-hook 'outline-minor-mode-hook 'emacspeak-outline-setup-keys)          
-;;; voice lock outlines
-(add-hook 'outline-mode-hook 'emacspeak-outline-voice-lock-setup)
-					;(add-hook 'outline-minor-mode-hook 'emacspeak-outline-conditional-voice-lock-setup)
 
 ;;}}}
 

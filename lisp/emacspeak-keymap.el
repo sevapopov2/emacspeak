@@ -1,5 +1,5 @@
 ;;; emacspeak-keymap.el --- Setup all keymaps and keybindings provided by Emacspeak
-;;; $Id: emacspeak-keymap.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-keymap.el,v 18.0 2003/04/29 21:17:35 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Module for setting up emacspeak keybindings
 ;;; Keywords: Emacspeak
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:35 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -53,7 +53,7 @@
 
 (defvar emacspeak-prefix "\C-e"
   "Default prefix key used for emacspeak. ")
-
+;;;###autoload 
 (defvar emacspeak-keymap nil
   "Primary keymap used by emacspeak. ")
 
@@ -80,8 +80,10 @@
 ;;{{{ Create a keymap that users can put personal commands
 ;;on
 ;;; Adding keys using custom:
+(defvar  emacspeak-personal-keymap nil
+  "Emacspeak personal keymap")
 
-(define-prefix-command 'emacspeak-personal-keymap  )
+(define-prefix-command 'emacspeak-personal-keymap   'emacspeak-personal-keymap)
 
 (defcustom emacspeak-personal-keys
   (when emacspeak-personal-keymap
@@ -109,7 +111,7 @@ field in the customization buffer.  You can use the notation
 [f1], [f2], etc., to specify function keys. "
   :group 'emacspeak
   :type '(repeat
-	  (cons :tag "Key binding"
+	  (cons  :tag "Key Binding"
 		(string :tag "Key")
 		(symbol :tag "Command")))
   :set '(lambda (sym val)
@@ -162,6 +164,7 @@ field in the customization buffer.  You can use the notation
 (define-key emacspeak-keymap "W"
   'emacspeak-speak-spell-current-word)
 (define-key emacspeak-keymap "u" 'emacspeak-url-template-fetch)
+(define-key emacspeak-keymap "\C-u" 'emacspeak-rss-browse)
 (define-key emacspeak-keymap "U" 'emacspeak-websearch-usenet)
 (define-key emacspeak-keymap "V" 'emacspeak-speak-version)
 (define-key emacspeak-keymap "\C-v" 'view-mode)
@@ -263,7 +266,7 @@ field in the customization buffer.  You can use the notation
   'emacspeak-remote-connect-to-server)
 (define-key emacspeak-keymap "\M-d"
   'emacspeak-pronounce-dispatch)
-(define-key emacspeak-keymap "\M-b" 'emacspeak-pronounce-define-local-pronunciation)
+(define-key emacspeak-keymap "\M-b" 'emacspeak-speak-other-buffer)
 (define-key emacspeak-keymap "\M-a" 'emacspeak-set-auditory-icon-player)
 (define-key emacspeak-keymap "\M-m" 'emacspeak-toggle-mail-alert)
 (define-key emacspeak-keymap "\M-v"
@@ -286,7 +289,7 @@ field in the customization buffer.  You can use the notation
 (define-key emacspeak-keymap "D"
   'emacspeak-view-emacspeak-doc)
 (define-key emacspeak-keymap '[f1]
-  'emacspeak-customize-personal-settings)
+  'customize-saved)
 (define-key emacspeak-keymap '[f11] 'emacspeak-wizards-shell-toggle)
 ;;; submap for setting dtk:
 (define-key emacspeak-dtk-submap "z" 'emacspeak-zap-tts)
@@ -321,8 +324,8 @@ field in the customization buffer.  You can use the notation
     (format "%s" i )
     'dtk-set-predefined-speech-rate ))
 ;;; Put these in the global map:
-(global-set-key '[(control left)] 'emacspeak-previous-frame)
-(global-set-key '[(control right)] 'emacspeak-next-frame)
+(global-set-key '[(control left)] 'emacspeak-previous-frame-or-buffer)
+(global-set-key '[(control right)] 'emacspeak-next-frame-or-buffer)
 (global-set-key '[pause] 'dtk-stop)
 (global-set-key '[(control down)] 'emacspeak-mark-forward-mark)
 (global-set-key '[(control up)] 'emacspeak-mark-backward-mark)
@@ -358,6 +361,7 @@ field in the customization buffer.  You can use the notation
 
 ;;}}}
 ;;{{{ Interactively switching the emacspeak-prefix
+;;;###autoload
 (defun emacspeak-keymap-choose-new-emacspeak-prefix (prefix-key)
   "Interactively select a new prefix key to use for all emacspeak
 commands.  The default is to use `C-e'  This command
@@ -378,7 +382,7 @@ relief."
 
 ;;}}}
 ;;{{{  removing emacspeak-self-insert-command in non-edit modes.
-
+;;;###autoload 
 (defun emacspeak-keymap-remove-emacspeak-edit-commands
   (keymap)
   "We define keys that invoke editting commands to be

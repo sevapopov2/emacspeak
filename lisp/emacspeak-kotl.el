@@ -1,5 +1,5 @@
 ;;; emacspeak-kotl.el --- Speech enable KOtl -- Hyperbole's outlining editor
-;;; $Id: emacspeak-kotl.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-kotl.el,v 18.0 2003/04/29 21:17:35 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extensions for Bob Weiner's excellent Outliner
 ;;; Keywords: Emacspeak, Speech Access, Hyperbole, Outliner
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:35 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -37,11 +37,6 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
 ;;{{{  Introduction:
 
 ;;; Provide Emacspeak  advice to
@@ -54,6 +49,10 @@
 ;;; the new functions before advising them.
 ;;; Then we advice the  new functions that are specific to kotl, e.g. moving
 ;;; cells etc.
+
+;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{  Advice the various redefined functions

@@ -1,5 +1,5 @@
 ;;; emacspeak-info.el --- Speech enable Info -- Emacs' online documentation viewer
-;;; $Id: emacspeak-info.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-info.el,v 18.0 2003/04/29 21:17:32 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Module for customizing Emacs info
 ;;; Keywords:emacspeak, audio interface to emacs
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:32 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -36,19 +36,13 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when (compile)
-  (require 'info)
-  (require 'dtk-speak))
-(require 'emacspeak-sounds)
-(require 'emacspeak-speak)
-(require 'voice-lock)
-(require 'dtk-voices)
-(require 'emacspeak-keymap)
 ;;{{{ Introduction:
 
 ;;; This module extends and customizes the Emacs info reader.
+
+;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{  Variables:
@@ -69,7 +63,7 @@
   "*Alist of personality or list of personalities to use for pseudo-underlined titles.
 The alist key is the character the title is underlined with (?*, ?= or ?-).")
   
-(defvar emacspeak-info-node   'harry
+(defvar emacspeak-info-node   voice-bolden
   "Personality to indicate the node name.")
 
 (defvar emacspeak-info-xref
@@ -77,7 +71,7 @@ The alist key is the character the title is underlined with (?*, ?= or ?-).")
   "Personality to indicate  cross-references.")
 
 (defvar emacspeak-info-menu-5
-  'betty
+  voice-lighten-extra
   "Personality for menu items.")
 
 ;;}}}

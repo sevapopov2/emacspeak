@@ -1,5 +1,5 @@
 ;;; emacspeak-gnuplot.el --- speech-enable gnuplot mode
-;;; $Id: emacspeak-gnuplot.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-gnuplot.el,v 18.0 2003/04/29 21:17:21 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech-enable
 ;;; gnuplot mode
@@ -9,15 +9,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:17:21 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2002, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2003, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -41,14 +41,7 @@
 
 ;;{{{ required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(require 'emacspeak-speak)
-(require 'voice-lock)
-(require 'emacspeak-fix-interactive)
-(require 'emacspeak-sounds)
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction:
 
@@ -64,63 +57,6 @@
 
 ;;}}}
 
-;;{{{ set up voice locking 
-
-(voice-lock-set-major-mode-keywords 'gnuplot-mode
-				    'gnuplot-voice-lock-keywords)
-
-(defvar gnuplot-voice-lock-keywords nil
-  "Voice lock keywords for gnuplot mode.")
-
-(setq gnuplot-voice-lock-keywords
-      (list
-					; comments
-       '("#.*$" . voice-lock-comment-personality)
-					; quoted things
-					;'("['\"]\\([^'\"\n]*\\)['\"]"
-					;  1 voice-lock-string-personality)
-       '("'[^'\n]*'?" . voice-lock-string-personality)
-					; stuff in brackets, sugg. by <LB>
-       '("\\[\\([^]]+\\)\\]"
-	 1 voice-lock-reference-personality)
-					; variable/function definitions
-       '("\\(\\<[a-z]+[a-z_0-9()]*\\)[ \t]*="
-	 1 voice-lock-variable-name-personality)
-					; built-in function names
-       (cons
-	(concat
-	 "\\<\\("
-	 "a\\(bs\\|cosh\?\\|rg\\|sinh\?\\|"
-	 "tan\\(\\|\[2h\]\\)\\)\\|"
-	 "bes\\(j\[01\]\\|y\[01\]\\)\\|"
-	 "c\\(eil\\|o\\(lumn\\|sh\?\\)\\)\\|"
-	 "e\\(rfc\?\\|xp\\)\\|floor\\|gamma\\|"
-	 "i\\(beta\\|gamma\\|mag\\|"
-	 "n\\(t\\|v\\(erf\\|norm\\)\\)\\)\\|"
-	 "l\\(gamma\\|og\\(\\|10\\)\\)\\|"
-	 "norm\\|r\\(and\\|eal\\)\\|"
-	 "s\\(gn\\|inh\?\\|qrt\\)\\|"
-	 "t\\(anh\?\\|m_\\(hour\\|m\\(day\\|in\\|on\\)\\|"
-	 "sec\\|wday\\|y\\(day\\|ear\\)\\)\\)\\|"
-	 "valid"
-	 "\\)\\>")
-	'voice-lock-function-name-personality)
-					; (s)plot -- also thing (s)plotted
-       '("\\<s?plot\\>" . voice-lock-keyword-personality)
-       '("\\<s?plot\\s-+\\([^'\" ]+\\)[) \n,\\\\]"
-	 1 voice-lock-variable-name-personality)
-					; other common commands
-					; miscellaneous commands
-       (cons
-	(concat "\\<\\("
-		"c\\(d\\|lear\\)\\|exit\\|fit\\|help\\|load\\|"
-		"p\\(ause\\|rint\\|wd\\)\\|quit\\|replot\\|"
-		"s\\(ave\\|et\\|how\\)"
-		"\\)\\>\\|!.*$")
-	'voice-lock-reference-personality))
-      )
-
-;;}}}
 ;;{{{ advice interactive commands
 
 (defadvice gnuplot-send-region-to-gnuplot (after emacspeak
@@ -172,9 +108,7 @@
      (t (dtk-tone 500 30 'force)
 	(and emacspeak-delete-char-speak-deleted-char
 	     (emacspeak-speak-char t))))
-    ad-do-it
-    (and emacspeak-delete-char-speak-current-char
-         (emacspeak-speak-char t)))
+    ad-do-it)
    (t ad-do-it))
   ad-return-value)
 

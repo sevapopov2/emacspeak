@@ -1,5 +1,5 @@
 ;;; emacspeak-realaudio.el --- Play realaudio from Emacs
-;;; $Id: emacspeak-realaudio.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-realaudio.el,v 18.0 2003/04/29 21:17:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Single click access to RealAudio from emacspeak
 ;;; Keywords: Emacspeak, RealAudio
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:50 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,14 +40,7 @@
 
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(require 'derived)
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when (compile)
-  (require 'emacspeak-fix-interactive))
-(require 'emacspeak-aumix)
-(require 'emacspeak-sounds)
-(require 'thingatpt)
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ Introduction:
 
@@ -65,10 +58,13 @@
 
 ;;}}}
 ;;{{{ variables
+(defgroup emacspeak-realaudio nil
+  "Emacspeak Realaudio  customization.")
+
 (defcustom emacspeak-realaudio-revert-to-auditory-icons t
   "Set this to T if you want to switch back from using midi
 icons once a realaudio stream is done playing."
-  :group 'emacspeak
+  :group 'emacspeak-realaudio
   :type 'boolean)
 
 (defcustom emacspeak-realaudio-player
@@ -79,7 +75,7 @@ icons once a realaudio stream is done playing."
     "/usr/bin/trplayer")
    (t "rap"))
   "*Executable that plays realaudio"
-  :group 'emacspeak
+  :group 'emacspeak-realaudio
   :type 'string)
 
 (defcustom emacspeak-realaudio-player-options 
@@ -87,7 +83,7 @@ icons once a realaudio stream is done playing."
 		 "/usr/bin/trplayer")
     (list "-l" "-i" "-b" "-c" ))
   "*Options for realplayer."
-  :group 'emacspeak
+  :group 'emacspeak-realaudio
   :type 'string)
 
 (defvar emacspeak-realaudio-process nil
@@ -110,7 +106,7 @@ specifies the actual location of the realaudio stream
 
 (defvar emacspeak-realaudio-buffer "*realaudio*"
   "Name of realaudio process buffer")
-
+;;;###autoload
 (defun emacspeak-realaudio-play (resource &optional prompt-time)
   "Play a realaudio stream.  Uses files from your Realaudio
 shortcuts directory for completion.  See documentation for
@@ -123,10 +119,11 @@ emacspeak-realaudio-shortcuts-directory. "
           (minibuffer-history emacspeak-realaudio-history))
       (emacspeak-pronounce-define-local-pronunciation
        emacspeak-realaudio-shortcuts-directory " shortcuts/ ")
-      (expand-file-name
-       (read-file-name "RealAudio resource: "
-                       emacspeak-realaudio-shortcuts-directory
-                       emacspeak-realaudio-last-url)))
+      (read-file-name "RealAudio resource: "
+                      emacspeak-realaudio-shortcuts-directory
+                      (if (eq major-mode 'dired-mode)
+                          (dired-get-filename)
+                        emacspeak-realaudio-last-url)))
     current-prefix-arg))
   (declare (special emacspeak-realaudio-player
                     emacspeak-realaudio-buffer 
@@ -136,13 +133,19 @@ emacspeak-realaudio-shortcuts-directory. "
                     emacspeak-realaudio-shortcuts-directory
                     emacspeak-realaudio-history
                     emacspeak-use-auditory-icons))
+  (unless (or
+           (string-match "^rtsp:" resource)
+           (string-match "^http:"  resource))
+    (setq resource
+          (expand-file-name resource)))
   (unless (string= resource (car emacspeak-realaudio-history))
     (pushnew resource emacspeak-realaudio-history))
   (when (get-buffer "*realaudio*")
     (kill-buffer emacspeak-realaudio-buffer))
   (let ((process-connection-type nil)
         (default-directory
-          (if (string-match "^http" resource )
+          (if (or (string-match "^rtsp:" resource)
+                  (string-match "^http" resource ))
               default-directory
             (file-name-directory resource)))
         (options (copy-list emacspeak-realaudio-player-options)))
@@ -169,25 +172,12 @@ emacspeak-realaudio-shortcuts-directory. "
         (and emacspeak-use-auditory-icons
              (not emacspeak-aumix-multichannel-capable-p)
              (not (emacspeak-using-midi-p)))
-      (emacspeak-set-auditory-icon-player 'emacspeak-midi-icon))))
+      (emacspeak-set-auditory-icon-player 'emacspeak-play-midi-icon))))
 
 (defvar emacspeak-realaudio-dont-insist-on-ram-url t
   "*Set to nil if you want emacspeak to insist that realaudio
 urls have a .ram or .rm extension.")
-
-(defun emacspeak-realaudio-play-url-at-point (&optional prompt-time)
-  "Play url under point as realaudio"
-  (interactive "P")
-  (declare (special emacspeak-realaudio-dont-insist-on-ram-url))
-  (let ((url (w3-view-this-url 'no-show)))
-    (cond
-     ((or emacspeak-realaudio-dont-insist-on-ram-url
-	  (string-match ".rm?$" url)
-	  (string-match ".ram?$" url))
-      (message "Playing Realaudio URL under point")
-      (emacspeak-realaudio-play url prompt-time))
-     (t (message "%s does not look like realaudio"
-		 url)))))
+;;;###autoload
 
 (defun emacspeak-realaudio-process-sentinel  (process state)
   "Cleanup after realaudio is done. "
@@ -235,9 +225,9 @@ urls have a .ram or .rm extension.")
 (defcustom emacspeak-realaudio-reset-auditory-display t 
   "Set this to T if you want the audio settings reset after
 a realaudio sream is done playing."
-  :group 'emacspeak
+  :group 'emacspeak-realaudio
   :type 'boolean)
-
+;;;###autoload
 (defun emacspeak-realaudio  (&optional ignored)
   "Start or control streaming audio including MP3 and
 realaudio.  If using `TRPlayer' as the player, accepts
@@ -289,7 +279,7 @@ commands via single keystrokes."
         (forward-line 1)))
     (kill-buffer buff)
     result))
-
+;;;###autoload
 (defun emacspeak-realaudio-browse (ramfile &optional start-time)
   "Browse RAM file before playing the selected component."
   (interactive
@@ -323,16 +313,6 @@ commands via single keystrokes."
             (concat component option )))
     (emacspeak-realaudio-play  component)))
      
-
-;;}}}
-;;{{{ W3 hook
-
-(add-hook 'w3-mode-hook
-          (function
-           (lambda nil
-             (declare (special w3-mode-map))
-             (define-key w3-mode-map "\M-r" 'emacspeak-realaudio-play-url-at-point)
-             (define-key w3-mode-map "\M-d" 'emacspeak-realaudio-stop))))
 
 ;;}}}
 ;;{{{ define a derived mode for realaudio interaction 

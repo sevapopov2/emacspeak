@@ -1,5 +1,5 @@
 ;;; emacspeak-make-mode.el --- Speech enable make-mode
-;;; $Id: emacspeak-make-mode.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-make-mode.el,v 18.0 2003/04/29 21:17:40 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable make-mode
 ;;; Keywords: Emacspeak, Make
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:40 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -40,14 +40,7 @@
 
 ;;{{{  required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(eval-when-compile (require 'dtk-speak)
-                   (require 'emacspeak-speak)
-                   (require 'voice-lock)
-                   (require 'emacspeak-sounds))
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction:
 

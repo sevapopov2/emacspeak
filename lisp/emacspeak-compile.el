@@ -7,14 +7,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:56 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -37,11 +37,6 @@
 ;;}}}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(require 'emacspeak-speak)
-
 ;;{{{  Introduction:
 
 ;;; Commentary:
@@ -51,12 +46,17 @@
 ;;; Code:
 
 ;;}}}
+;;{{{ Required modules
+(require 'emacspeak-preamble)
+
+;;}}}
 ;;{{{  functions
 
 (defun emacspeak-compilation-speak-error ()
   "Speech feedback about the compilation error. "
   (interactive)
-  (let ((dtk-stop-immediately nil))
+  (let ((dtk-stop-immediately nil)
+        (emacspeak-show-point t))
     (emacspeak-speak-line)))
 
 ;;}}}

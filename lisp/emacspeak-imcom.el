@@ -1,5 +1,5 @@
 ;;; emacspeak-imcom.el --- Emacspeak interface to IMCom/Jabber
-;;; $Id: emacspeak-imcom.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-imcom.el,v 18.0 2003/04/29 21:17:30 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains convenience imcom
 ;;; Keywords: Emacspeak,  Audio Desktop Imcom
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:17:30 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -47,20 +47,11 @@
 ;;}}}
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(require 'thingatpt)
-(require 'voice-lock)
-(require 'emacspeak-speak)
-(require 'emacspeak-wizards)
-(require 'emacspeak-sounds)
+(require 'emacspeak-preamble)
 (require 'comint)
-(require 'derived)
-
 ;;}}}
 ;;{{{ Custom
-
+;;;###autoload
 (defgroup emacspeak-imcom nil
   "Jabber access from the Emacspeak audio desktop.")
 
@@ -119,7 +110,7 @@
           'emacspeak-toggle-comint-autospeak)
 (add-hook 'emacspeak-imcom-hooks
           'emacspeak-toggle-comint-output-monitor)
-
+;;;###autoload
 (defun emacspeak-imcom ()
   "Start IMCom."
   (interactive)

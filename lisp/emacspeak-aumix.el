@@ -1,5 +1,5 @@
 ;;; emacspeak-aumix.el --- Setting Audio Mixer
-;;; $Id: emacspeak-aumix.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: emacspeak-aumix.el,v 18.0 2003/04/29 21:16:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to conveniently set audio display
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:16:50 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2002, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2003, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -88,6 +88,7 @@
 (emacspeak-aumix-set-channel ?o "output gain")
 (emacspeak-aumix-set-channel ?v "volume")
 
+;;;###autoload
 (defgroup emacspeak-aumix nil
   "Customization group for setting the Emacspeak auditory
 display."
@@ -112,6 +113,7 @@ display."
       (file-exists-p "/usr/bin/stdiosynth"))
 ;;}}}
 ;;{{{ emacspeak-aumix
+
 ;;;###autoload
 (defcustom emacspeak-aumix-settings-file
   (when
@@ -130,7 +132,7 @@ display."
   "*Option to pass to aumix for resetting to default values."
   :group 'emacspeak-aumix
   :type 'string)
-
+;;;###autoload
 (defun emacspeak-aumix-reset ()
   "Reset to default audio settings."
   (interactive)

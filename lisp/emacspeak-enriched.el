@@ -1,5 +1,5 @@
 ;;; emacspeak-enriched.el --- Audio Formatting for Emacs' WYSIWYG RichText  mode
-;;; $Id: emacspeak-enriched.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-enriched.el,v 18.0 2003/04/29 21:17:02 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak module to speak voicify rich text
 ;;; Keywords:emacspeak, audio interface to emacs rich text
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:02 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -37,14 +37,13 @@
 
 ;;}}}
 
-(require 'cl)
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'dtk-css-speech)
-(require 'emacspeak-sounds)
-(require 'emacspeak-speak)
 ;;{{{  Introduction
 
 ;;; emacspeak extensions to voicify rich  text.
+
+;;}}}
+;;{{{ required modules
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{ voicify-faces 

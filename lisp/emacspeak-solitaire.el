@@ -1,5 +1,5 @@
 ;;; emacspeak-solitaire.el --- Speech enable Solitaire game
-;;; $Id: emacspeak-solitaire.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-solitaire.el,v 18.0 2003/04/29 21:17:57 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to solitaire
 ;;; Keywords: Emacspeak, Speak, Spoken Output, solitaire
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:57 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,14 +40,8 @@
 
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when-compile (require 'dtk-speak)
-		   (require 'emacspeak-speak)
-		   (require 'emacspeak-sounds)
-		   (and (locate-library "solitaire")
-			(require 'solitaire)))
-
+(require 'emacspeak-preamble)
+(require 'solitaire)
 ;;}}}
 ;;{{{  Introduction 
 

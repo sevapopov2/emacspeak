@@ -1,5 +1,5 @@
 ;;; emacspeak-forms.el --- Speech enable Emacs' forms mode  -- provides  a convenient database interface
-;;; $Id: emacspeak-forms.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-forms.el,v 18.0 2003/04/29 21:17:19 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for forms-mode 
 ;;; Keywords:emacspeak, audio interface to emacs forms 
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:19 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1996 by T. V. Raman 
 ;;; All Rights Reserved. 
 ;;;
@@ -37,14 +37,11 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(eval-when-compile (require 'dtk-speak)
-		   (require 'dtk-voices)
-		   (require 'emacspeak-speak)
-		   (require 'emacspeak-sounds))
-(require 'forms)
+;;{{{ requires
+
+(require 'forms)(require 'emacspeak-preamble)
+
+;;}}}
 ;;{{{  Introduction:
 
 ;;; Provide additional advice to forms-mode 
@@ -87,7 +84,7 @@ speak the first field")
   :type 'symbol
   :group 'emacspeak-forms)
 
-(defcustom emacspeak-forms-ro-voice 'annotation-voice
+(defcustom emacspeak-forms-ro-voice voice-annotate
   "Personality for read-only fields. "
   :type 'symbol
   :group 'emacspeak-forms)
@@ -249,7 +246,8 @@ Assumes that point is at the front of a field value."
            forms--total-records))
 
 ;;}}}
-;;{{{ emacspeak forms find file 
+;;{{{ emacspeak forms find file
+;;;###autoload
 (defun emacspeak-forms-find-file (filename)
   "Visit a forms file"
   (interactive

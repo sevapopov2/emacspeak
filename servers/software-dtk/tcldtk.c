@@ -1,7 +1,7 @@
-/*$Id: tcldtk.c,v 17.0 2002/11/23 01:29:10 raman Exp $*/
+/*$Id: tcldtk.c,v 18.0 2003/04/29 21:21:23 raman Exp $*/
 /* <copyright*/
 /**
- *Copyright (C) 1995 -- 2002, T. V. Raman 
+ *Copyright (C) 1995 -- 2003, T. V. Raman 
  *All Rights Reserved
  *
  * This file is not part of GNU Emacs, but the same permissions apply.
@@ -58,6 +58,7 @@ int Tcldtk_Init(Tcl_Interp *interp) {
   unsigned int  devNo = 0;
   DWORD devOptions = 0;
   devOptions |= WAVE_OPEN_SHAREABLE;
+  devOptions |=WAVE_FORMAT_1S16;
   if (Tcl_PkgProvide(interp, PACKAGENAME, PACKAGEVERSION) != TCL_OK) {
     Tcl_AppendResult(interp, "Error loading ", PACKAGENAME, NULL);
     return TCL_ERROR;
@@ -158,7 +159,7 @@ int Synchronize(ClientData dtkHandle, Tcl_Interp *interp,
 int Stop(ClientData dtkHandle, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
   TextToSpeechReset (dtkHandle, FALSE);
   TextToSpeechSpeak(dtkHandle,
-                    "[:phoneme arpabet speak on :say clause]", TTS_FORCE);
+                    "[:phoneme arpabet speak on :say clause]", TTS_NORMAL);
   return TCL_OK;
 }
 

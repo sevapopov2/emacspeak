@@ -1,5 +1,5 @@
 ;;; emacspeak-folding.el --- Speech enable Folding Mode -- enables structured editting
-;;; $Id: emacspeak-folding.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-folding.el,v 18.0 2003/04/29 21:17:18 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for folding-mode
 ;;; Keywords:emacspeak, audio interface to emacs Folding editor
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:18 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -36,10 +36,10 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
+;;{{{ requires
+(require 'emacspeak-preamble)
 
-(require 'emacspeak-sounds)
+;;}}}
 ;;{{{  Introduction:
 
 ;;; Folding mode turns emacs into a folding editor.

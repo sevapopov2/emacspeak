@@ -1,5 +1,5 @@
 ;;; emacspeak-gnus.el --- Speech enable GNUS -- Fluent spoken access to usenet
-;;; $Id: emacspeak-gnus.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-gnus.el,v 18.0 2003/04/29 21:17:22 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable Gnus
 ;;; Keywords: Emacspeak, Gnus, Advice, Spoken Output, News
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:22 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -36,23 +36,16 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when (compile)
-  (when (locate-library "gnus")
-    (require 'gnus)
-    (require 'gnus-sum)))
-(eval-when-compile (require 'dtk-speak)
-		   (require 'voice-lock)
-		   (require 'emacspeak-keymap)
-		   (require 'emacspeak-speak)
-		   (require 'emacspeak-sounds))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+
 ;;{{{  Introduction:
 
 ;;; This module advices gnus to speak. 
+
+;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
+(require 'gnus)
+(require 'gnus-sum)
 
 ;;}}}
 ;;{{{  Customizations:

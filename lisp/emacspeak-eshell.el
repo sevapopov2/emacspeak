@@ -1,5 +1,5 @@
 ;;; emacspeak-eshell.el --- Speech-enable EShell - Emacs Shell
-;;; $Id: emacspeak-eshell.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-eshell.el,v 18.0 2003/04/29 21:17:06 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   Speech-enable EShell
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:17:06 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2002, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2003, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,14 +40,8 @@
 
 ;;{{{ required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(require 'backquote)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(eval-when (load)
-  (require 'esh-arg))
+(require 'emacspeak-preamble)
+(require 'esh-arg)
 ;;}}}
 ;;{{{  Introduction:
 
@@ -61,10 +55,17 @@
 ;;{{{  setup various EShell hooks
 
 ;;; Play an auditory icon as you display the prompt 
+(defun emacspeak-eshell-prompt-function ()
+  "Play auditory icon for prompt."
+  (declare (special eshell-last-command-status))
+  (cond
+   ((= 0 eshell-last-command-status)
+    (emacspeak-serve-auditory-icon 'item))
+   (t (emacspeak-auditory-icon 'warn-user))))
+
 (add-hook 'eshell-after-prompt-hook
-          (function
-           (lambda nil
-             (emacspeak-serve-auditory-icon 'item))))
+          'emacspeak-eshell-prompt-function)
+
 ;;; Speak command output 
 (add-hook 'eshell-post-command-hook
           (function 
@@ -163,17 +164,17 @@ personalities."
   :type 'symbol
   :group 'emacspeak-eshell)
 
-(defcustom emacspeak-eshell-ls-symlink-personality 'harry
+(defcustom emacspeak-eshell-ls-symlink-personality voice-bolden
   "Personality for symlinks."
   :type 'symbol
   :group 'emacspeak-eshell)
 
-(defcustom emacspeak-eshell-ls-executable-personality 'paul-animated
+(defcustom emacspeak-eshell-ls-executable-personality voice-animate-extra
   "Personality for executables."
   :type 'symbol
   :group 'emacspeak-eshell)
 
-(defcustom emacspeak-eshell-ls-readonly-personality 'paul-monotone
+(defcustom emacspeak-eshell-ls-readonly-personality voice-monotone
   "Personality for read only files."
   :type 'symbol
   :group 'emacspeak-eshell)
@@ -183,32 +184,32 @@ personalities."
   :type 'symbol
   :group 'emacspeak-eshell)
 
-(defcustom emacspeak-eshell-ls-special-personality 'paul-smooth 
+(defcustom emacspeak-eshell-ls-special-personality voice-smoothen
   "Personality for special files."
   :type 'symbol
   :group 'emacspeak-eshell)
 
-(defcustom emacspeak-eshell-ls-missing-personality 'paul-italic
+(defcustom emacspeak-eshell-ls-missing-personality voice-brighten
   "Personality for missing file."
   :type 'symbol
   :group 'emacspeak-eshell)
 
-(defcustom emacspeak-eshell-ls-archive-personality 'paul-surprized
+(defcustom emacspeak-eshell-ls-archive-personality voice-lighten-extra
   "Personality for archive files."
   :type 'symbol
   :group 'emacspeak-eshell)
 
-(defcustom emacspeak-eshell-ls-backup-personality 'paul-monotone 
+(defcustom emacspeak-eshell-ls-backup-personality voice-monotone-medium
   "Personality for backup files. "
   :type 'symbol
   :group 'emacspeak-eshell)
 
-(defcustom emacspeak-eshell-ls-product-personality 'paul-bold
+(defcustom emacspeak-eshell-ls-product-personality voice-bolden
   "Personality for files that can be recreated."
   :type 'symbol
   :group 'emacspeak-eshell)
 
-(defcustom  emacspeak-eshell-ls-clutter-personality 'paul-monotone
+(defcustom  emacspeak-eshell-ls-clutter-personality voice-lighten-extra
   "Personality for transients."
   :type 'symbol
   :group 'emacspeak-eshell)
@@ -226,7 +227,7 @@ personalities."
              ((not (cdr file)) emacspeak-eshell-ls-missing-personality)
              ((stringp (cadr file)) emacspeak-eshell-ls-symlink-personality)
              ((eq (cadr file) t) emacspeak-eshell-ls-directory-personality)
-             ((not (eshell-ls-filetype-p (cdr file) ?-))emacspeak- eshell-ls-special-personality)
+             ((not (eshell-ls-filetype-p (cdr file) ?-))emacspeak-eshell-ls-special-personality)
              ((and (/= (user-uid) 0)    ; root can execute anything
                    (eshell-ls-applicable (cdr file) 3
                                          'file-executable-p (car file)))
@@ -306,9 +307,7 @@ personalities."
      (t (dtk-tone 500 30 'force)
         (and emacspeak-delete-char-speak-deleted-char
              (emacspeak-speak-char t))))
-    ad-do-it
-    (and emacspeak-delete-char-speak-current-char
-         (emacspeak-speak-char t)))
+    ad-do-it)
    (t ad-do-it))
   ad-return-value)
 
@@ -317,11 +316,8 @@ personalities."
   (cond
    ((interactive-p )
     (dtk-tone 500 30 'force)
-    (and emacspeak-backward-delete-char-speak-deleted-char
-         (emacspeak-speak-this-char (preceding-char )))
-    ad-do-it
-    (and emacspeak-backward-delete-char-speak-current-char
-         (emacspeak-speak-this-char  (preceding-char ))))
+    (emacspeak-speak-this-char (preceding-char ))
+    ad-do-it)
    (t ad-do-it))
   ad-return-value)
 

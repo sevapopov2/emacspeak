@@ -1,5 +1,5 @@
 ;;; emacspeak-daisy.el --- daisy Front-end for emacspeak desktop
-;;; $Id: emacspeak-daisy.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-daisy.el,v 18.0 2003/04/29 21:16:57 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for DAISY Talking Books
 ;;; Keywords: Emacspeak, daisy Digital Talking Books
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:16:57 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -49,18 +49,11 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(require 'derived)
+(require 'emacspeak-preamble)
 (require 'xml-parse)
-(eval-when-compile (require 'emacspeak-keymap))
-
 ;;}}}
 ;;{{{  Customization variables
-
+;;;###autoload
 (defgroup emacspeak-daisy nil
   "Daisy Digital Talking Books  for the Emacspeak desktop."
   :group 'emacspeak)
@@ -390,7 +383,7 @@ Here is a list of all emacspeak DAISY commands along with their key-bindings:
 (defvar emacspeak-daisy-this-book nil
   "Holds pointer to book structure.")
 (make-variable-buffer-local 'emacspeak-daisy-this-book)
-
+;;;###autoload
 (defun emacspeak-daisy-open-book (filename)
   "Open Digital Talking Book specified by navigation file filename."
   (interactive

@@ -1,5 +1,5 @@
 ;;; emacspeak-generic.el --- Speech enable  generic modes
-;;; $Id: emacspeak-generic.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-generic.el,v 18.0 2003/04/29 21:17:20 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable generic 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:17:20 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2002, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2003, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,10 +40,7 @@
 
 ;;{{{ required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction:
 
@@ -58,40 +55,6 @@
 
 ;;}}}
 ;;{{{ voice locking 
-
-(defvar emacspeak-generic-voice-lock-expressions nil
-  "Records voice lock expressions for a specific generic
-mode. ")
-
-(make-variable-buffer-local 'emacspeak-generic-voice-lock-expressions)
-
-(defun emacspeak-generic-voice-lock-setup (keywords expressions)
-  "Set up voice-lock functionality for generic mode."
-  (declare (special voice-lock-defaults))
-  (let ((generic-voice-lock-expressions))
-    ;; Keywords
-    (when  keywords
-      (setq generic-voice-lock-expressions
-            (list
-             (let ((regexp (regexp-opt keywords)))
-               (list (concat "\\<\\(" regexp "\\)\\>")
-                     1
-                     'voice-lock-keyword-personality)))))
-    ;; Other voice-lock expressions
-    (when expressions
-      (setq generic-voice-lock-expressions
-	    (append expressions
-		    generic-voice-lock-expressions)))
-    (setq emacspeak-generic-voice-lock-expressions  generic-voice-lock-expressions)
-    (when (or expressions keywords)
-      (make-local-variable 'voice-lock-defaults)
-      (setq voice-lock-defaults
-	    '(emacspeak-generic-voice-lock-expressions nil)))))
-
-(defadvice generic-mode-set-font-lock (after emacspeak pre act com)
-  (emacspeak-generic-voice-lock-setup (ad-get-arg 0)
-                                      (ad-get-arg 1)))
-  
 
 ;;}}}
 ;;{{{  generic setup 
