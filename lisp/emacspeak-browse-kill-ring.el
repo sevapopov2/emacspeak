@@ -1,5 +1,5 @@
 ;;; emacspeak-browse-kill-ring.el --- browse-kill-ring  for emacspeak desktop
-;;; $Id: emacspeak-browse-kill-ring.el,v 20.0 2004/05/01 01:16:22 raman Exp $
+;;; $Id: emacspeak-browse-kill-ring.el,v 21.0 2004/11/25 18:45:45 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for BROWSE-KILL-RING
 ;;; Keywords: Emacspeak, browse-kill-ring
@@ -7,8 +7,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:22 $ |
-;;;  $Revision: 20.0 $ |
+;;; $Date: 2004/11/25 18:45:45 $ |
+;;;  $Revision: 21.0 $ |
 ;;; Location undetermined
 ;;;
 

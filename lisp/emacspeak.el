@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el,v 20.0 2004/05/01 01:16:22 raman Exp $
+;;; $Id: emacspeak.el,v 21.0 2004/11/25 18:45:45 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:22 $ |
-;;;  $Revision: 20.0 $ |
+;;; $Date: 2004/11/25 18:45:45 $ |
+;;;  $Revision: 21.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2003, T. V. Raman 
+;;;Copyright (C) 1995 -- 2004, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -36,35 +36,33 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
-;;{{{ required modules
+;;{{{ Introduction 
 
 ;;; Commentary:
 ;;;The complete audio desktop.
-;;; Code:
-
-(require 'cl)
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'backquote)
-(require 'emacspeak-load-path)
-(require 'dtk-speak)
-(require 'emacspeak-sounds)
-(require 'emacspeak-speak)
-(require 'voice-setup)
-(require 'emacspeak-keymap)
-(require 'emacspeak-fix-interactive)
-(require 'custom)
-;;}}}
-;;{{{  Introduction:
-
-;;;Commentary:
 
 ;;;Emacspeak extends Emacs to be a fully functional audio desktop.
 ;;; This is the main emacspeak module.
 ;;; It actually does very little:
 ;;; It loads the various parts of the system.
+;;; Code:
 
 ;;}}}
- 
+;;{{{ Required modules
+(require 'cl)
+(declaim  (optimize  (safety 0) (speed 3)))
+(require 'backquote)
+(require 'emacspeak-load-path)
+(require 'emacspeak-preamble)
+(require 'emacspeak-fix-interactive)
+(require 'emacspeak-sounds)
+;;}}}
+;;{{{ autoloads
+
+(load-library "emacspeak-loaddefs")
+(load-library "emacspeak-cus-load")
+
+;;}}}
 ;;{{{  Customize groups 
 
 (defgroup emacspeak nil
@@ -87,14 +85,10 @@
 ;;; end links 
   :prefix "emacspeak-"
   :group 'applications
-  :group 'accessibility
-  )
-
-;;}}}
-;;{{{  Setting up things:
+  :group 'accessibility)
 
 (defconst emacspeak-version
-  (let ((x "$Revision: 20.0 $"))
+  (let ((x "$Revision: 21.0 $"))
     (string-match "[0-9.]+" x)
     (substring x (match-beginning 0)
                (match-end 0)))
@@ -105,103 +99,6 @@
   :type 'hook
   :group 'emacspeak)
 
-;;}}}
-;;{{{ Emacspeak:
-
-(defcustom emacspeak-play-emacspeak-startup-icon nil
-  "If set to T, emacspeak plays its icon as it launches."
-  :type 'boolean
-  :group 'emacspeak)
-(defvar emacspeak-unibyte t
-  "Set this to nil before starting  emacspeak 
-if you are running in a multibyte enabled environment.")
-
-(defun emacspeak()
-  "Starts the Emacspeak speech subsystem.  Use emacs as you
-normally would, emacspeak will provide you spoken feedback
-as you work.  Emacspeak also provides commands for having
-parts of the current buffer, the mode-line etc to be spoken.
-
-If you are hearing this description as a result of pressing
-\\[emacspeak-describe-emacspeak] you may want to press
-\\[dtk-stop] to stop speech, and then use the arrow keys to
-move around in the Help buffer to read the rest of this
-description, which includes a summary of all emacspeak
-keybindings.
-
-All emacspeak commands use \\[emacspeak-prefix-command] as a
-prefix key.  You can also set the state of the TTS engine  by
-using \\[emacspeak-dtk-submap-command] as a prefix.  Here is
-a summary of all emacspeak commands along with their
-bindings.  You need to precede the keystrokes listed below
-with \\[emacspeak-prefix-command].
-
-Emacspeak also provides a fluent speech extension to the
-emacs terminal emulator (eterm).  Note: You need to use the
-term package that comes with emacs-19.29 and later.
-
-\\{emacspeak-keymap}
-
-See the online documentation for individual commands and
-functions for details.   "
-  (interactive)
-  (declare (special mark-even-if-inactive
-                    emacspeak-pronounce-load-pronunciations-on-startup
-                    emacspeak-pronounce-dictionaries-file
-                    default-enable-multibyte-characters
-                    emacspeak-unibyte
-                    emacspeak-play-program
-                    emacspeak-sounds-directory))
-;;; fixes transient mark mode in emacspeak 
-  (setq mark-even-if-inactive t)
-;;; force unibyte
-  (when emacspeak-unibyte
-    (setq default-enable-multibyte-characters nil))
-  (emacspeak-export-environment)
-  (require 'dtk-speak)
-  (dtk-initialize)
-  (load-library "voice-setup")
-  (require 'emacspeak-speak)
-  (require 'emacspeak-personality)
-  (require 'emacspeak-pronounce)
-  (require 'emacspeak-redefine)
-  (require 'emacspeak-fix-interactive)
-  (require 'emacspeak-keymap)
-  (require 'emacspeak-advice)
-  (require 'emacspeak-replace)
-  (require 'emacspeak-buff-menu)
-  (when (and  emacspeak-play-emacspeak-startup-icon 
-              (file-exists-p "/usr/bin/mpg123"))
-    (start-process "mp3" nil "mpg123"
-                   "-q"
-                   (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))
-  (emacspeak-sounds-define-theme-if-necessary emacspeak-sounds-default-theme)
-  (when emacspeak-pronounce-load-pronunciations-on-startup
-    (emacspeak-pronounce-load-dictionaries emacspeak-pronounce-dictionaries-file))
-  (run-hooks 'emacspeak-startup-hook)
-  (emacspeak-dtk-sync)
-  (emacspeak-setup-programming-modes)
-  (require 'emacspeak-wizards)
-  (tts-with-punctuations "some"
-			 (dtk-speak
-			  (format "  Press %s to get an   overview of emacspeak  %s \
- I am  completely operational,  and all my circuits are functioning perfectly! "
-				  (substitute-command-keys
-				   "\\[emacspeak-describe-emacspeak]" )
-				  emacspeak-version))))
-
-(defun emacspeak-describe-emacspeak ()
-  "Give a brief overview of emacspeak."
-  (interactive)
-  (describe-function 'emacspeak)
-  (switch-to-buffer "*Help*")
-  (dtk-set-punctuations "all")
-  (emacspeak-speak-buffer))
-
-;;}}}
-;;{{{ autoloads
-(load-library "emacspeak-loaddefs")
-(load-library "emacspeak-cus-load")
 ;;}}}
 ;;{{{ Package Setup Helper
 
@@ -237,11 +134,13 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "browse-kill-ring" 'emacspeak-browse-kill-ring )
 (emacspeak-do-package-setup "buff-sel" 'emacspeak-buff-sel)
 (emacspeak-do-package-setup "bs" 'emacspeak-bs)
+(emacspeak-do-package-setup "buff-menu" 'emacspeak-buff-menu)
 (emacspeak-do-package-setup "cc-mode" 'emacspeak-c)
 (emacspeak-do-package-setup "calc" 'emacspeak-calc)
 (emacspeak-do-package-setup "calculator" 'emacspeak-calculator)
 (emacspeak-do-package-setup "calendar" 'emacspeak-calendar)
 (emacspeak-do-package-setup "cc-mode" 'emacspeak-c)
+(emacspeak-do-package-setup "semantic" 'emacspeak-cedet)
 (emacspeak-do-package-setup "checkdoc" 'emacspeak-checkdoc)
 (emacspeak-do-package-setup "cmuscheme" 'emacspeak-cmuscheme)
 (emacspeak-do-package-setup "compile" 'emacspeak-compile)
@@ -259,6 +158,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "dunnet" 'emacspeak-entertain)
 (emacspeak-do-package-setup "ediary" 'emacspeak-ediary)
 (emacspeak-do-package-setup "ediff" 'emacspeak-ediff)
+(emacspeak-do-package-setup "emms" 'emacspeak-emms)
 (emacspeak-do-package-setup "eperiodic" 'emacspeak-eperiodic)
 (emacspeak-do-package-setup "erc" 'emacspeak-erc)
 (emacspeak-do-package-setup "eshell" 'emacspeak-eshell)
@@ -425,27 +325,6 @@ Emacs 20.3"
   )
 
 ;;}}}
-;;{{{  personal keymaps 
-
-(defun emacspeak-personal-keybindings ()
-  "Load user's personal keybindings for the audio desktop."
-  (declare (special emacspeak-personal-keys))
-  (when (locate-library "emacspeak-personal")
-    (load-library "emacspeak-personal")
-    (when emacspeak-personal-keymap
-      (setq emacspeak-personal-keys 
-            (mapcar
-             (lambda (binding)
-               (cond
-                ((numberp (car binding))
-                 (cons (format "%c" (car binding))
-                       (cdr binding)))
-                (t binding)))
-             (cdr emacspeak-personal-keymap))))))
-
-(add-hook 'emacspeak-startup-hook 'emacspeak-personal-keybindings)
-
-;;}}}
 ;;{{{ setup programming modes 
 
 ;;; turn on automatic voice locking , split caps and punctuations for programming modes
@@ -499,6 +378,93 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
 
 (add-hook 'after-init-hook
           'emacspeak-fix-commands-that-use-interactive)
+
+;;}}}
+;;{{{ Emacspeak:
+
+(defcustom emacspeak-play-emacspeak-startup-icon nil
+  "If set to T, emacspeak plays its icon as it launches."
+  :type 'boolean
+  :group 'emacspeak)
+(defvar emacspeak-unibyte t
+  "Set this to nil before starting  emacspeak 
+if you are running in a multibyte enabled environment.")
+
+(defun emacspeak()
+  "Starts the Emacspeak speech subsystem.  Use emacs as you
+normally would, emacspeak will provide you spoken feedback
+as you work.  Emacspeak also provides commands for having
+parts of the current buffer, the mode-line etc to be spoken.
+
+If you are hearing this description as a result of pressing
+\\[emacspeak-describe-emacspeak] you may want to press
+\\[dtk-stop] to stop speech, and then use the arrow keys to
+move around in the Help buffer to read the rest of this
+description, which includes a summary of all emacspeak
+keybindings.
+
+All emacspeak commands use \\[emacspeak-prefix-command] as a
+prefix key.  You can also set the state of the TTS engine  by
+using \\[emacspeak-dtk-submap-command] as a prefix.  Here is
+a summary of all emacspeak commands along with their
+bindings.  You need to precede the keystrokes listed below
+with \\[emacspeak-prefix-command].
+
+Emacspeak also provides a fluent speech extension to the
+emacs terminal emulator (eterm).  Note: You need to use the
+term package that comes with emacs-19.29 and later.
+
+\\{emacspeak-keymap}
+
+See the online documentation for individual commands and
+functions for details.   "
+  (interactive)
+  (declare (special mark-even-if-inactive
+                    emacspeak-pronounce-load-pronunciations-on-startup
+                    emacspeak-pronounce-dictionaries-file
+                    default-enable-multibyte-characters
+                    emacspeak-unibyte
+                    emacspeak-play-program
+                    emacspeak-sounds-directory))
+;;; fixes transient mark mode in emacspeak 
+  (setq mark-even-if-inactive t)
+;;; force unibyte
+  (when emacspeak-unibyte
+    (setq default-enable-multibyte-characters nil))
+  (emacspeak-export-environment)
+  (dtk-initialize)
+  (require 'emacspeak-redefine)
+  (require 'emacspeak-fix-interactive)
+  (require 'emacspeak-keymap)
+  (require 'emacspeak-advice)
+  (require 'emacspeak-replace)
+  (require 'emacspeak-buff-menu)
+  (when (and  emacspeak-play-emacspeak-startup-icon 
+              (file-exists-p "/usr/bin/mpg123"))
+    (start-process "mp3" nil "mpg123"
+                   "-q"
+                   (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))
+  (emacspeak-sounds-define-theme-if-necessary emacspeak-sounds-default-theme)
+  (when emacspeak-pronounce-load-pronunciations-on-startup
+    (emacspeak-pronounce-load-dictionaries emacspeak-pronounce-dictionaries-file))
+  (run-hooks 'emacspeak-startup-hook)
+  (emacspeak-setup-programming-modes)
+					;(require 'emacspeak-wizards)
+  (tts-with-punctuations "some"
+			 (dtk-speak
+			  (format "  Press %s to get an   overview of emacspeak  %s \
+ I am  completely operational,  and all my circuits are functioning perfectly! "
+				  (substitute-command-keys
+				   "\\[emacspeak-describe-emacspeak]" )
+				  emacspeak-version))))
+
+(defun emacspeak-describe-emacspeak ()
+  "Give a brief overview of emacspeak."
+  (interactive)
+  (describe-function 'emacspeak)
+  (switch-to-buffer "*Help*")
+  (dtk-set-punctuations "all")
+  (emacspeak-speak-buffer))
 
 ;;}}}
 (provide 'emacspeak)

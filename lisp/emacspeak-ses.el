@@ -1,5 +1,5 @@
 ;;; emacspeak-ses.el --- Speech-enable ses spread-sheet
-;;; $Id: emacspeak-ses.el,v 20.0 2004/05/01 01:16:23 raman Exp $
+;;; $Id: emacspeak-ses.el,v 21.0 2004/11/25 18:45:49 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for SES 
 ;;; Keywords: Emacspeak, ses 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:23 $ |
-;;;  $Revision: 20.0 $ |
+;;; $Date: 2004/11/25 18:45:49 $ |
+;;;  $Revision: 21.0 $ |
 ;;; Location undetermined
 ;;;
 

@@ -1,4 +1,4 @@
-<!--$Id: mlb-scorecard.xsl,v 20.0 2004/05/01 01:16:27 raman Exp $-->
+<!--$Id: mlb-scorecard.xsl,v 21.0 2004/11/25 18:46:07 raman Exp $-->
 <!--Description: Summarize baseball games.-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0">

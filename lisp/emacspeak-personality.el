@@ -1,21 +1,21 @@
 ;;; emacspeak-personality.el ---Emacspeak's new personality interface
-;;; $Id: emacspeak-personality.el,v 20.0 2004/05/01 01:16:23 raman Exp $
+;;; $Id: emacspeak-personality.el,v 21.0 2004/11/25 18:45:48 raman Exp $
 ;;; $Author: raman $
-;;; Description:  Contains the functions for speaking various chunks of text
-;;; Keywords: Emacspeak,  Spoken Output
+;;; Description:  Voice lock implementation
+;;; Keywords: Emacspeak,  Spoken Output, audio formatting
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:23 $ |
-;;;  $Revision: 20.0 $ |
+;;; $Date: 2004/11/25 18:45:48 $ |
+;;;  $Revision: 21.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2003, T. V. Raman 
+;;;Copyright (C) 1995 -- 2004, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -68,7 +68,7 @@
 ;;; visual characteristics --this was a key goal of the original
 ;;; Emacspeak design and it will be preserved going forward.
 
-;;; Finally, I may add better support for overlays --again this was a
+;;; Finally, I am adding  better support for overlays --again this was a
 ;;; part of Emacs that was at its nascent stage in 1994, but is now
 ;;; stable.
 
@@ -97,7 +97,7 @@
 ;;{{{ cumulative personalities 
 
 ;;;###autoload
-(defun emacspeak-personality-put (start end personality object)
+(defsubst emacspeak-personality-put (start end personality object)
   "Apply personality to specified region, over-writing any current
 personality settings."
   (when (and (integer-or-marker-p start)
@@ -131,7 +131,7 @@ Existing personality properties on the text range are preserved."
 	(t			       ;accumulate the new personality
 	 (unless (or (equal  v orig)
                      (listp orig)
-                     (and (listp orig) (memq v orig)))
+                     (and (listp orig)(memq v orig)))
 	   (setq new
 		 (remove-duplicates
 		  (append
@@ -150,8 +150,7 @@ Existing personality properties on the text range are preserved."
   (when (and (integer-or-marker-p start)
              (integer-or-marker-p end ))
     (ems-modify-buffer-safely
-     (let ((v (if
-                  (listp personality)
+     (let ((v (if (listp personality)
 		  (remove-duplicates personality :test #'eq)
 		personality))
            (orig (get-text-property start 'personality object))

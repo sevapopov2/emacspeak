@@ -1,5 +1,5 @@
-@c $Id: tts.texi,v 20.0 2004/05/01 01:16:26 raman Exp $
-@c @section Speech System Commands
+@c $Id: tts.texi,v 21.0 2004/11/25 18:46:05 raman Exp $
+ @section Speech System Commands
 
 @cindex tts
 @cindex speech system

@@ -1,4 +1,4 @@
-<!--$Id: common.xsl,v 20.0 2004/05/01 01:16:26 raman Exp $-->
+<!--$Id: common.xsl,v 21.0 2004/11/25 18:46:07 raman Exp $-->
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>
 Copyright: (C) T. V. Raman, 2001 - 2002,   All Rights Reserved.
@@ -8,12 +8,9 @@ Description: common rules
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   
-  
   <xsl:output method="html" indent="yes"
   encoding="iso8859-15"/>
-  <xsl:template match="/">
-    <xsl:apply-templates/>
-  </xsl:template>
+  <xsl:template match="//script|//meta|//iframe"/>
   <xsl:template match="head">
     <head>
       <xsl:apply-templates select="title"/>

@@ -1,5 +1,5 @@
 ;;; emacspeak-amphetadesk.el --- Emacspeak News Portal Interface
-;;; $Id: emacspeak-amphetadesk.el,v 20.0 2004/05/01 01:16:22 raman Exp $
+;;; $Id: emacspeak-amphetadesk.el,v 21.0 2004/11/25 18:45:44 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  RSS Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop RSS
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:22 $ |
-;;;  $Revision: 20.0 $ |
+;;; $Date: 2004/11/25 18:45:44 $ |
+;;;  $Revision: 21.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2003, T. V. Raman 
+;;;Copyright (C) 1995 -- 2004, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -75,6 +75,11 @@
   "Port where AmphetaDesk listens."
   :type 'integer
   :group 'emacspeak-amphetadesk)
+(defcustom emacspeak-amphetadesk-uri
+  "http://127.0.0.1:8888/"
+  "URI for Amphetadesk home."
+  :type 'string
+  :group 'emacspeak-amphetadesk)
 
 (defsubst emacspeak-amphetadesk-ensure-live ()
   "Ensure AmphetaDesk is alive, and start it if necessary."
@@ -109,7 +114,29 @@
     (emacspeak-w3-without-xsl
      (w3-fetch "http://127.0.0.1:8888/")))
    (t
-    (browse-url "http://127.0.0.1:8888/"))))
+    (browse-url emacspeak-amphetadesk-uri))))
+
+;;;###autoload
+
+(defun emacspeak-amphetadesk-quick-add (url)
+  "Quick add URL to Amphetadesk by prompting for URL."
+  (interactive
+   (list
+    (cond
+     ((and (eq major-mode 'w3-mode)
+           (w3-view-this-url 'no-show))
+      (w3-view-this-url 'no-show))
+     (t
+      (read-from-minibuffer "URL:")))))
+  (declare (special emacspeak-amphetadesk-uri))
+  (browse-url 
+   (concat emacspeak-amphetadesk-uri
+           "my_channels.html?add_url="
+           (webjump-url-encode
+            url))))
+(declaim (special w3-mode-map))
+(when (boundp 'w3-mode-map)
+  (define-key w3-mode-map "aa" 'emacspeak-amphetadesk-quick-add))
 
 ;;}}}
 (provide 'emacspeak-amphetadesk)

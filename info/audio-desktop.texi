@@ -1,4 +1,4 @@
-@c $Id: audio-desktop.texi,v 20.0 2004/05/01 01:16:25 raman Exp $
+@c $Id: audio-desktop.texi,v 21.0 2004/11/25 18:46:04 raman Exp $
 @node Audio Desktop
 @chapter The Emacspeak Audio Desktop.
 

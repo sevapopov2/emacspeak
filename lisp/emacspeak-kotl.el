@@ -1,5 +1,5 @@
 ;;; emacspeak-kotl.el --- Speech enable KOtl -- Hyperbole's outlining editor
-;;; $Id: emacspeak-kotl.el,v 20.0 2004/05/01 01:16:23 raman Exp $
+;;; $Id: emacspeak-kotl.el,v 21.0 2004/11/25 18:45:48 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extensions for Bob Weiner's excellent Outliner
 ;;; Keywords: Emacspeak, Speech Access, Hyperbole, Outliner
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:23 $ |
-;;;  $Revision: 20.0 $ | 
+;;; $Date: 2004/11/25 18:45:48 $ |
+;;;  $Revision: 21.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2003, T. V. Raman 
+;;;Copyright (C) 1995 -- 2004, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;

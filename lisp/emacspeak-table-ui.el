@@ -1,5 +1,5 @@
 ;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
-;;; $Id: emacspeak-table-ui.el,v 20.0 2004/05/01 01:16:23 raman Exp $
+;;; $Id: emacspeak-table-ui.el,v 21.0 2004/11/25 18:45:50 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:23 $ |
-;;;  $Revision: 20.0 $ | 
+;;; $Date: 2004/11/25 18:45:50 $ |
+;;;  $Revision: 21.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2003, T. V. Raman 
+;;;Copyright (C) 1995 -- 2004, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -356,8 +356,8 @@ Optional prefix arg prompts for a new filter."
                                         (emacspeak-table-ui-generate-key))
                                        "("))))
     (emacspeak-table-ui-filter-set
-     (emacspeak-table-ui-generate-key
-      )emacspeak-table-speak-row-filter))
+     (emacspeak-table-ui-generate-key)
+     emacspeak-table-speak-row-filter))
   (let ((voice-lock-mode t))
     (dtk-speak
      (mapconcat
@@ -546,8 +546,7 @@ The processed  data and presented using emacspeak table navigation. "
 ;;;###autoload
 (defun emacspeak-table-view-csv-buffer (&optional buffer-name)
   "Process a csv (comma separated values) data. 
-The processed  data and presented using emacspeak table
-navigation. "
+The processed  data and presented using emacspeak table navigation. "
   (interactive)
   (or buffer-name
       (setq buffer-name (current-buffer)))
@@ -1063,11 +1062,13 @@ markup to use."
 (defun emacspeak-table-sort-on-current-column ()
   "Sort table on current column. "
   (interactive )
-  (declare (special major-mode
-                    emacspeak-table))
+  (declare (special major-mode emacspeak-table
+                    emacspeak-table-speak-row-filter))
   (unless (eq major-mode  'emacspeak-table-mode )
     (error "This command should be used in emacspeak table mode."))
-  (let* ((column  (emacspeak-table-current-column emacspeak-table))
+  (let* ((column  (emacspeak-table-current-column
+		   emacspeak-table))
+         (row-filter emacspeak-table-speak-row-filter)
          (elements
           (loop for e across (emacspeak-table-elements emacspeak-table)
                 collect e))
@@ -1097,6 +1098,9 @@ markup to use."
     (emacspeak-table-prepare-table-buffer
      (emacspeak-table-make-table  sorted-table)
      buffer)
+    (save-excursion
+      (set-buffer buffer)
+      (setq emacspeak-table-speak-row-filter row-filter))
     (emacspeak-speak-mode-line)))
 
 ;;}}}

@@ -1,5 +1,5 @@
 ;;; emacspeak-realaudio.el --- Play realaudio from Emacs
-;;; $Id: emacspeak-realaudio.el,v 20.0 2004/05/01 01:16:23 raman Exp $
+;;; $Id: emacspeak-realaudio.el,v 21.0 2004/11/25 18:45:49 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Single click access to RealAudio from emacspeak
 ;;; Keywords: Emacspeak, RealAudio
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:23 $ |
-;;;  $Revision: 20.0 $ | 
+;;; $Date: 2004/11/25 18:45:49 $ |
+;;;  $Revision: 21.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2003, T. V. Raman
+;;; Copyright (c) 1995 -- 2004, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -107,26 +107,41 @@ specifies the actual location of the realaudio stream
 
 (defvar emacspeak-realaudio-buffer "*realaudio*"
   "Name of realaudio process buffer")
+
+(defvar emacspeak-realaudio-start-time-mark nil
+  "Record mark of start time in seconds.")
+
+(make-variable-buffer-local 'emacspeak-realaudio-start-time-mark)
+
+(defvar emacspeak-realaudio-end-time-mark nil
+  "Record mark of end time in seconds.")
+
+(make-variable-buffer-local 'emacspeak-realaudio-end-time-mark)
+
 ;;;###autoload
 (defun emacspeak-realaudio-play (resource &optional prompt-time)
   "Play a realaudio stream.  Uses files from your Realaudio
 shortcuts directory for completion.  See documentation for
-user configurable variable
-emacspeak-realaudio-shortcuts-directory. "
+user configurable variable emacspeak-realaudio-shortcuts-directory. "
   (interactive
    (list
     (let ((completion-ignore-case t)
           (emacspeak-speak-messages nil)
-          (minibuffer-history emacspeak-realaudio-history))
+          (minibuffer-history emacspeak-realaudio-history)
+          (file nil))
       (emacspeak-pronounce-define-local-pronunciation
        emacspeak-realaudio-shortcuts-directory " shortcuts/ ")
-      (read-file-name "RealAudio resource: "
-                      emacspeak-realaudio-shortcuts-directory
-                      (if (eq major-mode 'dired-mode)
-                          (dired-get-filename)
-                        emacspeak-realaudio-last-url)))
+      (kill-new default-directory)
+      (setq file
+            (read-file-name "RealAudio resource: "
+                            emacspeak-realaudio-shortcuts-directory
+                            (if (eq major-mode 'dired-mode)
+                                (dired-get-filename)
+                              emacspeak-realaudio-last-url)))
+      (pop kill-ring)
+      file)
     current-prefix-arg))
-  (declare (special emacspeak-realaudio-player
+  (declare (special emacspeak-realaudio-player emacspeak-realaudio-this-resource
                     emacspeak-realaudio-buffer 
                     emacspeak-realaudio-player-options
                     emacspeak-aumix-multichannel-capable-p
@@ -163,7 +178,8 @@ emacspeak-realaudio-shortcuts-directory. "
                         emacspeak-realaudio-player)
       (save-excursion
         (set-buffer emacspeak-realaudio-buffer)
-        (emacspeak-realaudio-mode)))
+        (emacspeak-realaudio-mode)
+        (setq emacspeak-realaudio-this-resource resource)))
     (unless (eq 'run (process-status emacspeak-realaudio-process))
       (error "Failed to start RealAudio"))
     (set-process-sentinel emacspeak-realaudio-process 'emacspeak-realaudio-process-sentinel)
@@ -173,7 +189,8 @@ emacspeak-realaudio-shortcuts-directory. "
         (and emacspeak-use-auditory-icons
              (not emacspeak-aumix-multichannel-capable-p)
              (not (emacspeak-using-midi-p)))
-      (emacspeak-set-auditory-icon-player 'emacspeak-play-midi-icon))))
+      (emacspeak-set-auditory-icon-player
+       'emacspeak-play-midi-icon))))
 
 (defvar emacspeak-realaudio-dont-insist-on-ram-url t
   "*Set to nil if you want emacspeak to insist that realaudio
@@ -197,6 +214,116 @@ urls have a .ram or .rm extension.")
   (kill-process emacspeak-realaudio-process)
   (message "Stopped RealAudio")
   (emacspeak-toggle-auditory-icons t))
+(defun emacspeak-realaudio-dispatch (char )
+  "Dispatch `CHAR'  to realaudio process.
+Echo output and return it as a string."
+  (declare (special emacspeak-realaudio-process))
+  (let*  ((buffer (process-buffer emacspeak-realaudio-process))
+          (mark (save-excursion
+                  (set-buffer buffer)
+                  (point-max))))
+    (process-send-string
+     emacspeak-realaudio-process
+     (format "%c" char))
+    (accept-process-output  emacspeak-realaudio-process 1)
+    (message "%s"
+             (save-excursion
+               (set-buffer buffer)
+               (buffer-substring mark (process-mark
+                                       emacspeak-realaudio-process))))))
+
+;;;###autoload
+(defun emacspeak-realaudio-get-current-time-in-seconds ()
+  "Return current time in seconds."
+  (interactive)
+  (let* ((emacspeak-speak-messages nil)
+         (seconds 0)
+         (timespec (emacspeak-realaudio-dispatch ?t))
+         (fields (split-string  timespec ":")))
+    (pop fields)                        ;discard "time"
+    (setq fields 
+          (mapcar #'string-to-number fields))
+    (setq seconds 
+          (+
+           (* 3600 (first fields))
+           (* 60 (second fields))
+           (third fields)))
+    (when (interactive-p)
+      (dtk-speak (format "%d" seconds)))
+    seconds))
+
+;;;###autoload
+(defun emacspeak-realaudio-set-start-mark (&optional mark-time)
+  "Set start mark. Default is to set marker to current play time.
+Mark is specified in seconds."
+  (interactive "P")
+  (declare (special emacspeak-realaudio-start-time-mark))
+  (setq emacspeak-realaudio-start-time-mark
+        (cond
+         ((and (interactive-p) mark-time)
+          (read-minibuffer "Mark in seconds:"))
+         ((interactive-p)
+          (emacspeak-realaudio-get-current-time-in-seconds))
+         (t (or mark-time 0))))
+  (when (interactive-p)
+    (message "Set start mark to %s"
+             emacspeak-realaudio-start-time-mark)))
+
+;;;###autoload
+(defun emacspeak-realaudio-set-end-mark (&optional mark-time)
+  "Set end mark. Default is to set marker to current play time.
+Mark is specified in seconds."
+  (interactive "P")
+  (declare (special emacspeak-realaudio-start-time-mark))
+  (setq emacspeak-realaudio-end-time-mark
+        (cond
+         ((and (interactive-p) mark-time)
+          (read-minibuffer "Mark in seconds:"))
+         ((interactive-p)
+          (emacspeak-realaudio-get-current-time-in-seconds))
+         (t (or mark-time 0))))
+  (when (interactive-p)
+    (message "Set end mark to %s"
+             emacspeak-realaudio-end-time-mark)))
+
+;;;###autoload
+(defcustom emacspeak-realaudio-mp3-clipper 
+  "/usr/local/bin/qmp3cut"
+  "Executable used to clip MP3 files."
+  :type 'string
+  :group 'emacspeak-realaudio)
+
+;;;###autoload
+(defun emacspeak-realaudio-write-mp3-clip (start end file)
+  "Writes specified clip from current mp3 stream.
+Prompts for start and end times as well as file  to save the clippi"
+  (interactive
+   (list
+    (read-from-minibuffer "Start time in seconds:"
+                          (format "%s"
+                                  emacspeak-realaudio-start-time-mark))
+    (read-from-minibuffer "End time in seconds: "
+                          (format "%s" emacspeak-realaudio-end-time-mark))
+    (read-file-name "File to save clip to")))
+  (declare (special emacspeak-realaudio-end-time-mark
+                    emacspeak-realaudio-start-time-mark
+                    emacspeak-realaudio-this-resource
+                    emacspeak-realaudio-mp3-clipper))
+  (unless (string="mp3"
+                  (file-name-extension emacspeak-realaudio-this-resource))
+    (error  "Can only clip MP3  files."))
+  (unless (file-executable-p emacspeak-realaudio-mp3-clipper)
+    (error
+     "I cannot find an MP3 clipper. Install package quelcom to obtain
+qmp3cut."))
+  (let ((command
+         (format "%s -B %ss -E %ss -o %s %s &"
+                 emacspeak-realaudio-mp3-clipper
+                 start end   file
+                 emacspeak-realaudio-this-resource)))
+    (shell-command command)
+    (message "Executing %s asynchronously."
+	     command)))
 
 (defun emacspeak-realaudio-trplayer-command (char)
   "Execute TRPlayer command."
@@ -205,20 +332,7 @@ urls have a .ram or .rm extension.")
   (cond
    ((char-equal char ?\;)
     (emacspeak-realaudio-select-realaudio-buffer))
-   (t 
-    (let*  ((buffer (process-buffer emacspeak-realaudio-process))
-	    (mark (save-excursion
-		    (set-buffer buffer)
-		    (point-max))))
-      (process-send-string
-       emacspeak-realaudio-process
-       (format "%c" char))
-      (accept-process-output  emacspeak-realaudio-process 1)
-      (message "%s"
-	       (save-excursion
-		 (set-buffer buffer)
-		 (buffer-substring mark (process-mark
-					 emacspeak-realaudio-process))))))))
+   (t (emacspeak-realaudio-dispatch char ))))
 
 (emacspeak-fix-interactive-command-if-necessary
  'emacspeak-realaudio-trplayer-command)
@@ -321,13 +435,22 @@ commands via single keystrokes."
 (define-derived-mode emacspeak-realaudio-mode fundamental-mode 
   "Realaudio Interaction"
   "Major mode for streaming audio. \n\n
-\\{emacspeak-realaudio-mode-map}")
+\\{emacspeak-realaudio-mode-map}"
+  (emacspeak-realaudio-setup-keys))
 
 (defun emacspeak-realaudio-setup-keys ()
   "Define key bindings for emacspeak-realaudio."
   (declare (special emacspeak-realaudio-mode-map
                     emacspeak-realaudio-trplayer-keys))
   (define-key emacspeak-realaudio-mode-map " " 'dtk-stop)
+  (define-key emacspeak-realaudio-mode-map "C"
+    'emacspeak-realaudio-get-current-time-in-seconds)
+  (define-key emacspeak-realaudio-mode-map "m"
+    'emacspeak-realaudio-set-start-mark)
+  (define-key emacspeak-realaudio-mode-map "M"
+    'emacspeak-realaudio-set-end-mark)
+  (define-key emacspeak-realaudio-mode-map "w"
+    'emacspeak-realaudio-write-mp3-clip)
   (define-key emacspeak-realaudio-mode-map [left] 'emacspeak-aumix-wave-decrease)
   (define-key emacspeak-realaudio-mode-map [right] 'emacspeak-aumix-wave-increase)
   (loop for c in emacspeak-realaudio-trplayer-keys
@@ -336,13 +459,17 @@ commands via single keystrokes."
           (format "%c" c)
           'emacspeak-realaudio-trplayer-call-command)))
 
-(eval-when '(load) (emacspeak-realaudio-setup-keys))
 ;;;###autoload
 (defvar emacspeak-realaudio-trplayer-keys
   (list ?p ?t ?s ?e ?l ?i
         ?< ?> ?. ?, ?0 ?9
         ?[ ?] ?{ ?})
   "Keys accepted by TRPlayer.")
+
+(defvar emacspeak-realaudio-this-resource nil
+  "Records location of resource being played.")
+
+(make-variable-buffer-local 'emacspeak-realaudio-this-resource)
 
 (defun emacspeak-realaudio-trplayer-call-command ()
   "Call appropriate TRPlayer command."

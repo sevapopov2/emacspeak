@@ -1,5 +1,5 @@
 ;;; emacspeak-keymap.el --- Setup all keymaps and keybindings provided by Emacspeak
-;;; $Id: emacspeak-keymap.el,v 20.0 2004/05/01 01:16:22 raman Exp $
+;;; $Id: emacspeak-keymap.el,v 21.0 2004/11/25 18:45:48 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Module for setting up emacspeak keybindings
 ;;; Keywords: Emacspeak
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:22 $ |
-;;;  $Revision: 20.0 $ | 
+;;; $Date: 2004/11/25 18:45:48 $ |
+;;;  $Revision: 21.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2003, T. V. Raman 
+;;;Copyright (C) 1995 -- 2004, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -295,7 +295,7 @@ field in the customization buffer.  You can use the notation
 (define-key help-map "\M-v" 'find-variable)
 (define-key help-map "\M-V" 'find-variable-at-point)
 
-(define-key emacspeak-keymap '[left]
+(define-key emacspeak-keymap '[aleft]
   'emacspeak-speak-this-buffer-previous-display)
 (define-key emacspeak-keymap '[right]
   'emacspeak-speak-this-buffer-next-display)
