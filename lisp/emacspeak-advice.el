@@ -1883,9 +1883,9 @@ Indicate large movement with an auditory icon if possible.
 Auditory highlight indicates position of point."
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement )
-    (ems-set-personality-temporarily  (point) (1+ (point))
-                                      'paul-animated
-                                      (emacspeak-speak-line))))
+    (unless transient-mark-mode (ems-set-personality-temporarily  (point) (1+ (point))
+								  'paul-animated
+								  (emacspeak-speak-line)))))
 
 (defadvice newline (before emacspeak pre act)
   "Speak the previous line if line echo is on.
@@ -2537,9 +2537,9 @@ Produce auditory icons if possible."
   "Produce an auditory icon if possible."
   (when (interactive-p )
     (emacspeak-auditory-icon 'mark-object )
-    (ems-set-personality-temporarily (point) (1+ (point))
-                                     'paul-animated
-                                     (emacspeak-speak-line ))))
+    (unless transient-mark-mode (ems-set-personality-temporarily (point) (1+ (point))
+								 'paul-animated
+								 (emacspeak-speak-line )))))
 
 (defadvice pop-global-mark (after emacspeak pre act)
   "Produce an auditory icon if possible."
