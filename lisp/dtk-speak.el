@@ -57,6 +57,7 @@
 (require 'dtk-interp)
 (require 'dtk-voices)
 (require 'outloud-voices)
+(require 'multispeech-voices)
 
 ;;}}}
 ;;{{{  user customizations:
@@ -92,11 +93,6 @@ Set things like speech rate, punctuation mode etc in this
 hook."
   :type 'hook)
 
-(defvar dtk-tcl (or (getenv "DTK_TCL" )
-                    "tcl")
-  "Interpreter  used to run the speech server.
-Extended tcl --tcl-- for all of the currently available servers.")
-
 (defvar dtk-program
   (or  (getenv "DTK_PROGRAM" ) "dtk-exp")
   "The program to use to talk to the speech engine.
@@ -104,7 +100,19 @@ Possible choices at present:
 dtk-exp     For the Dectalk Express.
 dtk-mv      for the Multivoice and older Dectalks.
 outloud     For IBM ViaVoice Outloud
+multispeech For Multilingual speech server
 The default is dtk-exp.")
+
+(defvar emacspeak-need-tcl (not (string-match "multispeech" dtk-program))
+  "Needness of TCL interpreter.")
+
+(defvar dtk-tcl (and emacspeak-need-tcl
+		     (or (getenv "DTK_TCL" )
+			 "tcl"))
+  "Interpreter  used to run the speech server.
+Extended tcl --tcl-- for most of the currently available servers.
+nil means that the server is a stand-alone application
+and doesn't need an interpreter.")
 
 (defvar dtk-quiet nil
   "Switch indicating if the speech synthesizer is to keep quiet.
@@ -1439,6 +1447,8 @@ This is setup on a per engine basis.")
   (cond
    ((string-match "outloud" tts-name)
     (outloud-configure-tts))
+   ((string-match "multispeech" tts-name)
+    (multispeech-configure-tts))
    (t (dtk-configure-tts)))
   (load-library "voice-setup")
   (setq tts-voice-reset-code (tts-get-voice-command tts-default-voice)))
@@ -1461,6 +1471,9 @@ When called  interactively, The selected server is started immediately. "
   (declare (special  dtk-tcl dtk-program dtk-servers-alist))
   (setq dtk-program program)
   (tts-configure-synthesis-setup dtk-program)
+  (setq dtk-tcl (and emacspeak-need-tcl
+		     (or (getenv "DTK_TCL" )
+			 "tcl")))
   (when (interactive-p)
     (dtk-initialize)))
 
@@ -1489,15 +1502,15 @@ Default is to use pipes.")
                     dtk-speak-server-initialized
                     dtk-startup-hook emacspeak-servers-directory))
   (let ((new-process nil)
-        (process-connection-type  dtk-speak-process-connection-type))
+        (process-connection-type  dtk-speak-process-connection-type)
+	(dtk-program (expand-file-name dtk-program
+				       emacspeak-servers-directory)))
     (setq new-process
           (apply 'start-process
                  "speaker"
                  (and dtk-debug tts-debug-buffer)
-                 dtk-tcl
-                 (list
-                  (expand-file-name dtk-program
-                                    emacspeak-servers-directory))))
+                 (or dtk-tcl dtk-program)
+                 (when dtk-tcl (list dtk-program))))
     (process-kill-without-query new-process)
     (setq dtk-speak-server-initialized
           (or (eq 'run (process-status new-process ))
@@ -1596,7 +1609,7 @@ Argument S specifies the syntax class."
 (defun dtk-speak (text &optional ignore-skim)
   "Speak the TEXT string on the  tts.
 This is achieved by sending the text to the speech server.
-No-op if variable `dtk-quiet' is set to nil.
+No-op if variable `dtk-quiet' is set to t.
 If option `outline-minor-mode' is on and selective display is in effect,
 only speak upto the first ctrl-m."
   (declare (special dtk-speaker-process dtk-stop-immediately

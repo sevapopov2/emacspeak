@@ -44,7 +44,7 @@ Use this to nuke the currently running TTS server and restart it." t nil)
 (autoload (quote dtk-speak) "dtk-speak" "\
 Speak the TEXT string on the  tts.
 This is achieved by sending the text to the speech server.
-No-op if variable `dtk-quiet' is set to nil.
+No-op if variable `dtk-quiet' is set to t.
 If option `outline-minor-mode' is on and selective display is in effect,
 only speak upto the first ctrl-m." nil nil)
 

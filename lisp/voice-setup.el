@@ -91,6 +91,7 @@
 (require 'backquote)
 (require 'acss-structure)
 (require 'outloud-voices)
+(require 'multispeech-voices)
 (require 'dtk-voices)
 ;;}}}
 ;;{{{ customization group 

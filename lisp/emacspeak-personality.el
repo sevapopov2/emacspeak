@@ -383,7 +383,9 @@ Append means place corresponding personality at the end."
         (voice nil))
     (setq voice (overlay-get  overlay 'personality))
     (when (and voice
-               emacspeak-personality-voiceify-overlays)
+               emacspeak-personality-voiceify-overlays
+	       (overlay-start overlay)
+	       (overlay-end overlay))
       (emacspeak-personality-remove
        (overlay-start overlay)
        (overlay-end overlay)
