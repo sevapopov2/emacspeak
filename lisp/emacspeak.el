@@ -126,6 +126,8 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 
 (emacspeak-do-package-setup "analog" 'emacspeak-analog)
 (emacspeak-do-package-setup "ansi-color" 'emacspeak-ansi-color)                            
+(emacspeak-do-package-setup "apt-sources" 'emacspeak-apt-sources)
+(emacspeak-do-package-setup "apt-utils" 'emacspeak-apt-utils)
 (emacspeak-do-package-setup "arc-mode" 'emacspeak-arc)
 (emacspeak-do-package-setup "babel" 'emacspeak-babel )
 (emacspeak-do-package-setup "bbdb" 'emacspeak-bbdb )
@@ -209,6 +211,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "re-builder" 'emacspeak-re-builder)
 (emacspeak-do-package-setup "reftex" 'emacspeak-reftex)
 (emacspeak-do-package-setup "rmail" 'emacspeak-rmail)
+(emacspeak-do-package-setup "rpm" 'emacspeak-rpm)
 (emacspeak-do-package-setup "rpm-spec-mode" 'emacspeak-rpm-spec)
 (emacspeak-do-package-setup "sgml-mode" 'emacspeak-sgml-mode)
 (emacspeak-do-package-setup "sh-script" 'emacspeak-sh-script)

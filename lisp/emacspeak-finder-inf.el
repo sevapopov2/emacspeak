@@ -38,6 +38,12 @@
 				      ("emacspeak-ansi-color.el"
 				       "Voiceify ansi-color "
 				       (emacspeak  ansi-color))
+				      ("emacspeak-apt-sources.el"
+				       "speech-enable APT's source.list file editor"
+				       (emacspeak  apt  sources))
+				      ("emacspeak-apt-utils.el"
+				       "speech-enable APT utilities"
+				       (emacspeak  apt  debian package manager))
 				      ("emacspeak-arc.el"
 				       "Speech enable archive-mode -- a  Emacs interface to zip and friends"
 				       (emacspeak  speak  spoken output  archive))
@@ -349,7 +355,7 @@
 				       (emacspeak  audio interface to emacs mail))
 				      ("emacspeak-rpm-spec.el"
 				       "Speech enable rpm spec editor"
-				       (emacspeak  rpm-spec streaming media ))
+				       (emacspeak  rpm-spec ))
 				      ("emacspeak-rpm.el"
 				       "speech-enable RPM"
 				       (emacspeak  rpm  red hat package manager))

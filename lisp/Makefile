@@ -83,6 +83,8 @@ AUX_OBJECTS =  cd-tool.elc \
 emacspeak-amphetadesk.elc \
 emacspeak-analog.elc \
 emacspeak-ansi-color.elc \
+emacspeak-apt-sources.elc \
+emacspeak-apt-utils.elc \
 emacspeak-arc.elc \
 emacspeak-auctex.elc \
 emacspeak-aumix.elc \
@@ -259,7 +261,7 @@ dtk-speak.elc: dtk-speak.el  dtk-interp.elc
 acss-structure.elc: acss-structure.el
 dectalk-voices.elc: dectalk-voices.el voice-setup.elc
 outloud-voices.elc: outloud-voices.el voice-setup.elc
-multispeech-voices.elc: multispeech-voices.el
+multispeech-voices.elc: multispeech-voices.el voice-setup.elc
 voice-setup.elc: voice-setup.el acss-structure.elc
 html-outline.elc: html-outline.el
 emacspeak-amphetadesk.elc: emacspeak-amphetadesk.el
@@ -268,6 +270,8 @@ emacspeak-actions.elc: emacspeak-actions.el
 emacspeak-advice.elc: emacspeak-advice.el dtk-speak.elc voice-setup.elc
 emacspeak-analog.elc: emacspeak-analog.el dtk-speak.elc voice-setup.elc
 emacspeak-ansi-color.elc: emacspeak-ansi-color.el dtk-speak.elc voice-setup.elc
+emacspeak-apt-sources.elc: emacspeak-apt-sources.el dtk-speak.elc voice-setup.elc
+emacspeak-apt-utils.elc: emacspeak-apt-utils.el dtk-speak.elc voice-setup.elc
 emacspeak-arc.elc: emacspeak-arc.el dtk-speak.elc voice-setup.elc
 emacspeak-auctex.elc: emacspeak-auctex.el dtk-speak.elc voice-setup.elc
 emacspeak-aumix.elc: emacspeak-aumix.el dtk-speak.elc voice-setup.elc
