@@ -227,6 +227,9 @@
 				      ("emacspeak-gud.el"
 				       "Speech enable Emacs' debugger interface --covers GDB, JDB, and PerlDB"
 				       (emacspeak  audio interface to emacs debuggers ))
+				      ("emacspeak-hexl.el"
+				       "Emacspeak extension to speech-enable hexl mode"
+				       (emacspeak  hexl mode  binary files editing ))
 				      ("emacspeak-hide.el"
 				       "Provides user commands for hiding and exposing blocks of text"
 				       (emacspeak  speak  spoken output  hide))

@@ -144,6 +144,7 @@ emacspeak-gnus.elc\
 emacspeak-gomoku.elc \
 emacspeak-gridtext.elc \
 emacspeak-gud.elc \
+emacspeak-hexl.elc \
 emacspeak-hide.elc \
 emacspeak-hideshow.elc \
 emacspeak-hyperbole.elc \
@@ -334,6 +335,7 @@ emacspeak-gnus.elc: emacspeak-gnus.el dtk-speak.elc voice-setup.elc
 emacspeak-gomoku.elc: emacspeak-gomoku.el dtk-speak.elc voice-setup.elc
 emacspeak-gridtext.elc: emacspeak-gridtext.el dtk-speak.elc voice-setup.elc
 emacspeak-gud.elc: emacspeak-gud.el dtk-speak.elc voice-setup.elc
+emacspeak-hexl.elc: emacspeak-hexl.el emacspeak-speak.elc emacspeak-redefine.elc
 emacspeak-hide.elc: emacspeak-hide.el emacspeak-speak.elc
 emacspeak-hideshow.elc: emacspeak-hideshow.el dtk-speak.elc voice-setup.elc
 emacspeak-hyperbole.elc: emacspeak-hyperbole.el dtk-speak.elc voice-setup.elc

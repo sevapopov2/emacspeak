@@ -1656,10 +1656,15 @@ current coding system, then we return an empty string."
 (defun emacspeak-speak-line-number-obsolete ()
   "Speak the line number of the current line."
   (interactive)
-  (message "line %d"
-           (emacspeak-get-current-line-number)))
+  (let ((emacspeak-speak-messages t))
+    (message "line %d"
+	     (emacspeak-get-current-line-number))))
 
-(defalias 'emacspeak-speak-line-number 'what-line)
+(defun emacspeak-speak-line-number ()
+  "Speak the line number of the current line."
+  (interactive)
+  (let ((emacspeak-speak-messages t))
+    (what-line)))
 
 (defun emacspeak-speak-buffer-filename (&optional filename)
   "Speak name of file being visited in current buffer.
@@ -2290,13 +2295,15 @@ Will be improved if it proves useful."
 (defun emacspeak-speak-current-column ()
   "Speak the current column."
   (interactive)
-  (message "Point at column %d" (current-column )))
+  (let ((emacspeak-speak-messages t))
+    (message "Point at column %d" (current-column ))))
 
 (defun emacspeak-speak-current-percentage ()
   "Announce the percentage into the current buffer."
   (interactive)
-  (message "Point is  %d%% into  the current buffer"
-           (emacspeak-get-current-percentage-into-buffer )))
+  (let ((emacspeak-speak-messages t))
+    (message "Point is  %d%% into  the current buffer"
+	     (emacspeak-get-current-percentage-into-buffer ))))
 
 ;;}}}
 ;;{{{  Speak the last message again:
