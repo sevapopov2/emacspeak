@@ -112,9 +112,6 @@
   "If set to T, emacspeak plays its icon as it launches."
   :type 'boolean
   :group 'emacspeak)
-(defvar emacspeak-unibyte t
-  "Set this to nil before starting  emacspeak 
-if you are running in a multibyte enabled environment.")
 
 (defun emacspeak()
   "Starts the Emacspeak speech subsystem.  Use emacs as you
