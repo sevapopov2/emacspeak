@@ -35,8 +35,7 @@
 
 (require 'emacspeak-preamble)
 (require 'emacspeak-w3)
-(require 'w3m nil t)
-(require 'w3m-form nil t)
+
 ;;}}}
 ;;{{{ keybindings 
 (declaim (special w3m-mode-map
@@ -288,18 +287,51 @@
     (let ((url (emacspeak-w3m-anchor))
           (act (emacspeak-w3m-action)))
       ad-do-it
-      (when (and (interactive-p)
-                 (not url)
-                 (consp act)
-                 (memq (car act)
-                       '(w3m-form-input
-                         w3m-form-input-radio
-                         w3m-form-input-checkbox
-                         w3m-form-input-password)))
-        (emacspeak-w3m-speak-this-anchor))
-      (emacspeak-auditory-icon 'select-object)))
+      (if (and (not url)
+	       (consp act)
+	       (memq (car act)
+		     '(w3m-form-input
+		       w3m-form-input-radio
+		       w3m-form-input-checkbox
+		       w3m-form-input-password)))
+	  (progn (emacspeak-w3m-speak-this-anchor)
+		 (emacspeak-auditory-icon 'select-object))
+	(emacspeak-auditory-icon 'open-object))))
    (t ad-do-it))
   ad-return-value)
+
+(defadvice w3m-history (around emacspeak pre act)
+  "Speech-enable W3M."
+  (cond
+   ((interactive-p)
+    (let ((emacspeak-speak-messages nil))
+      ad-do-it)
+    (emacspeak-auditory-icon 'open-object)
+    (when (stringp w3m-current-title)
+      (message "%s" w3m-current-title)))
+   (t ad-do-it))ad-return-value)
+
+(defadvice w3m-view-previous-page (around emacspeak pre act)
+  "Speech-enable W3M."
+  (cond
+   ((interactive-p)
+    (let ((emacspeak-speak-messages nil))
+      ad-do-it)
+    (emacspeak-auditory-icon 'select-object)
+    (when (stringp w3m-current-title)
+      (message "%s" w3m-current-title)))
+   (t ad-do-it))ad-return-value)
+
+(defadvice w3m-bookmark-view (around emacspeak pre act)
+  "Speech-enable W3M."
+  (cond
+   ((interactive-p)
+    (let ((emacspeak-speak-messages nil))
+      ad-do-it)
+    (emacspeak-auditory-icon 'open-object)
+    (when (stringp w3m-current-title)
+      (message "%s" w3m-current-title)))
+   (t ad-do-it))ad-return-value)
 
 (defadvice w3m-scroll-up-or-next-url (around emacspeak pre act comp)
   "Speech-enable scrolling."
@@ -334,10 +366,18 @@
    (t ad-do-it))
   ad-return-value)
 
-(defadvice w3m (after emacspeak pre act comp)
-  (when (and (interactive-p)
-	     (eq (ad-get-arg 0) 'popup))
-    (emacspeak-speak-mode-line)))
+(defadvice w3m (around emacspeak pre act)
+  "Speech-enable W3M."
+  (cond
+   ((interactive-p)
+    (let ((emacspeak-speak-messages nil))
+      ad-do-it)
+    (if (eq (ad-get-arg 0) 'popup)
+	(emacspeak-speak-mode-line)
+      (emacspeak-auditory-icon 'open-object)
+      (when (stringp w3m-current-title)
+	(message "%s" w3m-current-title))))
+   (t ad-do-it))ad-return-value)
 
 (defadvice w3m-close-window (after emacspeak pre act comp)
   "Produce auditory feedback."
