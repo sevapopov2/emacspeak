@@ -277,6 +277,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "gud" 'emacspeak-gud)
 (emacspeak-do-package-setup "gdb-ui" 'emacspeak-gud)
 (emacspeak-do-package-setup "hangman" 'emacspeak-entertain)
+(emacspeak-do-package-setup "hexl" 'emacspeak-hexl)
 (emacspeak-do-package-setup "hideshow" 'emacspeak-hideshow)
 					;(emacspeak-do-package-setup "html-helper-mode" 'html-voice )
 (emacspeak-do-package-setup "hyperbole" 'emacspeak-hyperbole)
