@@ -1,5 +1,5 @@
 ;;; emacspeak-gridtext.el --- gridtext
-;;; $Id: emacspeak-gridtext.el,v 19.0 2003/11/22 19:06:17 raman Exp $
+;;; $Id: emacspeak-gridtext.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for laying grids on text
 ;;; Keywords: Emacspeak, gridtext
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:17 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -111,7 +111,7 @@ end   as specified by grid."
               (loop for j from 0 to (1- (length grid))
                     do
                     (when (< (1- (nth j grid )) this-length)
-                      ;;; within bounds 
+;;; within bounds 
                       (aset  this-row j
                              (substring
                               this-line

@@ -1,5 +1,5 @@
 ;;; flite.el --- Emacspeak FLite
-;;; $Id: flite-voices.el,v 19.0 2003/11/22 19:06:22 raman Exp $
+;;; $Id: flite-voices.el,v 20.0 2004/05/01 01:16:24 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  FLite interface 
 ;;; Keywords: Emacspeak,  Audio Desktop FLite
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:22 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:24 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -72,7 +72,7 @@
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

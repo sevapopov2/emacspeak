@@ -1,5 +1,5 @@
 ;;; emacspeak-amphetadesk.el --- Emacspeak News Portal Interface
-;;; $Id: emacspeak-amphetadesk.el,v 19.0 2003/11/22 19:06:13 raman Exp $
+;;; $Id: emacspeak-amphetadesk.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  RSS Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop RSS
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:13 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -54,7 +54,10 @@
 (require 'custom)
 (require 'browse-url)
 (require 'emacspeak-preamble)
-(require 'emacspeak-w3)
+(eval-when-compile
+  (condition-case nil
+      (require 'emacspeak-w3)
+    (error nil)))
 ;;}}}
 ;;{{{ amphetadesk
 
@@ -77,26 +80,34 @@
   "Ensure AmphetaDesk is alive, and start it if necessary."
   (declare (special emacspeak-amphetadesk-program
                     emacspeak-amphetadesk-port))
-  (if (=  1
-          (shell-command
-           (format "netstat -nat | grep %s"
-		   emacspeak-amphetadesk-port)))
-      (shell-command
-       (format "%s &"
-               emacspeak-amphetadesk-program)
-       "*AmphetaDesk*")))
+  (let ((emacspeak-speak-messages nil))
+    (if (=  1
+	    (shell-command
+	     (format "netstat -nat | grep %s"
+		     emacspeak-amphetadesk-port)))
+	(shell-command
+	 (format "%s &"
+		 emacspeak-amphetadesk-program)
+	 "*AmphetaDesk*"))))
 
 ;;;###autoload
 (defun emacspeak-amphetadesk ()
   "Open amphetadesk."
   (interactive)
-  (declare (special browse-url-browser-function))
+  (declare (special browse-url-browser-function
+                    emacspeak-w3-post-process-hook))
   (emacspeak-amphetadesk-ensure-live)
   (cond
    ((and (featurep 'w3)
-	 (eq browse-url-browser-function 'browse-url-w3))
+	 (or (eq browse-url-browser-function 'w3-fetch)
+             (eq browse-url-browser-function 'browse-url-w3)))
+    (add-hook  'emacspeak-w3-post-process-hook
+               #'(lambda ()
+                   (imenu--make-index-alist)
+                   (goto-char (point-min))
+                   (emacspeak-speak-mode-line)))
     (emacspeak-w3-without-xsl
-     (browse-url "http://127.0.0.1:8888/")))
+     (w3-fetch "http://127.0.0.1:8888/")))
    (t
     (browse-url "http://127.0.0.1:8888/"))))
 
@@ -106,7 +117,7 @@
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

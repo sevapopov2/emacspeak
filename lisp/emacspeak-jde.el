@@ -1,5 +1,5 @@
 ;;; emacspeak-jde.el --- Speech enable JDE -- An integrated Java Development Environment
-;;; $Id: emacspeak-jde.el,v 19.0 2003/11/22 19:06:17 raman Exp $
+;;; $Id: emacspeak-jde.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to JDE
 ;;; Keywords: Emacspeak, Speak, Spoken Output, Java
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:17 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -302,6 +302,29 @@
     (message "Cleared all break points.")))
 
     
+;;}}}
+;;{{{ advice jde-xref
+(defadvice jde-xref-first-caller(after emacspeak pre act comp)
+  "Speak line we jumped to."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
+
+(defadvice jde-xref-next-caller(around emacspeak pre act comp)
+  "Speak line we jumped to.
+If we are on the last call, do nothing."
+  (cond
+   ( (and (interactive-p)
+          (car jde-xref-stack))
+     ad-do-it
+     (emacspeak-auditory-icon 'large-movement)
+     (emacspeak-speak-line))
+   (t ad-do-it))
+  ad-return-value)
+  
+   
+  
+
 ;;}}}
 (provide 'emacspeak-jde )
 ;;{{{ end of file 

@@ -1,5 +1,5 @@
 ;;; emacspeak-load-path.el -- Setup Emacs load-path for compiling Emacspeak
-;;; $Id: emacspeak-load-path.el,v 19.0 2003/11/22 19:06:18 raman Exp $
+;;; $Id: emacspeak-load-path.el,v 20.0 2004/05/01 01:16:23 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Sets up load-path for emacspeak compilation and installation
 ;;; Keywords: Emacspeak, Speech extension for Emacs
@@ -7,8 +7,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:18 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:23 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -41,7 +41,7 @@
 
 (defvar emacspeak-lisp-directory
   (expand-file-name "lisp/" emacspeak-directory)
-  "Directory containing lisp files for  Emacspeak.. ")  
+  "Directory containing lisp files for  Emacspeak.")  
 
 (or (member emacspeak-lisp-directory load-path )
     (setq load-path
@@ -50,5 +50,9 @@
 
 (defvar emacspeak-resource-directory (expand-file-name "~/.emacspeak")
   "Directory where Emacspeak resource files such as pronunciation dictionaries are stored. ")
+
+(setq byte-compile-warnings
+      '(redefine callargs free-vars
+                 unresolved obsolete))
 
 (provide 'emacspeak-load-path)

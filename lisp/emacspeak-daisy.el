@@ -1,5 +1,5 @@
 ;;; emacspeak-daisy.el --- daisy Front-end for emacspeak desktop
-;;; $Id: emacspeak-daisy.el,v 19.0 2003/11/22 19:06:15 raman Exp $
+;;; $Id: emacspeak-daisy.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for DAISY Talking Books
 ;;; Keywords: Emacspeak, daisy Digital Talking Books
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:15 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -70,6 +70,11 @@
   content
   audio-process
   nav-center)
+(defsubst emacspeak-daisy-book-name (this-book)
+  "Return a canonical name for the book."
+  (expand-file-name
+   (emacspeak-daisy-book-basename this-book)
+   (emacspeak-daisy-book-base this-book)))
 
 ;;}}}
 ;;{{{  helpers
@@ -449,14 +454,22 @@ Here is a list of all emacspeak DAISY commands along with their key-bindings:
      emacspeak-daisy-mode-map)))
 
 (define-key emacspeak-daisy-mode-map "?" 'describe-mode)
-(define-key emacspeak-daisy-mode-map "s" 'emacspeak-daisy-stop-audio)
+(define-key emacspeak-daisy-mode-map "m" 'emacspeak-daisy-mark-position-in-content-under-point)
+(define-key emacspeak-daisy-mode-map "s"
+  'emacspeak-daisy-stop-audio)
+(define-key emacspeak-daisy-mode-map "n"
+  'emacspeak-daisy-next-line)
+(define-key emacspeak-daisy-mode-map "p"
+  'emacspeak-daisy-previous-line)
+(define-key emacspeak-daisy-mode-map "o"
+  'emacspeak-daisy-define-outline-pattern)
+(define-key emacspeak-daisy-mode-map "S" 'emacspeak-daisy-save-bookmarks)
 (define-key emacspeak-daisy-mode-map "q" 'bury-buffer)
 (define-key emacspeak-daisy-mode-map " "
   'emacspeak-daisy-play-audio-under-point)
 (define-key emacspeak-daisy-mode-map "\C-m"
   'emacspeak-daisy-play-content-under-point)
-(define-key emacspeak-daisy-mode-map "n" 'next-line)
-(define-key emacspeak-daisy-mode-map "p" 'previous-line)
+
 (define-key emacspeak-daisy-mode-map "P" 'emacspeak-daisy-play-page-range)
 
 ;;}}}
@@ -472,7 +485,7 @@ Here is a list of all emacspeak DAISY commands along with their key-bindings:
   :group 'emacspeak-daisy)
 (defcustom emacspeak-daisy-completion-extensions-to-ignore
   '(".xml" ".smil" ".bks"
-    ".opf" ".css")
+    "~" ".opf" ".css" ".espeak.el")
   "These file name extensions are ignored when locating the
 navigation file for a book. Include all extensions except `.ncx'
   for optimal performance."
@@ -482,8 +495,8 @@ navigation file for a book. Include all extensions except `.ncx'
 
 (defsubst emacspeak-daisy-read-file-name()
   "Read file name."
-  ;;; we do this based on signature of read-file-name
-  (let ((read-file-name-takes-predicate ;;; emacs 21.4
+;;; we do this based on signature of read-file-name
+  (let ((read-file-name-takes-predicate	;;; emacs 21.4
          (= 7 (length
                (car (append
                      (symbol-function 'read-file-name) nil))))))
@@ -535,6 +548,13 @@ navigation buffer that can be used to browse and read the book."
       (emacspeak-daisy-ncx-handler
        (emacspeak-daisy-book-nav-center book)))
     (switch-to-buffer buffer)
+    (cd (emacspeak-daisy-book-base emacspeak-daisy-this-book))
+    (emacspeak-speak-load-directory-settings)
+    (when (emacspeak-daisy-get-bookmarks 
+           (emacspeak-daisy-book-name emacspeak-daisy-this-book))
+      (emacspeak-daisy-add-bookmarks-to-buffer
+       (emacspeak-daisy-get-bookmarks
+        (emacspeak-daisy-book-name emacspeak-daisy-this-book))))
     (goto-char (point-min))
     (rename-buffer
      (format "*Daisy: %s"
@@ -544,23 +564,123 @@ navigation buffer that can be used to browse and read the book."
 
 ;;}}}
 ;;{{{ interactive commands
+(defvar emacspeak-daisy-bookmarks
+  (make-hash-table :test #'equal)
+  "Hash table mapping book files to associated bookmark
+;;structures.")
+
+(defun emacspeak-daisy-get-bookmarks (book)
+  "Retrieve bookmarks."
+  (gethash  book emacspeak-daisy-bookmarks))
+
+(defun emacspeak-daisy-set-bookmarks (book bookmarks)
+  "Set bookmarks."
+  (puthash book bookmarks
+           emacspeak-daisy-bookmarks))
+
+(defun emacspeak-daisy-collect-bookmarks-in-buffer ()
+  "Return  list of bookmarks set in this buffer."
+  (let ((bookmarks nil)
+        (start nil)
+        (end nil))
+    (save-excursion
+      (goto-char (point-min))
+      (setq start (next-single-property-change (point) 'bookmark))
+      (while start
+        (setq end (next-single-property-change start 'bookmark))
+        (push
+         (list
+          (cons start  end)
+          (get-text-property start 'bookmark))
+         bookmarks)
+        (setq start (next-single-property-change end 'bookmark))))
+    bookmarks))
+
+(defun emacspeak-daisy-save-bookmarks ()
+  "Save bookmarks for current book."
+  (interactive)
+  (unless (eq 'emacspeak-daisy-mode major-mode)
+    (error "This command should be used in emacspeak-daisy-mode."))
+  (let ((book (expand-file-name
+               (emacspeak-daisy-book-basename emacspeak-daisy-this-book)
+               (emacspeak-daisy-book-base emacspeak-daisy-this-book)))
+        (bookmarks (emacspeak-daisy-collect-bookmarks-in-buffer))
+        (buffer (find-file-noselect
+                 (emacspeak-speak-get-directory-settings))))
+    (save-excursion
+      (set-buffer buffer)
+      (goto-char (point-max))
+      (insert
+       (format
+        " (emacspeak-daisy-set-bookmarks \"%s\"
+ '%s\n)"
+        book
+        (prin1-to-string bookmarks)))
+      (basic-save-buffer)
+      (kill-buffer buffer)
+      (emacspeak-auditory-icon 'save-object)
+      (message "Saved bookmarks"))))
+
+(defun emacspeak-daisy-add-bookmarks-to-buffer (bookmarks)
+  "Applies specified list of bookmarks to navigation buffer."
+  (unless (eq major-mode 'emacspeak-daisy-mode)
+    (error "Not in emacspeak-daisy-mode."))
+  (ems-modify-buffer-safely
+   (save-excursion
+     (goto-char (point-min))
+     (let ((entry nil)
+           (start nil)
+           (end nil)
+           (bookmark nil))
+       (while bookmarks
+         (setq entry (pop bookmarks))
+         (setq start (car (first entry))
+               end (cdr (first entry))
+               bookmark (second entry))
+         (put-text-property start end
+                            'bookmark bookmark)
+         (put-text-property start end
+                            'face 'highlight))))))
+
+(defun emacspeak-daisy-mark-position-in-content-under-point ()
+  "Mark current position in displayed content.
+No-op if content under point is not currently displayed."
+  (interactive)
+  (cond
+   ((get-text-property (point) 'viewer)
+    (ems-modify-buffer-safely
+     (put-text-property (line-beginning-position) (line-end-position)
+                        'bookmark
+                        (save-excursion
+                          (set-buffer (get-text-property (point) 'viewer))
+                          (point)))
+     (put-text-property (line-beginning-position) (line-end-position)
+                        'face 'highlight))
+    (message "Marked position."))
+   (t (message "Content not currently displayed."))))
 
 (defun emacspeak-daisy-play-content-under-point ()
   "Play SMIL content  under point."
   (interactive)
-  (let ((content (get-text-property (point) 'content))
+  (declare (special outline-regexp))
+  (let ((title nil)
+        (bookmark (get-text-property (point) 'bookmark))
+        (content (get-text-property (point) 'content))
         (viewer (get-text-property (point) 'viewer))
         (start (line-beginning-position))
         (end (line-end-position)))
+    (setq title (buffer-substring start end))
     (cond
      ((and viewer
            (buffer-live-p viewer))
       (switch-to-buffer viewer)
       (emacspeak-auditory-icon 'select-object)
+      (and bookmark (goto-char bookmark))
       (emacspeak-speak-mode-line))
      (content
       (emacspeak-daisy-configure-w3-to-record-viewer
-       (current-buffer) start end )
+       (current-buffer) title outline-regexp
+       start end bookmark)
       (emacspeak-auditory-icon 'open-object)
       (emacspeak-daisy-play-content  content))
      (t (error "No content under point.")))))
@@ -574,21 +694,68 @@ navigation buffer that can be used to browse and read the book."
       (emacspeak-daisy-play-audio clip))
      (t (error "No audio clip under point.")))))
 
+(defun emacspeak-daisy-previous-line ()
+  "Move to previous line."
+  (interactive)
+  (forward-line -1)
+  (beginning-of-line)
+  (emacspeak-speak-line)
+  (emacspeak-auditory-icon 'select-object))
+
+(defun emacspeak-daisy-define-outline-pattern (regexp)
+  "Define persistent outline regexp for this book."
+  (interactive "sOutline regexp:")
+  (declare (special outline-regexp))
+  (unless (eq 'emacspeak-daisy-mode major-mode)
+    (error "This command should be used in emacspeak-daisy-mode."))
+  (setq outline-regexp regexp)
+  (let ((buffer (find-file-noselect (emacspeak-speak-get-directory-settings))))
+    (save-excursion
+      (set-buffer buffer)
+      (goto-char (point-max))
+      (insert
+       (format
+        "(setq outline-regexp \"%s\")"
+        regexp))
+      (basic-save-buffer)
+      (kill-buffer buffer)
+      (emacspeak-auditory-icon 'save-object)
+      (message "Saved outline pattern"))))
+
+(defun emacspeak-daisy-next-line ()
+  "Move to next line."
+  (interactive)
+  (forward-line 1)
+  (beginning-of-line)
+  (emacspeak-speak-line)
+  (emacspeak-auditory-icon 'select-object))
+
 ;;}}}
 ;;{{{ Configure w3 post processor hook to record viewer buffer:
 
-(defun emacspeak-daisy-configure-w3-to-record-viewer (nav-center start  end)
+(defun emacspeak-daisy-configure-w3-to-record-viewer (nav-center title outline 
+								 start  end bookmark)
   "Attaches an automatically generated post processor function
-that asks W3 to record the viewer in the navigation center when done."
+that asks W3 to record the viewer in the navigation center when done.
+Also puts the displayed buffer in outline-minor-mode and gives it
+                                                      the right title."
   (declare (special emacspeak-w3-post-process-hook))
   (setq emacspeak-w3-post-process-hook
         (`
          (lambda  nil
 	   (let ((buffer (current-buffer)))
+             (outline-minor-mode 1)
+             (setq outline-regexp (, outline))
+             (rename-buffer title 'uniquely)
 	     (save-excursion
 	       (set-buffer (, nav-center))
 	       (put-text-property (, start) (, end)
-				  'viewer  buffer)))))))
+				  'viewer  buffer))
+             (cond
+              (bookmark
+               (goto-char bookmark)
+               (emacspeak-speak-line))
+	      (t (emacspeak-speak-mode-line))))))))
 
 ;;}}}
 

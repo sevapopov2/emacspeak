@@ -1,5 +1,5 @@
 #!/bin/sh
-#$Id: pdf2text,v 19.0 2003/11/22 19:06:46 raman Exp $
+#$Id: pdf2text,v 20.0 2004/05/01 01:16:25 raman Exp $
 #
 
 if which pdftotext   > /dev/null

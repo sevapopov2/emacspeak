@@ -1,5 +1,5 @@
 ;;; emacspeak-remote.el --- Enables running remote Emacspeak sessions
-;;; $Id: emacspeak-remote.el,v 19.0 2003/11/22 19:06:20 raman Exp $
+;;; $Id: emacspeak-remote.el,v 20.0 2004/05/01 01:16:23 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to remote speech server
 ;;; Keywords: Emacspeak, Speak, Spoken Output, remote server
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:20 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:23 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 

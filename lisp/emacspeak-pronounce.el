@@ -1,5 +1,5 @@
 ;;; emacspeak-pronounce.el --- Implements Emacspeak pronunciation dictionaries
-;;; $Id: emacspeak-pronounce.el,v 19.0 2003/11/22 19:06:19 raman Exp $
+;;; $Id: emacspeak-pronounce.el,v 20.0 2004/05/01 01:16:23 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Emacspeak pronunciation dictionaries
 ;;; Keywords:emacspeak, audio interface to emacs customized pronunciation
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:19 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:23 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -262,53 +262,54 @@ Modifies text and point in buffer."
                 (pronunciation (gethash  key pronunciation-table))
                 (pp nil)
                 (personality nil))
-            (goto-char (point-min))
-            (cond
-             ((stringp pronunciation)
-              (while (search-forward  word nil t)
-                (setq personality (get-text-property (point) 'personality))
-                (replace-match  pronunciation t t  )
-                (put-text-property
-                 (match-beginning 0)
-                 (+ (match-beginning 0) (length pronunciation))
-                 'personality
-                 (apply
-                  'append
-                  (mapcar
-                   #'(lambda (p)
-                       (when p
-                         (if (atom p) (list p) p)))
-                   (list emacspeak-pronounce-pronunciation-personality personality))))))
-             ((consp pronunciation )
-              (let ((matcher (car pronunciation))
-                    (pronouncer (cdr pronunciation))
-                    (pronunciation ""))
-                (while (funcall matcher   word nil t)
-                  (setq personality
-                        (get-text-property (point) 'personality))
-                  (setq pronunciation
-                        (save-match-data 
-			  (funcall pronouncer
-				   (buffer-substring 
-				    (match-beginning 0)
-				    (match-end 0)))))
-                  (replace-match pronunciation t t  )
-		  ;; get personality if any from pronunciation
-                  (setq pp
-                        (get-text-property (match-beginning 0) 'personality))
-                  (put-text-property
-                   (match-beginning 0)
-                   (+ (match-beginning 0) (length pronunciation))
-                   'personality
-                   (apply 'append
-                          (mapcar
-                           #'(lambda (p)
-                               (when p
-                                 (if (atom p) (list p) p)))
-                           (list
-                            emacspeak-pronounce-pronunciation-personality
-                            personality pp)))))))
-             (t nil))))))
+            (when word 
+	      (goto-char (point-min))
+	      (cond
+	       ((stringp pronunciation)
+		(while (search-forward  word nil t)
+		  (setq personality (get-text-property (point) 'personality))
+		  (replace-match  pronunciation t t  )
+		  (put-text-property
+		   (match-beginning 0)
+		   (+ (match-beginning 0) (length pronunciation))
+		   'personality
+		   (apply
+		    'append
+		    (mapcar
+		     #'(lambda (p)
+			 (when p
+			   (if (atom p) (list p) p)))
+		     (list emacspeak-pronounce-pronunciation-personality personality))))))
+	       ((consp pronunciation )
+		(let ((matcher (car pronunciation))
+		      (pronouncer (cdr pronunciation))
+		      (pronunciation ""))
+		  (while (funcall matcher   word nil t)
+		    (setq personality
+			  (get-text-property (point) 'personality))
+		    (setq pronunciation
+			  (save-match-data 
+			    (funcall pronouncer
+				     (buffer-substring 
+				      (match-beginning 0)
+				      (match-end 0)))))
+		    (replace-match pronunciation t t  )
+		    ;; get personality if any from pronunciation
+		    (setq pp
+			  (get-text-property (match-beginning 0) 'personality))
+		    (put-text-property
+		     (match-beginning 0)
+		     (+ (match-beginning 0) (length pronunciation))
+		     'personality
+		     (apply 'append
+			    (mapcar
+			     #'(lambda (p)
+				 (when p
+				   (if (atom p) (list p) p)))
+			     (list
+			      emacspeak-pronounce-pronunciation-personality
+			      personality pp)))))))
+	       (t nil)))))))
 
 ;;}}}
 ;;{{{  loading, clearing  and saving dictionaries
@@ -822,7 +823,7 @@ specified pronunciation dictionary key."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

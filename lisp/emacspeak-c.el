@@ -1,5 +1,5 @@
 ;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java 
-;;; $Id: emacspeak-c.el,v 19.0 2003/11/22 19:06:14 raman Exp $
+;;; $Id: emacspeak-c.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for C and C++ mode
 ;;; Keywords:emacspeak, audio interface to emacs C, C++
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:14 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -231,7 +231,7 @@
   (emacspeak-auditory-icon 'large-movement)
   (let  ((opoint (point))
          (semantics (c-guess-basic-syntax )))
-         ;;; skip across a comment
+;;; skip across a comment
     (cond
      ((or (assq 'c semantics )
           (assq 'comment-intro semantics ))
@@ -263,7 +263,7 @@ this level")
   (emacspeak-auditory-icon 'large-movement)
   (let  ((opoint (point))
          (semantics (c-guess-basic-syntax )))
-         ;;; skip across a comment
+;;; skip across a comment
     (cond
      ((or (assq 'c semantics )
           (assq 'comment-intro semantics ))

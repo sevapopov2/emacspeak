@@ -1,5 +1,5 @@
 ;;; emacspeak-erc.el --- speech-enable erc irc client
-;;; $Id: emacspeak-erc.el,v 19.0 2003/11/22 19:06:15 raman Exp $
+;;; $Id: emacspeak-erc.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for speech-enabling erc.el
 ;;; Keywords: Emacspeak, erc
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:15 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -97,7 +97,7 @@ server."
   "Personality for prompts.")
 
 (def-voice-font emacspeak-erc-notice-personality
-  voice-monotone
+  'inaudible
   'erc-notice-face
   "Personality for notices.")
 
@@ -348,6 +348,77 @@ set the current local value to the result.")
 (define-key erc-mode-map "\C-c\C-a"
   'emacspeak-erc-add-name-to-monitor)
 (define-key erc-mode-map "\C-c\C-d" 'emacspeak-erc-delete-name-from-monitor)
+;;}}}
+ 
+;;{{{ cricket rules 
+(defvar emacspeak-erc-cricket-bowling-figures-pattern
+  " [0-9]+-[0-9]+-[0-9]+-[0-9] "
+  "Pattern for matching bowling figures.")
+
+(defun emacspeak-erc-cricket-convert-bowling-figures (pattern)
+  "Pronounce bowling figures in cricket."
+  (let ((fields (split-string pattern "-")))
+    (format " %s for %s off %s overs with %s maidens "
+            (cond
+             ((string-equal "0" (fourth fields)) 
+              "none")
+             (t (fourth fields)))
+            (third fields)
+            (first fields)
+            (cond
+             ((string-equal "0" (second fields)) 
+              "no")
+             (t (second fields))))))
+
+(defvar emacspeak-erc-cricket-4-6-pattern
+  " [0-9]+x\[46]"
+  "Matches pattern used to  score number of fours and sixes in IRC #cricket.")
+
+(defun emacspeak-erc-cricket-convert-4-6-pattern (pattern)
+  "Convert 4/6 pattern for IRC cricket channels."
+  (format "%s %s"
+          (substring pattern 0 -2)
+          (cond
+           ((string-equal "4" 
+                          (substring pattern -1))
+            "fours")
+           (t "sixes"))))
+(defun emacspeak-erc-setup-cricket-rules ()
+  "Set up #cricket channels."
+  (interactive)
+  (emacspeak-pronounce-add-buffer-local-dictionary-entry
+   "km/h," " kays, ")
+  (emacspeak-pronounce-add-buffer-local-dictionary-entry
+   emacspeak-erc-cricket-bowling-figures-pattern
+   (cons 're-search-forward
+         'emacspeak-erc-cricket-convert-bowling-figures))
+  (emacspeak-pronounce-add-buffer-local-dictionary-entry
+   emacspeak-erc-cricket-4-6-pattern
+   (cons 're-search-forward
+         'emacspeak-erc-cricket-convert-4-6-pattern))
+  (emacspeak-pronounce-add-buffer-local-dictionary-entry
+   " [0-9]+nb"
+   (cons
+    're-search-forward
+    #'(lambda (pattern)
+        (format "%s no balls "
+                (substring pattern 0 -2)))))
+  (emacspeak-pronounce-add-buffer-local-dictionary-entry
+   "[0-9]+b"
+   (cons
+    're-search-forward
+    #'(lambda (pattern)
+        (format "%s balls "
+                (substring pattern 0 -1)))))
+  (emacspeak-pronounce-add-buffer-local-dictionary-entry
+   " [0-9]+w "
+   (cons
+    're-search-forward
+    #'(lambda (pattern)
+        (format "%s wides "
+                (substring pattern 0 -1)))))
+  (dtk-set-punctuations "some"))
+
 ;;}}}
 ;;{{{ end of file
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -- maintain a diary and appointments
-;;; $Id: emacspeak-calendar.el,v 19.0 2003/11/22 19:06:14 raman Exp $
+;;; $Id: emacspeak-calendar.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extensions to speech enable the calendar.
 ;;; Keywords: Emacspeak, Calendar, Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:14 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -67,6 +67,7 @@
 ;;{{{  functions: 
 (defun emacspeak-calendar-sort-diary-entries ()
   "Sort entries in diary entries list."
+  (declare (special diary-entries-list))
   (when(and  (boundp 'diary-entries-list)
 	     diary-entries-list)
     (setq diary-entries-list

@@ -1,5 +1,5 @@
 ;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
-;;; $Id: emacspeak-table-ui.el,v 19.0 2003/11/22 19:06:21 raman Exp $
+;;; $Id: emacspeak-table-ui.el,v 20.0 2004/05/01 01:16:23 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:21 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:23 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -443,7 +443,7 @@ Optional prefix arg prompts for a new filter."
 (defsubst emacspeak-table-prepare-table-buffer (table buffer
                                                       &optional filename)
   "Prepare tabular data."
-  (declare (special positions ))
+  (declare (special emacspeak-table positions ))
   (save-excursion
     (set-buffer buffer)
     (let ((i 0)
@@ -597,7 +597,8 @@ CalTrain schedules.  Execute command `describe-mode' bound to
 \\[describe-mode] in a buffer that is in emacspeak table mode to read
 the documentation on the table browser."
   (interactive "r")
-  (declare (special positions))
+  (declare (special emacspeak-table
+                    positions))
   (let ((workspace (get-buffer-create " table workspace  "))
         (buffer (get-buffer-create
                  (format  "*table-%s*"
@@ -1170,7 +1171,7 @@ future  use."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: t
+;;; byte-compile-dynamic: nil
 ;;; end: 
 
 ;;}}}

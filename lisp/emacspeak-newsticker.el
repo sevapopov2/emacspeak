@@ -1,5 +1,5 @@
 ;;; emacspeak-newsticker.el --- Speech-enable newsticker
-;;; $Id: emacspeak-newsticker.el,v 19.0 2003/11/22 19:06:18 raman Exp $
+;;; $Id: emacspeak-newsticker.el,v 20.0 2004/05/01 01:16:23 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for NEWSTICKER 
 ;;; Keywords: Emacspeak, newsticker 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:18 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:23 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -114,7 +114,7 @@
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

@@ -1,8 +1,8 @@
-#$Id: Makefile,v 19.0 2003/11/22 19:06:48 raman Exp $
+#$Id: Makefile,v 20.0 2004/05/01 01:16:25 raman Exp $
 #
 LABEL=1.0
 DIST=software-dtk-$(LABEL)
-CFLAGS=-g -fpic
+CFLAGS=-g -fpic  -pedantic -ansi -Wall
 INSTALL=install
 CC=gcc
 LIBS=-ltts -ltts_us -ltcl

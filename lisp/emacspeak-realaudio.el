@@ -1,5 +1,5 @@
 ;;; emacspeak-realaudio.el --- Play realaudio from Emacs
-;;; $Id: emacspeak-realaudio.el,v 19.0 2003/11/22 19:06:20 raman Exp $
+;;; $Id: emacspeak-realaudio.el,v 20.0 2004/05/01 01:16:23 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Single click access to RealAudio from emacspeak
 ;;; Keywords: Emacspeak, RealAudio
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:20 $ |
-;;;  $Revision: 19.0 $ | 
+;;; $Date: 2004/05/01 01:16:23 $ |
+;;;  $Revision: 20.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -89,8 +89,10 @@ icons once a realaudio stream is done playing."
   "Process handle to running player")
 (defvar emacspeak-realaudio-last-url nil
   "Records the last RealAudio resource we played")
+;;;###autoload
 (defvar emacspeak-realaudio-history nil
   "History list holding resources we played recently")
+;;;###autoload
 (defvar emacspeak-realaudio-shortcuts-directory 
   (expand-file-name "realaudio/" emacspeak-directory)
   "*Directory where we keep realaudio shortcuts.
@@ -321,7 +323,21 @@ commands via single keystrokes."
   "Major mode for streaming audio. \n\n
 \\{emacspeak-realaudio-mode-map}")
 
-(declaim (special emacspeak-realaudio-mode-map))
+(defun emacspeak-realaudio-setup-keys ()
+  "Define key bindings for emacspeak-realaudio."
+  (declare (special emacspeak-realaudio-mode-map
+                    emacspeak-realaudio-trplayer-keys))
+  (define-key emacspeak-realaudio-mode-map " " 'dtk-stop)
+  (define-key emacspeak-realaudio-mode-map [left] 'emacspeak-aumix-wave-decrease)
+  (define-key emacspeak-realaudio-mode-map [right] 'emacspeak-aumix-wave-increase)
+  (loop for c in emacspeak-realaudio-trplayer-keys
+        do
+        (define-key emacspeak-realaudio-mode-map
+          (format "%c" c)
+          'emacspeak-realaudio-trplayer-call-command)))
+
+(eval-when '(load) (emacspeak-realaudio-setup-keys))
+;;;###autoload
 (defvar emacspeak-realaudio-trplayer-keys
   (list ?p ?t ?s ?e ?l ?i
         ?< ?> ?. ?, ?0 ?9
@@ -333,21 +349,12 @@ commands via single keystrokes."
   (interactive)
   (emacspeak-realaudio-trplayer-command last-input-char))
 
-(loop for c in emacspeak-realaudio-trplayer-keys
-      do
-      (define-key emacspeak-realaudio-mode-map
-        (format "%c" c)
-        'emacspeak-realaudio-trplayer-call-command))
-
 (defun emacspeak-realaudio-select-realaudio-buffer ()
   "Switch to realaudio buffer."
   (interactive)
   (pop-to-buffer "*realaudio*")
   (emacspeak-speak-mode-line))
 
-(define-key emacspeak-realaudio-mode-map [left]
-  'emacspeak-aumix-wave-decrease)
-(define-key emacspeak-realaudio-mode-map [right] 'emacspeak-aumix-wave-increase)
 ;;}}}
 (provide 'emacspeak-realaudio)
 ;;{{{ end of file 

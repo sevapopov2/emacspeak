@@ -1,5 +1,5 @@
 ;;; emacspeak-hide.el --- Provides user commands for hiding and exposing blocks of text
-;;; $Id: emacspeak-hide.el,v 19.0 2003/11/22 19:06:17 raman Exp $
+;;; $Id: emacspeak-hide.el,v 20.0 2004/05/01 01:16:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Hide and expose blocks of text
 ;;; Keywords: Emacspeak, Speak, Spoken Output, hide
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2003/11/22 19:06:17 $ |
-;;;  $Revision: 19.0 $ |
+;;; $Date: 2004/05/01 01:16:22 $ |
+;;;  $Revision: 20.0 $ |
 ;;; Location undetermined
 ;;;
 
