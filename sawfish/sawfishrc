@@ -1,20 +1,22 @@
 ;;;$Id: sawfishrc,v 20.0 2004/05/01 01:16:25 raman Exp $
 (setq load-path
       (cons
-      (expand-file-name  "~/emacs/lisp/emacspeak/sawfish")
+      (expand-file-name  "/usr/local/share/emacs/site-lisp/emacspeak/sawfish")
       load-path))
-(load "tts")
 (load "tools")
 (bind-keys global-keymap
-           "M-e" 'emacs
-           "M-t" 'tts-say-current-window
-"M-F4" 'delete-this-window-safeley
-"M-F12" 'quit
-)
+           "C-e" 'emacs
+           "C-t" 'tts-say-current-window
+	   "C-F4" 'delete-this-window-safely
+	   "C-F12" 'quit
+	   )
 
 (require 'audio-events)
 (setq audio-events-enabled t)
 (setq play-sample-program "/usr/bin/play")
-(emacs)
+(setq emacs-program "/usr/local/bin/emacspeak -i &")
+(setq tts-server "multispeech")
 (tts-open)
 (tts-say-window-on-focus t)
+
+(emacs)
