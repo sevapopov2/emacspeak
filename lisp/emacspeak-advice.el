@@ -2310,6 +2310,9 @@ Also produce an auditory icon if possible."
 (defvar emacspeak-isearch-save-syntax-table  nil
   "Saved syntax table before we enter isearch mode.")
 
+(defvar emacspeak-isearch-save-speak-messages  nil
+  "Saved emacspeak-speak-messages before we enter isearch mode.")
+
 (make-variable-buffer-local
  'emacspeak-isearch-save-syntax-table)
 
@@ -2317,18 +2320,21 @@ Also produce an auditory icon if possible."
           (function
            (lambda ()
              (declare (special
+		       emacspeak-isearch-save-speak-messages
                        emacspeak-isearch-save-syntax-table))
              (setq emacspeak-isearch-save-syntax-table (syntax-table))
+	     (setq emacspeak-isearch-save-speak-messages emacspeak-speak-messages)
              (setq emacspeak-speak-messages nil))))
 
 (add-hook 'isearch-mode-end-hook
           (function
            (lambda ()
              (declare (special
+		       emacspeak-isearch-save-speak-messages
                        emacspeak-isearch-save-syntax-table))
              (and emacspeak-isearch-save-syntax-table
                   (set-syntax-table emacspeak-isearch-save-syntax-table))
-             (setq emacspeak-speak-messages t ))))
+             (setq emacspeak-speak-messages emacspeak-isearch-save-speak-messages ))))
 
 ;;}}}
 ;;{{{  Advice isearch-search to speak
