@@ -1,5 +1,5 @@
 ;;; emacspeak-nxml.el --- Speech enable nxml mode
-;;; $Id: emacspeak-nxml.el,v 20.0 2004/05/01 01:16:23 raman Exp $
+;;; $Id: emacspeak-nxml.el,v 21.0 2004/11/25 18:45:48 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, nxml streaming media 
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:23 $ |
-;;;  $Revision: 20.0 $ | 
+;;; $Date: 2004/11/25 18:45:48 $ |
+;;;  $Revision: 21.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2003, T. V. Raman
+;;; Copyright (c) 1995 -- 2004, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -337,7 +337,59 @@
 	    (dtk-speak
 	     (format "Closed %s"
 		     (xmltok-start-tag-qname))))))))
+;;{{{ speech enable outliner 
 
+(loop for f in
+      '(nxml-hide-all-text-content 
+        nxml-hide-direct-text-content 
+        nxml-hide-other 
+        nxml-hide-subheadings 
+        nxml-hide-text-content )
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory icon."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'close-object)
+            (emacspeak-speak-line)))))
+
+(loop for f in
+      '(nxml-show 
+        nxml-show-all 
+        nxml-show-direct-subheadings 
+        nxml-show-direct-text-content 
+        nxml-show-subheadings )
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory icon."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'open-object)
+            (emacspeak-speak-line)))))
+ 
+;;}}}
+;;{{{ Outline summarizer:
+
+(defun emacspeak-nxml-summarize-outline ()
+  "Intelligent spoken display of current outline entry."
+  (interactive)
+  (cond
+   ((get-text-property (point) 'nxml-outline-state)
+    (let ((o-open nil)
+          (o-end nil))
+      (save-excursion
+	(setq o-open (car (overlays-at (point))))
+	(next-line 1)
+	(beginning-of-line)
+	(forward-char -2)
+	(setq o-close (car (overlays-at (point))))
+	(dtk-speak (concat 
+		    (overlay-get  o-open 'display)
+		    (overlay-get o-close 'display)))))
+    (emacspeak-auditory-icon 'ellipses))
+   (t (message "Not on a hidden outline"))))
+  
+;;}}}
 ;;}}}
 (provide 'emacspeak-nxml)
 ;;{{{ end of file 

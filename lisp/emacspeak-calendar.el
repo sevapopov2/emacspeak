@@ -1,5 +1,5 @@
 ;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -- maintain a diary and appointments
-;;; $Id: emacspeak-calendar.el,v 20.0 2004/05/01 01:16:22 raman Exp $
+;;; $Id: emacspeak-calendar.el,v 21.0 2004/11/25 18:45:45 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extensions to speech enable the calendar.
 ;;; Keywords: Emacspeak, Calendar, Spoken Output
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:22 $ |
-;;;  $Revision: 20.0 $ | 
+;;; $Date: 2004/11/25 18:45:45 $ |
+;;;  $Revision: 21.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2003, T. V. Raman 
+;;;Copyright (C) 1995 -- 2004, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;

@@ -1,5 +1,5 @@
 ;;; emacspeak-jde.el --- Speech enable JDE -- An integrated Java Development Environment
-;;; $Id: emacspeak-jde.el,v 20.0 2004/05/01 01:16:22 raman Exp $
+;;; $Id: emacspeak-jde.el,v 21.0 2004/11/25 18:45:48 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to JDE
 ;;; Keywords: Emacspeak, Speak, Spoken Output, Java
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:22 $ |
-;;;  $Revision: 20.0 $ | 
+;;; $Date: 2004/11/25 18:45:48 $ |
+;;;  $Revision: 21.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2003, T. V. Raman
+;;; Copyright (c) 1995 -- 2004, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -324,6 +324,17 @@ If we are on the last call, do nothing."
   
    
   
+
+;;}}}
+;;{{{ Advice EFC widgets:
+
+(defadvice efc-option-dialog (after emacspeak pre act comp)
+  "Announce dialog box we just opened."
+  (emacspeak-auditory-icon 'open-object)
+  (dtk-speak
+   (ad-get-arg 0)))
+	    
+	    
 
 ;;}}}
 (provide 'emacspeak-jde )

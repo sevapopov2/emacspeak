@@ -1,5 +1,5 @@
 ;;; emacspeak-damlite.el --- Speech-enable damlite
-;;; $Id: emacspeak-damlite.el,v 20.0 2004/05/01 01:16:22 raman Exp $
+;;; $Id: emacspeak-damlite.el,v 21.0 2004/11/25 18:45:45 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for daml  authoring mode 
 ;;; Keywords: Emacspeak, damlite 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:22 $ |
-;;;  $Revision: 20.0 $ |
+;;; $Date: 2004/11/25 18:45:45 $ |
+;;;  $Revision: 21.0 $ |
 ;;; Location undetermined
 ;;;
 

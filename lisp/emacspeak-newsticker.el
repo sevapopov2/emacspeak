@@ -1,5 +1,5 @@
 ;;; emacspeak-newsticker.el --- Speech-enable newsticker
-;;; $Id: emacspeak-newsticker.el,v 20.0 2004/05/01 01:16:23 raman Exp $
+;;; $Id: emacspeak-newsticker.el,v 21.0 2004/11/25 18:45:48 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for NEWSTICKER 
 ;;; Keywords: Emacspeak, newsticker 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:23 $ |
-;;;  $Revision: 20.0 $ |
+;;; $Date: 2004/11/25 18:45:48 $ |
+;;;  $Revision: 21.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -108,6 +108,19 @@
 	    (emacspeak-auditory-icon 'large-movement)
 	    (emacspeak-newsticker-summarize-item))))))
 
+;;}}}
+;;{{{  silence auto activity
+
+(loop for f in
+      '(newsticker-get-news-with-delay
+        newsticker-get-news
+        newsticker--cache-save)
+      do
+      (eval
+       `(defadvice  ,f (around emacspeak pre act comp)
+	  "Silence messages."
+	  (let ((emacspeak-speak-messages nil))
+	    ad-do-it))))
 ;;}}}
 (provide 'emacspeak-newsticker)
 ;;{{{ end of file

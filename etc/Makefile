@@ -1,4 +1,4 @@
-# $Id: Makefile,v 20.0 2004/05/01 01:16:25 raman Exp $
+# $Id: Makefile,v 21.0 2004/11/25 18:46:01 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak, Dectalk, Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2004/05/01 01:16:25 $ |
-#  $Revision: 20.0 $ | 
+# $Date: 2004/11/25 18:46:01 $ |
+#  $Revision: 21.0 $ | 
 # Location undetermined
 #
 
@@ -50,6 +50,7 @@ config:
 	@sed "s@<emacspeak-dir>@$(SRC)/lisp@g" \
 		emacspeak.sh.def > emacspeak.sh
 	@chmod 755   emacspeak.sh
+	@chmod 755   *.pl
 
 # }}}
 # {{{maintainer target 

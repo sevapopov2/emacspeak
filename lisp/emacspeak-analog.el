@@ -1,5 +1,5 @@
 ;;; emacspeak-analog.el --- Speech-enable
-;;; $Id: emacspeak-analog.el,v 20.0 2004/05/01 01:16:22 raman Exp $
+;;; $Id: emacspeak-analog.el,v 21.0 2004/11/25 18:45:44 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for ANALOG log analyzer 
 ;;; Keywords: Emacspeak, analog 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:22 $ |
-;;;  $Revision: 20.0 $ |
+;;; $Date: 2004/11/25 18:45:44 $ |
+;;;  $Revision: 21.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -224,13 +224,15 @@ Speak field or char moved to."
 
 ;;}}}
 ;;{{{ key bindings
+(when (boundp 'analog-mode-map)
+  (declaim (special analog-mode-map))
+  (define-key analog-mode-map '[left]
+    'emacspeak-analog-backward-field-or-char)
+  (define-key analog-mode-map '[right] 'emacspeak-analog-forward-field-or-char)
+  (define-key analog-mode-map '[up] 'emacspeak-analog-previous-line)
+  (define-key analog-mode-map '[down] 'emacspeak-analog-next-line)
+  )
 
-(declaim (special analog-mode-map))
-(define-key analog-mode-map '[left]
-  'emacspeak-analog-backward-field-or-char)
-(define-key analog-mode-map '[right] 'emacspeak-analog-forward-field-or-char)
-(define-key analog-mode-map '[up] 'emacspeak-analog-previous-line)
-(define-key analog-mode-map '[down] 'emacspeak-analog-next-line)
 (defun emacspeak-analog-update-edit-keys ()
   "We define keys that invoke editting commands to invoke
 emacspeak-speak-and-skip-extent-upto-char "
