@@ -120,6 +120,15 @@
     (emacspeak-pcl-cvs-summarize-line)
     (emacspeak-auditory-icon 'mark-object)))
 
+(defadvice  cvs-sentinel (after emacspeak pre act )
+  "Provide auditory feedback"
+  (emacspeak-auditory-icon 'task-done))
+
+(defadvice cvs-bury-buffer (after emacspeak pre act)
+  "Produce auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)))
+
 ;;}}}
 (provide 'emacspeak-pcl-cvs)
 ;;{{{ end of file
