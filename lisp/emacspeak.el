@@ -108,7 +108,7 @@
 ;;}}}
 ;;{{{ Emacspeak:
 
-(defcustom emacspeak-play-emacspeak-startup-icon nil
+(defcustom emacspeak-play-emacspeak-startup-icon t
   "If set to T, emacspeak plays its icon as it launches."
   :type 'boolean
   :group 'emacspeak)
