@@ -349,7 +349,7 @@
         (emacspeak  audio interface to emacs mail))
     ("emacspeak-rpm-spec.el"
         "Speech enable rpm spec editor"
-        (emacspeak  rpm-spec streaming media ))
+        (emacspeak  rpm-spec ))
     ("emacspeak-rpm.el"
         "speech-enable RPM"
         (emacspeak  rpm  red hat package manager))
