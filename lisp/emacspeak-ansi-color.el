@@ -1,5 +1,5 @@
 ;;; emacspeak-ansi-color.el --- Voiceify ansi-color 
-;;; $Id: emacspeak-ansi-color.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: emacspeak-ansi-color.el,v 18.0 2003/04/29 21:16:49 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for ansi-color
 ;;; Keywords: Emacspeak, ansi-color
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:16:49 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -51,14 +51,7 @@
 ;;{{{ required modules
 
 ;;; Code:
-
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
-(require 'dtk-css-speech)
-(require 'voice-lock)
-(require 'emacspeak-sounds)
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ color to voice
 
@@ -74,15 +67,15 @@
           (when color
             (position  color ansi-color-names-vector
                        :test #'string-equal)))
-         (acss-spec nil)
+         (style nil)
          (color-parameter nil)
          (style-parameter nil))
     (setq voice-name
           (intern (format "emacspeak-ansi-color-%s-%s"
-                          color
+                          (if color color "default")
                           (if style style "default"))))
-    (unless (dtk-voice-defined-p voice-name)
-      (setq acss-spec (make-dtk-speech-style ))
+    (unless (tts-voice-defined-p voice-name)
+      (setq style (make-acss ))
       (setq style-parameter
             (if style-index
                 (+ 1 style-index)
@@ -91,11 +84,11 @@
             (if color-index
                 (+ 1 color-index)
               1))
-      (setf (dtk-speech-style-average-pitch acss-spec) color-parameter)
-      (setf (dtk-speech-style-pitch-range acss-spec) style-parameter)
-      (setf (dtk-speech-style-richness acss-spec) color-parameter)
-      (setf (dtk-speech-style-stress acss-spec) style-parameter)
-      (dtk-define-voice-from-speech-style voice-name acss-spec))
+      (setf (acss-average-pitch style) color-parameter)
+      (setf (acss-pitch-range style) color-parameter)
+      (setf (acss-richness style) color-parameter)
+      (setf (acss-stress style) color-parameter)
+      (tts-define-voice-from-speech-style voice-name style))
     voice-name))
 
 (defadvice ansi-color-set-extent-face (after emacspeak pre act comp)

@@ -1,4 +1,4 @@
-/*$Id: tcleci.cpp,v 17.0 2002/11/23 01:29:10 raman Exp $*/
+/*$Id: tcleci.cpp,v 18.0 2003/04/29 21:21:21 raman Exp $*/
 /* Tcl ViaVoiceOutloud Interface program
    (c) Copyright 1999 by Paige Phault
 
@@ -74,7 +74,7 @@ int  dsp = -1;
 //note that in the tcl server we select for 0.09 seconds so
 //that we dont queue up too many speech samples,
 //This is important for stopping speech immediately.
-#define BUFSIZE 1024
+#define BUFSIZE 512
 short waveBuffer[BUFSIZE];
 
 /* The following declarations are derived from the publically available

@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak.el,v 18.0 2003/04/29 21:17:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:17:00 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -45,11 +45,11 @@
 (eval-when-compile (require 'cl))
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'backquote)
-
+(require 'emacspeak-load-path)
 (require 'dtk-speak)
-(require 'voice-lock)
 (require 'emacspeak-sounds)
 (require 'emacspeak-speak)
+(require 'voice-setup)
 (require 'emacspeak-keymap)
 (require 'emacspeak-fix-interactive)
 (require 'custom)
@@ -64,6 +64,7 @@
 ;;; It loads the various parts of the system.
 
 ;;}}}
+ 
 ;;{{{  Customize groups 
 
 (defgroup emacspeak nil
@@ -93,7 +94,7 @@
 ;;{{{  Setting up things:
 
 (defconst emacspeak-version
-  (let ((x "$Revision: 17.0 $"))
+  (let ((x "$Revision: 18.0 $"))
     (string-match "[0-9.]+" x)
     (substring x (match-beginning 0)
                (match-end 0)))
@@ -101,137 +102,12 @@
 
 (defcustom emacspeak-startup-hook nil
   "Hook to run after starting emacspeak."
-  :type 'sexp
+  :type 'hook
   :group 'emacspeak)
 
 ;;}}}
 ;;{{{ Emacspeak:
 
-;;{{{  Make these interactive commands speak:
-
-(defvar emacspeak-emacs-commands-to-fix
-  '(
-    add-completions-from-file
-    ange-ftp-copy-file
-    ange-ftp-delete-file
-    ange-ftp-kill-ftp-process
-    ange-ftp-nslookup-host
-    ange-ftp-rename-file
-    ange-ftp-set-user
-    append-to-file
-    append-to-register
-    byte-force-recompile
-    byte-recompile-directory
-    cd
-    comint-run
-    command-apropos
-    copy-rectangle-to-register
-    copy-to-buffer
-    copy-to-register
-    customize-apropos
-    customize-apropos-faces
-    customize-apropos-groups
-    customize-apropos-options
-    debug-on-entry
-    debugger-return-value
-    define-mail-abbrev
-    define-mail-alias
-    describe-key
-    describe-key-briefly
-    desktop-save
-    dmacro-load
-    dtk-set-character-scale
-    dtk-set-rate
-    emacspeak-dial-dtk
-    emacspeak-frame-label-or-switch-to-labelled-frame
-    emacspeak-generate-documentation
-    emacspeak-keymap-choose-new-emacspeak-prefix
-    find-file
-    find-file-literally
-    find-file-other-frame
-    find-file-other-window
-    find-file-read-only
-    find-file-read-only-other-frame
-    find-file-read-only-other-window
-    fold-goto-line
-    global-unset-key
-    goto-line
-    help-make-xrefs
-    ielm-change-working-buffer
-    increment-register
-    insert-file
-    insert-file-literally
-    insert-register
-    insert-variable
-    jump-to-register
-    list-text-properties-at
-    load-file
-    load-library
-    local-unset-key
-    locate-library
-    mail-attach-file
-    mail-fcc
-    make-frame-on-display
-    make-obsolete
-    makefile-insert-macro
-    makefile-insert-target
-    message-resend
-    mime-include-audio
-    mime-include-external-anonftp
-    mime-include-external-ftp
-    mime-include-gif
-    mime-include-jpeg
-    mime-include-postscript
-    mime-include-raw-binary
-    mime-include-raw-nonbinary
-    nonincremental-re-search-backward
-    nonincremental-re-search-forward
-    nonincremental-search-backward
-    nonincremental-search-forward
-    number-to-register
-    point-to-register
-    prefer-coding-system
-    prepend-to-buffer
-    prepend-to-register
-    read-abbrev-file
-    recover-file
-    rename-buffer
-    run-at-time
-    run-with-timer
-    search-backward
-    search-forward
-    select-frame-by-name
-    set-background-color
-    set-border-color
-    set-buffer-file-coding-system
-    set-buffer-process-coding-system
-    set-cursor-color
-    set-foreground-color
-    set-frame-font
-    set-frame-name
-    set-left-margin
-    set-mouse-color
-    set-right-margin
-    set-selection-coding-system
-    set-visited-file-name
-    sort-regexp-fields
-    string-rectangle
-    switch-to-buffer-other-frame
-    switch-to-buffer-other-window
-    vc-comment-search-forward
-    vc-comment-search-reverse
-    vc-directory
-    vc-rename-file
-    vc-version-diff
-    vc-version-other-window
-    view-register
-    window-configuration-to-register
-    zap-to-char
-    )
-  "Precomputed list of interactive functions that have to be fixed.
-Precomputing this saves time at start-up.")
-
-;;}}}
 (defcustom emacspeak-play-emacspeak-startup-icon nil
   "If set to T, emacspeak plays its icon as it launches."
   :type 'boolean
@@ -275,8 +151,7 @@ functions for details.   "
                     default-enable-multibyte-characters
                     emacspeak-unibyte
                     emacspeak-play-program
-                    emacspeak-sounds-directory
-                    emacspeak-emacs-commands-to-fix))
+                    emacspeak-sounds-directory))
   ;;; fixes transient mark mode in emacspeak 
   (setq mark-even-if-inactive t)
   ;;; force unibyte
@@ -285,7 +160,10 @@ functions for details.   "
   (emacspeak-export-environment)
   (require 'dtk-speak)
   (dtk-initialize)
+  (load-library "voice-setup")
   (require 'emacspeak-speak)
+  (require 'emacspeak-personality)
+  (require 'emacspeak-pronounce)
   (require 'emacspeak-redefine)
   (require 'emacspeak-fix-interactive)
   (require 'emacspeak-keymap)
@@ -298,20 +176,19 @@ functions for details.   "
                    "-q"
                    (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))
   (emacspeak-sounds-define-theme-if-necessary emacspeak-sounds-default-theme)
-  (mapcar 'emacspeak-fix-interactive-command-if-necessary
-          emacspeak-emacs-commands-to-fix)
   (when emacspeak-pronounce-load-pronunciations-on-startup
     (emacspeak-pronounce-load-dictionaries emacspeak-pronounce-dictionaries-file))
   (run-hooks 'emacspeak-startup-hook)
   (emacspeak-dtk-sync)
   (emacspeak-setup-programming-modes)
   (require 'emacspeak-wizards)
-  (message
-   (format "  Press %s to get an   overview of emacspeak  %s \
+  (tts-with-punctuations "some"
+			 (dtk-speak
+			  (format "  Press %s to get an   overview of emacspeak  %s \
  I am  completely operational,  and all my circuits are functioning perfectly! "
-           (substitute-command-keys
-            "\\[emacspeak-describe-emacspeak]" )
-           emacspeak-version)))
+				  (substitute-command-keys
+				   "\\[emacspeak-describe-emacspeak]" )
+				  emacspeak-version))))
 
 (defun emacspeak-describe-emacspeak ()
   "Give a brief overview of emacspeak."
@@ -323,151 +200,8 @@ functions for details.   "
 
 ;;}}}
 ;;{{{ autoloads
-(autoload 'emacspeak-m-player "emacspeak-m-player"
-  "Emacspeak media player access."
-  t)
-(autoload 'emacspeak-daisy-open-book "emacspeak-daisy"
-  "Digital Talking Books on the Emacspeak Desktop."
-  t)
-(autoload 'emacspeak-ocr "emacspeak-ocr"
-  "OCR front-end for Emacspeak desktop"
-  t)
-
-(autoload 'emacspeak-gridtext "emacspeak-gridtext"
-  "Utilities for gridtext " t)
-
-(autoload 'emacspeak-gridtext-load "emacspeak-gridtext"
-  "Utilities for gridtext " t)
-(autoload 'emacspeak-filtertext "emacspeak-filtertext"
-  "Utilities for filtering text." t)
-(autoload 'emacspeak-url-template-load
-  "emacspeak-url-template"
-  "URL Template utility. " t)
-(autoload 'emacspeak-url-template-fetch
-  "emacspeak-url-template"
-  "URL Template utility. " t)
-(autoload 'emacspeak-xml-shell "emacspeak-xml-shell"
-  "Emacspeak XML Browser." t)
-(autoload 'emacspeak-imcom "emacspeak-imcom"
-  "Emacs interface to Jabber via IMCOM" t)
-(autoload 'emacspeak-freeamp-prefix-command "emacspeak-freeamp"
-  "Emacs interface to freeamp" t)
-(autoload 'emacspeak-freeamp "emacspeak-freeamp"
-  "Emacs interface to freeamp" t)
-(autoload 'emacspeak-freeamp-mode  "emacspeak-freeamp"
-  "Emacs interface to freeamp" t)
-(autoload 'cd-tool "cd-tool" 
-  "Play music CDs from Emacs" t)
-
-(mapcar 
- (function
-  (lambda (f)
-    (autoload  f  "emacspeak-aumix"
-      "Setup audio device characteristics" t)))
- (list
-  'emacspeak-aumix
-  'emacspeak-aumix-reset
-  'emacspeak-aumix-volume-decrease
-  'emacspeak-aumix-volume-increase 
-  'emacspeak-aumix-wave-decrease 
-  'emacspeak-aumix-wave-increase ))
-(autoload 'emacspeak-websearch-dispatch
-  "emacspeak-websearch"
-  "Perform a  websearch" t)
-(autoload 'emacspeak-websearch-usenet
-  "emacspeak-websearch"
-  "Browse Usenet Via Dejanews" t)
-(autoload 'emacspeak-websearch-emacspeak-archive
-  "emacspeak-websearch"
-  "Perform a simple Altavista search" t)
-
-(autoload 'emacspeak-forms-find-file "emacspeak-forms"
-  "Visit a forms file" t)
-
-(autoload 'emacspeak-remote-connect-to-server "emacspeak-remote"
-  "Connect to a remote speech server.
-Use this when you are running emacspeak on a remote machine and want
-to have speech output on the local desktop.
-Unlike the simpler rsh based remote-tcl solution
-(see file remote-tcl in the emacspeak distribution)
-this command emacspeak-remote-connect-to-server allows you
-to get remote speech feedback in cases where the remote machine cannot
-use rsh on your local desktop."
-  t)
-
-(autoload 'emacspeak-remote-quick-connect-to-server "emacspeak-remote"
-  "Connect to a remote speech server.
-Use this when you are running emacspeak on a remote machine and want
-to have speech output on the local desktop.
-Unlike the simpler rsh based remote-tcl solution
-(see file remote-tcl in the emacspeak distribution)
-this command emacspeak-remote-connect-to-server allows you
-to get remote speech feedback in cases where the remote machine cannot
-use rsh on your local desktop."
-  t)
-
-(autoload 'emacspeak-eterm-remote-term "emacspeak-eterm"
-  "Create a terminal to rlogin into a remote host" t)
-
-(autoload 'voice-lock-mode "voice-lock" "voice lock mode" t)
-
-(autoload 'emacspeak-toggle-auditory-icons "emacspeak-sounds"
-  "Ask emacspeak to use auditory icons" t)
-
-(autoload 'emacspeak-tabulate-region "emacspeak-tabulate"
-  "Identify columns in the region."  t)
-    
-(autoload 'emacspeak-table-find-csv-file "emacspeak-table-ui"
-  "Browse tables. Beginners: please do C-e C-t and specify one of the
-.tab files in the tables subdirectory of emacspeak.
-Describe function of emacspeak-table-find-file will then give you
-detailed documentation on the table browser" t )
-(autoload 'emacspeak-table-find-file "emacspeak-table-ui"
-  "Browse tables. Beginners: please do C-e C-t and specify one of the
-.tab files in the tables subdirectory of emacspeak.
-Describe function of emacspeak-table-find-file will then give you
-detailed documentation on the table browser" t )
-
-(autoload 'emacspeak-table-display-table-in-region "emacspeak-table-ui"
-  "Parse contents of region as tabular data and display it in table
-browsing mode.  Beginners: please do C-e C-t and specify one of the
-.tab files in the tables subdirectory of emacspeak.  Describe function
-of emacspeak-table-find-file will then give you detailed documentation
-on the table browser"
-  t )
-
-(autoload 'emacspeak-tapestry-describe-tapestry  "emacspeak-tapestry"
-  "Describe layout of buffers in current frame.
-This needs the tapestry.el package used by many Emacs systems like the
-vm mail reader." t)
-
-(autoload 'emacspeak-hide-or-expose-block "emacspeak-hide"
-  "Hide or expose blocks of text that share a common prefix.
-Useful in reading email, block comments in program source etc." t)
-
-(autoload 'emacspeak-hide-or-expose-all-blocks "emacspeak-hide"
-  "Hide or expose blocks of text that share a common prefix.
-Useful in reading email, block comments in program source etc." t)
-
-(autoload 'emacspeak-hide-speak-block-sans-prefix "emacspeak-hide"
-  "Speak a block of text sans the prefix that appears on every line of
-the block. Use in conjunction with emacspeak-hide-or-expose-block"
-  t)
-
-(autoload 'emacspeak-realaudio "emacspeak-realaudio"
-  "Single click interface to RealAudio" t)
-(autoload 'emacspeak-realaudio-browse "emacspeak-realaudio"
-  "Single click interface to RealAudio" t)
-
-(autoload 'emacspeak-realaudio-play-url-at-point "emacspeak-realaudio"
-  "Single click interface to RealAudio" t)
-
-(autoload 'emacspeak-realaudio-play "emacspeak-realaudio"
-  "Single click interface to RealAudio" t)
-
-(autoload 'emacspeak-realaudio-stop "emacspeak-realaudio"
-  "Single click interface to RealAudio" t)
-
+(load-library "emacspeak-loaddefs")
+(load-library "emacspeak-cus-load")
 ;;}}}
 ;;{{{ Package Setup Helper
 
@@ -492,6 +226,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 
 ;;}}}
 ;;{{{ Setup package extensions
+
 (emacspeak-do-package-setup "analog" 'emacspeak-analog)
 (emacspeak-do-package-setup "ansi-color" 'emacspeak-ansi-color)                            
 (emacspeak-do-package-setup "arc-mode" 'emacspeak-arc)
@@ -502,7 +237,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "browse-kill-ring" 'emacspeak-browse-kill-ring )
 (emacspeak-do-package-setup "buff-sel" 'emacspeak-buff-sel)
 (emacspeak-do-package-setup "bs" 'emacspeak-bs)
-(emacspeak-do-package-setup "c-mode" 'emacspeak-c)
+(emacspeak-do-package-setup "cc-mode" 'emacspeak-c)
 (emacspeak-do-package-setup "calc" 'emacspeak-calc)
 (emacspeak-do-package-setup "calculator" 'emacspeak-calculator)
 (emacspeak-do-package-setup "calendar" 'emacspeak-calendar)
@@ -513,14 +248,15 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "cperl-mode" 'emacspeak-cperl)
 (emacspeak-do-package-setup "ecb" 'emacspeak-ecb)
 (emacspeak-do-package-setup "cus-edit" 'emacspeak-custom)
+(emacspeak-do-package-setup "desktop" 'emacspeak-desktop )
 (emacspeak-do-package-setup "dired" 'emacspeak-dired )
 (emacspeak-do-package-setup "dismal" 'emacspeak-dismal)
-(emacspeak-do-package-setup "dictation"
-                            'emacspeak-dictation)
+(emacspeak-do-package-setup "dictation" 'emacspeak-dictation)
 (emacspeak-do-package-setup "dictionary" 'emacspeak-dictionary)
 (emacspeak-do-package-setup "dmacro" 'emacspeak-dmacro)
 (emacspeak-do-package-setup "doctor" 'emacspeak-entertain)
 (emacspeak-do-package-setup "dunnet" 'emacspeak-entertain)
+(emacspeak-do-package-setup "ediary" 'emacspeak-ediary)
 (emacspeak-do-package-setup "ediff" 'emacspeak-ediff)
 (emacspeak-do-package-setup "eperiodic" 'emacspeak-eperiodic)
 (emacspeak-do-package-setup "erc" 'emacspeak-erc)
@@ -539,7 +275,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "gud" 'emacspeak-gud)
 (emacspeak-do-package-setup "hangman" 'emacspeak-entertain)
 (emacspeak-do-package-setup "hideshow" 'emacspeak-hideshow)
-(emacspeak-do-package-setup "html-helper-mode" 'html-voice )
+					;(emacspeak-do-package-setup "html-helper-mode" 'html-voice )
 (emacspeak-do-package-setup "hyperbole" 'emacspeak-hyperbole)
 (emacspeak-do-package-setup "imenu" 'emacspeak-imenu)
 (emacspeak-do-package-setup "ibuffer" 'emacspeak-ibuffer)
@@ -566,8 +302,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "reftex" 'emacspeak-reftex)
 (emacspeak-do-package-setup "rmail" 'emacspeak-rmail)
 (emacspeak-do-package-setup "rpm-spec-mode" 'emacspeak-rpm-spec)
-(emacspeak-do-package-setup "sgml-mode"
-                            'emacspeak-sgml-mode)
+(emacspeak-do-package-setup "sgml-mode" 'emacspeak-sgml-mode)
 (emacspeak-do-package-setup "sh-script" 'emacspeak-sh-script)
 (emacspeak-do-package-setup "solitaire" 'emacspeak-solitaire)
 (emacspeak-do-package-setup "speedbar" 'emacspeak-speedbar)
@@ -575,6 +310,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "sql-mode" 'emacspeak-sql)
 (emacspeak-do-package-setup "sql" 'emacspeak-sql)
 (emacspeak-do-package-setup "supercite" 'emacspeak-supercite)
+(emacspeak-do-package-setup "swbuff" 'emacspeak-swbuff)
 (emacspeak-do-package-setup "tar-mode" 'emacspeak-tar)
 (emacspeak-do-package-setup "tcl" 'emacspeak-tcl)
 (emacspeak-do-package-setup "tdtd" 'emacspeak-tdtd)
@@ -598,7 +334,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "windmove" 'emacspeak-windmove)
 (emacspeak-do-package-setup "winring" 'emacspeak-winring)
 (emacspeak-do-package-setup "wrolo" 'emacspeak-wrolo)
-                                                                                          
+
 ;;}}}
 ;;{{{ finder
 
@@ -609,9 +345,12 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
             (progn
               (load-library "emacspeak-finder")
               (unless (file-newer-than-file-p
-                       (concat emacspeak-lisp-directory "/"
-                               "emacspeak-finder-inf.el")
-                       (concat emacspeak-lisp-directory "/" "emacspeak.el"))
+                       (expand-file-name
+                        "emacspeak-finder-inf.el" 
+			emacspeak-lisp-directory)
+                       (expand-file-name
+                        emacspeak-lisp-directory
+			"emacspeak.el"))
                 (emacspeak-finder-compile-keywords))
               (load-library "emacspeak-finder-inf")
               (push
@@ -700,7 +439,7 @@ Emacs 20.3"
 ;;{{{ setup programming modes 
 
 ;;; turn on automatic voice locking , split caps and punctuations for programming modes
-
+;;;###autoload
 (defun emacspeak-setup-programming-mode ()
   "Setup programming mode. Turns on audio indentation and
 sets punctuation mode to all, activates the dictionary and turns on split caps."
@@ -735,7 +474,9 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
          'sgml-mode-hook
          'xml-mode-hook
          'makefile-mode-hook
-         'tex-mode-hook
+         'TeX-mode-hook
+         'LaTeX-mode-hook
+         'bibtex-mode-hook
          'tcl-mode-hook
          'html-helper-mode-hook
          'scheme-mode-hook

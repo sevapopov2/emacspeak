@@ -1,5 +1,5 @@
 ;;; emacspeak-dismal.el --- Speech enable Dismal -- An Emacs Spreadsheet program
-;;; $Id: emacspeak-dismal.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-dismal.el,v 18.0 2003/04/29 21:16:58 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: spread sheet extension
 ;;; Keywords:emacspeak, audio interface to emacs spread sheets
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:58 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -45,14 +45,7 @@
 ;;}}}
 ;;{{{  requires 
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(eval-when-compile (require 'dtk-speak)
-                   (require 'emacspeak-sounds)
-                   (require 'emacspeak-speak)
-                   (require 'emacspeak-keymap))
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ custom
 
@@ -177,7 +170,7 @@ The `column header' is the entry in row 0."
 (setq-default emacspeak-dismal-row-summarizer-list nil)
 (setq-default emacspeak-dismal-col-summarizer-list nil)
 (setq-default emacspeak-dismal-sheet-summarizer-list nil)
-(defcustom emacspeak-dismal-value-personality 'paul-animated
+(defcustom emacspeak-dismal-value-personality voice-animate
   "Personality used for speaking cell values in summaries."
   :group 'emacspeak-dismal
   :type 'symbol)

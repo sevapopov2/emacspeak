@@ -1,5 +1,5 @@
 ;;; emacspeak-imenu.el --- Speech enable Imenu -- produce buffer-specific table of contents
-;;; $Id: emacspeak-imenu.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-imenu.el,v 18.0 2003/04/29 21:17:31 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface buffer indices
 ;;; Keywords: Emacspeak, Speak, Spoken Output, indices
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:31 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,15 +40,7 @@
 
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-
-(eval-when (compile)
-  (require 'imenu))
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(require 'emacspeak-keymap)
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction
 
@@ -69,6 +61,8 @@
   ;; If optional CONCAT-NAMES is non-nil, then a nested index has its
   ;; name and a space concatenated to the names of the children.
   ;; Third argument PREFIX is for internal use only.
+
+  (declare (special imenu-level-separator))
   (mapcan
    (function
     (lambda (item)
@@ -101,7 +95,7 @@
   "Provide auditory feedback"
   (when (interactive-p)
     (ems-set-personality-temporarily (point) (1+ (point))
-                                     'paul-animated
+                                     voice-animate
                                      (emacspeak-speak-line))))
 
 (defadvice imenu-go-find-at-position (around emacspeak pre act comp)
@@ -112,7 +106,7 @@
     ad-do-it
     (emacspeak-auditory-icon 'large-movement)
     (ems-set-personality-temporarily (point) (1+ (point))
-                                     'paul-animated
+                                     voice-animate
                                      (emacspeak-speak-line)))
    (t ad-do-it))
   ad-return-value)
@@ -122,7 +116,7 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (ems-set-personality-temporarily (point) (1+ (point))
-                                     'paul-animated
+                                     voice-animate
                                      (emacspeak-speak-line))))
 
 ;;}}}

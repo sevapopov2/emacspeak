@@ -1,5 +1,5 @@
 ;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
-;;; $Id: emacspeak-dired.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-dired.el,v 18.0 2003/04/29 21:16:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech enable dired
 ;;; Keywords: Emacspeak, Dired, Spoken Output
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:16:58 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -49,18 +49,8 @@
 ;;{{{  required packages 
 
 ;;; Code:
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(require 'voice-lock)
-(eval-when-compile
-  (require 'dired)
-  (require 'emacspeak-keymap))
-(require 'dtk-speak)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(require 'emacspeak-pronounce)
-
+(require 'emacspeak-preamble)
+(require 'dired)
 ;;}}}
 ;;{{{  configure dired
 
@@ -80,13 +70,10 @@ pronunciations only once.")
 (defun emacspeak-dired-define-pronunciations ()
   "Define pronunciations specific to Dired buffers."
   (declare (special emacspeak-dired-pronunciations-defined
-                    emacspeak-pronounce-dictionaries-loaded))
-  (require 'emacspeak-pronounce)
+                    emacspeak-pronounce-pronunciation-table emacspeak-pronounce-dictionaries-loaded))
   (unless emacspeak-dired-pronunciations-defined
     (setq emacspeak-dired-pronunciations-defined t)
-    (emacspeak-pronounce-set-dictionary
-     'dired-mode
-     '(("Dired" . " Directory Sorted "))))
+    (emacspeak-pronounce-add-dictionary-entry 'dired-mode "dired" " Directory Sorted "))
   (when (or (not (boundp 'emacspeak-pronounce-pronunciation-table))
             (not emacspeak-pronounce-pronunciation-table))
     (emacspeak-pronounce-toggle-use-of-dictionaries)))

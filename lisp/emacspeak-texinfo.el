@@ -1,5 +1,5 @@
 ;;; emacspeak-texinfo.el --- Speech enable texinfo mode
-;;; $Id: emacspeak-texinfo.el,v 17.0 2002/11/23 01:29:01 raman Exp $
+;;; $Id: emacspeak-texinfo.el,v 18.0 2003/04/29 21:18:18 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable
 ;;; texinfo mode
@@ -9,14 +9,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:01 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:18 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -40,16 +40,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;{{{  Required modules 
-
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(eval-when-compile (require 'dtk-speak)
-                   (require 'emacspeak-speak)
-                   (require 'emacspeak-sounds)
-                   (require 'voice-lock))
-
-;;}}};;{{{  Introduction:
+(require 'emacspeak-preamble)
+;;}}}
+;;{{{  Introduction:
 
 ;;; Commentary:
 
@@ -59,27 +52,12 @@
 
 ;;}}}
 ;;{{{ voice locking
-(defvar texinfo-voice-lock-keywords
-  '(
-    ("^\\(@c\\|@comment\\)\\>.*" . voice-lock-comment-personality) ;comments
-    ("@\\([a-zA-Z]+\\|[^ \t\n]\\)" 1 voice-lock-keyword-personality) ;commands
-    ("^\\*\\(.*\\)[\t ]*$" 1 voice-lock-function-name-personality t) ;menu items
-    ("@\\(emph\\|strong\\|b\\|i\\){\\([^}]+\\)" 2 voice-lock-comment-personality)
-    ("@\\(file\\|kbd\\|key\\|url\\|email\\){\\([^}]+\\)" 2 voice-lock-string-personality)
-    ("@\\(samp\\|code\\|var\\|math\\){\\([^}]+\\)"
-     2 voice-lock-variable-name-personality)
-    ("@\\(cite\\|xref\\|pxref\\){\\([^}]+\\)" 2 voice-lock-constant-personality)
-    ("@\\(end\\|itemx?\\) +\\(.+\\)" 2 voice-lock-function-name-personality keep)
-    )
-  "Additional expressions to highlight in TeXinfo mode.")
 
 (defun emacspeak-texinfo-mode-hook ()
   "Setup Emacspeak extensions"
-  (declare (special texinfo-voice-lock-keywords
-                    dtk-split-caps
-                    voice-lock-defaults))
-  (make-local-variable 'voice-lock-defaults)
-  (setq voice-lock-defaults '(texinfo-voice-lock-keywords t))
+  (declare (special dtk-split-caps))
+  
+  
   (voice-lock-mode 1)
   (dtk-set-punctuations "all")
   (or dtk-split-caps

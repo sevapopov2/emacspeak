@@ -1,5 +1,5 @@
 ;;; emacspeak-fix-interactive.el --- Tools to make  Emacs' builtin prompts   speak
-;;; $Id: emacspeak-fix-interactive.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-fix-interactive.el,v 18.0 2003/04/29 21:17:17 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Fixes functions that use interactive to prompt for args.
 ;;; Approach suggested by hans@cs.buffalo.edu
@@ -9,14 +9,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:17 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -39,7 +39,7 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'advice)
 (require 'dtk-speak)
@@ -85,7 +85,7 @@ interactive prompts speak. ")
    "\\|^face\\|^frame\\|^font"
    "\\|^color\\|^timer")
   "Regular expression matching function names whose interactive spec should not be fixed.")
-
+;;;###autoload
 (defsubst emacspeak-should-i-fix-interactive-p (sym)
   "Predicate to test if this function should be fixed. "
   (declare (special emacspeak-commands-dont-fix-regexp))
@@ -152,7 +152,7 @@ speak its prompts. "
                interactive-list))))))))))
 
 ;;}}}
-
+;;;###autoload
 (defun emacspeak-fix-interactive (sym)
   "Auto-advice interactive command to speak its prompt.  
 Fix the function definition of sym to make its interactive form
@@ -169,7 +169,8 @@ speak its prompts. "
         (some
          (function
           (lambda (prompt)
-            (declare (special emacspeak-xemacs-p))
+            (declare (special emacspeak-xemacs-p
+                              emacs-version))
             (not
              (or
               (string-match  "^[@*]?[depPr]" prompt )
@@ -191,15 +192,19 @@ speak its prompts. "
                          ((dtk-stop-immediately nil)
                           (emacspeak-last-command-needs-minibuffer-spoken t)
                           (emacspeak-speak-messages nil))
-                       (tts-with-punctuations "all"
-                                              (dtk-speak
-                                               (,
-                                                (format " %s "
-                                                        (or
-                                                         (if (= ?* (aref  prompt 0))
-                                                             (substring prompt 2 )
-                                                           (substring prompt 1 ))
-                                                         "")))))
+                       (when (or (string-lessp emacs-version "21")
+                                 (= ?c (aref  (, prompt) 0))
+                                 (= ?K (aref  (, prompt) 0))
+                                 (= ?k (aref  (, prompt) 0)))
+			 (tts-with-punctuations "all"
+						(dtk-speak
+						 (,
+						  (format " %s "
+							  (or
+							   (if (= ?* (aref  prompt 0))
+							       (substring prompt 2 )
+							     (substring prompt 1 ))
+							   ""))))))
                        (call-interactively
                         #'(lambda (&rest args)
                             (interactive (, prompt))
@@ -209,7 +214,7 @@ speak its prompts. "
   t)
 
 ;;; inline function for use from other modules:
-
+;;;###autoload
 (defsubst  emacspeak-fix-interactive-command-if-necessary
   (command)
   "Fix command if necessary."

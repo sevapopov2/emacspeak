@@ -1,5 +1,5 @@
 ;;; emacspeak-analog.el --- Speech-enable
-;;; $Id: emacspeak-analog.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: emacspeak-analog.el,v 18.0 2003/04/29 21:16:49 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for ANALOG log analyzer 
 ;;; Keywords: Emacspeak, analog 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:16:49 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -46,15 +46,7 @@
 ;;{{{ required modules
 
 ;;; Code:
-
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(require 'backquote)
-(eval-when-compile
-  (require 'emacspeak-speak)
-  (require 'emacspeak-sounds))
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ advice interactive commands
 (defadvice analog (after emacspeak pre act comp)
@@ -90,6 +82,13 @@
           (when (interactive-p)
             (emacspeak-speak-line)
             (emacspeak-auditory-icon 'select-object))))))
+
+;;}}}
+;;{{{ voice setup 
+
+(def-voice-font emacspeak-analog-entry-header-personality voice-bolden
+  'analog-entry-header-face
+  "Personality used for header lines.")
 
 ;;}}}
 ;;{{{ field navigation

@@ -1,5 +1,5 @@
 ;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java 
-;;; $Id: emacspeak-c.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: emacspeak-c.el,v 18.0 2003/04/29 21:16:55 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for C and C++ mode
 ;;; Keywords:emacspeak, audio interface to emacs C, C++
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:55 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -36,18 +36,16 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when-compile (require 'dtk-speak)
-                   (require 'emacspeak-speak)
-                   (require 'emacspeak-sounds)
-                   (and (locate-library "cc-mode")
-                        (require 'cc-mode )))
 ;;{{{ Introduction:
 
 ;;; Make some of C and C++ mode more emacspeak friendly
 ;;; Works with both boring c-mode 
 ;;; and the excellent cc-mode
+
+;;}}}
+;;{{{  Required modules
+(require 'emacspeak-preamble)
+(require 'cc-mode)
 
 ;;}}}
 ;;{{{  emacs 19.30
@@ -72,17 +70,11 @@
 
 (defadvice c-electric-backspace (around emacspeak pre act)
   "Speak character you're deleting."
-  (declare (special
-            emacspeak-backward-delete-char-speak-deleted-char
-            emacspeak-backward-delete-char-speak-current-char))
   (cond
    ((interactive-p )
     (dtk-tone 500 30 'force)
-    (and emacspeak-backward-delete-char-speak-deleted-char
-	 (emacspeak-speak-this-char (preceding-char )))
-    ad-do-it
-    (and emacspeak-backward-delete-char-speak-current-char
-	 (emacspeak-speak-this-char (preceding-char ))))
+    (emacspeak-speak-this-char (preceding-char ))
+    ad-do-it)
    (t ad-do-it))
   ad-return-value)
 

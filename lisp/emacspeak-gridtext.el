@@ -1,5 +1,5 @@
 ;;; emacspeak-gridtext.el --- gridtext
-;;; $Id: emacspeak-gridtext.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-gridtext.el,v 18.0 2003/04/29 21:17:27 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for laying grids on text
 ;;; Keywords: Emacspeak, gridtext
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:17:27 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -40,16 +40,9 @@
 
 ;;{{{ required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(require 'thingatpt)
-(require 'emacspeak-speak)
-(require 'voice-lock)
-(require 'emacspeak-sounds)
+(require 'emacspeak-preamble)
 (require 'emacspeak-table)
 (require 'emacspeak-table-ui)
-
 ;;}}}
 ;;{{{  Introduction:
 
@@ -82,6 +75,7 @@ buffer.")
 
 ;;}}}
 ;;{{{  helpers
+
 (defun emacspeak-gridtext-generate-key ()
   "Generates a key for current context.
 The key is used when persisting out the grid setting for
@@ -141,7 +135,7 @@ end   as specified by grid."
   "Lookup key and return corresponding grid. "
   (declare (special emacspeak-gridtext-table))
   (gethash key emacspeak-gridtext-table))
-
+;;;###autoload
 (defun emacspeak-gridtext-load (file)
   "Load saved grid settings."
   (interactive
@@ -155,7 +149,7 @@ end   as specified by grid."
 	 (expand-file-name  file emacspeak-resource-directory)))
     (error (message "Error loading resources from %s "
 		    file))))
-
+;;;###autoload
 (defun emacspeak-gridtext-save (file)
   "Save out grid settings."
   (interactive
@@ -186,7 +180,7 @@ end   as specified by grid."
 
 ;;}}}
 ;;{{{ interactive commands
-
+;;;###autoload
 (defun emacspeak-gridtext-apply (start end grid )
   "Apply grid to region."
   (interactive

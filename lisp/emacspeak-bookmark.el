@@ -1,5 +1,5 @@
 ;;; emacspeak-bookmark.el --- Speech enable Emacs' builtin bookmarks
-;;; $Id: emacspeak-bookmark.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: emacspeak-bookmark.el,v 18.0 2003/04/29 21:16:53 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to bookmark
 ;;; Keywords: Emacspeak, Speak, Spoken Output, bookmark
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:53 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,12 +40,7 @@
 
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(eval-when (compile)
-  (require 'bookmark))
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{  Introduction 

@@ -1,17 +1,17 @@
-#$Id: tts-lib.tcl,v 17.0 2002/11/23 01:29:09 raman Exp $
+#$Id: tts-lib.tcl,v 18.0 2003/04/29 21:21:18 raman Exp $
 # {{{ LCD Entry: 
 
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2002/11/23 01:29:09 $ |
-#  $Revision: 17.0 $ | 
+# $Date: 2003/04/29 21:21:18 $ |
+#  $Revision: 18.0 $ | 
 # Location undetermined
 #
 
 # }}}
 # {{{ Copyright:  
-#Copyright (C) 1995 -- 2002, T. V. Raman 
+#Copyright (C) 1995 -- 2003, T. V. Raman 
 #All Rights Reserved
 # Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 # All Rights Reserved. 
@@ -89,6 +89,7 @@ proc q {{element ""}} {
         return ""
     }
 }
+
 #queue a note 
 proc n {instrument note length {target 0} {step 5}} {
     global queue tts env

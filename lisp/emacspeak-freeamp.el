@@ -1,5 +1,5 @@
 ;;; emacspeak-freeamp.el --- Control freeamp from Emacs
-;;; $Id: emacspeak-freeamp.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-freeamp.el,v 18.0 2003/04/29 21:17:19 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling freeamp from emacs 
 ;;; Keywords: Emacspeak, freeamp
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:19 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,15 +40,7 @@
 
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(require 'derived)
-
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when (compile)
-  (require 'emacspeak-fix-interactive))
-(require 'emacspeak-aumix)
-(require 'emacspeak-sounds)
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ Introduction:
 
@@ -79,7 +71,7 @@
 (defvar emacspeak-freeamp-freeamp-keys
   (list ?p ?+ ?-  ?f ?b ?s ?= ?q)
   "Keys accepted by freeamp.")
-
+;;;###autoload
 (defun emacspeak-freeamp-freeamp-command (char)
   "Execute FreeAmp command."
   (interactive "cFreeamp Command:")
@@ -95,11 +87,12 @@
       (accept-process-output emacspeak-freeamp-process 1)
       (message "%s"
 	       (buffer-substring mark (point-max))))))
-
+;;;###autoload
 (defun emacspeak-freeamp-freeamp-call-command ()
   "Call appropriate freeamp command."
   (interactive)
   (emacspeak-freeamp-freeamp-command last-input-char))
+
 (define-key emacspeak-freeamp-mode-map  "o" 'emacspeak-freeamp)
 (loop for c in emacspeak-freeamp-freeamp-keys
       do
@@ -112,14 +105,16 @@
 
 ;;}}}
 ;;{{{ emacspeak-freeamp
-
+;;;###autoload
 (defun emacspeak-freeamp (resource)
   "Play specified resource using freeamp.
 Resource is an  MP3 file or m3u playlist.
 The player is placed in a buffer in emacspeak-freeamp-mode."
   (interactive
    (list
-    (read-file-name "MP3 Resource: ")))
+    (read-file-name "MP3 Resource: "
+                    (when (eq major-mode 'dired-mode)
+		      (dired-get-filename)))))
   (declare (special emacspeak-freeamp-process))
   (when (and emacspeak-freeamp-process
              (eq 'run (process-status

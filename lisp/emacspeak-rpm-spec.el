@@ -1,5 +1,5 @@
 ;;; emacspeak-rpm-spec.el --- Speech enable rpm spec editor
-;;; $Id: emacspeak-rpm-spec.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-rpm-spec.el,v 18.0 2003/04/29 21:17:54 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, rpm-spec streaming media 
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:54 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,14 +40,7 @@
 
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when (compile)
-  (require 'emacspeak-fix-interactive))
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(require 'voice-lock)
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ Introduction:
 
@@ -161,47 +154,35 @@
 ;;}}}
 ;;{{{ voice locking 
 
-(defvar rpm-spec-macro-personality 'harry
-  "*Personality for macros")
-(defvar rpm-spec-tag-personality 'paul-smooth
-  "*Personality for tags")
-(defvar rpm-spec-package-personality 'paul-animated
-  "*Personality for package tag")
-(defvar rpm-spec-dir-personality 'betty
-  "*Personality for directory entries")
-(defvar rpm-spec-doc-personality 'paul-monotone
-  "*Personality for documentation entries")
-(defvar rpm-spec-ghost-personality 'annotation-voice
-  "*Personality for %ghost files")
+(def-voice-font rpm-spec-macro-personality  voice-bolden
+  'rpm-spec-macro-face
+  ".Personality for macros"
+  :group 'emacspeak-rpm)
 
-(defvar rpm-spec-voice-lock-keywords
-  '(
-    ("%[a-zA-Z0-9_]+" 0 rpm-spec-macro-personality)
-    ("^\\([a-zA-Z0-9]+\\)\\(\([a-zA-Z0-9,]+\)\\):"
-     (1 rpm-spec-tag-personality)
-     (2 rpm-spec-ghost-personality))
-    ("^\\([a-zA-Z0-9]+\\):" 1 rpm-spec-tag-personality)
-    ("%\\(define\\|files\\|package\\|description\\)[ \t]+\\([^ \t\n-]+\\)"
-     (2 rpm-spec-package-personality))
-    ("%configure " 0 rpm-spec-macro-personality)
-    ("%dir[ \t]+\\([^ \t\n]+\\)[ \t]*" 1 rpm-spec-dir-personality)
-    ("%doc\\(\\|dir\\)[ \t]+\\(.*\\)\n" 2 rpm-spec-doc-personality)
-    ("%\\(ghost\\|config\\)[ \t]+\\(.*\\)\n" 2 rpm-spec-ghost-personality)
-    ("^%.+-[a-zA-Z][ \t]+\\([a-zA-Z0-9\.-]+\\)" 1 rpm-spec-doc-personality)
-    ("^\\(.+\\)(\\([a-zA-Z]\\{2,2\\}\\)):" 
-     (1 rpm-spec-tag-personality)
-     (2 rpm-spec-doc-personality))
-    ("^\\*\\(.*[0-9] \\)\\(.*\\)\\(<.*>\\)\\(.*\\)\n"
-     (1 rpm-spec-dir-personality)
-     (2 rpm-spec-package-personality)
-     (3 rpm-spec-tag-personality)
-     (4 voice-lock-warning-personality))
-    ("%{[^{}]*}" 0 rpm-spec-macro-personality)
-    )
-  "Additional expressions to highlight in RPM Spec mode.")
+(def-voice-font rpm-spec-tag-personality voice-smoothen
+  'rpm-spec-tag-face
+  ".Personality for tags"
+  :group 'emacspeak-rpm)
 
-(voice-lock-set-major-mode-keywords 'rpm-spec-mode
-                                    'rpm-spec-voice-lock-keywords)
+(def-voice-font rpm-spec-package-personality voice-animate
+  'rpm-spec-package-face
+  ".Personality for package tag"
+  :group 'emacspeak-rpm)
+
+(def-voice-font rpm-spec-dir-personality voice-lighten
+  'rpm-spec-dir-face
+  ".Personality for directory entries"
+  :group 'emacspeak-rpm)
+
+(def-voice-font rpm-spec-doc-personality voice-smoothen-extra
+  'rpm-spec-doc-face
+  ".Personality for documentation entries"
+  :group 'emacspeak-rpm)
+
+(def-voice-font rpm-spec-ghost-personality voice-smoothen-medium
+  'rpm-spec-ghost-face
+  ".Personality for %ghost files"
+  :group 'emacspeak-rpm)
 
 ;;}}}
 (provide 'emacspeak-rpm-spec)

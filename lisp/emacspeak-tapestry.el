@@ -1,5 +1,5 @@
 ;;; emacspeak-tapestry.el --- Speak information about current layout of windows
-;;; $Id: emacspeak-tapestry.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-tapestry.el,v 18.0 2003/04/29 21:18:11 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak module to speak window tapestries
 ;;; Keywords:emacspeak, audio interface to emacs tapestry
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:11 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -37,25 +37,25 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when (compile) (require 'tapestry))
-(condition-case nil 
-    (require 'tapestry)
-  (error "Could not locate tapestry.el"))
-(require 'emacspeak-sounds)
-(require 'emacspeak-speak)
-(require 'emacspeak-fix-interactive)
+
 ;;{{{  Introduction
 
 ;;; emacspeak extensions to speak window widnow layouts 
 
 ;;}}}
-;;{{{  Interactive defun 
+;;{{{ requires
+(require 'emacspeak-preamble)
+(require 'tapestry)
 
-(defun emacspeak-tapestry-describe-tapestry ()
-  "Describe the current layout of visible buffers in current frame."
-  (interactive)
+;;}}}
+;;{{{  Interactive defun 
+;;;###autoload
+(defun emacspeak-tapestry-describe-tapestry (&optional details)
+  "Describe the current layout of visible buffers in current frame.
+Use interactive prefix arg to get coordinate positions of the
+displayed buffers."
+  (interactive "P")
+  (declare (special voice-animate voice-bolden))
   (let* ((buffer-map (tapestry-buffer-map ))
          (count (length buffer-map))
          (window-list  (tapestry-window-list))
@@ -65,37 +65,45 @@
                   count 
                   (if (> count 1) "s" ""))))
     (put-text-property 0 (length description)
-                       'personality  'annotation-voice
+                       'personality  voice-annotate
                        description)
     (setq windows 
-          (loop for buffer in buffer-map
-                and window in window-list
-                collect
-                (let ((w (format "%s "  (second buffer)))
-                      (corners  (window-edges window))
-                      (tl nil )
-                      (br nil))
-                  (put-text-property 0 (length w)
-                                     'personality
-                                     'paul-animated w)
-                  (setq tl
-                        (format  " %d %d "
-                                 (first corners) (second corners))
-                        br  (format " %d %d "
-                                    (third corners) (fourth corners)))
-                  (put-text-property 0 (length tl)
-                                     'personality 'harry tl)
-                  (put-text-property 0 (length br)
-                                     'personality 'harry br)
-		  (concat w
-			  " with top left "
-			  tl
-			  " and bottom right "
-			  br))))
-    (tts-with-punctuations "some"
+	  (cond
+	   (details 
+	    (loop for buffer in buffer-map
+		  and window in window-list
+		  collect
+		  (let ((w (format "%s "  (second buffer)))
+			(corners  (window-edges window))
+			(tl nil )
+			(br nil))
+		    (put-text-property 0 (length w)
+				       'personality
+				       voice-animate w)
+		    (setq tl
+			  (format  " %d %d "
+				   (first corners) (second corners))
+			  br  (format " %d %d "
+				      (third corners) (fourth corners)))
+		    (put-text-property 0 (length tl)
+				       'personality voice-bolden tl)
+		    (put-text-property 0 (length br)
+				       'personality voice-bolden br)
+		    (concat w
+			    " with top left "
+			    tl
+			    " and bottom right "
+			    br))))
+	   (t
+	    (loop for buffer in buffer-map
+		  collect
+		  (second buffer)))))
+    (tts-with-punctuations "all"
                            (dtk-speak
                             (concat description
-                                    (apply 'concat windows ))))))
+                                    (mapconcat #'identity
+                                               windows
+                                               " "))))))
 
 ;;}}}
 (provide  'emacspeak-tapestry)

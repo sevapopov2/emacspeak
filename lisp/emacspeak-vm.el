@@ -1,5 +1,5 @@
 ;;; emacspeak-vm.el --- Speech enable VM -- A powerful mail agent (and the one I use)
-;;; $Id: emacspeak-vm.el,v 17.0 2002/11/23 01:29:01 raman Exp $
+;;; $Id: emacspeak-vm.el,v 18.0 2003/04/29 21:18:27 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enhance vm
 ;;; Keywords: Emacspeak, VM, Email, Spoken Output, Voice annotations
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:01 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:27 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -37,23 +37,19 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
-(require 'cl)
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(require 'dtk-voices)
-(require 'voice-lock)
-(require 'emacspeak-keymap)
-(require 'dtk-speak)
-(require 'emacspeak-sounds)
-(require 'emacspeak-speak)
+
 ;;{{{  Introduction:
 ;;; This module extends the mail reader vm.
 ;;; Uses voice locking for message headers and cited messages
 
 ;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
+
+;;}}}
 ;;{{{ voice locking:
 
-(defgroup  emacspeak-vm nil
+(defgroup emacspeak-vm nil
   "VM mail reader on the Emacspeak Desktop."
   :group 'emacspeak
   :group 'vm
@@ -64,27 +60,6 @@
 Note that some badly formed mime messages  cause trouble."
   :type 'boolean
   :group 'emacspeak-vm)
-
-(defvar vm-voice-lock-keywords nil
-  "Keywords to highlight in vm")
-
-(defvar vm-summary-voice-lock-keywords
-  "Additional expressions to highlight in vm  Summary mode.")
-
-;;;  Set vm-voice-lock-keywords
-
-(setq vm-voice-lock-keywords
-      (append vm-voice-lock-keywords
-              '(("^From: \\(.*\\)$" 1  emacspeak-vm-from-voice )
-                ("^To: \\(.*\\)$" 1 emacspeak-vm-to-voice)
-                ("^Subject: \\(.*\\)$" 1 emacspeak-vm-subject-voice)
-                ("^|?[a-zA-Z]*>+\\(.*\\)$" 1 emacspeak-vm-cite-voice )
-                )))
-
-(voice-lock-set-major-mode-keywords 'vm-mode      'vm-voice-lock-keywords)
-
-(voice-lock-set-major-mode-keywords 'vm-summary-mode
-                                    'vm-summary-voice-lock-keywords)
 
 (add-hook 'vm-mode-hook
           'emacspeak-vm-mode-setup)
@@ -106,21 +81,21 @@ Note that some badly formed mime messages  cause trouble."
 ;;}}}
 ;;{{{  vm voices:
 
-(defcustom emacspeak-vm-from-voice  'harry
+(defcustom emacspeak-vm-from-voice  voice-bolden
   "Personality for From field. "
   :type 'symbol
   :group 'emacspeak-vm)
 
-(defcustom emacspeak-vm-to-voice  'paul-animated
+(defcustom emacspeak-vm-to-voice  voice-animate
   "Personality for To field. "
   :type 'symbol
   :group 'emacspeak-vm)
-(defcustom emacspeak-vm-subject-voice  'paul-smooth 
+(defcustom emacspeak-vm-subject-voice  voice-brighten 
   "Personality for Subject field. "
   :type 'symbol
   :group 'emacspeak-vm)
 
-(defcustom emacspeak-vm-cite-voice  'paul-smooth
+(defcustom emacspeak-vm-cite-voice  voice-smoothen
   "Personality for citation lines. "
   :type 'symbol
   :group 'emacspeak-vm)
@@ -528,7 +503,7 @@ Leave point at front of decoded attachment."
           (function
            (lambda nil
              (emacspeak-pronounce-refresh-pronunciations))))
-
+(declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
 (emacspeak-pronounce-augment-pronunciations 'vm-presentation-mode
                                             emacspeak-pronounce-internet-smileys-pronunciations)
 

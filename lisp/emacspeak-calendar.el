@@ -1,5 +1,5 @@
 ;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -- maintain a diary and appointments
-;;; $Id: emacspeak-calendar.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: emacspeak-calendar.el,v 18.0 2003/04/29 21:16:55 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extensions to speech enable the calendar.
 ;;; Keywords: Emacspeak, Calendar, Spoken Output
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:55 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -36,15 +36,6 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'dtk-speak)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(require 'advice)
-(require 'emacspeak-keymap)
-(eval-when-compile (require 'calendar))
-
 ;;{{{  Introduction:
 
 ;;; This module speech enables the Emacs Calendar.
@@ -52,9 +43,16 @@
 ;;; This is an excellent example of this. 
 
 ;;}}}
+;;{{{ required modules
+;;; Code:
+(require 'emacspeak-preamble)
+(require 'calendar)
+;;}}}
 ;;{{{  personalities
-(defvar emacspeak-calendar-mark-personality 'ursula
-  "Personality to use when showing marked calendar entries.")
+(defcustom emacspeak-calendar-mark-personality 'ursula
+  "Personality to use when showing marked calendar entries."
+  :type 'symbol
+  :group 'emacspeak-calendar)
 
 ;;}}}
 ;;{{{  functions: 
@@ -374,6 +372,8 @@
        (save-excursion
          (set-buffer appt-buffer-name)
          (erase-buffer))))
+(declaim (special appt-delete-window
+                  appt-disp-window-function))
 
 (setq appt-disp-window-function 'emacspeak-appt-speak-appointment)
 (setq appt-delete-window 'emacspeak-appt-delete-display)

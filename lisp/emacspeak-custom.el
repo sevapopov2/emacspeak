@@ -1,5 +1,5 @@
 ;;; emacspeak-custom.el --- Speech enable interactive Emacs customization 
-;;; $Id: emacspeak-custom.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-custom.el,v 18.0 2003/04/29 21:16:57 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to custom
 ;;; Keywords: Emacspeak, Speak, Spoken Output, custom
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:57 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,17 +40,7 @@
 
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when-compile (require 'dtk-speak)
-		   (require 'emacspeak-speak)
-		   (require 'voice-lock)
-		   (require 'emacspeak-keymap)
-		   (require 'emacspeak-sounds)
-		   (require 'widget)
-		   (require 'wid-edit)
-		   (require 'emacspeak-widget))
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction
 
@@ -59,7 +49,44 @@
 ;;; which speech-enables the widget libraries.
 
 ;;}}}
-;;{{{ Advice
+
+;;{{{ advice
+
+(defadvice Custom-reset-current (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'item)
+    (dtk-speak "Reset current")))
+
+(defadvice Custom-reset-saved(after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'unmodified-object)
+    (dtk-speak "Reset to saved")))
+
+(defadvice Custom-reset-standard (after emacspeak act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'delete-object)
+    (dtk-speak "Erase customization")))
+
+(defadvice Custom-set (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'button)
+    (dtk-speak "Set for current session")))
+
+(defadvice Custom-save (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'save-object)
+    (dtk-speak "Set and saved")))
+
+(defadvice Custom-buffer-done (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice customize-save-customized (after emacspeak pre act comp)
   "Provide auditory feedback. "
@@ -148,6 +175,12 @@
              (emacspeak-pronounce-refresh-pronunciations))))
 
 ;;}}}
+;;{{{ define voices
+(def-voice-font emacspeak-custom-state-face voice-smoothen
+  'custom-state-face
+  "Personality used for showing custom state.")
+
+;;}}}
 ;;{{{  custom navigation
 
 (defcustom emacspeak-custom-group-regexp
@@ -155,7 +188,7 @@
   "Pattern identifying start of custom group."
   :type 'regexp
   :group 'emacspeak-custom)
-
+;;;###autoload
 (defun emacspeak-custom-goto-group ()
   "Jump to custom group when in a customization buffer."
   (interactive)
@@ -172,7 +205,7 @@
   "Pattern that identifies toolbar section."
   :type 'regexp
   :group 'emacspeak-custom)
-
+;;;###autoload
 (defun emacspeak-custom-goto-toolbar ()
   "Jump to custom toolbar when in a customization buffer."
   (interactive)
@@ -188,6 +221,12 @@
 ;;{{{  bind emacspeak commands 
 
 (declaim (special custom-mode-map))
+(define-key custom-mode-map "E" 'Custom-reset-standard)
+(define-key custom-mode-map "r" 'Custom-reset-current)
+(define-key custom-mode-map "R" 'Custom-reset-saved)
+(define-key custom-mode-map "s" 'Custom-set)
+(define-key  custom-mode-map "S" 'Custom-save)
+
 (define-key custom-mode-map "," 'backward-paragraph)
 (define-key custom-mode-map "." 'forward-paragraph)
 (define-key custom-mode-map  "\M-t" 'emacspeak-custom-goto-toolbar)

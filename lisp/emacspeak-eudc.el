@@ -1,5 +1,5 @@
 ;;; emacspeak-eudc.el --- Speech enable  directory client 
-;;; $Id: emacspeak-eudc.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-eudc.el,v 18.0 2003/04/29 21:17:06 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable universal directory client 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:17:06 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2002, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2003, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -39,23 +39,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;{{{ required modules
-
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(eval-when-compile (require 'dtk-speak)
-                   (require 'emacspeak-speak)
-                   (require 'emacspeak-sounds)
-                   (condition-case nil
-                       (progn (require 'widget)
-                              (require 'wid-edit)
-                              (message "Compiling against widget libraries %s %s"
-                                       (locate-library "widget")
-                                       (locate-library "wid-edit")))
-                     (error
-                      (message  "Widget libraries not found, widget support may not work correctly.")))
-                   (require 'emacspeak-widget)
-                   )
+(require 'emacspeak-preamble)              
 ;;}}}
 ;;{{{  Introduction:
 
@@ -118,10 +102,10 @@ Summarize the form to welcome the user. "
   (let((server "Server ")
        (host eudc-server))
     (put-text-property 0  (length host)
-                       'personality 'paul-animated
+                       'personality voice-animate
                        host)
     (put-text-property 0  (length server)
-                       'personality 'annotation-voice
+                       'personality voice-annotate
                        server)
     (dtk-speak 
      (concat server 
@@ -160,8 +144,8 @@ Summarize the form to welcome the user. "
 
 (defadvice eudc-mode (before emacspeak pre act comp)
   "Setup for voiceification"
-  (setq lazy-voice-lock-mode nil)
   (voice-lock-mode 1))
+
 (defgroup emacspeak-eudc nil
   "Emacspeak add-on to the Emacs Universal Directory Client."
   :group 'emacspeak
@@ -169,7 +153,7 @@ Summarize the form to welcome the user. "
   :prefix "emacspeak-eudc-")
 
 (defcustom emacspeak-eudc-attribute-value-personality
-  'paul-animated
+  voice-animate
   "Personality t use for voiceifying attribute values. "
   :type 'symbol
   :group 'emacspeak-eudc)

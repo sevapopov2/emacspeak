@@ -1,4 +1,4 @@
-$Id: DTK,v 17.0 2002/11/23 01:29:10 raman Exp $
+$Id: DTK,v 18.0 2003/04/29 21:21:24 raman Exp $
 Notes On Using Software Dectalk   (Software TTS) with Emacspeak:
 
 Fonix Software Dectalk TTS (Text To Speech) is a software version of
@@ -27,13 +27,10 @@ Before attempting to build and install Software Dectalk
 support for Emacspeak you should first install Emacspeak the
 normal way.  See the Emacspeak Makefile for instructions.
 
-** Compiling Software Dectalk  Support For Emacspeak:
+** Downloading  Software Dectalk  Support For Emacspeak:
 
-Change to the software-dtk subdirectory 
-of the Emacspeak source distribution.
-   make 
-This should compile the Emacspeak Dectalk  TCL library to
-produce a file called tcldtk.so.
+Download and install software-dtk package from the Emacspeak site.
+This provides the compiled Emacspeak software dtk server --file servers/software-dtk/tcldtk.so
 
 * Testing:
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-setup.el,v 18.0 2003/04/29 21:17:55 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
@@ -7,14 +7,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:55 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -47,43 +47,33 @@ variable is set to nil.
 To use emacspeak with emacs running in multibyte mode, this
 variable should be set to nil *before* 
 emacspeak is compiled or started.")
-
+;;;###autoload
 (defvar emacspeak-directory
   (expand-file-name "../" (file-name-directory load-file-name))
   "Directory where emacspeak is installed. ")
-
+;;;###autoload
 (defvar emacspeak-lisp-directory
   (expand-file-name  "lisp/" emacspeak-directory)
   "Directory where emacspeak lisp files are  installed. ")
-
+;;;###autoload
 (defvar emacspeak-sounds-directory
   (expand-file-name  "sounds/" emacspeak-directory)
   "Directory containing auditory icons for Emacspeak.")
-
+;;;###autoload
 (defvar emacspeak-etc-directory
   (expand-file-name  "etc/" emacspeak-directory)
   "Directory containing miscellaneous files  for
   Emacspeak.")
-
+;;;###autoload
 (defvar emacspeak-servers-directory
   (expand-file-name  "servers/" emacspeak-directory)
   "Directory containing speech servers  for
   Emacspeak.")
-
+;;;###autoload
 (defvar emacspeak-info-directory
   (expand-file-name  "info/" emacspeak-directory)
   "Directory containing  Emacspeak info files.")
-(defcustom emacspeak-play-program
-  (cond
-   ((getenv "EMACSPEAK_PLAY_PROGRAM"))
-   ((file-exists-p "/usr/bin/play") "/usr/bin/play")
-   ((file-exists-p "/usr/bin/audioplay") "/usr/bin/audioplay")
-   ((file-exists-p "/usr/demo/SOUND/play") "/usr/demo/SOUND/play")
-   (t (expand-file-name emacspeak-etc-directory "play")))
-  "Name of executable that plays sound files. "
-  :group 'emacspeak
-  :type 'string)
-
+;;;###autoload
 (defvar emacspeak-resource-directory (expand-file-name "~/.emacspeak/")
   "Directory where Emacspeak resource files such as
 pronunciation dictionaries are stored. ")
@@ -127,6 +117,7 @@ pronunciation dictionaries are stored. ")
 ;;; Use (add-hook 'emacspeak-startup-hook ...)
 ;;; to add your personal settings. 
 (emacspeak)
+(provide 'emacspeak-setup)
 ;;{{{  emacs local variables 
 
 ;;; local variables:

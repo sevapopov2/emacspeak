@@ -1,5 +1,5 @@
 ;;; emacspeak-man.el --- Speech enable Man mode -- Use this for UNIX Man pages
-;;; $Id: emacspeak-man.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-man.el,v 18.0 2003/04/29 21:17:40 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for man-mode
 ;;; Keywords:emacspeak, audio interface to emacs man 
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:40 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman 
 ;;; All Rights Reserved. 
 ;;;
@@ -47,15 +47,8 @@
 ;;{{{ Required modules
 
 ;;; Code:
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when-compile (require 'dtk-speak)
-                   (require 'emacspeak-speak)
-                   (require 'emacspeak-sounds)
-                   (require 'voice-lock)
-                   (require 'emacspeak-keymap)
-                   (require 'man))
-
+(require 'emacspeak-preamble)
+(require 'man)
 ;;}}}
 ;;{{{  Configure man
 
@@ -68,24 +61,6 @@
 (when (eq system-type 'gnu/linux)
   (setq Man-switches "-a"))
 
-(defvar Man-voice-lock-keywords nil
-  "Keywords to highlight in Man mode")
-(declaim (special Man-voice-lock-keywords
-                  Man-heading-regexp Man-first-heading-regexp
-                  Man-see-also-regexp
-                  ))
-(setq Man-voice-lock-keywords
-      (list
-       ;; Regexp describing section headers 
-       (cons Man-heading-regexp   'voice-lock-underline-personality)
-       ;;Regexp for SEE ALSO section (or your equiv) 
-       (cons Man-see-also-regexp    'voice-lock-italic-personality)
-       ;;Regexp for first heading on a manpage 
-       (cons Man-first-heading-regexp     'voice-lock-underline-personality )
-       ;; Regexp matching a references in SEE ALSO 
-					;(cons Man-reference-regexp    'voice-lock-bold-personality)
-       ))
-(voice-lock-set-major-mode-keywords 'Man-mode    'Man-voice-lock-keywords)
 ;;}}}
 ;;{{{  advice interactive commands 
 

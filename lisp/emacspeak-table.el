@@ -1,5 +1,5 @@
 ;;; emacspeak-table.el --- Implements data model for table browsing
-;;; $Id: emacspeak-table.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-table.el,v 18.0 2003/04/29 21:18:03 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:03 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -37,13 +37,14 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'thingatpt)
 ;;{{{  Introduction
 
 ;;; Implements a module that provides a high level interface to
 ;;; tabulated information.
+
+;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{  Define table data structure:
@@ -63,7 +64,7 @@
   current-column			;column containing point 
   elements                              ;  vector of  elements 
   )
-
+;;;###autoload
 (defun emacspeak-table-make-table (elements)
   "Construct a table object from elements."
   (assert (vectorp elements) t

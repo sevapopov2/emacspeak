@@ -1,5 +1,5 @@
 ;;; emacspeak-bibtex.el --- Speech enable bibtex -- Supports maintaining bibliographies in bibtex format
-;;; $Id: emacspeak-bibtex.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: emacspeak-bibtex.el,v 18.0 2003/04/29 21:16:53 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for editting bibtex files 
 ;;; Keywords:emacspeak, audio interface to emacs, bibtex
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:53 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -37,10 +37,9 @@
 
 ;;}}}
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-sounds)
-(require 'emacspeak-speak)
+;;{{{ required modules 
+(require 'emacspeak-preamble)
+;;}}}
 ;;{{{  Introduction
 
 ;;; Speech extensions for bibtex mode.
@@ -212,7 +211,6 @@
     (emacspeak-speak-line)))
 
 ;;}}}
-
 (provide  'emacspeak-bibtex)
 ;;{{{  emacs local variables 
 

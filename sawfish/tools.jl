@@ -1,4 +1,4 @@
-;;;$Id: tools.jl,v 17.0 2002/11/23 01:29:09 raman Exp $
+;;;$Id: tools.jl,v 18.0 2003/04/29 21:21:19 raman Exp $
 ;;; tools.jl --- Emacs tool for sawfish
 ;;; $Author: raman $
 ;;; Description:   Commands for launching or switching to
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:09 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:21:19 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -111,6 +111,8 @@
 	(display-window w)
       (system program))
     (and (tts-running-p) (tts-say-current-window))))
+
+(message "Loaded tools.jl")
 
 ;;{{{ end of file
 

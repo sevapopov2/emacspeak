@@ -1,5 +1,5 @@
 ;;; emacspeak-pronounce.el --- Implements Emacspeak pronunciation dictionaries
-;;; $Id: emacspeak-pronounce.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-pronounce.el,v 18.0 2003/04/29 21:17:46 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Emacspeak pronunciation dictionaries
 ;;; Keywords:emacspeak, audio interface to emacs customized pronunciation
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:17:46 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman 
 ;;; All Rights Reserved.
 ;;;
@@ -65,7 +65,8 @@
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
 (eval-when-compile (require 'wid-edit)
-		   (require 'voice-lock))
+		   (require 'emacspeak-personality))
+(require 'voice-setup)
 (require 'thingatpt)
 (eval-when (compile)
                                         ;avoid recursive include during compile
@@ -99,7 +100,7 @@ Values are alists containing string.pronunciation pairs.")
   (when (stringp key)
     (setq key (intern key )))
   (gethash key emacspeak-pronounce-dictionaries))
-
+;;;###autoload
 (defun emacspeak-pronounce-add-dictionary-entry  (key string pronunciation)
   "Add dictionary entry.
 This adds pronunciation pair
@@ -141,7 +142,7 @@ Arguments STRING and PRONUNCIATION specify what is being defined."
 ;;; parent stored as a property on child symbol.
 ;;; when dictionary composed for a buffer, inherited dictionaries are
 ;;; also looked up.
-
+;;;###autoload
 (defun emacspeak-pronounce-add-super  (parent child)
   "Make CHILD inherit PARENT's pronunciations."
   (let ((orig (get child 'emacspeak-pronounce-supers)))
@@ -252,24 +253,32 @@ Argument CHILD  specifies the mode whose supers are being requested."
 This is the personality used when speaking  things that have a pronunciation
 applied."
   :group 'emacspeak-pronounce
-  :type 'symbol)
-
+  :type (voice-setup-custom-menu))
+;;;###autoload
 (defsubst emacspeak-pronounce-apply-pronunciations (pronunciation-table )
   "Applies pronunciations specified in pronunciation table to current buffer.
 Modifies text and point in buffer."
+  (declare (special emacspeak-pronounce-pronunciation-personality))
   (loop for  key  being the hash-keys  of pronunciation-table
         do
         (let ((word (symbol-name key))
-              (pronunciation (gethash  key pronunciation-table )))
+              (pronunciation (gethash  key pronunciation-table ))
+              (personality nil))
           (goto-char (point-min))
           (while (search-forward  word nil t)
+            (setq personality
+                  (get-text-property (point) 'personality))
             (replace-match  pronunciation t t  )
-            (and emacspeak-pronounce-pronunciation-personality
-                 (put-text-property
-                  (match-beginning 0)
-                  (+ (match-beginning 0) (length pronunciation))
-                  'personality
-                  emacspeak-pronounce-pronunciation-personality))))))
+            (if emacspeak-pronounce-pronunciation-personality
+                (put-text-property
+                 (match-beginning 0)
+                 (+ (match-beginning 0) (length pronunciation))
+                 'personality
+                 emacspeak-pronounce-pronunciation-personality)
+              (put-text-property
+               (match-beginning 0)
+               (+ (match-beginning 0) (length pronunciation))
+               'personality personality))))))
 
 ;;}}}
 ;;{{{  loading, clearing  and saving dictionaries
@@ -287,7 +296,7 @@ Modifies text and point in buffer."
   "Says if user dictionaries loaded on  emacspeak startup."
   :type 'boolean
   :group 'emacspeak-pronounce)
-
+;;;###autoload
 (defun emacspeak-pronounce-save-dictionaries  ()
   "Writes out the persistent emacspeak pronunciation dictionaries."
   (interactive)
@@ -311,9 +320,10 @@ Modifies text and point in buffer."
       (while (search-forward ")" nil t)
         (replace-match ")\n" nil t))
       (save-buffer))))
+;;;###autoload
 (defvar emacspeak-pronounce-dictionaries-loaded nil
   "Indicates if dictionaries already loaded.")
-
+;;;###autoload
 (defun emacspeak-pronounce-load-dictionaries  (&optional filename)
   "Load pronunciation dictionaries.
 Optional argument FILENAME specifies the dictionary file."
@@ -326,7 +336,7 @@ Optional argument FILENAME specifies the dictionary file."
   (when (file-exists-p filename)
     (load-file filename)
     (setq emacspeak-pronounce-dictionaries-loaded t)))
-
+;;;###autoload
 (defun emacspeak-pronounce-clear-dictionaries ()
   "Clear all current pronunciation dictionaries."
   (interactive)
@@ -447,13 +457,13 @@ First loads any persistent dictionaries if not already loaded."
 
 ;;}}}
 ;;{{{ Turning dictionaries on and off on a per buffer basis
-
+;;;###autoload
 (defvar emacspeak-pronounce-pronunciation-table nil
   "Variable holding association list of pronunciations for a buffer.
 Becomes automatically buffer local.")
 (make-variable-buffer-local 'emacspeak-pronounce-pronunciation-table)
 (setq-default emacspeak-pronounce-pronunciation-table nil)
-
+;;;###autoload
 (defun emacspeak-pronounce-toggle-use-of-dictionaries (&optional state)
   "Toggle use of pronunciation dictionaries in current buffer.
 Pronunciations can be dfined on a per file, per directory and/or per
@@ -489,7 +499,7 @@ explicitly turn pronunciations on or off."
     (message
      "Emacspeak pronunciations have been re-activated in this buffer")
     (emacspeak-auditory-icon 'on))))
-
+;;;###autoload
 (defun emacspeak-pronounce-refresh-pronunciations ()
   "Refresh pronunciation table for current buffer.
 Activates pronunciation dictionaries if not already active."
@@ -541,10 +551,11 @@ See http://oz.uc.edu/~solkode/smileys.html for a full list."
 
 (defcustom emacspeak-pronounce-common-xml-namespace-uri-pronunciations 
   '(
+    ("http://www.w3.org/1999/02/22-rdf-syntax-ns#" . "RDF Syntax")
     ("http://www.w3.org/2002/06/xhtml2" . " xhtml2 ")
     ("http://www.w3.org/1999/XSL/Transform" . " XSLT ")
-    ("http://www.w3.org/2002/xforms/cr" . " XForms ")
-    ("http://www.w3.org/2002/xml-events" . " XEvents ")
+    ("http://www.w3.org/2002/xforms" . " XForms ")
+    ("http://www.w3.org/2001/xml-events" . " XEvents ")
     ("http://www.w3.org/2001/XMLSchema-instance". " XSchema Instance ")
     ("http://www.w3.org/2001/XMLSchema". " XSchema ")
     ("http://www.w3.org/1999/xhtml" . " xhtml ")
@@ -561,7 +572,7 @@ See http://oz.uc.edu/~solkode/smileys.html for a full list."
 
 ;;}}}
 ;;{{{ adding predefined dictionaries to a mode:
-
+;;;###autoload
 (defun emacspeak-pronounce-augment-pronunciations (mode dictionary)
   "Pushes pronunciations in specified dictionary on to the dictionary
 for the specified mode."

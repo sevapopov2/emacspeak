@@ -1,5 +1,5 @@
 ;;; dtk-interp.el --- Language specific (e.g. TCL) interface to speech server
-;;; $Id: dtk-interp.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: dtk-interp.el,v 18.0 2003/04/29 21:16:46 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Interfacing to the speech server
 ;;; Keywords: TTS, Dectalk, Speech Server
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:16:46 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -38,8 +38,6 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
 ;;{{{ introduction
 
 ;;; All requests to the speech server are factored out into
@@ -49,6 +47,39 @@
 ;;; This preserves the same level of efficiency as before,
 ;;; but gives us the flexibility to call out to different
 ;;; speech servers.
+
+;;}}}
+;;{{{ requires
+
+;;;Code:
+
+(eval-when-compile (require 'cl))
+(declaim  (optimize  (safety 0) (speed 3)))
+
+;;}}}
+;;{{{ macros
+
+(defmacro tts-with-punctuations (setting &rest body)
+  "Safely set punctuation mode for duration of body form."
+  (`
+   (progn
+     (declare (special dtk-punctuation-mode))
+     (let    ((save-punctuation-mode dtk-punctuation-mode))
+       (unwind-protect
+           (progn
+             (unless (string= (, setting) save-punctuation-mode)
+               (process-send-string dtk-speaker-process
+                                    (format "tts_set_punctuations %s  \n "
+                                            (, setting)))
+               (setq dtk-punctuation-mode (, setting)))
+             (,@ body)
+             (dtk-force))
+         (unless (string=  (, setting)  save-punctuation-mode)
+           (setq dtk-punctuation-mode save-punctuation-mode)
+           (process-send-string dtk-speaker-process
+                                (format "tts_set_punctuations %s  \n "
+                                        dtk-punctuation-mode ))
+           (dtk-force)))))))
 
 ;;}}}
 ;;{{{ silence

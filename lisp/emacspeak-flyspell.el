@@ -1,5 +1,5 @@
 ;;; emacspeak-ispell.el --- Speech enable Ispell -- Emacs' interactive spell checker
-;;; $Id: emacspeak-flyspell.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-flyspell.el,v 18.0 2003/04/29 21:17:18 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable flyspell
 ;;; Keywords: Emacspeak, Ispell, Spoken Output, fly spell checking
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:18 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -38,17 +38,15 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(require 'advice)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
 ;;{{{  Introduction:
 
 ;;; Commentary:
 
 ;;; This module speech enables flyspell.
+
+;;}}}
+;;{{{ Requires
+(require 'emacspeak-preamble)
 
 ;;}}}
 ;;{{{  define personalities
@@ -59,7 +57,7 @@
   :group 'flyspell
   :prefix "emacspeak-flyspell-")
 
-(defcustom emacspeak-flyspell-highlight-personality 'harry
+(defcustom emacspeak-flyspell-highlight-personality voice-bolden
   "Voice used to highlight spelling errors. "
   :type 'symbol
   :group 'emacspeak-flyspell)

@@ -1,5 +1,5 @@
 ;;; emacspeak-ispell.el --- Speech enable Ispell -- Emacs' interactive spell checker
-;;; $Id: emacspeak-ispell.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-ispell.el,v 18.0 2003/04/29 21:17:33 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable ispell
 ;;; Keywords: Emacspeak, Ispell, Spoken Output, Ispell version 2.30
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:33 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -38,11 +38,6 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
 ;;{{{  Introduction:
 
 ;;; This module speech enables ispell.
@@ -56,10 +51,16 @@
 ;;; Support for 2.30 will wither away
 
 ;;}}}
+;;{{{ requires
+(require 'emacspeak-preamble)
+
+;;}}}
 ;;{{{  define personalities
 
-(defvar ispell-highlight-personality 'harry
-  "Voice used to highlight spelling errors. ")
+(defcustom ispell-highlight-personality voice-bolden
+  "Voice used to highlight spelling errors. "
+  :type 'symbol
+  :group 'emacspeak-ispell)
 
 ;;}}}
 ;;{{{  first set up voice  highlighting in 2.30:

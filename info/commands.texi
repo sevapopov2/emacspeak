@@ -1,4 +1,4 @@
-@c $Id: commands.texi,v 17.0 2002/11/23 01:29:10 raman Exp $
+@c $Id: commands.texi,v 18.0 2003/04/29 21:21:28 raman Exp $
 @node Emacspeak Commands
 @chapter Emacspeak Commands
 
@@ -8,7 +8,6 @@ documentation.
 
 @menu
 * dtk-speak::                   
-* dtk-tcl::                     
 * emacspeak::                   
 * emacspeak-arc::               
 * emacspeak-aumix::             
@@ -53,6 +52,7 @@ documentation.
 * emacspeak-redefine::          
 * emacspeak-remote::            
 * emacspeak-rmail::             
+* emacspeak-rss::               
 * emacspeak-solitaire::         
 * emacspeak-sounds::            
 * emacspeak-speak::             
@@ -78,71 +78,11 @@ documentation.
 @node dtk-speak
 @section dtk-speak
 
+Commentary:
+Defines the TTS interface.
+
 Automatically generated documentation
 for commands defined in module  dtk-speak.
-
-@deffn dtk-select-server (PROGRAM)
-@kbd{ control e d d }
-
-Select a speech server interactively.
-Argument PROGRAM specifies the speech server program.
-When called  interactively, The selected server is started immediately. 
-@end deffn
-
-@deffn dtk-set-chunk-separator-syntax (S)
-@kbd{ control e d RETURN }
-
-Interactively set how text is split in chunks.
-See the Emacs documentation on syntax tables for details on how characters are
-classified into various syntactic classes.
-Argument S specifies the syntax class.
-@end deffn
-
-@deffn dtk-toggle-debug (&optional FLAG)
-@kbd{ control e d b }
-
-Toggle state of the debug FLAG.
-When debugging is on, you can switch to the buffer
-*speaker* to examine the output from the process
-that talks to the speech device by using command C-e d C-M-b.
-Note: *speaker* is a hidden buffer, ie it has a leading space in its name.
-@end deffn
-
-@deffn dtk-toggle-splitting-on-white-space ()
-@kbd{ control e d SPACE }
-
-Toggle splitting of speech on white space.
-This affects the internal state of emacspeak that decides if we split
-text purely by clause boundaries, or also include
-whitespace.  By default, emacspeak sends a clause at a time
-to the speech device.  This produces fluent speech for
-normal use.  However in modes such as `shell-mode' and some
-programming language modes, clause markers appear
-infrequently, and this can result in large amounts of text
-being sent to the speech device at once, making the system
-unresponsive when asked to stop talking.  Splitting on white
-space makes emacspeak's stop command responsive.  However,
-when splitting on white space, the speech sounds choppy
-since the synthesizer is getting a word at a time.
-@end deffn
-
-@deffn tts-restart ()
-@kbd{ control e control s }
-
-Use this to nuke the currently running TTS server and restart it.
-@end deffn
-
-@deffn tts-show-debug-buffer ()
-@kbd{ control e d CONTROL meta b }
-
-Select TTS debugging buffer.
-@end deffn
-
-@node dtk-tcl
-@section dtk-tcl
-
-Automatically generated documentation
-for commands defined in module  dtk-tcl.
 
 @deffn dtk-add-cleanup-pattern (&optional DELETE)
 @kbd{ control e d a }
@@ -194,6 +134,14 @@ and variable `dtk-resume-should-toggle' is t
  then this command will pause ongoing speech.
 @end deffn
 
+@deffn dtk-select-server (PROGRAM)
+@kbd{ control e d d }
+
+Select a speech server interactively.
+Argument PROGRAM specifies the speech server program.
+When called  interactively, The selected server is started immediately. 
+@end deffn
+
 @deffn dtk-set-character-scale (FACTOR &optional PREFIX)
 @kbd{ control e d f }
 
@@ -207,6 +155,15 @@ This function is advised.
 
 Before-advice `emacspeak-auto':
 Automatically defined advice to speak interactive prompts. 
+@end deffn
+
+@deffn dtk-set-chunk-separator-syntax (S)
+@kbd{ control e d RETURN }
+
+Interactively set how text is split in chunks.
+See the Emacs documentation on syntax tables for details on how characters are
+classified into various syntactic classes.
+Argument S specifies the syntax class.
 @end deffn
 
 @deffn dtk-set-predefined-speech-rate (&optional PREFIX)
@@ -281,6 +238,16 @@ short beep.  Interactive PREFIX arg means toggle the global default
 value, and then set the current local value to the result.
 @end deffn
 
+@deffn dtk-toggle-debug (&optional FLAG)
+@kbd{ control e d b }
+
+Toggle state of the debug FLAG.
+When debugging is on, you can switch to the buffer
+*speaker* to examine the output from the process
+that talks to the speech device by using command C-e d C-M-b.
+Note: *speaker* is a hidden buffer, ie it has a leading space in its name.
+@end deffn
+
 @deffn dtk-toggle-punctuation-mode (&optional PREFIX)
 Toggle punctuation mode between "some" and "all".
 Interactive PREFIX arg makes the new setting global.
@@ -314,6 +281,24 @@ means toggle the global default value, and then set the current local
 value to the result.
 @end deffn
 
+@deffn dtk-toggle-splitting-on-white-space ()
+@kbd{ control e d SPACE }
+
+Toggle splitting of speech on white space.
+This affects the internal state of emacspeak that decides if we split
+text purely by clause boundaries, or also include
+whitespace.  By default, emacspeak sends a clause at a time
+to the speech device.  This produces fluent speech for
+normal use.  However in modes such as `shell-mode' and some
+programming language modes, clause markers appear
+infrequently, and this can result in large amounts of text
+being sent to the speech device at once, making the system
+unresponsive when asked to stop talking.  Splitting on white
+space makes emacspeak's stop command responsive.  However,
+when splitting on white space, the speech sounds choppy
+since the synthesizer is getting a word at a time.
+@end deffn
+
 @deffn dtk-toggle-stop-immediately-while-typing (&optional PREFIX)
 @kbd{ control e d  cap I  }
 
@@ -325,6 +310,9 @@ Optional argument PREFIX specifies if the setting applies to all buffers.
 
 @node emacspeak
 @section emacspeak
+
+Commentary:
+The complete audio desktop.
 
 Automatically generated documentation
 for commands defined in module  emacspeak.
@@ -365,6 +353,10 @@ Speak the size of the file on current line
 
 @node emacspeak-aumix
 @section emacspeak-aumix
+
+Commentary:
+Provides an AUI to setting up the auditory display via AUMIX
+This module is presently Linux specific
 
 Automatically generated documentation
 for commands defined in module  emacspeak-aumix.
@@ -411,6 +403,10 @@ Increase volume of wave output.
 
 @node emacspeak-bs
 @section emacspeak-bs
+
+Commentary:
+speech-enable bs.el
+this is an alternative to list-buffers
 
 Automatically generated documentation
 for commands defined in module  emacspeak-bs.
@@ -470,6 +466,10 @@ Speak the date under point when called in Calendar Mode.
 @node emacspeak-compile
 @section emacspeak-compile
 
+Commentary:
+This module makes compiling code from inside Emacs speech friendly.
+It is an example of how a little amount of code can make Emacspeak even better.
+
 Automatically generated documentation
 for commands defined in module  emacspeak-compile.
 
@@ -493,6 +493,9 @@ Jump to custom toolbar when in a customization buffer.
 
 @node emacspeak-daisy
 @section emacspeak-daisy
+
+Commentary:
+Daisy Digital Talking Book Reader
 
 Automatically generated documentation
 for commands defined in module  emacspeak-daisy.
@@ -555,6 +558,12 @@ Stop audio.
 
 @node emacspeak-dired
 @section emacspeak-dired
+
+Commentary:
+This module speech enables dired.
+It reduces the amount of speech you hear:
+Typically you hear the file names as you move through the dired buffer
+Voicification is used to indicate directories, marked files etc.
 
 Automatically generated documentation
 for commands defined in module  emacspeak-dired.
@@ -757,6 +766,14 @@ set the current local value to the result.
 
 @node emacspeak-eterm
 @section emacspeak-eterm
+
+Commentary:
+This module makes eterm talk.
+Eterm is the new terminal emulator for Emacs.
+Use of emacspeak with eterm really needs an info page.
+At present, the only documentation is the source level documentation.
+This module uses Control-t as an additional prefix key to allow the user
+To move around the terminal and have different parts spoken. 
 
 Automatically generated documentation
 for commands defined in module  emacspeak-eterm.
@@ -1002,6 +1019,12 @@ all output to the terminal is automatically spoken.
 @node emacspeak-eudc
 @section emacspeak-eudc
 
+Commentary:
+EUDC --Emacs Universal Directory Client 
+provides a unified interface to directory servers
+e.g. ldap servers
+this module speech enables eudc 
+
 Automatically generated documentation
 for commands defined in module  emacspeak-eudc.
 
@@ -1222,6 +1245,15 @@ Save out grid settings.
 @node emacspeak-hide
 @section emacspeak-hide
 
+Commentary:
+
+Flexible hide and show for emacspeak.
+This module allows one to easily hide or expose
+blocks of lines starting with a common prefix.
+It is motivated by the need to flexibly hide quoted text in email
+but is designed to be more general.
+the prefix parsing is inspired by filladapt.el
+
 Automatically generated documentation
 for commands defined in module  emacspeak-hide.
 
@@ -1252,6 +1284,10 @@ and when you have heard enough navigate easily  to move past the block.
 
 @node emacspeak-ibuffer
 @section emacspeak-ibuffer
+
+Commentary:
+speech-enable ibuffer.el
+this is an alternative to buffer-menu
 
 Automatically generated documentation
 for commands defined in module  emacspeak-ibuffer.
@@ -1369,6 +1405,10 @@ Speak current section
 
 @node emacspeak-mpg123
 @section emacspeak-mpg123
+
+Commentary:
+This module speech-enables  MPG123
+MPG123 is an MP3 player.
 
 Automatically generated documentation
 for commands defined in module  emacspeak-mpg123.
@@ -1601,6 +1641,9 @@ Writes out recognized text from all pages in current document.
 @node emacspeak-outline
 @section emacspeak-outline
 
+Commentary:
+Provide additional advice to outline-mode
+
 Automatically generated documentation
 for commands defined in module  emacspeak-outline.
 
@@ -1631,6 +1674,22 @@ Speak current outline section starting from point
 @node emacspeak-pronounce
 @section emacspeak-pronounce
 
+Commentary:
+This module implements user customizable pronunciation dictionaries
+for emacspeak. Custom pronunciations can be defined per file, per
+directory and/or per major mode. Emacspeak maintains a persistent
+user dictionary upon request and loads these in new emacspeak
+sessions. This module implements the user interface to the custom
+dictionary as well as providing the internal API used by the rest
+of emacspeak in using the dictionary.
+Algorithm:
+
+The persistent dictionary is a hash table where the hash keys are
+filenames, directory names, or major-mode names. The hash values
+are association lists defining the dictionary. Users of this module
+can retrieve a dictionary made up of all applicable association
+lists for a given file.
+
 Automatically generated documentation
 for commands defined in module  emacspeak-pronounce.
 
@@ -1639,8 +1698,6 @@ Clear all current pronunciation dictionaries.
 @end deffn
 
 @deffn emacspeak-pronounce-define-local-pronunciation (WORD PRONUNCIATION)
-@kbd{ control e meta b }
-
 Define buffer local pronounciation.
 Argument WORD specifies the word which should be pronounced as specified by PRONUNCIATION.
 @end deffn
@@ -1708,9 +1765,9 @@ Speak contents of current element.
 Context-sensitive element summarizer.
 @end deffn
 
-@deffn emacspeak-psgml-toggle-interactive-voice-locking ()
+@deffn emacspeak-psgml-toggle-interactive-font-lock ()
 Toggles variable sgml-set-face.
-When turned on, the  buffer is voice locked interactively.
+When turned on, the  buffer is font locked interactively.
 Leave this off in general while editting.
 @end deffn
 
@@ -1741,6 +1798,15 @@ If already at the beginning then move to previous block.
 
 @node emacspeak-realaudio
 @section emacspeak-realaudio
+
+Commentary:
+Assuming you have a correctly configured RealAudio
+player, this package provides single click access to
+starting and stopping a RealAudio stream from anywhere
+on the Emacspeak desktop.  Before using this package,
+make sure that your realaudio player works outside
+Emacs. Then set variable Emacspeak-realaudio-player to
+point to the program you use to play RealAudio streams.
 
 Automatically generated documentation
 for commands defined in module  emacspeak-realaudio.
@@ -1811,10 +1877,6 @@ Play a realaudio stream.  Uses files from your Realaudio
 shortcuts directory for completion.  See documentation for
 user configurable variable
 emacspeak-realaudio-shortcuts-directory. 
-@end deffn
-
-@deffn emacspeak-realaudio-play-url-at-point (&optional PROMPT-TIME)
-Play url under point as realaudio
 @end deffn
 
 @deffn emacspeak-realaudio-select-realaudio-buffer ()
@@ -1913,6 +1975,22 @@ Speak labels of current message
 Summarize current message
 @end deffn
 
+@node emacspeak-rss
+@section emacspeak-rss
+
+Automatically generated documentation
+for commands defined in module  emacspeak-rss.
+
+@deffn emacspeak-rss-browse (FEED)
+@kbd{ control e control u }
+
+Browse specified RSS feed.
+@end deffn
+
+@deffn emacspeak-rss-display (RSS-URL &optional SPEAK)
+Retrieve and display RSS news feed.
+@end deffn
+
 @node emacspeak-solitaire
 @section emacspeak-solitaire
 
@@ -1934,6 +2012,27 @@ Speak coordinates of current position
 @node emacspeak-sounds
 @section emacspeak-sounds
 
+Commentary:
+This module provides the interface for generating auditory icons in emacspeak.
+Design goal:
+1) Auditory icons should be used to provide additional feedback,
+not as a gimmick.
+2) The interface should be usable at all times without the icons:
+e.g. when on a machine without a sound card.
+3) General principle for when to use an icon:
+Convey information about events taking place in parallel.
+For instance, if making a selection automatically moves the current focus
+to the next choice,
+We speak the next choice, while indicating the fact that something was selected with a sound cue.
+ This interface will assume the availability of a shell command "play"
+that can take one or more sound files and play them.
+This module will also provide a mapping between names in the elisp world and actual sound files.
+Modules that wish to use auditory icons should use these names, instead of actual file names.
+As of Emacspeak 13.0, this module defines a themes
+architecture for  auditory icons.
+Sound files corresponding to a given theme are found in
+appropriate subdirectories of emacspeak-sounds-directory
+
 Automatically generated documentation
 for commands defined in module  emacspeak-sounds.
 
@@ -1948,7 +2047,7 @@ Select  player used for producing auditory icons.
 Recommended choices:
 
 emacspeak-serve-auditory-icon for  the wave device.
-emacspeak-midi-icon for midi device. 
+emacspeak-play-midi-icon for midi device. 
 @end deffn
 
 @deffn emacspeak-sounds-reset-local-player ()
@@ -1975,12 +2074,17 @@ Optional interactive PREFIX arg toggles global value.
 @node emacspeak-speak
 @section emacspeak-speak
 
+Commentary:
+This module defines the core speech services used by emacspeak.
+It depends on the speech server interface modules
+It protects other parts of emacspeak
+from becoming dependent on the speech server modules
+
 Automatically generated documentation
 for commands defined in module  emacspeak-speak.
 
-@deffn emacspeak-audio-annotate-paragraphs (&optional PREFIX)
+@deffn emacspeak-audio-annotate-paragraphs ()
 Set property auditory-icon at front of all paragraphs.
-Interactive PREFIX arg prompts for sound cue to use
 @end deffn
 
 @deffn emacspeak-blink-matching-open ()
@@ -2238,17 +2342,16 @@ any other key to speak entire help.
 @deffn emacspeak-speak-line (&optional ARG)
 @kbd{ control e l }
 
-Speaks current line.  With prefix ARG, speaks the rest of
-the line from point.  Negative prefix optional arg speaks
-from start of line to point.  Voicifies if option
-`voice-lock-mode' is on.  Indicates indentation with a tone
-if audio indentation is in use.  Indicates position of point
-with an aural highlight if option `emacspeak-show-point' is
-turned on --see command `emacspeak-show-point' bound to
-M-x emacspeak-show-point.  Lines that start hidden blocks of
-text, e.g.  outline header lines, or header lines of blocks
-created by command `emacspeak-hide-or-expose-block' are
-indicated with auditory icon ellipses.
+Speaks current line.  With prefix ARG, speaks the rest of the line
+from point.  Negative prefix optional arg speaks from start of line to
+point.  Voicifies if option `voice-lock-mode' is on.  Indicates
+indentation with a tone if audio indentation is in use.  Indicates
+position of point with an aural highlight if option
+`emacspeak-show-point' is turned on --see command
+`emacspeak-show-point' bound to M-x emacspeak-show-point.  Lines that
+start hidden blocks of text, e.g.  outline header lines, or header
+lines of blocks created by command `emacspeak-hide-or-expose-block'
+are indicated with auditory icon ellipses.
 @end deffn
 
 @deffn emacspeak-speak-line-interactively ()
@@ -2292,6 +2395,8 @@ Speak the last message from Emacs once again.
 Optional interactive prefix arg 
 `from-message-cache' speaks message cached from the most
 recent call to function `message'.
+The message is also placed in the kill ring for convenient yanking
+if `emacspeak-speak-message-again-should-copy-to-kill-ring' is set..
 @end deffn
 
 @deffn emacspeak-speak-message-at-time (TIME MESSAGE)
@@ -2332,6 +2437,13 @@ Will be improved if it proves useful.
 @kbd{ control e control n }
 
 Speak the next window.
+@end deffn
+
+@deffn emacspeak-speak-other-buffer (BUFFER)
+@kbd{ control e meta b }
+
+Speak specified buffer.
+Useful to listen to a buffer while in a different context.
 @end deffn
 
 @deffn emacspeak-speak-other-window (&optional ARG)
@@ -2488,10 +2600,11 @@ Speak the white space at point.
 Spell word at  point.
 @end deffn
 
-@deffn emacspeak-speak-time ()
+@deffn emacspeak-speak-time (&optional WORLD)
 @kbd{ control e t }
 
 Speak the time.
+Optional interactive prefix invokes world clock.
 @end deffn
 
 @deffn emacspeak-speak-version ()
@@ -2527,6 +2640,10 @@ Speak the start of, rest of, or the entire word.
 's' to speak the start.
 'r' to speak the rest.
 any other key to speak entire word.
+@end deffn
+
+@deffn emacspeak-speak-world-clock (ZONE)
+Display current date and time  for specified zone.
 @end deffn
 
 @deffn emacspeak-switch-to-completions-window ()
@@ -2673,6 +2790,16 @@ Send this command to the TTS directly.
 
 @node emacspeak-speedbar
 @section emacspeak-speedbar
+
+Commentary:
+This module advises speedbar.el for use with Emacs.  The
+latest speedbar can be obtained from
+ftp://ftp.ultranet.com/pub/zappo/ This module ensures
+that speedbar works smoothly outside a windowing system
+in addition to speech enabling all interactive
+commands. Emacspeak also adds an Emacspeak environment
+specific entry point to speedbar
+--emacspeak-speedbar-goto-speedbar-- and binds this
 
 Automatically generated documentation
 for commands defined in module  emacspeak-speedbar.
@@ -2887,10 +3014,12 @@ in the white-space.
 Automatically generated documentation
 for commands defined in module  emacspeak-tapestry.
 
-@deffn emacspeak-tapestry-describe-tapestry ()
+@deffn emacspeak-tapestry-describe-tapestry (&optional DETAILS)
 @kbd{ control e meta t }
 
 Describe the current layout of visible buffers in current frame.
+Use interactive prefix arg to get coordinate positions of the
+displayed buffers.
 @end deffn
 
 @node emacspeak-tar
@@ -2963,6 +3092,10 @@ Speak current position
 
 @node emacspeak-tnt
 @section emacspeak-tnt
+
+Commentary:
+Speech-enables TNT -- the Emacs AOL Instant Messenger
+client 
 
 Automatically generated documentation
 for commands defined in module  emacspeak-tnt.
@@ -3069,8 +3202,26 @@ Yank specified header into kill ring.
 @node emacspeak-w3
 @section emacspeak-w3
 
+Commentary:
+Ensure that speech support for W3 gets installed and
+loaded correctly.
+The emacs W3 browser comes with builtin support for
+Emacspeak and ACSS
+
 Automatically generated documentation
 for commands defined in module  emacspeak-w3.
+
+@deffn emacspeak-w3-browse-rss-at-point ()
+Browses RSS url under point.
+@end deffn
+
+@deffn emacspeak-w3-browse-url-with-style (STYLE URL)
+Browse URL with specified XSL style.
+@end deffn
+
+@deffn emacspeak-w3-browse-xml-url-with-style (STYLE URL &optional UNESCAPE-CHARENT)
+Browse XML URL with specified XSL style.
+@end deffn
 
 @deffn emacspeak-w3-class-filter-and-follow (&optional PROMPT-CLASS)
 Follow url and point, and filter the result by specified class.
@@ -3110,6 +3261,14 @@ content from. Interactive use provides list of class values as
 completion. 
 @end deffn
 
+@deffn emacspeak-w3-extract-media-streams (&optional PROMPT-URL SPEAK)
+Extract links to media streams.
+operate on current web page when in a W3 buffer; otherwise
+`prompt-url' is the URL to process. Prompts for URL when called
+interactively. Optional arg `speak' specifies if the result should be
+spoken automatically.
+@end deffn
+
 @deffn emacspeak-w3-extract-nested-table (TABLE-INDEX &optional PROMPT-URL SPEAK)
 Extract nested table specified by `table-index'. Default is to
 operate on current web page when in a W3 buffer; otherwise
@@ -3136,6 +3295,10 @@ Interactive prefix arg causes url to be read from the minibuffer.
 Extract specified list of nested tables from a WWW page.
 Tables are specified by their position in the list 
 nested of tables found in the page.
+@end deffn
+
+@deffn emacspeak-w3-google-on-this-site ()
+Perform a google search restricted to the current WWW site.
 @end deffn
 
 @deffn emacspeak-w3-google-similar-to-this-page ()
@@ -3185,6 +3348,19 @@ Preview this region.
 Move back  to the previous document element.
 Optional interactive prefix argument COUNT 
 specifies by how many eleemnts to move.
+@end deffn
+
+@deffn emacspeak-w3-realaudio-play-url-at-point (&optional PROMPT-TIME)
+Play url under point as realaudio
+@end deffn
+
+@deffn emacspeak-w3-set-xsl-keep-result (VALUE)
+Set value of `emacspeak-w3-xsl-keep-result'.
+
+This function is advised.
+
+Before-advice `emacspeak-auto':
+Automatically defined advice to speak interactive prompts. 
 @end deffn
 
 @deffn emacspeak-w3-show-anchor-class ()
@@ -3266,6 +3442,9 @@ Search IBM My News
 @node emacspeak-websearch
 @section emacspeak-websearch
 
+Commentary:
+This module provides utility functions for searching the WWW
+
 Automatically generated documentation
 for commands defined in module  emacspeak-websearch.
 
@@ -3308,15 +3487,8 @@ Search Encyclopedia Britannica.
 Perform a CiteSeer search. 
 @end deffn
 
-@deffn emacspeak-websearch-cnn-search (QUERY &optional PREFIX)
+@deffn emacspeak-websearch-cnn-search (QUERY)
 Perform an CNN search.  
-Optional interactive prefix arg
-prompts for additional search parameters.  The default is to
-sort by date and show summaries.  To sort by relevance
-specify additional parameter &rf=0.  To hide summaries,
-specify additional parameter &lk=2.
-You can customize the defaults by setting variable
-emacspeak-websearch-cnn-options to an appropriate string.
 @end deffn
 
 @deffn emacspeak-websearch-company-news (TICKER &optional PREFIX)
@@ -3384,6 +3556,10 @@ Perform a FolDoc search.
 Search Freshmeat  Site. 
 @end deffn
 
+@deffn emacspeak-websearch-froogle (QUERY)
+Perform a Froogle search.
+@end deffn
+
 @deffn emacspeak-websearch-google (QUERY &optional LUCKY)
 Perform an Google search.
 Optional interactive prefix arg `lucky' is equivalent to hitting the 
@@ -3439,6 +3615,10 @@ With optional interactive prefix arg MAP shows the location map instead.
 Search the Merriam Webster Dictionary.
 @end deffn
 
+@deffn emacspeak-websearch-my-rss-search (QUERY)
+My RSS search.
+@end deffn
+
 @deffn emacspeak-websearch-news-yahoo (QUERY)
 Perform an Yahoo News search
 @end deffn
@@ -3487,7 +3667,7 @@ Search RPM  catalog  site.
 @end deffn
 
 @deffn emacspeak-websearch-shoutcast-search ()
-Ebay search.
+Shoutcast search.
 @end deffn
 
 @deffn emacspeak-websearch-software-search ()
@@ -3541,6 +3721,10 @@ Optional second arg as-html processes the results as HTML rather than data.
 @node emacspeak-widget
 @section emacspeak-widget
 
+Commentary:
+This module implements the necessary extensions to provide talking
+widgets.
+
 Automatically generated documentation
 for commands defined in module  emacspeak-widget.
 
@@ -3568,6 +3752,9 @@ Sets widget at point by invoking its prompter.
 
 @node emacspeak-wizards
 @section emacspeak-wizards
+
+Commentary:
+Contains various wizards for the Emacspeak desktop.
 
 Automatically generated documentation
 for commands defined in module  emacspeak-wizards.
@@ -3627,8 +3814,6 @@ Customize Emacspeak.
 @end deffn
 
 @deffn emacspeak-customize-personal-settings (FILE)
-@kbd{ control e <f1> }
-
 Create a customization buffer for browsing and updating
 personal customizations.
 @end deffn
@@ -3716,16 +3901,18 @@ Launch links on  specified URL in a new terminal.
 Launch lynx on  specified URL in a new terminal.
 @end deffn
 
-@deffn emacspeak-next-frame ()
+@deffn emacspeak-next-frame-or-buffer (&optional FRAME)
 @kbd{ <control right> }
 
-Move to next frame.
+Move to next buffer.
+With optional interactive prefix arg `frame', move to next frame instead.
 @end deffn
 
-@deffn emacspeak-previous-frame ()
+@deffn emacspeak-previous-frame-or-buffer (&optional FRAME)
 @kbd{ <control left> }
 
-Move to next frame.
+Move to previous buffer.
+With optional interactive prefix arg `frame', move to previous frame instead.
 @end deffn
 
 @deffn emacspeak-root (&optional CD)
@@ -3771,7 +3958,8 @@ meaning of `previous'.
 @deffn emacspeak-show-personality-at-point ()
 @kbd{ control e meta v }
 
-Show value of property personality at point.
+Show value of property personality (and possibly face)
+at point.
 @end deffn
 
 @deffn emacspeak-show-property-at-point (&optional PROPERTY)
@@ -3936,12 +4124,18 @@ Display info on recent change to Emacspeak.
 Browse  Emacspeak productivity tips.
 @end deffn
 
-@deffn emacspeak-wizards-browse-url-with-style (STYLE URL)
-Browse URL with specified XSL style.
-@end deffn
-
 @deffn emacspeak-wizards-count-slides-in-region ()
 Count slides starting from point.
+@end deffn
+
+@deffn emacspeak-wizards-find-longest-line-in-region (START END)
+Find longest line in region.
+Moves to the longest line when called interactively.
+@end deffn
+
+@deffn emacspeak-wizards-find-longest-paragraph-in-region (START END)
+Find longest paragraph in region.
+Moves to the longest paragraph when called interactively.
 @end deffn
 
 @deffn emacspeak-wizards-finder-find (DIRECTORY)
@@ -3964,8 +4158,24 @@ key             binding
 Nuke read-only property on text range.
 @end deffn
 
+@deffn emacspeak-wizards-fix-typo (EXT WORD CORRECTION)
+Search and replace  recursively in all files with extension `ext'
+for `word' and replace it with correction.
+Use with caution.
+@end deffn
+
 @deffn emacspeak-wizards-generate-finder ()
 Generate a widget-enabled finder wizard.
+@end deffn
+
+@deffn emacspeak-wizards-generate-voice-sampler (STEP)
+Generate a buffer that shows a sample line in all the ACSS settings
+for the current voice family.
+
+This function is advised.
+
+Before-advice `emacspeak-auto':
+Automatically defined advice to speak interactive prompts. 
 @end deffn
 
 @deffn emacspeak-wizards-get-table-content-from-file (TASK FILE DEPTH COUNT)
@@ -4043,6 +4253,10 @@ Switch to the shell buffer and cd to
 Display value of specified environment variable.
 @end deffn
 
+@deffn emacspeak-wizards-show-face (FACE)
+Show salient properties of specified face.
+@end deffn
+
 @deffn emacspeak-wizards-show-list-variable (VAR)
 Convenience command to view Emacs variables that are long lists.
 Prompts for a variable name and displays its value in a separate buffer.
@@ -4064,8 +4278,37 @@ for `word' and displays hits in a compilation buffer.
 Squeeze multiple blank lines in current buffer.
 @end deffn
 
+@deffn emacspeak-wizards-tpctl-display-status ()
+Show display status on thinkpads using tpctl.
+@end deffn
+
 @deffn emacspeak-wizards-use-w3-or-w3m ()
 Alternates between using W3 and W3M for browse-url.
+@end deffn
+
+@deffn emacspeak-wizards-vc-viewer (CONSOLE)
+View contents of specified virtual console.
+@end deffn
+
+@deffn emacspeak-wizards-vc-viewer-mode ()
+Major mode for interactively viewing virtual console contents.
+
+key             binding
+---             -------
+
+C-l		emacspeak-wizards-vc-viewer-refresh
+
+In addition to any hooks its parent mode `view-mode' might have run,
+this mode runs the hook `emacspeak-wizards-vc-viewer-mode-hook', as the final step
+during initialization.
+@end deffn
+
+@deffn emacspeak-wizards-vc-viewer-refresh ()
+Refresh view of VC we're viewing.
+@end deffn
+
+@deffn emacspeak-wizards-voice-sampler (PERSONALITY)
+Read a personality  and apply it to the current line.
 @end deffn
 
 @deffn emacspeak-wizards-xl-display ()
@@ -4155,7 +4398,9 @@ for commands defined in module  nil.
 @deffn emacspeak-m-player ()
 @kbd{ control e : }
 
-Emacspeak media player access.
+Play specified resource using m-player.
+Resource is an  MP3 file or m3u playlist.
+The player is placed in a buffer in emacspeak-m-player-mode.
 @end deffn
 
 @deffn emacspeak-speak-current-field ()
@@ -4164,9 +4409,5 @@ Emacspeak media player access.
 Speak current field.
 A field is
 defined  by Emacs 21.
-@end deffn
-
-@deffn emacspeak-w3-google-on-this-site ()
-Perform a google search restricted to the current WWW site.
 @end deffn
 

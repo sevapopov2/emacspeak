@@ -1,5 +1,5 @@
 ;;; emacspeak-xml-shell.el --- Implements a simple XML browser
-;;; $Id: emacspeak-xml-shell.el,v 17.0 2002/11/23 01:29:01 raman Exp $
+;;; $Id: emacspeak-xml-shell.el,v 18.0 2003/04/29 21:18:35 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains  xml-shell
 ;;; Keywords: Emacspeak,  Audio Desktop Xml-Shell
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:01 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:18:35 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -49,20 +49,11 @@
 ;;}}}
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
-(require 'custom)
+(require 'emacspeak-preamble)
 (require 'comint)
-(require 'voice-lock)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(require 'emacspeak-wizards)
-(require 'derived)
-
 ;;}}}
 ;;{{{ Customizations
-
+;;;###autoload
 (defgroup emacspeak-xml-shell nil
   "XML browser for the Emacspeak desktop.")
 
@@ -130,7 +121,7 @@ Interactive XML browser.
   "Process sentinel for XML shell."
   (declare (special emacspeak-xml-shell-document))
   (setq emacspeak-xml-shell-document nil))
-
+;;;###autoload
 (defun emacspeak-xml-shell (system-id)
   "Start Xml-Shell on contents of system-id."
   (interactive

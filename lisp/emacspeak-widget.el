@@ -1,5 +1,5 @@
 ;;; emacspeak-widget.el --- Speech enable Emacs' native GUI widget library
-;;; $Id: emacspeak-widget.el,v 17.0 2002/11/23 01:29:01 raman Exp $
+;;; $Id: emacspeak-widget.el,v 18.0 2003/04/29 21:18:31 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extensions to widgets
 ;;; Keywords:emacspeak, audio interface to emacs customized widgets
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:01 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:18:31 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -52,6 +52,7 @@
 (eval-when-compile (require 'cl))
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
+(require 'voice-setup)
 (eval-when-compile (require 'dtk-speak)
                    (condition-case nil
                        (progn (require 'widget)
@@ -72,30 +73,37 @@
   :group 'emacspeak
   :group 'widgets
   :prefix "emacspeak-widget-")
-(defcustom emacspeak-widget-edit-personality  'paul-smooth
+(def-voice-font  emacspeak-widget-field-personality  voice-smoothen
+  'widget-field-face
   "Personality for edit fields"
   :group 'emacspeak-widget
   :type 'symbol)
 
-(defcustom emacspeak-widget-value-personality 'paul-smooth
+(def-voice-font  emacspeak-widget-single-line-field-personality  voice-smoothen
+  'widget-single-line-field-face
+  "Personality for edit fields"
+  :group 'emacspeak-widget
+  :type 'symbol)
+
+(defcustom emacspeak-widget-value-personality voice-animate
   "Personality for values"
-  :group 'emacspeak-widget
-  :type 'symbol)
+  :group 'emacspeak-widget)
 
-(defcustom emacspeak-widget-button-personality 'harry
+(def-voice-font emacspeak-widget-button-personality voice-bolden
+  'widget-button-face
   "Personality for buttons"
-  :group 'emacspeak-widget
-  :type 'symbol)
+  :group 'emacspeak-widget)
 
-(defcustom emacspeak-widget-documentation-personality 'paul-monotone
+(def-voice-font emacspeak-widget-documentation-personality
+  voice-smoothen-extra
+  'widget-documentation-face
   "Personality for documentation"
-  :group 'emacspeak-widget
-  :type 'symbol)
+  :group 'emacspeak-widget)
 
-(defcustom emacspeak-widget-inactive-personality  'betty
+(def-voice-font emacspeak-widget-inactive-personality  voice-lighten
+  'widget-inactive-face
   "Personality for inactive fields"
-  :group 'emacspeak-widget
-  :type 'symbol)
+  :group 'emacspeak-widget)
 
 (declaim (special widget-menu-minibuffer-flag))
 (setq  widget-menu-minibuffer-flag t)
@@ -118,6 +126,7 @@ Returns a string with appropriate personality."
 
 (defsubst emacspeak-widget-help-echo (w)
   "Return help-echo with appropriate personality."
+  (declare (special voice-animate))
   (let ((h (widget-get w :help-echo))
         (help nil))
     (setq help
@@ -130,7 +139,7 @@ Returns a string with appropriate personality."
            (t nil)))
     (when help
       (put-text-property 0 (length help)
-                         'personality 'paul-animated help)
+                         'personality voice-animate help)
       help)))
 
 ;;}}}
@@ -152,7 +161,7 @@ Returns a string with appropriate personality."
                            parent-help))
      (w (message (format " %s " type)))
      (t (message " Not on a widget. ")))))
-        
+;;;###autoload        
 (defun emacspeak-widget-summarize-parent ()
   "Summarize parent of widget at point."
   (interactive)
@@ -163,7 +172,7 @@ Returns a string with appropriate personality."
      (t (message "Widget at point has no parent")))))
 
 ;;; Find summarizer for a specific widget type and dispatch.
-
+;;;###autoload
 (defun emacspeak-widget-summarize(widget)
   "Summarize specified widget."
   (let ((emacspeak-help (widget-get widget :emacspeak-help))
@@ -181,7 +190,7 @@ Returns a string with appropriate personality."
 ;;{{{  widget specific summarizers  --as per Per's suggestion
 
 ;;{{{  default
-
+;;;###autoload 
 (defun emacspeak-widget-default-summarize (widget)
   "Fall back summarizer for all widgets"
   (let* ((label (emacspeak-widget-label widget))
@@ -612,30 +621,6 @@ Returns a string with appropriate personality."
     ad-return-value))
 
 ;;}}}
-;;{{{ voice lock widget buffers:
-
-(defadvice widget-specify-field-update (after emacspeak pre act comp)
-  "Voiceify the field"
-  (put-text-property (ad-get-arg 1) (ad-get-arg 2)
-                     'personality
-                     emacspeak-widget-edit-personality))
-
-(defadvice  widget-specify-inactive(after emacspeak pre act comp)
-  "Voiceify the field"
-  (put-text-property (ad-get-arg 1) (ad-get-arg 2)
-                     'personality emacspeak-widget-inactive-personality))
-
-(defadvice widget-specify-button (after emacspeak pre act  comp)
-  "Voiceify the button"
-  (put-text-property (ad-get-arg 1) (ad-get-arg 2)
-                     'personality emacspeak-widget-button-personality))  
-
-(defadvice widget-specify-doc (after emacspeak pre act comp)
-  "Voiceify the documentation of a widget"
-  (put-text-property (ad-get-arg 1) (ad-get-arg 2)
-                     'personality emacspeak-widget-documentation-personality))
-
-;;}}}
 ;;{{{  Interactively summarize a widget and its parents.
 
 (defun emacspeak-widget-summarize-widget-under-point (&optional level)
@@ -740,10 +725,8 @@ widget before summarizing."
 (define-widget 'voice  'menu-choice
   :help-echo "Voice selector"
   "Widget for selecting a voice.")
-
 (define-widget 'personality 'item
   "Individual voice in a voice selector.")
-
 (defun emacspeak-widget-create-voice-selector ()
   "Create a suitable voice selector widget."
   (declare (special dtk-voice-table))

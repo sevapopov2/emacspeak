@@ -1,5 +1,5 @@
 ;;; emacspeak-bs.el --- speech-enable bs buffer selection
-;;; $Id: emacspeak-bs.el,v 17.0 2002/11/23 01:28:58 raman Exp $
+;;; $Id: emacspeak-bs.el,v 18.0 2003/04/29 21:16:53 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable bs
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:58 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:16:53 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2002, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2003, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,12 +40,8 @@
 
 ;;{{{ required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(require 'emacspeak-fix-interactive)
-
+(require 'emacspeak-preamble)
+(require 'bs)
 ;;}}}
 ;;{{{  Introduction:
 
@@ -81,10 +77,10 @@
             this-buffer-directory
             (dtk-stop-immediately nil))
         (put-text-property 0 (length document)
-                           'personality 'paul-smooth
+                           'personality voice-smoothen
                            document)
         (put-text-property 0 (length with)
-                           'personality 'paul-smooth with)
+                           'personality voice-smoothen  with)
         (save-excursion
           (set-buffer buffer)
           (setq this-buffer-read-only buffer-read-only)
@@ -101,7 +97,7 @@
         (when this-buffer-modified-p (dtk-tone 700 70))
         (when this-buffer-read-only (dtk-tone 250 50))
         (put-text-property 0 (length this-buffer-mode-name)
-			   'personality 'paul-smooth
+			   'personality voice-smoothen
 			   this-buffer-mode-name)
         (dtk-speak
          (concat 
@@ -136,7 +132,7 @@
   "Speech-enable bs mode"
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-spea-mode-line)))
+    (emacspeak-speak-mode-line)))
 (defadvice bs-set-configuration-and-refresh (after emacspeak pre act comp)
   "Speech-enable bs mode"
   (when (interactive-p)

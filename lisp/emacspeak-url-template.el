@@ -1,5 +1,5 @@
 ;;; emacspeak-url-template.el --- Create library of URI templates
-;;; $Id: emacspeak-url-template.el,v 17.0 2002/11/23 01:29:01 raman Exp $
+;;; $Id: emacspeak-url-template.el,v 18.0 2003/04/29 21:18:22 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   Implement library of URI templates
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:01 $ |
-;;;  $Revision: 17.0 $ |
+;;; $Date: 2003/04/29 21:18:22 $ |
+;;;  $Revision: 18.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2002, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2003, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,13 +40,8 @@
 
 ;;{{{ required modules
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds)
-(require 'emacspeak-websearch)
-(eval-when-compile (require 'webjump))
-
+(require 'emacspeak-preamble)
+(require 'webjump)
 ;;}}}
 ;;{{{  Introduction:
 
@@ -96,7 +91,7 @@
   "Add  specified template to key. "
   (declare (special emacspeak-url-template-table))
   (setf (gethash key emacspeak-url-template-table ) ut))
-
+;;;###autoload
 (defun emacspeak-url-template-get (key)
   "Lookup key and return corresponding template. "
   (declare (special emacspeak-url-template-table))
@@ -128,7 +123,7 @@ prompting for a template.")
                                        documentation
                                        :fetcher fetcher)))
                                
-
+;;;###autoload
 (defun emacspeak-url-template-load (file)
   "Load URL template resources from specified location."
   (interactive
@@ -169,15 +164,24 @@ prompting for a template.")
 
 ;;}}}
 ;;{{{  template resources 
+
 ;;{{{ shoutcast 
+(defvar emacspeak-url-template-shoutcast-history nil
+  "History to track shoutcast searchses.")
 
 (emacspeak-url-template-define
  "Shoutcast Search"
  "http://yp.shoutcast.com/directory?s=%s&l=25"
  (list
   #'(lambda ()
-      (webjump-url-encode
-       (read-from-minibuffer "Shoutcast search: "))))
+      (let ((query
+             (read-from-minibuffer "Shoutcast search: "
+                                   (car
+                                    emacspeak-url-template-shoutcast-history)
+                                   nil nil
+                                   'emacspeak-url-template-shoutcast-history)))
+        (pushnew query emacspeak-url-template-shoutcast-history :test #'string-equal)
+        (webjump-url-encode  query))))
  nil
  "Locate and display Shoutcast streams."
  #'(lambda (url)
@@ -267,13 +271,14 @@ prompting for a template.")
  "Only show Google hits."
  #'(lambda (url)
      (declare (special emacspeak-xslt-directory))
-     (emacspeak-wizards-browse-url-with-style
+     (emacspeak-w3-browse-url-with-style
       (expand-file-name "google-hits.xsl"
                         emacspeak-xslt-directory)
       url)))
 
 ;;}}}
 ;;{{{  cnet news 
+
 (emacspeak-url-template-define
  "Tech News From CNet"
  "http://news.com.com/"
@@ -294,7 +299,7 @@ prompting for a template.")
 ;;{{{ google OverviewOfNews 
 
 (emacspeak-url-template-define
- "Google News Overview"
+ "Google Headline News"
  "http://www.google.com/news/newsheadlines.html"
  nil
  #'(lambda nil
@@ -333,34 +338,6 @@ prompting for a template.")
   (emacspeak-w3-xslt-filter
    "//*[@class=\"article\"]//td[1]"
    url))
-
-(emacspeak-url-template-define
- "My Yahoo "
- "http://my.yahoo.com"
- nil
- nil
- "Apply content.xsl to my.yahoo.com and speak the relevant contents."
- #'(lambda (url)
-     (declare (special emacspeak-xslt-directory
-                       emacspeak-w3-url-rewrite-rule))
-     (emacspeak-wizards-browse-url-with-style
-      (expand-file-name "content.xsl"
-                        emacspeak-xslt-directory)
-      url)
-     (search-forward
-      (format-time-string "%A") nil t)
-     (setq emacspeak-w3-url-rewrite-rule
-           '("$" "&print=1"))
-     (beginning-of-line)
-     (emacspeak-speak-rest-of-buffer)))
-
-(emacspeak-url-template-define
- "Yahoo Daily News"
- "http://dailynews.yahoo.com/"
- nil
- nil
- "Retrieve articles from   Yahoo Daily News."
- 'emacspeak-url-template-yahoo-news-processor)
 
 (emacspeak-url-template-define
  "Yahoo Politics"
@@ -527,6 +504,18 @@ name of the list.")
 
 ;;}}}
 ;;{{{ cnn 
+(emacspeak-url-template-define
+ "CNN Search"
+ "http://search.cnn.com/cnn/search?%s"
+ (list
+  #'(lambda ()
+      (let ((q (read-from-minibuffer "CNN Search: ")))
+	(format "query=%s&qt=%s"
+		q q ))))
+ nil
+ "Search CNN"
+ #'(lambda (url)
+     (emacspeak-w3-extract-nested-table 10 url 'speak)))
 
 (emacspeak-url-template-define
  "CNN Weather "
@@ -541,13 +530,12 @@ name of the list.")
 
 (emacspeak-url-template-define
  "CNN headlines "
- "http://www.cnn.com/QUICKNEWS/print.html"
+ "http://www.cnn.com"
  nil
- #'(lambda nil
-     (search-forward "TOP STORIES" nil t)
-     (forward-line 1)
-     (emacspeak-speak-rest-of-buffer))
- "Retrieve and speak headline news from CNN.")
+ nil
+ "Retrieve and speak headline news from CNN."
+ #'(lambda (url)
+     (emacspeak-w3-extract-by-class "cnnMainT1" url 'speak)))
 
 (defun emacspeak-url-template-date-YearMonthDate ()
   "Return today as yyyymmdd"
@@ -575,17 +563,24 @@ name of the list.")
      (declare (special emacspeak-w3-class-filter))
      (setq emacspeak-w3-class-filter "cnnStoryContent"))
  "CNN Technology news."
- )
+ #'(lambda (url)
+     (emacspeak-w3-extract-by-class-list
+      (list
+       "cnnSectT2s"
+       "cnnSectT2head"
+       "cnnSectBoxHeadW"
+       "cnnSectBox")
+      url 'speak)))
+     
 
 (emacspeak-url-template-define
- "CNN HotStocks "
- "http://money.cnn.com/%s/markets/hotstox/"
- (list 
-  'emacspeak-url-template-date-year/month/date)
+ "CNN Markets "
+ "http://money.cnn.com/markets"
  nil
- "CNN Hot Stocks"
+ nil
+ "CNN Money"
  #'(lambda (url)
-     (emacspeak-w3-extract-nested-table 9 url 'speak)))
+     (emacspeak-w3-extract-table-by-position 11 url 'speak)))
 
 (emacspeak-url-template-define
  "CNN Content "
@@ -594,21 +589,16 @@ name of the list.")
  nil
  "CNN Content"
  #'(lambda (url)
+     (add-hook 'emacspeak-w3-post-process-hook
+               #'(lambda ()
+                   (declare (special emacspeak-w3-class-filter))
+                   (setq emacspeak-w3-class-filter "cnnStoryContent")))
      (emacspeak-w3-extract-by-class-list
       (list "cnnMainT1"
             "cnnMainNewT2"
             "cnnMainSections")
       url
       'speak)))
-
-(emacspeak-url-template-define
- "CNN Markets New York"
- "http://money.cnn.com/%s/markets/markets_newyork/"
- (list 'emacspeak-url-template-date-year/month/date)
- nil
- "Speak CNN Market Update."
- #'(lambda (url)
-     (emacspeak-w3-extract-nested-table 8 url 'speak)))
 
 ;;}}}
 ;;{{{ nfl 
@@ -619,6 +609,7 @@ name of the list.")
  nil
  "Pick out NFL broadcast links."
  #'(lambda (url)
+     (declare (special w3-mode-map))
      (define-key w3-mode-map "N" 'emacspeak-url-template-nfl-play-broadcast)
      (emacspeak-w3-extract-nested-table 9 url)
      "Displays the table giving the NFL broadcast links for this
@@ -630,14 +621,18 @@ the broadcast. You must have mplayer installed."
   "Play NFL url under point."
   (interactive)
   (let ((url (w3-view-this-url 'no-show))
-        (fields nil))
+        (fields nil)
+        (stream nil))
     (cond
      (url
       (setq fields (split-string url "file="))
-      (emacspeak-m-player
-       (first
-        (split-string (second fields)
-                      "'"))))
+      (setq stream (first
+		    (split-string (second fields)
+				  "'")))
+      (if (string-match "launch_rw" stream)
+          (emacspeak-realaudio-play stream)
+	(emacspeak-m-player
+	 stream)))
      (t "No url under point."))))
 
 ;;}}}
@@ -667,7 +662,7 @@ the broadcast. You must have mplayer installed."
  "Play NPR Talk Of The Nation  stream."
  'emacspeak-realaudio-play)
 (emacspeak-url-template-define
- "Morning Edition  Stream from NPR"
+ "Morning Edition Stream from NPR"
  "http://www.npr.org/ramfiles/me/%s.me.ram"
  (list 'emacspeak-url-template-date-YearMonthDate)
  nil
@@ -789,7 +784,7 @@ the broadcast. You must have mplayer installed."
 
 (emacspeak-url-template-define
  "sourceforge download for North America" 
- "http://umn.dl.sourceforge.net/sourceforge/%s/?m=A"
+ "http://osdn.dl.sourceforge.net/sourceforge/%s/?m=A"
  (list
   (lambda nil 
     (read-from-minibuffer "Project name")))
@@ -895,22 +890,39 @@ Set up URL rewrite rule to get print page."
  "Retrieve India Today. Published every Monday --specified appropriate date.")
 
 ;;}}}
+;;{{{ meerkat 
+
+(emacspeak-url-template-define
+ "Meerkat"
+ "http://meerkat.oreillynet.com/?_fl=rss10&%s"
+ (list
+  #'(lambda nil
+      (read-from-minibuffer
+       "Meerkat recipe: ")))
+ nil
+ "Meerkat tool"
+ #'(lambda (url)
+     (emacspeak-rss-display url 'speak)))
+
+;;}}}
 
 ;;}}}
 ;;{{{ Interactive commands 
-
+;;;###autoload
 (defun emacspeak-url-template-open (ut)
   "Fetch resource identified by URL template."
   (declare (special  emacspeak-w3-post-process-hook))
   (let ((fetcher (or (emacspeak-url-template-fetcher ut)
-                     'browse-url)))
+                     'browse-url))
+        (url (emacspeak-url-template-url ut)))
     (when (and (emacspeak-url-template-post-action ut)
                (or (emacspeak-url-template-fetcher ut)
 		   (eq browse-url-browser-function 'w3-fetch)
 		   (eq browse-url-browser-function 'browse-url-w3)))
       (add-hook 'emacspeak-w3-post-process-hook
 		(emacspeak-url-template-post-action ut)))
-    (funcall fetcher   (emacspeak-url-template-url ut))))
+    (kill-new url)
+    (funcall fetcher   url)))
 
 (defsubst emacspeak-url-template-help-internal (name)
   "Display and speak help."
@@ -927,7 +939,7 @@ Set up URL rewrite rule to get print page."
     (print-help-return-message))
   (emacspeak-speak-help)
   (emacspeak-auditory-icon 'help))
-
+;;;###autoload
 (defun emacspeak-url-template-fetch (&optional documentation)
   "Fetch a pre-defined resource.
 Use Emacs completion to obtain a list of available resources.

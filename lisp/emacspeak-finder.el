@@ -1,22 +1,22 @@
 ;;; emacspeak-finder.el --- Generate a database of keywords and descriptions for all Emacspeak  packages
-;;; $Id: emacspeak-finder.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-finder.el,v 18.0 2003/04/29 21:17:12 raman Exp $
 ;;; $Author: raman $ 
-;;; Description: Auditory interface to speedbar
+;;; Description: Auditory interface 
 ;;; Keywords: Emacspeak, Finder
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:12 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -39,8 +39,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;Inspired by finder.el
-(eval-when-compile (require 'cl))
+;;{{{ requires 
+
+(require 'emacspeak-preamble)
 (require 'lisp-mnt)
+
+;;}}}
 
 (defvar emacspeak-finder-inf-file
   (concat emacspeak-lisp-directory "/" "emacspeak-finder-inf.el")
@@ -48,7 +52,7 @@
 
 (defvar emacspeak-finder-preamble
   (concat 
-   ";;;$Id: emacspeak-finder.el,v 17.0 2002/11/23 01:28:59 raman Exp $\n"
+   ";;;$Id: emacspeak-finder.el,v 18.0 2003/04/29 21:17:12 raman Exp $\n"
    ";;; emacspeak-finder-inf.el --- keyword-to-package mapping\n"
    ";; Keywords: help\n"
    ";;; Commentary:\n"
@@ -112,13 +116,12 @@ emacspeak-finder-inf.el."
 
 ;;}}}
 ;;{{{ advice
+
 (defadvice finder-mode (after emacspeak pre act comp)
   "Provide auditory feedback"
   (emacspeak-auditory-icon 'open-object))
 
 ;;}}}
-      
-
 (provide 'emacspeak-finder)
 ;;{{{ end of file 
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-replace.el --- Speech enable interactive search and replace
-;;; $Id: emacspeak-replace.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-replace.el,v 18.0 2003/04/29 21:17:53 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension for replace.el
 ;;; Keywords: Emacspeak, Speech feedback, query replace (replace.el)
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:53 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2002, T. V. Raman 
+;;;Copyright (C) 1995 -- 2003, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -38,16 +38,11 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'advice)
-(require 'custom)
-(eval-when-compile
-  (require 'dtk-voices)
-  (require 'dtk-speak)
-  (require 'emacspeak-speak)
-  (require 'emacspeak-sounds)
-  (load-library "replace"))
+;;{{{ requires
+(require 'emacspeak-preamble)
+(load-library "replace")
+
+;;}}}
 ;;{{{  Introduction:
 
 ;;; This module causes emacs' replacement functions to use voice locking
@@ -56,7 +51,7 @@
 ;;{{{  define personalities
 
 (defcustom emacspeak-replace-personality
-  'paul-animated
+  voice-animate
   "Personality used in search and replace to indicate word
 that is being replaced."
   :group 'isearch

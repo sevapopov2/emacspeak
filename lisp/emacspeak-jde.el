@@ -1,5 +1,5 @@
 ;;; emacspeak-jde.el --- Speech enable JDE -- An integrated Java Development Environment
-;;; $Id: emacspeak-jde.el,v 17.0 2002/11/23 01:29:00 raman Exp $
+;;; $Id: emacspeak-jde.el,v 18.0 2003/04/29 21:17:34 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to JDE
 ;;; Keywords: Emacspeak, Speak, Spoken Output, Java
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:29:00 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:34 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -39,20 +39,60 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;{{{  Required modules
-
-(eval-when-compile (require 'cl))
-(declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-speak)
-(require 'emacspeak-keymap)
-(require 'emacspeak-sounds)
-(require 'voice-lock)
-
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction
 
 ;;;Speech enable Java IDE.
 ;;; The Java IDE --JDE-- can be found at 
 ;;;http://sunsite.auc.dk/jde/
+
+;;}}}
+;;{{{ voice lock 
+(def-voice-font  emacspeak-jde-number-personality voice-lock-constant-personality
+  'jde-java-font-lock-number-face
+  "Personality used for numbers."
+  :group 'emacspeak-jde)
+
+(def-voice-font emacspeak-jde-operator-personality voice-animate
+  'jde-java-font-lock-operator-face
+  "Personality used for java operators."
+  :group 'emacspeak-jde)
+
+(def-voice-font emacspeak-jde-constant-personality voice-lock-constant-personality
+  'jde-java-font-lock-constant-face
+  "Personality used for constants."
+  :group 'emacspeak-jde)
+
+(def-voice-font emacspeak-jde-api-personality voice-animate
+  'jde-java-font-lock-api-face
+  "Personality used for user defined API names."
+  :group 'emacspeak-jde)
+
+(def-voice-font emacspeak-jde-package-personality voice-monotone
+  'jde-java-font-lock-package-face
+  "Personality used for package names.")
+
+(def-voice-font emacspeak-jde-italic-personality 'italic
+  'jde-java-font-lock-italic-face
+  "Personality used for italics."
+  :group 'emacspeak-jde)
+
+(def-voice-font emacspeak-jde-underline-personality 'underline
+  'jde-java-font-lock-underline-face
+  "Underline personality."
+  :group 'emacspeak-jde)
+
+(def-voice-font emacspeak-jde-bold-personality 'bold
+  'jde-java-font-lock-bold-face
+  "Personality used for bold."
+  :group 'emacspeak-jde)
+
+                                        ;jde-java-font-lock-link-face
+                                        ;jde-java-font-lock-doc-tag-face
+                                        ;jde-java-font-lock-modifier-face
+                                        ;jde-java-font-lock-pre-face
+                                        ;jde-java-font-lock-code-face
 
 ;;}}}
 ;;{{{ Advice interactive commands:
@@ -111,23 +151,6 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-mode-line)))
-
-;;}}}
-;;{{{ voice lock 
-
-(declaim (special voice-lock-defaults-alist))
-(if (not (assq 'jde-mode voice-lock-defaults-alist))
-    (setq voice-lock-defaults-alist
-          (cons
-           (cons 'jde-mode
-
-                 ;; jde-mode-defaults
-                 '((java-voice-lock-keywords java-voice-lock-keywords-1
-                                             java-voice-lock-keywords-2 java-voice-lock-keywords-3)
-                   nil nil ((?_ . "w") (?$ . "w")) nil
-                   (voice-lock-mark-block-function . mark-defun)))
-
-           voice-lock-defaults-alist)))
 
 ;;}}}
 ;;{{{ jdebug 

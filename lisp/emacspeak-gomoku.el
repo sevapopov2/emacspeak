@@ -1,5 +1,5 @@
 ;;; emacspeak-gomoku.el --- Speech enable the game of Gomoku
-;;; $Id: emacspeak-gomoku.el,v 17.0 2002/11/23 01:28:59 raman Exp $
+;;; $Id: emacspeak-gomoku.el,v 18.0 2003/04/29 21:17:24 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to gomoku
 ;;; Keywords: Emacspeak, Speak, Spoken Output, gomoku
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/11/23 01:28:59 $ |
-;;;  $Revision: 17.0 $ | 
+;;; $Date: 2003/04/29 21:17:24 $ |
+;;;  $Revision: 18.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2002, T. V. Raman
+;;; Copyright (c) 1995 -- 2003, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -40,15 +40,8 @@
 
 ;;{{{  Required modules
 
-(eval-when-compile (require 'cl))
-(require 'backquote)
-(declaim  (optimize  (safety 0) (speed 3)))
-(eval-when-compile (require 'dtk-speak)
-		   (require 'emacspeak-speak)
-		   (require 'emacspeak-sounds)
-		   (when (locate-library "gomoku")
-		     (require 'gomoku)))
-
+(require 'emacspeak-preamble)
+(require 'gomoku)
 ;;}}}
 ;;{{{  Introduction 
 
@@ -189,7 +182,8 @@
   "Display statistics from previous games"
   (interactive)
   (declare (special gomoku-number-of-human-wins
-		    gomoku-number-of-emacs-wins))
+		    gomoku-number-of-emacs-wins
+                    gomoku-number-of-draws))
   (message (format "Wins %d losses %d%s"
 		   gomoku-number-of-human-wins
 		   gomoku-number-of-emacs-wins
@@ -355,6 +349,7 @@
 
 (defun emacspeak-gomoku-setup-keys ()
   "Add additional keybindings"
+  (declare (special gomoku-mode-map))
   (loop for key in (where-is-internal 'backward-char gomoku-mode-map)
         do
         (define-key gomoku-mode-map key 'gomoku-move-left))
