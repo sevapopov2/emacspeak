@@ -102,11 +102,13 @@
 
 (defun emacspeak-w3m-anchor-text (&optional default)
   "Return string containing text of anchor under point."
-  (save-excursion
-    (forward-char 1)
-    (if (get-text-property (point) 'w3m-anchor-sequence)
-	(message(emacspeak-speak-get-text-range 'w3m-anchor-sequence))
-      (message (or default "")))))
+  (if (get-text-property (point) 'w3m-anchor-sequence)
+      (buffer-substring
+       (previous-single-property-change
+	(1+ (point)) 'w3m-anchor-sequence nil (point-min))
+       (next-single-property-change
+	(point) 'w3m-anchor-sequence nil (point-max)))
+    (or default "")))
 
 (defun emacspeak-w3m-speak-cursor-anchor ()
   (dtk-speak (emacspeak-w3m-anchor-text "Not found")))
