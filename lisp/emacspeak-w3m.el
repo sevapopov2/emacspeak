@@ -60,14 +60,22 @@
 (fset 'emacspeak-w3m-anchor
       (byte-compile '(lambda () (w3m-anchor))))
 
-(defun emacspeak-w3m-action ())
-(fset 'emacspeak-w3m-action
+(defun emacspeak-w3m-get-action ())
+(fset 'emacspeak-w3m-get-action
       (byte-compile '(lambda () (w3m-action))))
+
+(defun emacspeak-w3m-action ()
+  (let ((act (emacspeak-w3m-get-action)))
+    (if (numberp (nth 2 act))
+	(append (list (car act) (cadr act)) (nthcdr 3 act))
+      act)))
 
 (defun emacspeak-w3m-form-get (form name))
 (fset 'emacspeak-w3m-form-get
-      (byte-compile '(lambda (form name)
-		       (w3m-form-get form name))))
+      (if (functionp 'w3m-form-get-by-name)
+	  'w3m-form-get-by-name
+	(byte-compile '(lambda (form name)
+			 (w3m-form-get-by-name form name)))))
 
 (defsubst emacspeak-w3m-personalize-string (string personality)
   (let ((newstring (copy-sequence string)))
@@ -81,6 +89,7 @@
 
 (defvar emacspeak-w3m-speak-action-alist
   '((w3m-form-input . emacspeak-w3m-speak-form-input)
+    (w3m-form-input-checkbox . emacspeak-w3m-speak-form-input-checkbox)
     (w3m-form-input-radio . emacspeak-w3m-speak-form-input-radio)
     (w3m-form-input-select . emacspeak-w3m-speak-form-input-select)
     (w3m-form-input-textarea . emacspeak-w3m-speak-form-input-textarea)
@@ -129,6 +138,18 @@
 	   name
 	   (emacspeak-w3m-personalize-string
 	    (or (emacspeak-w3m-form-get form name) value)
+	    emacspeak-w3m-form-personality))))
+
+(defun emacspeak-w3m-speak-form-input-checkbox (form name value)
+  "Speak checkbox"
+  (declare (special emacspeak-w3m-form-personality))
+  (dtk-speak
+   (format "checkbox %s is %s"
+	   name
+	   (emacspeak-w3m-personalize-string
+	    (if (emacspeak-w3m-form-get form name)
+		"on"
+	      "off")
 	    emacspeak-w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-input-password (form name)
@@ -273,6 +294,7 @@
                  (memq (car act)
                        '(w3m-form-input
                          w3m-form-input-radio
+                         w3m-form-input-checkbox
                          w3m-form-input-password)))
         (emacspeak-w3m-speak-this-anchor))
       (emacspeak-auditory-icon 'select-object)))
