@@ -1503,6 +1503,14 @@ in completion buffers"
              (count-lines (region-beginning)
                           (region-end)))))
 
+(defadvice indent-region (after emacspeak pre act)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'fill-object )
+    (message "Indented current region containing %s lines"
+             (count-lines (region-beginning)
+                          (region-end)))))
+
 ;;}}}
 ;;{{{  vc:
 
@@ -1550,6 +1558,11 @@ in completion buffers"
   ad-return-value )
 
 (defadvice vc-revert-buffer (after emacspeak pre act)
+  "Provide auditory feedback."
+  (when (interactive-p  )
+    (emacspeak-auditory-icon 'open-object)))
+
+(defadvice vc-update-change-log (after emacspeak pre act)
   "Provide auditory feedback."
   (when (interactive-p  )
     (emacspeak-auditory-icon 'open-object)))
