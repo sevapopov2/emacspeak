@@ -104,7 +104,7 @@ COMMAND-STRING to the TTS engine."
 
 (defsubst multispeech-get-family-code (name)
   "Get control code for voice family NAME."
-  (multispeech-get-voice-command name))
+  "")
 
 ;;}}}
 ;;{{{  hash table for mapping families to their dimensions
@@ -473,12 +473,11 @@ and TABLE gives the values along that dimension."
   (setq emacspeak-unspeakable-rule "^[^0-9a-zA-Z\243\263\300-\377\xe30-\xe6f\xe21\xe71]+$")
   (setq-default dtk-speak-nonprinting-chars nil)
   (unless russian-spelling-data-loaded-p
-    (progn
-      (let ((coding-system-for-read 'raw-text))
-	(load-library "Russian-spelling"))
-      (let ((coding-system-for-read 'cyrillic-koi8))
-	(load-library "Russian-spelling"))
-      (setq russian-spelling-data-loaded-p t))))
+    (let ((coding-system-for-read 'raw-text))
+      (load-library "Russian-spelling"))
+    (let ((coding-system-for-read 'cyrillic-koi8))
+      (load-library "Russian-spelling"))
+    (setq russian-spelling-data-loaded-p t)))
 
 ;;}}}
 (provide 'multispeech-voices)
