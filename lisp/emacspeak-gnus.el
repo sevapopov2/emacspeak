@@ -106,6 +106,12 @@
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
+(defadvice gnus-group-mail (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
+
 (defadvice gnus-group-get-new-news (around emacspeak pre act )
   "Temporarily deactivate advice on message"
   (when (interactive-p)
@@ -282,6 +288,28 @@ the previous group was closed."
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-line )))
+
+(defadvice gnus-summary-post-news (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
+
+(defadvice gnus-summary-mail-other-window (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
+
+(defadvice gnus-summary-reply (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)))
+
+(defadvice gnus-summary-reply-with-original (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)))
 
 (defadvice gnus-summary-exit (after emacspeak pre act comp)
   "Speak the line in group buffer."
@@ -460,6 +488,12 @@ instead you hear only the first screenful.")
 (defadvice gnus-article-edit-done (after emacspeak pre act comp)
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-line)))
+
+(defadvice gnus-article-mail (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
 (defadvice gnus-summary-show-article (after emacspeak pre act)
