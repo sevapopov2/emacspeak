@@ -1,5 +1,5 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el,v 20.0 2004/05/01 01:16:23 raman Exp $
+;;; $Id: emacspeak-setup.el,v 21.0 2004/11/25 18:45:49 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
@@ -7,14 +7,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:23 $ |
-;;;  $Revision: 20.0 $ | 
+;;; $Date: 2004/11/25 18:45:49 $ |
+;;;  $Revision: 21.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2003, T. V. Raman 
+
+;;;Copyright (C) 1995 -- 2004, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -35,12 +36,25 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
+;;{{{ Introduction
+
+;;; Commentary:
+;;; Entry point for Emacspeak.
+
+;;; Code:
+
+;;}}}
+;;{{{ Required Modules 
 
 (eval-when-compile (require 'cl))
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
 (eval-when (compile)
-  (require 'emacspeak-speak))
+  (require 'emacspeak-preamble))
+
+;;}}}
+;;{{{  Define locations 
+
 (defvar emacspeak-unibyte nil
   "Emacspeak will force emacs to unibyte unless this
 variable is set to nil.
@@ -78,6 +92,9 @@ emacspeak is compiled or started.")
   "Directory where Emacspeak resource files such as
 pronunciation dictionaries are stored. ")
 
+;;}}}
+;;{{{ speec rate 
+
 (defcustom outloud-default-speech-rate 50
   "Default speech rate for outloud."
   :group 'tts
@@ -95,6 +112,9 @@ pronunciation dictionaries are stored. ")
 
 (defvar tts-default-speech-rate dectalk-default-speech-rate
   "Setup on a per engine basis.")
+
+;;}}}
+;;{{{ Hooks
 
 (unless (featurep 'emacspeak)
   (setq load-path
@@ -121,6 +141,9 @@ pronunciation dictionaries are stored. ")
 
 ;;; Use (add-hook 'emacspeak-startup-hook ...)
 ;;; to add your personal settings. 
+
+;;}}}
+
 (emacspeak)
 (provide 'emacspeak-setup)
 ;;{{{  emacs local variables 

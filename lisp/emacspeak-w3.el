@@ -1,5 +1,5 @@
 ;;; emacspeak-w3.el --- Speech enable W3 WWW browser -- includes ACSS Support
-;;; $Id: emacspeak-w3.el,v 20.0 2004/05/01 01:16:24 raman Exp $
+;;; $Id: emacspeak-w3.el,v 21.0 2004/11/25 18:45:50 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak enhancements for W3
 ;;; Keywords: Emacspeak, W3, WWW
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:24 $ |
-;;;  $Revision: 20.0 $ | 
+;;; $Date: 2004/11/25 18:45:50 $ |
+;;;  $Revision: 21.0 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2003, T. V. Raman 
+;;;Copyright (C) 1995 -- 2004, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -72,6 +72,29 @@
     ad-do-it))
 
 ;;}}}
+;;{{{  show http headers
+(defcustom emacspeak-w3-lwp-request "lwp-request"
+  "LWP Request command from perl LWP."
+  :type 'string
+  :group 'emacspeak-w3)
+
+(defun emacspeak-w3-show-http-headers ()
+  "Show HTTP headers using lwp-request"
+  (interactive)
+  (declare (special emacspeak-w3-lwp-request))
+  (let ((url (if (eq major-mode 'w3-mode)
+                 (or (w3-view-this-url 'no-show)
+                     (url-view-url 'no-show))
+               (read-from-minibuffer "URL: "
+                                     "http://"  nil nil nil 
+                                     "http://"))))
+    (shell-command
+     (format "%s -de %s"
+             emacspeak-w3-lwp-request url))
+    (emacspeak-auditory-icon 'task-done)
+    (emacspeak-speak-other-window 1)))
+  
+;;}}}
 ;;{{{ setup
 
 (defcustom emacspeak-w3-punctuation-mode "some"
@@ -100,6 +123,7 @@
  #'(lambda ()
      (declare (special w3-mode-map))
      (modify-syntax-entry 10 " ")
+     (define-key w3-mode-map "hh" 'emacspeak-w3-show-http-headers)
      (define-key w3-mode-map "e" 'emacspeak-w3-xsl-map)
      (define-key w3-mode-map "\M-o" 'emacspeak-w3-do-onclick)
      (define-key w3-mode-map "\M-j"
@@ -742,7 +766,9 @@ interactively. Optional arg `speak' specifies if the result should be
 spoken automatically."
   (interactive
    (list current-prefix-arg))
-  (unless (eq major-mode 'w3-mode)
+  (unless (and
+	   (or (null prompt-url) (stringp prompt-url))
+	   (eq major-mode 'w3-mode))
     (setq prompt-url
           (read-from-minibuffer "URL:")))
   (declare (special emacspeak-w3-media-stream-suffixes))
@@ -759,6 +785,38 @@ spoken automatically."
      prompt-url
      (or (interactive-p)
 	 speak))))
+
+;;;###autoload
+(defun emacspeak-w3-extract-print-streams ( &optional prompt-url speak)
+  "Extract links to printable  streams.
+operate on current web page when in a W3 buffer; otherwise prompt for url.
+`prompt-url' is the URL to process. Prompts for URL when called
+interactively. Optional arg `speak' specifies if the result should be
+spoken automatically."
+  (interactive
+   (list current-prefix-arg))
+  (unless (and
+	   (or (null prompt-url) (stringp prompt-url))
+	   (eq major-mode 'w3-mode))
+    (setq prompt-url
+          (read-from-minibuffer "URL:")))
+  (declare (special emacspeak-w3-media-stream-suffixes))
+  (let ((filter "//a[contains(@href,\".pdf\")]"))
+    (emacspeak-w3-xslt-filter
+     filter
+     prompt-url
+     (or (interactive-p)
+	 speak))))
+
+(defun emacspeak-w3-extract-media-streams-under-point ()
+  "In W3 mode buffers, extract media streams from url under point."
+  (interactive)
+  (cond
+   ((and (eq major-mode 'w3-mode)
+	 (w3-view-this-url 'no-show))
+    (emacspeak-w3-extract-media-streams (w3-view-this-url 'no-show)
+                                        'speak))
+   (t (error "Not on a link in a W3 buffer."))))
 
 (defun emacspeak-w3-extract-matching-urls (pattern  &optional prompt-url speak)
   "Extracts links whose URL matches pattern."
@@ -1076,8 +1134,9 @@ XPath locator.")
 ;;}}}
 ;;{{{ Browse XML files:
 
-(defun emacspeak-w3-browse-xml(location)
+(defun emacspeak-w3-browse-xml(location &optional prompt-style)
   "Browse XML+CSS using W3.
+With interactive prefix arg, also prompt for an  XSL stylesheet.
 XML files can be rendered by an XML browser that is CSS aware.
 Emacs/W3 is not quite a complete XML+CSS browser, but it  does a
 good enough job for many things, especially the XML files from
@@ -1092,17 +1151,25 @@ XML files is quite usable:
 0) You get Aural CSS support.
 
 1) You get a navigable buffer using imenu if you have w3-imenu
-loaded.
-"
+loaded. "
   (interactive
    (list
-    (read-file-name "XML File: ")))
-  (let ((buffer (find-file-noselect location 'no-warn 'raw)))
+    (read-file-name "XML File: ")
+    current-prefix-arg))
+  (declare (special emacspeak-xslt-options))
+  (let ((buffer  (get-buffer-create " *xml work * "))
+        (emacspeak-xslt-options ""))
     (save-excursion
       (set-buffer buffer)
+      (insert-file-contents location)
+      (when prompt-style
+        (let ((xslt (read-file-name "XSL: " emacspeak-xslt-directory)))
+          (emacspeak-xslt-region xslt (point-min)
+                                 (point-max))))
       (emacspeak-w3-preview-this-buffer)
       (kill-buffer buffer)
       (emacspeak-auditory-icon 'open-object))))
+          
 
 ;;}}}
 ;;{{{  xsl keymap
@@ -1118,6 +1185,10 @@ loaded.
   'emacspeak-w3-xpath-filter-and-follow)
 (define-key emacspeak-w3-xsl-map "\C-p"
   'emacspeak-w3-xpath-junk-and-follow)
+(define-key emacspeak-w3-xsl-map "P"
+  'emacspeak-w3-extract-print-streams)
+(define-key emacspeak-w3-xsl-map "R"
+  'emacspeak-w3-extract-media-streams-under-point)
 (define-key emacspeak-w3-xsl-map "r"
   'emacspeak-w3-extract-media-streams)
 (define-key emacspeak-w3-xsl-map "u" 'emacspeak-w3-extract-matching-urls)
@@ -1616,6 +1687,29 @@ Note that this hook gets reset after it is used by W3 --and this is intentional.
       (setq emacspeak-pronounce-pronunciation-table save-pronunciations)))
    (t ad-do-it))
   ad-return-value)
+;;}}}
+;;{{{  make wget aware of emacspeak w3 url rewrite functionality 
+
+(defadvice w3-wget (before emacspeak pre act comp)
+  "Become aware of emacspeak w3 url rewrite rule,
+and make the redirect available via the minibuffer history.
+If a rewrite rule is defined in the current buffer, we change
+  this command to behave as if it were called with an
+  interactive prefix."
+  (when (and (interactive-p)
+             emacspeak-w3-url-rewrite-rule)
+    (ad-set-arg 0 t)
+    (let ((url (w3-view-this-url t))
+          (redirect nil))
+      (unless url
+        (error "Not on a link."))
+      (setq redirect
+            (string-replace-match (first emacspeak-w3-url-rewrite-rule)
+                                  url
+                                  (second
+                                   emacspeak-w3-url-rewrite-rule)))
+      (push redirect minibuffer-history))))
+
 ;;}}}
 ;;{{{  emacs local variables 
 

@@ -1,4 +1,4 @@
-# $Id: Makefile,v 20.0 2004/05/01 01:16:24 raman Exp $
+# $Id: Makefile,v 21.0 2004/11/25 18:45:51 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak, Dectalk, Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2004/05/01 01:16:24 $ |
-#  $Revision: 20.0 $ | 
+# $Date: 2004/11/25 18:45:51 $ |
+#  $Revision: 21.0 $ | 
 # Location undetermined
 #
 
@@ -99,6 +99,7 @@ emacspeak-c.elc \
 emacspeak-calc.elc \
 emacspeak-calculator.elc \
 emacspeak-calendar.elc \
+emacspeak-cedet.elc \
 emacspeak-checkdoc.elc \
 emacspeak-cmuscheme.elc \
 emacspeak-compile.elc \
@@ -117,6 +118,7 @@ emacspeak-ediary.elc \
 emacspeak-ediff.elc \
 flite-voices.elc \
 emacspeak-enriched.elc \
+emacspeak-emms.elc \
 emacspeak-entertain.elc \
 emacspeak-eperiodic.elc \
 emacspeak-erc.elc \
@@ -283,6 +285,7 @@ emacspeak-cmuscheme.elc: emacspeak-cmuscheme.el dtk-speak.elc voice-setup.elc
 emacspeak-calc.elc: emacspeak-calc.el 
 emacspeak-calculator.elc: emacspeak-calculator.el  dtk-speak.elc voice-setup.elc
 emacspeak-calendar.elc: emacspeak-calendar.el dtk-speak.el
+emacspeak-cedet.elc: emacspeak-cedet.el dtk-speak.elc voice-setup.elc
 emacspeak-checkdoc.elc: emacspeak-checkdoc.el dtk-speak.elc voice-setup.elc
 emacspeak-cperl.elc: emacspeak-cperl.el dtk-speak.elc voice-setup.elc
 emacspeak-custom.elc: emacspeak-custom.el dtk-speak.elc voice-setup.elc
@@ -299,6 +302,7 @@ emacspeak-ediary.elc: emacspeak-ediary.el dtk-speak.elc voice-setup.elc
 emacspeak-ediff.elc: emacspeak-ediff.el dtk-speak.elc voice-setup.elc
 flite-voices.elc: flite-voices.el
 emacspeak-enriched.elc: emacspeak-enriched.el dtk-speak.elc voice-setup.elc
+emacspeak-emms.elc: emacspeak-emms.el dtk-speak.elc 
 emacspeak-entertain.elc: emacspeak-entertain.el dtk-speak.elc voice-setup.elc
 emacspeak-eperiodic.elc: emacspeak-eperiodic.el dtk-speak.elc voice-setup.elc
 emacspeak-erc.elc: emacspeak-erc.el dtk-speak.elc voice-setup.elc

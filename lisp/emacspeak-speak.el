@@ -1,5 +1,5 @@
 ;;; emacspeak-speak.el --- Implements Emacspeak's core speech services
-;;; $Id: emacspeak-speak.el,v 20.0 2004/05/01 01:16:23 raman Exp $
+;;; $Id: emacspeak-speak.el,v 21.0 2004/11/25 18:45:49 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains the functions for speaking various chunks of text
 ;;; Keywords: Emacspeak,  Spoken Output
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:23 $ |
-;;;  $Revision: 20.0 $ |
+;;; $Date: 2004/11/25 18:45:49 $ |
+;;;  $Revision: 21.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2003, T. V. Raman 
+;;;Copyright (C) 1995 -- 2004, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -685,7 +685,7 @@ the sense of the filter. "
     (message "Unset column filter")
     (setq emacspeak-speak-line-column-filter nil))))
 
-;;}}}					; ;
+;;}}}					; ; ; ;	; ; ;
 
 (defcustom emacspeak-speak-space-regexp
   "^[ \t\r]+$"
@@ -797,7 +797,10 @@ are indicated with auditory icon ellipses."
                         (y-or-n-p
                          (format "Speak  this  %s long line? "
                                  l))))
-            (when confirm 
+            (when confirm
+                                        ;update threshold
+              (setq emacspeak-speak-maximum-line-length (1+ l))
+              (make-variable-buffer-local 'emacspeak-speak-maximum-line-length)
               ;; record the y answer
               (ems-modify-buffer-safely
                (put-text-property start end
@@ -1471,10 +1474,10 @@ current local  value to the result.")
   "Speak which function we are on.  Uses which-function from
 which-func without turning that mode on.  We actually use
 semantic to do the work."
-  (declare (special semantic-toplevel-bovine-cache))
+  (declare (special semantic--buffer-cache))
   (require 'which-func)
   (when  (and (featurep 'semantic)
-              semantic-toplevel-bovine-cache)
+              semantic--buffer-cache)
     (message  (or 
                (which-function)
                "Not inside a function."))))
@@ -1793,7 +1796,7 @@ Second interactive prefix sets clock to new timezone."
 
 
 (defconst emacspeak-codename
-  "LeapDog"
+  "PlayDog"
   "Code name of present release.")
 
 (defun emacspeak-speak-version ()
@@ -2181,6 +2184,18 @@ Non-nil means we split speech on newlines in comint buffer."
   (emacspeak-pronounce-refresh-pronunciations))
 
 (add-hook 'comint-mode-hook 'emacspeak-comint-speech-setup)
+(defvar emacspeak-speak-comint-output nil
+  "Temporarily set to T by command
+emacspeak-speak-comint-send-input.")
+
+(defun emacspeak-speak-comint-send-input ()
+  "Causes output to be spoken i.e., as if comint autospeak were turned
+on."
+  (interactive)
+  (declare (special emacspeak-speak-comint-output))
+  (setq emacspeak-speak-comint-output t)
+  (call-interactively 'comint-send-input)
+  (emacspeak-auditory-icon 'select-object))
 
 ;;}}}
 ;;{{{   quiten messages
@@ -2984,20 +2999,42 @@ directory specific settings."
   :group 'emacspeak-speak
   :type 'string)
 
-(defsubst emacspeak-speak-get-directory-settings ()
-  "Return directory specific settings file."
-  (declare (special emacspeak-speak-directory-settings))
-  (concat default-directory
-          emacspeak-speak-directory-settings))
+(defsubst emacspeak-speak-root-dir-p (dir)
+  "Check if we are at the root of the filesystem."
+  (let ((parent (expand-file-name  "../" dir)))
+    (or (or (not (file-readable-p dir))
+            (not (file-readable-p parent)))
+        (and 
+         (string= (file-truename dir) "/")
+         (string= (file-truename parent) "/")))))
+
+(defun emacspeak-speak-get-directory-settings (dir)
+  "Finds the next directory settings  file upwards in the directory tree
+from DIR. Returns nil if it cannot find a settings file in DIR
+or an ascendant directory."
+  (declare (special emacspeak-speak-directory-settings
+                    default-directory))
+  (let ((file (find emacspeak-speak-directory-settings
+		    (directory-files dir)
+		    :test 'string=)))
+    (cond
+     (file (expand-file-name file dir))
+     ((not (emacspeak-speak-root-dir-p dir))
+      (emacspeak-speak-get-directory-settings (expand-file-name ".." dir)))
+     (t nil))))
+
 ;;;###autoload
-(defun emacspeak-speak-load-directory-settings ()
+(defun emacspeak-speak-load-directory-settings (&optional directory)
   "Load a directory specific Emacspeak settings file.
 This is typically used to load up settings that are specific to
 an electronic book consisting of many files in the same
 directory."
-  (interactive)
-  (let ((settings (emacspeak-speak-get-directory-settings)))
-    (when (and (file-exists-p  settings)
+  (interactive "%DDirectory:")
+  (or directory
+      (setq directory default-directory))
+  (let ((settings (emacspeak-speak-get-directory-settings directory)))
+    (when (and settings
+               (file-exists-p  settings)
                (or emacspeak-speak-load-directory-settings-quietly
                    (y-or-n-p "Load directory settings? ")
                    "Load  directory specific Emacspeak

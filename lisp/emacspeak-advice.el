@@ -1,5 +1,5 @@
 ;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak intelligently
-;;; $Id: emacspeak-advice.el,v 20.0 2004/05/01 01:16:22 raman Exp $
+;;; $Id: emacspeak-advice.el,v 21.0 2004/11/25 18:45:44 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Core advice forms that make emacspeak work
 ;;; Keywords: Emacspeak, Speech, Advice, Spoken  output
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/05/01 01:16:22 $ |
-;;;  $Revision: 20.0 $ |
+;;; $Date: 2004/11/25 18:45:44 $ |
+;;;  $Revision: 21.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2003, T. V. Raman 
+;;;Copyright (C) 1995 -- 2004, T. V. Raman 
 ;;; Copyright (c) 1995, 1996,  1997 by T. V. Raman 
 ;;; All Rights Reserved.
 ;;;
@@ -1292,11 +1292,13 @@ in completion buffers"
 	  'personality
 	  emacspeak-comint-prompt-personality
 	  'rear-sticky nil)))
-      (when (and  emacspeak-comint-autospeak
-                  (or monitor 
-                      (eq (selected-window)
-                          (get-buffer-window
-                           (process-buffer (ad-get-arg 0))))))        
+      (when (and
+             (or emacspeak-comint-autospeak emacspeak-speak-comint-output)
+	     (or monitor 
+		 (eq (selected-window)
+		     (get-buffer-window
+		      (process-buffer (ad-get-arg 0))))))
+        (setq emacspeak-speak-comint-output nil)
 	(when emacspeak-comint-split-speech-on-newline (modify-syntax-entry 10 ">"))
         (condition-case nil
             (emacspeak-speak-region prior (point ))
@@ -1488,6 +1490,12 @@ in completion buffers"
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-current-column)))
+
+(defadvice indent-pp-sexp  (after emacspeak pre act)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'fill-object )
+    (message "Indented current s expression ")))
 
 (defadvice indent-sexp  (after emacspeak pre act)
   "Provide auditory feedback."
@@ -1956,7 +1964,8 @@ Otherwise cue user to the line just created."
 (defadvice keyboard-quit (before emacspeak pre act)
   "Stop speech first."
   (dtk-pause)
-  (emacspeak-auditory-icon 'warn-user))
+  (emacspeak-auditory-icon 'warn-user)
+  (dtk-speak "quit"))
 
 (defadvice keyboard-escape-quit (before emacspeak pre act)
   "Stop speech first."
