@@ -168,14 +168,15 @@ Argument BODY specifies forms to execute."
   "Set property auditory-icon at front of all paragraphs."
   (interactive )
   (save-excursion
-    (goto-char (point-max))
-    (ems-modify-buffer-safely
-     (let ((sound-cue 'paragraph))
-       (while (not (bobp))
-         (backward-paragraph)
-         (put-text-property  (1+ (point))
-                             (+ 2    (point ))
-                             'auditory-icon sound-cue ))))))
+    (let ((deactivate-mark nil))
+      (goto-char (point-max))
+      (ems-modify-buffer-safely
+       (let ((sound-cue 'paragraph))
+	 (while (not (bobp))
+	   (backward-paragraph)
+	   (put-text-property  (1+ (point))
+			       (+ 2    (point ))
+			       'auditory-icon sound-cue )))))))
 
 (defcustom  emacspeak-speak-paragraph-personality voice-animate
   "*Personality used to mark start of paragraph."
@@ -197,7 +198,8 @@ Useful to do this before you listen to an entire buffer."
   (when emacspeak-speak-paragraph-personality
     (save-excursion
       (goto-char (point-min))
-      (let ((start nil)
+      (let ((deactivate-mark nil)
+	    (start nil)
             (blank-line "\n[ \t\n\r]*\n"))
         (ems-modify-buffer-safely
          (while (re-search-forward blank-line nil t)
@@ -1361,8 +1363,7 @@ WIth prefix argument N, move N items (negative N means move backward)."
 
 (defun emacspeak-get-current-completion-from-completions  ()
   "Return the completion string under point in the *Completions* buffer."
-  (let ((deactivate-mark nil)
-	beg end)
+  (let (deactivate-mark beg end)
     (if (and (not (eobp)) (get-text-property (point) 'mouse-face))
 	(setq end (point) beg (1+ (point))))
     (if (and (not (bobp)) (get-text-property (1- (point)) 'mouse-face))
