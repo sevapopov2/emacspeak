@@ -106,6 +106,12 @@
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
+(defadvice gnus-group-mail (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
+
 (defadvice gnus-group-get-new-news (around emacspeak pre act )
   "Temporarily deactivate advice on message"
   (when (interactive-p)
@@ -275,68 +281,135 @@ Produce an auditory icon if possible."
           (dtk-speak (gnus-summary-article-subject )))))
     ad-return-value ))
 
-(defadvice gnus-summary-catchup-and-exit (after emacspeak pre act)
+(defadvice gnus-summary-catchup-and-exit (around emacspeak pre act)
   "Speak the newsgroup line.
  Produce an auditory icon indicating 
 the previous group was closed."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-line )))
+  (if (interactive-p)
+      (let ((dtk-stop-immediately nil)
+	    (emacspeak-speak-messages t))
+	ad-do-it
+	(emacspeak-auditory-icon 'close-object)
+	(emacspeak-speak-line ))
+    ad-do-it)
+  ad-return-value)
 
-(defadvice gnus-summary-exit (after emacspeak pre act comp)
-  "Speak the line in group buffer."
+(defadvice gnus-summary-post-news (after emacspeak pre act comp)
+  "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
-(defadvice gnus-summary-clear-mark-forward (after emacspeak pre act comp)
-  "Speak the line.
- Produce an auditory icon if possible."
+(defadvice gnus-summary-mail-other-window (after emacspeak pre act comp)
+  "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'deselect-object)
-    (emacspeak-gnus-summary-speak-subject)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
-(defadvice gnus-summary-mark-as-unread-forward (after emacspeak pre act)
-  "Speak the line.
- Produce an auditory icon if possible."
+(defadvice gnus-summary-reply (after emacspeak pre act comp)
+  "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-gnus-summary-speak-subject )))
+    (emacspeak-auditory-icon 'open-object)))
 
-(defadvice gnus-summary-mark-as-read-forward (after emacspeak pre act)
+(defadvice gnus-summary-reply-with-original (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)))
+
+(defadvice gnus-summary-exit (around emacspeak pre act comp)
+  "Speak the line in group buffer."
+  (if (interactive-p)
+      (let ((dtk-stop-immediately nil)
+	    (emacspeak-speak-messages t))
+	ad-do-it
+	(emacspeak-auditory-icon 'close-object)
+	(emacspeak-speak-line ))
+    ad-do-it)
+  ad-return-value)
+
+(defadvice gnus-summary-clear-mark-forward (around emacspeak pre act comp)
   "Speak the line.
  Produce an auditory icon if possible."
-  (when (interactive-p) 
-    (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-gnus-summary-speak-subject )))
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (emacspeak-auditory-icon 'deselect-object )
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(dtk-speak (gnus-summary-article-subject ))))
+    ad-return-value ))
 
-(defadvice gnus-summary-mark-as-unread-backward (after emacspeak pre act)
+(defadvice gnus-summary-mark-as-unread-forward (around emacspeak pre act)
   "Speak the line.
  Produce an auditory icon if possible."
-  (when (interactive-p) 
-    (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-gnus-summary-speak-subject )))
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (emacspeak-auditory-icon 'mark-object )
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(dtk-speak (gnus-summary-article-subject ))))
+    ad-return-value ))
 
-(defadvice gnus-summary-mark-as-read-backward (after emacspeak pre act)
+(defadvice gnus-summary-mark-as-read-forward (around emacspeak pre act)
   "Speak the line.
  Produce an auditory icon if possible."
-  (when (interactive-p) 
-    (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-gnus-summary-speak-subject )))
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (emacspeak-auditory-icon 'mark-object )
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(dtk-speak (gnus-summary-article-subject ))))
+    ad-return-value ))
 
-(defadvice gnus-summary-mark-as-processable (after emacspeak pre act)
+(defadvice gnus-summary-mark-as-unread-backward (around emacspeak pre act)
   "Speak the line.
  Produce an auditory icon if possible."
-  (when (interactive-p) 
-    (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-gnus-summary-speak-subject )))
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (emacspeak-auditory-icon 'mark-object )
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(dtk-speak (gnus-summary-article-subject ))))
+    ad-return-value ))
 
-(defadvice gnus-summary-unmark-as-processable (after emacspeak pre act)
+(defadvice gnus-summary-mark-as-read-backward (around emacspeak pre act)
   "Speak the line.
  Produce an auditory icon if possible."
-  (when (interactive-p) 
-    (emacspeak-auditory-icon 'deselect-object)
-    (emacspeak-gnus-summary-speak-subject )))
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (emacspeak-auditory-icon 'mark-object )
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(dtk-speak (gnus-summary-article-subject ))))
+    ad-return-value ))
+
+(defadvice gnus-summary-mark-as-processable (around emacspeak pre act)
+  "Speak the line.
+ Produce an auditory icon if possible."
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (emacspeak-auditory-icon 'mark-object )
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(dtk-speak (gnus-summary-article-subject ))))
+    ad-return-value ))
+
+(defadvice gnus-summary-unmark-as-processable (around emacspeak pre act)
+  "Speak the line.
+ Produce an auditory icon if possible."
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (emacspeak-auditory-icon 'deselect-object )
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(dtk-speak (gnus-summary-article-subject ))))
+    ad-return-value ))
 
 (defadvice gnus-summary-kill-same-subject-and-select (after emacspeak pre act)
   "Speak the subject and speak the first screenful.
@@ -417,15 +490,16 @@ instead you hear only the first screenful.")
   (save-excursion
     (set-buffer  "*Article*")
     (goto-char (point-min))
-    (setq dtk-punctuation-mode "some")
-    (voice-lock-mode 1)
-    (emacspeak-dtk-sync)
-    (cond
-     ((< (count-lines (point-min) (point-max))
-         emacspeak-gnus-large-article)
-      (emacspeak-speak-buffer  ))
-     (t (emacspeak-auditory-icon 'large-movement )
-        (let ((start (point)))
+    (search-forward "\n\n" nil t)
+    (let ((start (point))
+	  (dtk-punctuation-mode "some"))
+      (voice-lock-mode 1)
+      (emacspeak-dtk-sync)
+      (cond
+       ((< (count-lines start (point-max))
+	   emacspeak-gnus-large-article)
+	(emacspeak-speak-rest-of-buffer))
+       (t (emacspeak-auditory-icon 'large-movement )
           (move-to-window-line -1)
           (end-of-line)
           (emacspeak-speak-region start (point)))))))
@@ -462,10 +536,36 @@ instead you hear only the first screenful.")
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-line)))
 
+(defadvice gnus-article-mail (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
+
+(defadvice gnus-summary-save-article (after emacspeak pre act comp)
+  "Produce an auditory icon if possible"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'save-object)))
+
+(defadvice mm-save-part (after emacspeak pre act comp)
+  "Produce an auditory icon if possible"
+  (emacspeak-auditory-icon 'save-object))
+
+(defadvice gnus-summary-display-article (after emacspeak pre act comp)
+  "Produce an auditory icon if possible"
+  (emacspeak-auditory-icon 'open-object))
+
+(defadvice gnus-summary-toggle-header (after emacspeak pre act comp)
+  "Produce an auditory icon if possible"
+  (when (interactive-p)
+    (save-excursion
+      (set-buffer  "*Article*")
+      (emacspeak-auditory-icon
+       (if (gnus-article-hidden-text-p 'headers) 'off 'on)))))
+
 (defadvice gnus-summary-show-article (after emacspeak pre act)
   "Start speaking the article. "
   (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
     (emacspeak-gnus-speak-article-body)))
 
 (defadvice gnus-summary-next-page (after emacspeak pre act)
@@ -495,37 +595,61 @@ instead you hear only the first screenful.")
                             (set-buffer "*Article*")
                             (emacspeak-speak-line )))
 
-(defadvice gnus-summary-end-of-article
+(defadvice gnus-summary-end-of-article (after emacspeak pre act)
+  "Speak the first line. "
+  (save-excursion
+    (set-buffer "*Article*")
+    (emacspeak-speak-line )))
 
-  (after emacspeak pre act)
-  "Speak the first line. "(save-excursion
-                            (set-buffer "*Article*")
-                            (emacspeak-speak-line )))
-
-(defadvice gnus-summary-next-unread-article (after emacspeak pre act)
+(defadvice gnus-summary-next-unread-article (around emacspeak pre act)
   "Speak the article. "
-  (when (interactive-p)
-    (emacspeak-gnus-speak-article-body)))
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(emacspeak-gnus-speak-article-body)))
+    ad-return-value ))
 
-(defadvice gnus-summary-prev-unread-article (after emacspeak pre act)
+(defadvice gnus-summary-prev-unread-article (around emacspeak pre act)
   "Speak the article. "
-  (when (interactive-p)
-    (emacspeak-gnus-speak-article-body)))
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(emacspeak-gnus-speak-article-body)))
+    ad-return-value ))
 
-(defadvice gnus-summary-next-article (after emacspeak pre act)
+(defadvice gnus-summary-next-article (around emacspeak pre act)
   "Speak the article. "
-  (when (interactive-p)
-    (emacspeak-gnus-speak-article-body)))
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(emacspeak-gnus-speak-article-body)))
+    ad-return-value ))
 
-(defadvice gnus-summary-prev-same-subject  (after emacspeak pre act)
+(defadvice gnus-summary-prev-same-subject  (around emacspeak pre act)
   "Speak the article. "
-  (when (interactive-p)
-    (emacspeak-gnus-speak-article-body)))
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(emacspeak-gnus-speak-article-body)))
+    ad-return-value ))
 
-(defadvice gnus-summary-next-same-subject  (after emacspeak pre act)
+(defadvice gnus-summary-next-same-subject  (around emacspeak pre act)
   "Speak the article. "
-  (when (interactive-p)
-    (emacspeak-gnus-speak-article-body)))
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(emacspeak-gnus-speak-article-body)))
+    ad-return-value ))
 
 (defadvice gnus-summary-first-unread-article (after emacspeak pre act)
   "Speak the article. "
