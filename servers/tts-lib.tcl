@@ -1,11 +1,11 @@
-#$Id: tts-lib.tcl,v 16.0 2002/05/03 23:31:26 raman Exp $
+#$Id: tts-lib.tcl,v 17.0 2002/11/23 01:29:09 raman Exp $
 # {{{ LCD Entry: 
 
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2002/05/03 23:31:26 $ |
-#  $Revision: 16.0 $ | 
+# $Date: 2002/11/23 01:29:09 $ |
+#  $Revision: 17.0 $ | 
 # Location undetermined
 #
 
@@ -227,7 +227,6 @@ proc notes_initialize {} {
     }
     set tts(midi) 0
     if {![file executable /usr/bin/stdiosynth]} {
-        puts stderr "stdiosynth executable not found "
         return
     }
     set result [catch {set tts(notes) [open "|stdiosynth " w]} err]

@@ -1,5 +1,5 @@
 ;;; emacspeak-dictionary.el --- speech-enable dictionaries 
-;;; $Id: emacspeak-dictionary.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-dictionary.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   Speech enable dictionary mode
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -91,10 +91,6 @@
     (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 
-
-
-
-
 (defadvice dictionary-previous (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
@@ -104,22 +100,13 @@
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
-
+    (emacspeak-speak-text-range 'link-function)))
 
 (defadvice dictionary-next-link (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
-
-
-
-
-
-
-
-
+    (emacspeak-speak-text-range 'link-function)))
 
 ;;}}}
 (provide 'emacspeak-dictionary)

@@ -1,5 +1,5 @@
 ;;; emacspeak-speedbar.el --- Speech enable speedbar -- Tool for context-sensitive navigation
-;;; $Id: emacspeak-speedbar.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-speedbar.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to speedbar
 ;;; Keywords: Emacspeak, Speedbar
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -51,7 +51,6 @@
 ;;; specific entry point to speedbar
 ;;; --emacspeak-speedbar-goto-speedbar-- and binds this
 
-
 ;;; Code:
 
 ;;}}}
@@ -64,7 +63,7 @@
 (require 'voice-lock)
 (require 'emacspeak-keymap)
 (require 'emacspeak-sounds)
-;(eval-when-compile (require 'speedbar))
+					;(eval-when-compile (require 'speedbar))
 (eval-when (compile)
   (require 'emacspeak-fix-interactive))
 
@@ -153,7 +152,6 @@
   (emacspeak-auditory-icon 'select-object)
   (emacspeak-speak-mode-line))
 
-
 (defadvice speedbar-expand-line (after emacspeak pre act
                                        comp)
   "Speak the line we just expanded"
@@ -178,9 +176,6 @@ action"
    (t ad-do-it))
   ad-return-value)
 
-
-
-
 (defadvice speedbar-restricted-next (after emacspeak pre act
                                            comp)
   "Provide spoken feedback"
@@ -201,8 +196,6 @@ action"
 (defvar emacspeak-speedbar-disable-updates t
   "Non nil means speedbar does not automatically update.
 An automatically updating speedbar consumes resources.")
-
-
 
 (defun emacspeak-speedbar-goto-speedbar ()
   "Switch to the speedbar"
@@ -250,7 +243,7 @@ An automatically updating speedbar consumes resources.")
                   (?+ 'open-object)
                   (?- 'close-object)
                   (t 'large-movement))))
-      (t (message "No target on this line"))))))
+       (t (message "No target on this line"))))))
 
 ;;}}}
 ;;{{{  hooks
@@ -314,7 +307,6 @@ An automatically updating speedbar consumes resources.")
   :type 'symbol
   :group 'emacspeak-speedbar)
 
-
 (defadvice speedbar-make-button (after emacspeak pre act comp)
   "Voiceify the button"
   (let ((start (ad-get-arg 0))
@@ -345,7 +337,7 @@ An automatically updating speedbar consumes resources.")
 ;;{{{ keys 
 (declaim (special emacspeak-keymap))
 
-;(define-key emacspeak-keymap '[insert] 'emacspeak-speedbar-goto-speedbar)
+					;(define-key emacspeak-keymap '[insert] 'emacspeak-speedbar-goto-speedbar)
 
 ;;}}}
 (provide 'emacspeak-speedbar)

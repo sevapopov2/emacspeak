@@ -1,5 +1,5 @@
 ;;; emacspeak-eudc.el --- Speech enable  directory client 
-;;; $Id: emacspeak-eudc.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-eudc.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable universal directory client 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -173,7 +173,6 @@ Summarize the form to welcome the user. "
   "Personality t use for voiceifying attribute values. "
   :type 'symbol
   :group 'emacspeak-eudc)
-
 
 (defadvice eudc-print-attribute-value (around emacspeak pre
                                               act comp)

@@ -1,5 +1,5 @@
 ;;; emacspeak-xml-shell.el --- Implements a simple XML browser
-;;; $Id: emacspeak-xml-shell.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: emacspeak-xml-shell.el,v 17.0 2002/11/23 01:29:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains  xml-shell
 ;;; Keywords: Emacspeak,  Audio Desktop Xml-Shell
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:29:01 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -67,7 +67,10 @@
   "XML browser for the Emacspeak desktop.")
 
 (defcustom emacspeak-xml-shell-command "xmllint"
-  "Executable that provides the XML browser shell."
+  "Executable that provides the XML browser shell.
+Default is xmllint.
+If you want an XML Shell on steroids get XSH and use emacs custom to
+customize the default to be xsh."
   :type 'string
   :group 'emacspeak-xml-shell)
 
@@ -109,9 +112,9 @@ Interactive XML browser.
                        emacspeak-xml-shell-command
                        nil
                        (append emacspeak-xml-shell-options
-(if (string-match ".html?$" system-id)
-    (list "--html")
- nil )
+			       (if (string-match ".html?$" system-id)
+				   (list "--html")
+				 nil )
                                (list system-id)))))
     (save-excursion
       (set-buffer buffer)
@@ -197,7 +200,6 @@ Interactive XML browser.
 (defvar emacspeak-xml-shell-display-buffer nil
   "Buffer that displays processed output.")
 
-
 (defun emacspeak-xml-shell-create-accumulator (accumulate terminator post-processor)
   "Create a function that is suitable for use as a filter function for
 the XML shell process. The returned function will accumulate process
@@ -234,12 +236,21 @@ and end."
              (comint-send-input)))
           (t (insert output))))))))
 
+(defvar emacspeak-xml-shell-cat
+  (cond
+   ((string-equal "xmllint" emacspeak-xml-shell-command)
+    "cat")
+   ((string-equal emacspeak-xml-shell-command "xsh")
+    "ls")
+   (t ""))
+  "Set according to the XML Shell in use.")
 
 (defun emacspeak-xml-shell-process-node ( xpath display-function)
   "Apply display-function to the contents of node specified by xpath.
 Display function accepts two arguments, start and end that specify the
 region of text to process."
-  (declare (special emacspeak-xml-shell-process))
+  (declare (special emacspeak-xml-shell-process
+                    emacspeak-xml-shell-cat))
   (let ((accumulator nil)
         (terminator nil)
         (accumulate (get-buffer-create "*xml-shell-accumulator*")))
@@ -254,7 +265,9 @@ region of text to process."
                          accumulate  terminator 
                          display-function))
       (set-process-filter emacspeak-xml-shell-process accumulator)
-      (insert (format "cat %s" xpath))
+      (insert (format "%s %s"
+                      emacspeak-xml-shell-cat
+                      xpath))
       (comint-send-input))))
 
 (defcustom emacspeak-xml-shell-xslt nil
@@ -262,19 +275,16 @@ region of text to process."
   :type 'string
   :group 'emacspeak-xml-shell)
 
-
 (defsubst emacspeak-xml-shell-setup-html-base (base)
   "Locate HTML head in current buffer and add document base.  Creates
 HTML head if none found."
   (goto-char (point-min))
-   (let ((head   (search-forward "<head>" nil t)))
-     (or head
-         (insert "<head>\n"))
-     (insert
-      (format "<base href=\"%s\">\n" base))
-     (or head (insert "</head>\n"))))
-      
-   
+  (let ((head   (search-forward "<head>" nil t)))
+    (or head
+	(insert "<head>\n"))
+    (insert
+     (format "<base href=\"%s\">\n" base))
+    (or head (insert "</head>\n"))))
 
 (defun emacspeak-xml-shell-display-as-html (start end)
   "Suitable for use in displaying current node as HTML."
@@ -284,15 +294,22 @@ HTML head if none found."
      emacspeak-xml-shell-xslt
      start end))
   (emacspeak-xml-shell-setup-html-base emacspeak-xml-shell-document)
-  (w3-preview-this-buffer)
+  (emacspeak-w3-preview-this-buffer)
   (setq emacspeak-xml-shell-display-buffer (current-buffer)))
-
 
 (defun emacspeak-xml-shell-browse-current ()
   "Display current node."
   (interactive)
   (declare (special emacspeak-xml-shell-display-buffer))
   (emacspeak-xml-shell-process-node "."
+                                    'emacspeak-xml-shell-display-as-html)
+  (switch-to-buffer emacspeak-xml-shell-display-buffer))
+
+(defun emacspeak-xml-shell-browse-result (xpath)
+  "Display XPath  and display its result using W3."
+  (interactive "sXPath:")
+  (declare (special emacspeak-xml-shell-display-buffer))
+  (emacspeak-xml-shell-process-node xpath 
                                     'emacspeak-xml-shell-display-as-html)
   (switch-to-buffer emacspeak-xml-shell-display-buffer))
 
@@ -308,6 +325,8 @@ HTML head if none found."
   'emacspeak-xml-shell-goto-parent)
 (define-key emacspeak-xml-shell-mode-map [down] 
   'emacspeak-xml-shell-goto-children)
+(define-key emacspeak-xml-shell-mode-map "\C-c\C-v"
+  'emacspeak-xml-shell-browse-result)
 (define-key emacspeak-xml-shell-mode-map "\C-cv" 'emacspeak-xml-shell-browse-current)
 
 ;;}}}

@@ -1,5 +1,5 @@
 ;;; emacspeak-dictation.el --- Speech enable dictation -- Dictation Interface
-;;; $Id: emacspeak-dictation.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-dictation.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to dictation
 ;;; Keywords: Emacspeak, Speak, Spoken Output, dictation
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -69,15 +69,14 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'button)))
 
-
 (defadvice dictation-filter (around emacspeak pre act comp)
   "Speak what you heard. "
   (let ((start nil)
         (dtk-stop-immediately nil))
-      (set-buffer dictation-buffer)
-      (setq start (point))
-      ad-do-it
-      (emacspeak-speak-region start (point))))
+    (set-buffer dictation-buffer)
+    (setq start (point))
+    ad-do-it
+    (emacspeak-speak-region start (point))))
         
 ;;}}}
 (provide 'emacspeak-dictation )

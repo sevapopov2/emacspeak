@@ -1,5 +1,5 @@
 ;;; emacspeak-actions.el --- Emacspeak actions -- callbacks that can be associated with portions of a buffer
-;;; $Id: emacspeak-actions.el,v 16.0 2002/05/03 23:31:22 raman Exp $
+;;; $Id: emacspeak-actions.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $
 ;;; Define emacspeak actions for various modes
 ;;; Keywords:emacspeak, audio interface to emacs actions
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:22 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -61,13 +61,13 @@
   "Setup action on right parens.
 The defined   emacspeak action   causes
 emacspeak to show the matching paren when the cursor moves across a right paren."
-    (save-excursion
-      (goto-char (point-min))
-      (ems-modify-buffer-safely
-          (while (search-forward ")" nil t )
-            (put-text-property  (point) (1+ (point))
-                                'emacspeak-action
-                                'emacspeak-blink-matching-open )))))
+  (save-excursion
+    (goto-char (point-min))
+    (ems-modify-buffer-safely
+     (while (search-forward ")" nil t )
+       (put-text-property  (point) (1+ (point))
+			   'emacspeak-action
+			   'emacspeak-blink-matching-open )))))
 (add-hook 'emacspeak-emacs-lisp-mode-actions-hook
           'emacspeak-activate-match-blinker )
 ;;}}}
@@ -86,7 +86,7 @@ emacspeak to speak the semantics of the line
                            'emacspeak-action
                            'emacspeak-c-speak-semantics )))))
 (add-hook 'emacspeak-c-mode-actions-hook
-            'emacspeak-c-speak-semantics-when-on-closing-brace)
+	  'emacspeak-c-speak-semantics-when-on-closing-brace)
 
 ;;}}}
 (provide  'emacspeak-actions)

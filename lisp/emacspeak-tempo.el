@@ -1,5 +1,5 @@
 ;;; emacspeak-tempo.el --- Speech enable tempo -- template library used for Java and HTML authoring
-;;; $Id: emacspeak-tempo.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: emacspeak-tempo.el,v 17.0 2002/11/23 01:29:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extensions for tempo.el (used by html-helper-mode)
 ;;; Keywords: Emacspeak, Spoken Feedback, Template filling, html editing
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:01 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -55,7 +55,7 @@
 
 ;;; Prompting in the minibuffer is useful:
 
-  (declaim  (special tempo-interactive ))
+(declaim  (special tempo-interactive ))
 (setq tempo-interactive t)
 (add-hook 'tempo-insert-string-hook
           (function (lambda (string)
@@ -80,14 +80,10 @@
   (when (interactive-p)
     (emacspeak-speak-line)))
 
-
-
 ;;}}}
-
-
+(emacspeak-pronounce-add-super 'sgml-mode 'html-helper-mode)
 
 (provide 'emacspeak-tempo)
-
 
 ;;{{{ end of file 
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-bibtex.el --- Speech enable bibtex -- Supports maintaining bibliographies in bibtex format
-;;; $Id: emacspeak-bibtex.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-bibtex.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for editting bibtex files 
 ;;; Keywords:emacspeak, audio interface to emacs, bibtex
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -52,26 +52,26 @@
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
-(emacspeak-speak-line)))
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-find-text (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'button)
-(emacspeak-speak-line )))
+    (emacspeak-speak-line )))
 
 (defadvice end-of-bibtex-entry (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
-(emacspeak-speak-line)
+    (emacspeak-speak-line)
     ))
 
 (defadvice beginning-of-bibtex-entry (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
-(emacspeak-speak-line)
+    (emacspeak-speak-line)
     ))
 
 ;;}}}
@@ -81,139 +81,137 @@
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'button)
-(emacspeak-speak-line)))
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-empty-field (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'delete-object)
-(emacspeak-speak-line)))
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-kill-optional-field (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'delete-object)
-(emacspeak-speak-line)))
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-clean-entry (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'task-done)
-(message "Cleaned up entry")))
+    (message "Cleaned up entry")))
 
 ;;}}}
 ;;{{{  advice record creation
 
 ;;; list of commands that are advised:
-;'(bibtex-Unpublished 
-;        bibtex-string
-;        bibtex-TechReport
-;        bibtex-preamble
-;        bibtex-Proceedings
-;        bibtex-PhdThesis
-;        bibtex-Misc
-;        bibtex-MastersThesis
-;        bibtex-Manual
-;        bibtex-InProceedings
-;        bibtex-InCollection
-;        bibtex-InBook
-;        bibtex-InProceedings
-;        bibtex-Book
-;        bibtex-Article)
-
+					;'(bibtex-Unpublished 
+					;        bibtex-string
+					;        bibtex-TechReport
+					;        bibtex-preamble
+					;        bibtex-Proceedings
+					;        bibtex-PhdThesis
+					;        bibtex-Misc
+					;        bibtex-MastersThesis
+					;        bibtex-Manual
+					;        bibtex-InProceedings
+					;        bibtex-InCollection
+					;        bibtex-InBook
+					;        bibtex-InProceedings
+					;        bibtex-Book
+					;        bibtex-Article)
 
 (defadvice bibtex-Unpublished  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-string  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-TechReport  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-preamble  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-Proceedings  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-PhdThesis  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-Misc  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-MastersThesis  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-Manual  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-InProceedings  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-InCollection  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-InBook  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-InProceedings  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-Book  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice bibtex-Article  (after emacspeak pre act comp)
-        "Provide auditory feedback"
-        (when (interactive-p)
-          (emacspeak-auditory-icon 'open-object)
-          (emacspeak-speak-line)))
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 ;;}}}
-
 
 (provide  'emacspeak-bibtex)
 ;;{{{  emacs local variables 

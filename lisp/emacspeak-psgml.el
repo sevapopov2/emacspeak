@@ -1,5 +1,5 @@
 ;;; emacspeak-sgml-mode.el --- Speech enable psgml package
-;;; $Id: emacspeak-psgml.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-psgml.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for psgml
 ;;; Keywords:emacspeak, audio interface to emacs psgml
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -167,6 +167,13 @@ window")))
       (emacspeak-auditory-icon 'delete-object)
       (emacspeak-speak-line))))
 
+(defadvice sgml-up-element (after emacspeak pre act
+				  comp)
+  "Speak line we moved to"
+  (when (interactive-p)
+    (let ((emacspeak-show-point t))
+      (emacspeak-auditory-icon 'large-movement)
+      (emacspeak-speak-line))))
 
 (defadvice sgml-next-data-field (after emacspeak pre act
                                        comp)
@@ -287,19 +294,17 @@ window")))
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)))
 
-
 (defadvice sgml-edit-attrib-field-end (after emacspeak pre
-                                               act comp)
+					     act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)))
 (defadvice sgml-edit-attrib-next (after emacspeak pre
-                                               act comp)
+					act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
-
 
 (defadvice sgml-edit-attrib-clear (after emacspeak pre act
                                          comp)
@@ -309,7 +314,7 @@ window")))
     (emacspeak-speak-line)))
 
 (defadvice sgml-edit-attrib-default  (after emacspeak pre act
-                                         comp)
+					    comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'deselect-object)
@@ -327,8 +332,9 @@ window")))
 (emacspeak-pronounce-add-dictionary-entry 'sgml-mode"CDATA"
                                           "C DATA")
 ;;; xml mode inherits from sgml mode
+(emacspeak-pronounce-augment-pronunciations 'xml-mode
+                                            emacspeak-pronounce-common-xml-namespace-uri-pronunciations)
 (emacspeak-pronounce-add-super 'sgml-mode 'xml-mode)
-
 ;;}}}
 ;;{{{ setup sgml-mode-hook
 (declaim (special sgml-mode-map))
@@ -350,13 +356,13 @@ window")))
 
 (defvar emacspeak-sgml-markup-voices
   '((start-tag 	. harry)
-			    (end-tag 	. harry)
-			    (comment 	. paul-monotone)
-			    (pi 	. paul-animated)
-			    (sgml 	. paul-animated)
-			    (doctype 	. paul-italic)
-			    (entity 	. paul-italic)
-			    (shortref   . harry))
+    (end-tag 	. harry)
+    (comment 	. paul-monotone)
+    (pi 	. paul-animated)
+    (sgml 	. paul-animated)
+    (doctype 	. paul-italic)
+    (entity 	. paul-italic)
+    (shortref   . harry))
   "*List of markup to personality mappings.
 Element are of the form (MARKUP-TYPE . personality).
 Possible values for MARKUP-TYPE is:
@@ -375,8 +381,8 @@ shortref- short reference")
 (defadvice sgml-set-face-for (after emacspeak pre act comp)
   "Apply voice locking as well."
   (let* ((start (ad-get-arg 0))
-                (end (ad-get-arg 1))
-                     (type (ad-get-arg 2))
+	 (end (ad-get-arg 1))
+	 (type (ad-get-arg 2))
          (voice (cdr (assq type
                            emacspeak-sgml-markup-voices))))
     (ems-modify-buffer-safely
@@ -390,8 +396,8 @@ shortref- short reference")
   "Speak contents of current element. "
   (interactive)
   (save-excursion
-      (sgml-mark-current-element)
-(emacspeak-speak-region (mark) (point))))
+    (sgml-mark-current-element)
+    (emacspeak-speak-region (mark) (point))))
 
 ;;}}}
 ;;{{{ sgml browsing mode 

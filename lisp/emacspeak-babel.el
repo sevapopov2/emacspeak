@@ -1,5 +1,5 @@
 ;;; emacspeak-babel.el --- Speech-enable BabelFish
-;;; $Id: emacspeak-babel.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-babel.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to use BabelFish
 ;;; Keywords: Emacspeak, WWW interaction
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -58,12 +58,10 @@
 ;;}}}
 ;;{{{ speech-enable commands
 
-
-
 (defun emacspeak-babel-done ()
   "Announce  completion of the translation request."
   (message "Displayed translation in other window")
-(emacspeak-auditory-icon 'task-done))
+  (emacspeak-auditory-icon 'task-done))
 
 (add-hook 'babel-mode-hook 'emacspeak-babel-done)
 ;;}}}

@@ -1,5 +1,5 @@
 ;;; emacspeak-erc.el --- speech-enable erc irc client
-;;; $Id: emacspeak-erc.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-erc.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for speech-enabling erc.el
 ;;; Keywords: Emacspeak, erc
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -46,6 +46,7 @@
 (require 'advice)
 (require 'thingatpt)
 (require 'emacspeak-speak)
+(require 'emacspeak-pronounce)
 (require 'voice-lock)
 (require 'emacspeak-sounds)
 
@@ -77,6 +78,12 @@
   "Default personality for erc."
   :type 'symbol
   :group 'emacspeak-erc)
+
+(defcustom emacspeak-erc-ignore-notices nil
+  "Set to T if you dont want to see notifcation messages from the
+server."
+  :type 'boolean
+  :group 'eamcspeak-erc)
 
 (defcustom emacspeak-erc-direct-msg-personality
   'paul-animated
@@ -147,9 +154,13 @@
 
 ;;}}}
 ;;{{{ advice interactive commands
+(emacspeak-pronounce-augment-pronunciations 'erc-mode
+                                            emacspeak-pronounce-internet-smileys-pronunciations)
+
 (defadvice erc-mode (after emacspeak pre act comp)
   "Turn on voice lock mode."
   (declare (special voice-lock-mode))
+  (emacspeak-pronounce-refresh-pronunciations)
   (setq voice-lock-mode t))
 
 (defadvice erc-select (after emacspeak pre act comp)
@@ -174,19 +185,19 @@
 
 (defcustom emacspeak-erc-faces-to-personalities
   '((erc-default-face paul)
-				     (erc-direct-msg-face paul-animated)
-				     (erc-input-face paul-smooth)
-				     (erc-bold-face paul-bold)
-				     (erc-inverse-face betty)
-				     (erc-underline-face ursula)
-				     (erc-prompt-face harry)
-				     (erc-notice-face paul-italic)
-				     (erc-action-face paul-monotone)
-				     (erc-error-face kid)
-				     (erc-dangerous-host-face paul-surprized)
-				     (erc-pal-face paul-animated)
-				     (erc-fool-face paul-angry)
-				     (erc-keyword-face paul-animated))
+    (erc-direct-msg-face paul-animated)
+    (erc-input-face paul-smooth)
+    (erc-bold-face paul-bold)
+    (erc-inverse-face betty)
+    (erc-underline-face ursula)
+    (erc-prompt-face harry)
+    (erc-notice-face paul-italic)
+    (erc-action-face paul-monotone)
+    (erc-error-face kid)
+    (erc-dangerous-host-face paul-surprized)
+    (erc-pal-face paul-animated)
+    (erc-fool-face paul-angry)
+    (erc-keyword-face paul-animated))
   "Maps faces used in erc to speaker personalities in emacspeak."
   :group 'emacspeak-erc
   :type '(repeat
@@ -242,19 +253,16 @@ user is notified about activity in the room.")
 (make-variable-buffer-local
  'emacspeak-erc-people-to-monitor)
 
-
 (defvar emacspeak-erc-monitor-my-messages t
   "If T, then messages to your specified nick will be
 spoken.")
 
 (make-variable-buffer-local 'emacspeak-erc-monitor-my-messages)
 
-
 (defcustom emacspeak-erc-my-nick nil
   "My IRC nick."
   :type 'string
   :group 'emacspeak-erc)
-
 
 (defsubst emacspeak-erc-read-person (action)
   "Helper to prompt for and read person in ERC."
@@ -262,11 +270,11 @@ spoken.")
    (format "%s person" action)
    (save-excursion
      (let ((start (point)))
-     (search-backward  "<" (point-min) t)
-     (when (not (= start (point)))
-       (setq start (point))
-       (search-forward " ")
-       (buffer-substring start (1- (point))))))))
+       (search-backward  "<" (point-min) t)
+       (when (not (= start (point)))
+	 (setq start (point))
+	 (search-forward " ")
+	 (buffer-substring start (1- (point))))))))
      
 
 (defun emacspeak-erc-add-name-to-monitor (name)
@@ -303,7 +311,6 @@ spoken.")
            (mapconcat #'identity 
                       emacspeak-erc-people-to-monitor " ")))
 
-
 (defun emacspeak-erc-compute-message (string buffer)
   "Uses environment of buffer to decide what message to
 display. String is the original message."
@@ -327,8 +334,6 @@ display. String is the original message."
       string)
      (t nil))))
 
-
-
 (defadvice erc-display-line-buffer  (after emacspeak pre act
                                            comp)
   "Speech-enable ERC."
@@ -340,7 +345,7 @@ display. String is the original message."
     (save-excursion
       (set-buffer buffer)
       (when (and emacspeak-erc-room-monitor
-                emacspeak-erc-monitor-my-messages)
+		 emacspeak-erc-monitor-my-messages)
         (let ((emacspeak-speak-messages nil)
               (msg (emacspeak-erc-compute-message (ad-get-arg 0)
                                                   buffer)))
@@ -348,7 +353,7 @@ display. String is the original message."
             (emacspeak-auditory-icon 'progress)
             (message msg)
             (tts-with-punctuations dtk-punctuation-mode
-            (dtk-speak  msg))))))))
+				   (dtk-speak  msg))))))))
 
 (defadvice erc-display-line-1  (after emacspeak pre act comp)
   "Speech-enable ERC."
@@ -360,7 +365,7 @@ display. String is the original message."
     (save-excursion
       (set-buffer buffer)
       (when (and emacspeak-erc-room-monitor
-                emacspeak-erc-monitor-my-messages)
+		 emacspeak-erc-monitor-my-messages)
         (let ((emacspeak-speak-messages nil)
               (msg (emacspeak-erc-compute-message (ad-get-arg 0)
                                                   buffer)))
@@ -368,7 +373,7 @@ display. String is the original message."
             (emacspeak-auditory-icon 'progress)
             (message msg)
             (tts-with-punctuations dtk-punctuation-mode
-            (dtk-speak  msg))))))))
+				   (dtk-speak  msg))))))))
 
 (defun emacspeak-erc-toggle-room-monitor  (&optional prefix)
   "Toggle state of ERC room monitor.
@@ -420,12 +425,22 @@ set the current local value to the result."
 
 ;;}}}
 ;;{{{ silence server messages 
+
 (defadvice erc-parse-line-from-server (around emacspeak pre
                                               act comp)
   "Silence server messages."
   (let ((emacspeak-speak-messages nil))
     ad-do-it
     ad-return-value))
+
+(defadvice erc-make-notice (around emacspeak  pre act comp)
+  "Ignore notices from server is emacspeak-erc-ignore-notices it set."
+  (cond
+   ((not emacspeak-erc-ignore-notices )
+    ad-do-it
+    ad-return-value)
+   (t "")))
+
 ;;}}}
 ;;{{{ define emacspeak keys
 (declaim (special erc-mode-map))

@@ -1,5 +1,5 @@
 ;;; emacspeak-python.el --- Speech enable Python development environment
-;;; $Id: emacspeak-python.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-python.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to python mode
 ;;; Keywords: Emacspeak, Speak, Spoken Output, python
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -68,17 +68,16 @@
   (when (interactive-p)
     (dtk-say " colon ")))
 
-
 (defadvice py-electric-backspace (around emacspeak pre act)
   "Speak character you're deleting."
   (cond
    ((interactive-p )
-      (dtk-tone 500 30 'force)
-      (and emacspeak-backward-delete-char-speak-deleted-char
-           (emacspeak-speak-this-char (preceding-char )))
-      ad-do-it
-      (and emacspeak-backward-delete-char-speak-current-char
-           (emacspeak-speak-this-char (preceding-char ))))
+    (dtk-tone 500 30 'force)
+    (and emacspeak-backward-delete-char-speak-deleted-char
+	 (emacspeak-speak-this-char (preceding-char )))
+    ad-do-it
+    (and emacspeak-backward-delete-char-speak-current-char
+	 (emacspeak-speak-this-char (preceding-char ))))
    (t ad-do-it))
   ad-return-value)
 
@@ -86,12 +85,12 @@
   "Speak character you're deleting."
   (cond
    ((interactive-p )
-      (dtk-tone 500 30 'force)
-      (and emacspeak-backward-delete-char-speak-deleted-char
-           (emacspeak-speak-this-char (preceding-char )))
-      ad-do-it
-      (and emacspeak-backward-delete-char-speak-current-char
-           (emacspeak-speak-this-char (preceding-char ))))
+    (dtk-tone 500 30 'force)
+    (and emacspeak-backward-delete-char-speak-deleted-char
+	 (emacspeak-speak-this-char (preceding-char )))
+    ad-do-it
+    (and emacspeak-backward-delete-char-speak-current-char
+	 (emacspeak-speak-this-char (preceding-char ))))
    (t ad-do-it))
   ad-return-value)
 
@@ -174,7 +173,6 @@
              (count-lines  (region-beginning)
                            (region-end))))))
 
-
 (defadvice py-comment-region (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
   (when (interactive-p)
@@ -206,7 +204,6 @@
   (when (interactive-p)
     (emacspeak-speak-line)
     (emacspeak-auditory-icon 'large-movement)))
-
 
 (defadvice end-of-python-def-or-class (after emacspeak pre act comp)
   "Speak current statement after moving"
@@ -268,11 +265,11 @@
 If already at the beginning then move to previous block."
   (interactive)
   (let ((start (point)))
-  (beginning-of-python-def-or-class)
-  (unless (eq start (point))
-  (beginning-of-line)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'large-movement))))
+    (beginning-of-python-def-or-class)
+    (unless (eq start (point))
+      (beginning-of-line)
+      (emacspeak-speak-line)
+      (emacspeak-auditory-icon 'large-movement))))
 
 (defun emacspeak-py-next-block()
   "Move forward to the beginning of the next block."
@@ -328,7 +325,7 @@ If already at the beginning then move to previous block."
      ))
   "Additional expressions to voiceify in Python mode.")
 (voice-lock-set-major-mode-keywords 'python-mode
-                                                      'python-voice-lock-keywords)
+				    'python-voice-lock-keywords)
 
 ;;}}}
 ;;{{{ keybindings

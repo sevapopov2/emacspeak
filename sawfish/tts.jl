@@ -1,5 +1,5 @@
 ;;; tts.jl -- Sawfish interface  to Emacspeak speech servers 
-;;; $Id: tts.jl,v 16.0 2002/05/03 23:31:26 raman Exp $
+;;; $Id: tts.jl,v 17.0 2002/11/23 01:29:10 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   Interface REP/Sawfish to Emacspeak TTS servers
 ;;; Keywords: Sawfish, Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:26 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:29:10 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 

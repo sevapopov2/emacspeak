@@ -1,4 +1,4 @@
-# $Id: Makefile,v 16.0 2002/05/03 23:31:26 raman Exp $
+# $Id: Makefile,v 17.0 2002/11/23 01:29:08 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak, Dectalk, Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2002/05/03 23:31:26 $ |
-#  $Revision: 16.0 $ | 
+# $Date: 2002/11/23 01:29:08 $ |
+#  $Revision: 17.0 $ | 
 # Location undetermined
 #
 
@@ -39,7 +39,7 @@
 # }}}
 # {{{xml -> html 
 %.html: %.xml
-	xsltproc $< > $@
+	xsltproc --stringparam html.stylesheet docbook.css  $< > $@
 
 # }}}
 # {{{ User level target--  config 

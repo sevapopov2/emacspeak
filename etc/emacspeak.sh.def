@@ -1,6 +1,6 @@
 #!/bin/sh
 # emacspeak - execute emacs with speech enhancements
-#$Id: emacspeak.sh.def,v 16.0 2002/05/03 23:31:26 raman Exp $
+#$Id: emacspeak.sh.def,v 17.0 2002/11/23 01:29:08 raman Exp $
     if [ -f /etc/emacspeak.conf ]
     then
     . /etc/emacspeak.conf
@@ -15,6 +15,9 @@ CL_ALL=""
 for CL in $* ; do
 	if [ "$CL" = "-o" ]; then
 		DTK_PROGRAM=outloud
+		export DTK_PROGRAM
+                elif [ "$CL" = "-d" ]; then
+		DTK_PROGRAM=dtk-soft
 		export DTK_PROGRAM
 	elif [ "$CL" = "-q" ]; then
 		INITSTR=""

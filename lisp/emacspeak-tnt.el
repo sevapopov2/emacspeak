@@ -1,5 +1,5 @@
 ;;; emacspeak-tnt.el --- Instant Messenger 
-;;; $Id: emacspeak-tnt.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: emacspeak-tnt.el,v 17.0 2002/11/23 01:29:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Speech-enable AOL Instant Messenger Client TNT
 ;;; Keywords: Emacspeak, Instant Messaging 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:29:01 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -44,6 +44,7 @@
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'advice)
 (require 'emacspeak-speak)
+(require 'emacspeak-pronounce)
 (require 'voice-lock)
 (require 'emacspeak-fix-interactive)
 (require 'emacspeak-sounds)
@@ -52,7 +53,6 @@
 ;;{{{  Introduction:
 
 ;;; Commentary:
-
 
 ;;; Speech-enables TNT -- the Emacs AOL Instant Messenger
 ;;; client 
@@ -66,15 +66,21 @@
   "Provide additional auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)))
-    
+(emacspeak-pronounce-augment-pronunciations 'tnt-im-mode
+					    emacspeak-pronounce-internet-smileys-pronunciations)
+(emacspeak-pronounce-augment-pronunciations 'tnt-chat-mode
+                                            emacspeak-pronounce-internet-smileys-pronunciations)
+
 (defadvice tnt-open (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
+    (timer-activate tnt-idle-timer)
     (emacspeak-pronounce-refresh-pronunciations)
     (emacspeak-auditory-icon 'open-object)))
 
 (defadvice tnt-im (after emacspeak pre act comp)
   "Provide auditory feedback."
+  (emacspeak-pronounce-refresh-pronunciations)
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
@@ -87,6 +93,7 @@
 
 (defadvice tnt-join-chat (after emacspeak pre act comp)
   "Provide auditory feedback."
+  (emacspeak-pronounce-refresh-pronunciations)
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
@@ -149,7 +156,6 @@
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
-
 (defadvice tnt-edit-buddies (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
@@ -172,9 +178,6 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'warn-user)))
 
-
-
-
 (defadvice tnt-prev-event (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
@@ -187,13 +190,11 @@
 
 ;;}}}
 
-
 ;;{{{  advice builtins
 (defadvice tnt-push-event (after emacspeak pre act comp)
   "Alert user to event being pushed."
   (message (ad-get-arg 0))
   (emacspeak-auditory-icon 'item))
-
 
 (defadvice tnt-im-mode (after emacspeak pre act comp)
   "Turn on outline minor mode to enable navigation. "
@@ -238,7 +239,7 @@ automatically."
 (defadvice tnt-append-message-and-adjust-window (after emacspeak pre act comp)
   "Speak messages if autospeak is on, and the conversation buffer is selected."
   (let ((buffer  (ad-get-arg 0))
-        (message (ad-get-arg 1)))
+        (message (tnt-strip-html (ad-get-arg 1))))
     (when (and emacspeak-tnt-autospeak
                (eq (current-buffer)
                    buffer))

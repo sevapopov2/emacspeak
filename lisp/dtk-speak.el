@@ -1,5 +1,5 @@
 ;;; dtk-speak.el --- Provides Emacs Lisp interface to speech server
-;;;$Id: dtk-speak.el,v 16.0 2002/05/03 23:31:22 raman Exp $
+;;;$Id: dtk-speak.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacs interface to the dectalk
 ;;; Keywords: Dectalk Emacs Elisp
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:22 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -53,7 +53,7 @@
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'backquote)
 (require 'custom)
-  (require 'dtk-tcl)
+(require 'dtk-tcl)
 
 ;;}}}
 ;;{{{  user customizations:
@@ -93,7 +93,6 @@ hook."
                     "tcl")
   "Interpreter  used to run the speech server.
 Extended tcl --tcl-- for all of the currently available servers.")
-
 
 (defvar dtk-program
   (or  (getenv "DTK_PROGRAM" ) "dtk-exp")
@@ -175,17 +174,20 @@ available TTS servers.")
      (declare (special dtk-punctuation-mode))
      (let    ((save-punctuation-mode dtk-punctuation-mode))
        (unwind-protect
-           (progn      
-             (process-send-string dtk-speaker-process
-                                  (format "tts_set_punctuations %s  \n "
-                                          (, setting)) )
+           (progn
+             (unless (string= (, setting) save-punctuation-mode)
+               (process-send-string dtk-speaker-process
+                                    (format "tts_set_punctuations %s  \n "
+                                            (, setting)))
+               (setq dtk-punctuation-mode (, setting)))
              (,@ body)
              (dtk-force))
-         (setq dtk-punctuation-mode save-punctuation-mode)
-         (process-send-string dtk-speaker-process
-                              (format "tts_set_punctuations %s  \n "
-                                      dtk-punctuation-mode ))
-         (dtk-force))))))
+         (unless (string=  (, setting)  save-punctuation-mode)
+           (setq dtk-punctuation-mode save-punctuation-mode)
+           (process-send-string dtk-speaker-process
+                                (format "tts_set_punctuations %s  \n "
+                                        dtk-punctuation-mode ))
+           (dtk-force)))))))
 
 ;;}}}
 ;;{{{  Mapping characters to speech:
@@ -703,7 +705,6 @@ Default is to use pipes.")
   "Use this to nuke the currently running TTS server and restart it."
   (interactive)
   (dtk-initialize ))
-
 
 (defun tts-show-debug-buffer ()
   "Select TTS debugging buffer."

@@ -1,5 +1,5 @@
 ;;; emacspeak-outline.el --- Speech enable Outline --   Browsing  Structured Documents
-;;; $Id: emacspeak-outline.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-outline.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for outline-mode
 ;;; Keywords:emacspeak, audio interface to emacs Outlines
@@ -9,7 +9,7 @@
 ;;; emacspeak| T. V. Raman |raman@crl.dec.com 
 ;;; A speech interface to Emacs |
 ;;; $date: $ |
-;;;  $Revision: 16.0 $ | 
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -66,26 +66,26 @@
 (make-variable-buffer-local 'outline-regexp)
 
 (setq outline-voice-lock-keywords
-'(;;
-    ;; Highlight headings according to the level.
-    (eval . (list (concat "^" outline-regexp ".+")
-		  0 '(or (cdr (assq (outline-voice-lock-level)
-				    '((1 . voice-lock-function-name-personality)
-				      (2 . voice-lock-variable-name-personality)
-				      (3 . voice-lock-keyword-personality)
-				      (4 . voice-lock-builtin-personality)
-				      (5 . voice-lock-comment-personality)
-				      (6 . voice-lock-constant-personality)
-				      (7 . voice-lock-type-personality)
-				      (8 . voice-lock-string-personality))))
-			 voice-lock-warning-personality)
-		  nil t))))
+      '( ;;
+	;; Highlight headings according to the level.
+	(eval . (list (concat "^" outline-regexp ".+")
+		      0 '(or (cdr (assq (outline-voice-lock-level)
+					'((1 . voice-lock-function-name-personality)
+					  (2 . voice-lock-variable-name-personality)
+					  (3 . voice-lock-keyword-personality)
+					  (4 . voice-lock-builtin-personality)
+					  (5 . voice-lock-comment-personality)
+					  (6 . voice-lock-constant-personality)
+					  (7 . voice-lock-type-personality)
+					  (8 . voice-lock-string-personality))))
+			     voice-lock-warning-personality)
+		      nil t))))
 
 (defun emacspeak-outline-conditional-voice-lock-setup ()
   "Conditionally setup voice locking for outline headers"
   (unless voice-lock-keywords
-  (make-local-variable 'voice-lock-defaults)
-  (setq voice-lock-defaults '(outline-voice-lock-keywords t))))
+    (make-local-variable 'voice-lock-defaults)
+    (setq voice-lock-defaults '(outline-voice-lock-keywords t))))
 
 (defun emacspeak-outline-voice-lock-setup ()
   "Setup voice locking for outline headers"
@@ -112,7 +112,7 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (and (looking-at "^$")
-    (skip-syntax-backward " "))
+	 (skip-syntax-backward " "))
     (emacspeak-speak-line )))
 
 (defadvice outline-previous-visible-heading (after emacspeak pre act comp)
@@ -132,7 +132,6 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line )))
-
 
 (defadvice outline-backward-same-level (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -214,11 +213,10 @@
 ;;{{{  Interactive speaking of sections
 
 (defcustom emacspeak-outline-dont-query-before-speaking t
-"*Option to control prompts when speaking  outline
+  "*Option to control prompts when speaking  outline
 sections."
-:group 'emacspeak
-:type 'boolean)
-
+  :group 'emacspeak
+  :type 'boolean)
 
 (defun emacspeak-outline-speak-heading (what direction)
   "Function used by all interactive section speaking
@@ -236,11 +234,11 @@ commands. "
             (setq end (point)))
         (error (setq end (point-max)))))
     (when (or  emacspeak-outline-dont-query-before-speaking
-             (y-or-n-p
-          (format  "Speak %s lines from section %s"
-                   (count-lines start end )
-                   (thing-at-point 'line))))
-         (emacspeak-speak-region start end ))))
+	       (y-or-n-p
+		(format  "Speak %s lines from section %s"
+			 (count-lines start end )
+			 (thing-at-point 'line))))
+      (emacspeak-speak-region start end ))))
 
 (defun emacspeak-outline-speak-next-heading ()
   "Analogous to outline-next-visible-heading,
@@ -248,13 +246,11 @@ except that the outline section is optionally spoken"
   (interactive)
   (emacspeak-outline-speak-heading 'outline-next-visible-heading 1))
 
-
 (defun emacspeak-outline-speak-previous-heading ()
   "Analogous to outline-previous-visible-heading,
 except that the outline section is optionally spoken"
   (interactive)
   (emacspeak-outline-speak-heading 'outline-next-visible-heading -1))
-
 
 (defun emacspeak-outline-speak-forward-heading ()
   "Analogous to outline-forward-same-level,
@@ -285,31 +281,27 @@ except that the outline section is optionally spoken"
           (format "Speak %s lines from section %s"
                   (count-lines start end)
                   (thing-at-point 'line))))
-         (emacspeak-speak-region start end ))))
-
+     (emacspeak-speak-region start end ))))
 
 ;;{{{ bind these in outline mode
 
 (defun emacspeak-outline-setup-keys ()
   "Bind keys in outline minor mode map"
-(define-key outline-mode-prefix-map "p"
-  'emacspeak-outline-speak-previous-heading)
-(define-key outline-mode-prefix-map "n"
-  'emacspeak-outline-speak-next-heading)
-(define-key outline-mode-prefix-map "b"
-  'emacspeak-outline-speak-backward-heading)
-(define-key outline-mode-prefix-map "f"
-  'emacspeak-outline-speak-forward-heading)
-(define-key outline-mode-prefix-map " " 'emacspeak-outline-speak-this-heading))
-
+  (define-key outline-mode-prefix-map "p"
+    'emacspeak-outline-speak-previous-heading)
+  (define-key outline-mode-prefix-map "n"
+    'emacspeak-outline-speak-next-heading)
+  (define-key outline-mode-prefix-map "b"
+    'emacspeak-outline-speak-backward-heading)
+  (define-key outline-mode-prefix-map "f"
+    'emacspeak-outline-speak-forward-heading)
+  (define-key outline-mode-prefix-map " " 'emacspeak-outline-speak-this-heading))
 
 (add-hook 'outline-mode-hook 'emacspeak-outline-setup-keys)
 (add-hook 'outline-minor-mode-hook 'emacspeak-outline-setup-keys)          
 ;;; voice lock outlines
 (add-hook 'outline-mode-hook 'emacspeak-outline-voice-lock-setup)
-;(add-hook 'outline-minor-mode-hook 'emacspeak-outline-conditional-voice-lock-setup)
-
-
+					;(add-hook 'outline-minor-mode-hook 'emacspeak-outline-conditional-voice-lock-setup)
 
 ;;}}}
 

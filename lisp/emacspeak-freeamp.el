@@ -1,5 +1,5 @@
 ;;; emacspeak-freeamp.el --- Control freeamp from Emacs
-;;; $Id: emacspeak-freeamp.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-freeamp.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling freeamp from emacs 
 ;;; Keywords: Emacspeak, freeamp
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -68,15 +68,13 @@
 (define-prefix-command 'emacspeak-freeamp-prefix-command
   'emacspeak-freeamp-mode-map)
 
-
 (define-derived-mode emacspeak-freeamp-mode fundamental-mode 
   "Freeamp Interaction"
   "Major mode for freeamp interaction. \n\n
 \\{emacspeak-freeamp-mode-map}"
-(setq emacspeak-freeamp-process (get-buffer-process (current-buffer))))
+  (setq emacspeak-freeamp-process (get-buffer-process (current-buffer))))
 
 (declaim (special emacspeak-freeamp-mode-map))
-
 
 (defvar emacspeak-freeamp-freeamp-keys
   (list ?p ?+ ?-  ?f ?b ?s ?= ?q)
@@ -96,8 +94,7 @@
        (format "%c" char))
       (accept-process-output emacspeak-freeamp-process 1)
       (message "%s"
-       (buffer-substring mark (point-max))))))
-
+	       (buffer-substring mark (point-max))))))
 
 (defun emacspeak-freeamp-freeamp-call-command ()
   "Call appropriate freeamp command."
@@ -107,7 +104,7 @@
 (loop for c in emacspeak-freeamp-freeamp-keys
       do
       (define-key emacspeak-freeamp-mode-map   (format
-                                                  "%c" c)
+						"%c" c)
         'emacspeak-freeamp-freeamp-call-command))
 (define-key emacspeak-freeamp-mode-map [left]
   'emacspeak-aumix-wave-decrease)

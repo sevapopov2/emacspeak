@@ -1,4 +1,4 @@
-;;; $Id: regexp-opt.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: regexp-opt.el,v 17.0 2002/11/23 01:29:01 raman Exp $
 ;;; Bundled with Emacspeak since emacs 19.34 does not bundle it.
 ;;; regexp-opt.el --- generate efficient regexps to match strings.
 
@@ -203,7 +203,7 @@ in REGEXP."
   ;; The basic idea is to find character ranges.  Also we take care in the
   ;; position of character set meta characters in the character set regexp.
   ;;
-  (let* ((charwidth 256)				; Yeah, right.
+  (let* ((charwidth 256)		; Yeah, right.
 	 (charmap (make-bool-vector charwidth nil))
 	 (charset "")
 	 (bracket "") (dash "") (caret ""))

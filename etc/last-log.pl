@@ -1,38 +1,30 @@
 #!/usr/bin/perl -w
-#$Id: last-log.pl,v 16.0 2002/05/03 23:31:26 raman Exp $
+#$Id: last-log.pl,v 17.0 2002/11/23 01:29:09 raman Exp $
 #Description: Print out hostname wher ewe logged in from:
 use strict;
-
 #see /usr/include/utmp.h
 use constant  RECORD_SIZE => 292;
 use constant RECORD_FORMAT =>'l A32 A256';
-
-#build up a database of users 
-
-my ($name, $junk, $uid);
-my  %names;
-while (($name, $junk, $uid) = getpwent) {
-  $names{$name} = $uid;
-}
-endpwent;
-
+my $CONSOLE_SND  = 'play /usr/share/sounds/startup3.wav';
 my $user = shift;
 $user ||= $ENV{LOGNAME};
-my $u = $names{$user};
+my $u =qx(id -u);
 die "User $user not found on this system" unless defined ($u);
+chomp($u);
 
 my $lastlog  = "/var/log/lastlog";
 open(LASTL, $lastlog) or die "Cannot read lastlog $!";
-
 my $offset = $u * RECORD_SIZE  ;
 seek (LASTL, $offset, 0);
 my $record;
 read(LASTL, $record, RECORD_SIZE);
-
 my ($time, $line, $host) = unpack(RECORD_FORMAT, $record);
+if ( $host) {
 my $home=$ENV{HOME};
 open (OUT, "> $home/.emacspeak/.current-remote-hostname") or die "Cannot write output $!";
 print OUT $host, "\n";
 close OUT;
+} else {
+  qx($CONSOLE_SND);
+}
 close LASTL;
-

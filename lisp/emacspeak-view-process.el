@@ -1,5 +1,5 @@
 ;;; emacspeak-view-process.el --- Speech enable View Processes -- A powerful task manager
-;;; $Id: emacspeak-view-process.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: emacspeak-view-process.el,v 17.0 2002/11/23 01:29:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for flexible viewing of processes
 ;;; Keywords:emacspeak, audio interface to emacs administering processes
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:01 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -143,8 +143,6 @@
     (emacspeak-auditory-icon 'select-object)
     (message "Reversed output lines")))
 
-
-
 (defadvice View-process-quit (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
@@ -222,37 +220,33 @@
 (defcustom View-process-child-line-personality 'kid
   "personality for child process "
   :type 'symbol
-:group 'emacspeak-view-process)
-
+  :group 'emacspeak-view-process)
 
 (defcustom View-process-parent-line-personality 'harry
   "Personality for parent "
   :type 'symbol
-:group 'emacspeak-view-process)
+  :group 'emacspeak-view-process)
 
 (defcustom View-process-single-line-personality 'parul-monotone
   "Personality for voice lock in view process mode"
   :type 'symbol
-:group 'emacspeak-view-process)
-
+  :group 'emacspeak-view-process)
 
 (defcustom View-process-signal-line-personality 'paul-disgusted
   "Indicate a signal"
   :type 'symbol
-:group 'emacspeak-view-process)
+  :group 'emacspeak-view-process)
 
 (defcustom View-process-signaled-line-personality 'paul-animated
   "Personality for indicating a signalled process"
   :type 'symbol
-:group 'emacspeak-view-process)
+  :group 'emacspeak-view-process)
 
 	 
 (defcustom View-process-renice-line-personality 'paul-smooth
   "Indicate a reniced process"
   :type 'symbol
-:group 'emacspeak-view-process)
-
-
+  :group 'emacspeak-view-process)
 
 (declaim (special View-process-child-line-mark
                   View-process-parent-line-mark
@@ -290,7 +284,6 @@
    )
   "The font lock keywords for the `View-process-mode'."
   )
-
 
 (voice-lock-set-major-mode-keywords 'View-process-mode
                                     'View-process-voice-lock-keywords)

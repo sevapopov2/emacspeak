@@ -1,6 +1,6 @@
 ;;; emacspeak-bbdb.el --- Speech enable BBDB -- a powerful address manager
 
-;;; $Id: emacspeak-bbdb.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-bbdb.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for bbdb 
 ;;; Keywords:emacspeak, audio interface to emacs bbdb 
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@crl.dec.com 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -72,9 +72,9 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'delete-object)
     (save-excursion
-    (when (looking-at  "?")
-      (forward-line 1))
-    (emacspeak-speak-line))))
+      (when (looking-at  "?")
+	(forward-line 1))
+      (emacspeak-speak-line))))
 
 (defadvice bbdb-edit-current-field (before emacspeak pre act )
   "Provide auditory feedback"
@@ -102,18 +102,18 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement )
     (save-excursion
-    (when (looking-at  "?")
-      (forward-line 1))
-    (emacspeak-speak-line ))))
+      (when (looking-at  "?")
+	(forward-line 1))
+      (emacspeak-speak-line ))))
 
 (defadvice bbdb-prev-record (after emacspeak pre act )
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement )
     (save-excursion
-    (when (looking-at  "?")
-      (forward-line 1))
-    (emacspeak-speak-line ))))
+      (when (looking-at  "?")
+	(forward-line 1))
+      (emacspeak-speak-line ))))
 
 (defadvice bbdb-omit-record (after emacspeak pre act )
   "Provide auditory feedback"
@@ -163,25 +163,23 @@
    (t ad-do-it ))
   ad-return-value )
 
-
 ;;}}}
 ;;{{{  Advice mail-ua  specific hooks
 
 (defadvice bbdb/vm-show-sender (after emacspeak pre act comp)
-"Provide spoken feedback"
-(when (interactive-p)
-(emacspeak-speak-other-window 1)))
-
+  "Provide spoken feedback"
+  (when (interactive-p)
+    (emacspeak-speak-other-window 1)))
 
 (defadvice bbdb/rmail-show-sender (after emacspeak pre act comp)
-"Provide spoken feedback"
-(when (interactive-p)
-(emacspeak-speak-other-window 1)))
+  "Provide spoken feedback"
+  (when (interactive-p)
+    (emacspeak-speak-other-window 1)))
 
 (defadvice bbdb/mh-show-sender (after emacspeak pre act comp)
-"Provide spoken feedback"
-(when (interactive-p)
-(emacspeak-speak-other-window 1)))
+  "Provide spoken feedback"
+  (when (interactive-p)
+    (emacspeak-speak-other-window 1)))
 
 ;;}}}
 (provide  'emacspeak-bbdb)

@@ -7,42 +7,51 @@ Extract content as specified by param locator.
 Param locator is an XPath expression.
 Param path is the same expression, but quoted so it can be
 shown in the output.
+Filters out nodes matching param deletor if specified.
 
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-  <xsl:output method="html" indent="yes"
-              encoding="iso8859-15"/>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  version="1.0">
+<!--
+  <xsl:output method="html" indent="yes" encoding="iso8859-15"/>
+-->
   <xsl:param name="locator"/>
-<xsl:param name="path"/>
+  <xsl:param name="path"/>
+<xsl:param name="deletor"/>
   <xsl:param name="base"/>
-  <xsl:include href="identity.xsl"/>
-<!-- { html body  -->
-<!-- nuke these -->
-  <xsl:template match="//script|//meta"/>
+  <xsl:template match="*|@*" mode="copy" >
+    <xsl:copy>
+       <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates select="node()" mode="copy"/>
+    </xsl:copy>
+  </xsl:template>
+<!-- { html   -->
 <!--add base uri if available. -->
+
   <xsl:template match="/html/head">
-    <head>
+    <xsl:element name="head">
       <xsl:element name="base">
         <xsl:attribute name="href">
           <xsl:value-of select="$base"/>
         </xsl:attribute>
       </xsl:element>
-      <xsl:apply-templates/>
-    </head>
+      <xsl:apply-templates select="title" mode="copy"/>
+    </xsl:element>
   </xsl:template>
   <xsl:template match="/html/body">
     <xsl:element name="body">
-      <xsl:apply-templates select="@*"/>
-<h2> Nodes Matching   <xsl:value-of select="$path"/></h2>
-      <p>Found <xsl:value-of select="count($locator)"/> matching elements.</p>
-      <xsl:for-each select="$locator">
-        <xsl:element name="{name()}">
-          <xsl:apply-templates select="@*"/>
-          <xsl:apply-templates/>
-        </xsl:element><br/>
-      </xsl:for-each>
+<xsl:apply-templates select="$locator" mode="copy"/>
+      <h2> Nodes Matching   <xsl:value-of select="$path"/></h2>
+      <p>Found <xsl:value-of select="count($locator)"/> matching
+      elements
+in  
+<xsl:element name="a"><xsl:attribute name="href"><xsl:value-of select="$base"/></xsl:attribute>
+document </xsl:element>.</p>
     </xsl:element>
   </xsl:template>
+<xsl:include href="identity.xsl"/>
+<!-- nuke these -->
+  <xsl:template match="//script|//meta//style"/>
 <!-- } -->
 </xsl:stylesheet>
 <!--

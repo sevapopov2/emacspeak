@@ -1,5 +1,5 @@
 ;;; emacspeak-sgml-mode.el --- Speech enable SGML mode
-;;; $Id: emacspeak-sgml-mode.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-sgml-mode.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for sgml mode
 ;;; Keywords:emacspeak, audio interface to emacs sgml 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -94,15 +94,13 @@
 ;;{{{ simple voice locking 
 
 (voice-lock-set-major-mode-keywords 'sgml-mode
-                                                      'sgml-voice-lock-keywords)
+				    'sgml-voice-lock-keywords)
 
 (defconst sgml-voice-lock-keywords-1
   '(("<\\([!?][a-z][-.a-z0-9]*\\)" 1 voice-lock-keyword-personality)
     ("<\\(/?[a-z][-.a-z0-9]*\\)" 1 voice-lock-function-name-personality)
     ("[&%][a-z][-.a-z0-9]*;?" . voice-lock-variable-name-personality)
     ("<! *--.*-- *>" . voice-lock-comment-personality)))
-
-
 
 ;; for voice-lock, but must be defvar'ed after
 ;; sgml-voice-lock-keywords-1  above

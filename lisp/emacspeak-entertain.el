@@ -1,5 +1,5 @@
 ;;; emacspeak-entertain.el --- Speech enable misc games
-;;; $Id: emacspeak-entertain.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-entertain.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to diversions
 ;;; Keywords: Emacspeak, Speak, Spoken Output, games
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -75,12 +75,12 @@
 (declaim (special mpuz-silent ))
 (setq mpuz-silent t )
 (defadvice mpuz-correct-guess (after emacspeak pre act )
-               "Provide an auditory icon"
-               (emacspeak-auditory-icon 'search-hit ))
+  "Provide an auditory icon"
+  (emacspeak-auditory-icon 'search-hit ))
 
 (defadvice mpuz-congratulate (after emacspeak pre act )
-               "Produce auditory icon"
-               (emacspeak-auditory-icon 'alarm ))
+  "Produce auditory icon"
+  (emacspeak-auditory-icon 'alarm ))
 
 ;;}}}
 ;;{{{ dunnet 
@@ -110,8 +110,8 @@
 (defun emacspeak-hangman-setup-pronunciations ()
   "Setup pronunciation dictionaries."
   (declare (special emacspeak-pronounce-pronunciation-table))
-(emacspeak-pronounce-add-dictionary-entry 'hm-mode "_" ".")
-(when (or (not (boundp 'emacspeak-pronounce-pronunciation-table))
+  (emacspeak-pronounce-add-dictionary-entry 'hm-mode "_" ".")
+  (when (or (not (boundp 'emacspeak-pronounce-pronunciation-table))
             (not emacspeak-pronounce-pronunciation-table))
     (emacspeak-pronounce-toggle-use-of-dictionaries)))
 
@@ -131,9 +131,9 @@
           do
           (aset  string  i
                  (aref hm-current-guess-string (* i 2 ))))
-     (message  "%s:  %s "
-             (length string)
-             (downcase string))))
+    (message  "%s:  %s "
+	      (length string)
+	      (downcase string))))
 
 (defadvice hangman (after emacseak pre act comp)
   "Speech enable hangman."
@@ -142,10 +142,10 @@
     (emacspeak-auditory-icon 'open-object)))
 (declaim (special hm-map))
 (when (boundp 'hm-map)
-(declaim (special hm-map))
-(define-key hm-map " " 'emacspeak-hangman-speak-guess)
-(define-key hm-map "=" 'emacspeak-hangman-speak-statistics)
-)
+  (declaim (special hm-map))
+  (define-key hm-map " " 'emacspeak-hangman-speak-guess)
+  (define-key hm-map "=" 'emacspeak-hangman-speak-statistics)
+  )
 
 ;;}}}
 (provide 'emacspeak-entertain)

@@ -1,5 +1,5 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-setup.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
@@ -7,8 +7,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -88,12 +88,10 @@ emacspeak is compiled or started.")
   "Directory where Emacspeak resource files such as
 pronunciation dictionaries are stored. ")
 
-
-
 (defcustom outloud-default-speech-rate 50
   "Default speech rate for outloud."
   :group 'tts
-:type 'integer)
+  :type 'integer)
 
 (defcustom dtk-default-speech-rate 225
   "*Default speech rate at which TTS is started. "
@@ -109,17 +107,17 @@ pronunciation dictionaries are stored. ")
               load-path )))
 (defconst  emacspeak-xemacs-p
   (when
-  (or (boundp 'running-xemacs)
-   (string-match "Lucid\\|XEmacs" emacs-version))
-  t)
-"T if we are running under XEmacs.")
+      (or (boundp 'running-xemacs)
+	  (string-match "Lucid\\|XEmacs" emacs-version))
+    t)
+  "T if we are running under XEmacs.")
 
 (load-library "emacspeak")
 (defvar dtk-startup-hook nil)
 (defun emacspeak-tts-startup-hook ()
   "Default hook function run after TTS is started."
-                      (dtk-set-rate tts-default-speech-rate t)
-                      (dtk-interp-sync))
+  (dtk-set-rate tts-default-speech-rate t)
+  (dtk-interp-sync))
 
 (add-hook 'dtk-startup-hook 
           'emacspeak-tts-startup-hook)

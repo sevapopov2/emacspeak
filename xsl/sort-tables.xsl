@@ -43,17 +43,22 @@ relevant tables bubble to the top.
   <xsl:template match="/html/body">
     <xsl:element name="body">
       <xsl:apply-templates select="@*"/>
+<xsl:if test="count(//table//table)  &gt; 0">
       <table>
         <caption>
           <a href="#__about_sorted_tables">Tables Sorted</a>
         </caption>
         <tr>
           <td>
-            <a href="#__nested_tables"><xsl:value-of select="count(//table//table)"/>
-nested tables</a>
+            <a href="#__nested_tables">
+<xsl:value-of select="count(//table)"/> 
+tables of which 
+<xsl:value-of select="count(//table//table)"/>
+are nested</a>
           </td>
         </tr>
       </table>
+      </xsl:if>
       <xsl:apply-templates/>
       <h2>
         <a name="__nested_tables" id="__nested_tables"><xsl:value-of select="count(//table//table)"/>

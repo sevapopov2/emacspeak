@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak.el,v 17.0 2002/11/23 01:28:59 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:59 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -37,7 +37,6 @@
 
 ;;}}}
 ;;{{{ required modules
-
 
 ;;; Commentary:
 ;;;The complete audio desktop.
@@ -90,13 +89,11 @@
   :group 'accessibility
   )
 
-
-
 ;;}}}
 ;;{{{  Setting up things:
 
 (defconst emacspeak-version
-  (let ((x "$Revision: 16.0 $"))
+  (let ((x "$Revision: 17.0 $"))
     (string-match "[0-9.]+" x)
     (substring x (match-beginning 0)
                (match-end 0)))
@@ -235,14 +232,13 @@
 Precomputing this saves time at start-up.")
 
 ;;}}}
-(defcustom emacspeak-play-emacspeak-startup-icon t
+(defcustom emacspeak-play-emacspeak-startup-icon nil
   "If set to T, emacspeak plays its icon as it launches."
   :type 'boolean
   :group 'emacspeak)
 (defvar emacspeak-unibyte t
   "Set this to nil before starting  emacspeak 
 if you are running in a multibyte enabled environment.")
-
 
 (defun emacspeak()
   "Starts the Emacspeak speech subsystem.  Use emacs as you
@@ -274,6 +270,8 @@ See the online documentation for individual commands and
 functions for details.   "
   (interactive)
   (declare (special mark-even-if-inactive
+                    emacspeak-pronounce-load-pronunciations-on-startup
+                    emacspeak-pronounce-dictionaries-file
                     default-enable-multibyte-characters
                     emacspeak-unibyte
                     emacspeak-play-program
@@ -302,6 +300,8 @@ functions for details.   "
   (emacspeak-sounds-define-theme-if-necessary emacspeak-sounds-default-theme)
   (mapcar 'emacspeak-fix-interactive-command-if-necessary
           emacspeak-emacs-commands-to-fix)
+  (when emacspeak-pronounce-load-pronunciations-on-startup
+    (emacspeak-pronounce-load-dictionaries emacspeak-pronounce-dictionaries-file))
   (run-hooks 'emacspeak-startup-hook)
   (emacspeak-dtk-sync)
   (emacspeak-setup-programming-modes)
@@ -323,6 +323,9 @@ functions for details.   "
 
 ;;}}}
 ;;{{{ autoloads
+(autoload 'emacspeak-m-player "emacspeak-m-player"
+  "Emacspeak media player access."
+  t)
 (autoload 'emacspeak-daisy-open-book "emacspeak-daisy"
   "Digital Talking Books on the Emacspeak Desktop."
   t)
@@ -451,7 +454,6 @@ Useful in reading email, block comments in program source etc." t)
 the block. Use in conjunction with emacspeak-hide-or-expose-block"
   t)
 
-
 (autoload 'emacspeak-realaudio "emacspeak-realaudio"
   "Single click interface to RealAudio" t)
 (autoload 'emacspeak-realaudio-browse "emacspeak-realaudio"
@@ -465,7 +467,6 @@ the block. Use in conjunction with emacspeak-hide-or-expose-block"
 
 (autoload 'emacspeak-realaudio-stop "emacspeak-realaudio"
   "Single click interface to RealAudio" t)
-
 
 ;;}}}
 ;;{{{ Package Setup Helper
@@ -559,10 +560,12 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "outline" 'emacspeak-outline)
 (emacspeak-do-package-setup "perl-mode" 'emacspeak-perl)
 (emacspeak-do-package-setup "pcl-cvs" 'emacspeak-pcl-cvs)
+(emacspeak-do-package-setup "pcvs" 'emacspeak-pcl-cvs)
 (emacspeak-do-package-setup "psgml" 'emacspeak-psgml)
 (emacspeak-do-package-setup "python-mode" 'emacspeak-python)
 (emacspeak-do-package-setup "reftex" 'emacspeak-reftex)
 (emacspeak-do-package-setup "rmail" 'emacspeak-rmail)
+(emacspeak-do-package-setup "rpm-spec-mode" 'emacspeak-rpm-spec)
 (emacspeak-do-package-setup "sgml-mode"
                             'emacspeak-sgml-mode)
 (emacspeak-do-package-setup "sh-script" 'emacspeak-sh-script)
@@ -585,6 +588,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "tex-site" 'emacspeak-auctex)
 (emacspeak-do-package-setup "texinfo" 'emacspeak-texinfo)
 (emacspeak-do-package-setup "tmm" 'emacspeak-facemenu)
+(emacspeak-do-package-setup "todo-mode" 'emacspeak-todo-mode)
 (emacspeak-do-package-setup "view" 'emacspeak-view)
 (emacspeak-do-package-setup "view-process-mode" 'emacspeak-view-process)
 (emacspeak-do-package-setup "vm" 'emacspeak-vm)
@@ -596,7 +600,6 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "wrolo" 'emacspeak-wrolo)
                                                                                           
 ;;}}}
-
 ;;{{{ finder
 
 ;;; Finder is special -- it needs to conditionally
@@ -621,7 +624,6 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (defconst emacspeak-bug-address
   "raman@cs.cornell.edu"
   "Address of the maintainer of this package.")
-
 
 (defun emacspeak-submit-bug ()
   "Function to submit a bug to the programs maintainer."
@@ -699,16 +701,16 @@ Emacs 20.3"
 
 ;;; turn on automatic voice locking , split caps and punctuations for programming modes
 
-
 (defun emacspeak-setup-programming-mode ()
   "Setup programming mode. Turns on audio indentation and
-sets punctuation mode to all, and turns on split caps."
+sets punctuation mode to all, activates the dictionary and turns on split caps."
   (declare (special dtk-split-caps
                     emacspeak-audio-indentation))
   (voice-lock-mode 1)
   (dtk-set-punctuations "all")
   (or dtk-split-caps
       (dtk-toggle-split-caps))
+  (emacspeak-pronounce-refresh-pronunciations)
   (or emacspeak-audio-indentation
       (emacspeak-toggle-audio-indentation))
   (emacspeak-dtk-sync))
@@ -731,6 +733,7 @@ sets punctuation mode to all, and turns on split caps."
          'sh-mode-hook
          'sql-mode-hook
          'sgml-mode-hook
+         'xml-mode-hook
          'makefile-mode-hook
          'tex-mode-hook
          'tcl-mode-hook

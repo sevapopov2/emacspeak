@@ -1,5 +1,5 @@
 ;;; dtk-interp.el --- Language specific (e.g. TCL) interface to speech server
-;;; $Id: dtk-interp.el,v 16.0 2002/05/03 23:31:22 raman Exp $
+;;; $Id: dtk-interp.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Interfacing to the speech server
 ;;; Keywords: TTS, Dectalk, Speech Server
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:22 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -77,7 +77,6 @@
 (defsubst dtk-interp-notes-shutdown()
   (declare (special dtk-speaker-process))
   (process-send-string dtk-speaker-process "notes_shutdown\n"))
-
 
 (defsubst dtk-interp-note (instrument pitch duration
                                       &optional target step force)

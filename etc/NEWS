@@ -1,74 +1,73 @@
 Emacspeak News --History Of User-Visible Changes
-$Id: NEWS,v 16.0 2002/05/03 23:31:26 raman Exp $
+$Id: NEWS,v 17.0 2002/11/23 01:29:08 raman Exp $
 Author: T. V. Raman <raman@cs.cornell.edu>
 
-* Emacspeak 16.0 Additions And Changes:
+* Emacspeak 17.0 Additions And Changes:
 
-Emacspeak 16.0 provides the following user level enhancements:
+Emacspeak 17.0 provides the following user level enhancements:
 
 * New Emacspeak Features:
-** emacspeak-daisy: Digital Talking Book Reader
 
-Module emacspeak-daisy.el implements a browser for working with
-Digital Audio Books conforming to the Daisy3 specification --invoked
-by command emacspeak-daisy-open-book.
+** Enhanced Emacs 21 support:
 
+I have now switched to Emacs 21 on all my machines.
 
-** Speech-enables W3M
+** emacspeak-w3.el:
 
-W3M is an alternative to using Emacs W3.
-
-** IMCom for Jabber:
-
-Module emacspeak-imcom provides a speech-enabled wrapper for
-Jabber client IMCom.
-
-** XML Shell:
-
-Module emacspeak-xml-shell implements an XML Shell for walking
- XML trees interactively.
-
-** emacspeak-analog.el: Log Analyzer
-
-Speech-enables package analog --a convenient means for viewing
-multiple log files.
-
-** eperiodic: Periodic Table Of Eleements 
-
-Speech-enables a simple periodic table of elements.
+Magic Lens: XSLT Based magic lens for selectively browsing content.
 
 
-** Pronunciation Dictionaries
+** emacspeak-websearch.el: 
 
-New Command to interactively edit Emacspeak pronunciation
-dictionaries.
+Websearch now handles asynchronous searches.
 
-** Tools:
+** emacspeak-url-template.el:
 
-*** Wizards for Viewing XL and PowerPoint Files:
+Additional productivity web templates.
 
+** emacspeak-wizards.el:
 
-Install package xlhtml http://www.xlhtml.org --this provides
-convertors xlhtml and ppthtml that convert .xls and .ppt
-files to HTML.  If installed, Emacspeak can use this tool to
-preview .xls and .ppt files using W3 when a .xls or .ppt
-file is opened in emacs.
+New productivity wizards.
 
-*** emacspeak-wizards-shell-toggle:
+** Software Dectalk:
 
-Switches to shell buffer and automatically changes directory
-to the default directory of the previously current buffer.
+There is a new speech server for the Software Dectalk TTS engine.
+Software Dectalk TTS is sold commercially by Fonix Inc.
 
 
 
-*** Shell mode mode-line format:
+** emacspeak-rpm-spec.el: 
 
-Speak directory as part of the mode-line.
+Speech-enable rpm spec editor.
 
-** stereo-outloud:
 
-New speech server stereo-outloud implements a speech server
-for ViaVoice TTS using in-memory synthesis.
+** emacspeak-m-player.el:
+
+New module  for easy access to media player mplayer.
+
+
+** emacspeak-reftex.el:
+
+Enhanced reftex support.
+
+** emacspeak-pronounce.el:
+
+Added customizable dictionary
+emacspeak-pronounce-internet-smileys-pronunciations
+for holding Internet smileys.
+This dictionary is used by all  messaging tools including mail and
+instant messaging tools.
+
+
+Added custom dictionary
+emacspeak-pronounce-common-xml-namespace-uri-pronunciations
+that can be customized to hold common XML namespace URIs along with
+their pronunciation.
+This is used in XML and HTML modes.
+
+** emacspeak-ecb.el:
+
+Enhanced ECB support.
 
 
 Local variables:

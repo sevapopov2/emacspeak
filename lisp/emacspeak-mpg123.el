@@ -1,5 +1,5 @@
 ;;; emacspeak-mpg123.el --- Speech enable MP3 Player
-;;; $Id: emacspeak-mpg123.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-mpg123.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech-enable MP3 player
 ;;; Keywords: Emacspeak, WWW interaction
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -53,7 +53,6 @@
 
 ;;; Commentary:
 
-
 ;;; This module speech-enables  MPG123
 ;;; MPG123 is an MP3 player.
 
@@ -81,8 +80,8 @@ mpg123 defines this as a macro which causes compile trouble."
              (assoc n mpg123*music-alist))))
 
 (defsubst emacspeak-mpg123-speak-line ()
-"Speak just the title"
-(emacspeak-mpg123-speak-title))
+  "Speak just the title"
+  (emacspeak-mpg123-speak-title))
 ;;}}}
 ;;{{{ advice interactive commands to speak
 
@@ -103,9 +102,6 @@ mpg123 defines this as a macro which causes compile trouble."
   "Speak position."
   (when (interactive-p)
     (emacspeak-mpg123-speak-current-time)))
-
-
-
 
   
 
@@ -234,10 +230,10 @@ to skip to the next track. "
   "Skip currently playing track. "
   (interactive)
   (declare (special emacspeak-mp3-playlist-process))
-(process-send-string
- emacspeak-mp3-playlist-process
-(format "%c" 3))
-(message "Skipped track. "))
+  (process-send-string
+   emacspeak-mp3-playlist-process
+   (format "%c" 3))
+  (message "Skipped track. "))
 
 (defun emacspeak-mp3-playlist-stop ()
   "Kill currently playing playlist. "
@@ -245,7 +241,6 @@ to skip to the next track. "
   (declare (special emacspeak-mp3-playlist-process))
   (kill-process emacspeak-mp3-playlist-process)
   (message "Stopped playlist. "))
-
 
 (declaim (special mpg123-mode-map))
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-checkdoc.el --- Speech-enable checkdoc
-;;; $Id: emacspeak-checkdoc.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-checkdoc.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description:Speech-enable checkdoc
 ;;; Keywords: Emacspeak, Speak, Spoken Output, maintain code 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -57,27 +57,27 @@
 ;;{{{ implementation
 
 (defadvice checkdoc (around emacspeak pre act comp)
-"Advice read-event temporarily."
-(cond
-((interactive-p)
-(save-match-data
+  "Advice read-event temporarily."
+  (cond
+   ((interactive-p)
+    (save-match-data
       (ad-enable-advice  'read-event 'before 'emacspeak-checkdoc )
       (ad-activate-on 'read-event)
       ad-do-it
       (ad-disable-advice  'read-event 'before 'emacspeak-checkdoc )
       (ad-activate-off 'read-event)))
-(t  ad-do-it))
-ad-return-value)
+   (t  ad-do-it))
+  ad-return-value)
 
 (provide 'emacspeak-checkdoc-advice)
 
 ;;; checkdoc-advice.el ends here
 
 (defadvice read-event (before emacspeak-checkdoc pre act comp)
-(let ((dtk-stop-immediately nil)) 
-(dtk-stop)
-(emacspeak-speak-line) 
-(emacspeak-speak-message-again)))
+  (let ((dtk-stop-immediately nil)) 
+    (dtk-stop)
+    (emacspeak-speak-line) 
+    (emacspeak-speak-message-again)))
 
 ;;}}}
 (provide 'emacspeak-checkdoc)

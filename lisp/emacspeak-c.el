@@ -1,5 +1,5 @@
 ;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java 
-;;; $Id: emacspeak-c.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-c.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for C and C++ mode
 ;;; Keywords:emacspeak, audio interface to emacs C, C++
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -55,10 +55,20 @@
 ;;; things got renamed in 19.30.
 
 (when  (string-lessp emacs-version "19.29")
-     (defalias 'c-guess-basic-syntax 'c-guess-basic-semantics))
+  (defalias 'c-guess-basic-syntax 'c-guess-basic-semantics))
 
 ;;}}}
 ;;{{{ advice electric deletion
+
+(defadvice c-electric-delete-forward (around emacspeak pre act)
+  "Speak character you're deleting."
+  (cond
+   ((interactive-p )
+    (dtk-tone 500 30 'force)
+    (emacspeak-speak-this-char (following-char ))
+    ad-do-it)
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice c-electric-backspace (around emacspeak pre act)
   "Speak character you're deleting."
@@ -67,12 +77,12 @@
             emacspeak-backward-delete-char-speak-current-char))
   (cond
    ((interactive-p )
-      (dtk-tone 500 30 'force)
-      (and emacspeak-backward-delete-char-speak-deleted-char
-           (emacspeak-speak-this-char (preceding-char )))
-      ad-do-it
-      (and emacspeak-backward-delete-char-speak-current-char
-           (emacspeak-speak-this-char (preceding-char ))))
+    (dtk-tone 500 30 'force)
+    (and emacspeak-backward-delete-char-speak-deleted-char
+	 (emacspeak-speak-this-char (preceding-char )))
+    ad-do-it
+    (and emacspeak-backward-delete-char-speak-current-char
+	 (emacspeak-speak-this-char (preceding-char ))))
    (t ad-do-it))
   ad-return-value)
 
@@ -81,14 +91,10 @@
 
 ;;{{{  Electric chars speak
 
-
-
 (defadvice c-electric-star (after emacspeak pre act )
   "Speak what you typed"
   (when (interactive-p)
     (dtk-say "star")))
-
-
 
 (defadvice c-electric-semi&comma (after emacspeak pre act )
   "Speak the line when a statement is completed."
@@ -109,49 +115,47 @@
     (emacspeak-speak-this-char last-input-char)))
 
 (defadvice electric-c-terminator (after emacspeak pre act )
-"Speak what was typed. "
-(when (interactive-p)
-(emacspeak-speak-this-char last-input-char)))
+  "Speak what was typed. "
+  (when (interactive-p)
+    (emacspeak-speak-this-char last-input-char)))
 
 (defadvice c-electric-colon (after emacspeak pre act )
-"Speak the character you inserted"
-(when (interactive-p)
-(emacspeak-speak-this-char last-input-char)))
+  "Speak the character you inserted"
+  (when (interactive-p)
+    (emacspeak-speak-this-char last-input-char)))
 
 (defadvice c-electric-paren (after emacspeak pre act )
-"Speak the character you inserted"
-(when (interactive-p)
-(emacspeak-speak-this-char last-input-char)))
+  "Speak the character you inserted"
+  (when (interactive-p)
+    (emacspeak-speak-this-char last-input-char)))
 
 (defadvice c-electric-pound (after emacspeak pre act )
-"Speak the character you inserted"
-(when (interactive-p)
-(emacspeak-speak-this-char last-input-char)))
+  "Speak the character you inserted"
+  (when (interactive-p)
+    (emacspeak-speak-this-char last-input-char)))
 (defadvice c-electric-brace (after emacspeak pre act )
-"Speak the character you inserted"
-(when (interactive-p)
-(emacspeak-speak-this-char last-input-char)))
+  "Speak the character you inserted"
+  (when (interactive-p)
+    (emacspeak-speak-this-char last-input-char)))
 
 (defadvice electric-c-semi (after emacspeak pre act )
-"Speak what was typed. "
-(when (interactive-p)
-(emacspeak-speak-this-char last-input-char)))
-
+  "Speak what was typed. "
+  (when (interactive-p)
+    (emacspeak-speak-this-char last-input-char)))
 
 (defadvice electric-c-sharp-sign (after emacspeak pre act )
-"Speak what was typed. "
-(when (interactive-p)
-(emacspeak-speak-this-char last-input-char)))
+  "Speak what was typed. "
+  (when (interactive-p)
+    (emacspeak-speak-this-char last-input-char)))
 
 (defadvice electric-c-brace (after emacspeak pre act )
-"Speak what was typed. "
-(when (interactive-p)
-(emacspeak-speak-this-char last-input-char)))
-
+  "Speak what was typed. "
+  (when (interactive-p)
+    (emacspeak-speak-this-char last-input-char)))
 
 (defadvice c-electric-delete (before emacspeak pre act )
-"Speak char before deleting it."
-(when (interactive-p )
+  "Speak char before deleting it."
+  (when (interactive-p )
     (emacspeak-speak-this-char(preceding-char ))
     (dtk-tone 500 30)))
 
@@ -161,45 +165,45 @@
 ;;; CPP directives: 
 
 (defadvice c-up-conditional (after emacspeak pre act )
-"Speak the line moved to."
-(when (interactive-p)
-  (emacspeak-auditory-icon 'large-movement)
-(emacspeak-speak-line )))
+  "Speak the line moved to."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line )))
 
 (defadvice c-forward-conditional (after emacspeak pre act )
-"Speak the line moved to."
-(when (interactive-p)
-  (emacspeak-auditory-icon 'large-movement)
-(emacspeak-speak-line )))
+  "Speak the line moved to."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line )))
 
 (defadvice c-backward-conditional (after emacspeak pre act )
-"Speak the line moved to."
-(when (interactive-p)
-(emacspeak-auditory-icon 'large-movement)
-(emacspeak-speak-line )))
+  "Speak the line moved to."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line )))
 
 ;;; Statements 
 
 (defadvice c-beginning-of-statement (after emacspeak pre act )
-"Speak the line moved to."
-(when (interactive-p)
-(emacspeak-auditory-icon 'large-movement)
-(emacspeak-speak-line )))
+  "Speak the line moved to."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line )))
 
 (defadvice c-end-of-statement (after emacspeak pre act )
-"Speak the line moved to."
-(when (interactive-p)
-  (emacspeak-auditory-icon 'large-movement)
-(emacspeak-speak-line )))
+  "Speak the line moved to."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line )))
 
 (defadvice mark-c-function (after emacspeak pre act )
   "Provide spoken and auditory feedback."
   (when (interactive-p)
-(let ((dtk-stop-immediately nil))
-    (emacspeak-auditory-icon 'mark-object)
-(dtk-speak "Marked function containing %s lines "
-           (count-lines (point) (mark)))
-    (emacspeak-speak-line ))))
+    (let ((dtk-stop-immediately nil))
+      (emacspeak-auditory-icon 'mark-object)
+      (dtk-speak "Marked function containing %s lines "
+		 (count-lines (point) (mark)))
+      (emacspeak-speak-line ))))
 
 ;;}}}
 
@@ -222,9 +226,9 @@
 ;;{{{  extensions  provided by c++ mode
 
 (defadvice c-scope-operator (after emacspeak pre act )
-"speak what you inserted."
-(when (interactive-p)
-(dtk-speak "colon colon")))
+  "speak what you inserted."
+  (when (interactive-p)
+    (dtk-speak "colon colon")))
 
 ;;}}} 
 ;;{{{  Some more navigation functions I define:
@@ -327,7 +331,7 @@ C argument declaration")
    '( brace-list-open        . "  open brace of an enum or static array list")
    '( brace-list-close       . "  close brace of an enum or
 static array list")
-'( brace-entry-open       . "  first line in an enum or static array list")
+   '( brace-entry-open       . "  first line in an enum or static array list")
    '( brace-list-intro       . "  first line in an enum or static array list")
    '( brace-list-entry       . "  subsequent lines in an enum or static array list")
    '( statement              . "  a C (or like) statement")

@@ -1,5 +1,5 @@
 ;;; emacspeak-bookmark.el --- Speech enable Emacs' builtin bookmarks
-;;; $Id: emacspeak-bookmark.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-bookmark.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to bookmark
 ;;; Keywords: Emacspeak, Speak, Spoken Output, bookmark
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -113,7 +113,6 @@
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
-
 (defadvice bookmark-bmenu-2-window (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
@@ -185,8 +184,6 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-speak-line)))
-
-
 
 ;;}}}
 (provide 'emacspeak-bookmark)

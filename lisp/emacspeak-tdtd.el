@@ -1,5 +1,5 @@
 ;;; emacspeak-tdtd.el --- Speech enable  DTD authoring 
-;;; $Id: emacspeak-tdtd.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: emacspeak-tdtd.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable tdtd 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -45,7 +45,6 @@
 (require 'emacspeak-speak)
 (require 'emacspeak-sounds)
 
-
 ;;}}}
 ;;{{{  Introduction:
 
@@ -62,25 +61,25 @@
 
 (defadvice dtd-mode (after emacspeak pre act comp)
   "set up for voice locking."
-(emacspeak-tdtd-voice-lock-setup)
-(voice-lock-mode 1)
-(dtk-set-punctuations "all"))
+  (emacspeak-tdtd-voice-lock-setup)
+  (voice-lock-mode 1)
+  (dtk-set-punctuations "all"))
 
 (defun emacspeak-tdtd-voice-lock-setup()
   "Setup voice locking for tdtd mode."
   (declare (special voice-lock-defaults
-            dtd-xml-flag 
-        dtd-decl-flag dtd-sys-decl-flag ))
-    (make-local-variable 'voice-lock-defaults)
-    (cond
-     (dtd-xml-flag
-      (setq voice-lock-defaults '(dtd-xml-voice-lock-keywords t)))
-     (dtd-decl-flag
-      (setq voice-lock-defaults '(dtd-decl-voice-lock-keywords t)))
-     (dtd-sys-decl-flag
-      (setq voice-lock-defaults '(dtd-sys-decl-voice-lock-keywords t)))
-     (t
-      (setq voice-lock-defaults '(dtd-sgml-voice-lock-keywords t)))))
+		    dtd-xml-flag 
+		    dtd-decl-flag dtd-sys-decl-flag ))
+  (make-local-variable 'voice-lock-defaults)
+  (cond
+   (dtd-xml-flag
+    (setq voice-lock-defaults '(dtd-xml-voice-lock-keywords t)))
+   (dtd-decl-flag
+    (setq voice-lock-defaults '(dtd-decl-voice-lock-keywords t)))
+   (dtd-sys-decl-flag
+    (setq voice-lock-defaults '(dtd-sys-decl-voice-lock-keywords t)))
+   (t
+    (setq voice-lock-defaults '(dtd-sgml-voice-lock-keywords t)))))
 
 ;;}}}
 ;;{{{ voice locking 

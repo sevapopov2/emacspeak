@@ -1,5 +1,5 @@
 ;;; emacspeak-buff-sel.el --- Speech enable buf-sel -- an alternative technique for switching buffers
-;;; $Id: emacspeak-buff-sel.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-buff-sel.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak pronunciation dictionaries
 ;;; Keywords:emacspeak, audio interface to emacs interactive buffer selection
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -82,11 +82,7 @@
 (define-key buffer-select-minibuffer-map "\C-p" 'buffer-select-prev)
 (define-key buffer-select-minibuffer-map "\C-n" 'buffer-select-next)
 
-
 ;;}}}
-
-
-
 
 (provide  'emacspeak-buff-sel)
 ;;{{{  emacs local variables 

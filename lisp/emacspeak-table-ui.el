@@ -1,5 +1,5 @@
 ;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
-;;; $Id: emacspeak-table-ui.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-table-ui.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -43,8 +43,8 @@
 (require 'emacspeak-table)
 (require 'emacspeak-tabulate)
 (eval-when-compile (require 'dtk-speak)
-(require 'emacspeak-speak)
-(require 'emacspeak-sounds))
+		   (require 'emacspeak-speak)
+		   (require 'emacspeak-sounds))
 (require 'thingatpt)
 ;;{{{  Introduction
 
@@ -58,7 +58,6 @@
   :group 'emacspeak
   :prefix "emacspeak-table-")
 
-
 (defcustom emacspeak-table-column-header-personality 'paul-smooth
   "personality for speaking column headers."
   :type 'symbol
@@ -66,8 +65,8 @@
 
 (defcustom emacspeak-table-row-header-personality 'harry
   "Personality for speaking row headers"
-:type 'symbol
-:group 'emacspeak-table)
+  :type 'symbol
+  :group 'emacspeak-table)
 
 ;;}}}
 ;;{{{  emacspeak table mode
@@ -219,7 +218,6 @@ specifies the filter"
     (scroll-left (- (current-column)
                     (+ (/ width  2)
                        (window-hscroll))))))
-
 
 (defsubst  emacspeak-table-speak-coordinates ()
   "Speak current table coordinates."
@@ -600,7 +598,8 @@ CalTrain schedules.  Execute command `describe-mode' bound to
 the documentation on the table browser."
   (interactive "r")
   (declare (special positions))
-  (let ((buffer (get-buffer-create
+  (let ((workspace (get-buffer-create " table workspace  "))
+        (buffer (get-buffer-create
                  (format  "*table-%s*"
                           (or (buffer-name)
                               "scratch"))))
@@ -610,9 +609,19 @@ the documentation on the table browser."
         (j 0)
         (count 0)
         (row-start 1)
-        (column-start 1))
-    (setq table (emacspeak-table-make-table
-                 (ems-tabulate-parse-region start end)))
+        (column-start 1)
+        (text (buffer-substring start end)))
+    (save-excursion
+      (set-buffer workspace)
+      (erase-buffer)
+      (insert text)
+      (goto-char (point-min))
+      (flush-lines "^ *$")
+      (setq table (emacspeak-table-make-table
+		   (ems-tabulate-parse-region
+		    (point-min)
+		    (point-max)))))
+    (kill-buffer workspace)
     (save-excursion
       (set-buffer buffer)
       (let ((inhibit-read-only t))
@@ -916,8 +925,8 @@ table markup.")
 
 (defsubst emacspeak-table-markup-get-table (mode )
   (declare (special emacspeak-table-markup-table))
-  (or (cl-gethash mode emacspeak-table-markup-table)
-      (cl-gethash 'fundamental-mode emacspeak-table-markup-table)))
+  (or (gethash mode emacspeak-table-markup-table)
+      (gethash 'fundamental-mode emacspeak-table-markup-table)))
 
 ;;}}}
 ;;{{{  define table markup for the various modes of interest
@@ -940,7 +949,6 @@ table markup.")
                                    :col-start "<TD>\n"
                                    :col-end "</TD>\n"
                                    :col-separator ""))
-
 
 (emacspeak-table-markup-set-table 'latex2e-mode
                                   (emacspeak-table-make-markup
@@ -986,8 +994,6 @@ table markup.")
                                    :col-end ""
                                    :col-separator "\t"))
 
-
-
 ;;}}}
 ;;{{{ copy and paste tables 
 
@@ -1006,7 +1012,6 @@ emacspeak-table-mode. "))
     (setq emacspeak-table-clipboard emacspeak-table)
     (message "Copied current table to emacspeak table clipboard."))
    (t (error "Cannot find table in current buffer"))))
-
 
 (defun emacspeak-table-paste-from-clipboard ()
   "Paste the emacspeak table clipboard into the current buffer.
@@ -1130,7 +1135,6 @@ future  use."
          (expand-file-name  file emacspeak-resource-directory)))
     (error (message "Error loading resources from %s "
                     file))))
-
 
 (defun emacspeak-table-ui-filter-save (file)
   "Save out filter settings."

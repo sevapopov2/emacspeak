@@ -1,5 +1,5 @@
 ;;; emacspeak-reftex.el --- speech enable reftex
-;;; $Id: emacspeak-reftex.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-reftex.el,v 17.0 2002/11/23 01:29:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech enable
 ;;; reftex 
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:29:00 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -65,14 +65,14 @@
 ;;{{{ advice interactive commands
 
 (defadvice reftex-select-previous-heading (after emacspeak pre act
-                                      comp)
+                                                 comp)
   "Speech enable  by speaking toc entry."
   (when (interactive-p)
     (emacspeak-speak-line)
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice reftex-select-next-heading (after emacspeak pre act
-                                  comp)
+                                             comp)
   "Speech enable  by speaking toc entry."
   (when (interactive-p)
     (emacspeak-speak-line)
@@ -116,7 +116,7 @@
   "Speech enable  by speaking toc entry."
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
-      (other-window 1)
+    (other-window 1)
     (recenter 0)
     (other-window 1)
     (emacspeak-speak-predefined-window 2)))
@@ -128,7 +128,7 @@
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice reftex-select-next (after emacspeak pre act
-                                  comp)
+                                     comp)
   "Speech enable  by speaking toc entry."
   (when (interactive-p)
     (emacspeak-speak-line)
@@ -140,6 +140,142 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
+
+(defadvice reftex-toc-toggle-follow (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon
+     (if reftex-toc-follow-mode
+         'on
+       'off))
+    (message "Turned %s follow mode. "
+             (if reftex-toc-follow-mode 'on 'off))))
+(defadvice reftex-toc-toggle-labels (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon
+     (if reftex-toc-include-labels
+         'on
+       'off))
+    (message "Turned %s labels. "
+             (if reftex-toc-include-labels 'on 'off))))
+
+(defadvice reftex-toc-toggle-file-boundary (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon
+     (if reftex-toc-include-file-boundaries
+         'on
+       'off))
+    (message "Turned %s file boundary markers. "
+             (if reftex-toc-include-file-boundaries 'on 'off))))
+
+(defadvice reftex-toc-toggle-context (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon
+     (if reftex-toc-include-context
+         'on
+       'off))
+    (message "Turned %s context markers. "
+             (if reftex-toc-include-context 'on 'off))))
+
+(defadvice reftex-index-next (after emacspeak pre act comp)
+  "Speech enable  by speaking  entry."
+  (when (interactive-p)
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
+
+(defadvice reftex-index-previous (after emacspeak pre act comp)
+  "Speech enable  by speaking  entry."
+  (when (interactive-p)
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
+(defadvice reftex-index-goto-entry (after emacspeak pre act comp)
+  "Speech enable  by speaking index entry."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (recenter 0)
+    (cond
+     (outline-minor-mode
+      (emacspeak-outline-speak-this-heading))
+     (t
+      (emacspeak-speak-predefined-window 1)))))
+
+(defadvice reftex-index-goto-entry-and-hide (after emacspeak pre act comp)
+  "Speech enable  by speaking toc entry."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (if outline-minor-mode
+        (emacspeak-outline-speak-this-heading)
+      (emacspeak-speak-line))))
+
+(defadvice reftex-index-view-entry (after emacspeak pre act comp)
+  "Speech enable  by speaking index entry."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (other-window 1)
+    (recenter 0)
+    (other-window 1)
+    (emacspeak-speak-predefined-window 2)))
+
+(defadvice reftex-index-toggle-follow (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon
+     (if reftex-index-follow-mode
+         'on
+       'off))
+    (message "Turned %s follow mode. "
+             (if reftex-index-follow-mode 'on 'off))))
+
+(defadvice reftex-index-toggle-labels (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon
+     (if reftex-index-include-labels
+         'on
+       'off))
+    (message "Turned %s labels. "
+             (if reftex-index-include-labels 'on 'off))))
+
+(defadvice reftex-index-toggle-file-boundary (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon
+     (if reftex-index-include-file-boundaries
+         'on
+       'off))
+    (message "Turned %s file boundary markers. "
+             (if reftex-index-include-file-boundaries 'on 'off))))
+
+(defadvice reftex-index-toggle-context (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon
+     (if reftex-index-include-context
+         'on
+       'off))
+    (message "Turned %s context markers. "
+             (if reftex-index-include-context 'on 'off))))
+
+(defadvice reftex-display-index (after emacspeak pre act comp)
+  "Speech enable index mode."
+  (when (interactive-p)
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'open-object)))
+
+(defadvice reftex-index-quit (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
+
+(defadvice reftex-index-quit-and-kill (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 ;;}}}
 (provide 'emacspeak-reftex)

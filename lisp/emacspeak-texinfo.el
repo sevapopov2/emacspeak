@@ -1,5 +1,5 @@
 ;;; emacspeak-texinfo.el --- Speech enable texinfo mode
-;;; $Id: emacspeak-texinfo.el,v 16.0 2002/05/03 23:31:24 raman Exp $
+;;; $Id: emacspeak-texinfo.el,v 17.0 2002/11/23 01:29:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable
 ;;; texinfo mode
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:24 $ |
-;;;  $Revision: 16.0 $ | 
+;;; $Date: 2002/11/23 01:29:01 $ |
+;;;  $Revision: 17.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -101,21 +101,21 @@
     (emacspeak-speak-line)))
 
 (defadvice TeXinfo-insert-environment (after emacspeak pre act
-                                      comp)
+					     comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
 (defadvice texinfo-insert-@item (after emacspeak pre act
-                                      comp)
+				       comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'item)
     (emacspeak-speak-line)))
 
 (defadvice texinfo-insert-@node (after emacspeak pre act
-                                      comp)
+				       comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)

@@ -1,5 +1,5 @@
 ;;; emacspeak-cmuscheme.el --- Scheme support for emacspeak
-;;; $Id: emacspeak-cmuscheme.el,v 16.0 2002/05/03 23:31:23 raman Exp $
+;;; $Id: emacspeak-cmuscheme.el,v 17.0 2002/11/23 01:28:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Speech-enable emacs for scheme and guile
 ;;; Keywords: Emacspeak, cmuscheme
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2002/05/03 23:31:23 $ |
-;;;  $Revision: 16.0 $ |
+;;; $Date: 2002/11/23 01:28:58 $ |
+;;;  $Revision: 17.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -81,7 +81,7 @@
     (emacspeak-auditory-icon 'select-object)
     (message "Sent %s lines to scheme. "
              (count-lines (region-beginning)
-                                 (region-end)))))
+			  (region-end)))))
 
 (defadvice scheme-send-definition (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -95,14 +95,13 @@
     (emacspeak-auditory-icon 'select-object)
     (message "Sent last sexp  to scheme. ")))
 
-
 (defadvice scheme-compile-region (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (message "Compiling  %s lines to scheme. "
              (count-lines (region-beginning)
-                                 (region-end)))))
+			  (region-end)))))
 
 (defadvice scheme-compile-definition (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -115,8 +114,6 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-mode-line)))
-
-
 
 (defadvice scheme-send-region-and-go (after emacspeak pre act comp)
   "Provide auditory feedback."

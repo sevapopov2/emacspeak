@@ -1,4 +1,4 @@
-;;;$Id: emacspeak-w3m.el,v 16.0 2002/05/03 23:31:24 raman Exp $;;; emacspeak-w3m.el --- speech-enables w3m-el
+;;;$Id: emacspeak-w3m.el,v 17.0 2002/11/23 01:29:01 raman Exp $;;; emacspeak-w3m.el --- speech-enables w3m-el
 ;;; This file is not part of Emacspeak, but the same terms and
 ;;; conditions apply.
 ;; Copyright (C) 2001,2002  Dimitri V. Paduchih
@@ -44,6 +44,7 @@
 ;;}}}
 ;;{{{ keybindings 
 (declaim (special w3m-mode-map))
+(define-key w3m-mode-map "\C-e" 'emacspeak-prefix-command)
 (define-key w3m-mode-map [M-tab] 'w3m-previous-anchor)
 (define-key w3m-mode-map [backtab] 'w3m-previous-anchor)
 (define-key w3m-mode-map [tab] 'w3m-next-anchor)
@@ -99,16 +100,13 @@
     (w3m-form-reset . emacspeak-w3m-speak-form-reset))
   )
 
-
 (defun emacspeak-w3m-anchor-text (&optional default)
   "Return string containing text of anchor under point."
-  (if (get-text-property (point) 'w3m-anchor-sequence)
-      (buffer-substring
-       (previous-single-property-change
-	(1+ (point)) 'w3m-anchor-sequence nil (point-min))
-       (next-single-property-change
-	(point) 'w3m-anchor-sequence nil (point-max)))
-    (or default "")))
+  (save-excursion
+    (forward-char 1)
+    (if (get-text-property (point) 'w3m-anchor-sequence)
+	(message(emacspeak-speak-get-text-range 'w3m-anchor-sequence))
+      (message (or default "")))))
 
 (defun emacspeak-w3m-speak-cursor-anchor ()
   (dtk-speak (emacspeak-w3m-anchor-text "Not found")))
@@ -312,7 +310,6 @@
    (t ad-do-it))
   ad-return-value)
 
-
 (defadvice w3m (after emacspeak pre act comp)
   (when (and (interactive-p)
 	     (eq (ad-get-arg 0) 'popup))
@@ -366,63 +363,21 @@
 ;;}}}
 ;;{{{ TVR: applying XSL
 
-(defvar emacspeak-w3m-xsl-p nil
-  "*T means we apply XSL transformation before displaying HTML.")
-
-(defvar emacspeak-w3m-xsl-transform nil
-  "Specifies transform to use before displaying a page.
-Nil means no transform is used.")
-
-(defadvice  w3m-w3m-dump-source (after emacspeak pre act comp)
-  "Apply requested transform if any after grabbing the HTML. "
-  (when (and emacspeak-w3m-xsl-p emacspeak-w3m-xsl-transform)
-    (emacspeak-xslt-region
-     emacspeak-w3m-xsl-transform
-     (point-min)
-     (point-max))))
-
 (defadvice  w3m-w3m-dump-head-source (after emacspeak pre act comp)
   "Apply requested transform if any after grabbing the HTML. "
-  (when (and emacspeak-w3m-xsl-p emacspeak-w3m-xsl-transform)
+  (require 'emacspeak-w3)
+  (when (and emacspeak-w3-xsl-p emacspeak-w3-xsl-transform)
     (emacspeak-xslt-region
-     emacspeak-w3m-xsl-transform
+     emacspeak-w3-xsl-transform
      (point-min)
      (point-max))))
-(defun emacspeak-w3m-xslt-select (xsl)
-  "Select transformation to apply."
-  (interactive
-   (list
-    (expand-file-name
-     (read-file-name "XSL Transformation: "
-                     emacspeak-xslt-directory))))
-  (declare (special emacspeak-w3m-xsl-transform))
-  (setq emacspeak-w3m-xsl-transform xsl
-	emacspeak-w3m-xsl-p	    t)
-  (message "Will apply %s before displaying HTML pages."
-           (file-name-sans-extension
-            (file-name-nondirectory
-             xsl)))
-  (emacspeak-auditory-icon 'select-object))
 
-(defun emacspeak-w3m-xsl-toggle ()
-  "Toggle  XSL transformations before displaying HTML.
-This uses XSLT Processor xsltproc available as part of the
-libxslt package."
-  (interactive)
-  (declare (special emacspeak-w3m-xsl-p))
-  (setq emacspeak-w3m-xsl-p
-        (not emacspeak-w3m-xsl-p))
-  (emacspeak-auditory-icon
-   (if emacspeak-w3m-xsl-p 'on 'off))
-  (message "Turned %s XSL"
-           (if emacspeak-w3m-xsl-p 'on 'off)))
 ;;}}}
 ;;{{{ tvr: mapping font faces to personalities 
 
    
         
   
-
 
 (voice-setup-set-voice-for-face 'w3m-arrived-anchor-face 'betty)
 (voice-setup-set-voice-for-face 'w3m-anchor-face 'harry)
@@ -453,8 +408,6 @@ libxslt package."
   (setq dtk-punctuation-mode "some"))
 
 (add-hook 'w3m-fontify-after-hook 'emacspeak-w3m-voiceify-faces-in-buffer)
-
-
 
 ;;}}}
 (provide 'emacspeak-w3m)
