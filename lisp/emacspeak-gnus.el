@@ -290,9 +290,11 @@ the previous group was closed."
     (emacspeak-speak-line)))
 
 (defadvice gnus-summary-clear-mark-forward (after emacspeak pre act comp)
+  "Speak the line.
+ Produce an auditory icon if possible."
   (when (interactive-p)
     (emacspeak-auditory-icon 'deselect-object)
-    (emacspeak-speak-line)))
+    (emacspeak-gnus-summary-speak-subject)))
 
 (defadvice gnus-summary-mark-as-unread-forward (after emacspeak pre act)
   "Speak the line.
@@ -305,7 +307,7 @@ the previous group was closed."
   "Speak the line.
  Produce an auditory icon if possible."
   (when (interactive-p) 
-    (emacspeak-auditory-icon'mark-object)
+    (emacspeak-auditory-icon 'mark-object)
     (emacspeak-gnus-summary-speak-subject )))
 
 (defadvice gnus-summary-mark-as-unread-backward (after emacspeak pre act)
@@ -320,6 +322,20 @@ the previous group was closed."
  Produce an auditory icon if possible."
   (when (interactive-p) 
     (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-gnus-summary-speak-subject )))
+
+(defadvice gnus-summary-mark-as-processable (after emacspeak pre act)
+  "Speak the line.
+ Produce an auditory icon if possible."
+  (when (interactive-p) 
+    (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-gnus-summary-speak-subject )))
+
+(defadvice gnus-summary-unmark-as-processable (after emacspeak pre act)
+  "Speak the line.
+ Produce an auditory icon if possible."
+  (when (interactive-p) 
+    (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-gnus-summary-speak-subject )))
 
 (defadvice gnus-summary-kill-same-subject-and-select (after emacspeak pre act)
@@ -363,7 +379,7 @@ indicating the article is being opened."
   "Speak the line.
  Produce an auditory icon if possible."
   (when (interactive-p) 
-    (emacspeak-auditory-icon'select-object)
+    (emacspeak-auditory-icon 'select-object)
     (emacspeak-gnus-summary-speak-subject )))
 
 (defadvice gnus-summary-down-thread (after emacspeak pre act)
