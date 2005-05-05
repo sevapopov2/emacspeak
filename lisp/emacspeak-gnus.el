@@ -477,6 +477,32 @@ Produce an auditory icon if possible."
     (emacspeak-gnus-summary-speak-subject )))
 
 ;;}}}
+;;{{{  Draft specific commands
+
+(defadvice gnus-draft-edit-message (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)))
+
+(defadvice gnus-draft-send-message (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'task-done)))
+
+(defadvice gnus-draft-send-all-messages (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'task-done)))
+
+(defadvice gnus-draft-toggle-sending (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon
+     (if (= (char-after (line-beginning-position)) ?\ )
+	 'deselect-object
+       'mark-object))))
+
+;;}}}
 ;;{{{  Article reading
 (defun emacspeak-gnus-summary-catchup-quietly-and-exit ()
   "Catch up on all articles in current group."
