@@ -358,16 +358,18 @@ Like Emacs' built-in dired-show-file-type but allows user to customize
 options passed to command `file'."
   (interactive (list (dired-get-filename t) current-prefix-arg))
   (declare (special emacspeak-dired-file-cmd-options))
-  (with-temp-buffer 
+  (with-temp-buffer
+    (make-local-variable 'emacspeak-speak-messages)
+    (setq emacspeak-speak-messages t)
     (if deref-symlinks
 	(call-process "file" nil t t  "-l"
-                      emacspeak-dired-file-cmd-options  file)
+		      emacspeak-dired-file-cmd-options  file)
       (call-process "file" nil t t
-                    emacspeak-dired-file-cmd-options file))
+		    emacspeak-dired-file-cmd-options file))
     (when (bolp)
       (backward-delete-char 1))
+    (emacspeak-auditory-icon 'select-object)
     (message (buffer-string))))
-    
 
 (defun emacspeak-dired-speak-header-line()
   "Speak the header line of the dired buffer. "
@@ -383,6 +385,7 @@ On a directory line, run du -s on the directory to speak its size."
   (interactive)
   (let ((filename (dired-get-filename nil t))
         (size 0)
+	(emacspeak-speak-messages t)
         (dtk-stop-immediately nil))
     (cond
      ((and filename
@@ -394,7 +397,8 @@ On a directory line, run du -s on the directory to speak its size."
                                         ; check for ange-ftp
       (when (= size -1)
         (setq size
-              (nth  4
+              (nth  (if (= (char-after (line-beginning-position)) ?\ )
+			4 5)
                     (split-string (thing-at-point 'line)))))
       (emacspeak-auditory-icon 'select-object)
       (message "File size %s"
@@ -404,7 +408,8 @@ On a directory line, run du -s on the directory to speak its size."
 (defun emacspeak-dired-speak-file-modification-time ()
   "Speak modification time  of the current file."
   (interactive)
-  (let ((filename (dired-get-filename nil t)))
+  (let ((filename (dired-get-filename nil t))
+	(emacspeak-speak-messages t))
     (cond
      (filename
       (emacspeak-auditory-icon 'select-object)
@@ -417,11 +422,12 @@ On a directory line, run du -s on the directory to speak its size."
 (defun emacspeak-dired-speak-file-access-time ()
   "Speak access time  of the current file."
   (interactive)
-  (let ((filename (dired-get-filename nil t)))
+  (let ((filename (dired-get-filename nil t))
+	(emacspeak-speak-messages t))
     (cond
      (filename
       (emacspeak-auditory-icon 'select-object)
-      (message "Last accessed   on  %s"
+      (message "Last accessed   on : %s"
                (format-time-string
                 emacspeak-speak-time-format-string
                 (nth 4 (file-attributes filename )))))
@@ -429,7 +435,8 @@ On a directory line, run du -s on the directory to speak its size."
 (defun emacspeak-dired-speak-symlink-target ()
   "Speaks the target of the symlink on the current line."
   (interactive)
-  (let ((filename (dired-get-filename nil t)))
+  (let ((filename (dired-get-filename nil t))
+	(emacspeak-speak-messages t))
     (cond
      (filename
       (emacspeak-auditory-icon 'select-object)
@@ -442,12 +449,18 @@ On a directory line, run du -s on the directory to speak its size."
 (defun emacspeak-dired-speak-file-permissions ()
   "Speak the permissions of the current file."
   (interactive)
-  (let ((filename (dired-get-filename nil t)))
+  (let ((filename (dired-get-filename nil t))
+	(emacspeak-speak-messages t))
     (cond
      (filename
       (emacspeak-auditory-icon 'select-object)
       (message "Permissions %s"
-               (nth 8 (file-attributes filename ))))
+               (let ((permissions (nth 8 (file-attributes filename ))))
+		 (if (string-match "^.[?]+$" permissions)
+		     (nth  (if (= (char-after (line-beginning-position)) ?\ )
+			       0 1)
+			   (split-string (thing-at-point 'line)))
+		   permissions))))
      (t (message "No file on current line")))))
 
 ;;}}}

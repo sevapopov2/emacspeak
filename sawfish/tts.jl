@@ -47,7 +47,7 @@
 (defgroup tts "Speech synthesis")
 
 (defcustom tts-client "telnet"
-  "TTS cleint "
+  "TTS client "
   :group     tts
   :type      string
   :allow-nil nil)
@@ -64,7 +64,13 @@
   :type      string
   :allow-nil nil)
 
-(defvar emacspeak "/home/raman/emacs/lisp/emacspeak"
+(defcustom tts-server "multispeech"
+  "TTS server "
+  :group     tts
+  :type      string
+  :allow-nil nil)
+
+(defvar emacspeak "/usr/local/share/emacs/site-lisp/emacspeak"
 "Root of Emacspeak installation.")
 
 (defvar tts-process nil
@@ -73,26 +79,17 @@
 (defun tts-open-connection ()
   "Open a TTS session."
   (interactive)
-    (setq tts-process (make-process))
-    (start-process tts-process tts-client tts-host
-                   tts-port))
-
-(defvar tts-tcl "/usr/bin/tcl"
-"TCL interpreter")
-
-(defvar tts-dtk
-  (expand-file-name "servers/dtk-exp" emacspeak)
-"DTK tcl server")
-
-(defvar tts-outloud
-  (expand-file-name "servers/outloud" emacspeak)
-  "DTK tcl server")
+  (setq tts-process (make-process))
+  (start-process tts-process tts-client tts-host
+		 tts-port))
 
 (defun tts-open ()
   "Open a TTS session."
   (interactive)
   (setq tts-process (make-process))
-  (start-process tts-process tts-tcl tts-dtk))
+  (start-process tts-process
+		 (expand-file-name tts-server
+				   (expand-file-name "servers" emacspeak))))
 
 (defun tts-close ()
   "Close a TTS session."
@@ -117,7 +114,7 @@
       (tts-open))
   (when tts-stop-immediately
     (format tts-process "s\n"))
-  (format tts-process "q {%s}; d\n" text))
+  (format tts-process "q {%s}\nd\n" text))
 
 (defun tts-say-workspace ()
   "Say the name of the current workspace."

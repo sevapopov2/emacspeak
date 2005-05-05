@@ -38,6 +38,12 @@
 				      ("emacspeak-ansi-color.el"
 				       "Voiceify ansi-color "
 				       (emacspeak  ansi-color))
+				      ("emacspeak-apt-sources.el"
+				       "speech-enable APT's source.list file editor"
+				       (emacspeak  apt  sources))
+				      ("emacspeak-apt-utils.el"
+				       "speech-enable APT utilities"
+				       (emacspeak  apt  debian package manager))
 				      ("emacspeak-arc.el"
 				       "Speech enable archive-mode -- a  Emacs interface to zip and friends"
 				       (emacspeak  speak  spoken output  archive))
@@ -107,6 +113,12 @@
 				      ("emacspeak-custom.el"
 				       "Speech enable interactive Emacs customization "
 				       (emacspeak  speak  spoken output  custom))
+				      ("emacspeak-cyclebuffer.el"
+				       "Speech-enable cyclebuffer.el"
+				       nil)
+				      ("emacspeak-edb.el"
+				       "Speech interface for the EDB package"
+				       (emacspeak  database speech interface))
 				      ("emacspeak-daisy.el"
 				       "daisy Front-end for emacspeak desktop"
 				       (emacspeak  daisy digital talking books))
@@ -215,6 +227,9 @@
 				      ("emacspeak-gud.el"
 				       "Speech enable Emacs' debugger interface --covers GDB, JDB, and PerlDB"
 				       (emacspeak  audio interface to emacs debuggers ))
+				      ("emacspeak-hexl.el"
+				       "Emacspeak extension to speech-enable hexl mode"
+				       (emacspeak  hexl mode  binary files editing ))
 				      ("emacspeak-hide.el"
 				       "Provides user commands for hiding and exposing blocks of text"
 				       (emacspeak  speak  spoken output  hide))
@@ -349,7 +364,7 @@
 				       (emacspeak  audio interface to emacs mail))
 				      ("emacspeak-rpm-spec.el"
 				       "Speech enable rpm spec editor"
-				       (emacspeak  rpm-spec streaming media ))
+				       (emacspeak  rpm-spec ))
 				      ("emacspeak-rpm.el"
 				       "speech-enable RPM"
 				       (emacspeak  rpm  red hat package manager))
@@ -452,6 +467,9 @@
 				      ("emacspeak-websearch.el"
 				       "search utilities"
 				       (emacspeak  www interaction))
+				      ("emacspeak-wget.el"
+				       "Speech-enable Wget"
+				       (emacspeak  wget  www  ftp  download manager))
 				      ("emacspeak-widget.el"
 				       "Speech enable Emacs' native GUI widget library"
 				       (emacspeak  audio interface to emacs customized widgets))
@@ -488,6 +506,9 @@
 				      ("html-outline.el"
 				       "Extends html-helper-mode to provide outline and imenu support"
 				       nil)
+				      ("multispeech-voices.el"
+				       "Define various device independent voices in terms of Multispeech codes."
+				       (voice  personality  multispeech))
 				      ("outloud-voices.el"
 				       "Define various device independent voices in terms of OutLoud tags"
 				       (voice  personality  ibm viavoice outloud))

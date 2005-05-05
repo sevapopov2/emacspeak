@@ -55,7 +55,7 @@ COMPILE =  -f batch-byte-compile
 #The various modules:
 DTK_OBJECTS = acss-structure.elc \
 dtk-speak.elc		dectalk-voices.elc\
-outloud-voices.elc  \
+outloud-voices.elc multispeech-voices.elc \
 dtk-interp.elc		
 
 SPEAK_OBJECTS =   \
@@ -83,6 +83,8 @@ AUX_OBJECTS =  cd-tool.elc \
 emacspeak-amphetadesk.elc \
 emacspeak-analog.elc \
 emacspeak-ansi-color.elc \
+emacspeak-apt-sources.elc \
+emacspeak-apt-utils.elc \
 emacspeak-arc.elc \
 emacspeak-auctex.elc \
 emacspeak-aumix.elc \
@@ -105,6 +107,8 @@ emacspeak-cmuscheme.elc \
 emacspeak-compile.elc \
 emacspeak-cperl.elc \
 emacspeak-custom.elc \
+emacspeak-cyclebuffer.elc \
+emacspeak-edb.elc \
 emacspeak-daisy.elc \
 emacspeak-damlite.elc \
 emacspeak-dictation.elc \
@@ -140,6 +144,7 @@ emacspeak-gnus.elc\
 emacspeak-gomoku.elc \
 emacspeak-gridtext.elc \
 emacspeak-gud.elc \
+emacspeak-hexl.elc \
 emacspeak-hide.elc \
 emacspeak-hideshow.elc \
 emacspeak-hyperbole.elc \
@@ -206,6 +211,7 @@ emacspeak-vm.elc \
 emacspeak-w3.elc \
 emacspeak-w3m.elc \
 emacspeak-websearch.elc \
+emacspeak-wget.elc \
 emacspeak-widget.elc \
 emacspeak-windmove.elc \
 emacspeak-winring.elc \
@@ -259,6 +265,7 @@ dtk-speak.elc: dtk-speak.el  dtk-interp.elc
 acss-structure.elc: acss-structure.el
 dectalk-voices.elc: dectalk-voices.el voice-setup.elc
 outloud-voices.elc: outloud-voices.el voice-setup.elc
+multispeech-voices.elc: multispeech-voices.el voice-setup.elc
 voice-setup.elc: voice-setup.el acss-structure.elc
 html-outline.elc: html-outline.el
 emacspeak-amphetadesk.elc: emacspeak-amphetadesk.el
@@ -267,6 +274,8 @@ emacspeak-actions.elc: emacspeak-actions.el
 emacspeak-advice.elc: emacspeak-advice.el dtk-speak.elc voice-setup.elc
 emacspeak-analog.elc: emacspeak-analog.el dtk-speak.elc voice-setup.elc
 emacspeak-ansi-color.elc: emacspeak-ansi-color.el dtk-speak.elc voice-setup.elc
+emacspeak-apt-sources.elc: emacspeak-apt-sources.el dtk-speak.elc voice-setup.elc
+emacspeak-apt-utils.elc: emacspeak-apt-utils.el dtk-speak.elc voice-setup.elc
 emacspeak-arc.elc: emacspeak-arc.el dtk-speak.elc voice-setup.elc
 emacspeak-auctex.elc: emacspeak-auctex.el dtk-speak.elc voice-setup.elc
 emacspeak-aumix.elc: emacspeak-aumix.el dtk-speak.elc voice-setup.elc
@@ -288,6 +297,8 @@ emacspeak-cedet.elc: emacspeak-cedet.el dtk-speak.elc voice-setup.elc
 emacspeak-checkdoc.elc: emacspeak-checkdoc.el dtk-speak.elc voice-setup.elc
 emacspeak-cperl.elc: emacspeak-cperl.el dtk-speak.elc voice-setup.elc
 emacspeak-custom.elc: emacspeak-custom.el dtk-speak.elc voice-setup.elc
+emacspeak-cyclebuffer.elc: emacspeak-cyclebuffer.el dtk-speak.elc
+emacspeak-edb.elc: emacspeak-edb.el dtk-speak.elc voice-setup.elc
 emacspeak-daisy.elc: emacspeak-daisy.el dtk-speak.elc voice-setup.elc
 emacspeak-damlite.elc: emacspeak-damlite.el dtk-speak.elc voice-setup.elc
 emacspeak-desktop.elc: emacspeak-desktop.el dtk-speak.elc voice-setup.elc
@@ -324,6 +335,7 @@ emacspeak-gnus.elc: emacspeak-gnus.el dtk-speak.elc voice-setup.elc
 emacspeak-gomoku.elc: emacspeak-gomoku.el dtk-speak.elc voice-setup.elc
 emacspeak-gridtext.elc: emacspeak-gridtext.el dtk-speak.elc voice-setup.elc
 emacspeak-gud.elc: emacspeak-gud.el dtk-speak.elc voice-setup.elc
+emacspeak-hexl.elc: emacspeak-hexl.el emacspeak-speak.elc emacspeak-redefine.elc
 emacspeak-hide.elc: emacspeak-hide.el emacspeak-speak.elc
 emacspeak-hideshow.elc: emacspeak-hideshow.el dtk-speak.elc voice-setup.elc
 emacspeak-hyperbole.elc: emacspeak-hyperbole.el dtk-speak.elc voice-setup.elc
@@ -402,6 +414,7 @@ emacspeak-vm.elc: emacspeak-vm.el dtk-speak.elc voice-setup.elc
 emacspeak-w3.elc: emacspeak-w3.el dtk-speak.elc voice-setup.elc
 emacspeak-w3m.elc: emacspeak-w3m.el dtk-speak.elc voice-setup.elc
 emacspeak-websearch.elc: emacspeak-websearch.el emacspeak-w3.elc
+emacspeak-wget.elc: emacspeak-wget.el dtk-speak.elc
 emacspeak-widget.elc: emacspeak-widget.el dtk-speak.elc voice-setup.elc
 emacspeak-winring.elc: emacspeak-winring.el dtk-speak.elc voice-setup.elc
 emacspeak-windmove.elc: emacspeak-windmove.el dtk-speak.elc voice-setup.elc
