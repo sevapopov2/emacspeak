@@ -1,5 +1,5 @@
 ;;; emacspeak-eudc.el --- Speech enable  directory client 
-;;; $Id: emacspeak-eudc.el,v 21.0 2004/11/25 18:45:46 raman Exp $
+;;; $Id: emacspeak-eudc.el,v 22.0 2005/04/30 16:39:54 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable universal directory client 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:46 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:54 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 

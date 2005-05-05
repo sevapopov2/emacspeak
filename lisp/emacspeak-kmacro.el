@@ -1,5 +1,5 @@
 ;;; emacspeak-kmacro.el --- Speech-enable kbd macro interface
-;;; $Id: emacspeak-kmacro.el,v 21.0 2004/11/25 18:45:48 raman Exp $
+;;; $Id: emacspeak-kmacro.el,v 22.0 2005/04/30 16:39:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for KMACRO 
 ;;; Keywords: Emacspeak, kmacro 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:48 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:58 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -59,13 +59,11 @@
 (defadvice kmacro-start-macro (before emacspeak pre act comp)
   "Provide auditory icon."
   (when  (interactive-p)
-             
     (emacspeak-auditory-icon 'select-object)
     (message "Defining new kbd macro.")))
 
 (defadvice kmacro-start-macro-or-insert-counter (before
-                                                 emacspeak pre
-                                                 act comp)
+                                                 emacspeak pre act comp)
   "Provide auditory icon if new macro is being defined."
   (when (and (interactive-p)
              (not  defining-kbd-macro )
@@ -73,8 +71,7 @@
     (emacspeak-auditory-icon 'select-object)
     (message "Defining new kbd macro.")))
 
-(defadvice kmacro-end-or-call-macro (before emacspeak pre act
-                                            comp)
+(defadvice kmacro-end-or-call-macro (before emacspeak pre act comp)
   "Provide auditory feedback about we are about to do."
   (cond
    ((and (interactive-p)
@@ -103,6 +100,7 @@
   "Provide auditory feedback."
   (when (interactive-p)
     (message "Calling  second macro from ring.")))
+
 ;;}}}
 (provide 'emacspeak-kmacro)
 ;;{{{ end of file

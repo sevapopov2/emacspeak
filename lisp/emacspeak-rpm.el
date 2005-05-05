@@ -1,5 +1,5 @@
 ;;; emacspeak-rpm.el --- speech-enable RPM
-;;; $Id: emacspeak-rpm.el,v 21.0 2004/11/25 18:45:49 raman Exp $
+;;; $Id: emacspeak-rpm.el,v 22.0 2005/04/30 16:39:59 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech-enable RPM
 ;;; Keywords: Emacspeak, rpm, Red Hat Package Manager
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:49 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:59 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -106,7 +106,7 @@
 ;;}}}
 
 ;;; emacspeak-rpm.el --- search utilities
-;;; $Id: emacspeak-rpm.el,v 21.0 2004/11/25 18:45:49 raman Exp $
+;;; $Id: emacspeak-rpm.el,v 22.0 2005/04/30 16:39:59 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to make Web searching convenient
 ;;; Keywords: Emacspeak, WWW interaction
@@ -115,8 +115,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:49 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:59 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 

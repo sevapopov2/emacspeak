@@ -1,5 +1,5 @@
 ;;; emacspeak-re-builder.el --- speech-enable re-builder
-;;; $Id: emacspeak-re-builder.el,v 21.0 2004/11/25 18:45:49 raman Exp $
+;;; $Id: emacspeak-re-builder.el,v 22.0 2005/04/30 16:39:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable re-builder
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:49 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:58 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 

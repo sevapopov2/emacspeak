@@ -1,4 +1,4 @@
-#$Id: Makefile,v 21.0 2004/11/25 18:46:04 raman Exp $
+#$Id: Makefile,v 22.0 2005/04/30 16:40:10 raman Exp $
 SF_HOME=raman@emacspeak.sf.net:~/www-emacspeak/htdocs
 HTML_FILES=$(shell find . -name '*.html' -print)
 TEXINDEX=texindex
@@ -23,7 +23,7 @@ commands.texi:
 	make
 	make htm
 
-options.texi: 
+options.texi:  
 	$(EMACS) -batch -q -l ../utils/document-commands.el
 
 install: emacspeak.info
@@ -72,7 +72,7 @@ htm: emacspeak.texi
 	perl add-css.pl html/*.html
 	for f in $(HTML_FILES) ; \
 		do \
-		tidy -mic -asxml  $$f || echo tidy; \
+		tidy -q -mic -asxml  $$f 2>&1 > /dev/null  || echo tidy; \
 		done
 
 

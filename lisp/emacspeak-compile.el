@@ -7,8 +7,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:45 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:39:52 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -48,6 +48,20 @@
 ;;}}}
 ;;{{{ Required modules
 (require 'emacspeak-preamble)
+
+;;}}}
+;;{{{ persoanlities 
+(def-voice-font emacspeak-compilation-info-personality
+  voice-lighten
+  'compilation-info-face
+  "Personality used for information in compilation lines."
+  :group 'emacspeak-compile)
+
+(def-voice-font emacspeak-compilation-warning-personality
+  voice-animate
+  'compilation-warning-face
+  "Personality used for warnings in compilation lines."
+  :group 'emacspeak-compile)
 
 ;;}}}
 ;;{{{  functions

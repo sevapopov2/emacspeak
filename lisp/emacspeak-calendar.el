@@ -1,5 +1,5 @@
 ;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -- maintain a diary and appointments
-;;; $Id: emacspeak-calendar.el,v 21.0 2004/11/25 18:45:45 raman Exp $
+;;; $Id: emacspeak-calendar.el,v 22.0 2005/04/30 16:39:51 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extensions to speech enable the calendar.
 ;;; Keywords: Emacspeak, Calendar, Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:45 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:39:51 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -82,7 +82,7 @@
    (get-text-property (point) 'personality)
    (save-excursion
      (forward-char 1)
-     (string= diary-entry-marker (buffer-substring (point) (+ 1 (point ))))))
+     (string-equal diary-entry-marker (buffer-substring (point) (+ 1 (point ))))))
   )
 
 (defun emacspeak-speak-calendar-date()
@@ -359,7 +359,7 @@
 (add-hook 'initial-calendar-window-hook 'emacspeak-calendar-keys t)
 (add-hook 'initial-calendar-window-hook 
 	  (function (lambda () 
-		      (dtk-set-punctuations "some")
+		      (dtk-set-punctuations 'some)
 		      (emacspeak-dtk-sync))))
 
 ;;}}}

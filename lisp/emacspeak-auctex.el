@@ -1,5 +1,5 @@
 ;;; emacspeak-auctex.el --- Speech enable AucTeX -- a powerful TeX/LaTeX authoring environment
-;;; $Id: emacspeak-auctex.el,v 21.0 2004/11/25 18:45:44 raman Exp $
+;;; $Id: emacspeak-auctex.el,v 22.0 2005/04/30 16:39:50 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for auctex-mode
 ;;; Keywords:emacspeak, audio interface to emacs AUCTEX
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:44 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:39:50 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -62,6 +62,81 @@
   'font-latex-sedate-face                                          
   "Personality used  on macro names."                              
   :group 'emacspeak-auctex)                                        
+
+(def-voice-font  emacspeak-latex-doctex-documentation-personality
+  voice-monotone
+  'font-latex-doctex-documentation-face
+  "Personality used for documentation in doctex files."
+  :group 'emacspeak-auctex)
+
+(def-voice-font  emacspeak-latex-doctex-preprocessor-personality
+  voice-brighten-medium
+  'font-latex-doctex-preprocessor-face
+  "Personality used for preprocessor lines in   doctex files."
+  :group 'emacspeak-auctex)
+
+(def-voice-font  emacspeak-latex-math-personality
+  voice-brighten-extra
+  'font-latex-math-face
+  "Personality used for math mode."
+  :group 'emacspeak-auctex)
+
+(def-voice-font  emacspeak-latex-string-personality
+  voice-lighten-extra
+  'font-latex-string-face
+  "Personality used for strings."
+  :group 'emacspeak-auctex)
+
+(def-voice-font  emacspeak-latex-subscript-personality
+  voice-smoothen
+  'font-latex-subscript-face
+  "Personality used for subscript."
+  :group 'emacspeak-auctex)
+
+(def-voice-font  emacspeak-latex-superscript-personality
+  voice-brighten-extra
+  'font-latex-superscript-face
+  "Personality used for superscript."
+  :group 'emacspeak-auctex)
+
+(def-voice-font  emacspeak-latex-title-1-personality
+  voice-bolden-extra
+  'font-latex-title-1-face
+  "Personality used for titl11."
+  :group 'emacspeak-auctex)
+(def-voice-font  emacspeak-latex-title-2-personality
+  voice-bolden-medium
+  'font-latex-title-2-face
+  "Personality used for titl11."
+  :group 'emacspeak-auctex)
+
+(def-voice-font  emacspeak-latex-title-3-personality
+  voice-bolden
+  'font-latex-title-3-face
+  "Personality used for titl11."
+  :group 'emacspeak-auctex)
+(def-voice-font  emacspeak-latex-title-3-personality
+  voice-bolden
+  'font-latex-title-3-face
+  "Personality used for titl11."
+  :group 'emacspeak-auctex)
+(def-voice-font  emacspeak-latex-title-4-personality
+  voice-smoothen
+  'font-latex-title-4-face
+  "Personality used for titl11."
+  :group 'emacspeak-auctex)
+
+(def-voice-font  emacspeak-latex-dwarningverbatim-personality
+  voice-animate
+  'font-latex-warning-face
+  "Personality used for warnings."
+  :group 'emacspeak-auctex)
+
+(def-voice-font  emacspeak-latex-verbatim-personality
+  voice-monotone
+  'font-latex-verbatim-face
+  "Personality used for verbatim."
+  :group 'emacspeak-auctex)
 
 ;;}}}
 ;;{{{  Marking structured objects:

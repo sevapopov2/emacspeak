@@ -1,5 +1,5 @@
 ;;; emacspeak-w3.el --- Speech enable W3 WWW browser -- includes ACSS Support
-;;; $Id: emacspeak-w3.el,v 21.0 2004/11/25 18:45:50 raman Exp $
+;;; $Id: emacspeak-w3.el,v 22.0 2005/04/30 16:40:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak enhancements for W3
 ;;; Keywords: Emacspeak, W3, WWW
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:50 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:40:01 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -97,11 +97,12 @@
 ;;}}}
 ;;{{{ setup
 
-(defcustom emacspeak-w3-punctuation-mode "some"
+(defcustom emacspeak-w3-punctuation-mode  'all
   "Pronunciation mode to use for W3 buffers."
   :type '(choice
-          (string "some" :tag "some")
-          (string "all" :tag "all"))
+          (const  :tag "Ignore" nil)
+          (const  :tag "some" some)
+          (const  :tag "all" all))
   :group 'emacspeak-w3)
 
 (defun emacspeak-w3-speak-mode-hook ()
@@ -109,7 +110,8 @@
   (declare (special emacspeak-w3-post-process-hook
                     emacspeak-w3-punctuation-mode))
   (set (make-local-variable 'voice-lock-mode) t)
-  (setq dtk-punctuation-mode emacspeak-w3-punctuation-mode)
+  (when emacspeak-w3-punctuation-mode
+    (setq dtk-punctuation-mode emacspeak-w3-punctuation-mode))
   (emacspeak-auditory-icon 'open-object)
   (unless emacspeak-w3-post-process-hook
     (emacspeak-speak-mode-line)))
@@ -458,6 +460,41 @@ even if one is already defined."
     (when (interactive-p)
       (emacspeak-speak-mode-line)
       (emacspeak-auditory-icon 'open-object))))
+
+;;}}}
+;;{{{ url expand and execute
+
+(defvar emacspeak-w3-url-executor nil
+  "URL expand/execute function  to use in current buffer.")
+
+(make-variable-buffer-local 'emacspeak-w3-url-executor)
+
+(defun emacspeak-w3-url-expand-and-execute ()
+  "Applies buffer-specific URL expander/executor function."
+  (interactive)
+  (declare (special emacspeak-w3-url-executor))
+  (unless (eq major-mode 'w3-mode)
+    (error "This command is only useful in W3 buffers."))
+  (let ((url (w3-view-this-url t)))
+    (unless url
+      (error "Not on a link."))
+    (cond
+     ((and (boundp 'emacspeak-w3-url-executor)
+           (fboundp emacspeak-w3-url-executor))
+      (funcall emacspeak-w3-url-executor url))
+     (t
+      (setq emacspeak-w3-url-executor
+            (intern
+             (completing-read 
+	      "Executor function: "
+	      obarray 'fboundp t
+	      "emacspeak-" nil )))
+      (if (and (boundp 'emacspeak-w3-url-executor)
+               (fboundp emacspeak-w3-url-executor))
+          (funcall emacspeak-w3-url-executor url)
+        (error "Invalid executor %s"
+               emacspeak-w3-url-executor))))))
+      
 
 ;;}}}
 ;;{{{  jump to title in document
@@ -1214,7 +1251,9 @@ loaded. "
   'emacspeak-w3-extract-nested-table)
 (define-key emacspeak-w3-xsl-map "\C-f" 'emacspeak-w3-count-matches)
 (define-key emacspeak-w3-xsl-map "\C-x" 'emacspeak-w3-count-nested-tables)
-(define-key emacspeak-w3-xsl-map "X" 'emacspeak-w3-extract-nested-table-list)
+(define-key emacspeak-w3-xsl-map "X"
+  'emacspeak-w3-extract-nested-table-list)
+(define-key emacspeak-w3-xsl-map "e" 'emacspeak-w3-url-expand-and-execute)
 (define-key emacspeak-w3-xsl-map "i" 'emacspeak-w3-extract-node-by-id)
 
 ;;}}}
@@ -1265,8 +1304,12 @@ used as well."
 urls.")
 
 (make-variable-buffer-local 'emacspeak-w3-xpath-filter)
-(defvar emacspeak-w3-most-recent-xpath-filter nil
-  "Caches most recently used xpath filter.")
+(defcustom emacspeak-w3-most-recent-xpath-filter
+  "//p|ol|ul|dl|h1|h2|h3|h4|h5|h6|blockquote"
+  "Caches most recently used xpath filter.
+Can be customized to set up initial default."
+  :type 'string
+  :group 'emacspeak-w3)
 ;;;###autoload
 (defun emacspeak-w3-xpath-filter-and-follow (&optional prompt)
   "Follow url and point, and filter the result by specified xpath.
@@ -1277,8 +1320,6 @@ used as well."
   (declare (special emacspeak-w3-xpath-filter
                     emacspeak-w3-most-recent-xpath-filter
 		    emacspeak-w3-url-rewrite-rule))
-  (unless (fboundp 'string-replace-match)
-    (error "Install and load the elib package to use this feature."))
   (unless (eq major-mode 'w3-mode)
     (error "This command is only useful in W3 buffers."))
   (let ((url (w3-view-this-url t))
@@ -1286,6 +1327,8 @@ used as well."
     (unless url
       (error "Not on a link."))
     (when emacspeak-w3-url-rewrite-rule
+      (unless (fboundp 'string-replace-match)
+	(error "Install and load the elib package to use this feature."))
       (setq redirect
 	    (string-replace-match (first emacspeak-w3-url-rewrite-rule)
 				  url

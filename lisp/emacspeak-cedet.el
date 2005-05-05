@@ -1,5 +1,5 @@
 ;;; emacspeak-cedet.el --- Speech enable CEDET
-;;; $Id: emacspeak-cedet.el,v 21.0 2004/11/25 18:45:45 raman Exp $
+;;; $Id: emacspeak-cedet.el,v 22.0 2005/04/30 16:39:51 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to CEDET
 ;;; Keywords: Emacspeak, Speak, Spoken Output, CEDET
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:45 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:39:51 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -66,14 +66,14 @@
 	    ad-do-it
 	    (let ((completions-buffer (get-buffer "*Completions*")))
 	      (if (> (point) prior)
-		  (tts-with-punctuations "all"
+		  (tts-with-punctuations 'all
 					 (dtk-speak (buffer-substring prior (point ))))
 		(when (and completions-buffer
 			   (window-live-p (get-buffer-window completions-buffer )))
 		  (save-excursion
 		    (set-buffer completions-buffer )
 		    (emacspeak-prepare-completions-buffer)
-		    (tts-with-punctuations "all"
+		    (tts-with-punctuations 'all
 					   (dtk-speak (buffer-string )))))))
 	    ad-return-value))))
 

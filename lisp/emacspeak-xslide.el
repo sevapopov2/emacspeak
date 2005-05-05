@@ -1,5 +1,5 @@
 ;;; emacspeak-xslide.el --- Speech enable  XSL authoring 
-;;; $Id: emacspeak-xslide.el,v 21.0 2004/11/25 18:45:51 raman Exp $
+;;; $Id: emacspeak-xslide.el,v 22.0 2005/04/30 16:40:03 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable xslide 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:51 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:40:03 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -107,7 +107,7 @@
   "set up for voice locking."
   (emacspeak-xsl-voice-lock-setup)
   (voice-lock-mode 1)
-  (dtk-set-punctuations "all"))
+  (dtk-set-punctuations 'all))
 
 (defun emacspeak-xsl-voice-lock-setup()
   "Setup voice locking for xsl mode."

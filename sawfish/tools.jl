@@ -1,4 +1,4 @@
-;;;$Id: tools.jl,v 21.0 2004/11/25 18:46:02 raman Exp $
+;;;$Id: tools.jl,v 22.0 2005/04/30 16:40:09 raman Exp $
 ;;; tools.jl --- Emacs tool for sawfish
 ;;; $Author: raman $
 ;;; Description:   Commands for launching or switching to
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:46:02 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:40:09 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 

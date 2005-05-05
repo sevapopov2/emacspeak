@@ -1,5 +1,5 @@
 ;;; emacspeak-oo-browser.el --- Speech enable OO Browser -- For Browsing large OO Systems
-;;; $Id: emacspeak-oo-browser.el,v 21.0 2004/11/25 18:45:48 raman Exp $
+;;; $Id: emacspeak-oo-browser.el,v 22.0 2005/04/30 16:39:58 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extensions for Bob Weiner's excellent OO-Browser.
 ;;; Keywords: Emacspeak, Speech Access, Browsing source code.
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:48 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:39:58 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 

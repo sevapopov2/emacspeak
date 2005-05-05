@@ -1,5 +1,5 @@
 ;;; emacspeak-pronounce.el --- Implements Emacspeak pronunciation dictionaries
-;;; $Id: emacspeak-pronounce.el,v 21.0 2004/11/25 18:45:48 raman Exp $
+;;; $Id: emacspeak-pronounce.el,v 22.0 2005/04/30 16:39:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Emacspeak pronunciation dictionaries
 ;;; Keywords:emacspeak, audio interface to emacs customized pronunciation
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:48 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:58 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -96,7 +96,8 @@ Values are alists containing string.pronunciation pairs.")
   (setf  (gethash key emacspeak-pronounce-dictionaries) pr-alist ))
 
 (defsubst emacspeak-pronounce-get-dictionary (key)
-  (declare (special emacspeak-pronounce-dictionaries))
+  (declare (special emacspeak-pronounce-dictionaries
+                    minibuffer-history))
   (when (stringp key)
     (setq key (intern key )))
   (gethash key emacspeak-pronounce-dictionaries))
@@ -452,16 +453,21 @@ Returns a pair of the form (key-type . key)."
   (declare (special emacspeak-pronounce-pronunciation-keys))
   (let ((key nil)
         (key-type
-         (completing-read  "Define pronunciation that is specific to: " emacspeak-pronounce-pronunciation-keys nil t )))
+         (read
+          (completing-read
+           "Define pronunciation that is specific to: "
+           emacspeak-pronounce-pronunciation-keys nil t ) )))
+    (when (interactive-p)		;cleanup minibuffer history
+      (pop minibuffer-history))
     (cond
-     ((string= key-type "buffer")
+     ((eq key-type 'buffer)
       (setq key (buffer-name )))        ;handled differently
-     ((string= key-type "file")
+     ((eq key-type 'file)
       (setq key (buffer-file-name))
       (or key
           (error "Current buffer is not associated with a file"))
       (setq key (intern key)))
-     ((string= key-type "directory")
+     ((eq key-type 'directory)
       (setq key
             (or
              (condition-case nil
@@ -470,7 +476,7 @@ Returns a pair of the form (key-type . key)."
              default-directory))
       (or key (error "No directory associated with current buffer"))
       (setq key (intern key)))
-     ((string= key-type "mode")
+     ((eq key-type 'mode)
       (setq key
             major-mode)
       (or key (error "No major mode found for current buffer")))
@@ -496,10 +502,10 @@ First loads any persistent dictionaries if not already loaded."
     (when (and (not emacspeak-pronounce-dictionaries-loaded)
                (y-or-n-p "Load pre existing  pronunciation dictionaries first? "))
       (emacspeak-pronounce-load-dictionaries))
-    (unless  (string= (car key-pair)  "buffer")
+    (unless  (eq (car key-pair)  'buffer)
       (emacspeak-pronounce-add-dictionary-entry (cdr key-pair) word pronunciation)
       (emacspeak-pronounce-refresh-pronunciations))
-    (when (string= (car key-pair)  "buffer")
+    (when (eq (car key-pair)  'buffer)
       (emacspeak-pronounce-add-buffer-local-dictionary-entry word pronunciation))))
 
 (defun emacspeak-pronounce-define-pronunciation ()
@@ -518,10 +524,10 @@ First loads any persistent dictionaries if not already loaded."
     (when (and (not emacspeak-pronounce-dictionaries-loaded)
                (y-or-n-p "Load pre existing  pronunciation dictionaries first? "))
       (emacspeak-pronounce-load-dictionaries))
-    (unless  (string= (car key-pair)  "buffer")
+    (unless  (eq (car key-pair)  'buffer)
       (emacspeak-pronounce-add-dictionary-entry (cdr key-pair) word pronunciation)
       (emacspeak-pronounce-refresh-pronunciations))
-    (when (string= (car key-pair)  "buffer")
+    (when (eq (car key-pair)  'buffer)
       (emacspeak-pronounce-add-buffer-local-dictionary-entry  word pronunciation))))
 
 ;;}}}
@@ -621,7 +627,8 @@ See http://oz.uc.edu/~solkode/smileys.html for a full list."
 (defcustom emacspeak-pronounce-common-xml-namespace-uri-pronunciations 
   '(
     ("http://www.w3.org/1999/02/22-rdf-syntax-ns#" . "RDF Syntax")
-    ("http://www.w3.org/2002/06/xhtml2" . " xhtml2 ")
+    ("http://www.w3.org/2002/06/xhtml2" . " xhtml2 ") 
+    ("http://www.w3.org/2003/XInclude" . "xinclude")
     ("http://www.w3.org/1999/XSL/Transform" . " XSLT ")
     ("http://www.w3.org/2002/xforms" . " XForms ")
     ("http://www.w3.org/2001/xml-events" . " XEvents ")
@@ -791,7 +798,7 @@ specified pronunciation dictionary key."
 ;;}}}
 ;;{{{ phone numbers
 
-(defvar emacspeak-pronounce-us-phone-number-pattern "1?[0-9]\\{3\\}-[0-9]\\{3}-[0-9]\\{4\\}"
+(defvar emacspeak-pronounce-us-phone-number-pattern "1?-?[0-9]\\{3\\}-[0-9]\\{3\\}-[0-9]\\{4\\}"
   "Pattern that matches US phone numbers.")
 
 (defun emacspeak-pronounce-us-phone-number (phone)
@@ -812,7 +819,7 @@ specified pronunciation dictionary key."
           (replace-regexp-in-string
            "[0-9]\\{2\\}" " \\&"  suffix-code))
     (propertize 
-     (format "(%s) %s, %s. "
+     (format "%s %s, %s. "
              area-code prefix-code suffix-code)
      'personality voice-punctuations-some)))
 

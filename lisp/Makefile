@@ -1,4 +1,4 @@
-# $Id: Makefile,v 21.0 2004/11/25 18:45:51 raman Exp $
+# $Id: Makefile,v 22.0 2005/04/30 16:40:03 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak, Dectalk, Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2004/11/25 18:45:51 $ |
-#  $Revision: 21.0 $ | 
+# $Date: 2005/04/30 16:40:03 $ |
+#  $Revision: 22.0 $ | 
 # Location undetermined
 #
 
@@ -80,6 +80,8 @@ emacspeak-re-builder.elc \
 	emacspeak-tabulate.elc 
 
 AUX_OBJECTS =  cd-tool.elc \
+emacspeak-add-log.elc \
+emacspeak-alsaplayer.elc \
 emacspeak-amphetadesk.elc \
 emacspeak-analog.elc \
 emacspeak-ansi-color.elc \
@@ -153,6 +155,7 @@ emacspeak-iswitchb.elc \
 emacspeak-jde.elc \
 emacspeak-kmacro.elc  \
 emacspeak-kotl.elc \
+emacspeak-madplay.elc \
 emacspeak-m-player.elc \
 emacspeak-make-mode.elc \
 emacspeak-man.elc \
@@ -161,6 +164,7 @@ emacspeak-metapost.elc \
 emacspeak-midge.elc \
 emacspeak-mpg123.elc \
 emacspeak-mspools.elc \
+emacspeak-nero.elc \
 emacspeak-net-utils.elc \
 emacspeak-newsticker.elc \
 emacspeak-ocr.elc \
@@ -169,6 +173,7 @@ emacspeak-nxml.elc \
 emacspeak-outline.elc \
 emacspeak-pcl-cvs.elc \
 emacspeak-perl.elc \
+emacspeak-php-mode.elc \
 emacspeak-psgml.elc \
 emacspeak-python.elc \
 emacspeak-re-builder.elc \
@@ -205,6 +210,7 @@ emacspeak-view.elc \
 emacspeak-vm.elc \
 emacspeak-w3.elc \
 emacspeak-w3m.elc \
+emacspeak-wdired.elc \
 emacspeak-websearch.elc \
 emacspeak-widget.elc \
 emacspeak-windmove.elc \
@@ -261,9 +267,11 @@ dectalk-voices.elc: dectalk-voices.el voice-setup.elc
 outloud-voices.elc: outloud-voices.el voice-setup.elc
 voice-setup.elc: voice-setup.el acss-structure.elc
 html-outline.elc: html-outline.el
+emacspeak-alsaplayer.elc: emacspeak-alsaplayer.el
 emacspeak-amphetadesk.elc: emacspeak-amphetadesk.el
 cd-tool.elc: cd-tool.el
-emacspeak-actions.elc: emacspeak-actions.el  
+emacspeak-actions.elc: emacspeak-actions.el
+emacspeak-add-log.elc: emacspeak-add-log.el dtk-speak.elc voice-setup.elc
 emacspeak-advice.elc: emacspeak-advice.el dtk-speak.elc voice-setup.elc
 emacspeak-analog.elc: emacspeak-analog.el dtk-speak.elc voice-setup.elc
 emacspeak-ansi-color.elc: emacspeak-ansi-color.el dtk-speak.elc voice-setup.elc
@@ -340,6 +348,7 @@ emacspeak-kmacro.elc: emacspeak-kmacro.el dtk-speak.elc voice-setup.elc
 emacspeak-kotl.elc: emacspeak-kotl.el dtk-speak.elc voice-setup.elc
 emacspeak-loaddefs.elc: emacspeak-loaddefs.el
 emacspeak-load-path.elc: emacspeak-load-path.elc
+emacspeak-madplay.elc: emacspeak-madplay.el dtk-speak.elc voice-setup.elc
 emacspeak-m-player.elc: emacspeak-m-player.el dtk-speak.elc voice-setup.elc
 emacspeak-make-mode.elc: emacspeak-make-mode.el dtk-speak.elc voice-setup.elc
 emacspeak-man.elc: emacspeak-man.el dtk-speak.elc voice-setup.elc
@@ -348,6 +357,7 @@ emacspeak-metapost.elc: emacspeak-metapost.el dtk-speak.elc voice-setup.elc
 emacspeak-midge.elc: emacspeak-midge.el dtk-speak.elc voice-setup.elc
 emacspeak-mpg123.elc: emacspeak-mpg123.el dtk-speak.elc voice-setup.elc
 emacspeak-mspools.elc: emacspeak-mspools.el dtk-speak.elc voice-setup.elc
+emacspeak-nero.elc: emacspeak-nero.el dtk-speak.elc voice-setup.elc
 emacspeak-net-utils.elc: emacspeak-net-utils.el dtk-speak.elc voice-setup.elc
 emacspeak-newsticker.elc: emacspeak-newsticker.el dtk-speak.elc voice-setup.elc
 emacspeak-nxml.elc: emacspeak-nxml.el dtk-speak.elc voice-setup.elc
@@ -356,6 +366,7 @@ emacspeak-outline.elc: emacspeak-outline.el dtk-speak.elc voice-setup.elc
 emacspeak-ocr.elc: emacspeak-ocr.el dtk-speak.elc voice-setup.elc
 emacspeak-pcl-cvs.elc: emacspeak-pcl-cvs.el dtk-speak.elc voice-setup.elc
 emacspeak-perl.elc: emacspeak-perl.el dtk-speak.elc voice-setup.elc
+emacspeak-php-mode.elc: emacspeak-php-mode.el dtk-speak.elc voice-setup.elc
 emacspeak-pronounce.elc: emacspeak-pronounce.el
 emacspeak-personality.elc: emacspeak-personality.el
 emacspeak-psgml.elc: emacspeak-psgml.el dtk-speak.elc voice-setup.elc
@@ -401,6 +412,7 @@ emacspeak-view.elc: emacspeak-view.el dtk-speak.elc voice-setup.elc
 emacspeak-vm.elc: emacspeak-vm.el dtk-speak.elc voice-setup.elc
 emacspeak-w3.elc: emacspeak-w3.el dtk-speak.elc voice-setup.elc
 emacspeak-w3m.elc: emacspeak-w3m.el dtk-speak.elc voice-setup.elc
+emacspeak-wdired.elc: emacspeak-wdired.el dtk-speak.elc voice-setup.elc
 emacspeak-websearch.elc: emacspeak-websearch.el emacspeak-w3.elc
 emacspeak-widget.elc: emacspeak-widget.el dtk-speak.elc voice-setup.elc
 emacspeak-winring.elc: emacspeak-winring.el dtk-speak.elc voice-setup.elc
@@ -423,7 +435,7 @@ indent:
 # {{{  user level target-- clean
 
 clean:
-	rm -f *.elc 
+	rm -f *.elc  emacspeak-loaddefs.el emacspeak-cus-loads.el
 
 # }}}
 # {{{ end of file 

@@ -1,4 +1,4 @@
-;;;$Id: sawfishrc,v 21.0 2004/11/25 18:46:03 raman Exp $
+;;;$Id: sawfishrc,v 22.0 2005/04/30 16:40:09 raman Exp $
 (setq load-path
       (cons
       (expand-file-name  "~/emacs/lisp/emacspeak/sawfish")

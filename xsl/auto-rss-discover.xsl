@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!--$Id: auto-rss-discover.xsl,v 21.0 2004/11/25 18:46:07 raman Exp $-->
+<!--$Id: auto-rss-discover.xsl,v 22.0 2005/04/30 16:40:28 raman Exp $-->
 
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>

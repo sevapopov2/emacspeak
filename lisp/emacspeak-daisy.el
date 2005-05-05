@@ -1,5 +1,5 @@
 ;;; emacspeak-daisy.el --- daisy Front-end for emacspeak desktop
-;;; $Id: emacspeak-daisy.el,v 21.0 2004/11/25 18:45:45 raman Exp $
+;;; $Id: emacspeak-daisy.el,v 22.0 2005/04/30 16:39:52 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for DAISY Talking Books
 ;;; Keywords: Emacspeak, daisy Digital Talking Books
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:45 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:52 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -126,7 +126,7 @@
   (let ((children (xml-tag-children tag))
 	(result nil))
     (while children
-      (when (string= name (xml-tag-name (car children)))
+      (when (string-equal name (xml-tag-name (car children)))
 	(nconc result (car children)))
       (setq children (cdr children)))
     result))

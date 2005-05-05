@@ -1,5 +1,5 @@
 ;;; emacspeak-realaudio.el --- Play realaudio from Emacs
-;;; $Id: emacspeak-realaudio.el,v 21.0 2004/11/25 18:45:49 raman Exp $
+;;; $Id: emacspeak-realaudio.el,v 22.0 2005/04/30 16:39:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Single click access to RealAudio from emacspeak
 ;;; Keywords: Emacspeak, RealAudio
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:49 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:39:58 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -126,6 +126,7 @@ user configurable variable emacspeak-realaudio-shortcuts-directory. "
   (interactive
    (list
     (let ((completion-ignore-case t)
+          (ido-mode nil)
           (emacspeak-speak-messages nil)
           (minibuffer-history emacspeak-realaudio-history)
           (file nil))
@@ -143,54 +144,55 @@ user configurable variable emacspeak-realaudio-shortcuts-directory. "
     current-prefix-arg))
   (declare (special emacspeak-realaudio-player emacspeak-realaudio-this-resource
                     emacspeak-realaudio-buffer 
-                    emacspeak-realaudio-player-options
+                    emacspeak-realaudio-player-options ido-mode
                     emacspeak-aumix-multichannel-capable-p
                     emacspeak-realaudio-process
                     emacspeak-realaudio-shortcuts-directory
                     emacspeak-realaudio-history
                     emacspeak-use-auditory-icons))
-  (unless (or
-           (string-match "^rtsp:" resource)
-           (string-match "^http:"  resource))
-    (setq resource
-          (expand-file-name resource)))
-  (unless (string= resource (car emacspeak-realaudio-history))
-    (pushnew resource emacspeak-realaudio-history))
-  (when (get-buffer "*realaudio*")
-    (kill-buffer emacspeak-realaudio-buffer))
-  (let ((process-connection-type nil)
-        (default-directory
-          (if (or (string-match "^rtsp:" resource)
-                  (string-match "^http" resource ))
-              default-directory
-            (file-name-directory resource)))
-        (options (copy-list emacspeak-realaudio-player-options)))
-    (when prompt-time
-      (push (read-from-minibuffer "Time spec: ")
-            options)
-      (push "-t" options))
-    (setq emacspeak-realaudio-process
-          (apply 'start-process"realaudio" emacspeak-realaudio-buffer
-                 emacspeak-realaudio-player
-                 resource
-                 options))
-    (when (string-match "trplayer"
-                        emacspeak-realaudio-player)
-      (save-excursion
-        (set-buffer emacspeak-realaudio-buffer)
-        (emacspeak-realaudio-mode)
-        (setq emacspeak-realaudio-this-resource resource)))
-    (unless (eq 'run (process-status emacspeak-realaudio-process))
-      (error "Failed to start RealAudio"))
-    (set-process-sentinel emacspeak-realaudio-process 'emacspeak-realaudio-process-sentinel)
-    (message "Launched audio stream")
-    (setq emacspeak-realaudio-last-url resource)
-    (when
-        (and emacspeak-use-auditory-icons
-             (not emacspeak-aumix-multichannel-capable-p)
-             (not (emacspeak-using-midi-p)))
-      (emacspeak-set-auditory-icon-player
-       'emacspeak-play-midi-icon))))
+  (let ((ido-mode nil))
+    (unless (or
+	     (string-match "^rtsp:" resource)
+	     (string-match "^http:"  resource))
+      (setq resource
+	    (expand-file-name resource)))
+    (unless (string-equal resource (car emacspeak-realaudio-history))
+      (pushnew resource emacspeak-realaudio-history))
+    (when (get-buffer "*realaudio*")
+      (kill-buffer emacspeak-realaudio-buffer))
+    (let ((process-connection-type nil)
+	  (default-directory
+	    (if (or (string-match "^rtsp:" resource)
+		    (string-match "^http" resource ))
+		default-directory
+	      (file-name-directory resource)))
+	  (options (copy-list emacspeak-realaudio-player-options)))
+      (when prompt-time
+	(push (read-from-minibuffer "Time spec: ")
+	      options)
+	(push "-t" options))
+      (setq emacspeak-realaudio-process
+	    (apply 'start-process"realaudio" emacspeak-realaudio-buffer
+		   emacspeak-realaudio-player
+		   resource
+		   options))
+      (when (string-match "trplayer"
+			  emacspeak-realaudio-player)
+	(save-excursion
+	  (set-buffer emacspeak-realaudio-buffer)
+	  (emacspeak-realaudio-mode)
+	  (setq emacspeak-realaudio-this-resource resource)))
+      (unless (eq 'run (process-status emacspeak-realaudio-process))
+	(error "Failed to start RealAudio"))
+      (set-process-sentinel emacspeak-realaudio-process 'emacspeak-realaudio-process-sentinel)
+      (message "Launched audio stream")
+      (setq emacspeak-realaudio-last-url resource)
+      (when
+	  (and emacspeak-use-auditory-icons
+	       (not emacspeak-aumix-multichannel-capable-p)
+	       (not (emacspeak-using-midi-p)))
+	(emacspeak-set-auditory-icon-player
+	 'emacspeak-play-midi-icon)))))
 
 (defvar emacspeak-realaudio-dont-insist-on-ram-url t
   "*Set to nil if you want emacspeak to insist that realaudio
@@ -249,6 +251,7 @@ Echo output and return it as a string."
            (* 60 (second fields))
            (third fields)))
     (when (interactive-p)
+      (kill-new (format "%d" seconds))
       (dtk-speak (format "%d" seconds)))
     seconds))
 
@@ -309,8 +312,8 @@ Prompts for start and end times as well as file  to save the clippi"
                     emacspeak-realaudio-start-time-mark
                     emacspeak-realaudio-this-resource
                     emacspeak-realaudio-mp3-clipper))
-  (unless (string="mp3"
-                  (file-name-extension emacspeak-realaudio-this-resource))
+  (unless (string-equal"mp3"
+		       (file-name-extension emacspeak-realaudio-this-resource))
     (error  "Can only clip MP3  files."))
   (unless (file-executable-p emacspeak-realaudio-mp3-clipper)
     (error
@@ -369,14 +372,15 @@ special major mode that provides the various navigation
 commands via single keystrokes."
   (interactive "P")
   (declare (special emacspeak-realaudio-process))
-  (cond
-   ((and emacspeak-realaudio-process
-         (eq 'run (process-status emacspeak-realaudio-process)))
-    (if  (string-match "trplayer"
-                       emacspeak-realaudio-player)
-        (call-interactively 'emacspeak-realaudio-trplayer-command)
-      (emacspeak-realaudio-stop)))
-   (t  (call-interactively 'emacspeak-realaudio-play))))
+  (let ((ido-mode nil))
+    (cond
+     ((and emacspeak-realaudio-process
+	   (eq 'run (process-status emacspeak-realaudio-process)))
+      (if  (string-match "trplayer"
+			 emacspeak-realaudio-player)
+	  (call-interactively 'emacspeak-realaudio-trplayer-command)
+	(emacspeak-realaudio-stop)))
+     (t  (call-interactively 'emacspeak-realaudio-play)))))
 
 ;;}}}
 ;;{{{ browsing ramfiles

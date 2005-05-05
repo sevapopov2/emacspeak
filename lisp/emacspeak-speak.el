@@ -1,5 +1,5 @@
 ;;; emacspeak-speak.el --- Implements Emacspeak's core speech services
-;;; $Id: emacspeak-speak.el,v 21.0 2004/11/25 18:45:49 raman Exp $
+;;; $Id: emacspeak-speak.el,v 22.0 2005/04/30 16:40:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains the functions for speaking various chunks of text
 ;;; Keywords: Emacspeak,  Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:49 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:40:00 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -80,6 +80,7 @@
 
 ;;}}}
 ;;{{{ inhibit-point-motion-hooks
+
 (defsubst ems-inhibit-point-motion-hooks ()
   (declare (special inhibit-point-motion-hooks))
   (if (boundp 'inhibit-point-motion-hooks)
@@ -231,7 +232,7 @@ Useful to do this before you listen to an entire buffer."
    (goto-char (point-min))
    (forward-line 3)
    (delete-region (point-min) (point))
-   (dtk-set-punctuations "all")
+   (dtk-set-punctuations 'all)
    (emacspeak-dtk-sync)
    (emacspeak-auditory-icon 'help)))
 
@@ -442,15 +443,16 @@ setting.."
     ("tone" . "tone"))
   "Possible methods of indicating indentation.")
 
-(defcustom emacspeak-audio-indentation-method "speak"
+(defcustom emacspeak-audio-indentation-method   'speak
   "*Current technique used to cue indentation.  Default is
 `speak'.  You can specify `tone' for producing a beep
 indicating the indentation.  Automatically becomes local in
 any buffer where it is set."
   :group 'emacspeak-speak
   :type '(choice
-          (const "speak")
-          (const "tone")))
+          (const :tag "Ignore" nil)
+          (const :tag "speak" speak)
+          (const :tag "tone" tone)))
 
 (make-variable-buffer-local
  'emacspeak-audio-indentation-method)
@@ -683,7 +685,7 @@ the sense of the filter. "
     (message "Unset column filter")
     (setq emacspeak-speak-line-column-filter nil))))
 
-;;}}}					; ; ; ;	; ; ;
+;;}}}					; ; ; ;	; ; ; ; ; ;
 
 (defcustom emacspeak-speak-space-regexp
   "^[ \t\r]+$"
@@ -704,17 +706,14 @@ lines of blocks created by command `emacspeak-hide-or-expose-block'
 are indicated with auditory icon ellipses."
   (interactive "P")
   (declare (special voice-lock-mode voice-animate
-                    voice-indent
-                    dtk-stop-immediately
+                    voice-indent dtk-stop-immediately
                     inhibit-field-text-motion
                     emacspeak-speak-line-invert-filter
                     dtk-punctuation-mode
                     emacspeak-speak-space-regexp
-                    outline-minor-mode folding-mode
                     emacspeak-speak-maximum-line-length
                     emacspeak-show-point
-                    emacspeak-decoration-rule
-                    emacspeak-horizontal-rule
+                    emacspeak-decoration-rule emacspeak-horizontal-rule
                     emacspeak-unspeakable-rule emacspeak-audio-indentation))
   (when (listp arg) (setq arg (car arg )))
   (save-excursion
@@ -730,18 +729,11 @@ are indicated with auditory icon ellipses."
       (setq start (point))
       (end-of-line)
       (setq end (point))
+                                        ;determine what to speak based on prefix arg
       (cond
        ((null arg))
        ((> arg 0) (setq start orig))
        (t (setq end orig)))
-      (when (and emacspeak-audio-indentation
-                 (null arg ))
-        (let ((limit (line-end-position)))
-          (beginning-of-line 1)
-	  (skip-syntax-forward " " limit)
-	  (setq indent  (current-column )))
-        (when (string= emacspeak-audio-indentation-method "tone")
-          (emacspeak-indent indent )))
       (setq line 
             (if emacspeak-show-point
                 (ems-set-personality-temporarily
@@ -749,10 +741,20 @@ are indicated with auditory icon ellipses."
                  voice-animate
                  (buffer-substring  start end ))
               (buffer-substring start end )))
-      (when (get-text-property  start 'emacspeak-hidden-block)
+      (when (and emacspeak-audio-indentation
+                 (null arg ))
+        (let ((limit (line-end-position)))
+          (beginning-of-line 1)
+	  (skip-syntax-forward " " limit)
+	  (setq indent  (current-column )))
+        (when (eq emacspeak-audio-indentation-method 'tone)
+          (emacspeak-indent indent )))
+      (when
+          (or (text-invisible-p end)
+              (get-text-property  start 'emacspeak-hidden-block))
         (emacspeak-auditory-icon 'ellipses))
       (cond
-       ((string= ""  line)              ;blank line
+       ((string-equal ""  line)		;blank line
         (when dtk-stop-immediately (dtk-stop))
         (dtk-tone 250   75 'force)
         (when (emacspeak-using-midi-p)
@@ -762,61 +764,54 @@ are indicated with auditory icon ellipses."
         (dtk-tone 300   120 'force)
         (when (emacspeak-using-midi-p)
           (emacspeak-play-midi-icon 'blank-line)))
-       ((and
-         (not (string= "all" dtk-punctuation-mode))
-         (string-match  emacspeak-horizontal-rule line)) ;horizontal rule
+       ((and (not (eq 'all dtk-punctuation-mode))
+             (string-match  emacspeak-horizontal-rule line)) ;horizontal rule
         (when dtk-stop-immediately (dtk-stop))
         (dtk-tone 350   100 'force)
         (when (emacspeak-using-midi-p)
           (emacspeak-play-midi-icon 'horizontal-rule)))
-       ((and
-         (not (string= "all" dtk-punctuation-mode))
-         (string-match  emacspeak-decoration-rule line) ) ;decorative rule
+       ((and (not (eq 'all dtk-punctuation-mode))
+             (string-match  emacspeak-decoration-rule line) ) ;decorative rule
         (when dtk-stop-immediately (dtk-stop))
         (dtk-tone 450   100 'force)
         (when (emacspeak-using-midi-p)
           (emacspeak-play-midi-icon 'decorative-rule)))
-       ((and (not (string= "all" dtk-punctuation-mode))
+       ((and (not (eq 'all  dtk-punctuation-mode))
              (string-match  emacspeak-unspeakable-rule line) ) ;unspeakable rule
         (when dtk-stop-immediately (dtk-stop))
         (dtk-tone 550   100 'force)
         (when (emacspeak-using-midi-p)
           (emacspeak-play-midi-icon 'unspeakable-rule)))
-       (t
-        (let ((l (length line))
-              (confirm nil))
-          (when
-              (or selective-display
-                  (< l emacspeak-speak-maximum-line-length)
-                  (get-text-property start
-                                     'emacspeak-speak-this-long-line)
-                  (setq confirm 
-                        (y-or-n-p
-                         (format "Speak  this  %s long line? "
-                                 l))))
-            (when confirm
-                                        ;update threshold
-              (setq emacspeak-speak-maximum-line-length (1+ l))
-              (make-variable-buffer-local 'emacspeak-speak-maximum-line-length)
-              ;; record the y answer
-              (ems-modify-buffer-safely
-               (put-text-property start end
-                                  'emacspeak-speak-this-long-line t)))
-            (when (and (null arg)
-                       emacspeak-speak-line-column-filter)
-              (setq line
-                    (emacspeak-speak-line-apply-column-filter line
-                                                              emacspeak-speak-line-invert-filter)))
-            (if (and (string= "speak" emacspeak-audio-indentation-method )
-                     (null arg )
-                     indent
-                     (> indent 0))
-                (progn
-                  (setq indent (format "indent %d" indent))
-                  (put-text-property   0 (length indent)
-                                       'personality voice-indent   indent )
-                  (dtk-speak (concat indent line)))
-              (dtk-speak line)))))))))
+       (t (let ((l (length line))
+                (confirm nil))
+            (when (or selective-display
+                      (< l emacspeak-speak-maximum-line-length)
+                      (get-text-property start 'emacspeak-speak-this-long-line)
+                      (setq confirm 
+                            (y-or-n-p
+                             (format "Speak  this  %s long line? " l))))
+              (when confirm             ;update threshold
+                (setq emacspeak-speak-maximum-line-length (1+ l))
+                (make-variable-buffer-local 'emacspeak-speak-maximum-line-length)
+                ;; record the y answer
+                (ems-modify-buffer-safely
+                 (put-text-property start end
+                                    'emacspeak-speak-this-long-line t)))
+              (when (and (null arg)
+                         emacspeak-speak-line-column-filter)
+                (setq line
+                      (emacspeak-speak-line-apply-column-filter line
+                                                                emacspeak-speak-line-invert-filter)))
+              (if (and (eq 'speak emacspeak-audio-indentation-method )
+                       (null arg )
+                       indent
+                       (> indent 0))
+                  (progn
+                    (setq indent (format "indent %d" indent))
+                    (put-text-property   0 (length indent)
+                                         'personality voice-indent   indent )
+                    (dtk-speak (concat indent line)))
+                (dtk-speak line)))))))))
 
 (defvar emacspeak-speak-last-spoken-word-position nil
   "Records position of the last word that was spoken.
@@ -1027,7 +1022,7 @@ setting to be global."
                nil t ))
         (table nil))
     (cond
-     ((string= "iso ascii" type)
+     ((string-equal "iso ascii" type)
       (setq table dtk-iso-ascii-character-to-speech-table))
      (t (setq table nil)))
     (cond
@@ -1495,10 +1490,8 @@ semantic to do the work."
 (defun emacspeak-speak-mode-line ()
   "Speak the mode-line."
   (interactive)
-  (declare (special  mode-name  major-mode
-                     voice-annotate
-                     emacspeak-which-function-mode
-                     global-mode-string
+  (declare (special  mode-name  major-mode voice-annotate
+                     emacspeak-which-function-mode global-mode-string
                      column-number-mode line-number-mode
                      emacspeak-mail-alert mode-line-format ))
   (dtk-stop)
@@ -1509,58 +1502,63 @@ semantic to do the work."
         (frame-info nil)
         (recursion-depth (recursion-depth))
         (recursion-info nil)
-        (dir-info (when (eq major-mode 'shell-mode)
+        (dir-info (when (or
+                         (eq major-mode 'shell-mode)
+                         (eq major-mode 'comint-mode))
                     default-directory)))
     (when (and  emacspeak-which-function-mode
                 (fboundp 'which-function)
                 (which-function))
       (emacspeak-speak-which-function))
-    (when  (and emacspeak-mail-alert (emacspeak-mail-alert-user))
-      (dtk-tone 450 75))
+    (when   emacspeak-mail-alert (emacspeak-mail-alert-user))
     (cond
      ((stringp mode-line-format) (dtk-speak mode-line-format ))
      (t                                 ;process modeline
-      (put-text-property 0 (length dir-info)
-                         'personality voice-annotate dir-info) 
+      (when dir-info
+        (put-text-property 0 (length dir-info)
+                           'personality voice-annotate dir-info))
       (cond
        ((> (length (frame-list)) 1)
         (setq frame-info
               (format " %s " (frame-parameter (selected-frame) 'name)))
         (put-text-property 0 (length frame-info)
-                           'personality 'annotation-voice frame-info))
+                           'personality voice-smoothen frame-info))
        (t (setq frame-info "")))
       (when (> recursion-depth 0)
         (setq  recursion-info
                (format " Recursive Edit %d "
                        recursion-depth))
         (put-text-property 0 (length recursion-info)
-                           'personality 'annotation-voice
+                           'personality voice-smoothen
                            recursion-info))
-      (when (buffer-modified-p ) (dtk-tone 700 70))
-      (when buffer-read-only (dtk-tone 250 50))
-      (tts-with-punctuations "all"
+      (unless (and buffer-read-only
+                   (buffer-modified-p)) ;avoid pathological case
+        (when(and (not (eq major-mode 'shell-mode))
+                  (not (eq major-mode 'comint-mode))
+                  (buffer-modified-p))
+          (dtk-tone 950 100))
+        (when buffer-read-only (dtk-tone 250 100)))
+      (put-text-property 0 (length global-info)
+                         'personality voice-smoothen global-info)
+      (tts-with-punctuations 'all
                              (dtk-speak
-                              (concat
-                               (or dir-info " ")
-                               (format  "%s %s %s %s  %s  "
-                                        (buffer-name)
-                                        (if line-number-mode
-                                            (format "line %d"
-                                                    (emacspeak-get-current-line-number))
-                                          "")
-                                        (if column-number-mode
-                                            (format "Column %d"
-                                                    (current-column))
-                                          "")
-                                        mode-name
-                                        (emacspeak-get-current-percentage-verbously))
-                               frame-info
-                               recursion-info
-                               global-info)))))))
+                              (concat dir-info
+                                      (buffer-name)
+                                      (when line-number-mode
+                                        (format " line %d"
+                                                (emacspeak-get-current-line-number)))
+                                      (when column-number-mode
+                                        (format " Column %d"
+                                                (current-column)))
+                                      mode-name
+                                      (emacspeak-get-current-percentage-verbously)
+                                      frame-info
+                                      recursion-info
+                                      global-info)))))))
 
 (defun emacspeak-speak-current-buffer-name ()
   "Speak name of current buffer."
-  (tts-with-punctuations "all"
+  (tts-with-punctuations 'all
 			 (dtk-speak
 			  (buffer-name))))
 
@@ -1574,11 +1572,11 @@ semantic to do the work."
 This should eventually be initialized based on the OS we are
 running under.")
 
-(defsubst emacspeak-speak-buffer-coding-system-info ()
+(defsubst ems-get-buffer-coding-system ()
   "Return buffer coding system info if releant.
 If emacspeak-speak-default-os-coding-system is set and matches the
 current coding system, then we return an empty string."
-  (declare (special buffer-file-coding-system voice-annotateannotatate
+  (declare (special buffer-file-coding-system voice-annotate
                     emacspeak-speak-default-os-coding-system))
   (cond
    ((and (boundp 'buffer-file-coding-system)
@@ -1592,6 +1590,7 @@ current coding system, then we return an empty string."
                          value)
       value))
    (t "")))
+
 (defvar emacspeak-minor-mode-prefix
   "Active minor modes "
   "Prefix used in composing utterance produced by emacspeak-speak-minor-mode-line.")
@@ -1604,7 +1603,7 @@ current coding system, then we return an empty string."
   (interactive)
   (declare (special minor-mode-alist
                     emacspeak-minor-mode-prefix 
-                    voice-lock-mode))
+                    voice-lock-mode vc-mode))
   (force-mode-line-update)
   (let ((voice-lock-mode t)
         (info
@@ -1627,14 +1626,15 @@ current coding system, then we return an empty string."
                  (eval (cadr form)))
                 (t form)))
            info))
-    (setq info (delete nil info))
+    (setq info (delq nil info))
     (setq info (delete "" info))
     (tts-with-punctuations "some"
                            (dtk-speak
                             (concat
                              emacspeak-minor-mode-prefix
-                             (mapconcat #'identity info ", ")
-                             (emacspeak-speak-buffer-coding-system-info))))))
+                             vc-mode
+                             (mapconcat #'identity info " ")
+                             (ems-get-buffer-coding-system))))))
   
 ;;; obseleted by what-line in simple.el
 
@@ -1770,7 +1770,7 @@ Second interactive prefix sets clock to new timezone."
    (world
     (call-interactively 'emacspeak-speak-world-clock))
    (t
-    (tts-with-punctuations "some"
+    (tts-with-punctuations 'some
                            (dtk-speak
                             (propertize 
 			     (format-time-string
@@ -1779,7 +1779,7 @@ Second interactive prefix sets clock to new timezone."
                             
  
 (defconst emacspeak-codename
-  "PlayDog"
+  "GuideDog"
   "Code name of present release.")
 
 (defun emacspeak-speak-version ()
@@ -1802,7 +1802,7 @@ Second interactive prefix sets clock to new timezone."
       (start-process "mp3" nil "mpg123"
                      "-q"
                      (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))
-    (tts-with-punctuations "some"
+    (tts-with-punctuations 'some
                            (dtk-speak
                             (concat signature
                                     version
@@ -1928,6 +1928,7 @@ achieved by a change in voice personality."
 
 ;;}}}
 ;;{{{ speaking personality chunks
+
 (defun emacspeak-speak-this-personality-chunk ()
   "Speak chunk of text around point that has current
 personality."
@@ -1998,8 +1999,6 @@ Speak that chunk after moving."
       (backward-char 1)
       (emacspeak-speak-this-personality-chunk))
      (t (error "No previous  chunks with current personality.")))))
-      
-  
 
 ;;}}}
 ;;{{{  Execute command repeatedly, browse
@@ -2159,7 +2158,7 @@ Non-nil means we split speech on newlines in comint buffer."
   "Set up splitting of speech into chunks in comint modes."
   (declare (special
 	    emacspeak-comint-split-speech-on-newline ))
-  (dtk-set-punctuations "all")
+  (dtk-set-punctuations 'all)
   (when emacspeak-comint-split-speech-on-newline
     (modify-syntax-entry 10 ">"))
   (emacspeak-pronounce-refresh-pronunciations))
@@ -2986,8 +2985,8 @@ directory specific settings."
     (or (or (not (file-readable-p dir))
             (not (file-readable-p parent)))
         (and 
-         (string= (file-truename dir) "/")
-         (string= (file-truename parent) "/")))))
+         (string-equal (file-truename dir) "/")
+         (string-equal (file-truename parent) "/")))))
 
 (defun emacspeak-speak-get-directory-settings (dir)
   "Finds the next directory settings  file upwards in the directory tree
@@ -2997,7 +2996,7 @@ or an ascendant directory."
                     default-directory))
   (let ((file (find emacspeak-speak-directory-settings
 		    (directory-files dir)
-		    :test 'string=)))
+		    :test 'string-equal)))
     (cond
      (file (expand-file-name file dir))
      ((not (emacspeak-speak-root-dir-p dir))

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--$Id: dtb-page-range.xsl,v 21.0 2004/11/25 18:46:07 raman Exp $
+<!--$Id: dtb-page-range.xsl,v 22.0 2005/04/30 16:40:28 raman Exp $
 
 
 Description: Extract nodes in a specified page range from a
@@ -68,5 +68,8 @@ and the final intersection is computed using set:intersection.
         </xsl:choose>
       </body>
     </html>
+  </xsl:template>
+  <xsl:template match="pagenum">
+    <p><strong><xsl:apply-templates/></strong></p>
   </xsl:template>
 </xsl:stylesheet>

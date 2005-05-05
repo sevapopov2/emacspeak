@@ -1,5 +1,5 @@
 ;;; emacspeak-texinfo.el --- Speech enable texinfo mode
-;;; $Id: emacspeak-texinfo.el,v 21.0 2004/11/25 18:45:50 raman Exp $
+;;; $Id: emacspeak-texinfo.el,v 22.0 2005/04/30 16:40:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable
 ;;; texinfo mode
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:50 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:40:01 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -59,7 +59,7 @@
   
   
   (voice-lock-mode 1)
-  (dtk-set-punctuations "all")
+  (dtk-set-punctuations 'all)
   (or dtk-split-caps
       (dtk-toggle-split-caps))
   (or emacspeak-audio-indentation

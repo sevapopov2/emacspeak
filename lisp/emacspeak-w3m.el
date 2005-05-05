@@ -1,4 +1,4 @@
-;;;$Id: emacspeak-w3m.el,v 21.0 2004/11/25 18:45:50 raman Exp $;;; emacspeak-w3m.el --- speech-enables w3m-el
+;;;$Id: emacspeak-w3m.el,v 22.0 2005/04/30 16:40:02 raman Exp $;;; emacspeak-w3m.el --- speech-enables w3m-el
 ;;{{{ Copyright
 
 ;;; This file is not part of Emacs, but the same terms and
@@ -34,7 +34,7 @@
 ;;{{{  required modules
 
 (require 'emacspeak-preamble)
-(require 'w3m nil t)
+					;(require 'w3m nil t)
 ;;}}}
 ;;{{{ keybindings 
 (declaim (special w3m-mode-map
@@ -433,7 +433,7 @@
 (defadvice w3m-mode (after emacspeak pre act comp)
   "Set punctuation mode."
   (declare (special dtk-punctuation-mode))
-  (setq dtk-punctuation-mode "some")
+  (setq dtk-punctuation-mode 'some)
   (define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command))
 
 ;;}}}

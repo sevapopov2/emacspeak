@@ -1,5 +1,5 @@
 ;;; emacspeak-personality.el ---Emacspeak's new personality interface
-;;; $Id: emacspeak-personality.el,v 21.0 2004/11/25 18:45:48 raman Exp $
+;;; $Id: emacspeak-personality.el,v 22.0 2005/04/30 16:39:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Voice lock implementation
 ;;; Keywords: Emacspeak,  Spoken Output, audio formatting
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:48 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:58 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -272,8 +272,8 @@ displayed in the messages area."
              ((ems-plain-cons-p value))	;;pass on plain cons
              ( (listp value)
                (setq voice
-                     (delete nil 
-                             (mapcar   #'voice-setup-get-voice-for-face value))))
+                     (delq nil 
+			   (mapcar   #'voice-setup-get-voice-for-face value))))
              (t (message "Got %s" value)))
             (when voice
               (funcall emacspeak-personality-voiceify-faces start end voice object))
@@ -308,8 +308,8 @@ displayed in the messages area."
 	     ((ems-plain-cons-p value))	;;pass on plain cons
              ( (listp value)
                (setq voice
-                     (delete nil 
-                             (mapcar   #'voice-setup-get-voice-for-face value))))
+                     (delq nil 
+			   (mapcar   #'voice-setup-get-voice-for-face value))))
              (t (message "Got %s" value)))
             (when voice
               (funcall emacspeak-personality-voiceify-faces start end voice object))
@@ -344,8 +344,8 @@ displayed in the messages area."
              ((ems-plain-cons-p value))	;;pass on plain cons
              ( (listp value)
                (setq voice
-                     (delete nil 
-                             (mapcar   #'voice-setup-get-voice-for-face value))))
+                     (delq nil 
+			   (mapcar   #'voice-setup-get-voice-for-face value))))
              (t (message "Got %s" value)))
             (when voice
               (funcall emacspeak-personality-voiceify-faces start end voice object))
@@ -384,8 +384,8 @@ displayed in the messages area."
 	     ;; 	      nil)
              ( (listp value)
                (setq voice
-                     (delete nil 
-                             (mapcar   #'voice-setup-get-voice-for-face value))))
+                     (delq nil 
+			   (mapcar   #'voice-setup-get-voice-for-face value))))
              (t (message "Got %s" value)))
             (when voice
               (funcall emacspeak-personality-voiceify-faces 0
@@ -452,9 +452,9 @@ Append means place corresponding personality at the end."
         (setq voice (voice-setup-get-voice-for-face   value)))
        ((listp value)
         (setq voice
-              (delete nil
-                      (mapcar
-                       #'voice-setup-get-voice-for-face value))))
+              (delq nil
+		    (mapcar
+		     #'voice-setup-get-voice-for-face value))))
        (t (message "Got %s" value)))
       (when voice
         (and emacspeak-personality-voiceify-overlays

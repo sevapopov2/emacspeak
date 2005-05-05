@@ -1,5 +1,5 @@
 ;;; dtk-interp.el --- Language specific (e.g. TCL) interface to speech server
-;;; $Id: dtk-interp.el,v 21.0 2004/11/25 18:45:44 raman Exp $
+;;; $Id: dtk-interp.el,v 22.0 2005/04/30 16:39:41 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Interfacing to the speech server
 ;;; Keywords: TTS, Dectalk, Speech Server
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:44 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:39:41 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -67,14 +67,14 @@
      (let    ((save-punctuation-mode dtk-punctuation-mode))
        (unwind-protect
            (progn
-             (unless (string= (, setting) save-punctuation-mode)
+             (unless (eq (, setting) save-punctuation-mode)
                (process-send-string dtk-speaker-process
                                     (format "tts_set_punctuations %s  \n "
                                             (, setting)))
                (setq dtk-punctuation-mode (, setting)))
              (,@ body)
              (dtk-force))
-         (unless (string=  (, setting)  save-punctuation-mode)
+         (unless (eq  (, setting)  save-punctuation-mode)
            (setq dtk-punctuation-mode save-punctuation-mode)
            (process-send-string dtk-speaker-process
                                 (format "tts_set_punctuations %s  \n "

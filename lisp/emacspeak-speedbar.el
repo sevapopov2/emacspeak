@@ -1,5 +1,5 @@
 ;;; emacspeak-speedbar.el --- Speech enable speedbar -- Tool for context-sensitive navigation
-;;; $Id: emacspeak-speedbar.el,v 21.0 2004/11/25 18:45:49 raman Exp $
+;;; $Id: emacspeak-speedbar.el,v 22.0 2005/04/30 16:40:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to speedbar
 ;;; Keywords: Emacspeak, Speedbar
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:49 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:40:00 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -246,7 +246,7 @@ An automatically updating speedbar consumes resources.")
   "Actions taken when we enter the Speedbar"
   (declare (special speedbar-key-map
                     speedbar-hide-button-brackets-flag))
-  (dtk-set-punctuations "all")
+  (dtk-set-punctuations 'all)
   (setq speedbar-hide-button-brackets-flag t)
   (define-key speedbar-key-map "f"
     'emacspeak-speedbar-click)
