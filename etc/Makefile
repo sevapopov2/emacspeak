@@ -1,4 +1,4 @@
-# $Id: Makefile,v 21.0 2004/11/25 18:46:01 raman Exp $
+# $Id: Makefile,v 22.0 2005/04/30 16:40:07 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak, Dectalk, Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2004/11/25 18:46:01 $ |
-#  $Revision: 21.0 $ | 
+# $Date: 2005/04/30 16:40:07 $ |
+#  $Revision: 22.0 $ | 
 # Location undetermined
 #
 

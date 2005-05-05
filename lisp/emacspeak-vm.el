@@ -1,5 +1,5 @@
 ;;; emacspeak-vm.el --- Speech enable VM -- A powerful mail agent (and the one I use)
-;;; $Id: emacspeak-vm.el,v 21.0 2004/11/25 18:45:50 raman Exp $
+;;; $Id: emacspeak-vm.el,v 22.0 2005/04/30 16:40:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enhance vm
 ;;; Keywords: Emacspeak, VM, Email, Spoken Output, Voice annotations
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:50 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:40:01 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -68,7 +68,7 @@ Note that some badly formed mime messages  cause trouble."
   "Setup function placed on vm-mode-hook by Emacspeak."
   (declare (special  dtk-punctuation-mode emacspeak-vm-voice-lock-messages
                      dtk-allcaps-beep))
-  (setq dtk-punctuation-mode "some")
+  (setq dtk-punctuation-mode 'some)
   (when dtk-allcaps-beep
     (dtk-toggle-allcaps-beep))
   (emacspeak-dtk-sync)
@@ -233,8 +233,7 @@ Note that some badly formed mime messages  cause trouble."
 ;;{{{  Moving between messages
 
 (add-hook 'vm-select-message-hook
-          (function (lambda nil 
-                      (emacspeak-vm-summarize-message))))
+          'emacspeak-vm-summarize-message)
 
 ;;}}}
 ;;{{{  Scrolling messages:
@@ -318,7 +317,6 @@ Then speak the screenful. "
   (if (interactive-p)
       (let ((dtk-stop-immediately nil))
         (message "Forwarding message")
-        (emacspeak-vm-summarize-message)
         ad-do-it
         (emacspeak-speak-line ))
     ad-do-it)

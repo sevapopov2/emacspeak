@@ -1,5 +1,5 @@
 ;;; emacspeak-hide.el --- Provides user commands for hiding and exposing blocks of text
-;;; $Id: emacspeak-hide.el,v 21.0 2004/11/25 18:45:47 raman Exp $
+;;; $Id: emacspeak-hide.el,v 22.0 2005/04/30 16:39:57 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Hide and expose blocks of text
 ;;; Keywords: Emacspeak, Speak, Spoken Output, hide
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:47 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:57 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -168,9 +168,9 @@ STRING is the token's text."
 
 (defsubst emacspeak-hide-prefix-matches-this-line (prefix)
   (unless (eobp)
-    (string= (nth 2 prefix)
-	     (buffer-substring-no-properties  (point)
-					      (+ (point) (nth 1  prefix))))))
+    (string-equal (nth 2 prefix)
+		  (buffer-substring-no-properties  (point)
+						   (+ (point) (nth 1  prefix))))))
 
 ;;}}}
 

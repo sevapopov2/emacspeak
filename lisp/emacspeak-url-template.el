@@ -1,5 +1,5 @@
 ;;; emacspeak-url-template.el --- Create library of URI templates
-;;; $Id: emacspeak-url-template.el,v 21.0 2004/11/25 18:45:50 raman Exp $
+;;; $Id: emacspeak-url-template.el,v 22.0 2005/04/30 16:40:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   Implement library of URI templates
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:50 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:40:01 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -47,6 +47,8 @@
 ;;; actual URL.
 ;;; The user provides values for the parameterized portons
 ;;; of the URL e.g. the date.
+;;; See @xref{URL Templates}, for details on the URL templates
+;;; that are presently defined.
 
 ;;; Code:
 
@@ -124,6 +126,7 @@ This function is sensitive to calendar mode when prompting."
 
 ;;}}}
 ;;{{{  define resources 
+
 (defvar emacspeak-url-template-name-alist nil
   "Alist of url template names --used by completing-read when
 prompting for a template.")
@@ -202,13 +205,31 @@ documentation   Documents this template resource.
 
 ;;}}}
 ;;{{{  template resources 
+
+;;{{{  fedex, UPS
+(emacspeak-url-template-define
+ "fedex packages"
+ "http://www.fedex.com/cgi-bin/tracking?link=6&pv=ja&action=track&ftc_3=null&template_type=ftc&language=english&last_action=track&ascend_header=1&cntry_code=us&initial=x&mps=y&ascend_header=1&cntry_code=us&initial=x&tracknumber_list=%s"
+ (list "Tracking Number: ")
+ nil
+ "Display package tracking information from Fedex.")
+ 
+(emacspeak-url-template-define
+ "UPS Packages"
+ "http://wwwapps.ups.com/WebTracking/processInputRequest?HTMLVersion=5.0&sort_by=status&tracknums_displayed=5&TypeOfInquiryNumber=T&loc=en_US&InquiryNumber1=%s&InquiryNumber2=&InquiryNumber3=&InquiryNumber4=&InquiryNumber5=&track.x=0&track.y=0&AgreeToTermsAndConditions=yes"
+ (list "Tracking Number: ")
+ nil
+ "Display package tracking information from UPS.")
+ 
+
+;;}}}
 ;;{{{ amazon
 (emacspeak-url-template-define
  "Amazon Product Details By ASIN"
  "http://amazon.com/o/dt/upda-1.0-i/tg/aa/upda/item/-/%s"
  (list "ASIN Or ISBN: ")
  nil
- "Retrieve produce details from Amazon by either ISBN or ASIN.")
+ "Retrieve product details from Amazon by either ISBN or ASIN.")
 ;;}}}
 ;;{{{ bookshare
 (defcustom emacspeak-bookshare-user-id nil
@@ -284,21 +305,9 @@ documentation   Documents this template resource.
 ;;{{{ bbc
 
 (emacspeak-url-template-define
- "BBC Streams on demand"
- "rtsp://rmv8.bbc.net.uk/radio4/%s"
- (list "Stream: (directory/stream.ra): ")
- nil
- "Use this to play a BBC stream by its directory/stream-name locator."
- #'(lambda (url)
-     (emacspeak-realaudio-play url)))
-
-(emacspeak-url-template-define
  "BBC 7 Schedule"
  "http://www.bbc.co.uk/bbc7/listings/index.shtml?%s"
- (list
-  #'(lambda nil
-      (read-from-minibuffer"Day:"
-                           "Today")))
+ (list "BBC 7 Schedule: ")
  nil
  "Retrieve BBC7 schedule for specified day."
  #'(lambda (url)
@@ -308,7 +317,7 @@ documentation   Documents this template resource.
 
 (emacspeak-url-template-define
  "BBC Radio4 On Demand"
- "rtsp://rmv8.bbc.net.uk/radio4/%s.ra"
+ "http://www.bbc.co.uk/radio/aod/shows/rpms/radio4/%s.rpm"
  (list "WeekdayTime: ")
  nil
  "Specify a week day (three letters -- lower case -- and a time spec
@@ -319,8 +328,8 @@ to play a BBC Radio4 program on demand."
 
 (emacspeak-url-template-define
  "BBC Radio7 On Demand"
- "rtsp://rmv8.bbc.net.uk/bbc7/%s.ra"
- (list "WeekdayTime: ")
+ "http://www.bbc.co.uk/radio/aod/shows/rpms/bbc7/%s.rpm"
+ (list "WeekdayTime: hhmm_day")
  nil
  "Specify a week day (three letters -- lower case -- and a time spec
 -- e.g. 1230 --
@@ -343,10 +352,61 @@ to play a BBC Radio7 program on demand."
       (expand-file-name "linearize-tables.xsl"
                         emacspeak-xslt-directory)
       url)))
+;;{{{ bbc channel 
+
+(defvar  emacspeak-url-template-bbc-channels-content 
+  "http://www.bbc.co.uk/radio/aod/shows/rpms/"
+  "Location of BBC audio content.")
+
+(defun emacspeak-url-template-bbc-channel-player (url)
+  "Extract program name, construct realplayer URL and play that
+content."
+  (declare (special  emacspeak-url-template-bbc-channels-content))
+  (let ((content (second
+		  (split-string url "?")))
+	(uri nil))
+    (cond
+     ((null content)
+      (error "Cannot locate content particle in %s" url))
+     (t
+      (setq uri
+	    (concat emacspeak-url-template-bbc-channels-content
+		    content
+		    ".rpm"))
+      (kill-new uri)
+      (emacspeak-realaudio-play uri)
+      (message "Playing content under point.")))))
+
+(emacspeak-url-template-define
+ "BBC Channel On Demand"
+ "http://www.bbc.co.uk/radio/aod/networks/%s/audiolist.shtml"
+ (list "BBC Channel: ")
+ #'(lambda ()
+     (declare (special emacspeak-w3-url-executor))
+     (setq emacspeak-w3-url-executor
+           'emacspeak-url-template-bbc-channel-player))
+ "Display BBC Channel on demand."
+ )
+
+;;}}}
+;;{{{ bbc Genres 
+
+(emacspeak-url-template-define
+ "BBC Genres On Demand"
+ "http://www.bbc.co.uk/radio/aod/genres/%s/audiolist.shtml"
+ (list "BBC Genre: ")
+ #'(lambda ()
+     (declare (special emacspeak-w3-url-executor))
+     (setq emacspeak-w3-url-executor
+           'emacspeak-url-template-bbc-channel-player))
+ "Display BBC Channel on demand."
+ )
+
+;;}}}
 
 (emacspeak-url-template-define
  "BBC Programs On Demand"
- "http://www.bbc.co.uk/radio/aod/rpms/%s.rpm"
+ "http://www.bbc.co.uk/radio/aod/shows/rpms/%s.rpm"
  (list "BBC Program: ")
  nil
  "Play BBC programs on demand."
@@ -381,6 +441,127 @@ to play a BBC Radio7 program on demand."
  "BBC News text version."
  )
 
+;;}}}
+;;{{{ google maps
+
+(defun emacspeak-url-template-google-maps-xml (url)
+  "Set up buffer containing XML data from google maps."
+  (switch-to-buffer (emacspeak-url-template-google-maps-get-xml
+                     url))
+  (let ((nxml-auto-insert-xml-declaration-flag nil))
+    (goto-char (point-min))
+    (nxml-mode)
+    (goto-char (point-min))
+    (search-forward "?>" nil t)
+    (while (search-forward "<" nil t)
+      (replace-match "
+<"))
+    (indent-region (point-min) (point-max))))
+
+(defun emacspeak-url-template-google-maps-get-xml (url)
+  "Return buffer containing XML from google."
+  (let ((buffer (get-buffer-create "*Google Maps")))
+    (save-excursion
+      (set-buffer buffer)
+      (erase-buffer)
+      (kill-all-local-variables)
+      (shell-command
+       (format "lynx -source %s" url)
+       (current-buffer))
+      (goto-char (point-min))
+      (search-forward "<page" nil t)
+      (search-backward "<?" nil t)
+      (delete-region (point-min) (point))
+      (search-forward "</page>" nil t)
+      (delete-region (point) (point-max))
+      (goto-char (point-min))
+      (while (search-forward "<?xml version=\"1.0\"?>" nil t)
+        (replace-match
+         "<?xml version=\"1.0\" encoding=\"iso-8859-14\"?>"))
+      (goto-char (point-min))
+      buffer)))
+  
+(emacspeak-url-template-define
+ "Google Maps Give Me XML"
+ "http://maps.google.com/maps?q=%s&btng=Search&output=js"
+ (list "Query: ")
+ nil
+ "Get me XML from Google Maps.
+Specify the query using English and  addresses as complete as
+  possible.
+
+Here are some examples:
+
+0) To find a location by address specify:
+
+650 Harry Road San Jose CA 95120
+
+1) To get directions, specify:
+
+<source address> to <destination address>
+
+2) To find businesses etc., near a location, specify:
+
+<what> near <location address>
+"
+ 'emacspeak-url-template-google-maps-xml)
+
+(defun emacspeak-url-template-google-maps-speak (url &optional
+						     near speak)
+  "Audio format map information from Google Maps.
+Optional arg `near' specifies reference location for generating direction links."
+  (let ((buffer (emacspeak-url-template-google-maps-get-xml url))
+        (emacspeak-xslt-options "")
+        (params
+         (cond
+          (near
+           (list (cons "base" (format "\"'%s'\"" url))
+                 (cons "near" (format "\"'%s'\"" near))))
+          (t
+           (list (cons "base" (format "\"'%s'\"" url)))))))
+    (save-excursion
+      (set-buffer buffer)
+      (emacspeak-xslt-region
+       (expand-file-name "emapspeak.xsl"
+                         emacspeak-xslt-directory)
+       (point-min) (point-max) params)
+      (add-hook 'emacspeak-w3-post-process-hook
+                #'(lambda ()
+                    (setq emacspeak-w3-url-executor
+                          'emacspeak-url-template-google-maps-speak)
+                    (emacspeak-speak-buffer)))
+      (when speak
+        (add-hook 'emacspeak-w3-post-process-hook
+                  'emacspeak-speak-buffer
+                  'at-end))
+      (emacspeak-w3-preview-this-buffer))))
+
+(emacspeak-url-template-define
+ "EmapSpeak Via Google"
+ "http://maps.google.com/maps?q=%s&btng=Search&output=js"
+ (list "Query: ")
+ nil
+ "EmapSpeak Via Google.
+
+Specify the query using English and  addresses as complete as
+  possible.
+
+Here are some examples:
+
+0) To find a location by address specify:
+
+650 Harry Road San Jose CA 95120
+
+1) To get directions, specify:
+
+<source address> to <destination address>
+
+2) To find businesses etc., near a location, specify:
+
+<what> near <location address>
+"
+ 'emacspeak-url-template-google-maps-speak)
+      
 ;;}}}
 ;;{{{ google scholar 
 
@@ -515,7 +696,7 @@ from English to German.")
  nil
  "Retrieve and speak directions from MapQuest."
  #'(lambda (url)
-     (emacspeak-w3-extract-table-by-match "DIRECTIONS"
+     (emacspeak-w3-extract-table-by-match "Maneuvers"
                                           url 'speak)))
 
 ;;}}}
@@ -661,25 +842,22 @@ from English to German.")
 ;;{{{ Adobe pdf conversion 
 
 (emacspeak-url-template-define
- "pdf2html"
- "http://access.adobe.com/perl/convertPDF.pl?url=%s"
+ "pdf2txt"
+ "http://access.adobe.com/access/convert.do?acceptLanguage=en&srcPdfUrl=%s&convertTo=text&visuallyImpaired=true&preferHTMLReason=&platform=Linux&comments=&submit=Convert"
  (list "PDF URL: ")
  nil
- "Use access.adobe.com to  convert a remote PDF document to
-HTML.
+ "Use access.adobe.com to  convert a remote PDF document to plain
+ text.
 The PDF document needs to be available on the public Internet.")
 
-;;}}}
-;;{{{ oasis 
 (emacspeak-url-template-define
- "OASIS  Lists"
- "http://lists.oasis-open.org/archives/%s/%s/maillist.html"
- (list "OASIS Group: "
-       #'(lambda ()
-	   (emacspeak-url-template-collect-date  "YearMonth: "
-                                                 "%Y%m")))
- "Use this to pull up the
-archived  mail from the OASIS list. You need to know the exact name of the list.")
+ "pdf2html"
+ "http://access.adobe.com/access/convert.do?acceptLanguage=en&srcPdfUrl=%s&convertTo=html&visuallyImpaired=true&preferHTMLReason=&platform=Linux&comments=&submit=Convert"
+ (list "PDF URL: ")
+ nil
+ "Use access.adobe.com to  convert a remote PDF document to plain
+ text.
+The PDF document needs to be available on the public Internet.")
 
 ;;}}}
 ;;{{{ w3c 
@@ -837,17 +1015,29 @@ name of the list.")
  "Read pulpit from PBS. Published on the Thursday of the week."
  #'(lambda (url)
      (emacspeak-w3-xslt-filter
-      "//p" url 'speak)))
+      "//p|ul|ol|dl|h1|h2|h3|h4|h5|h6|blockquote" url 'speak)))
 
 ;;}}}
 ;;{{{  NPR programs 
 
 (emacspeak-url-template-define
  "American Life On Demand."
- "http://www.wbez.org/ta/%s.rm"
+					;"http://www.wbez.org/ta/%s.rm"
+ "http://www.thislife.org/ra/%s.ram"
  (list "Episode: ")
  nil
  "Play This American Life  shows on demand."
+ 'emacspeak-realaudio-play)
+
+(emacspeak-url-template-define
+ "Wait Wait, Dont Tell Me (NPR)"
+ "http://www.npr.org/dmg/dmg.php?mediaURL=/waitwait/%s_waitwait&mediaType=RM"
+ (list
+  #'(lambda ()
+      (emacspeak-url-template-collect-date "Date: (Saturdays)"
+                                           "%Y%m%d")))
+ nil
+ "Play Wait, Wait Dont Tell Me from NPR."
  'emacspeak-realaudio-play)
 
 (emacspeak-url-template-define
@@ -890,6 +1080,7 @@ plays entire program."
  nil
  "Play NPR Talk Of The Nation  stream."
  'emacspeak-realaudio-play)
+
 (emacspeak-url-template-define
  "Morning Edition Stream from NPR"
  "http://www.npr.org/dmg/dmg.php?prgCode=ME&showDate=%s&segNum=&mediaPref=RM"
@@ -1030,13 +1221,6 @@ plays entire program."
  "Open specified project page at SourceForge.")
 
 (emacspeak-url-template-define
- "sourceforge browse download" 
- "http://prdownloads.sourceforge.net/%s"
- (list "Project name")
- nil
- "Retrieve download page at Sourceforge for specified project.")
-
-(emacspeak-url-template-define
  "sourceforge browse mirrors" 
  "http://prdownloads.sourceforge.net/%s/?sort_by=date"
  (list "Project name")
@@ -1044,7 +1228,7 @@ plays entire program."
      (declare (special emacspeak-w3-url-rewrite-rule))
      (setq emacspeak-w3-url-rewrite-rule
            '("prdownloads.sourceforge.net"
-             "umn.dl.sourceforge.net/sourceforge")))
+             "ovh.dl.sourceforge.net/sourceforge")))
  "Retrieve download table  at Sourceforge for specified project."
  #'(lambda (url)
      (emacspeak-w3-extract-table-by-match "Current"
@@ -1405,8 +1589,22 @@ Meerkat realy needs an xml-rpc method for getting this.")
       url 'speak)))
 
 ;;}}}
+;;{{{ airport conditions:
+(emacspeak-url-template-define
+ "Airport conditions"
+ "http://www.fly.faa.gov/flyfaa/flyfaaindex.jsp?ARPT=%s&p=0"
+ (list "Airport Code:")
+ nil
+ "Display airport conditions from the FAA."
+ #'(lambda (url)
+     (emacspeak-w3-extract-table-by-match "Status"
+                                          url 'speak)))
+
+;;}}}
+
 ;;}}}
 ;;{{{ Interactive commands 
+
 ;;;###autoload
 (defun emacspeak-url-template-open (ut)
   "Fetch resource identified by URL template."
@@ -1468,19 +1666,65 @@ Optional interactive prefix arg displays documentation for specified resource."
 Use Emacs completion to obtain a list of available
 resources."
   (interactive)
-  (declare (special emacspeak-url-template-table))
+  (declare (special emacspeak-url-template-name-alist))
   (let ((completion-ignore-case t)
-        (name nil)
-        (table
-         (loop for key being the hash-keys of
-               emacspeak-url-template-table
-               collect (list 
-                        (format "%s" key)
-                        (format "%s" key)))))
+        (name nil))
     (setq name
           (completing-read "Resource: "
-                           table))
+                           emacspeak-url-template-name-alist))
     (emacspeak-url-template-help-internal  name)))
+
+;;}}}
+;;{{{ Generate texinfo documentation for all defined url
+
+(defun emacspeak-url-template-generate-texinfo-documentation (buffer)
+  "Generates texinfo section documenting all defined URL
+  templates."
+  (declare (special emacspeak-url-template-table))
+  (insert
+   "@node URL Templates \n@section  URL Templates\n\n")
+  (insert
+   (format 
+    "This section is generated automatically from the source-level documentation.
+Any errors or corrections should be made to the source-level
+documentation.
+This section documents a total of %d URL Templates.\n\n"
+    (hash-table-count emacspeak-url-template-table)))
+  (insert
+   (format
+    "All of these URL templates can be invoked via command
+  @kbd{M-x emacspeak-url-template-fetch} normally bound to
+  @kbd{%s}.
+This command prompts for the name of the template, and completion
+  is available via Emacs' minibuffer completion.
+Each URL template carries out the following steps:
+@itemize @bullet
+@item Prompt for the relevant information.
+@item Fetch the resulting URL using an appropriate fetcher.
+@item Set up the resulting resource with appropriate
+  customizations.
+@end itemize
+
+As an example, the URL templates that enable access to NPR media
+streams prompt for a program id and date, and automatically
+launch the realmedia player after fetching the resource.\n\n"
+    (mapconcat #'key-description
+	       (where-is-internal
+		'emacspeak-url-template-fetch)
+	       " ")))
+  (let ((keys
+         (sort 
+	  (loop for key being the hash-keys of emacspeak-url-template-table
+		collect key)
+	  'string-lessp)))
+    (loop for key in keys
+          do
+	  (insert
+	   (format "@kbd{%s}\n\n" key))
+	  (insert
+	   (emacspeak-url-template-documentation
+	    (emacspeak-url-template-get key)))
+	  (insert "\n\n"))))
 
 ;;}}}
 (provide 'emacspeak-url-template)

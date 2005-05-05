@@ -1,6 +1,6 @@
 \input texinfo
 @raggedright
-@c$Id: emacspeak.texi,v 21.0 2004/11/25 18:46:04 raman Exp $
+@c$Id: emacspeak.texi,v 22.0 2005/04/30 16:40:12 raman Exp $
 @setfilename./emacspeak.info 
 @settitle Emacspeak User's Manual --2nd Edition.
 @dircategory Accessibility

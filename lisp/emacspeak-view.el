@@ -1,5 +1,5 @@
 ;;; emacspeak-view.el --- Speech enable View mode -- Efficient browsing of read-only content
-;;; $Id: emacspeak-view.el,v 21.0 2004/11/25 18:45:50 raman Exp $
+;;; $Id: emacspeak-view.el,v 22.0 2005/04/30 16:40:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for view
 ;;; Keywords:emacspeak, audio interface to emacs, view-mode
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:50 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:40:01 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -70,11 +70,15 @@
 ;;{{{ Advise additional interactive commands:
 (defadvice view-file (after emacspeak pre act comp)
   "Load directory specific settings"
-  (emacspeak-speak-load-directory-settings))
+  (emacspeak-speak-load-directory-settings)
+  (outline-minor-mode 1))
+
 (defadvice view-mode (after emacspeak pre act comp)
   "Announce what happened"
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-load-directory-settings)
+    (outline-minor-mode 1)
     (message "Entered view mode Press %s to exit"
 	     (key-description
 	      (where-is-internal 'View-exit view-mode-map 'firstonly)))))

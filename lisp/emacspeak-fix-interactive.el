@@ -1,5 +1,5 @@
 ;;; emacspeak-fix-interactive.el --- Tools to make  Emacs' builtin prompts   speak
-;;; $Id: emacspeak-fix-interactive.el,v 21.0 2004/11/25 18:45:47 raman Exp $
+;;; $Id: emacspeak-fix-interactive.el,v 22.0 2005/04/30 16:39:56 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Fixes functions that use interactive to prompt for args.
 ;;; Approach suggested by hans@cs.buffalo.edu
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:47 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:39:56 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -125,7 +125,7 @@ use the minibuffer."
                          (emacspeak-speak-messages nil))
                      (when (ems-prompt-without-minibuffer-p (, prompt))
                        (emacspeak-auditory-icon 'open-object)
-                       (tts-with-punctuations "all"
+                       (tts-with-punctuations 'all
                                               (dtk-speak
                                                (format " %s "
                                                        (or (substring (, prompt) 1 ) "")))))

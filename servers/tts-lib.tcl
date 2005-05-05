@@ -1,11 +1,11 @@
-#$Id: tts-lib.tcl,v 21.0 2004/11/25 18:46:02 raman Exp $
+#$Id: tts-lib.tcl,v 22.0 2005/04/30 16:40:09 raman Exp $
 # {{{ LCD Entry: 
 #x
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2004/11/25 18:46:02 $ |
-#  $Revision: 21.0 $ | 
+# $Date: 2005/04/30 16:40:09 $ |
+#  $Revision: 22.0 $ | 
 # Location undetermined
 #
 
@@ -102,6 +102,15 @@ proc n {instrument note length {target 0} {step 5}} {
     return ""
 }
 
+
+#queue a beep 
+proc b {{pitch 523} {length 100} {repeat 1} {duration 50}} {
+    global queue tts 
+    set queue($tts(q_tail)) [list b $pitch $length $repeat $duration]
+    incr tts(q_tail)
+    return ""
+}
+
 #queue a sound event
 
 proc a {sound} {
@@ -180,7 +189,7 @@ proc queue_restore {} {
 #play a sound over the server
 proc p {sound} {
     global tts
-    catch "exec $tts(play) $sound >& /dev/null &" errCode
+    catch "exec $tts(play) $sound 2>&1 >   /dev/null &" errCode
     speech_task
 }
 
@@ -240,6 +249,26 @@ proc notes_initialize {} {
     } else {
         puts stderr "Error playing test note "
         set tts(midi) 0
+    }
+}
+
+# }}}
+# {{{beep  
+
+#you need to have beep installed 
+
+proc beep_initialize {} {
+    global tts
+    if {[file executable /usr/bin/beep]} {
+        set tts(beep) 1
+    }
+}
+
+proc beep {{freq 523} {length 100} {repeat 1} {delay 10}} {
+    global tts
+    if {[info exists tts(beep)]
+        && $tts(beep) == 1}  {
+        exec beep -f $freq -l $length -r $repeat -d $delay &
     }
 }
 

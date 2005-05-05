@@ -1,5 +1,5 @@
 ;;; emacspeak-eshell.el --- Speech-enable EShell - Emacs Shell
-;;; $Id: emacspeak-eshell.el,v 21.0 2004/11/25 18:45:45 raman Exp $
+;;; $Id: emacspeak-eshell.el,v 22.0 2005/04/30 16:39:54 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   Speech-enable EShell
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:45 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:54 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -95,7 +95,7 @@
           (emacspeak-speak-messages nil)m)
       ad-do-it
       (when (> (point) prior)
-        (tts-with-punctuations "all"
+        (tts-with-punctuations 'all
                                (dtk-speak
                                 (buffer-substring prior
                                                   (point)))))

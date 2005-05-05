@@ -1,5 +1,5 @@
 ;;; emacspeak-todo-mode.el --- speech-enable todo-mode
-;;; $Id: emacspeak-todo-mode.el,v 21.0 2004/11/25 18:45:50 raman Exp $
+;;; $Id: emacspeak-todo-mode.el,v 22.0 2005/04/30 16:40:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description: todo-mode  for maintaining todo lists 
 ;;; Keywords: Emacspeak, todo-mode 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:50 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:40:01 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 

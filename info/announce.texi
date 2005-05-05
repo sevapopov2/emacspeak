@@ -1,4 +1,4 @@
-@c $Id: announce.texi,v 21.0 2004/11/25 18:46:04 raman Exp $
+@c $Id: announce.texi,v 22.0 2005/04/30 16:40:10 raman Exp $
 
 @node Announce
 @chapter Announcing Emacspeak Manual 2nd Edition As An Open Source Project

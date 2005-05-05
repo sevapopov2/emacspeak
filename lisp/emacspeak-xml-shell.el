@@ -1,5 +1,5 @@
 ;;; emacspeak-xml-shell.el --- Implements a simple XML browser
-;;; $Id: emacspeak-xml-shell.el,v 21.0 2004/11/25 18:45:50 raman Exp $
+;;; $Id: emacspeak-xml-shell.el,v 22.0 2005/04/30 16:40:03 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains  xml-shell
 ;;; Keywords: Emacspeak,  Audio Desktop Xml-Shell
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:50 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:40:03 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -286,7 +286,12 @@ HTML head if none found."
     (emacspeak-xslt-region
      emacspeak-xml-shell-xslt
      start end))
-  (emacspeak-xml-shell-setup-html-base emacspeak-xml-shell-document)
+  (emacspeak-xml-shell-setup-html-base
+   emacspeak-xml-shell-document)
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "-------" nil t)
+      (replace-match "<br>")))
   (emacspeak-w3-preview-this-buffer)
   (setq emacspeak-xml-shell-display-buffer (current-buffer)))
 
@@ -303,8 +308,7 @@ HTML head if none found."
   (interactive "sXPath:")
   (declare (special emacspeak-xml-shell-display-buffer))
   (emacspeak-xml-shell-process-node xpath 
-                                    'emacspeak-xml-shell-display-as-html)
-  (switch-to-buffer emacspeak-xml-shell-display-buffer))
+                                    'emacspeak-xml-shell-display-as-html))
 
 ;;}}}
 ;;{{{ keybindings

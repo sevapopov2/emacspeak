@@ -1,4 +1,4 @@
-# $Id: Makefile,v 21.0 2004/11/25 18:46:05 raman Exp $
+# $Id: Makefile,v 22.0 2005/04/30 16:40:28 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak,  TTS,Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2004/11/25 18:46:05 $ |
-#  $Revision: 21.0 $ | 
+# $Date: 2005/04/30 16:40:28 $ |
+#  $Revision: 22.0 $ | 
 # Location undetermined
 #
 
@@ -81,7 +81,7 @@
 #    which tcl
 # Assuming you're using dtk-exp: 
 # Check that the dtk-exp can be run by typing
-#    tcl <emacspeak-dir>/dtk-exp 
+# <emacspeak-dir>/dtk-exp 
 # You should hear the Dectalk speak and get a TCL prompt if everything is okay.
 # Next, check that your serial port is working correctly, and that your stty 
 # settings are correct. You can do this by executing the following sequence 
@@ -193,6 +193,7 @@ ${INFO} ${UGUIDE} ${IGUIDE} ${NEWS} ${MISC} Makefile
 # {{{  User level targets emacspeak info print 
 
 emacspeak:
+	test -f  lisp/emacspeak-loaddefs.el || make config 
 	cd lisp; $(MAKE)  SRC=$(SRC)
 	touch   $(ID)
 	chmod 644 $(ID)
@@ -261,10 +262,10 @@ install:
 	$(INSTALL) -d $(libdir)/sounds
 	$(INSTALL) -d $(libdir)/servers
 	$(INSTALL) -d $(libdir)/servers/linux-outloud
-	$(INSTALL)  ${OUTLOUD}  $(libdir)/servers/linux-outloud
+	$(INSTALL)  -m 755 ${OUTLOUD}  $(libdir)/servers/linux-outloud
 	$(INSTALL) -d $(libdir)/servers/software-dtk
-	$(INSTALL)  ${DTKTTS}  $(libdir)/servers/software-dtk
-	$(INSTALL)  ${TCL_PROGRAMS}  $(libdir)/servers
+	$(INSTALL)  -m 755 ${DTKTTS}  $(libdir)/servers/software-dtk
+	$(INSTALL)  -m 755 ${TCL_PROGRAMS}  $(libdir)/servers
 	$(INSTALL) -m 0644   ${NEWS}   $(libdir)/etc
 	cp   ${MISC}   $(libdir)/etc
 	$(CP) -r $(SOUNDS) $(libdir)/sounds
@@ -299,7 +300,7 @@ all: emacspeak
 # {{{  user level target-- clean
 
 clean:
-	rm -f lisp/*.elc 
+	cd lisp; $(MAKE) clean
 		cd info; $(MAKE) clean
 
 # }}}

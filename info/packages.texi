@@ -1,4 +1,4 @@
-@c $Id: packages.texi,v 21.0 2004/11/25 18:46:05 raman Exp $
+@c $Id: packages.texi,v 22.0 2005/04/30 16:40:12 raman Exp $
 @node Emacs Packages
 @chapter Emacs Packages.
 

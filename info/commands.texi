@@ -1,17 +1,18 @@
-@c $Id: commands.texi,v 21.0 2004/11/25 18:46:04 raman Exp $
+@c $Id: commands.texi,v 22.0 2005/04/30 16:40:10 raman Exp $
 @node Emacspeak Commands
 @chapter Emacspeak Commands
 
 This chapter is generated automatically from the source-level documentation.
 Any errors or corrections should be made to the source-level
 documentation.
+This chapter documents a total of 681 commands.
 
 @menu
 * cd-tool::                     
 * dtk-speak::                   
 * emacspeak::                   
+* emacspeak-alsaplayer::        
 * emacspeak-amphetadesk::       
-* emacspeak-analog::            
 * emacspeak-arc::               
 * emacspeak-aumix::             
 * emacspeak-bs::                
@@ -47,6 +48,7 @@ documentation.
 * emacspeak-kotl::              
 * emacspeak-loaddefs::          
 * emacspeak-m-player::          
+* emacspeak-madplay::           
 * emacspeak-man::               
 * emacspeak-mpg123::            
 * emacspeak-ocr::               
@@ -79,6 +81,7 @@ documentation.
 * emacspeak-widget::            
 * emacspeak-wizards::           
 * emacspeak-xml-shell::         
+* URL Templates ::              
 @end menu
 
 @node cd-tool
@@ -365,6 +368,140 @@ Give a brief overview of emacspeak.
 Function to submit a bug to the programs maintainer.
 @end deffn
 
+@node emacspeak-alsaplayer
+@section emacspeak-alsaplayer
+
+Commentary:
+Defines a simple derived mode for interacting with
+alsaplayer.
+alsaplayer navigation commands  work via single keystrokes.
+
+Automatically generated documentation
+for commands defined in module  emacspeak-alsaplayer.
+
+@deffn {Interactive Command} emacspeak-alsaplayer-add-to-queue (RESOURCE)
+Add specified resource to queue.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-backward-minute (MINUTES)
+Skip backwards by  minutes.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-backward-second (SECONDS)
+Skip backward by  seconds.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-backward-ten-minutes (MINUTES)
+Skip backwards by  chunks of minutes.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-clear ()
+Clear or resume alsaplayer
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-forward-minute (MINUTES)
+Skip forward by  minutes.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-forward-second (SECONDS)
+Skip forward by  seconds.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-forward-ten-minutes (MINUTES)
+Skip forward by  chunks of ten minutes.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-jump (TRACK)
+Jump to specified track.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-launch ()
+Launch Alsaplayer.
+user is placed in a buffer associated with the newly created
+Alsaplayer session.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-mode ()
+Major mode for alsaplayer interaction. 
+
+key             binding
+---             -------
+
+v		emacspeak-alsaplayer-volume
+?		emacspeak-alsaplayer-status
+/		emacspeak-alsaplayer-speed
+S		emacspeak-alsaplayer-stop
+s		emacspeak-alsaplayer-start
+r		emacspeak-alsaplayer-relative
+q		emacspeak-alsaplayer-quit
+p		emacspeak-alsaplayer-previous
+n		emacspeak-alsaplayer-next
+SPC		emacspeak-alsaplayer-pause
+l		emacspeak-alsaplayer-launch
+j		emacspeak-alsaplayer-jump
+g		emacspeak-alsaplayer-seek
+c		emacspeak-alsaplayer-clear
+A		emacspeak-alsaplayer-replace-queue
+a		emacspeak-alsaplayer-add-to-queue
+[		emacspeak-alsaplayer-backward-ten-minutes
+]		emacspeak-alsaplayer-forward-ten-minutes
+<		emacspeak-alsaplayer-backward-minute
+>		emacspeak-alsaplayer-forward-minute
+,		emacspeak-alsaplayer-backward-second
+.		emacspeak-alsaplayer-forward-second
+
+This mode runs the hook `emacspeak-alsaplayer-mode-hook', as the final step
+during initialization.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-next ()
+Next  alsaplayer
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-pause ()
+Pause or resume alsaplayer
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-previous ()
+Previous  alsaplayer
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-quit ()
+Quit or resume alsaplayer
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-relative (OFFSET)
+Relative seek  alsaplayer
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-replace-queue (RESOURCE)
+Add specified resource to queue.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-seek (OFFSET)
+Absolute seek  alsaplayer
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-speed (SETTING)
+Set speed in alsaplayer.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-start ()
+Start  alsaplayer
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-status ()
+Show alsaplayer status
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-stop ()
+Stop  alsaplayer
+@end deffn
+
+@deffn {Interactive Command} emacspeak-alsaplayer-volume (SETTING)
+Set volume.
+@end deffn
+
 @node emacspeak-amphetadesk
 @section emacspeak-amphetadesk
 
@@ -377,39 +514,6 @@ Open amphetadesk.
 
 @deffn {Interactive Command} emacspeak-amphetadesk-quick-add (URL)
 Quick add URL to Amphetadesk by prompting for URL.
-@end deffn
-
-@node emacspeak-analog
-@section emacspeak-analog
-
-Commentary:
-Speech-enables package analog --convenient log analyzer 
-
-Automatically generated documentation
-for commands defined in module  emacspeak-analog.
-
-@deffn {Interactive Command} emacspeak-analog-backward-field-or-char ()
-Move back to next field if field specification is available.
-Otherwise move to previous char.
-Speak field or char moved to.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-analog-forward-field-or-char ()
-Move forward to next field if field specification is available.
-Otherwise move to next char.
-Speak field or char moved to.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-analog-next-line ()
-Move down and speak current field.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-analog-previous-line ()
-Move up and speak current field.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-analog-speak-this-field ()
-Speak current field.
 @end deffn
 
 @node emacspeak-arc
@@ -902,8 +1006,10 @@ http://www.cs.cmu.edu/~berez/irc/erc.el
 Automatically generated documentation
 for commands defined in module  emacspeak-erc.
 
-@deffn {Interactive Command} emacspeak-erc-add-name-to-monitor (NAME)
-Add people to monitor in this room.
+@deffn {Interactive Command} emacspeak-erc-add-name-to-monitor (NAME &optional QUITEN-PRONUNCIATION)
+Add people to moniter in this room.
+Optional interactive prefix  arg defines a pronunciation that
+  silences speaking of this perso's name.
 @end deffn
 
 @deffn {Interactive Command} emacspeak-erc-delete-name-from-monitor (NAME)
@@ -953,11 +1059,6 @@ Copy text from terminal to an Emacs REGISTER.
 This copies  region delimited by the emacspeak eterm marker 
 set by command M-x emacspeak-eterm-set-marker and the 
 emacspeak eterm pointer to a register.
-
-This function is advised.
-
-Before-advice `emacspeak-auto':
-Automatically defined advice to speak interactive prompts. 
 @end deffn
 
 @deffn {Interactive Command} emacspeak-eterm-define-window (ID)
@@ -1279,14 +1380,6 @@ freeamp navigation commands then work via single keystrokes.
 Automatically generated documentation
 for commands defined in module  emacspeak-freeamp.
 
-@deffn {Interactive Command} emacspeak-freeamp (RESOURCE)
-@kbd{ control e control f o }
-
-Play specified resource using freeamp.
-Resource is an  MP3 file or m3u playlist.
-The player is placed in a buffer in emacspeak-freeamp-mode.
-@end deffn
-
 @deffn {Interactive Command} emacspeak-freeamp-freeamp-call-command ()
 @kbd{ control e control f q   control e control f =   control e control f s   control e control f b   control e control f f   control e control f -   control e control f +   control e control f p }
 
@@ -1295,11 +1388,6 @@ Call appropriate freeamp command.
 
 @deffn {Interactive Command} emacspeak-freeamp-freeamp-command (CHAR)
 Execute FreeAmp command.
-
-This function is advised.
-
-Before-advice `emacspeak-auto':
-Automatically defined advice to speak interactive prompts. 
 @end deffn
 
 @deffn {Interactive Command} emacspeak-freeamp-mode ()
@@ -1556,11 +1644,6 @@ to do if you run emacspeak on a remote machine from inside a terminal
 that is running inside a local emacspeak session.  You can have the
 remote emacspeak use a different control key to give your fingers some
 relief.
-
-This function is advised.
-
-Before-advice `emacspeak-auto':
-Automatically defined advice to speak interactive prompts. 
 @end deffn
 
 @node emacspeak-kotl
@@ -1670,6 +1753,53 @@ Seek  to absolute specified position.
 
 @deffn {Interactive Command} emacspeak-m-player-seek-relative (OFFSET)
 Seek  by offset into stream from current position.
+@end deffn
+
+@node emacspeak-madplay
+@section emacspeak-madplay
+
+Commentary:
+Defines a simple derived mode for interacting with
+madplay.
+madplay navigation commands  work via single keystrokes.
+
+Automatically generated documentation
+for commands defined in module  emacspeak-madplay.
+
+@deffn {Interactive Command} emacspeak-madplay (RESOURCE)
+Play specified resource using madplay.
+Resource is an  MP3 file or directory containing mp3 files.
+The player is placed in a buffer in emacspeak-madplay-mode.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-madplay-madplay-call-command ()
+Call appropriate madplay command.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-madplay-madplay-command (CHAR)
+Execute Madplay command.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-madplay-mode ()
+Major mode for madplay interaction. 
+
+key             binding
+---             -------
+
+<right>		emacspeak-aumix-wave-increase
+<left>		emacspeak-aumix-wave-decrease
+t		emacspeak-madplay-madplay-call-command
+q		emacspeak-madplay-madplay-call-command
+-		emacspeak-madplay-madplay-call-command
++		emacspeak-madplay-madplay-call-command
+s		emacspeak-madplay-madplay-call-command
+p		emacspeak-madplay-madplay-call-command
+b		emacspeak-madplay-madplay-call-command
+f		emacspeak-madplay-madplay-call-command
+o		emacspeak-madplay
+
+This mode runs the hook `emacspeak-madplay-mode-hook', as the final step
+during initialization.
 @end deffn
 
 @node emacspeak-man
@@ -2116,34 +2246,6 @@ point to the program you use to play RealAudio streams.
 Automatically generated documentation
 for commands defined in module  emacspeak-realaudio.
 
-@deffn {Interactive Command} emacspeak-realaudio (&optional IGNORED)
-@kbd{ control e ; }
-
-Start or control streaming audio including MP3 and
-realaudio.  If using `TRPlayer' as the player, accepts
-trplayer control commands if a stream is already playing.
-Otherwise, the playing stream is simply stopped.  If no
-stream is playing, this command prompts for a realaudio
-resource.  Realaudio resources can be specified either as a
-Realaudio URL, the location of a local Realaudio file, or as
-the name of a local Realaudio metafile. Realaudio resources
-you have played in this session are available in the
-minibuffer history.  The default is to play the resource you
-played most recently. Emacspeak uses the contents of the
-directory specified by variable
-emacspeak-realaudio-shortcuts-directory to offer a set of
-completions. Hit space to use this completion list.
-
-If using TRPlayer, you can either give one-shot commands
-using command emacspeak-realaudio available from anywhere on
-the audio desktop as `C-e ;'.
-Alternatively, switch to buffer *realaudio* using
-`C-e ;;' if you wish to issue many
-navigation commands.  Note that buffer *realaudio* uses a
-special major mode that provides the various navigation
-commands via single keystrokes.
-@end deffn
-
 @deffn {Interactive Command} emacspeak-realaudio-browse (RAMFILE &optional START-TIME)
 Browse RAM file before playing the selected component.
 @end deffn
@@ -2223,7 +2325,7 @@ Forward-char redefined to speak char moved to.
 @end deffn
 
 @deffn {Interactive Command} emacspeak-self-insert-command (&optional ARG)
-@kbd{ Character set JISX0213-2   Character set Tibetan 2 column   Character set Indian 2 Column   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set Ethiopic characters   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Tibetan 1 column   Character set Indian glyph   Character set Indian IS 13194   Character set Arabic 2-column   Character set Lao   Character set ASCII with right-to-left direction   Character set Arabic 1-column   Character set Arabic digit   Character set VISCII upper-case   Character set VISCII lower-case   Character set IPA   Character set SiSheng (PinYin/ZhuYin)   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-1) A141-C67F   Character set JISX0213-1   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set JISX0212 (Japanese): ISO-IR-159   Character set KSC5601 (Korean): ISO-IR-149   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set GB2312: ISO-IR-58   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set RHP of Latin-8 (ISO 8859-14): ISO-IR-199   Character set RHP of Latin-9 (ISO 8859-15): ISO-IR-203   Character set RHP of Latin-5 (ISO 8859-9): ISO-IR-148   Character set RHP of Cyrillic (ISO 8859-5): ISO-IR-144   Character set Japanese Roman (JISX0201.1976)   Character set Japanese Katakana (JISX0201.1976)   Character set RHP of Hebrew (ISO 8859-8): ISO-IR-138   Character set RHP of Arabic (ISO 8859-6): ISO-IR-127   Character set RHP of Greek (ISO 8859-7): ISO-IR-126   Character set RHP of Thai (TIS620): ISO-IR-166   Character set RHP of Latin-4 (ISO 8859-4): ISO-IR-110   Character set RHP of Latin-3 (ISO 8859-3): ISO-IR-109   Character set RHP of Latin-2 (ISO 8859-2): ISO-IR-101   Character set RHP of Latin-1 (ISO 8859-1): ISO-IR-100   ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ~   @}   |   @{   z   y   x   w   v   u   t   s   r   q   p   o   n   m   l   k   j   i   h   g   f   e   d   c   b   a   `   _   ^   ]   \   [    cap Z     cap Y     cap X     cap W     cap V     cap U     cap T     cap S     cap R     cap Q     cap P     cap O     cap N     cap M     cap L     cap K     cap J     cap I     cap H     cap G     cap F     cap E     cap D     cap C     cap B     cap A    @@   ?   >   =   <   ;   :   9   8   7   6   5   4   3   2   1   0   /   .   -   ,   +   *   )   (   '   &   %   $   #   !   SPACE }
+@kbd{ Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set JISX0213-2   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Tibetan 2 column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set Indian 2 Column   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-7 (Chinese traditional): ISO-IR-187   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-6 (Chinese traditional): ISO-IR-186   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-5 (Chinese traditional): ISO-IR-185   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-4 (Chinese traditional): ISO-IR-184   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set CNS11643-3 (Chinese traditional): ISO-IR-183   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Ethiopic characters   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +0100.. cap U +24FF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +E000+FFFF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Unicode subset ( cap U +2500.. cap U +33FF)   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Tibetan 1 column   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   Character set Indian glyph   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡   ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-2) C940-FEFE   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set Big5 (Level-1) A141-C67F   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set JISX0213-1   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-2 (Chinese traditional): ISO-IR-172   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set CNS11643-1 (Chinese traditional): ISO-IR-171   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set JISX0212 (Japanese): ISO-IR-159   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set KSC5601 (Korean): ISO-IR-149   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set JISX0208.1983/1990 (Japanese): ISO-IR-87   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set GB2312: ISO-IR-58   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   Character set JISX0208.1978 (Japanese): ISO-IR-42   ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡   ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é   è   ç   æ   å   ä   ã   â   á   à   ß   Þ   Ý   Ü   Û   Ú   Ù   Ø   ×   Ö   Õ   Ô   Ó   Ò   Ñ   Ð   Ï   Î   Í   Ì   Ë   Ê   É   È   Ç   Æ   Å   Ä   Ã   Â   Á   À   ¿   ¾   ½   ¼   »   º   ¹   ¸   ·   ¶   µ   ´   ³   ²   ±   °   ¯   ®   ­   ¬   «   ª   ©   ¨   §   ¦   ¥   ¤   £   ¢   ¡       ~   @}   |   @{   z   y   x   w   v   u   t   s   r   q   p   o   n   m   l   k   j   i   h   g   f   e   d   c   b   a   `   _   ^   ]   \   [    cap Z     cap Y     cap X     cap W     cap V     cap U     cap T     cap S     cap R     cap Q     cap P     cap O     cap N     cap M     cap L     cap K     cap J     cap I     cap H     cap G     cap F     cap E     cap D     cap C     cap B     cap A    @@   ?   >   =   <   ;   :   9   8   7   6   5   4   3   2   1   0   /   .   -   ,   +   *   )   (   '   &   %   $   #   !   SPACE }
 
 Insert a character.
 Speaks the character if emacspeak-character-echo is true.
@@ -2345,6 +2447,7 @@ Select  player used for producing auditory icons.
 Recommended choices:
 
 emacspeak-serve-auditory-icon for  the wave device.
+emacspeak-queue-auditory-icon when using software TTS.
 emacspeak-play-midi-icon for midi device. 
 @end deffn
 
@@ -2354,6 +2457,10 @@ This lets me have Emacspeak switch to using audioplay on
 solaris after I've used it for a while from a remote session
 where it would use the more primitive speech-server based
 audio player.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-sounds-reset-sound ()
+Reload sound drivers.
 @end deffn
 
 @deffn {Interactive Command} emacspeak-sounds-select-theme (THEME)
@@ -2402,11 +2509,6 @@ Prompt for and dial a phone NUMBER with the Dectalk.
 
 @deffn {Interactive Command} emacspeak-execute-repeatedly (COMMAND)
 Execute COMMAND repeatedly.
-
-This function is advised.
-
-Before-advice `emacspeak-auto':
-Automatically defined advice to speak interactive prompts. 
 @end deffn
 
 @deffn {Interactive Command} emacspeak-mark-backward-mark ()
@@ -2482,11 +2584,6 @@ Default is to read the previous word.
 @deffn {Interactive Command} emacspeak-speak-and-skip-extent-upto-char (CHAR)
 Search forward from point until we hit char.
 Speak text between point and the char we hit.
-
-This function is advised.
-
-Before-advice `emacspeak-auto':
-Automatically defined advice to speak interactive prompts. 
 @end deffn
 
 @deffn {Interactive Command} emacspeak-speak-and-skip-extent-upto-this-char ()
@@ -3126,11 +3223,6 @@ for commands defined in module  emacspeak-table-ui.
 
 @deffn {Interactive Command} emacspeak-table-copy-current-element-to-register (REGISTER)
 Speak current table element
-
-This function is advised.
-
-Before-advice `emacspeak-auto':
-Automatically defined advice to speak interactive prompts. 
 @end deffn
 
 @deffn {Interactive Command} emacspeak-table-copy-to-clipboard ()
@@ -3412,6 +3504,8 @@ i.e., hotlist entries  that are ``templates'' for the
 actual URL.
 The user provides values for the parameterized portons
 of the URL e.g. the date.
+See @xref{URL Templates}, for details on the URL templates
+that are presently defined.
 
 Automatically generated documentation
 for commands defined in module  emacspeak-url-template.
@@ -3512,6 +3606,42 @@ Emacspeak and ACSS
 
 Automatically generated documentation
 for commands defined in module  emacspeak-w3.
+
+@deffn {Interactive Command} emacspeak-freeamp (RESOURCE)
+@kbd{ control e control f o }
+
+Play specified resource using freeamp.
+Resource is an  MP3 file or m3u playlist.
+The player is placed in a buffer in emacspeak-freeamp-mode.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-realaudio (&optional IGNORED)
+@kbd{ control e ; }
+
+Start or control streaming audio including MP3 and
+realaudio.  If using `TRPlayer' as the player, accepts
+trplayer control commands if a stream is already playing.
+Otherwise, the playing stream is simply stopped.  If no
+stream is playing, this command prompts for a realaudio
+resource.  Realaudio resources can be specified either as a
+Realaudio URL, the location of a local Realaudio file, or as
+the name of a local Realaudio metafile. Realaudio resources
+you have played in this session are available in the
+minibuffer history.  The default is to play the resource you
+played most recently. Emacspeak uses the contents of the
+directory specified by variable
+emacspeak-realaudio-shortcuts-directory to offer a set of
+completions. Hit space to use this completion list.
+
+If using TRPlayer, you can either give one-shot commands
+using command emacspeak-realaudio available from anywhere on
+the audio desktop as `C-e ;'.
+Alternatively, switch to buffer *realaudio* using
+`C-e ;;' if you wish to issue many
+navigation commands.  Note that buffer *realaudio* uses a
+special major mode that provides the various navigation
+commands via single keystrokes.
+@end deffn
 
 @deffn {Interactive Command} emacspeak-w3-browse-rss-at-point ()
 Browses RSS url under point.
@@ -3745,6 +3875,10 @@ Speak document element under point.
 Toggle drawing of W3 table borders
 @end deffn
 
+@deffn {Interactive Command} emacspeak-w3-url-expand-and-execute ()
+Applies buffer-specific URL expander/executor function.
+@end deffn
+
 @deffn {Interactive Command} emacspeak-w3-url-rewrite-and-follow (&optional PROMPT)
 Apply a url rewrite rule as specified in the current buffer
 before following link under point.  If no rewrite rule is
@@ -3909,6 +4043,16 @@ Display form specified by form-markup.
 Ebay search.
 @end deffn
 
+@deffn {Interactive Command} emacspeak-websearch-emaps-search (QUERY &optional USE-NEAR)
+Perform EmapSpeak search.
+Query is a Google Maps query in plain English.
+Interactive prefix arg `use-near' searches near our previously cached  location.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-websearch-emapspeak-near-my-location (QUERY)
+Perform search relative to `my-location'.
+@end deffn
+
 @deffn {Interactive Command} emacspeak-websearch-exchange-rate-convertor (CONVERSION-SPEC)
 Currency convertor.
 @end deffn
@@ -3926,10 +4070,9 @@ Perform a Froogle search.
 @end deffn
 
 @deffn {Interactive Command} emacspeak-websearch-google (QUERY &optional LUCKY)
-Perform an Google search.
+Perform a Google search.
 Optional interactive prefix arg `lucky' is equivalent to hitting the 
 I'm Feeling Lucky button on Google.
-Meaning of the `lucky' flag can be inverted by setting option emacspeak-websearch-google-feeling-lucky-p.
 @end deffn
 
 @deffn {Interactive Command} emacspeak-websearch-google-advanced ()
@@ -3942,6 +4085,12 @@ Do a I'm Feeling Lucky Google search.
 
 @deffn {Interactive Command} emacspeak-websearch-google-search-in-date-range ()
 Use this from inside the calendar to do Google date-range searches.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-websearch-google-specialize (SPECIALIZE QUERY)
+Perform a specialized Google search. See the Google site for
+  what is possible here:
+http://www.google.com/options/specialsearches.html 
 @end deffn
 
 @deffn {Interactive Command} emacspeak-websearch-google-usenet-advanced ()
@@ -3969,8 +4118,9 @@ Search the Merriam Webster Dictionary.
 My RSS search.
 @end deffn
 
-@deffn {Interactive Command} emacspeak-websearch-news-yahoo (QUERY)
-Perform an Yahoo News search
+@deffn {Interactive Command} emacspeak-websearch-news-yahoo (QUERY &optional NO-RSS)
+Perform an Yahoo News search.
+Optional prefix arg no-rss scrapes information from HTML.
 @end deffn
 
 @deffn {Interactive Command} emacspeak-websearch-northern-light (QUERY)
@@ -3983,6 +4133,10 @@ Perform an Open Directory search
 
 @deffn {Interactive Command} emacspeak-websearch-people-yahoo ()
 Perform an Yahoo  people search
+@end deffn
+
+@deffn {Interactive Command} emacspeak-websearch-podscope ()
+Perform a PodScope search to locate podcasts.
 @end deffn
 
 @deffn {Interactive Command} emacspeak-websearch-quotes-yahoo-search (QUERY &optional PREFIX)
@@ -4037,6 +4191,10 @@ Search the W3C Site.
 
 @deffn {Interactive Command} emacspeak-websearch-weather (QUERY)
 Get weather forecast for specified zip code.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-websearch-wikipedia-search (QUERY)
+Search Wikipedia
 @end deffn
 
 @deffn {Interactive Command} emacspeak-websearch-yahoo (QUERY)
@@ -4447,6 +4605,26 @@ Browse  Emacspeak productivity tips.
 Count slides starting from point.
 @end deffn
 
+@deffn {Interactive Command} emacspeak-wizards-dvi-display ()
+Called to set up preview of an DVI file.
+Assumes we are in a buffer visiting a .DVI file.
+Previews those contents as text and nukes the buffer
+visiting the DVI file.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-wizards-dvi-mode ()
+Major mode for browsing DVI files.
+
+DVI files  are converted to text and previewed using text mode.
+
+This mode runs the hook `emacspeak-wizards-dvi-mode-hook', as the final step
+during initialization.
+
+key             binding
+---             -------
+
+@end deffn
+
 @deffn {Interactive Command} emacspeak-wizards-edit-file-as-root (FILENAME)
 Edit file as root using sudo vi.
 See /etc/sudoers for how to set up sudo.
@@ -4593,6 +4771,10 @@ Run rpm -qi on current dired entry.
 
 Switch to the shell buffer and cd to 
  the directory of the current buffer.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-wizards-show-commentary (&optional FILE)
+Display commentary. Default is to display commentary from current buffer.
 @end deffn
 
 @deffn {Interactive Command} emacspeak-wizards-show-environment-variable (V)
@@ -4755,4 +4937,444 @@ In addition to any hooks its parent mode `comint-mode' might have run,
 this mode runs the hook `emacspeak-xml-shell-mode-hook', as the final step
 during initialization.
 @end deffn
+
+@node URL Templates 
+@section  URL Templates
+
+This section is generated automatically from the source-level documentation.
+Any errors or corrections should be made to the source-level
+documentation.
+This section documents a total of 90 URL Templates.
+
+All of these URL templates can be invoked via command
+  @kbd{M-x emacspeak-url-template-fetch} normally bound to
+  @kbd{ control e u }.
+This command prompts for the name of the template, and completion
+  is available via Emacs' minibuffer completion.
+Each URL template carries out the following steps:
+@itemize @bullet
+@item Prompt for the relevant information.
+@item Fetch the resulting URL using an appropriate fetcher.
+@item Set up the resulting resource with appropriate
+  customizations.
+@end itemize
+
+As an example, the URL templates that enable access to NPR media
+streams prompt for a program id and date, and automatically
+launch the realmedia player after fetching the resource.
+
+@kbd{Airport conditions}
+
+Display airport conditions from the FAA.
+
+@kbd{All Things Considered Stream from NPR}
+
+Play NPR All Things Considered stream.
+
+@kbd{All Things Considered from NPR}
+
+Play All Things Considered segment.
+
+@kbd{Amazon Product Details By ASIN}
+
+Retrieve product details from Amazon by either ISBN or ASIN.
+
+@kbd{American Life On Demand.}
+
+Play This American Life  shows on demand.
+
+@kbd{BBC 7 Schedule}
+
+Retrieve BBC7 schedule for specified day.
+
+@kbd{BBC Channel On Demand}
+
+Display BBC Channel on demand.
+
+@kbd{BBC Genres On Demand}
+
+Display BBC Channel on demand.
+
+@kbd{BBC Listen Again}
+
+BBC Listen Again Listings
+
+@kbd{BBC News}
+
+BBC News text version.
+
+@kbd{BBC Programs On Demand}
+
+Play BBC programs on demand.
+
+@kbd{BBC Radio4 On Demand}
+
+Specify a week day (three letters -- lower case -- and a time spec
+-- e.g. 1230 --
+to play a BBC Radio4 program on demand.
+
+@kbd{BBC Radio7 On Demand}
+
+Specify a week day (three letters -- lower case -- and a time spec
+-- e.g. 1230 --
+to play a BBC Radio7 program on demand.
+
+@kbd{BBC Sports}
+
+BBC News text version.
+
+@kbd{Baseball Game Index}
+
+Display baseball Play By Play.
+
+@kbd{Baseball Play By Play}
+
+Display baseball Play By Play.
+
+@kbd{Baseball Results}
+
+Baseball results for a given date.
+
+@kbd{Baseball scores}
+
+Display baseball scores.
+
+@kbd{Baseball standings}
+
+Display MLB standings.
+
+@kbd{Baseball summary}
+
+Display baseball team summary.
+
+@kbd{BookShare}
+
+Bookshare Login
+
+@kbd{CNN Content }
+
+CNN Content
+
+@kbd{CNN Market Data }
+
+CNN Money
+
+@kbd{CNN Market News }
+
+CNN Money
+
+@kbd{CNN Tecnology }
+
+CNN Technology news.
+
+@kbd{CNN headlines }
+
+Retrieve and speak headline news from CNN.
+
+@kbd{CNNFn Content}
+
+Extract content links from CNN FN.
+
+@kbd{Cartoon You Said It By Laxman}
+
+Retrieve Cartoon Times Of India.
+
+@kbd{DDJ TechNetCast Play}
+
+Play Technetcast stream from DDJ.
+
+@kbd{DDJ TechNetCast Save}
+
+Browse to a specified DDJ Technetcast stream and save  it.
+
+@kbd{EmapSpeak Via Google}
+
+EmapSpeak Via Google.
+
+Specify the query using English and  addresses as complete as
+  possible.
+
+Here are some examples:
+
+0) To find a location by address specify:
+
+650 Harry Road San Jose CA 95120
+
+1) To get directions, specify:
+
+<source address> to <destination address>
+
+2) To find businesses etc., near a location, specify:
+
+<what> near <location address>
+
+@kbd{Flight Tracker}
+
+Display flight arrival and departure information.
+
+@kbd{Geek Linux Daily}
+
+Play specified edition of Geek  Linux DailyShow
+
+@kbd{Google Glossary}
+
+Google Glossary lookup.
+
+@kbd{Google Headline News}
+
+Retrieve and speak Google News Overview.
+
+@kbd{Google Hits}
+
+Only show Google hits.
+
+@kbd{Google Maps Give Me XML}
+
+Get me XML from Google Maps.
+Specify the query using English and  addresses as complete as
+  possible.
+
+Here are some examples:
+
+0) To find a location by address specify:
+
+650 Harry Road San Jose CA 95120
+
+1) To get directions, specify:
+
+<source address> to <destination address>
+
+2) To find businesses etc., near a location, specify:
+
+<what> near <location address>
+
+@kbd{Google News Search}
+
+Search Google news.
+
+@kbd{Google Scholar}
+
+Google Scholar Search
+
+@kbd{Google Text  News}
+
+Retrieve and speak Google News Overview.
+
+@kbd{Google WebQuotes}
+
+Google WebQuotes.
+
+@kbd{InfoWorld RSS Feeds}
+
+Produce  a set of RSS links published by InfoWorld.
+
+@kbd{Linux Today News}
+
+Get news column from Linux Today.
+
+@kbd{MLB Alerts}
+
+Show MLB Scorecard.
+
+@kbd{MLB Scorecard}
+
+Show MLB Scorecard.
+
+@kbd{MapQuest Directions}
+
+Retrieve and speak directions from MapQuest.
+
+@kbd{Meerkat Profile}
+
+Meerkat Profile
+
+@kbd{Meerkat Recipe}
+
+Meerkat tool
+
+@kbd{Morning Edition Stream from NPR}
+
+Play NPR Morning Edition  stream.
+
+@kbd{Morning Edition from NPR}
+
+Play Morning Edition segment.
+
+@kbd{Motley Fool Radio from NPR}
+
+Play NPR Motley Fool   stream.
+
+@kbd{NPR On Demand}
+
+Play NPR shows on demand.
+Program is specified as a program code:
+
+ME Morning Edition
+ATC All Things Considered
+
+Segment is specified as a two digit number --specifying a blank value
+plays entire program.
+
+@kbd{Netcraft Web Analysis}
+
+Analyze WWW site using Netcraft.
+
+@kbd{Old Time Radio}
+
+This months Old Time Radio Programing
+
+@kbd{Pulpit --- I Cringely}
+
+Read pulpit from PBS. Published on the Thursday of the week.
+
+@kbd{Redhat Linux Show}
+
+Play specified edition of Redhat Linux Show
+
+@kbd{Shoutcast Search}
+
+Locate and display Shoutcast streams.
+
+@kbd{Talk Of The Nation  Stream from NPR}
+
+Play NPR Talk Of The Nation  stream.
+
+@kbd{Talk Of The Nation from NPR}
+
+Play NPR Talk Of The Nation segment.
+
+@kbd{Tech News From CNet}
+
+Display tech news from CNET
+
+@kbd{Times Of India}
+
+Retrieve Times Of India.
+Set up URL rewrite rule to get print page.
+
+@kbd{Translation Via Google}
+
+Translate a Web page using google. Source and target languages
+are specified as two-letter language codes, e.g. en|de translates
+from English to German.
+
+@kbd{Travel itenerary from ViewTrip.com}
+
+Display Trip Details
+
+@kbd{Travelocity Lookup}
+
+Show arrival/departure information from Travelocity.
+
+@kbd{UPS Packages}
+
+Display package tracking information from UPS.
+
+@kbd{Wait Wait, Dont Tell Me (NPR)}
+
+Play Wait, Wait Dont Tell Me from NPR.
+
+@kbd{Weather forecast from Weather Underground}
+
+Weather forecast from weather underground mobile.
+
+@kbd{Yahoo Business News}
+
+Retrieve and speak business  section from Yahoo Daily News.
+
+@kbd{Yahoo Content By Content ID}
+
+Retrieve and speak news section from Yahoo Daily News.
+
+@kbd{Yahoo DailyNews}
+
+Retrieve and speak DailyNewspage from  Yahoo Daily News.
+
+@kbd{Yahoo Entertainment}
+
+Retrieve and speak Entertainment section from Yahoo Daily News.
+
+@kbd{Yahoo Health}
+
+Retrieve and speak Health section from Yahoo Daily News.
+
+@kbd{Yahoo Lifestyle}
+
+Yahoo Lifestyle News.
+
+@kbd{Yahoo Oddly}
+
+Retrieve and speak Oddity section from Yahoo Daily News.
+
+@kbd{Yahoo Politics}
+
+Retrieve and speak Politics section from Yahoo Daily News.
+
+@kbd{Yahoo RSS Feeds}
+
+List Yahoo RSS Feeds.
+
+@kbd{Yahoo SF Local}
+
+Retrieve and speak Local section from Yahoo Daily News.
+
+@kbd{Yahoo Science}
+
+Retrieve and speak Science section from Yahoo Daily News.
+
+@kbd{Yahoo Sports}
+
+Entertainment news from Yahoo.
+
+@kbd{Yahoo Technology  News}
+
+Yahoo Technology News.
+
+@kbd{Yahoo Top Stories}
+
+Retrieve and speak Top Stories  section from Yahoo Daily News.
+
+@kbd{Yahoo World News}
+
+Yahoo World News.
+
+@kbd{fedex packages}
+
+Display package tracking information from Fedex.
+
+@kbd{pdf2html}
+
+Use access.adobe.com to  convert a remote PDF document to plain
+ text.
+The PDF document needs to be available on the public Internet.
+
+@kbd{pdf2txt}
+
+Use access.adobe.com to  convert a remote PDF document to plain
+ text.
+The PDF document needs to be available on the public Internet.
+
+@kbd{sourceforge Stats}
+
+Display project usage statistics.
+
+@kbd{sourceforge browse mirrors}
+
+Retrieve download table  at Sourceforge for specified project.
+
+@kbd{sourceforge project}
+
+Open specified project page at SourceForge.
+
+@kbd{w3c IRC Logs}
+
+Use this to pull up the
+archived  logs from the W3C IRC. You need to know the exact
+name of the channel.
+
+@kbd{w3c Lists}
+
+Use this to pull up the
+archived  mail from the W3C list. You need to know the exact
+name of the list.
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-m-player.el --- Control mplayer from Emacs
-;;; $Id: emacspeak-m-player.el,v 21.0 2004/11/25 18:45:48 raman Exp $
+;;; $Id: emacspeak-m-player.el,v 22.0 2005/04/30 16:39:58 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, m-player streaming media 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:48 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:39:58 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 

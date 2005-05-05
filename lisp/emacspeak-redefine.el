@@ -1,5 +1,5 @@
 ;;; emacspeak-redefine.el --- Redefines some key Emacs builtins to speak
-;;; $Id: emacspeak-redefine.el,v 21.0 2004/11/25 18:45:49 raman Exp $
+;;; $Id: emacspeak-redefine.el,v 22.0 2005/04/30 16:39:58 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak's redefinition of some key functions.
 ;;; Emacspeak does most of its work by advising other functions to speak.
@@ -10,8 +10,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:49 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:39:58 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -96,7 +96,8 @@ speech flush as you type."
   (when buffer-read-only
     (signal 'buffer-read-only
             (list (current-buffer))))
-  (unless (car buffer-undo-list)
+  (when (and (listp buffer-undo-list)
+             (null (car buffer-undo-list)))
     (pop buffer-undo-list ))
   (self-insert-command  arg )
   (cond

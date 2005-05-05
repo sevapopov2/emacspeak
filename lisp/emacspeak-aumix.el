@@ -1,5 +1,5 @@
 ;;; emacspeak-aumix.el --- Setting Audio Mixer
-;;; $Id: emacspeak-aumix.el,v 21.0 2004/11/25 18:45:44 raman Exp $
+;;; $Id: emacspeak-aumix.el,v 22.0 2005/04/30 16:39:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to conveniently set audio display
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:44 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:50 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 

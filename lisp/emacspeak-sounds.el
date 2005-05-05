@@ -1,5 +1,5 @@
 ;;; emacspeak-sounds.el --- Defines Emacspeak auditory icons
-;;; $Id: emacspeak-sounds.el,v 21.0 2004/11/25 18:45:49 raman Exp $
+;;; $Id: emacspeak-sounds.el,v 22.0 2005/04/30 16:40:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Module for adding sound cues to emacspeak
 ;;; Keywords:emacspeak, audio interface to emacs, auditory icons
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:49 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:40:00 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -149,7 +149,10 @@ If we add new icons we should declare them here. ")
   (declare (special emacspeak-sounds-icon-list))
   emacspeak-sounds-icon-list)
 
-(defvar emacspeak-default-sound ""
+(defvar emacspeak-default-sound
+  (expand-file-name
+   "default-8k/button.au"
+   emacspeak-sounds-directory)
   "Default sound to play if requested icon not found.")
 
 (defvar emacspeak-sounds-themes-table
@@ -220,8 +223,8 @@ Do not set this by hand;
   (interactive
    (list
     (expand-file-name
-     (read-file-name "Theme: "
-                     emacspeak-sounds-directory))))
+     (read-directory-name "Theme: "
+			  emacspeak-sounds-directory))))
   (declare (special emacspeak-sounds-current-theme
                     emacspeak-sounds-themes-table))
   (setq theme (expand-file-name theme emacspeak-sounds-directory))
@@ -255,7 +258,7 @@ Do not set this by hand;
 ;;}}}
 ;;{{{  queue an auditory icon
 ;;;###autoload
-(defsubst emacspeak-queue-auditory-icon (sound-name)
+(defun emacspeak-queue-auditory-icon (sound-name)
   "Queue auditory icon SOUND-NAME."
   (declare (special dtk-speaker-process))
   (process-send-string dtk-speaker-process
@@ -266,18 +269,20 @@ Do not set this by hand;
 ;;{{{  native player (emacs 21)
 
 ;;;###autoload
-(defsubst emacspeak-native-auditory-icon (sound-name)
+(defun emacspeak-native-auditory-icon (sound-name)
   "Play auditory icon using native Emacs player."
-  (play-sound
-   (list 'sound :file
-	 (format "%s"
-		 (emacspeak-get-sound-filename sound-name )))))
+  (declare (special emacspeak-use-auditory-icons))
+  (when emacspeak-use-auditory-icons
+    (play-sound
+     (list 'sound :file
+	   (format "%s"
+		   (emacspeak-get-sound-filename sound-name ))))))
 
 ;;}}}
 ;;{{{  serve an auditory icon
 
 ;;;###autoload
-(defsubst emacspeak-serve-auditory-icon (sound-name)
+(defun emacspeak-serve-auditory-icon (sound-name)
   "Serve auditory icon SOUND-NAME.
 Sound is served only if `emacspeak-use-auditory-icons' is true.
 See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-auditory-icons ]."
@@ -300,7 +305,7 @@ sparc20's."
   :type 'string
   :group 'emacspeak-sounds)
 
-(defsubst emacspeak-play-auditory-icon (sound-name)
+(defun emacspeak-play-auditory-icon (sound-name)
   "Produce auditory icon SOUND-NAME.
 Sound is produced only if `emacspeak-use-auditory-icons' is true.
 See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-auditory-icons ]."
@@ -316,13 +321,13 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
 ;;}}}
 ;;{{{  queue a midi icon
 
-(defsubst emacspeak-queue-midi-icon (midi-name)
+(defun emacspeak-queue-midi-icon (midi-name)
   "Queue midi icon midi-NAME."
   (apply 'dtk-queue-note
          (emacspeak-get-midi-note midi-name)))
 
 ;;;###autoload
-(defsubst emacspeak-play-midi-icon (midi-name)
+(defun emacspeak-play-midi-icon (midi-name)
   "Play midi icon midi-NAME."
   (apply 'dtk-force-note
          (emacspeak-get-midi-note midi-name)))
@@ -340,10 +345,12 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
 	  (const emacspeak-queue-auditory-icon)
           (const emacspeak-play-midi-icon)))
 ;;;###autoload 
-(defsubst emacspeak-auditory-icon (icon)
+(defun emacspeak-auditory-icon (icon)
   "Play an auditory ICON."
-  (declare (special emacspeak-auditory-icon-function))
-  (funcall emacspeak-auditory-icon-function icon))
+  (declare (special emacspeak-auditory-icon-function
+                    emacspeak-use-auditory-icons))
+  (when emacspeak-use-auditory-icons
+    (funcall emacspeak-auditory-icon-function icon)))
 
 ;;}}}
 ;;{{{  Map names to midi
@@ -494,7 +501,6 @@ is a .1ms note on instrument 60."
 Optional interactive PREFIX arg toggles global value."
   (interactive "P")
   (declare (special emacspeak-use-auditory-icons
-                    emacspeak-aumix-multichannel-capable-p
                     dtk-program emacspeak-auditory-icon-function))
   (require 'emacspeak-aumix)
   (cond
@@ -505,13 +511,6 @@ Optional interactive PREFIX arg toggles global value."
                   emacspeak-use-auditory-icons))
    (t (setq emacspeak-use-auditory-icons
             (not emacspeak-use-auditory-icons))))
-  ;; when using software tts  use midi if we cant mix channels.
-  (when (and emacspeak-use-auditory-icons
-             (or
-	      (string= dtk-program "outloud")
-	      (string= dtk-program "stereo-outloud"))
-             (not emacspeak-aumix-multichannel-capable-p))
-    (setq emacspeak-auditory-icon-function 'emacspeak-play-midi-icon))
   (message "Turned %s auditory icons %s"
            (if emacspeak-use-auditory-icons  "on" "off" )
            (if prefix "" "locally"))
@@ -526,7 +525,7 @@ Optional interactive PREFIX arg toggles global value."
     ("emacspeak-play-midi-icon" . "emacspeak-play-midi-icon"))
   "Table of auditory icon players used  when selecting a player.")
 
-(defsubst emacspeak-select-auditory-icon-player ()
+(defun emacspeak-select-auditory-icon-player ()
   "Pick a player for producing auditory icons."
   (declare (special emacspeak-sounds-auditory-icon-players))
   (read 
@@ -540,6 +539,7 @@ Optional interactive PREFIX arg toggles global value."
 Recommended choices:
 
 emacspeak-serve-auditory-icon for  the wave device.
+emacspeak-queue-auditory-icon when using software TTS.
 emacspeak-play-midi-icon for midi device. "
   (interactive
    (list
@@ -548,11 +548,10 @@ emacspeak-play-midi-icon for midi device. "
                     emacspeak-auditory-icon-function))
   (cond
    ((and (not emacspeak-aumix-midi-available-p)
-         (memq player '(emacspeak-play-midi-icon
-                        emacspeak-queue-midi-icon
-                        emacspeak-play-midi-icon)))
-    (message "Cannot use midi icons in your current
-environment."))
+         (memq player
+               '(emacspeak-play-midi-icon emacspeak-queue-midi-icon)))
+    (message
+     "Cannot use midi icons in your current environment."))
    (t (setq emacspeak-auditory-icon-function player)))
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)))
@@ -591,6 +590,25 @@ audio player."
        emacspeak-play-program "/usr/bin/audioplay"
        emacspeak-play-args "-i"
        emacspeak-auditory-icon-function 'emacspeak-play-auditory-icon)))
+
+;;}}}
+;;{{{  flush sound driver
+
+(defcustom emacspeak-sounds-reset-snd-module-command nil
+  "Command to reset sound module."
+  :type '(choice
+          :tag "Command to reset sound modules: "
+          (const nil :tag "None")
+	  (string :tag "Command "))
+  :group 'emacspeak-sounds)
+;;;###autoload
+(defun emacspeak-sounds-reset-sound  ()
+  "Reload sound drivers."
+  (interactive)
+  (declare (special emacspeak-sounds-reset-snd-module-command))
+  (when emacspeak-sounds-reset-snd-module-command
+    (shell-command emacspeak-sounds-reset-snd-module-command)))
+
 
 ;;}}}
 (provide  'emacspeak-sounds)

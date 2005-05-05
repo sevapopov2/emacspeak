@@ -1,5 +1,5 @@
 ;;; emacspeak-sh-script.el --- Speech enable  sh-script mode
-;;; $Id: emacspeak-sh-script.el,v 21.0 2004/11/25 18:45:49 raman Exp $
+;;; $Id: emacspeak-sh-script.el,v 22.0 2005/04/30 16:40:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable sh-script 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:49 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:40:00 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -56,7 +56,7 @@
 (defadvice sh-mode (after emacspeak pre act comp)
   "Speech-enable sh-script editting."
   (voice-lock-mode 1)
-  (dtk-set-punctuations "all")
+  (dtk-set-punctuations 'all)
   (unless emacspeak-audio-indentation
     (emacspeak-toggle-audio-indentation))
   (emacspeak-speak-mode-line))
