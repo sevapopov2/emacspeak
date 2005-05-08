@@ -1,6 +1,6 @@
 #!/bin/sh
 # emacspeak - execute emacs with speech enhancements
-#$Id: emacspeak.sh.def,v 21.0 2004/11/25 18:46:01 raman Exp $
+#$Id: emacspeak.sh.def,v 22.0 2005/04/30 16:40:06 raman Exp $
 if [ -f /etc/emacspeak.conf ]
 then
     . /etc/emacspeak.conf

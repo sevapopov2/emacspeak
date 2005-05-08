@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el,v 21.0 2004/11/25 18:45:45 raman Exp $
+;;; $Id: emacspeak.el,v 22.0 2005/04/30 16:39:53 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:45 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:53 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -64,11 +64,16 @@
 
 ;;}}}
 ;;{{{  Customize groups 
+(defconst emacspeak-version
+  (let ((x "$Revision: 22.0 $"))
+    (string-match "[0-9.]+" x)
+    (substring x (match-beginning 0)
+               (match-end 0)))
+  "Version number for Emacspeak.")
 
 (defgroup emacspeak nil
   "Emacspeak: The Complete Audio Desktop  "
   :link '(url-link :tag "SourceForge" "http://emacspeak.sf.net")
-  :link '(url-link :tag "Cornell" "http://www.cs.cornell.edu/home/raman/emacspeak")
   :link '(url-link :tag "Papers" "http://emacspeak.sf.net/publications")
   :link '(url-link :tag "Mail"
                    "http://www.cs.vassar.edu/~priestdo/emacspeak/")
@@ -85,14 +90,8 @@
 ;;; end links 
   :prefix "emacspeak-"
   :group 'applications
-  :group 'accessibility)
-
-(defconst emacspeak-version
-  (let ((x "$Revision: 21.0 $"))
-    (string-match "[0-9.]+" x)
-    (substring x (match-beginning 0)
-               (match-end 0)))
-  "Version number for Emacspeak.")
+  :group 'accessibility
+  :version emacspeak-version)
 
 (defcustom emacspeak-startup-hook nil
   "Hook to run after starting emacspeak."
@@ -123,7 +122,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 
 ;;}}}
 ;;{{{ Setup package extensions
-
+(emacspeak-do-package-setup "add-log" 'emacspeak-add-log)
 (emacspeak-do-package-setup "analog" 'emacspeak-analog)
 (emacspeak-do-package-setup "ansi-color" 'emacspeak-ansi-color)                            
 (emacspeak-do-package-setup "apt-sources" 'emacspeak-apt-sources)
@@ -201,12 +200,14 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "midge-mode" 'emacspeak-midge)
 (emacspeak-do-package-setup "mpuz" 'emacspeak-entertain)
 (emacspeak-do-package-setup "mspools" 'emacspeak-mspools)
+(emacspeak-do-package-setup "nero" 'emacspeak-nero)
 (emacspeak-do-package-setup "net-utils" 'emacspeak-net-utils)
 (emacspeak-do-package-setup "newsticker" 'emacspeak-newsticker)
 (emacspeak-do-package-setup "nxml-mode" 'emacspeak-nxml)
 (emacspeak-do-package-setup "oobr" 'emacspeak-oo-browser)
 (emacspeak-do-package-setup "outline" 'emacspeak-outline)
 (emacspeak-do-package-setup "perl-mode" 'emacspeak-perl)
+(emacspeak-do-package-setup "php-mode" 'emacspeak-php-mode)
 (emacspeak-do-package-setup "pcl-cvs" 'emacspeak-pcl-cvs)
 (emacspeak-do-package-setup "pcvs" 'emacspeak-pcl-cvs)
 (emacspeak-do-package-setup "psgml" 'emacspeak-psgml)
@@ -247,6 +248,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "w3" 'emacspeak-w3)
 (emacspeak-do-package-setup "w3m" 'emacspeak-w3m)
 (emacspeak-do-package-setup "wget" 'emacspeak-wget)
+(emacspeak-do-package-setup "wdired" 'emacspeak-wdired)
 (emacspeak-do-package-setup "wid-edit" 'emacspeak-widget)
 (emacspeak-do-package-setup "windmove" 'emacspeak-windmove)
 (emacspeak-do-package-setup "winring" 'emacspeak-winring)
@@ -341,7 +343,7 @@ Emacs 20.3"
 sets punctuation mode to all, activates the dictionary and turns on split caps."
   (declare (special dtk-split-caps
                     emacspeak-audio-indentation))
-  (dtk-set-punctuations "all")
+  (dtk-set-punctuations 'all)
   (or dtk-split-caps
       (dtk-toggle-split-caps))
   (emacspeak-pronounce-refresh-pronunciations)
@@ -436,7 +438,10 @@ functions for details.   "
   (when emacspeak-unibyte
     (setq default-enable-multibyte-characters nil))
   (emacspeak-export-environment)
+  (require 'emacspeak-aumix)
+  (require 'emacspeak-sounds)
   (dtk-initialize)
+  (require 'emacspeak-personality)
   (require 'emacspeak-redefine)
   (require 'emacspeak-personality)
   (require 'emacspeak-fix-interactive)
@@ -455,7 +460,7 @@ functions for details.   "
   (run-hooks 'emacspeak-startup-hook)
   (emacspeak-setup-programming-modes)
 					;(require 'emacspeak-wizards)
-  (tts-with-punctuations "some"
+  (tts-with-punctuations 'some
 			 (dtk-speak
 			  (format "  Press %s to get an   overview of emacspeak  %s \
  I am  completely operational,  and all my circuits are functioning perfectly! "
@@ -468,7 +473,7 @@ functions for details.   "
   (interactive)
   (describe-function 'emacspeak)
   (switch-to-buffer "*Help*")
-  (dtk-set-punctuations "all")
+  (dtk-set-punctuations 'all)
   (emacspeak-speak-buffer))
 
 ;;}}}

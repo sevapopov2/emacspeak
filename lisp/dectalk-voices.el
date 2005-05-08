@@ -1,5 +1,5 @@
 ;;; dectalk-voices.el --- Define various device independent voices in terms of Dectalk codes.
-;;; $Id: dectalk-voices.el,v 21.0 2004/11/25 18:45:44 raman Exp $
+;;; $Id: dectalk-voices.el,v 22.0 2005/04/30 16:39:41 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Module to set up Dectalk voices and personalities
 ;;; Keywords: Voice, Personality, Dectalk
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:44 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:41 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -53,9 +53,6 @@
 (require 'acss-structure)
 ;;}}}
 ;;{{{  voice table
-
-(defvar tts-default-voice 'paul 
-  "Default voice used. ")
 
 (defvar dectalk-default-voice-string ""
   "Dectalk string for  default voice --set to be a no-op.")
@@ -575,11 +572,15 @@ and TABLE gives the values along that dimension."
 	  (concat "["
 		  (dectalk-get-family-code family)
                   (dectalk-get-punctuations-code (acss-punctuations style))
-		  " :dv "
-		  (dectalk-get-average-pitch-code (acss-average-pitch style) family)
-		  (dectalk-get-pitch-range-code (acss-pitch-range style) family)
-		  (dectalk-get-stress-code (acss-stress style ) family)
-		  (dectalk-get-richness-code (acss-richness style) family)
+                  (when (or (acss-average-pitch style)
+                            (acss-pitch-range style)
+                            (acss-stress style )
+                            (acss-richness style))
+		    (concat " :dv "
+			    (dectalk-get-average-pitch-code (acss-average-pitch style) family)
+			    (dectalk-get-pitch-range-code (acss-pitch-range style) family)
+			    (dectalk-get-stress-code (acss-stress style ) family)
+			    (dectalk-get-richness-code (acss-richness style) family)))
 		  "]")))
     (dectalk-define-voice name command)))
 

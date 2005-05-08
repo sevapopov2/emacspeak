@@ -1,6 +1,6 @@
 ;;; emacspeak-bbdb.el --- Speech enable BBDB -- a powerful address manager
 
-;;; $Id: emacspeak-bbdb.el,v 21.0 2004/11/25 18:45:44 raman Exp $
+;;; $Id: emacspeak-bbdb.el,v 22.0 2005/04/30 16:39:51 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for bbdb 
 ;;; Keywords:emacspeak, audio interface to emacs bbdb 
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@crl.dec.com 
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:44 $ |
-;;;  $Revision: 21.0 $ | 
+;;; $Date: 2005/04/30 16:39:51 $ |
+;;;  $Revision: 22.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -46,6 +46,30 @@
 ;;; Provide additional advice to bbdb
 
 ;;}}}
+;;{{{ personalities 
+(def-voice-font emacspeak-bbdb-company-personality
+  voice-brighten
+  'bbdb-company
+  "Personality for company name."
+  :group 'emacspeak-bbdb)
+(def-voice-font emacspeak-bbdb-field-name-personality
+  voice-smoothen
+  'bbdb-field-name
+  "Personality for field name."
+  :group 'emacspeak-bbdb)
+
+(def-voice-font emacspeak-bbdb-field-value-personality
+  voice-animate
+  'bbdb-field-value
+  "Personality for field values."
+  :group 'emacspeak-bbdb)
+
+(def-voice-font emacspeak-bbdb-name
+  voice-bolden
+  'bbdb-name
+  "Personality for  name."
+  :group 'emacspeak-bbdb)
+
 ;;{{{  Variable settings:
 
 ;;; Emacspeak will not work if bbdb is in electric mode
@@ -60,6 +84,8 @@
                       (define-key bbdb-mode-map "c" 'bbdb-create)
                       )))
                       
+;;}}}
+
 ;;}}}
 ;;{{{ Advice:
 

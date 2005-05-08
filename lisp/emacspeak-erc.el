@@ -1,5 +1,5 @@
 ;;; emacspeak-erc.el --- speech-enable erc irc client
-;;; $Id: emacspeak-erc.el,v 21.0 2004/11/25 18:45:45 raman Exp $
+;;; $Id: emacspeak-erc.el,v 22.0 2005/04/30 16:39:53 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for speech-enabling erc.el
 ;;; Keywords: Emacspeak, erc
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2004/11/25 18:45:45 $ |
-;;;  $Revision: 21.0 $ |
+;;; $Date: 2005/04/30 16:39:53 $ |
+;;;  $Revision: 22.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -191,17 +191,22 @@ spoken.")
 	 (search-forward " ")
 	 (buffer-substring start (1- (point))))))))
      
-
-(defun emacspeak-erc-add-name-to-monitor (name)
-  "Add people to monitor in this room."
+(defun emacspeak-erc-add-name-to-monitor (name &optional
+					       quiten-pronunciation)
+  "Add people to moniter in this room.
+Optional interactive prefix  arg defines a pronunciation that
+  silences speaking of this perso's name."
   (interactive
    (list
-    (emacspeak-erc-read-person "Add ")))
+    (emacspeak-erc-read-person "Add ")
+    current-prefix-arg))
   (declare (special emacspeak-erc-people-to-monitor))
   (unless (eq major-mode 'erc-mode)
     (error "Not in an ERC buffer."))
   (pushnew name emacspeak-erc-people-to-monitor
            :test #'string-equal)
+  (when quiten-pronunciation
+    (emacspeak-pronounce-add-buffer-local-dictionary-entry name ""))
   (emacspeak-auditory-icon 'select-object)
   (message "monitoring %s"
            (mapconcat #'identity 
@@ -417,7 +422,7 @@ set the current local value to the result.")
     #'(lambda (pattern)
         (format "%s wides "
                 (substring pattern 0 -1)))))
-  (dtk-set-punctuations "some"))
+  (dtk-set-punctuations 'some))
 
 ;;}}}
 ;;{{{ end of file
