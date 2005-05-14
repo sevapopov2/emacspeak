@@ -1564,7 +1564,7 @@ semantic to do the work."
                                       (when column-number-mode
                                         (format " Column %d"
                                                 (current-column)))
-                                      mode-name
+                                      " " mode-name
                                       (emacspeak-get-current-percentage-verbously)
                                       frame-info
                                       recursion-info
