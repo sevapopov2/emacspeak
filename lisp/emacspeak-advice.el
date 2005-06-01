@@ -800,6 +800,13 @@ Produce an auditory icon as well."
 	(dtk-say "no" )))
     ad-return-value ))
 
+(defadvice map-y-or-n-p (around emacspeak pre act)
+  "Provide speech feedback unconditionally."
+  (declare (special emacspeak-speak-messages))
+  (let ((emacspeak-speak-messages t))
+    ad-do-it
+    ad-return-value))
+
 ;;}}}
 ;;{{{  advice various input functions to speak:
 (defadvice read-key-sequence(around emacspeak pre act )
