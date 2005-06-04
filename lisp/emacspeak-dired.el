@@ -463,6 +463,23 @@ On a directory line, run du -s on the directory to speak its size."
 		   permissions))))
      (t (message "No file on current line")))))
 
+(defun emacspeak-dired-speak-file-ownerships ()
+  "Speak the ownerships of the current file."
+  (interactive)
+  (let ((filename (dired-get-filename nil t))
+	(emacspeak-speak-messages t))
+    (cond
+     (filename
+      (emacspeak-auditory-icon 'select-object)
+      (message "Owned by %s/%s"
+	       (nth (if (= (char-after (line-beginning-position)) ?\ )
+			2 3)
+		    (split-string (thing-at-point 'line)))
+	       (nth (if (= (char-after (line-beginning-position)) ?\ )
+			3 4)
+		    (split-string (thing-at-point 'line)))))
+     (t (message "No file on current line")))))
+
 ;;}}}
 ;;{{{  keys
 (eval-when (load)
@@ -473,6 +490,7 @@ On a directory line, run du -s on the directory to speak its size."
   (declare (special dired-mode-map ))
   (define-key dired-mode-map "'" 'emacspeak-dired-show-file-type)
   (define-key  dired-mode-map "/" 'emacspeak-dired-speak-file-permissions)
+  (define-key  dired-mode-map "\M-/" 'emacspeak-dired-speak-file-ownerships)
   (define-key  dired-mode-map ";" 'emacspeak-dired-speak-header-line)
   (define-key  dired-mode-map "a" 'emacspeak-dired-speak-file-access-time)
   (define-key dired-mode-map "c" 'emacspeak-dired-speak-file-modification-time)

@@ -172,6 +172,25 @@
       (message  "Permissions  %s "
                 string)))))
 
+(defun emacspeak-tar-speak-file-ownerships()
+  "Speak ownerships of file current entry "
+  (interactive)
+  (declare (special emacspeak-speak-messages))
+  (unless (or (eq major-mode 'tar-mode)
+	      (eq major-mode 'debview-mode))
+    (error "This command should be called only in tar mode"))
+  (let ((entry (tar-current-descriptor))
+	(emacspeak-speak-messages t))
+    (cond
+     ((null entry)
+      (message "No file on this line"))
+     (t (emacspeak-auditory-icon 'select-object)
+	(message  "Owned by %s/%s "
+                  (tar-header-uname (tar-desc-tokens
+				     entry))
+		  (tar-header-gname (tar-desc-tokens
+				     entry)))))))
+
 (defun emacspeak-tar-speak-file-size()
   "Speak size of file current entry "
   (interactive)
@@ -215,6 +234,7 @@
   (emacspeak-keymap-remove-emacspeak-edit-commands tar-mode-map)
   (define-key tar-mode-map "z" 'emacspeak-tar-speak-file-size)       
   (define-key tar-mode-map "/" 'emacspeak-tar-speak-file-permissions)
+  (define-key tar-mode-map "\M-/" 'emacspeak-tar-speak-file-ownerships)
   (define-key tar-mode-map "c" 'emacspeak-tar-speak-file-date)
   )
 
