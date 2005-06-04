@@ -215,6 +215,12 @@ this group is being deselected."
     (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-speak-line )))
 
+(defadvice gnus-group-customize (after emacspeak pre act)
+  "Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line )))
+
 ;;}}}
 ;;{{{  summary mode 
 
@@ -413,6 +419,30 @@ the previous group was closed."
     ad-do-it
     (when (interactive-p)
       (emacspeak-auditory-icon 'deselect-object )
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(dtk-speak (gnus-summary-article-subject ))))
+    ad-return-value ))
+
+(defadvice gnus-summary-tick-article-forward (around emacspeak pre act)
+  "Speak the line.
+ Produce an auditory icon if possible."
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (emacspeak-auditory-icon 'mark-object )
+      (if (= saved-point (point))
+          (dtk-speak "No more articles ")
+	(dtk-speak (gnus-summary-article-subject ))))
+    ad-return-value ))
+
+(defadvice gnus-summary-tick-article-backward (around emacspeak pre act)
+  "Speak the line.
+ Produce an auditory icon if possible."
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (emacspeak-auditory-icon 'mark-object )
       (if (= saved-point (point))
           (dtk-speak "No more articles ")
 	(dtk-speak (gnus-summary-article-subject ))))
