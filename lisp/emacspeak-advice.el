@@ -633,7 +633,8 @@ before the message is spoken."
                     emacspeak-speak-messages-should-pause-ongoing-speech
                     emacspeak-speak-messages emacspeak-lazy-message-time))
   (let ((dtk-stop-immediately t )
-        (inhibit-read-only t))
+        (inhibit-read-only t)
+	(deactivate-mark nil))
     ad-do-it
     (setq emacspeak-last-message ad-return-value )
     (put-text-property 0 (length emacspeak-last-message)
