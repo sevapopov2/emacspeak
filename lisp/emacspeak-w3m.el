@@ -556,13 +556,15 @@
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (with-current-buffer (window-buffer)
+      (emacspeak-speak-mode-line))))
 
 (defadvice w3m-quit (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (with-current-buffer (window-buffer)
+      (emacspeak-speak-mode-line))))
 
 (defadvice w3m-wget (after emacspeak pre act comp)
   "provide auditory confirmation"

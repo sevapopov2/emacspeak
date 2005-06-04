@@ -99,6 +99,18 @@
     (emacspeak-speak-mode-line)
     (emacspeak-auditory-icon 'close-object)))
 
+(defadvice gnus-group-quit (after emacspeak pre act)
+  "Provide auditory contextual feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
+
+(defadvice gnus-group-exit (after emacspeak pre act)
+  "Provide auditory contextual feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
+
 ;;}}}
 ;;{{{  starting up:
 

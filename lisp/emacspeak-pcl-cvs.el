@@ -152,7 +152,9 @@
 (defadvice cvs-bury-buffer (after emacspeak pre act)
   "Produce auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)))
+    (emacspeak-auditory-icon 'close-object)
+    (with-current-buffer (window-buffer)
+      (emacspeak-speak-mode-line))))
 
 ;;}}}
 (provide 'emacspeak-pcl-cvs)
