@@ -68,6 +68,12 @@
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
+(defadvice deb-view-dired-view-cleanup (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
+
 (defadvice tar-next-line (before emacspeak pre act com)
   "Produce auditory icon  if we cant move."
   (when (and (interactive-p)
@@ -138,7 +144,8 @@
   "Speak permissions of file current entry "
   (interactive)
   (declare (special emacspeak-speak-messages))
-  (unless (eq major-mode 'tar-mode)
+  (unless (or (eq major-mode 'tar-mode)
+	      (eq major-mode 'debview-mode))
     (error "This command should be called only in tar mode"))
   (let ((entry (tar-current-descriptor))
         (mode nil)
@@ -169,7 +176,8 @@
   "Speak size of file current entry "
   (interactive)
   (declare (special emacspeak-speak-messages))
-  (unless (eq major-mode 'tar-mode)
+  (unless (or (eq major-mode 'tar-mode)
+	      (eq major-mode 'debview-mode))
     (error "This command should be called only in tar mode"))
   (let ((entry (tar-current-descriptor))
 	(emacspeak-speak-messages t))
@@ -186,7 +194,8 @@
   (interactive)
   (declare (special emacspeak-speak-time-format-string
 		    emacspeak-speak-messages))
-  (unless (eq major-mode 'tar-mode)
+  (unless (or (eq major-mode 'tar-mode)
+	      (eq major-mode 'debview-mode))
     (error "This command should be called only in tar mode"))
   (let ((entry (tar-current-descriptor))
 	(emacspeak-speak-messages t))
