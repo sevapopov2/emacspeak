@@ -80,13 +80,16 @@
   "Personality for CVS lines needing an action.")
 
 ;;}}}
+;;{{{  speech enable interactive commands
 
-;;{{{  speech enable interactive commands 
+(defsubst emacspeak-pcl-cvs-summarize-line ()
+  (emacspeak-speak-line))
+
 (defadvice cvs-mode-add (after emacspeak pre act comp)
   "Provide spoken feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
+    (emacspeak-pcl-cvs-summarize-line)))
 (defadvice cvs-mode-kill-buffers (after emacspeak pre act
                                         comp)
   "Produce an auditory icon."
@@ -119,31 +122,28 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)))
 
-(defsubst emacspeak-pcl-cvs-summarize-line ()
-  (emacspeak-speak-line))
-
 (defadvice cvs-mode-next-line (after emacspeak pre act comp)
   "Provide auditory feedback. "
   (when (interactive-p)
-    (emacspeak-pcl-cvs-summarize-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-pcl-cvs-summarize-line)))
 (defadvice cvs-mode-previous-line (after emacspeak pre act comp)
   "Provide auditory feedback. "
   (when (interactive-p)
-    (emacspeak-pcl-cvs-summarize-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-pcl-cvs-summarize-line)))
 
 (defadvice cvs-mode-mark (after emacspeak  pre act comp)
   "Provide auditory feedback. "
   (when (interactive-p)
-    (emacspeak-pcl-cvs-summarize-line)
-    (emacspeak-auditory-icon 'mark-object)))
+    (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-pcl-cvs-summarize-line)))
 
 (defadvice cvs-mode-unmark (after emacspeak  pre act comp)
   "Provide auditory feedback. "
   (when (interactive-p)
-    (emacspeak-pcl-cvs-summarize-line)
-    (emacspeak-auditory-icon 'deselect-object)))
+    (emacspeak-auditory-icon 'deselect-object)
+    (emacspeak-pcl-cvs-summarize-line)))
 
 (defadvice  cvs-sentinel (after emacspeak pre act )
   "Provide auditory feedback"
