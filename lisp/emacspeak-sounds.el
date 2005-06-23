@@ -316,7 +316,8 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
   (declare (special  emacspeak-use-auditory-icons
                      emacspeak-play-args emacspeak-play-program))
   (and emacspeak-use-auditory-icons
-       (let ((process-connection-type nil))
+       (let ((process-connection-type nil)
+	     (default-directory (file-name-as-directory (getenv "HOME"))))
          (start-process
           "play" nil emacspeak-play-program
                                         ;emacspeak-play-args ;breaks sox
