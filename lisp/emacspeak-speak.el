@@ -154,7 +154,7 @@ Argument BODY specifies forms to execute."
 (defsubst emacspeak-speak-get-text-range (property)
   "Return text range  around  at point and having the same value as  specified by argument PROPERTY."
   (buffer-substring
-   (previous-single-property-change (point)
+   (previous-single-property-change (1+ (point))
                                     property nil (point-min))
    (next-single-property-change
     (point) property nil (point-max))))
