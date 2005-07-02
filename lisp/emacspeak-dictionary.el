@@ -119,7 +119,7 @@
     (emacspeak-speak-line)))
 (defadvice dictionary-new-search (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (or (interactive-p) (referenced-p))
     (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 (defadvice dictionary-lookup-definition (after emacspeak pre act comp)
