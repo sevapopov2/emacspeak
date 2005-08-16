@@ -1,8 +1,8 @@
 ;;; emacspeak-nxml.el --- Speech enable nxml mode
 ;;; $Id: emacspeak-nxml.el,v 22.0 2005/04/30 16:39:58 raman Exp $
 ;;; $Author: raman $
-;;; Description: Controlling mplayer from emacs 
-;;; Keywords: Emacspeak, nxml streaming media 
+;;; Description: Emacspeak extension to speech enable nxml mode
+;;; Keywords: Emacspeak, nxml
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:

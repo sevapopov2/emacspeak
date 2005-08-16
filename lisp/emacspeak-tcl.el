@@ -1,8 +1,8 @@
 ;;; emacspeak-tcl.el --- Speech enable TCL development environment
 ;;; $Id: emacspeak-tcl.el,v 22.0 2005/04/30 16:40:00 raman Exp $
 ;;; $Author: raman $ 
-;;; DescriptionEmacspeak extensions for tcl-mode
-;;; Keywords:emacspeak, audio interface to emacs tcl
+;;; Description: Emacspeak extensions for tcl-mode
+;;; Keywords: emacspeak, audio interface to emacs tcl
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
