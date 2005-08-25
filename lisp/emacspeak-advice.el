@@ -2067,40 +2067,48 @@ Provide an auditory icon if possible."
 (defadvice mail-subject (after emacspeak pre act)
   "Speak the subject line."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line )))
 
 (defadvice mail-cc   (after emacspeak pre act)
   "Speak the cc  line."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line )))
 
 (defadvice mail-bcc (after emacspeak pre act)
   "Speak the bcc line."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line )))
 
 (defadvice mail-to (after emacspeak pre act)
   "Speak the to line."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line )))
 
 (defadvice mail-reply-to (after emacspeak pre act)
   "Speak the reply-to line."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line )))
 (defadvice mail-fcc (after emacspeak pre act)
   "Speak the fcc line."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line )))
 
 (defadvice mail-signature  (after emacspeak pre act)
   "Announce you signed the message."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'yank-object)
     (message "Signed your message")))
 
 (defadvice mail-send-and-exit (after emacspeak pre act)
   "Speak the modeline of active buffer."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line )))
 
 ;;}}}
