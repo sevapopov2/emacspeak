@@ -34,6 +34,8 @@
 ;;{{{  required modules
 
 (require 'emacspeak-preamble)
+(require 'emacspeak-w3)
+(require 'easymenu)
 
 (eval-when (load)
   (require 'w3m-util)
@@ -44,6 +46,7 @@
 (declaim (special w3m-mode-map
                   emacspeak-prefix))
 (define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command)
+(define-key w3m-mode-map "x" 'emacspeak-w3m-xsl-map)
 (define-key w3m-mode-map [M-tab] 'w3m-previous-anchor)
 (define-key w3m-mode-map [backtab] 'w3m-previous-anchor)
 (define-key w3m-mode-map [tab] 'w3m-next-anchor)
@@ -679,13 +682,115 @@
 ;;}}}
 ;;{{{ TVR: applying XSL
 
-(defadvice  w3m-w3m-dump-head-source (after emacspeak pre act comp)
-  "Apply requested transform if any after grabbing the HTML. "
-  (when (and emacspeak-w3-xsl-p emacspeak-w3-xsl-transform)
-    (emacspeak-xslt-region
-     emacspeak-w3-xsl-transform
-     (point-min)
-     (point-max))))
+(defvar emacspeak-w3m-xsl-once nil
+  "XSL transformation for once applying.")
+
+(defun emacspeak-w3m-xslt-apply (xsl)
+  "Apply specified transformation to current page."
+  (interactive
+   (list
+    (expand-file-name
+     (read-file-name "XSL Transformation: "
+                     emacspeak-xslt-directory))))
+  (declare (special major-mode
+		    emacspeak-w3-xsl-p
+		    emacspeak-w3-xsl-transform
+                    emacspeak-xslt-directory))
+  (unless (eq major-mode 'w3m-mode)
+    (error "Not in a W3m buffer."))
+  (setq emacspeak-w3m-xsl-once xsl)
+  (w3m-redisplay-this-page))
+
+(defun emacspeak-w3m-xslt-perform (xsl-name &optional persistent)
+  "Perform XSL transformation by name on the current page
+or make it persistent if the second argument is not nil."
+  (let ((xsl (expand-file-name (concat xsl-name ".xsl")
+			       emacspeak-xslt-directory)))
+    (when persistent
+      (emacspeak-w3-xslt-select xsl))
+    (when (or emacspeak-w3-xsl-p
+	      (not persistent))
+      (emacspeak-w3m-xslt-apply xsl))))
+
+(defun emacspeak-w3m-xsl-add-submit-button (&optional persistent)
+  "Add regular submit button if needed.
+With prefix arg makes this transformation persistent."
+  (interactive "P")
+  (emacspeak-w3m-xslt-perform "add-submit-button" persistent))
+
+(defun emacspeak-w3m-xsl-google-hits (&optional persistent)
+  "Extracts Google hits from the current page.
+With prefix argument makes this transformation persistent."
+  (interactive "P")
+  (emacspeak-w3m-xslt-perform "google-hits" persistent))
+
+(defun emacspeak-w3m-xsl-linearize-tables (&optional persistent)
+  "Linearizes tables on the current page.
+With prefix argument makes this transformation persistent."
+  (interactive "P")
+  (emacspeak-w3m-xslt-perform "linearize-tables" persistent))
+
+(defun emacspeak-w3m-xsl-sort-tables (&optional persistent)
+  "Sorts tables on the current page.
+With prefix argument makes this transformation persistent."
+  (interactive "P")
+  (emacspeak-w3m-xslt-perform "sort-tables" persistent))
+
+(defadvice  w3m-create-text-page (before emacspeak pre act comp)
+  "Apply requested transform if any before displaying the HTML. "
+  (if emacspeak-w3m-xsl-once
+      (let ((emacspeak-w3-xsl-p t)
+	    (emacspeak-w3-xsl-transform emacspeak-w3m-xsl-once))
+	(emacspeak-xslt-region
+	 emacspeak-w3-xsl-transform
+	 (point-min)
+	 (point-max)))
+    (when (and emacspeak-w3-xsl-p emacspeak-w3-xsl-transform)
+      (emacspeak-xslt-region
+       emacspeak-w3-xsl-transform
+       (point-min)
+       (point-max))))
+  (setq emacspeak-w3m-xsl-once nil))
+
+;;}}}
+;;{{{  xsl keymap
+
+(define-prefix-command 'emacspeak-w3m-xsl-map)
+
+(declaim (special emacspeak-w3m-xsl-map))
+(define-key emacspeak-w3m-xsl-map "a" 'emacspeak-w3m-xslt-apply)
+(define-key emacspeak-w3m-xsl-map "s" 'emacspeak-w3-xslt-select)
+(define-key emacspeak-w3m-xsl-map "o" 'emacspeak-w3-xsl-toggle)
+(define-key emacspeak-w3m-xsl-map "b" 'emacspeak-w3m-xsl-add-submit-button)
+(define-key emacspeak-w3m-xsl-map "h" 'emacspeak-w3m-xsl-google-hits)
+(define-key emacspeak-w3m-xsl-map "l" 'emacspeak-w3m-xsl-linearize-tables)
+(define-key emacspeak-w3m-xsl-map "t" 'emacspeak-w3m-xsl-sort-tables)
+
+(add-hook 'w3m-mode-setup-functions
+	  '(lambda ()
+	     (easy-menu-define xslt-menu w3m-mode-map
+	       "XSLT menu"
+	       '("XSLT transforming"
+		 ["Enable default transforming on the fly"
+		  emacspeak-w3-xsl-toggle
+		  :included (not emacspeak-w3-xsl-p)]
+		 ["Disable default transforming on the fly"
+		  emacspeak-w3-xsl-toggle
+		  :included emacspeak-w3-xsl-p]
+		 ["Add regular submit button"
+		  emacspeak-w3m-xsl-add-submit-button t]
+		 ["Show only search hits"
+		  emacspeak-w3m-xsl-google-hits t]
+		 ["Linearize tables"
+		  emacspeak-w3m-xsl-linearize-tables t]
+		 ["Sort tables"
+		  emacspeak-w3m-xsl-sort-tables t]
+		 ["Select default transformation"
+		  emacspeak-w3-xslt-select t]
+		 ["Apply specified transformation"
+		  emacspeak-w3m-xslt-apply t]
+		 )))
+	  t)
 
 ;;}}}
 ;;{{{ tvr: mapping font faces to personalities 
