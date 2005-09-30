@@ -795,12 +795,12 @@ With prefix argument makes this transformation persistent."
 ;;}}}
 ;;{{{ tvr: mapping font faces to personalities 
 
-(def-voice-font  w3m-arrived-anchor-personality
+(def-voice-font  emacspeak-w3m-arrived-anchor-personality
   voice-lighten
   'w3m-arrived-anchor-face
   "w3m-arrived-anchor-face")
 
-(def-voice-font  w3m-anchor-personality
+(def-voice-font  emacspeak-w3m-anchor-personality
   voice-bolden
   'w3m-anchor-face
   "w3m-anchor-face")
@@ -820,7 +820,7 @@ With prefix argument makes this transformation persistent."
   'w3m-header-line-location-title-face
   "w3m-header-line-location-title-face")
 
-(def-voice-font  w3m-header-line-location-content-personality
+(def-voice-font  emacspeak-w3m-header-line-location-content-personality
   voice-animate
   'w3m-header-line-location-content-face
   "w3m-header-line-location-content-face")
