@@ -219,6 +219,7 @@ emacspeak-wdired.elc \
 emacspeak-websearch.elc \
 emacspeak-wget.elc \
 emacspeak-widget.elc \
+emacspeak-wiki.elc \
 emacspeak-windmove.elc \
 emacspeak-winring.elc \
 emacspeak-wizards.elc  \
@@ -428,6 +429,7 @@ emacspeak-wdired.elc: emacspeak-wdired.el dtk-speak.elc voice-setup.elc
 emacspeak-websearch.elc: emacspeak-websearch.el emacspeak-w3.elc
 emacspeak-wget.elc: emacspeak-wget.el dtk-speak.elc
 emacspeak-widget.elc: emacspeak-widget.el dtk-speak.elc voice-setup.elc
+emacspeak-wiki.elc: emacspeak-wiki.el dtk-speak.elc voice-setup.elc
 emacspeak-winring.elc: emacspeak-winring.el dtk-speak.elc voice-setup.elc
 emacspeak-windmove.elc: emacspeak-windmove.el dtk-speak.elc voice-setup.elc
 emacspeak-wizards.elc: emacspeak-wizards.el dtk-speak.elc voice-setup.elc

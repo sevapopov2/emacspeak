@@ -491,6 +491,9 @@
     ("emacspeak-widget.el"
         "Speech enable Emacs' native GUI widget library"
         (emacspeak  audio interface to emacs customized widgets))
+    ("emacspeak-wiki.el"
+        "Speech enable emacs-wiki package"
+        (emacspeak  emacs wiki  html publishing))
     ("emacspeak-windmove.el"
         "speech-enable windmove "
         (emacspeak  windmove))
