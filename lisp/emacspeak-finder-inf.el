@@ -477,7 +477,7 @@
         "Speech enable W3 WWW browser -- includes ACSS Support"
         (emacspeak  w3  www))
     ("emacspeak-w3m.el"
-        nil
+        "Speech enable W3m WWW browser"
         (emacspeak  w3m))
     ("emacspeak-wdired.el"
         "Speech-enable wdired"
