@@ -344,6 +344,9 @@
     ("emacspeak-php-mode.el"
         "Speech-Enable php-mode "
         (emacspeak  php))
+    ("emacspeak-planner.el"
+        "speech-enable Planner -- a powerful organizer in Emacs"
+        (emacspeak  organizer  day planner  daily schedule)
     ("emacspeak-preamble.el"
         "standard  include for Emacspeak modules"
         (emacspeak  audio interface to emacs auctex))

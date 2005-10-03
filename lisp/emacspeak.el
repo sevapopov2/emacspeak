@@ -210,6 +210,8 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "php-mode" 'emacspeak-php-mode)
 (emacspeak-do-package-setup "pcl-cvs" 'emacspeak-pcl-cvs)
 (emacspeak-do-package-setup "pcvs" 'emacspeak-pcl-cvs)
+(emacspeak-do-package-setup "planner" 'emacspeak-planner)
+(emacspeak-do-package-setup "planner-tasks-overview" 'emacspeak-planner)
 (emacspeak-do-package-setup "psgml" 'emacspeak-psgml)
 (emacspeak-do-package-setup "python-mode" 'emacspeak-python)
 (emacspeak-do-package-setup "re-builder" 'emacspeak-re-builder)
