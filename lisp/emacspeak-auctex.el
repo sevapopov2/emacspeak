@@ -1,7 +1,7 @@
 ;;; emacspeak-auctex.el --- Speech enable AucTeX -- a powerful TeX/LaTeX authoring environment
 ;;; $Id: emacspeak-auctex.el,v 22.0 2005/04/30 16:39:50 raman Exp $
 ;;; $Author: raman $ 
-;;; DescriptionEmacspeak extensions for auctex-mode
+;;; Description: Emacspeak extensions for auctex-mode
 ;;; Keywords:emacspeak, audio interface to emacs AUCTEX
 ;;{{{  LCD Archive entry: 
 
