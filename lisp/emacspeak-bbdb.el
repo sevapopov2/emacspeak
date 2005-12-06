@@ -2,8 +2,8 @@
 
 ;;; $Id: emacspeak-bbdb.el,v 22.0 2005/04/30 16:39:51 raman Exp $
 ;;; $Author: raman $ 
-;;; DescriptionEmacspeak extensions for bbdb 
-;;; Keywords:emacspeak, audio interface to emacs bbdb 
+;;; Description: Emacspeak extensions for bbdb 
+;;; Keywords: emacspeak, audio interface to emacs bbdb 
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:

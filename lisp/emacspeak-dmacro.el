@@ -1,8 +1,8 @@
 ;;; emacspeak-dmacro.el --- Speech enable DMacro -- Dynamic  Macros 
 ;;; $Id: emacspeak-dmacro.el,v 22.0 2005/04/30 16:39:53 raman Exp $
 ;;; $Author: raman $ 
-;;; DescriptionEmacspeak extensions for dmacro
-;;; Keywords:emacspeak, audio interface to emacs dmacro
+;;; Description: Emacspeak extensions for dmacro
+;;; Keywords: emacspeak, audio interface to emacs dmacro
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:

@@ -1,8 +1,8 @@
 ;;; emacspeak-view.el --- Speech enable View mode -- Efficient browsing of read-only content
 ;;; $Id: emacspeak-view.el,v 22.0 2005/04/30 16:40:01 raman Exp $
 ;;; $Author: raman $ 
-;;; DescriptionEmacspeak extensions for view
-;;; Keywords:emacspeak, audio interface to emacs, view-mode
+;;; Description: Emacspeak extensions for view
+;;; Keywords: emacspeak, audio interface to emacs, view-mode
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:

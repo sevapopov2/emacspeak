@@ -1,8 +1,8 @@
 ;;; emacspeak-perl.el --- Speech enable CPerl Mode 
 ;;; $Id: emacspeak-cperl.el,v 22.0 2005/04/30 16:39:52 raman Exp $
 ;;; $Author: raman $ 
-;;; DescriptionEmacspeak extensions for CPerl mode
-;;; Keywords:emacspeak, audio interface to emacs CPerl
+;;; Description: Emacspeak extensions for CPerl mode
+;;; Keywords: emacspeak, audio interface to emacs CPerl
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
