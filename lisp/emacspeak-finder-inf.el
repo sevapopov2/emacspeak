@@ -53,6 +53,9 @@
     ("emacspeak-arc.el"
         "Speech enable archive-mode -- a  Emacs interface to zip and friends"
         (emacspeak  speak  spoken output  archive))
+    ("emacspeak-asm.el"
+        "Emacspeak extensions for asm-mode"
+        (emacspeak  audio interface to emacs asm mode)
     ("emacspeak-auctex.el"
         "Speech enable AucTeX -- a powerful TeX/LaTeX authoring environment"
         (emacspeak  audio interface to emacs auctex))
@@ -311,6 +314,9 @@
     ("emacspeak-mspools.el"
         "Speech enable MSpools -- Monitor multiple mail drops"
         (emacspeak  speak  spoken output  mspools))
+    ("emacspeak-muse.el"
+        "speech support for muse authoring environment"
+        (emacspeak  hypermedia  document authoring))
     ("emacspeak-nero.el"
         "Speech-Enable nero (interface to lynx)"
         (emacspeak  nero))
@@ -356,6 +362,9 @@
     ("emacspeak-psgml.el"
         "Speech enable psgml package"
         (emacspeak  audio interface to emacs psgml))
+    ("emacspeak-ps.el"
+        "Emacspeak extensions for ps-mode"
+        (emacspeak  audio interface to emacs ps mode)
     ("emacspeak-python.el"
         "Speech enable Python development environment"
         (emacspeak  speak  spoken output  python))

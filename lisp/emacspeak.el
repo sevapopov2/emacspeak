@@ -128,6 +128,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "apt-sources" 'emacspeak-apt-sources)
 (emacspeak-do-package-setup "apt-utils" 'emacspeak-apt-utils)
 (emacspeak-do-package-setup "arc-mode" 'emacspeak-arc)
+(emacspeak-do-package-setup "asm-mode" 'emacspeak-asm)
 (emacspeak-do-package-setup "babel" 'emacspeak-babel )
 (emacspeak-do-package-setup "bbdb" 'emacspeak-bbdb )
 (emacspeak-do-package-setup "bibtex" 'emacspeak-bibtex)
@@ -200,6 +201,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "midge-mode" 'emacspeak-midge)
 (emacspeak-do-package-setup "mpuz" 'emacspeak-entertain)
 (emacspeak-do-package-setup "mspools" 'emacspeak-mspools)
+(emacspeak-do-package-setup "muse" 'emacspeak-muse)
 (emacspeak-do-package-setup "nero" 'emacspeak-nero)
 (emacspeak-do-package-setup "net-utils" 'emacspeak-net-utils)
 (emacspeak-do-package-setup "newsticker" 'emacspeak-newsticker)
@@ -213,6 +215,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "planner" 'emacspeak-planner)
 (emacspeak-do-package-setup "planner-tasks-overview" 'emacspeak-planner)
 (emacspeak-do-package-setup "psgml" 'emacspeak-psgml)
+(emacspeak-do-package-setup "ps-mode" 'emacspeak-ps)
 (emacspeak-do-package-setup "python-mode" 'emacspeak-python)
 (emacspeak-do-package-setup "re-builder" 'emacspeak-re-builder)
 (emacspeak-do-package-setup "reftex" 'emacspeak-reftex)
@@ -361,6 +364,7 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
                (add-hook hook
                          'emacspeak-setup-programming-mode)))
    (list 'c-mode-common-hook
+	 'asm-mode-hook
          'py-mode-hook
          'prolog-mode-hook
          'lisp-mode-hook
@@ -380,6 +384,7 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
          'TeX-mode-hook
          'LaTeX-mode-hook
          'bibtex-mode-hook
+	 'ps-mode-hook
          'tcl-mode-hook
          'html-helper-mode-hook
          'scheme-mode-hook

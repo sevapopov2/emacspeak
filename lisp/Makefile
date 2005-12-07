@@ -88,6 +88,7 @@ emacspeak-ansi-color.elc \
 emacspeak-apt-sources.elc \
 emacspeak-apt-utils.elc \
 emacspeak-arc.elc \
+emacspeak-asm.elc \
 emacspeak-auctex.elc \
 emacspeak-aumix.elc \
 emacspeak-autoload.elc \
@@ -169,6 +170,7 @@ emacspeak-metapost.elc \
 emacspeak-midge.elc \
 emacspeak-mpg123.elc \
 emacspeak-mspools.elc \
+emacspeak-muse.elc \
 emacspeak-nero.elc \
 emacspeak-net-utils.elc \
 emacspeak-newsticker.elc \
@@ -181,6 +183,7 @@ emacspeak-perl.elc \
 emacspeak-php-mode.elc \
 emacspeak-planner.elc \
 emacspeak-psgml.elc \
+emacspeak-ps.elc \
 emacspeak-python.elc \
 emacspeak-re-builder.elc \
 emacspeak-realaudio.elc \
@@ -287,6 +290,7 @@ emacspeak-ansi-color.elc: emacspeak-ansi-color.el dtk-speak.elc voice-setup.elc
 emacspeak-apt-sources.elc: emacspeak-apt-sources.el dtk-speak.elc voice-setup.elc
 emacspeak-apt-utils.elc: emacspeak-apt-utils.el dtk-speak.elc voice-setup.elc
 emacspeak-arc.elc: emacspeak-arc.el dtk-speak.elc voice-setup.elc
+emacspeak-asm.elc: emacspeak-asm.el dtk-speak.elc voice-setup.elc
 emacspeak-auctex.elc: emacspeak-auctex.el dtk-speak.elc voice-setup.elc
 emacspeak-aumix.elc: emacspeak-aumix.el dtk-speak.elc voice-setup.elc
 emacspeak-autoload.elc: emacspeak-autoload.el
@@ -371,6 +375,7 @@ emacspeak-metapost.elc: emacspeak-metapost.el dtk-speak.elc voice-setup.elc
 emacspeak-midge.elc: emacspeak-midge.el dtk-speak.elc voice-setup.elc
 emacspeak-mpg123.elc: emacspeak-mpg123.el dtk-speak.elc voice-setup.elc
 emacspeak-mspools.elc: emacspeak-mspools.el dtk-speak.elc voice-setup.elc
+emacspeak-muse.elc: emacspeak-muse.el dtk-speak.elc voice-setup.elc
 emacspeak-nero.elc: emacspeak-nero.el dtk-speak.elc voice-setup.elc
 emacspeak-net-utils.elc: emacspeak-net-utils.el dtk-speak.elc voice-setup.elc
 emacspeak-newsticker.elc: emacspeak-newsticker.el dtk-speak.elc voice-setup.elc
@@ -385,6 +390,7 @@ emacspeak-planner.elc: emacspeak-planner.el dtk-speak.elc
 emacspeak-pronounce.elc: emacspeak-pronounce.el
 emacspeak-personality.elc: emacspeak-personality.el
 emacspeak-psgml.elc: emacspeak-psgml.el dtk-speak.elc voice-setup.elc
+emacspeak-ps.elc: emacspeak-ps.el dtk-speak.elc voice-setup.elc
 emacspeak-python.elc: emacspeak-python.el dtk-speak.elc voice-setup.elc
 emacspeak-re-builder.elc: emacspeak-re-builder.el dtk-speak.elc voice-setup.elc
 emacspeak-realaudio.elc: emacspeak-realaudio.el dtk-speak.elc voice-setup.elc
