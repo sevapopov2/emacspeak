@@ -128,6 +128,7 @@
 (defadvice tab-to-tab-stop (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-current-column)))
 
 (defadvice forward-sentence (after emacspeak pre act)
