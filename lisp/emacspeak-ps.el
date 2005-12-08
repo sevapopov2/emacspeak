@@ -86,12 +86,14 @@ Otherwise cue user to the line just created."
 (defadvice ps-mode-comment-out-region (after emacspeak pre act comp)
   "Provide spoken feedback."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'section)
     (message "Commented region containing %s lines"
 	     (count-lines (point) (mark)))))
 
 (defadvice ps-mode-uncomment-region (after emacspeak pre act comp)
   "Provide spoken feedback."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'section)
     (message "Uncommented region containing %s lines"
 	     (count-lines (point) (mark)))))
 

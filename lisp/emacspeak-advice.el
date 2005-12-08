@@ -1665,6 +1665,7 @@ in completion buffers"
   "Provide spoken feedback."
   (when (interactive-p)
     (let ((prefix-arg (ad-get-arg 2)))
+      (emacspeak-auditory-icon 'section)
       (message "%s region containing %s lines"
                (if (and prefix-arg
                         (< prefix-arg 0))

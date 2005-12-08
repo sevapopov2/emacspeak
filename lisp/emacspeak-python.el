@@ -160,6 +160,7 @@
 (defadvice py-comment-region (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
   (when (interactive-p)
+    (emacspeak-auditory-icon 'section)
     (dtk-speak
      (format "Commented  block  containing %s lines"
              (count-lines  (region-beginning)
