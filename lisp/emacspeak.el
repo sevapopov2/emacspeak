@@ -381,6 +381,7 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
 	 'nxml-mode-hook
          'xsl-mode-hook
          'makefile-mode-hook
+	 'texinfo-mode-hook
          'TeX-mode-hook
          'LaTeX-mode-hook
          'bibtex-mode-hook
