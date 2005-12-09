@@ -96,8 +96,8 @@
 (defadvice gnus-group-suspend (after emacspeak pre act)
   "Provide auditory contextual feedback."
   (when (interactive-p)
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'close-object)))
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice gnus-group-quit (after emacspeak pre act)
   "Provide auditory contextual feedback."
@@ -142,8 +142,8 @@
 (defadvice gnus-group-select-group (after emacspeak pre act comp)
   "Read line after entering into group."
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defadvice gnus-group-read-group  (after  emacspeak pre act)
   "Speak the first article line.

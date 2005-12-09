@@ -271,14 +271,14 @@
 (defadvice w3m-edit-current-url (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice w3m-edit-this-url (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice w3m-submit-form (after emacspeak pre act comp)
   "Produce auditory icon."
@@ -404,8 +404,8 @@
 			 w3m-form-input-radio
 			 w3m-form-input-checkbox
 			 w3m-form-input-password)))
-	(emacspeak-w3m-speak-this-anchor)
-	(emacspeak-auditory-icon 'select-object))))
+	(emacspeak-auditory-icon 'select-object)
+	(emacspeak-w3m-speak-this-anchor))))
    (t ad-do-it))
   ad-return-value)
 
@@ -590,8 +590,8 @@
 (defadvice w3m-select-buffer (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice w3m-select-buffer-show-this-line (after emacspeak pre act comp)
   "Provide auditory feedback."

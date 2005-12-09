@@ -2871,6 +2871,7 @@ to reduce chatter."
      ((and completions-buffer
            (window-live-p (get-buffer-window completions-buffer )))
       (select-window  (get-buffer-window completions-buffer ))
+      (emacspeak-auditory-icon 'select-object)
       (when (interactive-p)
         (setq voice-lock-mode t)
         (message current-entry)
@@ -2880,8 +2881,7 @@ to reduce chatter."
           (emacspeak-make-string-inaudible current-entry))
         (dtk-toggle-splitting-on-white-space)
         (dtk-speak
-         (emacspeak-get-current-completion-from-completions)))
-      (emacspeak-auditory-icon 'select-object))
+         (emacspeak-get-current-completion-from-completions))))
      (t (message "No completions")))))
 
 (defun emacspeak-completions-move-to-completion-group()
@@ -2963,8 +2963,8 @@ Speak text between point and the char we hit."
                         (point-max)
                         'no-error)
         (setq goal (point))
-        (emacspeak-speak-region start goal)
-        (emacspeak-auditory-icon 'select-object))
+        (emacspeak-auditory-icon 'select-object)
+        (emacspeak-speak-region start goal))
        (t (error "Could not find %c" char))))
     (when goal (goto-char goal))))
 
@@ -2986,8 +2986,8 @@ See documentation for command run-at-time for details on time-spec."
     (read-from-minibuffer "Message: ")))
   (run-at-time time nil
                #'(lambda (m)
-                   (message m)
-                   (emacspeak-auditory-icon 'alarm))
+                   (emacspeak-auditory-icon 'alarm)
+                   (message m))
                message))
 
 ;;}}}

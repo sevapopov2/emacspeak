@@ -439,21 +439,21 @@ Set this to nil if things get too slow."
                                            comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object )))
+    (emacspeak-auditory-icon 'select-object )
+    (emacspeak-speak-line)))
 (defadvice ediff-next-meta-item (after emacspeak pre act
                                        comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object )))
+    (emacspeak-auditory-icon 'select-object )
+    (emacspeak-speak-line)))
 
 (defadvice ediff-registry-action (after emacspeak pre act
                                         comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice ediff-show-registry (after emacspeak pre act
                                       comp)

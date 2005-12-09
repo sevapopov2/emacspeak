@@ -60,14 +60,14 @@
 (defadvice rpm (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (interactive-p)
-    (message "Welcome to RPM")
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (message "Welcome to RPM")))
 
 (defadvice rpm-invert-sort (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (interactive-p)
-    (message "Inverted sort order")
-    (emacspeak-auditory-icon 'task-done)))
+    (emacspeak-auditory-icon 'task-done)
+    (message "Inverted sort order")))
 (defadvice rpm-toggle-format (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
@@ -102,8 +102,8 @@
 (defadvice rpm-rebuild-index (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (interactive-p)
-    (message "Rebuilt index")
-    (emacspeak-auditory-icon 'task-done)))
+    (emacspeak-auditory-icon 'task-done)
+    (message "Rebuilt index")))
 
 (defadvice rpm-proc-sentinel (after emacspeak pre act )
   "Provide auditory feedback"

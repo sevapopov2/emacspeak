@@ -331,8 +331,8 @@ implemented. ")))
                                               (current-buffer)
                                               (point-max)))
       (setq end (point))
-      (emacspeak-speak-region start end )
-      (emacspeak-auditory-icon 'select-object))))
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-speak-region start end ))))
 
 (defun emacspeak-w3-speak-next-element ()
   "Speak next document element."
@@ -346,8 +346,8 @@ implemented. ")))
                                               (current-buffer)
                                               (point-max)))
       (setq end (point))
-      (emacspeak-speak-region start end )
-      (emacspeak-auditory-icon 'select-object))))
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-speak-region start end ))))
 ;;}}}
 ;;{{{ experimental --unravel javascript urls 
 (defvar emacspeak-w3-javascript-cleanup-buffer " *javascript-cleanup*"
@@ -458,8 +458,8 @@ even if one is already defined."
     (browse-url
      (or redirect url))
     (when (interactive-p)
-      (emacspeak-speak-mode-line)
-      (emacspeak-auditory-icon 'open-object))))
+      (emacspeak-auditory-icon 'open-object)
+      (emacspeak-speak-mode-line))))
 
 ;;}}}
 ;;{{{ url expand and execute
@@ -505,8 +505,8 @@ even if one is already defined."
   (condition-case nil
       (progn
         (search-forward (buffer-name))
-        (emacspeak-speak-line)
-        (emacspeak-auditory-icon 'large-movement))
+        (emacspeak-auditory-icon 'large-movement)
+        (emacspeak-speak-line))
     (error "Title not found in body.")))
 
 ;;}}}
@@ -526,8 +526,8 @@ even if one is already defined."
       (when
           (eq (aref (widget-get (widget-at (point)) :w3-form-data) 0)
               'submit)
-        (w3-speak-summarize-form-field)
         (emacspeak-auditory-icon 'large-movement)
+        (w3-speak-summarize-form-field)
         (setq found t)))
     (message "Could not find submit button.")))
 
@@ -630,11 +630,11 @@ HTML."
                      emacspeak-xslt-directory))))
   (declare (special emacspeak-w3-xsl-transform))
   (setq emacspeak-w3-xsl-transform xsl)
+  (emacspeak-auditory-icon 'select-object)
   (message "Will apply %s before displaying HTML pages."
            (file-name-sans-extension
             (file-name-nondirectory
-             xsl)))
-  (emacspeak-auditory-icon 'select-object))
+             xsl))))
 ;;;###autoload
 (defun emacspeak-w3-xsl-toggle ()
   "Toggle  application of XSL transformations.
@@ -1419,8 +1419,8 @@ used as well."
                          url))))))
     (add-hook 'emacspeak-w3-post-process-hook
               #'(lambda nil
-                  (emacspeak-speak-mode-line)
-                  (emacspeak-auditory-icon 'open-object)))
+                  (emacspeak-auditory-icon 'open-object)
+                  (emacspeak-speak-mode-line)))
     (save-excursion
       (set-buffer src-buffer)
       (emacspeak-w3-preview-this-buffer))
@@ -1470,8 +1470,8 @@ used as well."
                          url))))))
     (add-hook 'emacspeak-w3-post-process-hook
               #'(lambda nil
-                  (emacspeak-speak-mode-line)
-                  (emacspeak-auditory-icon 'open-object)))
+                  (emacspeak-auditory-icon 'open-object)
+                  (emacspeak-speak-mode-line)))
     (save-excursion
       (set-buffer src-buffer)
       (when unescape-charent
@@ -1536,8 +1536,8 @@ current page."
       emacspeak-w3-google-related-uri 
       url))
     (search-forward "Similar")
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 ;;}}}
 ;;{{{ advice focus on cell 
