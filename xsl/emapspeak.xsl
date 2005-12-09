@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--$Id: emapspeak.xsl,v 22.0 2005/04/30 16:40:29 raman Exp $-->
+<!--$Id: emapspeak.xsl,v 23.505 2005/11/25 16:30:54 raman Exp $-->
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>
 Copyright: (C) T. V. Raman, 2001 - 2002,   All Rights Reserved.
@@ -23,7 +23,7 @@ near: url-encoded location from where direction links are generated
         <h1><xsl:apply-templates select="title"/></h1>
         <table summary="Coordinates">
         </table>
-        <xsl:apply-templates select="overlay/location"/>
+        <xsl:apply-templates select="overlay/locations/location"/>
         <xsl:apply-templates select="directions"/>
         <table summary="info">
           <tr>
@@ -69,9 +69,9 @@ near: url-encoded location from where direction links are generated
             <xsl:value-of select="$title"/>
           </a>
         </xsl:when>
-<xsl:otherwise><xsl:value-of select="$title"/></xsl:otherwise>
+        <xsl:otherwise><xsl:value-of select="$title"/></xsl:otherwise>
       </xsl:choose>
-</h2>
+    </h2>
     <table summary="info">
       <xsl:apply-templates select="info"/>
       <tr>
@@ -106,7 +106,7 @@ near: url-encoded location from where direction links are generated
           <xsl:attribute name="href">
             <xsl:value-of select="normalize-space(url)"/>
           </xsl:attribute>
-local.google</a>
+        local.google</a>
       </td>
     </tr>
   </xsl:template>
@@ -132,32 +132,57 @@ local.google</a>
       </tr>
     </table>
   </xsl:template>
-<xsl:template match="segments">
-<p> Route consists of 
-<xsl:value-of select="count(segment)"/> segments making up a
-total of 
-<xsl:value-of select="@meters"/> meters (approximately
-<xsl:value-of
-    select="substring-before(@distance, 'mi')"/> miles)
-and is expected to take <xsl:value-of select="@seconds"/> seconds 
-(approximately
-<xsl:value-of
-    select="substring-before(@time, 'min')"/> minutes).
-</p>
-<ol>
-<xsl:apply-templates select="segment"/>
-</ol>
-</xsl:template>
-
-<xsl:template match="segment">
-<li>
-  <strong>
-    <xsl:copy-of select="./node()"/>.
-  </strong>
-  and Go 
-  <em>
+  <xsl:template match="segments">
+    <p> Route consists of 
+    <xsl:value-of select="count(segment)"/> segments making up a
+    total of 
     <xsl:value-of select="@meters"/> meters (approximately
-  <xsl:value-of select="substring-before(@distance, 'mi')"/> miles)</em>
-</li>
-</xsl:template>
+    <xsl:value-of
+        select="substring-before(@distance, 'mi')"/> miles)
+    and is expected to take <xsl:value-of select="@seconds"/> seconds 
+    (approximately
+    <xsl:value-of
+        select="substring-before(@time, 'min')"/> minutes).
+    </p>
+    <ol>
+      <xsl:apply-templates select="segment"/>
+    </ol>
+  </xsl:template>
+
+  <xsl:template match="segment">
+    <li>
+      <xsl:copy-of select="./text|./b|text()"/>.
+      and Go 
+      <em>
+        <xsl:value-of select="@meters"/> meters
+        <xsl:choose>
+          <xsl:when test="substring-before(@distance, 'mi')">
+            (approximately <xsl:value-of select="substring-before(@distance, 'mi')"/>
+            miles)
+          </xsl:when>
+          <xsl:when test="substring-before(@distance, 'ft')">
+            <xsl:value-of select="substring-before(@distance, 'ft')"/>
+            feet)
+          </xsl:when>
+        </xsl:choose>
+      </em>
+      <xsl:if test="count(cross_streets/cross_street) > 1">
+        <em><xsl:value-of select="count(cross_streets/cross_street)"/>
+        blocks </em>:<br/>
+        <xsl:apply-templates select="cross_streets"/>
+      </xsl:if>
+    </li>
+  </xsl:template>
+
+  <xsl:template match="cross_streets">
+    <ul>
+      <xsl:apply-templates select="cross_street"/>
+    </ul>
+  </xsl:template>
+  <xsl:template match="cross_street">
+    <li>
+      <xsl:apply-templates/>
+      <xsl:value-of select="@meters"/> meters 
+    </li>
+  </xsl:template>
 </xsl:stylesheet>

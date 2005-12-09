@@ -1,11 +1,11 @@
 \input texinfo
 @raggedright
-@c$Id: emacspeak.texi,v 22.0 2005/04/30 16:40:12 raman Exp $
+@c$Id: emacspeak.texi,v 23.505 2005/11/25 16:30:53 raman Exp $
 @setfilename./emacspeak.info 
 @settitle Emacspeak User's Manual --2nd Edition.
 @dircategory Accessibility
 @dircategory Emacs
-     @direntry
+@direntry
  * Emacspeak:(emacspeak).		Speech-enabled Audio Desktop.
 @end direntry
 

@@ -1,5 +1,5 @@
-This is Emacspeak from  Sat Apr 30 09:40:50 PDT 2005
-Distribution created by tvraman on bubbles.almaden.ibm.com
+This is Emacspeak from  Fri Nov 25 08:30:58 PST 2005
+Distribution created by tvraman on labrador
 Unpack the  distribution 
 And type make config 
 To configure the source files. Then type make

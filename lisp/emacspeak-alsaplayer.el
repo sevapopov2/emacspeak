@@ -1,5 +1,5 @@
 ;;; emacspeak-alsaplayer.el --- Control alsaplayer from Emacs
-;;; $Id: emacspeak-alsaplayer.el,v 22.0 2005/04/30 16:39:50 raman Exp $
+;;; $Id: emacspeak-alsaplayer.el,v 23.505 2005/11/25 16:30:49 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling alsaplayer from emacs 
 ;;; Keywords: Emacspeak, alsaplayer
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:50 $ |
-;;;  $Revision: 22.0 $ | 
+;;; $Date: 2005/11/25 16:30:49 $ |
+;;;  $Revision: 23.505 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -98,8 +98,6 @@ from alsaplayer."
   :type 'directory
   :group 'emacspeak-alsaplayer)
 
-
-
 (defun emacspeak-alsaplayer-get-session ()
   "Return session id from alsaplayer output."
   (substring
@@ -128,13 +126,14 @@ Alsaplayer session."
              "alsaplayer"
              (current-buffer)
              emacspeak-alsaplayer-program
+             "-r"
              "-i" "daemon" ))
       (accept-process-output process)
       (setq emacspeak-alsaplayer-session
             (emacspeak-alsaplayer-get-session))
       (put 'emacspeak-alsaplayer-session 'buffer (current-buffer))
       (setq emacspeak-alsaplayer-session-id
-             (second
+	    (second
              (split-string emacspeak-alsaplayer-session "-")))
       (erase-buffer)
       (setq process
@@ -160,26 +159,31 @@ Optional second arg no-refresh is used to avoid getting status twice."
   (save-excursion
     (set-buffer (get 'emacspeak-alsaplayer-session 'buffer))
     (erase-buffer)
-  (let ((process nil))
-    (setq process
-          (apply 'start-process
-                 "alsaplayer"
-                 (current-buffer) emacspeak-alsaplayer-program
-                 "-n" emacspeak-alsaplayer-session-id
-                 command-list))
-    (unless no-refresh
-    (setq process
-          (start-process
-                 "alsaplayer" (current-buffer)   emacspeak-alsaplayer-program
-                 "-n" emacspeak-alsaplayer-session-id
-                 "--status"))))))
+    (let ((process nil))
+      (setq process
+	    (apply 'start-process
+		   "alsaplayer"
+		   (current-buffer) emacspeak-alsaplayer-program
+		   "-n" emacspeak-alsaplayer-session-id
+		   command-list))
+      (unless no-refresh
+	(setq process
+	      (start-process
+	       "alsaplayer" (current-buffer)   emacspeak-alsaplayer-program
+	       "-n" emacspeak-alsaplayer-session-id
+	       "--status"))))))
 
 (defun emacspeak-alsaplayer-add-to-queue (resource)
   "Add specified resource to queue."
   (interactive
    (list
-    (read-file-name "MP3 Resource: "
-                    emacspeak-alsaplayer-media-directory)))
+    (read-file-name "Media Resource: "
+                    (if 
+			(string-match (format ".*%s.*"
+					      emacspeak-alsaplayer-media-directory)
+				      (expand-file-name default-directory))
+			default-directory
+		      emacspeak-alsaplayer-media-directory))))
   (emacspeak-alsaplayer-send-command
    (cond
     ((file-directory-p resource)
@@ -188,7 +192,7 @@ Optional second arg no-refresh is used to avoid getting status twice."
       (directory-files
        (expand-file-name resource)
        'full
-       "mp3$")))
+       "\\(mp3\\)\\|\\(ogg\\)$")))
     (t
      (list "-e"
            (expand-file-name resource)))))
@@ -334,7 +338,6 @@ Optional second arg no-refresh is used to avoid getting status twice."
 ;;}}}
 ;;{{{ additional temporal navigation 
 
-
 (defun emacspeak-alsaplayer-forward-second ( seconds)
   "Skip forward by  seconds."
   (interactive "p")
@@ -371,7 +374,6 @@ Optional second arg no-refresh is used to avoid getting status twice."
     (format "-%s"
             (* 60 (or minutes 1))))))
 
-
 (defun emacspeak-alsaplayer-forward-ten-minutes ( minutes)
   "Skip forward by  chunks of ten minutes."
   (interactive "p")
@@ -389,8 +391,6 @@ Optional second arg no-refresh is used to avoid getting status twice."
     "--relative"
     (format "-%s"
             (* 600 (or minutes 1))))))
-
-
 
 (define-key emacspeak-alsaplayer-mode-map "."
   'emacspeak-alsaplayer-forward-second)

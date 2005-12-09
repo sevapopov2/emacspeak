@@ -1,5 +1,5 @@
 ;;; emacspeak-rss.el --- Emacspeak RSS Wizard
-;;; $Id: emacspeak-rss.el,v 22.0 2005/04/30 16:40:00 raman Exp $
+;;; $Id: emacspeak-rss.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  RSS Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop RSS
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:40:00 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 
@@ -49,6 +49,7 @@
 (require 'browse-url)
 ;;}}}
 ;;{{{ RSS feed cache
+
 ;;;###autoload
 (defgroup emacspeak-rss nil
   "RSS Feeds for the Emacspeak desktop."
@@ -70,14 +71,20 @@
 
 ;;}}}
 ;;{{{  view feed
+(defcustom emacspeak-rss-unescape-html t
+  "Fix malformed  XML that results from sites attempting to
+unescape HTML tags."
+  :type 'boolean
+  :group 'emacspeak-rss)
 
 ;;;###autoload
 (defun emacspeak-rss-display (rss-url &optional speak)
-  "Retrieve and display RSS news feed."
+  "Retrieve and display RSS URL."
   (interactive
    (list
     (car
-     (browse-url-interactive-arg "RSS Feed: "))))
+     (browse-url-interactive-arg "RSS URL: "))))
+  (declare (special emacspeak-rss-unescape-html))
   (declare (special emacspeak-xslt-directory))
   (when (or (interactive-p)speak)
     (add-hook 'emacspeak-w3-post-process-hook
@@ -85,7 +92,7 @@
   (emacspeak-w3-browse-xml-url-with-style
    (expand-file-name "rss.xsl" emacspeak-xslt-directory)
    rss-url
-					;'unescape-charent
+   (and emacspeak-rss-unescape-html 'unescape-charent)
    ))
 
 ;;;###autoload

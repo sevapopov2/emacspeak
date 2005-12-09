@@ -1,4 +1,4 @@
-        @c $Id: tts-server.texi,v 22.0 2005/04/30 16:40:12 raman Exp $
+        @c $Id: tts-server.texi,v 23.505 2005/11/25 16:30:53 raman Exp $
         @node TTS Servers
         @chapter Emacspeak TTS Servers
 

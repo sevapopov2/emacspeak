@@ -1,11 +1,12 @@
 #!/usr/bin/perl -w
-#$Id: ocr-client.pl,v 22.0 2005/04/30 16:40:09 raman Exp $
+#$Id: ocr-client.pl,v 23.505 2005/11/25 16:30:52 raman Exp $
 #Description: Invoke ocrxtr client. Pipe result to stdout
 #Usage: ocr-client.pl image-file [hostname]
 use strict;
 use File::Basename;
 
 my $OCR = 'ocrxtr';
+#my $OCR = 'xtrclilite';
 my $image =shift;
 die "No image specified" unless defined ($image);
 my $host =shift;
@@ -14,7 +15,7 @@ my $input = "/tmp/$$-$name.tiff";
 my $output = "/tmp/ocr-output-$$.txt";
 $host ='localhost' unless defined ($host);
 if ( $host =~ m/localhost/) {
-  qx($OCR -out_text_name $output $image);
+  qx($OCR -out_text_name $output $image 2>/dev/null);
   open (OUT, "cat -s $output |");
   while ( <OUT>) {
     print;

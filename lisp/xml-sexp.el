@@ -1,5 +1,5 @@
 ;;; xml-sexp.el --- Convert XML to S-Expressions
-;;; $Id: xml-sexp.el,v 22.0 2005/04/30 16:40:03 raman Exp $
+;;; $Id: xml-sexp.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Convert XML to S-Expressions
 ;;; Keywords: Emacspeak, XML 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:40:03 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 

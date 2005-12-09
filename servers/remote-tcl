@@ -1,10 +1,10 @@
 #!/bin/sh
-#$Id: remote-tcl,v 22.0 2005/04/30 16:40:09 raman Exp $
+#$Id: remote-tcl,v 23.505 2005/11/25 16:30:52 raman Exp $
 #Description: Launch a dectalk server on a remote host.
 #Copyright (C) 1995 -- 2003, T. V. Raman 
 # {{{  documentation
 
-# Running dectalk driver remotely.
+# Running TTS Server  remotely.
 
 # This will have to be polished up, but I've beaten on it  and it appears to
 # work like a charm.

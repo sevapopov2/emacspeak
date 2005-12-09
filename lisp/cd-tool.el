@@ -1,5 +1,5 @@
 ;;; cd-tool.el --- Play  CDs from Emacs
-;;;$Id: cd-tool.el,v 22.0 2005/04/30 16:39:41 raman Exp $
+;;;$Id: cd-tool.el,v 23.505 2005/11/25 16:30:49 raman Exp $
 ;;;Emacs front-end to CDTool
 ;;{{{  Copyright:
 

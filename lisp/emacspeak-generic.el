@@ -1,5 +1,5 @@
 ;;; emacspeak-generic.el --- Speech enable  generic modes
-;;; $Id: emacspeak-generic.el,v 22.0 2005/04/30 16:39:57 raman Exp $
+;;; $Id: emacspeak-generic.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable generic 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:57 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 
