@@ -436,8 +436,6 @@ and their meanings. ")
                         (define-key c-mode-base-map "\M-p"
                           'c-previous-statement))
                       (emacspeak-pronounce-toggle-use-of-dictionaries 'on)
-                      (or dtk-split-caps
-                          (dtk-toggle-split-caps))
                       (or dtk-allcaps-beep
                           (dtk-toggle-allcaps-beep)))))
 

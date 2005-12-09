@@ -142,20 +142,6 @@
      (buffer-name makefile-browser-client))))
 
 ;;}}}
-;;{{{ setup mode hook:
-
-(add-hook 'makefile-mode-hook
-          (function (lambda ()
-                      (declare (special dtk-split-caps))
-                      (voice-lock-mode 1)
-                      (dtk-set-punctuations 'all)
-                      (or dtk-split-caps
-                          (dtk-toggle-split-caps))
-                      (or emacspeak-audio-indentation
-                          (emacspeak-toggle-audio-indentation))
-                      (emacspeak-dtk-sync))))
-
-;;}}}
 (provide 'emacspeak-make-mode)
 
 ;;{{{ end of file 

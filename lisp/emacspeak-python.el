@@ -267,17 +267,6 @@ If already at the beginning then move to previous block."
   (emacspeak-speak-line))
 
 ;;}}}
-;;{{{  hooks
-
-(defun emacspeak-python-mode-hook ()
-  "Hook added by Emacspeak to python mode"
-  (unless emacspeak-audio-indentation
-    (emacspeak-toggle-audio-indentation)))
-
-(add-hook 'py-mode-hook
-          'emacspeak-python-mode-hook)
-
-;;}}}
 ;;{{{ keybindings
 
 (progn

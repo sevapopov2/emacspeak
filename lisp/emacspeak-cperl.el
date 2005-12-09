@@ -201,18 +201,6 @@ Otherwise cue user to the line just created. "
   (when (interactive-p)
     (emacspeak-auditory-icon 'task-done)
     (emacspeak-speak-mode-line)))
-;;}}}
-;;{{{ set up hooks 
-
-(add-hook 'cperl-mode-hook
-          (function (lambda ()
-		      (voice-lock-mode 1)
-		      (dtk-set-punctuations 'all)
-		      (or dtk-split-caps
-			  (dtk-toggle-split-caps))
-		      (or emacspeak-audio-indentation
-			  (emacspeak-toggle-audio-indentation))
-		      (emacspeak-dtk-sync))))
 
 ;;}}}
 (provide  'emacspeak-cperl)
