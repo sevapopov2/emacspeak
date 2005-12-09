@@ -83,7 +83,6 @@
 (defadvice pcomplete-list (after emacspeak pre act )
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'help)
     (emacspeak-auditory-icon 'help)))
 
 (defadvice pcomplete (around emacspeak pre act)
