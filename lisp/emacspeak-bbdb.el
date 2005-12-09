@@ -2,8 +2,8 @@
 
 ;;; $Id: emacspeak-bbdb.el,v 22.0 2005/04/30 16:39:51 raman Exp $
 ;;; $Author: raman $ 
-;;; DescriptionEmacspeak extensions for bbdb 
-;;; Keywords:emacspeak, audio interface to emacs bbdb 
+;;; Description: Emacspeak extensions for bbdb 
+;;; Keywords: emacspeak, audio interface to emacs bbdb 
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
@@ -143,11 +143,21 @@
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-line)))
 
+(defadvice bbdb (after emacspeak pre act )
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'search-hit)))
+
 (defadvice bbdb-bury-buffer (after emacspeak pre act )
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line )))
+
+(defadvice bbdb-save-db (after emacspeak pre act )
+  "Produce an auditory icon if possible"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'save-object)))
 
 (defadvice bbdb-elide-record (after emacspeak pre act )
   "Provide auditory feedback"
@@ -199,6 +209,11 @@
     (emacspeak-speak-other-window 1)))
 
 (defadvice bbdb/mh-show-sender (after emacspeak pre act comp)
+  "Provide spoken feedback"
+  (when (interactive-p)
+    (emacspeak-speak-other-window 1)))
+
+(defadvice bbdb/gnus-show-sender (after emacspeak pre act comp)
   "Provide spoken feedback"
   (when (interactive-p)
     (emacspeak-speak-other-window 1)))

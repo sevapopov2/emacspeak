@@ -1,8 +1,8 @@
 ;;; emacspeak-folding.el --- Speech enable Folding Mode -- enables structured editting
 ;;; $Id: emacspeak-folding.el,v 22.0 2005/04/30 16:39:56 raman Exp $
 ;;; $Author: raman $ 
-;;; DescriptionEmacspeak extensions for folding-mode
-;;; Keywords:emacspeak, audio interface to emacs Folding editor
+;;; Description: Emacspeak extensions for folding-mode
+;;; Keywords: emacspeak, audio interface to emacs Folding editor
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
