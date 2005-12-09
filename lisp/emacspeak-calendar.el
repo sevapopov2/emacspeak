@@ -162,14 +162,14 @@
 
 (defadvice calendar-goto-date (after emacspeak pre act)
   "Speak the date. "
-  (emacspeak-auditory-icon 'select-object)
   (when (interactive-p )
+    (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-calendar-date )))
 
 (defadvice calendar-goto-today (after emacspeak pre act)
   "Speak the date. "
-  (emacspeak-auditory-icon 'select-object)
   (when (interactive-p )
+    (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-calendar-date )))
 
 (defadvice calendar-backward-day (after emacspeak pre act)
