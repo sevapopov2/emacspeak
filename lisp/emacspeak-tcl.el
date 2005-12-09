@@ -196,6 +196,7 @@ is a Tcl expression, and the last argument is Tcl commands.")
 (defadvice tcl-indent-line (after emacspeak pre act)
   "Speak the line"
   (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 ;;}}}
 

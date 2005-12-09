@@ -537,7 +537,7 @@
 (defadvice w3m-horizontal-recenter (after emacspeak pre act comp)
   "Produce auditory icon."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'center)))
+    (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice w3m (around emacspeak pre act)
   "Speech-enable W3M."

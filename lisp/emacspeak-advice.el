@@ -1676,7 +1676,7 @@ in completion buffers"
 (defadvice bury-buffer (after emacspeak pre act)
   "Announce the buffer that becomes current."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line )))
 
 (defadvice save-buffer (around emacspeak pre act)
@@ -2374,7 +2374,7 @@ Produce an auditory icon if possible."
 (defadvice recenter (before emacspeak pre act)
   "Stop speech first."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'scroll)
+    (emacspeak-auditory-icon 'large-movement)
     (dtk-stop )))
 
 ;;}}}

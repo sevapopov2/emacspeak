@@ -151,7 +151,7 @@
 (defadvice py-indent-region (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-auditory-icon 'fill-object)
     (dtk-speak
      (format "Indented region   containing %s lines"
              (count-lines  (region-beginning)

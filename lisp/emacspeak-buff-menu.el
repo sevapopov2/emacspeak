@@ -155,7 +155,7 @@
 (defadvice Buffer-menu-bury (after emacspeak pre act)
   "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'close-object)
     (emacspeak-list-buffers-speak-buffer-line )))
 
 (defadvice Buffer-menu-delete-backwards (after emacspeak pre act)

@@ -72,6 +72,7 @@
 (defadvice meta-indent-line (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line )))
 
 (defadvice meta-fill-paragraph (after emacspeak pre act)

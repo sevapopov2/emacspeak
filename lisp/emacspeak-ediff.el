@@ -419,7 +419,7 @@ Set this to nil if things get too slow."
 (defadvice ediff-recenter (after emacspeak pre act )
   "Provide spoken feedback"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object )
+    (emacspeak-auditory-icon 'large-movement )
     (message "Refreshed the ediff display")))
 
 (defadvice ediff-jump-to-difference (after emacspeak pre act )
