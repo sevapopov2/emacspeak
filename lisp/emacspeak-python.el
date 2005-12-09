@@ -1,5 +1,5 @@
 ;;; emacspeak-python.el --- Speech enable Python development environment
-;;; $Id: emacspeak-python.el,v 22.0 2005/04/30 16:39:58 raman Exp $
+;;; $Id: emacspeak-python.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to python mode
 ;;; Keywords: Emacspeak, Speak, Spoken Output, python
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:58 $ |
-;;;  $Revision: 22.0 $ | 
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -38,19 +38,22 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;{{{ Introduction
+
+;;; Commentary:
+
+;;; This speech-enables python-mode available on sourceforge
+
+;;; Code:
+
+;;}}}
 ;;{{{  Required modules
 
 (require 'emacspeak-preamble)
-;;}}}
-;;{{{  Introduction
-
-;;;Speech enable python mode.
-;;; If you have python installed
-;;; you will find python-mode.el in the Python distribution.
-;;; If you dont have python, then you dont need this either.
 
 ;;}}}
 ;;{{{ Advice interactive commands:
+
 ;;{{{  electric editing
 
 (defadvice py-electric-colon (after emacspeak pre act comp)
@@ -84,8 +87,8 @@
 (defadvice py-shell (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'task-done)
-    (message "Launched Python interpreter")))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice py-clear-queue (after emacspeak pre act comp)
   "Provide auditory feedback"
@@ -122,6 +125,16 @@
 
 ;;}}}
 ;;{{{  whitespace management and indentation
+(loop for f in
+      (list 'py-fill-paragraph
+            'py-fill-comment
+            'py-fill-string)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'fill-object)))))
 
 (defadvice py-newline-and-indent(after emacspeak pre act comp)
   "Speak line so we know current indentation"
@@ -183,6 +196,13 @@
   (when (interactive-p)
     (emacspeak-speak-line)
     (emacspeak-auditory-icon 'large-movement)))
+
+(defadvice py-beginning-of-def-or-class (after emacspeak pre act comp)
+  "Speak current statement after moving"
+  (when (interactive-p)
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'large-movement)))
+
 (defadvice beginning-of-python-def-or-class (after emacspeak pre act comp)
   "Speak current statement after moving"
   (when (interactive-p)
@@ -190,6 +210,12 @@
     (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice end-of-python-def-or-class (after emacspeak pre act comp)
+  "Speak current statement after moving"
+  (when (interactive-p)
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'large-movement)))
+
+(defadvice py-end-of-def-or-class (after emacspeak pre act comp)
   "Speak current statement after moving"
   (when (interactive-p)
     (emacspeak-speak-line)
@@ -203,7 +229,17 @@
              (count-lines (region-beginning)
                           (region-end))))
     (emacspeak-auditory-icon 'mark-object)))
-
+(defadvice py-narrow-to-defun (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (message "%s %s lines"
+             (save-excursion
+               (goto-char (point-min))
+               (buffer-substring (line-beginning-position)
+                                 (line-end-position)))
+             (count-lines (point-min)
+                          (point-max)))))
+    
 (defadvice py-mark-def-or-class (after emacspeak pre act comp)
   "Speak number of lines marked"
   (when (interactive-p)
@@ -242,6 +278,7 @@
     ad-return-value))
 
 ;;}}}
+
 ;;}}}
 ;;{{{ Additional navigation
 (defun emacspeak-py-previous-block()
@@ -266,17 +303,6 @@ If already at the beginning then move to previous block."
   (emacspeak-auditory-icon 'large-movement))
 
 ;;}}}
-;;{{{  hooks
-
-(defun emacspeak-python-mode-hook ()
-  "Hook added by Emacspeak to python mode"
-  (unless emacspeak-audio-indentation
-    (emacspeak-toggle-audio-indentation)))
-
-(add-hook 'py-mode-hook
-          'emacspeak-python-mode-hook)
-
-;;}}}
 ;;{{{ keybindings
 
 (progn
@@ -289,7 +315,8 @@ If already at the beginning then move to previous block."
   (define-key py-mode-map "\C-\M-n" 'emacspeak-py-next-block)
   (define-key py-mode-map "\C-\M-p" 'emacspeak-py-previous-block)
   )
-
+(add-hook 'python-mode-hook
+          'emacspeak-setup-programming-mode)
 ;;}}}
 (provide 'emacspeak-python )
 ;;{{{ end of file 

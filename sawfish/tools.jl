@@ -1,4 +1,4 @@
-;;;$Id: tools.jl,v 22.0 2005/04/30 16:40:09 raman Exp $
+;;;$Id: tools.jl,v 23.505 2005/11/25 16:30:52 raman Exp $
 ;;; tools.jl --- Emacs tool for sawfish
 ;;; $Author: raman $
 ;;; Description:   Commands for launching or switching to
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:40:09 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:52 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 
@@ -46,7 +46,7 @@
 (require 'tts)
 ;;; Set this to the executable you wish to run  via command `emacs'
 (defcustom emacs-program
- "/usr/bin/emacs -i &"
+ "emacs -i &"
   "Emacs executable to run.")
 (defcustom xemacs-program
  "/usr/bin/xemacs -i &"

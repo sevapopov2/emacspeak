@@ -1,5 +1,5 @@
 ;;; emacspeak-url-template.el --- Create library of URI templates
-;;; $Id: emacspeak-url-template.el,v 22.0 2005/04/30 16:40:01 raman Exp $
+;;; $Id: emacspeak-url-template.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   Implement library of URI templates
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:40:01 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 
@@ -76,15 +76,20 @@
 
 (defun emacspeak-url-template-url (ut)
   "Instantiate URL identified by URL template."
+  (declare (special emacspeak-url-template-current-ut))
   (apply 'format
          ( emacspeak-url-template-template ut)
          (mapcar
-          (function
-           (lambda (g)
-             (cond
-              ((stringp g)
-               (webjump-url-encode (read-from-minibuffer g)))
-              (t (funcall g)))))
+          #'(lambda (g)
+              (let ((input nil))
+                (setq input
+                      (cond
+                       ((stringp g)
+                        (webjump-url-encode (read-from-minibuffer g)))
+                       (t (funcall g))))
+                (nconc emacspeak-url-template-current-ut
+                       (list input))
+                input))
           (emacspeak-url-template-generators ut))))
 
 (defun emacspeak-url-template-collect-date (prompt time-format-string)
@@ -147,8 +152,7 @@ post-action     Function called to apply post actions.
 fetcher         Unless specified, browse-url retrieves URL.
                 If specified, fetcher is a function of one arg
                 that is called with the URI to retrieve.
-documentation   Documents this template resource.
-"
+documentation   Documents this template resource. "
   (declare (special emacspeak-url-template-table
                     emacspeak-url-template-name-alist))
   (unless (emacspeak-url-template-get  name)
@@ -317,7 +321,7 @@ documentation   Documents this template resource.
 
 (emacspeak-url-template-define
  "BBC Radio4 On Demand"
- "http://www.bbc.co.uk/radio/aod/shows/rpms/radio4/%s.rpm"
+ "rtsp://rmv8.bbc.net.uk/radio4/%s.ra"
  (list "WeekdayTime: ")
  nil
  "Specify a week day (three letters -- lower case -- and a time spec
@@ -328,8 +332,8 @@ to play a BBC Radio4 program on demand."
 
 (emacspeak-url-template-define
  "BBC Radio7 On Demand"
- "http://www.bbc.co.uk/radio/aod/shows/rpms/bbc7/%s.rpm"
- (list "WeekdayTime: hhmm_day")
+ "rtsp://rmv8.bbc.net.uk/bbc7/%s_%s.ra"
+ (list "hhmm" "day")
  nil
  "Specify a week day (three letters -- lower case -- and a time spec
 -- e.g. 1230 --
@@ -385,8 +389,7 @@ content."
      (declare (special emacspeak-w3-url-executor))
      (setq emacspeak-w3-url-executor
            'emacspeak-url-template-bbc-channel-player))
- "Display BBC Channel on demand."
- )
+ "Display BBC Channel on demand.")
 
 ;;}}}
 ;;{{{ bbc Genres 
@@ -466,7 +469,7 @@ content."
       (erase-buffer)
       (kill-all-local-variables)
       (shell-command
-       (format "lynx -source %s" url)
+       (format "lynx -source '%s'" url)
        (current-buffer))
       (goto-char (point-min))
       (search-forward "<page" nil t)
@@ -483,7 +486,7 @@ content."
   
 (emacspeak-url-template-define
  "Google Maps Give Me XML"
- "http://maps.google.com/maps?q=%s&btng=Search&output=js"
+ emacspeak-websearch-google-maps-uri
  (list "Query: ")
  nil
  "Get me XML from Google Maps.
@@ -566,6 +569,15 @@ Here are some examples:
 ;;{{{ google scholar 
 
 (emacspeak-url-template-define
+ "Google Books"
+ "http://books.google.com/books?q=%s&btnG=Search+Books&hl=en"
+ (list "Google Book Search: ")
+ #'(lambda nil
+     (search-forward "pages" nil t)
+     (emacspeak-speak-line))
+ "Google Print Search")
+
+(emacspeak-url-template-define
  "Google Scholar"
  "http://scholar.google.com/scholar?ie=UTF-8&oe=UTF-8&hl=en&btnG=Search&num=25&q=%s"
  (list "Google Scholar Search: ")
@@ -573,6 +585,20 @@ Here are some examples:
      (search-forward "Results" nil t)
      (emacspeak-speak-line))
  "Google Scholar Search")
+
+;;}}}
+;;{{{ googl blogsearch
+(emacspeak-url-template-define
+ "BlogSearch Google"
+ "http://blogsearch.google.com/blogsearch?hl=en&q=%s&btnG=Search+Blogs&scoring=d"
+ (list "Google Blog Search: ")
+ #'(lambda nil
+     (search-forward "Results" nil t)
+     (emacspeak-speak-line))
+ "Google Print Search"
+ #'(lambda (url)
+     (emacspeak-w3-without-xsl
+      (w3-fetch url))))
 
 ;;}}}
 ;;{{{ google translation service
@@ -623,12 +649,24 @@ from English to German.")
 ;;{{{ google OverviewOfNews 
 
 (emacspeak-url-template-define
+ "Google Print"
+ "http://print.google.com/print?oi=print&q=%s"
+ (list "Google Print Search:")
+ #'(lambda nil
+     (search-forward "Print  Books" nil t)
+     (emacspeak-speak-rest-of-buffer))
+ "Google Print Search")
+
+(emacspeak-url-template-define
  "Google Text  News"
  "http://news.google.com/news?ned=tus"
  nil
  #'(lambda nil
      (emacspeak-speak-rest-of-buffer))
- "Retrieve and speak Google News Overview.")
+ "Retrieve and speak Google News Overview."
+ #'(lambda (url)
+     (emacspeak-w3-without-xsl
+      (browse-url url))))
 
 (emacspeak-url-template-define
  "Google Headline News"
@@ -653,6 +691,25 @@ from English to German.")
  #'(lambda (url)
      (emacspeak-w3-without-xsl
       (browse-url url))))
+
+(emacspeak-url-template-define
+ "Google RSS News"
+ "http://news.google.com/news?hl=en&ned=tus&q=%s&scoring=d&ie=ISO-8859-1&output=rss"
+ (list "Search news for: ")
+ nil
+ "Search Google news."
+ #'(lambda (url)
+     (emacspeak-rss-display url 'speak)))
+
+(emacspeak-url-template-define
+ "Google Feeds"
+ "http://news.google.com/intl/en_us/news_feed_terms.html"
+ nil
+ nil
+ "List  Google news Feeds."
+ #'(lambda (url)
+     (emacspeak-w3-extract-table-by-match "Sports"
+                                          url 'speak)))
 
 ;;}}}
 ;;{{{  cnet news 
@@ -705,12 +762,15 @@ from English to German.")
  "Yahoo RSS Feeds"
  "http://news.yahoo.com/rss"
  nil
- nil
+ #'(lambda ()
+     (emacspeak-pronounce-add-buffer-local-dictionary-entry
+      "http://rss.news.yahoo.com/rss/" ""))
  "List Yahoo RSS Feeds."
  #'(lambda (url)
      (emacspeak-w3-xslt-filter
-      "//a[contains(@href,\"rss\")]"
+      "//a[not(contains(@href,\"url\"))and  contains(@href, \"rss\") ]"
       url 'speak)))
+
 (defun emacspeak-url-template-yahoo-news-processor (url)
   "Process and speak Yahoo news."
   (declare (special emacspeak-w3-post-process-hook))
@@ -723,7 +783,7 @@ from English to German.")
 		      '("$" "&printer=1"))
 		(emacspeak-speak-buffer)))
   (emacspeak-w3-xslt-filter
-   "(//*[@class=\"article\"])//td[1]"
+   "//*[@id=\"ynmain\"]"
    url))
 
 (emacspeak-url-template-define
@@ -1238,7 +1298,7 @@ plays entire program."
 ;;{{{  MLB scores
 (emacspeak-url-template-define
  "MLB Alerts"
- "http://gd2.mlb.com/components/game/year_2004/alerts.xml"
+ "http://gd2.mlb.com/components/game/mlb/year_2005/alerts.xml"
  nil
  'emacspeak-speak-buffer
  "Show MLB Scorecard."
@@ -1249,7 +1309,7 @@ plays entire program."
 
 (emacspeak-url-template-define
  "MLB Scorecard"
- "http://gd.mlb.com/components/game/%s/scoreboard.xml"
+ "http://gd.mlb.com/components/game/mlb/%s/master_scoreboard.xml"
  (list
   #'(lambda nil
       (let ((date 
@@ -1350,7 +1410,7 @@ plays entire program."
 
 (emacspeak-url-template-define
  "Baseball scores" 
- "http://gd.mlb.com/components/game/%s_%smlb_%smlb_1/boxscore.html"
+ "http://gd.mlb.com/components/game/mlb/%s_%smlb_%smlb_1/boxscore.html"
  (list
   #'(lambda nil
       (let ((date 
@@ -1617,7 +1677,15 @@ Meerkat realy needs an xml-rpc method for getting this.")
 		   (eq browse-url-browser-function 'w3-fetch)
 		   (eq browse-url-browser-function 'browse-url-w3)))
       (add-hook 'emacspeak-w3-post-process-hook
-		(emacspeak-url-template-post-action ut)))
+		(emacspeak-url-template-post-action ut))
+      (add-hook 'emacspeak-w3-post-process-hook
+		#'(lambda ()
+                    (declare (special
+                              emacspeak-url-template-current-ut))
+                    (rename-buffer
+                     (downcase
+                      (mapconcat #'identity emacspeak-url-template-current-ut ": "))
+                     'unique))))
     (kill-new url)
     (funcall fetcher   url)))
 
@@ -1636,6 +1704,10 @@ Meerkat realy needs an xml-rpc method for getting this.")
     (print-help-return-message))
   (emacspeak-speak-help)
   (emacspeak-auditory-icon 'help))
+
+(defvar emacspeak-url-template-current-ut nil
+  "Records name and args of URL template we're executing.")
+
 ;;;###autoload
 (defun emacspeak-url-template-fetch (&optional documentation)
   "Fetch a pre-defined resource.
@@ -1645,6 +1717,7 @@ before completing the request.
 Optional interactive prefix arg displays documentation for specified resource."
   (interactive "P")
   (declare (special emacspeak-url-template-name-alist
+                    emacspeak-url-template-current-ut
 		    emacspeak-speak-messages))
   (let ((completion-ignore-case t)
         (emacspeak-speak-messages nil)
@@ -1655,7 +1728,8 @@ Optional interactive prefix arg displays documentation for specified resource."
                                 'must-match))
     (cond
      (documentation (emacspeak-url-template-help-internal name))
-     (t 
+     (t
+      (setq emacspeak-url-template-current-ut (list name))
       (emacspeak-url-template-open
        (emacspeak-url-template-get
         name))

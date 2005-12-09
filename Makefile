@@ -1,4 +1,4 @@
-# $Id: Makefile,v 22.0 2005/04/30 16:40:28 raman Exp $
+# $Id: Makefile,v 23.505 2005/11/25 16:30:54 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak,  TTS,Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2005/04/30 16:40:28 $ |
-#  $Revision: 22.0 $ | 
+# $Date: 2005/11/25 16:30:54 $ |
+#  $Revision: 23.505 $ | 
 # Location undetermined
 #
 
@@ -165,10 +165,10 @@ etc/remote.txt etc/FAQ etc/HELP etc/applications.html   etc/tips.html
 SOUNDS=sounds/default-8k sounds/emacspeak.mp3
 
 TCL_PROGRAMS = servers/.servers \
-servers/dtk-exp \
+servers/dtk-exp  servers/ssh-dtk-exp\
 servers/dtk-mv \
 servers/dtk-soft \
-servers/outloud \
+servers/outloud  servers/ssh-outloud \
 servers/dsp-outloud \
 servers/tts-lib.tcl \
 servers/remote-tcl \
@@ -344,7 +344,7 @@ rpm: emacspeak.spec
 	/bin/rm -rf /usr/share/emacs/site-lisp/emacspeak || echo ""
 	@cp emacspeak.tar.bz2 /usr/src/redhat/SOURCES/
 	@cp emacspeak.spec /usr/src/redhat/SPECS/
-	rpm  -ba --sign --clean   /usr/src/redhat/SPECS/emacspeak.spec
+	rpmbuild  -ba --sign --clean   /usr/src/redhat/SPECS/emacspeak.spec
 
 # }}}
 # {{{list distfiles to stdout

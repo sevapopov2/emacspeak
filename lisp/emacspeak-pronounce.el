@@ -1,5 +1,5 @@
 ;;; emacspeak-pronounce.el --- Implements Emacspeak pronunciation dictionaries
-;;; $Id: emacspeak-pronounce.el,v 22.0 2005/04/30 16:39:58 raman Exp $
+;;; $Id: emacspeak-pronounce.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Emacspeak pronunciation dictionaries
 ;;; Keywords:emacspeak, audio interface to emacs customized pronunciation
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:58 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 
@@ -139,9 +139,11 @@ Arguments STRING and PRONUNCIATION specify what is being defined."
    (t                                   ;turn it on
     (setq emacspeak-pronounce-pronunciation-table
           (emacspeak-pronounce-compose-pronunciation-table))))
-  (puthash    string pronunciation emacspeak-pronounce-pronunciation-table)
-  (message "Added  local pronunciation in buffer %s"
-           (buffer-name)))
+  (puthash    string pronunciation
+              emacspeak-pronounce-pronunciation-table)
+  (when (interactive-p)
+    (message "Added  local pronunciation in buffer %s"
+	     (buffer-name))))
 
 ;;}}}
 ;;{{{ setting up inheritance relations
@@ -583,12 +585,10 @@ Activates pronunciation dictionaries if not already active."
   (cond
    ((not (boundp 'emacspeak-pronounce-pronunciation-table)) ;first time
     (set (make-local-variable 'emacspeak-pronounce-pronunciation-table)
-         (emacspeak-pronounce-compose-pronunciation-table))
-    )
+         (emacspeak-pronounce-compose-pronunciation-table)))
    ( emacspeak-pronounce-pronunciation-table ;already on --refresh it
      (setq emacspeak-pronounce-pronunciation-table
-           (emacspeak-pronounce-compose-pronunciation-table))
-     )
+           (emacspeak-pronounce-compose-pronunciation-table)))
    (t                                   ;turn it on
     (setq emacspeak-pronounce-pronunciation-table
           (emacspeak-pronounce-compose-pronunciation-table))))
@@ -627,7 +627,8 @@ See http://oz.uc.edu/~solkode/smileys.html for a full list."
 (defcustom emacspeak-pronounce-common-xml-namespace-uri-pronunciations 
   '(
     ("http://www.w3.org/1999/02/22-rdf-syntax-ns#" . "RDF Syntax")
-    ("http://www.w3.org/2002/06/xhtml2" . " xhtml2 ") 
+    ("http://www.w3.org/2002/06/xhtml2" . " xhtml2 ")
+    ("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" . "XUL" )
     ("http://www.w3.org/2003/XInclude" . "xinclude")
     ("http://www.w3.org/1999/XSL/Transform" . " XSLT ")
     ("http://www.w3.org/2002/xforms" . " XForms ")

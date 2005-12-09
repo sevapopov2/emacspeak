@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el,v 22.0 2005/04/30 16:39:53 raman Exp $
+;;; $Id: emacspeak.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:53 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 
@@ -65,7 +65,7 @@
 ;;}}}
 ;;{{{  Customize groups 
 (defconst emacspeak-version
-  (let ((x "$Revision: 22.0 $"))
+  (let ((x "$Revision: 23.505 $"))
     (string-match "[0-9.]+" x)
     (substring x (match-beginning 0)
                (match-end 0)))
@@ -184,6 +184,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "info" 'emacspeak-info)
 (emacspeak-do-package-setup "ispell" 'emacspeak-ispell)
 (emacspeak-do-package-setup "iswitchb" 'emacspeak-iswitchb)
+(emacspeak-do-package-setup "jabber" 'emacspeak-jabber)
 (emacspeak-do-package-setup "jde" 'emacspeak-jde)
 (emacspeak-do-package-setup "kmacro" 'emacspeak-kmacro)
 (emacspeak-do-package-setup "kotl" 'emacspeak-kotl)
@@ -200,6 +201,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "newsticker" 'emacspeak-newsticker)
 (emacspeak-do-package-setup "nxml-mode" 'emacspeak-nxml)
 (emacspeak-do-package-setup "oobr" 'emacspeak-oo-browser)
+(emacspeak-do-package-setup "org" 'emacspeak-org)
 (emacspeak-do-package-setup "outline" 'emacspeak-outline)
 (emacspeak-do-package-setup "perl-mode" 'emacspeak-perl)
 (emacspeak-do-package-setup "php-mode" 'emacspeak-php-mode)
@@ -351,7 +353,6 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
                (add-hook hook
                          'emacspeak-setup-programming-mode)))
    (list 'c-mode-common-hook
-         'py-mode-hook
          'prolog-mode-hook
          'lisp-mode-hook
          'emacs-lisp-mode-hook

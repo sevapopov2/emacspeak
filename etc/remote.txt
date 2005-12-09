@@ -60,7 +60,7 @@ typically use C-r
 Now for the script--
 
 #!/bin/sh
-#$Id: remote.txt,v 22.0 2005/04/30 16:40:08 raman Exp $
+#$Id: remote.txt,v 23.505 2005/11/25 16:30:52 raman Exp $
 #Description: Launch a speech server on  a remote host.
 remote=labrador
 tcl=/usr/local/bin/tcl

@@ -1,4 +1,4 @@
-/*$Id: tcldtk.c,v 22.0 2005/04/30 16:40:09 raman Exp $*/
+/*$Id: tcldtk.c,v 23.505 2005/11/25 16:30:53 raman Exp $*/
 /* <copyright*/
 /**
  *Copyright (C) 1995 -- 2003, T. V. Raman 
@@ -58,7 +58,7 @@ Tcldtk_Init (Tcl_Interp * interp)
 {
   int status;
   LPTTS_HANDLE_T dtkHandle;
-  unsigned int devNo = 0;
+  unsigned int devNo = WAVE_MAPPER;
   DWORD devOptions = 0;
   devOptions |= WAVE_OPEN_SHAREABLE;
   devOptions |= WAVE_FORMAT_1S16;

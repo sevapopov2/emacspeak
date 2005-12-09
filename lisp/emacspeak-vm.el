@@ -1,5 +1,5 @@
 ;;; emacspeak-vm.el --- Speech enable VM -- A powerful mail agent (and the one I use)
-;;; $Id: emacspeak-vm.el,v 22.0 2005/04/30 16:40:01 raman Exp $
+;;; $Id: emacspeak-vm.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enhance vm
 ;;; Keywords: Emacspeak, VM, Email, Spoken Output, Voice annotations
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:40:01 $ |
-;;;  $Revision: 22.0 $ | 
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -132,9 +132,9 @@ Note that some badly formed mime messages  cause trouble."
    (vm-message-pointer
     (dtk-stop)
     (let*  ((message (car vm-message-pointer ))
-            (from (vm-su-from message ))
-            (subject (vm-so-sortable-subject message ))
-            (to (vm-su-to message ))
+            (from (vm-from-of message ))
+            (subject (vm-subject-of  message ))
+            (to (vm-to-of message ))
             (header nil))
       (while (not header)
 	(setq header 
@@ -158,26 +158,28 @@ Note that some badly formed mime messages  cause trouble."
             (number (emacspeak-vm-number-of  message))
             (from(or (vm-su-full-name message)
                      (vm-su-from message )))
-            (subject (vm-so-sortable-subject message ))
+            (subject (vm-su-subject message ))
             (to(or (vm-su-to-names message)
                    (vm-su-to message )))
             (self-p (or
                      (string-match emacspeak-vm-user-full-name to)
                      (string-match  (user-login-name) to)))
-            (lines (vm-su-line-count message)))
+            (lines (vm-su-line-count message))
+            (summary nil))
       (dtk-speak
-       (format "%s %s %s   %s %s "
-               number
-               (or from "")
-               (if subject (format "on %s" subject) "")
-               (if (and to (< (length to) 80))
-                   (format "to %s" to) "")
-               (if lines (format "%s lines" lines) "")))
+       (vm-decode-mime-encoded-words-in-string
+        (format "%s %s %s   %s %s "
+                number
+                (or from "")
+                (if subject (format "on %s" subject) "")
+                (if (and to (< (length to) 80))
+                    (format "to %s" to) "")
+                (if lines (format "%s lines" lines) ""))))
       (cond 
        ((and self-p
              (= 0 self-p)                    ) ;mail to me and others 
         (emacspeak-auditory-icon 'item))
-       (self-p                          ;mail to others including me
+       (self-p				;mail to others including me
         (emacspeak-auditory-icon 'mark-object))
        (t			     ;got it because of a mailing list
         (emacspeak-auditory-icon 'select-object ))))))
@@ -188,7 +190,7 @@ Note that some badly formed mime messages  cause trouble."
   (declare (special vm-message-pointer))
   (when vm-message-pointer
     (message "Labels: %s"
-             (vm-su-labels (car vm-message-pointer )))))
+             (vm-labels-of (car vm-message-pointer )))))
 
 (defun emacspeak-vm-mode-line ()
   "VM mode line information. "

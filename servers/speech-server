@@ -1,5 +1,5 @@
 #!/usr/bin/tcl
-# $Id: speech-server,v 22.0 2005/04/30 16:40:09 raman Exp $
+# $Id: speech-server,v 23.505 2005/11/25 16:30:52 raman Exp $
 # Description:  Speech server
 #Usage: tcl speech-server port device-specific-script
 #Example: tcl speech-server 2222 dtk-exp
@@ -9,8 +9,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2005/04/30 16:40:09 $ |
-#  $Revision: 22.0 $ | 
+# $Date: 2005/11/25 16:30:52 $ |
+#  $Revision: 23.505 $ | 
 # Location undetermined
 #
 

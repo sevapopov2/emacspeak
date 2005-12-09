@@ -1,5 +1,5 @@
 ;;; emacspeak-speak.el --- Implements Emacspeak's core speech services
-;;; $Id: emacspeak-speak.el,v 22.0 2005/04/30 16:40:00 raman Exp $
+;;; $Id: emacspeak-speak.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains the functions for speaking various chunks of text
 ;;; Keywords: Emacspeak,  Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:40:00 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 
@@ -685,7 +685,7 @@ the sense of the filter. "
     (message "Unset column filter")
     (setq emacspeak-speak-line-column-filter nil))))
 
-;;}}}					; ; ; ;	; ; ; ; ; ;
+;;}}}					; ; ; ;	; ; ; ; ; ; ; ;
 
 (defcustom emacspeak-speak-space-regexp
   "^[ \t\r]+$"
@@ -1487,74 +1487,84 @@ semantic to do the work."
      (ems-process-mode-line-format (symbol-value (car spec)))
      (ems-process-mode-line-format (cdr spec))))))
 
-(defun emacspeak-speak-mode-line ()
-  "Speak the mode-line."
-  (interactive)
+(defun emacspeak-speak-buffer-info ()
+  "Speak buffer information."
+  (message "Buffer has %s lines and %s characters "
+           (count-lines (point-min) (point-max))
+           (- (point-max) (point-min))))
+
+(defun emacspeak-speak-mode-line (&optional buffer-info)
+  "Speak the mode-line.
+Interactive prefix arg speaks buffer info."
+  (interactive "P")
   (declare (special  mode-name  major-mode voice-annotate
                      emacspeak-which-function-mode global-mode-string
                      column-number-mode line-number-mode
                      emacspeak-mail-alert mode-line-format ))
-  (dtk-stop)
-  (force-mode-line-update)
-  (emacspeak-dtk-sync)
-  (let ((dtk-stop-immediately nil )
-        (global-info (ems-process-mode-line-format global-mode-string))
-        (frame-info nil)
-        (recursion-depth (recursion-depth))
-        (recursion-info nil)
-        (dir-info (when (or
-                         (eq major-mode 'shell-mode)
-                         (eq major-mode 'comint-mode))
-                    default-directory)))
-    (when (and  emacspeak-which-function-mode
-                (fboundp 'which-function)
-                (which-function))
-      (emacspeak-speak-which-function))
-    (when   emacspeak-mail-alert (emacspeak-mail-alert-user))
-    (cond
-     ((stringp mode-line-format) (dtk-speak mode-line-format ))
-     (t                                 ;process modeline
-      (when dir-info
-        (put-text-property 0 (length dir-info)
-                           'personality voice-annotate dir-info))
+  (cond
+   (buffer-info (emacspeak-speak-buffer-info))
+   (t
+    (dtk-stop)
+    (force-mode-line-update)
+    (emacspeak-dtk-sync)
+    (let ((dtk-stop-immediately nil )
+	  (global-info (ems-process-mode-line-format global-mode-string))
+	  (frame-info nil)
+	  (recursion-depth (recursion-depth))
+	  (recursion-info nil)
+	  (dir-info (when (or
+			   (eq major-mode 'shell-mode)
+			   (eq major-mode 'comint-mode))
+		      default-directory)))
+      (when (and  emacspeak-which-function-mode
+		  (fboundp 'which-function)
+		  (which-function))
+	(emacspeak-speak-which-function))
+      (when   emacspeak-mail-alert (emacspeak-mail-alert-user))
       (cond
-       ((> (length (frame-list)) 1)
-        (setq frame-info
-              (format " %s " (frame-parameter (selected-frame) 'name)))
-        (put-text-property 0 (length frame-info)
-                           'personality voice-smoothen frame-info))
-       (t (setq frame-info "")))
-      (when (> recursion-depth 0)
-        (setq  recursion-info
-               (format " Recursive Edit %d "
-                       recursion-depth))
-        (put-text-property 0 (length recursion-info)
-                           'personality voice-smoothen
-                           recursion-info))
-      (unless (and buffer-read-only
-                   (buffer-modified-p)) ;avoid pathological case
-        (when(and (not (eq major-mode 'shell-mode))
-                  (not (eq major-mode 'comint-mode))
-                  (buffer-modified-p))
-          (dtk-tone 950 100))
-        (when buffer-read-only (dtk-tone 250 100)))
-      (put-text-property 0 (length global-info)
-                         'personality voice-smoothen global-info)
-      (tts-with-punctuations 'all
-                             (dtk-speak
-                              (concat dir-info
-                                      (buffer-name)
-                                      (when line-number-mode
-                                        (format " line %d"
-                                                (emacspeak-get-current-line-number)))
-                                      (when column-number-mode
-                                        (format " Column %d"
-                                                (current-column)))
-                                      mode-name
-                                      (emacspeak-get-current-percentage-verbously)
-                                      frame-info
-                                      recursion-info
-                                      global-info)))))))
+       ((stringp mode-line-format) (dtk-speak mode-line-format ))
+       (t				;process modeline
+	(when dir-info
+	  (put-text-property 0 (length dir-info)
+			     'personality voice-annotate dir-info))
+	(cond
+	 ((> (length (frame-list)) 1)
+	  (setq frame-info
+		(format " %s " (frame-parameter (selected-frame) 'name)))
+	  (put-text-property 0 (length frame-info)
+			     'personality voice-smoothen frame-info))
+	 (t (setq frame-info "")))
+	(when (> recursion-depth 0)
+	  (setq  recursion-info
+		 (format " Recursive Edit %d "
+			 recursion-depth))
+	  (put-text-property 0 (length recursion-info)
+			     'personality voice-smoothen
+			     recursion-info))
+	(unless (and buffer-read-only
+		     (buffer-modified-p)) ;avoid pathological case
+	  (when(and (not (eq major-mode 'shell-mode))
+		    (not (eq major-mode 'comint-mode))
+		    (buffer-modified-p))
+	    (dtk-tone 950 100))
+	  (when buffer-read-only (dtk-tone 250 100)))
+	(put-text-property 0 (length global-info)
+			   'personality voice-smoothen global-info)
+	(tts-with-punctuations 'all
+			       (dtk-speak
+				(concat dir-info
+					(buffer-name)
+					(when line-number-mode
+					  (format " line %d"
+						  (emacspeak-get-current-line-number)))
+					(when column-number-mode
+					  (format " Column %d"
+						  (current-column)))
+					mode-name
+					(emacspeak-get-current-percentage-verbously)
+					frame-info
+					recursion-info
+					global-info)))))))))
 
 (defun emacspeak-speak-current-buffer-name ()
   "Speak name of current buffer."
@@ -1779,7 +1789,7 @@ Second interactive prefix sets clock to new timezone."
                             
  
 (defconst emacspeak-codename
-  "GuideDog"
+  "Retriever"
   "Code name of present release.")
 
 (defun emacspeak-speak-version ()

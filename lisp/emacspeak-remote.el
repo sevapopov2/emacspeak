@@ -1,5 +1,5 @@
 ;;; emacspeak-remote.el --- Enables running remote Emacspeak sessions
-;;; $Id: emacspeak-remote.el,v 22.0 2005/04/30 16:39:59 raman Exp $
+;;; $Id: emacspeak-remote.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to remote speech server
 ;;; Keywords: Emacspeak, Speak, Spoken Output, remote server
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:59 $ |
-;;;  $Revision: 22.0 $ | 
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -175,15 +175,16 @@ and listening on port port.  Host is the hostname of the remote
 server, typically the desktop machine.  Port is the tcp port that that
 host is listening on for speech requests."
   (interactive
-   (list
-    (completing-read "Remote host: "
-                     emacspeak-eterm-remote-hosts-table	;completion table
-                     nil				;predicate
-                     nil				;must-match
-                     (emacspeak-remote-get-current-remote-hostname) ;initial input
-                     )
-    (read-minibuffer "Remote port: "
-                     emacspeak-remote-default-port-to-connect)))
+   (progn (tts-restart)
+	  (list
+	   (completing-read "Remote host: "
+			    emacspeak-eterm-remote-hosts-table ;completion table
+			    nil				;predicate
+			    nil				;must-match
+			    (emacspeak-remote-get-current-remote-hostname) ;initial input
+			    ))
+	  (read-minibuffer "Remote port: "
+			   emacspeak-remote-default-port-to-connect)))
   (declare (special dtk-speaker-process
                     emacspeak-remote-use-telnet-to-connect
                     emacspeak-remote-default-port-to-connect

@@ -1,5 +1,5 @@
 ;;; emacspeak-realaudio.el --- Play realaudio from Emacs
-;;; $Id: emacspeak-realaudio.el,v 22.0 2005/04/30 16:39:58 raman Exp $
+;;; $Id: emacspeak-realaudio.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Single click access to RealAudio from emacspeak
 ;;; Keywords: Emacspeak, RealAudio
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:58 $ |
-;;;  $Revision: 22.0 $ | 
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -181,6 +181,11 @@ user configurable variable emacspeak-realaudio-shortcuts-directory. "
 	(save-excursion
 	  (set-buffer emacspeak-realaudio-buffer)
 	  (emacspeak-realaudio-mode)
+          (goto-char (point-min))
+          (insert
+           (format "Stream: %s\n"
+                   resource))
+          (set-marker (process-mark emacspeak-realaudio-process) (point))
 	  (setq emacspeak-realaudio-this-resource resource)))
       (unless (eq 'run (process-status emacspeak-realaudio-process))
 	(error "Failed to start RealAudio"))

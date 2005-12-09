@@ -1,4 +1,4 @@
-;;;$Id: emacspeak-w3m.el,v 22.0 2005/04/30 16:40:02 raman Exp $;;; emacspeak-w3m.el --- speech-enables w3m-el
+;;;$Id: emacspeak-w3m.el,v 23.505 2005/11/25 16:30:50 raman Exp $;;; emacspeak-w3m.el --- speech-enables w3m-el
 ;;{{{ Copyright
 
 ;;; This file is not part of Emacs, but the same terms and

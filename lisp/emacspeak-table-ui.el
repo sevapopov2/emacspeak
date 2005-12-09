@@ -1,5 +1,5 @@
 ;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
-;;; $Id: emacspeak-table-ui.el,v 22.0 2005/04/30 16:40:00 raman Exp $
+;;; $Id: emacspeak-table-ui.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:40:00 $ |
-;;;  $Revision: 22.0 $ | 
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -96,6 +96,9 @@
   (define-key emacspeak-table-keymap "a"
     'emacspeak-table-select-automatic-speaking-method)
   (define-key emacspeak-table-keymap "s" 'emacspeak-table-search)
+  (define-key emacspeak-table-keymap "C"
+    'emacspeak-table-search-column)
+  (define-key emacspeak-table-keymap "R" 'emacspeak-table-search-row)
   (define-key emacspeak-table-keymap "f" 'emacspeak-table-speak-row-filtered)
   (define-key emacspeak-table-keymap "g" 'emacspeak-table-speak-column-filtered)
   (define-key emacspeak-table-keymap "h"
@@ -104,7 +107,7 @@
   (define-key emacspeak-table-keymap "T" 'emacspeak-table-goto-top)
   (define-key emacspeak-table-keymap "B" 'emacspeak-table-goto-bottom)
   (define-key emacspeak-table-keymap "L" 'emacspeak-table-goto-left)
-  (define-key emacspeak-table-keymap "R" 'emacspeak-table-goto-right)
+  (define-key emacspeak-table-keymap "E" 'emacspeak-table-goto-right)
   )
 
 (defun emacspeak-table-mode ()
@@ -807,11 +810,12 @@ browsing table elements"
 ;;}}}
 ;;{{{ searching and finding:
 
-(defun emacspeak-table-search ()
+(defun emacspeak-table-search (&optional what)
   "Search the table for matching elements.  Interactively prompts for
 row or column to search and pattern to look for.    If there is a match, makes
-the matching cell current."
-  (interactive )
+the matching cell current. When called from a program, `what' can
+  be either `row' or `column'."
+  (interactive "P")
   (declare (special emacspeak-table))
   (unless (boundp 'emacspeak-table)
     (error "Cannot find table associated with this buffer"))
@@ -819,11 +823,12 @@ the matching cell current."
   (let* ((row (emacspeak-table-current-row emacspeak-table))
          (column (emacspeak-table-current-column emacspeak-table))
          (found nil)
-         (slice 
-          (case (read-char)
-            (?r 'row)
-            (?c 'column)
-            (otherwise (error "Can only search in either row or column"))))
+         (slice
+          (or what 
+	      (case (read-char)
+		(?r 'row)
+		(?c 'column)
+		(otherwise (error "Can only search in either row or column")))))
          (pattern (read-string
                    (format "Search in current  %s for: " slice ))))
     (cond
@@ -845,6 +850,15 @@ the matching cell current."
       (emacspeak-auditory-icon 'search-hit))
      (t (emacspeak-auditory-icon 'search-miss)))
     (funcall emacspeak-table-speak-element)))
+(defun emacspeak-table-search-row ()
+  "Search in current table row."
+  (interactive)
+  (emacspeak-table-search 'row))
+
+(defun emacspeak-table-search-column ()
+  "Search in current table column."
+  (interactive)
+  (emacspeak-table-search 'column))
 
 (defun emacspeak-table-search-headers ()
   "Search the table row or column headers.  Interactively prompts for
@@ -1081,13 +1095,14 @@ markup to use."
            (function
             (lambda (x y)
               (cond
+               ((and (numberp (read (aref x column)))
+                     (numberp (read (aref y column))))
+                (< (read (aref x column))
+                   (read (aref y column))))
                ((and (stringp  (aref x column))
                      (stringp (aref y column)))
                 (string-lessp (aref x column)
                               (aref y column)))
-               ((and (numberp (aref x column))
-                     (numberp (aref y column)))
-                (< (aref x column) (aref y column)))
                (t (string-lessp
                    (format "%s" (aref x column))
                    (format "%s" (aref y column)))))))))

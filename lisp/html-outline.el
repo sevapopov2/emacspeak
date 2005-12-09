@@ -1,6 +1,6 @@
 ;;; html-outline.el --- Extends html-helper-mode to provide outline and imenu support
 ;;; Author: T. V. Raman
-;;; $Id: html-outline.el,v 22.0 2005/04/30 16:40:03 raman Exp $
+;;; $Id: html-outline.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; Description: Outlining for HTML helper mode
 ;;; Implements the necessary extensions to make outline minor mode recognize
 ;;; html markup.

@@ -1,4 +1,4 @@
-@c $Id: structure.texi,v 22.0 2005/04/30 16:40:12 raman Exp $
+@c $Id: structure.texi,v 23.505 2005/11/25 16:30:53 raman Exp $
 @node Structured Editing
 @section Structured Editing And Templates
 

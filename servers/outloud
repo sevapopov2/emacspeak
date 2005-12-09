@@ -5,8 +5,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2005/04/30 16:40:09 $ |
-#  $Revision: 22.0 $ | 
+# $Date: 2005/11/25 16:30:52 $ |
+#  $Revision: 23.505 $ | 
 # Location undetermined
 #
 
@@ -207,7 +207,7 @@ proc service {} {
     global tts
     set talking [speakingP]
     while {$talking == 1} {
-        set status   [lsearch [select [list  stdin]  {} {} 0.010] stdin]
+        set status   [lsearch [select [list  stdin]  {} {} 0.02] stdin]
         if { $status >= 0} {
             set tts(talking?) 0
             set talking 0
@@ -237,7 +237,7 @@ proc speech_task {} {
             }
             a {
                 set sound [lindex $event 1]
-                exec $tts(play) $sound 2>&1 > /dev/null &
+                exec $tts(play) $sound >/dev/null   &
             }
             b {
                 if {$tts(beep)} {

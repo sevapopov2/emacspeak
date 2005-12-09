@@ -1,4 +1,4 @@
-# $Id: Makefile,v 22.0 2005/04/30 16:40:03 raman Exp $
+# $Id: Makefile,v 23.505 2005/11/25 16:30:50 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak, Dectalk, Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2005/04/30 16:40:03 $ |
-#  $Revision: 22.0 $ | 
+# $Date: 2005/11/25 16:30:50 $ |
+#  $Revision: 23.505 $ | 
 # Location undetermined
 #
 
@@ -86,6 +86,7 @@ emacspeak-amphetadesk.elc \
 emacspeak-analog.elc \
 emacspeak-ansi-color.elc \
 emacspeak-arc.elc \
+emacspeak-atom.elc \
 emacspeak-auctex.elc \
 emacspeak-aumix.elc \
 emacspeak-autoload.elc \
@@ -152,6 +153,7 @@ emacspeak-imenu.elc \
 emacspeak-info.elc\
 emacspeak-ispell.elc \
 emacspeak-iswitchb.elc \
+emacspeak-jabber.elc \
 emacspeak-jde.elc \
 emacspeak-kmacro.elc  \
 emacspeak-kotl.elc \
@@ -169,6 +171,7 @@ emacspeak-net-utils.elc \
 emacspeak-newsticker.elc \
 emacspeak-ocr.elc \
 emacspeak-oo-browser.elc \
+emacspeak-org.elc \
 emacspeak-nxml.elc \
 emacspeak-outline.elc \
 emacspeak-pcl-cvs.elc \
@@ -276,6 +279,7 @@ emacspeak-advice.elc: emacspeak-advice.el dtk-speak.elc voice-setup.elc
 emacspeak-analog.elc: emacspeak-analog.el dtk-speak.elc voice-setup.elc
 emacspeak-ansi-color.elc: emacspeak-ansi-color.el dtk-speak.elc voice-setup.elc
 emacspeak-arc.elc: emacspeak-arc.el dtk-speak.elc voice-setup.elc
+emacspeak-atom.elc: emacspeak-atom.el dtk-speak.elc
 emacspeak-auctex.elc: emacspeak-auctex.el dtk-speak.elc voice-setup.elc
 emacspeak-aumix.elc: emacspeak-aumix.el dtk-speak.elc voice-setup.elc
 emacspeak-autoload.elc: emacspeak-autoload.el
@@ -342,6 +346,7 @@ emacspeak-imenu.elc: emacspeak-imenu.el dtk-speak.elc voice-setup.elc
 emacspeak-info.elc: emacspeak-info.el dtk-speak.elc voice-setup.elc 
 emacspeak-ispell.elc: emacspeak-ispell.el dtk-speak.elc voice-setup.elc
 emacspeak-iswitchb.elc: emacspeak-iswitchb.el dtk-speak.elc voice-setup.elc
+emacspeak-jabber.elc: emacspeak-jabber.el dtk-speak.elc
 emacspeak-jde.elc: emacspeak-jde.el dtk-speak.elc voice-setup.elc
 emacspeak-keymap.elc: emacspeak-keymap.el
 emacspeak-kmacro.elc: emacspeak-kmacro.el dtk-speak.elc voice-setup.elc
@@ -361,7 +366,8 @@ emacspeak-nero.elc: emacspeak-nero.el dtk-speak.elc voice-setup.elc
 emacspeak-net-utils.elc: emacspeak-net-utils.el dtk-speak.elc voice-setup.elc
 emacspeak-newsticker.elc: emacspeak-newsticker.el dtk-speak.elc voice-setup.elc
 emacspeak-nxml.elc: emacspeak-nxml.el dtk-speak.elc voice-setup.elc
-emacspeak-oo-browser.elc: emacspeak-oo-browser.el dtk-speak.elc voice-setup.elc 
+emacspeak-oo-browser.elc: emacspeak-oo-browser.el dtk-speak.elc voice-setup.elc
+emacspeak-org.elc: emacspeak-org.el dtk-speak.elc
 emacspeak-outline.elc: emacspeak-outline.el dtk-speak.elc voice-setup.elc
 emacspeak-ocr.elc: emacspeak-ocr.el dtk-speak.elc voice-setup.elc
 emacspeak-pcl-cvs.elc: emacspeak-pcl-cvs.el dtk-speak.elc voice-setup.elc
