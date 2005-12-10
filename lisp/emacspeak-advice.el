@@ -1,5 +1,5 @@
 ;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak intelligently
-;;; $Id: emacspeak-advice.el,v 22.0 2005/04/30 16:39:49 raman Exp $
+;;; $Id: emacspeak-advice.el,v 23.505 2005/11/25 16:30:49 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Core advice forms that make emacspeak work
 ;;; Keywords: Emacspeak, Speech, Advice, Spoken  output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:49 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:49 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 
@@ -1624,12 +1624,16 @@ in completion buffers"
   (when (interactive-p)
     (emacspeak-auditory-icon 'help)
     (message "Displayed mode help in other window")))
-
-(defadvice describe-bindings (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'help)
-    (message "Displayed key bindings  in other window")))
+(loop for f in
+      '(describe-bindings 
+	describe-prefix-bindings)
+      do
+      (eval 
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'help)
+	    (message "Displayed key bindings  in other window")))))
 
 (defadvice indent-for-tab-command (after emacspeak pre act comp)
   "Produce auditory feedback."

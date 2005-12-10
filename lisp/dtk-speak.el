@@ -1,5 +1,5 @@
 ;;; dtk-speak.el --- Provides Emacs Lisp interface to speech server
-;;;$Id: dtk-speak.el,v 22.0 2005/04/30 16:39:49 raman Exp $
+;;;$Id: dtk-speak.el,v 23.505 2005/11/25 16:30:49 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacs interface to TTS
 ;;; Keywords: Dectalk Emacs Elisp
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:49 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:49 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 
@@ -94,7 +94,8 @@ dtk-speech-rate-base  +  dtk-speech-rate-step*level."
   "List of hooks to be run after starting up the speech server.  
 Set things like speech rate, punctuation mode etc in this
 hook."
-  :type 'hook)
+  :type 'hook
+  :group 'tts)
 
 (defvar dtk-program
   (or  (getenv "DTK_PROGRAM" ) "dtk-exp")
@@ -1376,7 +1377,7 @@ available TTS servers.")
 This is setup on a per engine basis.")
 
 ;;; will be reset on a per TTS engine basis.
-;(defalias 'tts-get-voice-command 'dectalk-get-voice-command)
+					;(defalias 'tts-get-voice-command 'dectalk-get-voice-command)
   
 (defun tts-configure-synthesis-setup (&optional tts-name)
   "Setup synthesis environment. "
@@ -1388,10 +1389,13 @@ This is setup on a per engine basis.")
     (outloud-configure-tts))
    ((string-match "multispeech" tts-name)
     (multispeech-configure-tts))
-   ((string-match "dtk-" tts-name) ;all dectalks
+   ((string-match "dtk-" tts-name)      ;all dectalks
     (dectalk-configure-tts))
-   (t (dectalk-configure-tts); will become generic-configure
+   (t (dectalk-configure-tts)		; will become
+					; generic-configure)))
       ))
+  (when (string-match "^ssh" tts-name)  ;remote server
+    (setq emacspeak-auditory-icon-function 'emacspeak-serve-auditory-icon))
   (load-library "voice-setup")
   (setq tts-voice-reset-code (tts-get-voice-command tts-default-voice)))
 

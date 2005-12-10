@@ -1,5 +1,5 @@
 ;;; emacspeak-aumix.el --- Setting Audio Mixer
-;;; $Id: emacspeak-aumix.el,v 22.0 2005/04/30 16:39:50 raman Exp $
+;;; $Id: emacspeak-aumix.el,v 23.505 2005/11/25 16:30:49 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to conveniently set audio display
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:50 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:49 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 
@@ -57,7 +57,7 @@
 ;;}}}
 ;;{{{ Variables
 
-(defvar emacspeak-aumix-program "aumix"
+(defvar emacspeak-aumix-program "/usr/bin/aumix"
   "Program that sets up the mixer.")
 
 (defvar emacspeak-aumix-channel-table (make-hash-table)
@@ -123,6 +123,11 @@ display."
   "*Name of file containing personal aumix settings."
   :group 'emacspeak-aumix
   :type 'string)
+;;;###autoload
+(defcustom emacspeak-alsactl-program "alsactl"
+  "ALSA sound controller used to restore settings."
+  :type 'string
+  :group 'emacspeak-aumix)
 
 ;;;###autoload
 (defcustom emacspeak-aumix-reset-options
@@ -132,16 +137,25 @@ display."
   "*Option to pass to aumix for resetting to default values."
   :group 'emacspeak-aumix
   :type 'string)
+
 ;;;###autoload
 (defun emacspeak-aumix-reset ()
   "Reset to default audio settings."
   (interactive)
   (declare (special emacspeak-aumix-program
+                    emacspeak-alsactl-program
                     emacspeak-aumix-reset-options))
-  (shell-command
-   (format "%s %s"
-           emacspeak-aumix-program
-           emacspeak-aumix-reset-options))
+  (cond
+   ((executable-find emacspeak-alsactl-program)
+    (shell-command
+     (format "%s restore"
+             emacspeak-alsactl-program)))
+   ((and (file-exists-p emacspeak-aumix-program)
+         (file-executable-p emacspeak-aumix-program))
+    (shell-command
+     (format "%s %s"
+             emacspeak-aumix-program
+             emacspeak-aumix-reset-options))))
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)))
 (eval-when-compile (require 'emacspeak-forms))

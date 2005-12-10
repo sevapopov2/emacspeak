@@ -1,5 +1,5 @@
 ;;; emacspeak-analog.el --- Speech-enable
-;;; $Id: emacspeak-analog.el,v 22.0 2005/04/30 16:39:50 raman Exp $
+;;; $Id: emacspeak-analog.el,v 23.505 2005/11/25 16:30:49 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for ANALOG log analyzer 
 ;;; Keywords: Emacspeak, analog 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:50 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:49 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 

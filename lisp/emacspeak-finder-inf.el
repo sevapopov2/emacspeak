@@ -1,4 +1,4 @@
-;;;$Id: emacspeak-finder-inf.el,v 22.0 2005/04/30 16:39:54 raman Exp $
+;;;$Id: emacspeak-finder-inf.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; emacspeak-finder-inf.el --- keyword-to-package mapping
 ;; Keywords: help
 ;;; Commentary:
@@ -56,6 +56,9 @@
     ("emacspeak-asm.el"
         "Emacspeak extensions for asm-mode"
         (emacspeak  audio interface to emacs asm mode)
+    ("emacspeak-atom.el"
+        "Emacspeak ATOM Wizard"
+        (emacspeak   audio desktop atom))
     ("emacspeak-auctex.el"
         "Speech enable AucTeX -- a powerful TeX/LaTeX authoring environment"
         (emacspeak  audio interface to emacs auctex))
@@ -252,7 +255,7 @@
         "speech-enable ibuffer buffer selection"
         (emacspeak  audio desktop))
     ("emacspeak-ido.el"
-        nil
+        "speech-enable ido"
         (emacspeak  audio desktop))
     ("emacspeak-imcom.el"
         "Emacspeak interface to IMCom/Jabber"
@@ -269,6 +272,9 @@
     ("emacspeak-iswitchb.el"
         "speech-enable iswitchb buffer selection"
         (emacspeak  audio desktop))
+    ("emacspeak-jabber.el"
+        "Speech-Enable jabber "
+        (emacspeak  jabber))
     ("emacspeak-jde.el"
         "Speech enable JDE -- An integrated Java Development Environment"
         (emacspeak  speak  spoken output  java))
@@ -335,6 +341,9 @@
     ("emacspeak-oo-browser.el"
         "Speech enable OO Browser -- For Browsing large OO Systems"
         (emacspeak  speech access  browsing source code.))
+    ("emacspeak-org.el"
+        "Speech-enable org "
+        (emacspeak  org ))
     ("emacspeak-outline.el"
         "Speech enable Outline --   Browsing  Structured Documents"
         (emacspeak  audio interface to emacs outlines))

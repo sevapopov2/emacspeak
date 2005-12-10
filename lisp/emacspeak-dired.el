@@ -1,5 +1,5 @@
 ;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
-;;; $Id: emacspeak-dired.el,v 22.0 2005/04/30 16:39:53 raman Exp $
+;;; $Id: emacspeak-dired.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech enable dired
 ;;; Keywords: Emacspeak, Dired, Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:53 $ |
-;;;  $Revision: 22.0 $ |
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ |
 ;;; Location undetermined
 ;;;
 
@@ -50,6 +50,7 @@
 
 ;;; Code:
 (require 'emacspeak-preamble)
+(require 'desktop)
 (require 'dired)
 ;;}}}
 ;;{{{ Define personalities 

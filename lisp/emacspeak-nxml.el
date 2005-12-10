@@ -1,5 +1,5 @@
 ;;; emacspeak-nxml.el --- Speech enable nxml mode
-;;; $Id: emacspeak-nxml.el,v 22.0 2005/04/30 16:39:58 raman Exp $
+;;; $Id: emacspeak-nxml.el,v 23.505 2005/11/25 16:30:50 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Emacspeak extension to speech enable nxml mode
 ;;; Keywords: Emacspeak, nxml
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:58 $ |
-;;;  $Revision: 22.0 $ | 
+;;; $Date: 2005/11/25 16:30:50 $ |
+;;;  $Revision: 23.505 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -375,8 +375,10 @@
   (interactive)
   (cond
    ((get-text-property (point) 'nxml-outline-state)
+    (emacspeak-auditory-icon 'ellipses)
     (let ((o-open nil)
-          (o-end nil))
+          (o-end nil)
+	  (deactivate-mark nil))
       (save-excursion
 	(setq o-open (car (overlays-at (point))))
 	(next-line 1)
@@ -385,8 +387,7 @@
 	(setq o-close (car (overlays-at (point))))
 	(dtk-speak (concat 
 		    (overlay-get  o-open 'display)
-		    (overlay-get o-close 'display)))))
-    (emacspeak-auditory-icon 'ellipses))
+		    (overlay-get o-close 'display))))))
    (t (message "Not on a hidden outline"))))
   
 ;;}}}

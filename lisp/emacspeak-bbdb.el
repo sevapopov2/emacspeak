@@ -1,6 +1,6 @@
 ;;; emacspeak-bbdb.el --- Speech enable BBDB -- a powerful address manager
 
-;;; $Id: emacspeak-bbdb.el,v 22.0 2005/04/30 16:39:51 raman Exp $
+;;; $Id: emacspeak-bbdb.el,v 23.505 2005/11/25 16:30:49 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extensions for bbdb 
 ;;; Keywords: emacspeak, audio interface to emacs bbdb 
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@crl.dec.com 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/04/30 16:39:51 $ |
-;;;  $Revision: 22.0 $ | 
+;;; $Date: 2005/11/25 16:30:49 $ |
+;;;  $Revision: 23.505 $ | 
 ;;; Location undetermined
 ;;;
 
