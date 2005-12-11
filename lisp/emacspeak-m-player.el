@@ -99,6 +99,13 @@
   :type  '(repeat
 	   (string :tag "option"))
   :group 'emacspeak-m-player)
+
+(defcustom emacspeak-m-player-coding-system nil
+  "Media player output coding system.
+It is used for tags decoding."
+  :type '(coding-system :size 0)
+  :group 'emacspeak-m-player)
+
 ;;;###autoload
 (defun emacspeak-m-player (resource )
   "Play specified resource using m-player.
@@ -142,6 +149,8 @@ The player is placed in a buffer in emacspeak-m-player-mode."
            (apply 'make-comint
                   "m-player" emacspeak-m-player-program
                   nil options)))
+    (set-process-coding-system emacspeak-m-player-process
+			       emacspeak-m-player-coding-system)
     (switch-to-buffer (process-buffer emacspeak-m-player-process))
     (emacspeak-m-player-mode)
     (setq comint-output-filter-functions (list 'comint-carriage-motion))
