@@ -92,6 +92,18 @@ from alsaplayer."
   :type 'string
   :group 'emacspeak-alsaplayer)
 
+(defcustom emacspeak-alsaplayer-output
+  "alsa"
+  "Alsaplayer driver for output."
+  :type 'string
+  :group 'emacspeak-alsaplayer)
+
+(defcustom emacspeak-alsaplayer-coding-system nil
+  "Alsaplayer output coding system.
+It is used for tags decoding."
+  :type '(coding-system :size 0)
+  :group 'emacspeak-alsaplayer)
+
 (defcustom emacspeak-alsaplayer-media-directory
   (expand-file-name "~/mp3/")
   "Directory to look for media files."
@@ -127,7 +139,9 @@ Alsaplayer session."
              (current-buffer)
              emacspeak-alsaplayer-program
              "-r"
-             "-i" "daemon" ))
+             "-i" "daemon"
+	     "-o" emacspeak-alsaplayer-output))
+      (set-process-coding-system process emacspeak-alsaplayer-coding-system)
       (accept-process-output process)
       (setq emacspeak-alsaplayer-session
             (emacspeak-alsaplayer-get-session))
@@ -142,7 +156,8 @@ Alsaplayer session."
              "-n"
              (or emacspeak-alsaplayer-session-id
                  "0")
-             "--status")))
+             "--status"))
+      (set-process-coding-system process emacspeak-alsaplayer-coding-system))
     (switch-to-buffer buffer)
     (rename-buffer emacspeak-alsaplayer-session 'unique))
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
@@ -166,12 +181,14 @@ Optional second arg no-refresh is used to avoid getting status twice."
 		   (current-buffer) emacspeak-alsaplayer-program
 		   "-n" emacspeak-alsaplayer-session-id
 		   command-list))
+      (set-process-coding-system process emacspeak-alsaplayer-coding-system)
       (unless no-refresh
 	(setq process
 	      (start-process
 	       "alsaplayer" (current-buffer)   emacspeak-alsaplayer-program
 	       "-n" emacspeak-alsaplayer-session-id
-	       "--status"))))))
+	       "--status"))
+	(set-process-coding-system process emacspeak-alsaplayer-coding-system)))))
 
 (defun emacspeak-alsaplayer-add-to-queue (resource)
   "Add specified resource to queue."
