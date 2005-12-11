@@ -1502,9 +1502,11 @@ semantic to do the work."
 
 (defun emacspeak-speak-buffer-info ()
   "Speak buffer information."
-  (message "Buffer has %s lines and %s characters "
-           (count-lines (point-min) (point-max))
-           (- (point-max) (point-min))))
+  (let ((emacspeak-speak-messages t)
+	(deactivate-mark nil))
+    (message "Buffer has %s lines and %s characters "
+	     (count-lines (point-min) (point-max))
+	     (- (point-max) (point-min)))))
 
 (defun emacspeak-speak-mode-line (&optional buffer-info)
   "Speak the mode-line.
