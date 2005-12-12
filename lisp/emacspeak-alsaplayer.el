@@ -92,10 +92,23 @@ from alsaplayer."
   :type 'string
   :group 'emacspeak-alsaplayer)
 
-(defcustom emacspeak-alsaplayer-output
-  "alsa"
-  "Alsaplayer driver for output."
-  :type 'string
+(defcustom emacspeak-alsaplayer-output nil
+  "Alsaplayer driver for sound output."
+  :type '(choice (const :tag "default" nil)
+		 (const "alsa")
+		 (const "oss")
+		 (const "jack")
+		 (const "nas")
+		 (const "sgi")
+		 (const "sparc")
+		 (string :tag "Driver name"))
+  :group 'emacspeak-alsaplayer)
+
+(defcustom emacspeak-alsaplayer-sound-device nil
+  "Alsaplayer sound device.
+Default is hw:0,0 for ALSA and /dev/dsp for OSS output."
+  :type '(choice (const :tag "default" nil)
+		 (string :tag "Device specification"))
   :group 'emacspeak-alsaplayer)
 
 (defcustom emacspeak-alsaplayer-coding-system nil
@@ -129,18 +142,21 @@ Alsaplayer session."
                     emacspeak-alsaplayer-session-id))
   (let ((process-connection-type t)
         (process nil)
+	(options (nconc (list "-r" "-i" "daemon")
+			(when emacspeak-alsaplayer-output
+			  (list "-o" emacspeak-alsaplayer-output))
+			(when emacspeak-alsaplayer-sound-device
+			  (list "-d" emacspeak-alsaplayer-sound-device))))
         (buffer (get-buffer-create "alsaplayer")))
     (save-excursion
       (set-buffer buffer)
       (emacspeak-alsaplayer-mode)
       (setq process
-            (start-process
-             "alsaplayer"
-             (current-buffer)
-             emacspeak-alsaplayer-program
-             "-r"
-             "-i" "daemon"
-	     "-o" emacspeak-alsaplayer-output))
+            (apply 'start-process
+		   "alsaplayer"
+		   (current-buffer)
+		   emacspeak-alsaplayer-program
+		   options))
       (set-process-coding-system process emacspeak-alsaplayer-coding-system)
       (accept-process-output process)
       (setq emacspeak-alsaplayer-session
