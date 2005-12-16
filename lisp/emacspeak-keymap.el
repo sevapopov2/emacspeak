@@ -389,6 +389,7 @@ field in the customization buffer.  You can use the notation
 (define-key emacspeak-keymap ";" 'emacspeak-realaudio )
 (define-key emacspeak-keymap ":" 'emacspeak-m-player)
 (define-key emacspeak-keymap "\M-;" 'emacspeak-alsaplayer-launch)
+(define-key emacspeak-keymap "\M-j" 'emacspeak-jabber-popup-roster)
 (define-key emacspeak-keymap "C" 'emacspeak-customize)
 (define-key emacspeak-keymap "\C-o" 'emacspeak-ocr )
 (define-key emacspeak-keymap "\C-c"
