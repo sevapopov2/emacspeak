@@ -175,6 +175,19 @@
     (emacspeak-auditory-icon 'close-object)))
 
 ;;}}}
+;;{{{ Pronunciation settings
+
+(defadvice message-mode (after emacspeak pre act comp)
+  "Turn on voice lock mode."
+  (declare (special voice-lock-mode))
+  (emacspeak-pronounce-refresh-pronunciations)
+  (setq voice-lock-mode t))
+
+(declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
+(emacspeak-pronounce-augment-pronunciations 'message-mode
+					    emacspeak-pronounce-internet-smileys-pronunciations)
+
+;;}}}
 (provide  'emacspeak-message)
 ;;{{{  emacs local variables 
 

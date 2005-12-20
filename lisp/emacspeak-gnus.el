@@ -774,6 +774,16 @@ instead you hear only the first screenful.")
     (sit-for 1)
     (emacspeak-speak-current-window)))
 
+(defadvice gnus-article-mode (after emacspeak pre act comp)
+  "Turn on voice lock mode."
+  (declare (special voice-lock-mode))
+  (emacspeak-pronounce-refresh-pronunciations)
+  (setq voice-lock-mode t))
+
+(declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
+(emacspeak-pronounce-augment-pronunciations 'gnus-article-mode
+					    emacspeak-pronounce-internet-smileys-pronunciations)
+
 ;;}}}
 (provide 'emacspeak-gnus)
 ;;{{{  end of file 
