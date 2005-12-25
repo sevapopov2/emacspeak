@@ -145,6 +145,22 @@
     (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-pcl-cvs-summarize-line)))
 
+(defadvice cvs-mode-add-change-log-entry-other-window (after emacspeak
+							     pre act comp)
+  "Provide auditory icon if possible. "
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'yank-object)))
+
+(defadvice cvs-status-trees (after emacspeak pre act comp)
+  "Provide auditory icon if possible. "
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)))
+
+(defadvice cvs-status-cvstrees (after emacspeak pre act comp)
+  "Provide auditory icon if possible. "
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)))
+
 (defadvice  cvs-sentinel (after emacspeak pre act )
   "Provide auditory feedback"
   (emacspeak-auditory-icon 'task-done))
