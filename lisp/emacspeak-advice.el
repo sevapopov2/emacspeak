@@ -1758,7 +1758,14 @@ Produce an auditory icon if possible."
     (emacspeak-speak-mode-line))
    (t ad-do-it))
   ad-return-value)
-    
+
+(defadvice kill-this-buffer (after emacspeak pre act)
+  "Produce an auditory icon to indicate closing of an object.
+Then indicate current buffer by speaking  the modeline."
+  (when (interactive-p )
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
+
 (defadvice quit-window (after emacspeak pre act)
   "Produce an auditory icon to indicate closing of an object.
 Then indicate current buffer by speaking  the modeline."
