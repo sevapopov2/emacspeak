@@ -55,10 +55,9 @@
   (cond
    ((= (following-char) 0)
     (emacspeak-speak-line))
-   (t(save-excursion
-       (end-of-line)
-       (skip-syntax-backward "^ ")
-       (emacspeak-speak-line 1)))))
+   (t
+    (dtk-speak (tar-header-name
+		(tar-desc-tokens (tar-current-descriptor)))))))
 
 ;;}}}
 ;;{{{ Advice

@@ -51,12 +51,7 @@
 
 (defun emacspeak-archive-speak-line ()
   "Speak line in archive mode intelligently"
-  (end-of-line)
-  (cond
-   ((null (char-after (1+ (point))))
-    (emacspeak-speak-line))
-   (t (skip-syntax-backward "^ ")  
-      (emacspeak-speak-line 1))))
+  (emacspeak-speak-line 1))
 
 ;;}}}
 ;;{{{ fix interactive commands that need fixing 
@@ -182,8 +177,10 @@ first initializing it if necessary."
      (t
       (emacspeak-auditory-icon 'select-object)
       (message "File: %s"
-	       (nth  (emacspeak-arc-get-field-index "File")
-		     (split-string (thing-at-point 'line))))))))
+	       (mapconcat (function (lambda (x) x))
+			  (nthcdr  (emacspeak-arc-get-field-index "File")
+				   (split-string (thing-at-point 'line)))
+			  " "))))))
 
 (defun emacspeak-arc-speak-file-size ()
   "Speak the size of the file on current line"
