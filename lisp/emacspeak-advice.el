@@ -2980,7 +2980,9 @@ emacspeak running."
   "Provide auditory indication that overwrite mode has
 changed."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'warn-user)
+    (emacspeak-auditory-icon (if overwrite-mode
+				 'on
+			       'off))
     (message "Turned %s overwrite mode"
              (or  overwrite-mode "off"))))
 
