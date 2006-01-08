@@ -163,6 +163,120 @@ pronunciations only once.")
    (t ad-do-it))
   ad-return-value)
 
+(defadvice dired-change-marks (around emacspeak pre act comp)
+  "Provide auditory feedback."
+  (if (interactive-p)
+      (let ((emacspeak-speak-messages t))
+	ad-do-it
+	(emacspeak-auditory-icon 'select-object))
+    ad-do-it)
+  ad-return-value)
+
+(defadvice dired-do-toggle (after emacspeak pre act comp)
+  "Produce auditory icon."
+  (when (interactive-p )
+    (emacspeak-auditory-icon 'select-object)))
+
+(loop for f in
+      '(dired-flag-auto-save-files dired-flag-backup-files)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act )
+	  "Produce an auditory icon indicating that files
+were marked or unmarked for deletion."
+	  (when (interactive-p )
+	    (if (ad-get-arg 0)
+		(emacspeak-auditory-icon 'deselect-object)
+	      (emacspeak-auditory-icon 'delete-object))))))
+
+(loop for f in
+      '(dired-mark-symlinks dired-mark-directories dired-mark-executables)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act )
+	  "Produce an auditory icon indicating that files were marked or unmarked."
+	  (when (interactive-p )
+	    (if (ad-get-arg 0)
+		(emacspeak-auditory-icon 'deselect-object)
+	      (emacspeak-auditory-icon 'mark-object))))))
+
+(loop for f in
+      '(dired-flag-garbage-files dired-clean-directory)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act )
+	  "Produce an auditory icon indicating that files were marked for deletion."
+	  (when (interactive-p )
+	    (emacspeak-auditory-icon 'delete-object)))))
+
+(defadvice dired-undo  (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (if (buffer-modified-p)
+        (emacspeak-auditory-icon 'modified-object)
+      (emacspeak-auditory-icon 'unmodified-object ))
+    (emacspeak-dired-speak-line)))
+
+(loop for f in
+      '(dired-summary dired-show-file-type)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (if (interactive-p)
+	      (let ((emacspeak-speak-messages t))
+		(emacspeak-auditory-icon 'select-object)
+		ad-do-it)
+	    ad-do-it)
+	  ad-return-value)))
+
+(defadvice dired-do-search (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p )
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
+
+(loop for f in
+      '(dired-do-byte-compile dired-do-load)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Produce auditory icon."
+	  (when (interactive-p )
+	    (emacspeak-auditory-icon 'task-done)))))
+
+(defadvice dired-maybe-insert-subdir  (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'yank-object)
+    (emacspeak-dired-speak-line)))
+
+(defadvice dired-do-kill-lines (before emacspeak pre act comp)
+  "Speak item before killing it. "
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'delete-object)
+    (when dtk-stop-immediately (dtk-stop))
+    (let ((dtk-stop-immediately nil))
+      (dtk-tone 500 30)
+      (emacspeak-dired-speak-line))))
+
+(defadvice dired-copy-filename-as-kill (after emacspeak pre act comp)
+  "Produce an auditory icon if possible."
+  (when (interactive-p )
+    (emacspeak-auditory-icon 'mark-object )))
+
+(defadvice dired-do-query-replace-regexp (around emacspeak pre act comp)
+  "Stop message from chattering.
+Turn on voice lock temporarily.
+Provide auditory icon when finished."
+  (declare (special voice-lock-mode ))
+  (let ((voice-lock-mode 1)
+        (emacspeak-speak-messages nil))
+    (dtk-stop)
+    (unwind-protect
+        ad-do-it
+      (emacspeak-auditory-icon 'task-done))))
+
 (defadvice dired-query (before emacspeak pre act comp)
   "Produce auditory icon."
   (emacspeak-auditory-icon 'ask-short-question))
@@ -192,18 +306,25 @@ pronunciations only once.")
   "Hook is not reliable."
   (emacspeak-dired-initialize))
 
-(defadvice dired-find-file  (around  emacspeak pre act)
-  "Produce an auditory icon."
-  (cond
-   ((interactive-p)
-    (let ((directory-p (file-directory-p (dired-get-filename t t ))))
-      ad-do-it
-      (when directory-p
-        (voice-lock-mode 1)
-        (emacspeak-dired-label-fields))
-      (emacspeak-auditory-icon 'open-object )))
-   (t ad-do-it))
-  ad-return-value)
+(loop for f in
+      '(dired-find-file
+	dired-find-file-other-window
+	dired-display-file
+	dired-view-file)
+      do
+      (eval
+       `(defadvice ,f  (around  emacspeak pre act)
+	  "Produce an auditory icon."
+	  (cond
+	   ((interactive-p)
+	    (let ((directory-p (file-directory-p (dired-get-filename t t ))))
+	      ad-do-it
+	      (when directory-p
+		(voice-lock-mode 1)
+		(emacspeak-dired-label-fields))
+	      (emacspeak-auditory-icon 'open-object )))
+	   (t ad-do-it))
+	  ad-return-value)))
 
 (defadvice dired-tree-up (after emacspeak pre act)
   "Speak the filename."
