@@ -209,6 +209,11 @@
   'jabber-chat-prompt-system
   "Personality for jabber special and system messages.")
 
+(def-voice-font emacspeak-jabber-rare-time-personality
+  voice-smoothen-extra
+  'jabber-rare-time-face
+  "Personality for the rare time info in jabber chat buffer.")
+
 (def-voice-font emacspeak-jabber-title-small-personality
   voice-animate
   'jabber-title-small
