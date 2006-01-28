@@ -50,143 +50,140 @@
 (define-key database-edit-mode-map [right] 'db-forward-char)
 (define-key database-edit-mode-map [left] 'db-backward-char)
 
+;; Helper functions.
+
+(defun emacspeak-edb-speak-current-field ()
+  "Speak the field under point."
+  (declare (special dbf-this-field-beginning-pos
+		    dbf-this-field-end-marker))
+  (if dbf-this-field-beginning-pos
+      (emacspeak-speak-region dbf-this-field-beginning-pos
+			      (or (marker-position dbf-this-field-end-marker)
+				  (point-max)))
+    (message "Not within a field")
+    (ding)))
+
 ;; Now, advising some functions.
 
-(defadvice db-find-file (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
+(defadvice emacspeak-speak-current-field (around emacspeak-edb pre act comp)
+  "Treat fealds appropriately in the database mode."
+  (if (and (interactive-p)
+	   (eq major-mode 'database-mode))
+      (emacspeak-edb-speak-current-field)
+    ad-do-it))
 
-(defadvice db-first-field (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
+(loop for f in
+      '(db-find-file db-summary)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'open-object)
+	    (emacspeak-speak-mode-line)))))
 
-(defadvice db-next-field (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
+(loop for f in
+      '(db-first-field
+	db-last-field
+	db-add-record
+	db-copy-record)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'open-object)
+	    (emacspeak-speak-line)))))
 
-(defadvice db-previous-field (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
-
-(defadvice db-last-field (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
+(loop for f in
+      '(db-next-field db-previous-field)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'select-object)
+	    (emacspeak-edb-speak-current-field)))))
 
 (defadvice db-view-mode (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'close-object)))
 
-(defadvice db-next-record (after emacspeak pre act comp)
-  "Provide auditory feedback.
-  Play auditory icon if possible."
-  (when (interactive-p)
-    (dtk-stop)
-    (emacspeak-auditory-icon 'scroll)
-    (if (string-match "Database.*Summary" mode-name)
-	(emacspeak-speak-next-window)
-    (emacspeak-speak-current-window))))
+(loop for f in
+      '(db-next-record
+	db-previous-record
+	db-first-record
+	db-last-record
+	db-jump-to-record
+	db-next-screen-or-record
+	db-previous-screen-or-record)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback. Play auditory icon if possible."
+	  (when (interactive-p)
+	    (dtk-stop)
+	    (emacspeak-auditory-icon 'scroll)
+	    (if (string-match "Database.*Summary" mode-name)
+		(emacspeak-speak-next-window)
+	      (emacspeak-speak-current-window))))))
 
-(defadvice db-previous-record (after emacspeak pre act comp)
-  "Provide auditory feedback.
-  Play auditory icon if possible."
-  (when (interactive-p)
-    (dtk-stop)
-    (emacspeak-auditory-icon 'scroll)
-    (if (string-match "Database.*Summary" mode-name)
-	(emacspeak-speak-next-window)
-    (emacspeak-speak-current-window))))
-
-(defadvice db-next-line-or-field (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
-
-(defadvice db-previous-line-or-field (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
-
-(defadvice db-first-record (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
-
-(defadvice db-last-record (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
-
-(defadvice db-summary (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-mode-line)))
+(loop for f in
+      '(db-next-line-or-field db-previous-line-or-field)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (declare (special dbf-this-field-index))
+	  (if (interactive-p)
+	      (let ((prev dbf-this-field-index))
+		ad-do-it
+		(unless (= prev dbf-this-field-index)
+		  (emacspeak-auditory-icon 'select-object))
+		(emacspeak-speak-line))
+	    ad-do-it)
+	  ad-return-value)))
 
 (defadvice dbs-view (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
-
-(defadvice dbs-exit (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
-
-(defadvice db-add-record (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-current-window)))
 
-(defadvice db-quit (after emacspeak pre act)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)))
+(loop for f in
+      '(db-quit db-exit dbs-exit)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'close-object)
+	    (emacspeak-speak-mode-line)))))
 
-(defadvice db-exit (after emacspeak pre act)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)))
-
-(defadvice db-save-database (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'save-object)))
+(loop for f in
+      '(db-save-database db-accept-record)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'save-object)))))
 
 (defadvice db-mark-record (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'mark-object)))
 
-(defadvice db-isearch-forward (before emacspeak pre act comp)
-  "Provide auditory feedback.
-  Pause ongoing speech first."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (dtk-pause)))
-
-(defadvice db-isearch-backward (before emacspeak pre act comp)
-  "Provide auditory feedback.
-  Pause ongoing speech first."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (dtk-pause)))
+(loop for f in
+      '(db-isearch-forward db-isearch-backward)
+      do
+      (eval
+       `(defadvice ,f (before emacspeak pre act comp)
+	  "Provide auditory feedback. Pause ongoing speech first."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'open-object)
+	    (dtk-pause)))))
 
 (defadvice db-search-field (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -194,7 +191,54 @@
     (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 
-(defadvice db-backward-delete-char (around emacspeak pre act)
+(defadvice db-sort (after emacspeak pre act comp)
+  "Provide an auditory icon when finished."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'task-done)))
+
+(defadvice db-newline (around emacspeak pre act comp)
+  "Speak the previous line if line echo is on.
+See command \\[emacspeak-toggle-line-echo].  Otherwise cue the user to
+the newly created blank line or speak the next field
+if we were moved to."
+  (declare (special emacspeak-line-echo
+		    dbf-this-field-index))
+  (if (interactive-p)
+      (if (not emacspeak-line-echo)
+	  (let ((prev dbf-this-field-index))
+	    ad-do-it
+	    (if (not (= prev dbf-this-field-index))
+		(emacspeak-edb-speak-current-field)
+	      (when dtk-stop-immediately (dtk-stop))
+	      (dtk-tone 225 120 'force)))
+	(emacspeak-speak-line )
+	ad-do-it)
+    ad-do-it)
+  ad-return-value)
+
+(defadvice db-kill-region (around emacspeak pre act comp)
+  "Indicate region has been killed.
+Use an auditory icon if possible."
+  (cond
+   ((interactive-p)
+    (let ((count (count-lines (region-beginning)
+                              (region-end))))
+      ad-do-it
+      (emacspeak-auditory-icon 'delete-object )
+      (message "Killed region containing %s lines" count)))
+   (t ad-do-it))
+  ad-return-value)
+
+(defadvice db-copy-region-as-kill (after emacspeak pre act comp)
+  "Indicate that region has been copied to the kill ring.
+Produce an auditory icon if possible."
+  (when (interactive-p )
+    (emacspeak-auditory-icon 'mark-object )
+    (message "region containing %s lines  copied to kill ring "
+             (count-lines (region-beginning)
+                          (region-end)))))
+
+(defadvice db-backward-delete-char (around emacspeak pre act comp)
   "Speak character you're deleting."
   (cond
    ((interactive-p )
@@ -204,67 +248,42 @@
    (t ad-do-it))
   ad-return-value)
 
-(defadvice db-jump-to-record (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
+(defadvice db-delete-char (around emacspeak pre act comp)
+  "Speak character you're deleting."
+  (declare (special emacspeak-delete-char-speak-deleted-char))
+  (cond
+   ((interactive-p )
+    (dtk-tone 500 30 'force)
+    (and emacspeak-delete-char-speak-deleted-char
+         (emacspeak-speak-char t))
+    ad-do-it)
+   (t ad-do-it))
+  ad-return-value)
 
-(defadvice db-next-screen-or-record (after emacspeak pre act comp)
-  "Try to speak a new screen or record."
-  (when (interactive-p)
-    (dtk-stop)
-    (emacspeak-auditory-icon 'scroll)
-    (if (string-match "Database.*Summary" mode-name)
-	(emacspeak-speak-next-window)
-    (emacspeak-speak-current-window))))
+(loop for f in
+      '(db-beginning-of-line-or-field db-end-of-line-or-field)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (dtk-stop)
+	    (emacspeak-auditory-icon 'select-object)))))
 
-(defadvice db-previous-screen-or-record (after emacspeak pre act comp)
-  "Try to speak a new screen or record."
-  (when (interactive-p)
-    (dtk-stop)
-    (emacspeak-auditory-icon 'scroll)
-    (if (string-match "Database.*Summary" mode-name)
-	(emacspeak-speak-next-window)
-    (emacspeak-speak-current-window))))
-
-(defadvice db-beginning-of-line-or-field (after emacspeak pre act)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)))
-
-(defadvice db-end-of-line-or-field (after emacspeak pre act)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)))
-
-
-(defadvice db-copy-record (after emacspeak pre act)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
-
-(defadvice db-forward-char (around emacspeak pre act comp)
-  "Speak character moved to. Produce an auditory icon if we can not move."
-  (let ((prevpos (point)))
-    ad-do-it
-    (if (interactive-p)
-	(if (= (point) prevpos)
-	    (emacspeak-auditory-icon 'warn-user)
-	  (and dtk-stop-immediately (dtk-stop))
-	  (emacspeak-speak-char t)))
-    ad-return-value))
-
-(defadvice db-backward-char (around emacspeak pre act comp)
-  "Speak character moved to. Produce an auditory icon if we can not move."
-  (let ((prevpos (point)))
-    ad-do-it
-    (if (interactive-p)
-	(if (= (point) prevpos)
-	    (emacspeak-auditory-icon 'warn-user)
-	  (and dtk-stop-immediately (dtk-stop))
-	  (emacspeak-speak-char t)))
-    ad-return-value))
+(loop for f in
+      '(db-forward-char db-backward-char)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
+	  "Speak character moved to. Produce an auditory icon if we can not move."
+	  (let ((prevpos (point)))
+	    ad-do-it
+	    (if (interactive-p)
+		(if (= (point) prevpos)
+		    (emacspeak-auditory-icon 'warn-user)
+		  (and dtk-stop-immediately (dtk-stop))
+		  (emacspeak-speak-char t)))
+	    ad-return-value))))
 
 (defadvice db-forward-word (after emacspeak pre act)
   "Speak the word you just moved to."
@@ -274,11 +293,11 @@
 
 (defadvice db-backward-word (after emacspeak pre act)
   "Speak the word you just moved to."
-  (when (interactive-p) (emacspeak-speak-word )))
+  (when (interactive-p)
+    (emacspeak-speak-word )))
 
 (provide 'emacspeak-edb)
 
 ;;; local variables:
 ;;; byte-compile-dynamic: t
 ;;; end: 
-
