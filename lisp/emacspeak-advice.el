@@ -1715,7 +1715,7 @@ Use an auditory icon if possible."
       (message "Killed region containing %s lines" count)))
    (t ad-do-it))
   ad-return-value)
-    
+
 (defadvice completion-kill-region (around emacspeak pre act)
   "Indicate region has been killed.
 Use an auditory icon if possible."
@@ -1973,14 +1973,13 @@ Auditory highlight indicates position of point."
   "Speak the previous line if line echo is on.
 See command \\[emacspeak-toggle-line-echo].  Otherwise cue the user to
 the newly created blank line."
-
   (declare (special emacspeak-line-echo ))
   (when (interactive-p)
     (cond
      (emacspeak-line-echo
       (emacspeak-speak-line ))
-     (t(if dtk-stop-immediately (dtk-stop))
-       (dtk-tone 225 120 'force   )))))
+     (t (if dtk-stop-immediately (dtk-stop))
+	(dtk-tone 225 120 'force   )))))
 
 (defadvice newline-and-indent (around emacspeak pre act)
   "Speak the previous line if line echo is on.
