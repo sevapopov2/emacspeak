@@ -162,7 +162,9 @@
 	    (emacspeak-speak-mode-line)))))
 
 (loop for f in
-      '(db-save-database db-accept-record)
+      '(db-save-database
+	db-write-database-file
+	db-accept-record)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -191,10 +193,14 @@
     (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 
-(defadvice db-sort (after emacspeak pre act comp)
-  "Provide an auditory icon when finished."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'task-done)))
+(loop for f in
+      '(db-sort db-report)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide an auditory icon when finished."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'task-done)))))
 
 (defadvice db-newline (around emacspeak pre act comp)
   "Speak the previous line if line echo is on.
