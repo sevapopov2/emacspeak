@@ -193,6 +193,12 @@
     (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 
+(defadvice db-delete-record (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'delete-object)
+    (emacspeak-speak-line)))
+
 (loop for f in
       '(db-sort db-report)
       do
@@ -243,6 +249,50 @@ Produce an auditory icon if possible."
     (message "region containing %s lines  copied to kill ring "
              (count-lines (region-beginning)
                           (region-end)))))
+
+(defadvice db-kill-to-end (around emacspeak pre act comp)
+  "Indicate region has been killed.
+Use an auditory icon if possible."
+  (declare (special dbf-this-field-end-marker))
+  (cond
+   ((interactive-p)
+    (let ((count (count-lines (point)
+                              (marker-position dbf-this-field-end-marker))))
+      ad-do-it
+      (emacspeak-auditory-icon 'delete-object )
+      (message "Killed region containing %s lines" count)))
+   (t ad-do-it))
+  ad-return-value)
+
+(defadvice db-kill-word (before emacspeak pre act comp)
+  "Speak word before killing it."
+  (when (interactive-p )
+    (save-excursion
+      (skip-syntax-forward " ")
+      (when dtk-stop-immediately (dtk-stop))
+      (let ((dtk-stop-immediately nil))
+        (dtk-tone 500 30)
+        (emacspeak-speak-word 1 )))))
+
+(defadvice db-backward-kill-word (before emacspeak pre act comp)
+  "Speak word before killing it."
+  (when (interactive-p )
+    (when dtk-stop-immediately (dtk-stop))
+    (let ((start (point ))
+          (dtk-stop-immediately nil))
+      (save-excursion
+        (forward-word -1)
+        (dtk-tone 500 30)
+        (emacspeak-speak-region (point) start )))))
+
+(defadvice db-kill-line(before emacspeak pre act comp)
+  "Speak line before killing it. "
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'delete-object)
+    (when dtk-stop-immediately (dtk-stop))
+    (let ((dtk-stop-immediately nil))
+      (dtk-tone 500 30)
+      (emacspeak-speak-line 1))))
 
 (defadvice db-backward-delete-char (around emacspeak pre act comp)
   "Speak character you're deleting."
