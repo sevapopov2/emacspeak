@@ -300,7 +300,10 @@ Use an auditory icon if possible."
    ((interactive-p )
     (dtk-tone 500 30 'force)
     (emacspeak-speak-this-char (preceding-char ))
-    ad-do-it)
+    (let ((pos (point)))
+      ad-do-it
+      (when (= pos (point))
+	(ding))))
    (t ad-do-it))
   ad-return-value)
 
