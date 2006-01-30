@@ -6,7 +6,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Initial version: Author: Igor B. Poretsky <root@goga.energo.ru>
+;;; Initial version: Author: Igor B. Poretsky <master@goga.energo.ru>
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -94,8 +94,9 @@ COMMAND-STRING to the TTS engine."
 
 ;;}}}
 ;;{{{  the inaudible voice
+;;; no special code needed --handled by Emacspeak engine.
 
-(multispeech-define-voice 'inaudible "[_: vo:0 ]")
+(multispeech-define-voice 'inaudible "")
 
 ;;}}}
 ;;{{{  Mapping css parameters to tts codes
@@ -104,7 +105,7 @@ COMMAND-STRING to the TTS engine."
 
 (defsubst multispeech-get-family-code (name)
   "Get control code for voice family NAME."
-  (multispeech-get-voice-command name))
+  "")
 
 ;;}}}
 ;;{{{  hash table for mapping families to their dimensions
@@ -450,6 +451,9 @@ and TABLE gives the values along that dimension."
 ;;}}}
 ;;{{{ Configurater 
 
+(defvar russian-spelling-data-loaded-p nil
+  "Indicates whether Russian spelling data have already been loaded.")
+
 (defun multispeech-configure-tts ()
   "Configure TTS environment to use multilingual speech server."
   (declare (special tts-default-speech-rate
@@ -464,15 +468,15 @@ and TABLE gives the values along that dimension."
   (setq tts-default-voice nil)
   (setq tts-default-speech-rate multispeech-default-speech-rate)
   (set-default 'tts-default-speech-rate multispeech-default-speech-rate)
-  (setq default-enable-multibyte-characters t)
   (setq emacspeak-speak-default-os-coding-system 'cyrillic-koi8)
   (set-process-coding-system dtk-speaker-process 'cyrillic-koi8 'cyrillic-koi8)
-  (setq emacspeak-unspeakable-rule "^[^0-9a-zA-Z\243\263\300-\377\xe30-\xe6f\xe21\xe71]+$")
   (setq-default dtk-speak-nonprinting-chars nil)
-  (let ((coding-system-for-read 'raw-text))
-    (load-library "Russian-spelling"))
-  (let ((coding-system-for-read 'cyrillic-koi8))
-    (load-library "Russian-spelling")))
+  (unless russian-spelling-data-loaded-p
+    (let ((coding-system-for-read 'raw-text))
+      (load-library "Russian-spelling"))
+    (let ((coding-system-for-read 'cyrillic-koi8))
+      (load-library "Russian-spelling"))
+    (setq russian-spelling-data-loaded-p t)))
 
 ;;}}}
 (provide 'multispeech-voices)

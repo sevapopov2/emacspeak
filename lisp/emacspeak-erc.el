@@ -68,7 +68,7 @@
   "Set to T if you dont want to see notification  messages from the
 server."
   :type 'boolean
-  :group 'eamcspeak-erc)
+  :group 'emacspeak-erc)
 
 (def-voice-font emacspeak-erc-direct-msg-personality
   voice-animate
@@ -97,7 +97,7 @@ server."
   "Personality for prompts.")
 
 (def-voice-font emacspeak-erc-notice-personality
-  'inaudible
+  voice-lighten
   'erc-notice-face
   "Personality for notices.")
 
@@ -193,9 +193,9 @@ spoken.")
      
 (defun emacspeak-erc-add-name-to-monitor (name &optional
 					       quiten-pronunciation)
-  "Add people to moniter in this room.
+  "Add people to monitor in this room.
 Optional interactive prefix  arg defines a pronunciation that
-  silences speaking of this perso's name."
+  silences speaking of this person's name."
   (interactive
    (list
     (emacspeak-erc-read-person "Add ")
@@ -335,7 +335,7 @@ set the current local value to the result.")
     ad-return-value))
 
 (defadvice erc-make-notice (around emacspeak  pre act comp)
-  "Ignore notices from server is emacspeak-erc-ignore-notices it set."
+  "Ignore notices from server if emacspeak-erc-ignore-notices is set."
   ad-do-it
   (cond
    ((not emacspeak-erc-ignore-notices ) ad-return-value)

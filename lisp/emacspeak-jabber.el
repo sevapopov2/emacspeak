@@ -54,6 +54,28 @@
 ;;}}}
 ;;{{{ Advice interactive commands:
 
+(defadvice jabber-connect (after emacspeak pre act comp)
+  "Provide auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'on)))
+
+(defadvice jabber-disconnect (after emacspeak pre act comp)
+  "Provide auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'off)))
+
+(loop for f in
+      '(jabber-roster-mode
+	jabber-chat-mode
+	jabber-browse-mode)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Turn on voice lock mode."
+	  (declare (special voice-lock-mode))
+	  (emacspeak-pronounce-refresh-pronunciations)
+	  (setq voice-lock-mode t))))
+
 ;;}}}
 ;;{{{ silence keepalive
 
@@ -98,7 +120,7 @@
   (cond
    (emacspeak-jabber-speak-presence-alerts ad-do-it)
    (t (let ((emacspeak-speak-messages nil))
-        ad-do-i)))
+        ad-do-it)))
   ad-return-value)
 
 ;;;this is what I use as my jabber alert function:
@@ -133,6 +155,79 @@
 					    emacspeak-pronounce-internet-smileys-pronunciations)
 (emacspeak-pronounce-augment-pronunciations 'jabber-mode
                                             emacspeak-pronounce-internet-smileys-pronunciations)
+
+;;}}}
+;;{{{ Voices
+
+(def-voice-font emacspeak-jabber-roster-user-online-personality
+  voice-bolden
+  'jabber-roster-user-online
+  "Personality for online jabber users.")
+
+(def-voice-font emacspeak-jabber-roster-user-offline-personality
+  voice-lighten-extra
+  'jabber-roster-user-offline
+  "Personality for offline jabber users.")
+
+(def-voice-font emacspeak-jabber-roster-user-away-personality
+  voice-lighten
+  'jabber-roster-user-away
+  "Personality for away jabber users.")
+
+(def-voice-font emacspeak-jabber-roster-user-xa-personality
+  voice-lighten-extra
+  'jabber-roster-user-xa
+  "Personality for extended away jabber users.")
+
+(def-voice-font emacspeak-jabber-roster-user-dnd-personality
+  voice-animate-extra
+  'jabber-roster-user-dnd
+  "Personality for do not disturb jabber users.")
+
+(def-voice-font emacspeak-jabber-roster-user-chatty-personality
+  voice-animate
+  'jabber-roster-user-chatty
+  "Personality for chatty jabber users.")
+
+(def-voice-font emacspeak-jabber-roster-user-error-personality
+  voice-bolden-and-animate
+  'jabber-roster-user-error
+  "Personality for jabber users sending presence errors.")
+
+(def-voice-font emacspeak-jabber-chat-prompt-local-personality
+  voice-bolden
+  'jabber-chat-prompt-local
+  "Personality for jabber chat prompt for what you type.")
+
+(def-voice-font emacspeak-jabber-chat-prompt-foreign-personality
+  voice-bolden-and-animate
+  'jabber-chat-prompt-foreign
+  "Personality for jabber chat prompt for what they send.")
+
+(def-voice-font emacspeak-jabber-chat-prompt-system-personality
+  voice-monotone
+  'jabber-chat-prompt-system
+  "Personality for jabber special and system messages.")
+
+(def-voice-font emacspeak-jabber-rare-time-personality
+  voice-smoothen-extra
+  'jabber-rare-time-face
+  "Personality for the rare time info in jabber chat buffer.")
+
+(def-voice-font emacspeak-jabber-title-small-personality
+  voice-animate
+  'jabber-title-small
+  "Personality for jabber small titles.")
+
+(def-voice-font emacspeak-jabber-title-medium-personality
+  voice-smoothen
+  'jabber-title-medium
+  "Personality for jabber medium titles.")
+
+(def-voice-font emacspeak-jabber-title-large-personality
+  voice-bolden
+  'jabber-title-large
+  "Personality for jabber large titles.")
 
 ;;}}}
 (provide 'emacspeak-jabber)
