@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--$Id: object.xsl,v 23.505 2005/11/25 16:30:54 raman Exp $-->
+<!--$Id: object.xsl,v 24.0 2006/05/03 02:54:05 raman Exp $-->
 
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>
@@ -27,7 +27,8 @@ Transform HTML Object element into an anchor usable in W3.
       <xsl:attribute name="href">
         <xsl:value-of select="@src"/>
       </xsl:attribute>
-      Frame: <xsl:value-of select="@name"/><br/>
+      Frame: <xsl:value-of select="@name"/>
+      <br/>
     </a>
   </xsl:template>
   

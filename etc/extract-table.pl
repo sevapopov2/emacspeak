@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-#$Id: extract-table.pl,v 23.505 2005/11/25 16:30:52 raman Exp $
+#$Id: extract-table.pl,v 24.0 2006/05/03 02:54:03 raman Exp $
 # Accepts a URI and table spec
 #returns a csv file
 use strict;

@@ -1,5 +1,5 @@
 ;;; emacspeak-cmuscheme.el --- Scheme support for emacspeak
-;;; $Id: emacspeak-cmuscheme.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-cmuscheme.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Speech-enable emacs for scheme and guile
 ;;; Keywords: Emacspeak, cmuscheme
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -76,7 +76,7 @@
     (emacspeak-auditory-icon 'select-object)
     (message "Sent %s lines to scheme. "
              (count-lines (region-beginning)
-			  (region-end)))))
+                          (region-end)))))
 
 (defadvice scheme-send-definition (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -96,7 +96,7 @@
     (emacspeak-auditory-icon 'select-object)
     (message "Compiling  %s lines to scheme. "
              (count-lines (region-beginning)
-			  (region-end)))))
+                          (region-end)))))
 
 (defadvice scheme-compile-definition (after emacspeak pre act comp)
   "Provide auditory feedback."

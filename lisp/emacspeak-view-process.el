@@ -1,5 +1,5 @@
 ;;; emacspeak-view-process.el --- Speech enable View Processes -- A powerful task manager
-;;; $Id: emacspeak-view-process.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-view-process.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for flexible viewing of processes
 ;;; Keywords:emacspeak, audio interface to emacs administering processes
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -239,7 +239,7 @@
   :type 'symbol
   :group 'emacspeak-view-process)
 
-	 
+         
 (defcustom View-process-renice-line-personality voice-monotone-medium
   "Indicate a reniced process"
   :type 'symbol

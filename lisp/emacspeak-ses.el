@@ -1,5 +1,5 @@
 ;;; emacspeak-ses.el --- Speech-enable ses spread-sheet
-;;; $Id: emacspeak-ses.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-ses.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for SES 
 ;;; Keywords: Emacspeak, ses 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -185,7 +185,7 @@ is nil if SYM is not a symbol that names a cell."
     (emacspeak-ses-summarize-current-cell)))
 
 ;;}}}
-					;(emacspeak-ses-setup)
+                                        ;(emacspeak-ses-setup)
 (provide 'emacspeak-ses)
 ;;{{{ end of file
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-fix-interactive.el --- Tools to make  Emacs' builtin prompts   speak
-;;; $Id: emacspeak-fix-interactive.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-fix-interactive.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Fixes functions that use interactive to prompt for args.
 ;;; Approach suggested by hans@cs.buffalo.edu
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -62,10 +62,6 @@
 ;;; The exception to this appear to be the code letters for
 ;;; reading characters and key sequences 
 ;;; i.e. "c" and "k"
-;;; This module has been updated to auto-advice
-;;; only those interactive commands that use "c" or "k"
-;;; when running XEmacs.
-;;; The Search for emacspeak-xemacs-p to see the test used.
 
 ;;}}}
 ;;{{{  functions that are  fixed.
@@ -160,8 +156,8 @@ use the minibuffer."
   (dolist (item
            (rest (assoc module load-history)))
     (and (symbolp item)
-	 (commandp item)
-	 (emacspeak-fix-interactive-command-if-necessary item)))
+         (commandp item)
+         (emacspeak-fix-interactive-command-if-necessary item)))
   (when (interactive-p)
     (message "Fixed interactive commands defined in module %s" module)))
 
@@ -197,6 +193,8 @@ Memoizes call in emacspeak-load-history-pointer to memoize this call. "
     (when (interactive-p)
       (message "Fixed recently defined  interactive commands")))
   t)
+
+
 
 ;;}}}
 (provide 'emacspeak-fix-interactive)

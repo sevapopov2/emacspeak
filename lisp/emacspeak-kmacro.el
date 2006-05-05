@@ -1,5 +1,5 @@
 ;;; emacspeak-kmacro.el --- Speech-enable kbd macro interface
-;;; $Id: emacspeak-kmacro.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-kmacro.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for KMACRO 
 ;;; Keywords: Emacspeak, kmacro 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -75,7 +75,7 @@
   "Provide auditory feedback about we are about to do."
   (cond
    ((and (interactive-p)
-	 defining-kbd-macro)
+         defining-kbd-macro)
     (message "Finished defining kbd macro."))
    (t(emacspeak-auditory-icon 'select-object)
      (message "Calling macro."))))
@@ -84,7 +84,7 @@
   "Provide auditory feedback about we are about to do."
   (cond
    ((and (interactive-p)
-	 defining-kbd-macro)
+         defining-kbd-macro)
     (message "Finished defining kbd macro."))
    (t(emacspeak-auditory-icon 'select-object)
      (message "Calling macro."))))
@@ -96,7 +96,7 @@
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-lin)))
 (defadvice kmacro-call-ring-2nd-repeat (before emacspeak pre act
-					       comp)
+                                               comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (message "Calling  second macro from ring.")))

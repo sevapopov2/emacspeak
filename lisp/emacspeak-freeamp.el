@@ -1,5 +1,5 @@
 ;;; emacspeak-freeamp.el --- Control freeamp from Emacs
-;;; $Id: emacspeak-freeamp.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-freeamp.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling freeamp from emacs 
 ;;; Keywords: Emacspeak, freeamp
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -59,6 +59,8 @@
 ;;{{{ define a derived mode for freeamp interaction 
 (defvar emacspeak-freeamp-process nil
   "Process handle to freeamp." )
+
+;;;###autoload
 (define-prefix-command 'emacspeak-freeamp-prefix-command
   'emacspeak-freeamp-mode-map)
 
@@ -88,7 +90,7 @@
        (format "%c" char))
       (accept-process-output emacspeak-freeamp-process 1)
       (message "%s"
-	       (buffer-substring mark (point-max))))))
+               (buffer-substring mark (point-max))))))
 ;;;###autoload
 (defun emacspeak-freeamp-freeamp-call-command ()
   "Call appropriate freeamp command."
@@ -103,7 +105,7 @@
 (loop for c in emacspeak-freeamp-freeamp-keys
       do
       (define-key emacspeak-freeamp-mode-map   (format
-						"%c" c)
+                                                "%c" c)
         'emacspeak-freeamp-freeamp-call-command))
 (define-key emacspeak-freeamp-mode-map [left]
   'emacspeak-aumix-wave-decrease)
@@ -120,7 +122,7 @@ The player is placed in a buffer in emacspeak-freeamp-mode."
    (list
     (read-file-name "MP3 Resource: "
                     (when (eq major-mode 'dired-mode)
-		      (dired-get-filename)))))
+                      (dired-get-filename)))))
   (declare (special emacspeak-freeamp-process))
   (when (and emacspeak-freeamp-process
              (eq 'run (process-status

@@ -12,32 +12,20 @@ Param attr  specifies the attribute to list.
   <xsl:output method="text" indent="yes" encoding="iso8859-1"/>
   <xsl:param name="attr"
   select="'class'"/>
-  <xsl:param name="selector">//@<xsl:value-of select="$attr"/></xsl:param>
+  <xsl:param name="selector">
+    //@<xsl:value-of select="$attr"/>
+  </xsl:param>
   
-  <!-- { html body  -->
-  <xsl:template match="//script|//meta|//iframe|//head"/>
+  
+  
   <xsl:template match="/">
-    <xsl:apply-templates/>
+    <xsl:apply-templates select="$selector"/>
   </xsl:template>
-  <xsl:template match="head">
-    <head>
-      <xsl:apply-templates select="title"/>
-      <xsl:if test="string-length($base) &gt; 0">
-        <xsl:element name="base">
-          <xsl:attribute name="href">
-            <xsl:value-of select="$base"/>
-          </xsl:attribute>
-        </xsl:element>
-      </xsl:if>
-    </head>
+  <xsl:template match="@*">
+    <xsl:value-of select="."/>
+    <xsl:text>
+    </xsl:text>
   </xsl:template>
-  <xsl:template match="body">
-    
-    <xsl:for-each select="//@class">
-      <xsl:value-of select="."/><xsl:text>
-    </xsl:text></xsl:for-each>
-  </xsl:template>
-  <!-- } -->
 </xsl:stylesheet>
 <!--
 Local Variables:

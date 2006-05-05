@@ -1,5 +1,5 @@
 #!/usr/bin/tcl
-#$Id: ssh-outloud,v 23.505 2005/11/25 16:30:52 raman Exp $
+#$Id: ssh-outloud,v 24.0 2006/05/03 02:54:04 raman Exp $
 #Description: Launch a TTS server on a remote host. via ssh
 #Copyright (C) 1995 -- 2003, T. V. Raman 
 # {{{  documentation

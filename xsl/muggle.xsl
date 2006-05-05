@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--$Id: muggle.xsl,v 23.505 2005/11/25 16:30:54 raman Exp $-->
+<!--$Id: muggle.xsl,v 24.0 2006/05/03 02:54:05 raman Exp $-->
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>
 Copyright: (C) T. V. Raman, 2001 - 2002,   All Rights Reserved.
@@ -14,7 +14,7 @@ params: what - what to look for
     <html>
       <head>
         <title>
-<xsl:apply-templates select="title"/>
+          <xsl:apply-templates select="title"/>
         </title>
       </head>
       <body>
@@ -35,6 +35,7 @@ params: what - what to look for
     </h2>
     
     <xsl:copy-of select="."/>
-  </xsl:template>  
-
+  </xsl:template>
+  
+  
 </xsl:stylesheet>

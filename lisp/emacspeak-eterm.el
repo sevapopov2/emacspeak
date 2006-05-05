@@ -1,5 +1,5 @@
 ;;; emacspeak-eterm.el --- Speech enable eterm -- Emacs' terminal emulator  term.el
-;;; $Id: emacspeak-eterm.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-eterm.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable eterm. 
 ;;; Keywords: Emacspeak, Eterm, Terminal emulation, Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -671,23 +671,23 @@ sent to the terminal as if it were typed by the user."
 Argument ID specifies the window."
   (when (and coordinate id)
     (let*  ((window  (emacspeak-eterm-get-window id ))
-	    (row (cdr coordinate))
-	    (column (car coordinate ))
-	    (left-stretch (emacspeak-eterm-window-left-stretch window ))
-	    (right-stretch (emacspeak-eterm-window-right-stretch window ))
-	    (top-left-row (cdr
-			   (emacspeak-eterm-window-top-left window )))
-	    (top-left-column (car
-			      (emacspeak-eterm-window-top-left window)))
-	    (bottom-right-row (cdr 
-			       (emacspeak-eterm-window-bottom-right window )))
-	    (bottom-right-column (car
-				  (emacspeak-eterm-window-bottom-right window  ))))
+            (row (cdr coordinate))
+            (column (car coordinate ))
+            (left-stretch (emacspeak-eterm-window-left-stretch window ))
+            (right-stretch (emacspeak-eterm-window-right-stretch window ))
+            (top-left-row (cdr
+                           (emacspeak-eterm-window-top-left window )))
+            (top-left-column (car
+                              (emacspeak-eterm-window-top-left window)))
+            (bottom-right-row (cdr 
+                               (emacspeak-eterm-window-bottom-right window )))
+            (bottom-right-column (car
+                                  (emacspeak-eterm-window-bottom-right window  ))))
       (not
        (or  (< row top-left-row )
-	    (> row bottom-right-row )
-	    (and (not left-stretch ) (< column top-left-column ))
-	    (and (not right-stretch ) (> column bottom-right-column )))))))
+            (> row bottom-right-row )
+            (and (not left-stretch ) (< column top-left-column ))
+            (and (not right-stretch ) (> column bottom-right-column )))))))
  
 ;;; Translate a screen position to a buffer position
 
@@ -1065,7 +1065,7 @@ Use command emacspeak-toggle-eterm-autospeak bound to
   
 (ems-generate-switcher 'emacspeak-toggle-eterm-autospeak
                        'emacspeak-eterm-autospeak
-		       "Toggle state of eterm autospeak.
+                       "Toggle state of eterm autospeak.
 When eterm autospeak is turned on and the terminal is in line mode,
 all output to the terminal is automatically spoken. 
   Interactive prefix arg means toggle  the global default value, and then set the
@@ -1182,8 +1182,8 @@ See command emacspeak-toggle-eterm-autospeak bound to
         (emacspeak-eterm-pointer-to-cursor)))))
 
 (ems-generate-switcher 'emacspeak-eterm-toggle-pointer-mode
-		       'emacspeak-eterm-pointer-mode
-		       "Toggle emacspeak eterm pointer mode.
+                       'emacspeak-eterm-pointer-mode
+                       "Toggle emacspeak eterm pointer mode.
 With optional interactive prefix  arg, turn it on.
 When emacspeak eterm is in pointer mode, the eterm read pointer
 stays where it is rather than automatically moving to the terminal cursor when
@@ -1201,7 +1201,7 @@ there is terminal activity.")
   )
 
 (def-voice-font emacspeak-eterm-underline-personality
-  voice-lock-underline-personality
+  voice-brighten-medium
   'term-underline
   "Underline personality for eterm.")
 
@@ -1306,7 +1306,7 @@ there is terminal activity.")
     (let ((pmark (process-mark (get-buffer-process (current-buffer)))))
       (when  (> (point) (marker-position pmark))
         (emacspeak-auditory-icon 'delete-object )
-	(emacspeak-speak-region  pmark (point))))))
+        (emacspeak-speak-region  pmark (point))))))
 
 (defadvice term-dynamic-list-filename-completions (after emacspeak pre act )
   "Provide auditory feedback"

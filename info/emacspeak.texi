@@ -1,6 +1,6 @@
 \input texinfo
 @raggedright
-@c$Id: emacspeak.texi,v 23.505 2005/11/25 16:30:53 raman Exp $
+@c$Id: emacspeak.texi,v 24.0 2006/05/03 02:54:04 raman Exp $
 @setfilename./emacspeak.info 
 @settitle Emacspeak User's Manual --2nd Edition.
 @dircategory Accessibility
@@ -17,6 +17,7 @@
 @include install.texi
 @include using.texi
 @include audio-desktop.texi
+@include voices.texi
 @include online-help.texi
 @include packages.texi
 @include eterm.texi

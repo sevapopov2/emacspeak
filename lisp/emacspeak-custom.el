@@ -1,5 +1,5 @@
 ;;; emacspeak-custom.el --- Speech enable interactive Emacs customization 
-;;; $Id: emacspeak-custom.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-custom.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to custom
 ;;; Keywords: Emacspeak, Speak, Spoken Output, custom
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -94,7 +94,7 @@
     (message "Saved customizations.")))
 
 (defadvice custom-save-all (after emacspeak pre
-				  act comp)
+                                  act comp)
   "Provide auditory feedback. "
   (when (interactive-p)
     (emacspeak-auditory-icon 'save-object)
@@ -175,59 +175,32 @@
 
 ;;}}}
 ;;{{{ define voices
-(def-voice-font emacspeak-custom-state-face voice-smoothen
-  'custom-state-face
-  "Personality used for showing custom state.")
-(def-voice-font emacspeak-custom-button-personality voice-bolden
-  'custom-button-face
-  "Personality for custom-button-face")
-
-(def-voice-font emacspeak-custom-button-pressed-personality  voice-bolden-extra
-  'custom-button-pressed-face
-  "Personality for custom-button-pressed-face")
-
-(def-voice-font emacspeak-custom-changed-personality  voice-smoothen
-  'custom-changed-face
-  "Personality for custom-changed-face")
-
-(def-voice-font emacspeak-custom-comment-personality  voice-monotone-medium
-  'custom-comment-face
-  "Personality for custom-comment-face")
-
-(def-voice-font emacspeak-custom-comment-tag-personality  voice-monotone
-  'custom-comment-tag-face
-  "Personality for custom-comment-tag-face")
-
-(def-voice-font emacspeak-custom-documentation-personality
-  voice-brighten-medium
-  'custom-documentation-face
-  "Personality for custom-documentation-face")
-
-(def-voice-font emacspeak-custom-personality  voice-lighten
-  'custom-face
-  "Personality for custom-face")
-(def-voice-font emacspeak-custom-group-tag-personality  voice-bolden
-  'custom-group-tag-face
-  "Personality for custom-group-tag-face")
-
-(def-voice-font emacspeak-custom-invalid-personality  voice-animate-extra
-  'custom-invalid-face
-  "Personality for custom-invalid-face")
-(def-voice-font emacspeak-custom-modified-personality  voice-lighten-medium
-  'custom-modified-face
-  "Personality for custom-modified-face")
-(def-voice-font emacspeak-custom-saved-personality  voice-smoothen-extra
-  'custom-saved-face
-  "Personality for custom-saved-face")
-(def-voice-font emacspeak-custom-set-personality  voice-smoothen-medium
-  'custom-set-face
-  "Personality for custom-set-face")
-(def-voice-font emacspeak-custom-variable-button-personality  voice-animate
-  'custom-variable-button-face
-  "Personality for custom-variable-button-face")
-(def-voice-font emacspeak-custom-variable-tag-personality  voice-bolden-medium
-  'custom-variable-tag-face
-  "Personality for custom-variable-tag-face")
+(voice-setup-add-map
+ '(
+   (custom-button voice-bolden)
+   (custom-button-pressed voice-bolden-extra)
+   (custom-button-pressed-unraised voice-bolden-extra)
+   (custom-button-mouse voice-bolden-medium)
+   (custom-button-unraised voice-smoothen)
+   (custom-changed voice-smoothen)
+   (custom-comment-face voice-monotone-medium)
+   (custom-comment-tag voice-monotone)
+   (custom-comment-tag-face voice-monotone)
+   (custom-documentation voice-brighten-medium)
+   (custom-face-tag voice-lighten)
+   (custom-group-tag voice-bolden)
+   (custom-group-tag-1 voice-lighten-medium)
+   (custom-group-tag-face voice-bolden)
+   (custom-invalid voice-animate-extra)
+   (custom-link voice-bolden)
+   (custom-modified voice-lighten-medium)
+   (custom-rogue voice-bolden-and-animate)
+   (custom-modified-face voice-lighten-medium)
+   (custom-saved voice-smoothen-extra)
+   (custom-set voice-smoothen-medium)
+   (custom-state voice-smoothen)
+   (custom-variable-button voice-animate)
+   (custom-variable-tag voice-bolden-medium)))
 
 ;;}}}
 ;;{{{  custom navigation

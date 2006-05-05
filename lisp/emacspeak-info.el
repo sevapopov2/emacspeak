@@ -1,5 +1,5 @@
 ;;; emacspeak-info.el --- Speech enable Info -- Emacs' online documentation viewer
-;;; $Id: emacspeak-info.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-info.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Module for customizing Emacs info
 ;;; Keywords:emacspeak, audio interface to emacs
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -111,8 +111,8 @@ Possible values are:
 screenfull  -- speak the displayed screen
 node -- speak the entire node."
   :type '(menu-choice
-	  (const :tag "First screenfull" screenfull)
-	  (const :tag "Entire node" node))
+          (const :tag "First screenfull" screenfull)
+          (const :tag "Entire node" node))
   :group 'emacspeak-info)
 
 (defsubst emacspeak-info-speak-current-window ()
@@ -193,16 +193,16 @@ and then cue the next selected buffer."
   "Speak info header line."
   (interactive)
   (declare (special Info-use-header-line
-		    Info-header-line))
+                    Info-header-line))
   (let ((voice-lock-mode t))
     (cond
      ((and (boundp 'Info-use-header-line)
-	   (boundp 'Info-header-line)
-	   Info-header-line)
+           (boundp 'Info-header-line)
+           Info-header-line)
       (dtk-speak Info-header-line))
      (t (save-excursion
-	  (beginning-of-buffer)
-	  (emacspeak-speak-line))))))
+          (beginning-of-buffer)
+          (emacspeak-speak-line))))))
 
 ;;}}}
 ;;{{{  Emacs 21 
@@ -230,7 +230,7 @@ node-spec."
   (interactive
    (list
     (read-from-minibuffer "Node: "
-			  "(")))
+                          "(")))
   (Info-goto-node node-spec)
   (emacspeak-info-visit-node))
 

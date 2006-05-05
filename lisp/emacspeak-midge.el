@@ -1,5 +1,5 @@
 ;;; emacspeak-midge.el --- Speech-enable MIDI editor
-;;; $Id: emacspeak-midge.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-midge.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech-enable MIDGE
 ;;; Keywords: Emacspeak, MIDI 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -49,10 +49,10 @@
 ;;; This module speech enables  midge.
 ;;; Midge is a MIDI composer/editor tool.
 ;;;From the package README file:
-					; Midge, for midi generator, is a text to midi translator.
-					; It creates type 1 (ie multitrack) midi files from text
-					; descriptions of music. It is a single perl script, which
-					; does not require any additional modules.
+                                        ; Midge, for midi generator, is a text to midi translator.
+                                        ; It creates type 1 (ie multitrack) midi files from text
+                                        ; descriptions of music. It is a single perl script, which
+                                        ; does not require any additional modules.
 ;;;The package also provides a convenient emacs mode for
 ;;;editing and playing  midge files.
 ;;;Midge's homepage is at:

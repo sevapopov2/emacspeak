@@ -1,5 +1,5 @@
 ;;; emacspeak-imenu.el --- Speech enable Imenu -- produce buffer-specific table of contents
-;;; $Id: emacspeak-imenu.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-imenu.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface buffer indices
 ;;; Keywords: Emacspeak, Speak, Spoken Output, indices
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -67,17 +67,17 @@
    (function
     (lambda (item)
       (let* ((name (car item))
-	     (pos (cdr item))
-	     (new-prefix (and concat-names
-			      (if prefix
-				  (concat prefix imenu-level-separator name)
-				name))))
-	(cond
-	 ((or (markerp pos) (numberp pos)
-	      (overlayp pos))
-	  (list (cons new-prefix pos)))
-	 (t
-	  (emacspeak-imenu-flatten-index-alist pos
+             (pos (cdr item))
+             (new-prefix (and concat-names
+                              (if prefix
+                                  (concat prefix imenu-level-separator name)
+                                name))))
+        (cond
+         ((or (markerp pos) (numberp pos)
+              (overlayp pos))
+          (list (cons new-prefix pos)))
+         (t
+          (emacspeak-imenu-flatten-index-alist pos
                                                new-prefix))))))
    index-alist))
 
@@ -155,8 +155,8 @@
     (when (interactive-p)
       (emacspeak-auditory-icon 'large-movement)
       (if emacspeak-imenu-autospeak
-	  (emacspeak-imenu-speak-this-section)
-	(emacspeak-speak-line))
+          (emacspeak-imenu-speak-this-section)
+        (emacspeak-speak-line))
       (when (overlays-at (point))
         (goto-char (overlay-end (car (overlays-at (point)))))))))
 
@@ -178,10 +178,10 @@
           (setq guess
                 (cond
                  ((overlayp (cdr item))
-		  (overlay-start (cdr item )))
+                  (overlay-start (cdr item )))
                  ((markerp (cdr item))
-		  (marker-position (cdr item )))
-		 (t (cdr item))))
+                  (marker-position (cdr item )))
+                 (t (cdr item))))
           (when (> position guess)
             (if (> guess target)
                 (setq target guess))))
@@ -189,8 +189,8 @@
     (when (interactive-p)
       (emacspeak-auditory-icon 'large-movement)
       (if emacspeak-imenu-autospeak
-	  (emacspeak-imenu-speak-this-section)
-	(emacspeak-speak-line)))))
+          (emacspeak-imenu-speak-this-section)
+        (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{  speaking logical sections

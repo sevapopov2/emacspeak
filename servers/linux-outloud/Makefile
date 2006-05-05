@@ -1,13 +1,14 @@
-#$Id: Makefile,v 23.505 2005/11/25 16:30:53 raman Exp $
+#$Id: Makefile,v 24.0 2006/05/03 02:54:04 raman Exp $
 CC=g++
 INSTALL = install
 PREFIX = /usr
 libparentdir = ${PREFIX}/share/emacs/site-lisp
-libdir =$(libparentdir)/emacspeak/linux-outloud
-CFLAGS=   -g   -O2 -fPIC  -DPIC -pedantic -ansi -Wall 
+libdir =$(libparentdir)/emacspeak/servers/linux-outloud
+CFLAGS=   -g    -O2 -fPIC  -DPIC -pedantic -ansi -Wall 
 LIBS= -ltcl -ldl
 
 TTS=tcleci.so eci.ini VIAVOICE
+ATTS=atcleci.cpp  ALSA asoundrc
 
 all: tcleci.so 
 
@@ -31,4 +32,4 @@ clean:
 install: tcleci.so
 	if test ! -d $(libdir) ; then mkdir $(libdir); fi ; \
 	chmod 755 $(libdir); \
-	$(INSTALL) -m 0644 $(TTS) $(libdir)
+	$(INSTALL) -m 0644 $(TTS) $(ATTS) $(libdir)

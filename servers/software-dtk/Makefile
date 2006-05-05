@@ -1,4 +1,4 @@
-#$Id: Makefile,v 23.505 2005/11/25 16:30:53 raman Exp $
+#$Id: Makefile,v 24.0 2006/05/03 02:54:04 raman Exp $
 #
 LABEL=1.0
 DIST=software-dtk-$(LABEL)
