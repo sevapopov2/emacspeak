@@ -1,5 +1,5 @@
 ;;; emacspeak-xslt-process.el --- speech-enable xslt-process 
-;;; $Id: emacspeak-xslt-process.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-xslt-process.el,v 24.0 2006/05/03 02:54:02 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for speech-enabling
 ;;; xslt-process mode
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:02 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -77,16 +77,16 @@
     (emacspeak-speak-mode-line)))
 
 (defadvice xslt-process-invoke-browser-view (after emacspeak
-						   pre act
-						   comp)
+                                                   pre act
+                                                   comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'task-done)
     (emacspeak-speak-mode-line)))
 
 (defadvice xslt-process-invoke-pdf-viewer (after emacspeak
-						 pre act
-						 comp)
+                                                 pre act
+                                                 comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'task-done)
@@ -109,7 +109,7 @@
         (emacspeak-speak-line)
         (emacspeak-auditory-icon 'mark-object)))))
 (defadvice xslt-process-remove-breakpoint (after emacspeak pre
-						 act comp)
+                                                 act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (save-excursion
@@ -143,28 +143,28 @@
     (emacspeak-speak-line)))
 
 (defadvice xslt-process-do-finish (after emacspeak pre act
-					 comp)
+                                         comp)
   "Provide auditory feedback."
   (when (interactive-p)
     
 
     (defadvice xslt-process-do-continue (after emacspeak pre act
-					       comp)
+                                               comp)
       "Provide auditory feedback."
       (when (interactive-p)
-	(emacspeak-auditory-icon 'select-object)))
+        (emacspeak-auditory-icon 'select-object)))
 
     (defadvice xslt-process-do-stop (after emacspeak pre act
-					   comp)
+                                           comp)
       "Provide auditory feedback."
       (when (interactive-p)
-	(emacspeak-auditory-icon 'select-object)))
+        (emacspeak-auditory-icon 'select-object)))
 
     (defadvice xslt-process-do-quit (after emacspeak pre act
-					   comp)
+                                           comp)
       "Provide auditory feedback."
       (when (interactive-p)
-	(emacspeak-auditory-icon 'select-object)))
+        (emacspeak-auditory-icon 'select-object)))
 
     (emacspeak-auditory-icon 'close-object)))
 

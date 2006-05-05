@@ -1,5 +1,5 @@
 ;;; emacspeak-sounds.el --- Defines Emacspeak auditory icons
-;;; $Id: emacspeak-sounds.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-sounds.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Module for adding sound cues to emacspeak
 ;;; Keywords:emacspeak, audio interface to emacs, auditory icons
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -167,7 +167,8 @@ If we add new icons we should declare them here. ")
         file-ext ))
 
 (defgroup emacspeak-sounds nil
-  "Emacspeak auditory icons.")
+  "Emacspeak auditory icons."
+  :group 'emacspeak)
 
 ;;;###autoload
 (defcustom emacspeak-sounds-default-theme
@@ -224,7 +225,7 @@ Do not set this by hand;
    (list
     (expand-file-name
      (read-directory-name "Theme: "
-			  emacspeak-sounds-directory))))
+                          emacspeak-sounds-directory))))
   (declare (special emacspeak-sounds-current-theme
                     emacspeak-sounds-themes-table))
   (setq theme (expand-file-name theme emacspeak-sounds-directory))
@@ -275,8 +276,8 @@ Do not set this by hand;
   (when emacspeak-use-auditory-icons
     (play-sound
      (list 'sound :file
-	   (format "%s"
-		   (emacspeak-get-sound-filename sound-name ))))))
+           (format "%s"
+                   (emacspeak-get-sound-filename sound-name ))))))
 
 ;;}}}
 ;;{{{  serve an auditory icon
@@ -309,14 +310,15 @@ sparc20's."
   "Produce auditory icon SOUND-NAME.
 Sound is produced only if `emacspeak-use-auditory-icons' is true.
 See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-auditory-icons ]."
-  (declare (special  emacspeak-use-auditory-icons
-                     emacspeak-play-args emacspeak-play-program))
+  (declare (special  emacspeak-use-auditory-icons emacspeak-play-program))
   (and emacspeak-use-auditory-icons
        (let ((process-connection-type nil))
-         (start-process
-          "play" nil emacspeak-play-program
-                                        ;emacspeak-play-args ;breaks sox
-          (emacspeak-get-sound-filename sound-name )))))
+		 (condition-case err
+			 (start-process
+			  "play" nil emacspeak-play-program
+			  (emacspeak-get-sound-filename sound-name))
+		   (error
+			(message (error-message-string err)))))))
 
 ;;}}}
 ;;{{{  queue a midi icon
@@ -342,7 +344,7 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
           (const emacspeak-play-auditory-icon)
           (const emacspeak-serve-auditory-icon)
           (const emacspeak-native-auditory-icon)
-	  (const emacspeak-queue-auditory-icon)
+          (const emacspeak-queue-auditory-icon)
           (const emacspeak-play-midi-icon)))
 ;;;###autoload 
 (defun emacspeak-auditory-icon (icon)
@@ -599,7 +601,7 @@ audio player."
   :type '(choice
           :tag "Command to reset sound modules: "
           (const nil :tag "None")
-	  (string :tag "Command "))
+          (string :tag "Command "))
   :group 'emacspeak-sounds)
 ;;;###autoload
 (defun emacspeak-sounds-reset-sound  ()

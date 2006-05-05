@@ -1,5 +1,5 @@
 ;;; emacspeak-ido.el --- speech-enable ido
-;;; $Id: emacspeak-ido.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-ido.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable ido
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -82,10 +82,10 @@
     (format " %d choices: " (length ido-matches))
     (minibuffer-contents)
     (if(or (null ido-current-directory)
-	   (string-equal ido-current-directory emacspeak-ido-cache-current-directory))
-	" "
+           (string-equal ido-current-directory emacspeak-ido-cache-current-directory))
+        " "
       (format "In directory: %s"
-	      ido-current-directory)))))
+              ido-current-directory)))))
 
 ;;}}}
 ;;{{{ speech-enable interactive commands:
@@ -259,9 +259,9 @@ The default value of 12 is too high for using ido effectively with speech. "
 
 (defun emacspeak-ido-keys ()
   "Setup additional  keybindings within ido."
-  (declare (special ido-mode-map))
-  (define-key ido-mode-map "\C-f" 'ido-enter-find-file)
-  (define-key ido-mode-map "^" 'ido-up-directory))
+  (declare (special ido-completion-map))
+  (define-key ido-completion-map "\C-f" 'ido-enter-find-file)
+  (define-key ido-completion-map "^" 'ido-up-directory))
 
 ;;}}}
 (provide 'emacspeak-ido)

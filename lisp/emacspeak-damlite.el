@@ -1,5 +1,5 @@
 ;;; emacspeak-damlite.el --- Speech-enable damlite
-;;; $Id: emacspeak-damlite.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-damlite.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for daml  authoring mode 
 ;;; Keywords: Emacspeak, damlite 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -52,7 +52,7 @@
 (require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ define personalities 
-(def-voice-font emacspeak-daml-class-face voice-lock-type-personality
+(def-voice-font emacspeak-daml-class-face voice-smoothen
   'daml-class-face
   "Personality used for DAML classes.")
 
@@ -62,12 +62,12 @@
   "Personality used for class references.")
 
 (def-voice-font emacspeak-daml-comment-face
-  voice-lock-comment-personality
+  voice-monotone
   'daml-comment-face
   "Personality used for DAML comments.")
 
 (def-voice-font emacspeak-daml-keyword-face
-  voice-lock-keyword-personality
+  voice-animate-extra
   'daml-keyword-face
   "Personality for keywords in DAML.")
 
@@ -92,7 +92,7 @@
   "Personality for DAML property references.")
 
 (def-voice-font emacspeak-daml-string-face
-  voice-lock-string-personality
+  voice-lighten-extra
   'daml-string-face
   "Personality for DAML strings.")
 

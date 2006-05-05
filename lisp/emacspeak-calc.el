@@ -1,5 +1,5 @@
 ;;; emacspeak-calc.el --- Speech enable the Emacs Calculator -- a powerful symbolic algebra system
-;;; $Id: emacspeak-calc.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-calc.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: 
 ;;; Keywords:
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -74,7 +74,7 @@
           (emacspeak-use-auditory-icons nil))
       ad-do-it)
     (tts-with-punctuations 'all
-			   (emacspeak-read-previous-line))
+                           (emacspeak-read-previous-line))
     (emacspeak-auditory-icon 'task-done))
    (t ad-do-it))
   ad-return-value )
@@ -84,7 +84,7 @@
   (let ((emacspeak-speak-messages nil))
     ad-do-it
     (tts-with-punctuations 'all
-			   (emacspeak-read-previous-line))
+                           (emacspeak-read-previous-line))
     (emacspeak-auditory-icon 'select-object))
   ad-return-value)
 

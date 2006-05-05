@@ -1,4 +1,4 @@
-@c $Id: install.texi,v 23.505 2005/11/25 16:30:53 raman Exp $
+@c $Id: install.texi,v 24.0 2006/05/03 02:54:04 raman Exp $
 @node Installation
 @chapter Installation Instructions
 
@@ -79,8 +79,8 @@ the sources.
 @node Configuring and Installing Emacspeak
 @section Configuring and Installing Emacspeak
 
-Note: You need GNU Emacs 20.2
- or later for using newer versions of Emacspeak.
+Note: You need a current version of GNU Emacs 
+  for using newer versions of Emacspeak.
 
 The speech server for the Dectalk is written in TclX.  (For example, see the
 source file @file{dtk-exp}).  

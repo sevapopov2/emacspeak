@@ -1,5 +1,5 @@
 ;;; emacspeak-rss.el --- Emacspeak RSS Wizard
-;;; $Id: emacspeak-rss.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-rss.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  RSS Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop RSS
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -64,9 +64,9 @@
     )
   "Table of RSS feeds."
   :type '(repeat
-	  (list :tag "RSS Feed"
-		(string :tag "Title")
-		(string :tag "URI")))
+          (list :tag "RSS Feed"
+                (string :tag "Title")
+                (string :tag "URI")))
   :group 'emacspeak-rss)
 
 ;;}}}
@@ -84,16 +84,32 @@ unescape HTML tags."
    (list
     (car
      (browse-url-interactive-arg "RSS URL: "))))
-  (declare (special emacspeak-rss-unescape-html))
-  (declare (special emacspeak-xslt-directory))
+  (declare (special emacspeak-rss-unescape-html
+                    emacspeak-xslt-directory))
   (when (or (interactive-p)speak)
     (add-hook 'emacspeak-w3-post-process-hook
-	      'emacspeak-speak-buffer))
+              'emacspeak-speak-buffer))
   (emacspeak-w3-browse-xml-url-with-style
    (expand-file-name "rss.xsl" emacspeak-xslt-directory)
    rss-url
-   (and emacspeak-rss-unescape-html 'unescape-charent)
-   ))
+   (and emacspeak-rss-unescape-html 'unescape-charent)))
+
+;;;###autoload
+(defun emacspeak-opml-display (opml-url &optional speak)
+  "Retrieve and display OPML  URL."
+  (interactive
+   (list
+    (car
+     (browse-url-interactive-arg "OPML  URL: "))))
+  (declare (special emacspeak-rss-unescape-html
+                    emacspeak-xslt-directory))
+  (when (or (interactive-p)speak)
+    (add-hook 'emacspeak-w3-post-process-hook
+              'emacspeak-speak-buffer))
+  (emacspeak-w3-browse-xml-url-with-style
+   (expand-file-name "opml.xsl" emacspeak-xslt-directory)
+   opml-url
+   (and emacspeak-rss-unescape-html 'unescape-charent)))
 
 ;;;###autoload
 (defun emacspeak-rss-browse (feed)
@@ -102,7 +118,7 @@ unescape HTML tags."
    (list
     (let ((completion-ignore-case t))
       (completing-read "Feed:"
-		       emacspeak-rss-feeds))))
+                       emacspeak-rss-feeds))))
   (let ((uri (cadr
               (assoc feed emacspeak-rss-feeds))))
     (emacspeak-rss-display uri 'speak)))

@@ -1,4 +1,4 @@
-# $Id: Makefile,v 23.505 2005/11/25 16:30:54 raman Exp $
+# $Id: Makefile,v 24.0 2006/05/03 02:54:05 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak,  TTS,Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2005/11/25 16:30:54 $ |
-#  $Revision: 23.505 $ | 
+# $Date: 2006/05/03 02:54:05 $ |
+#  $Revision: 24.0 $ | 
 # Location undetermined
 #
 
@@ -174,6 +174,7 @@ servers/tts-lib.tcl \
 servers/remote-tcl \
 servers/speech-server
 ELISP = lisp/*.el \
+lisp/atom-blogger \
 lisp/xml-forms/*.xml \
 lisp/Makefile
 TEMPLATES = etc/emacspeak.sh.def etc/Makefile 
@@ -224,7 +225,7 @@ tar:
 	@echo "To configure the source files. Then type make" >> $(ID)
 	@echo "See the Makefile for details. " >> $(ID)
 	tar cvf  emacspeak.tar $(EXCLUDES) $(DISTFILES)   $(ID) \
-	 		${TABLE_SAMPLES} ${REALAUDIO} ${SHOUTCAST} ${FORMS} \
+			 ${TABLE_SAMPLES} ${REALAUDIO} ${SHOUTCAST} ${FORMS} \
 	${SOUNDS}   
 
 dist: $(DISTFILES)
@@ -248,13 +249,16 @@ install:
 	touch $(libdir)/.nosearch
 	  $(INSTALL) -d $(libdir)/lisp
 	$(INSTALL) -d $(libdir)/lisp/xml-forms
-	  $(INSTALL) -d $(libdir)/etc
+	$(INSTALL) -d $(libdir)/lisp/atom-blogger
+	$(INSTALL) -d $(libdir)/etc
 	$(INSTALL) -d $(libdir)/sawfish
 	$(INSTALL) -d $(libdir)/xsl
 	$(INSTALL) -d $(libdir)/user-guide
 	$(INSTALL) -d $(libdir)/install-guide
 	  $(INSTALL) -m 0644  lisp/*.el lisp/*.elc  $(libdir)/lisp
 	$(INSTALL) -m 0644  lisp/xml-forms/*.xml   $(libdir)/lisp/xml-forms
+	$(INSTALL) -m 0644  lisp/atom-blogger/*.el    $(libdir)/lisp/atom-blogger
+	$(INSTALL) -m 0644  lisp/atom-blogger/*.xsl    $(libdir)/lisp/atom-blogger
 	$(INSTALL) -m 0644  sawfish/*.jl sawfish/sawfishrc   $(libdir)/sawfish
 	$(INSTALL) -m 0644  xsl/*.xsl    $(libdir)/xsl
 	$(INSTALL) -m 0644  ${UGUIDE}   $(libdir)/user-guide
@@ -344,7 +348,7 @@ rpm: emacspeak.spec
 	/bin/rm -rf /usr/share/emacs/site-lisp/emacspeak || echo ""
 	@cp emacspeak.tar.bz2 /usr/src/redhat/SOURCES/
 	@cp emacspeak.spec /usr/src/redhat/SPECS/
-	rpmbuild  -ba --sign --clean   /usr/src/redhat/SPECS/emacspeak.spec
+	rpmbuild  -ba --target noarch --sign --clean   /usr/src/redhat/SPECS/emacspeak.spec
 
 # }}}
 # {{{list distfiles to stdout
@@ -366,12 +370,12 @@ RPM=/usr/src/redhat/RPMS/i386/emacspeak-${LABEL}-1.i386.rpm
 SF_HOME='raman@emacspeak.sf.net:~/www-emacspeak/htdocs'
 sourceforge: 
 	mv emacspeak.tar.bz2 ${TARBALL}
-	( echo 'anonymous';				\
-	  echo prompt;					\
-	  echo hash;					\
-	  echo cd incoming;				\
-	  echo put ${TARBALL};			\
-	  echo put ${RPM};		\
+	( echo 'anonymous';			     \
+	  echo prompt;				  \
+	  echo hash;				    \
+	  echo cd incoming;			     \
+	  echo put ${TARBALL};		  \
+	  echo put ${RPM};	      \
 	  echo quit ) | /usr/bin/ftp upload.sourceforge.net
 	scp ${RPM} ${TARBALL} ${SF_HOME}
 

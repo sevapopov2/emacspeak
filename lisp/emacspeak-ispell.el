@@ -1,5 +1,5 @@
 ;;; emacspeak-ispell.el --- Speech enable Ispell -- Emacs' interactive spell checker
-;;; $Id: emacspeak-ispell.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-ispell.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable ispell
 ;;; Keywords: Emacspeak, Ispell, Spoken Output, Ispell version 2.30
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -67,19 +67,19 @@
 (declaim (special ispell-version))
 (when  (string-lessp ispell-version "2.37")
   (fset 'ispell-highlight-spelling-error
-	(symbol-function 'ispell-highlight-spelling-error-overlay))
+        (symbol-function 'ispell-highlight-spelling-error-overlay))
 
   (defadvice ispell-highlight-spelling-error (after emacspeak act )
     "Use voice locking to highlight the error.
 Will clobber any existing personality property defined on start end"
     (let ((start (ad-get-arg 0))
-	  (end (ad-get-arg 1 ))
-	  (highlight (ad-get-arg 2 )))
+          (end (ad-get-arg 1 ))
+          (highlight (ad-get-arg 2 )))
       (if highlight
-	  (put-text-property  start end
-			      'personality  ispell-highlight-personality )
-	(put-text-property start end
-			   'personality  nil ))))
+          (put-text-property  start end
+                              'personality  ispell-highlight-personality )
+        (put-text-property start end
+                           'personality  nil ))))
   )
 
 ;;}}}
@@ -124,10 +124,10 @@ many available corrections."
       (cond
        ((< (length choices)
            emacspeak-ispell-max-choices)
-	(loop for choice in choices
-	      do
-	      (insert (format "%s %s\n" position choice))
-	      (incf position)))
+        (loop for choice in choices
+              do
+              (insert (format "%s %s\n" position choice))
+              (incf position)))
        (t (insert
            (format "There were %s corrections available."
                    (length choices)))))

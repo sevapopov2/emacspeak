@@ -1,5 +1,5 @@
 ;;; emacspeak-emms.el --- Speech-enable EMMS
-;;; $Id: emacspeak-emms.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-emms.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech-enable EMMS
 ;;; Keywords: Emacspeak, Multimedia
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -67,7 +67,7 @@
 
 (loop for f in
       '(emms-next emms-next-noerror
-		  emms-previous)
+                  emms-previous)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -123,13 +123,13 @@
 (loop for f in
       '(emms-streams emms-stream-quit
                      emms-stream-popup emms-stream-popup-revert
-		     )
+                     )
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
-	  "Provide auditory feedback."
-	  (when (interactive-p)
-	    (emacspeak-speak-mode-line)))))
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (emacspeak-speak-mode-line)))))
 (loop for f in
       '(emms-stream-next-line emms-stream-previous-line)
       do

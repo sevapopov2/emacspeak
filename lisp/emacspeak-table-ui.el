@@ -1,5 +1,5 @@
 ;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
-;;; $Id: emacspeak-table-ui.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-table-ui.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -621,9 +621,9 @@ the documentation on the table browser."
       (goto-char (point-min))
       (flush-lines "^ *$")
       (setq table (emacspeak-table-make-table
-		   (ems-tabulate-parse-region
-		    (point-min)
-		    (point-max)))))
+                   (ems-tabulate-parse-region
+                    (point-min)
+                    (point-max)))))
     (kill-buffer workspace)
     (save-excursion
       (set-buffer buffer)
@@ -825,10 +825,10 @@ the matching cell current. When called from a program, `what' can
          (found nil)
          (slice
           (or what 
-	      (case (read-char)
-		(?r 'row)
-		(?c 'column)
-		(otherwise (error "Can only search in either row or column")))))
+              (case (read-char)
+                (?r 'row)
+                (?c 'column)
+                (otherwise (error "Can only search in either row or column")))))
          (pattern (read-string
                    (format "Search in current  %s for: " slice ))))
     (cond
@@ -1081,7 +1081,7 @@ markup to use."
   (unless (eq major-mode  'emacspeak-table-mode )
     (error "This command should be used in emacspeak table mode."))
   (let* ((column  (emacspeak-table-current-column
-		   emacspeak-table))
+                   emacspeak-table))
          (row-filter emacspeak-table-speak-row-filter)
          (elements
           (loop for e across (emacspeak-table-elements emacspeak-table)

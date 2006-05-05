@@ -1,5 +1,5 @@
 ;;; emacspeak-aumix.el --- Setting Audio Mixer
-;;; $Id: emacspeak-aumix.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-aumix.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to conveniently set audio display
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -221,7 +221,7 @@ you are done."
   (let ((emacspeak-speak-messages nil))
     (shell-command
      (format "%s -w +%s"
-	     emacspeak-aumix-program  gain))
+             emacspeak-aumix-program  gain))
     (emacspeak-auditory-icon 'select-object) ))
 
 ;;;###autoload
@@ -232,7 +232,7 @@ you are done."
   (let ((emacspeak-speak-messages nil))
     (shell-command
      (format "%s -w -%s"
-	     emacspeak-aumix-program  gain))
+             emacspeak-aumix-program  gain))
     (emacspeak-auditory-icon 'select-object)))
 
 ;;;###autoload
@@ -243,7 +243,7 @@ you are done."
   (let ((emacspeak-speak-messages nil))
     (shell-command
      (format "%s -v +%s"
-	     emacspeak-aumix-program  gain))
+             emacspeak-aumix-program  gain))
     (emacspeak-auditory-icon 'select-object)))
 
 ;;;###autoload
@@ -254,7 +254,7 @@ you are done."
   (let ((emacspeak-speak-messages nil))
     (shell-command
      (format "%s -v -%s"
-	     emacspeak-aumix-program  gain))
+             emacspeak-aumix-program  gain))
     (emacspeak-auditory-icon 'select-object)))
 
 ;;}}}

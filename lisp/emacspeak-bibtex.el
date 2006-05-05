@@ -1,5 +1,5 @@
 ;;; emacspeak-bibtex.el --- Speech enable bibtex -- Supports maintaining bibliographies in bibtex format
-;;; $Id: emacspeak-bibtex.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-bibtex.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for editting bibtex files 
 ;;; Keywords:emacspeak, audio interface to emacs, bibtex
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -104,21 +104,21 @@
 ;;{{{  advice record creation
 
 ;;; list of commands that are advised:
-					;'(bibtex-Unpublished 
-					;        bibtex-string
-					;        bibtex-TechReport
-					;        bibtex-preamble
-					;        bibtex-Proceedings
-					;        bibtex-PhdThesis
-					;        bibtex-Misc
-					;        bibtex-MastersThesis
-					;        bibtex-Manual
-					;        bibtex-InProceedings
-					;        bibtex-InCollection
-					;        bibtex-InBook
-					;        bibtex-InProceedings
-					;        bibtex-Book
-					;        bibtex-Article)
+                                        ;'(bibtex-Unpublished 
+                                        ;        bibtex-string
+                                        ;        bibtex-TechReport
+                                        ;        bibtex-preamble
+                                        ;        bibtex-Proceedings
+                                        ;        bibtex-PhdThesis
+                                        ;        bibtex-Misc
+                                        ;        bibtex-MastersThesis
+                                        ;        bibtex-Manual
+                                        ;        bibtex-InProceedings
+                                        ;        bibtex-InCollection
+                                        ;        bibtex-InBook
+                                        ;        bibtex-InProceedings
+                                        ;        bibtex-Book
+                                        ;        bibtex-Article)
 
 (defadvice bibtex-Unpublished  (after emacspeak pre act comp)
   "Provide auditory feedback"

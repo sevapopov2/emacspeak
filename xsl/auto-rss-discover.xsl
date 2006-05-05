@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!--$Id: auto-rss-discover.xsl,v 23.505 2005/11/25 16:30:54 raman Exp $-->
+<!--$Id: auto-rss-discover.xsl,v 24.0 2006/05/03 02:54:05 raman Exp $-->
 
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>
@@ -14,7 +14,7 @@ Description: Display all RSS links
   <xsl:output method="xml" indent="yes" encoding="iso8859-1"/>
   <xsl:template name="generate-rss">
     <xsl:if test="count(//link[@type='application/rss+xml'])">
-      <xsl:apply-templates select="//link" mode="rss"/>
+      <xsl:apply-templates select="//link[@type='application/rss+xml']" mode="rss"/>
     </xsl:if>
   </xsl:template>
   
@@ -32,7 +32,8 @@ Description: Display all RSS links
           <input type="hidden" name="add_url" value="{@href}"/>
           <input type="submit" name="submit" value="Add to AmphetaDesk" />
         </form>
-    </p></xsl:if>
+      </p>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
 <!--

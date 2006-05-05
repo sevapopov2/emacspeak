@@ -1,5 +1,5 @@
 ;;; emacspeak-remote.el --- Enables running remote Emacspeak sessions
-;;; $Id: emacspeak-remote.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-remote.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to remote speech server
 ;;; Keywords: Emacspeak, Speak, Spoken Output, remote server
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -90,12 +90,12 @@ a local  Emacspeak terminal buffer.")
 ;;; or translate it to bash syntax and place it in your
 ;;; .profile:
 
-					;/bin/rm -f  ~/.emacspeak/.current-remote-hostname
-					;set remote=`who am i`
-					;if ( $;remote == 6 ) then
-					;eval 	set remote=$remote[6]
-					;echo -n  "$remote" > ~/.emacspeak/.current-remote-hostname
-					;endif
+                                        ;/bin/rm -f  ~/.emacspeak/.current-remote-hostname
+                                        ;set remote=`who am i`
+                                        ;if ( $;remote == 6 ) then
+                                        ;eval   set remote=$remote[6]
+                                        ;echo -n  "$remote" > ~/.emacspeak/.current-remote-hostname
+                                        ;endif
 
 ;;;Remote hostname guessing
 ;;;
@@ -141,6 +141,14 @@ the host we just logged in from."
   "*If set to t, then use a telnet subprocess
 to connect to the remote host that is running the speech
 server. Default is to use Emacs' built-in open-network-stream.")
+
+;;;###autoload
+(defcustom emacspeak-remote-use-ssh nil
+  "Set to T to use SSH remote servers."
+  :type 'boolean
+  :group 'emacspeak-remote)
+
+  
 ;;;###autoload
 (defun emacspeak-remote-quick-connect-to-server()
   "Connect to remote server.
@@ -148,9 +156,12 @@ Does not prompt for host or port, but quietly uses the
 guesses that appear as defaults when prompting.
 Use this once you are sure the guesses are usually correct."
   (interactive)
-  (emacspeak-remote-connect-to-server
-   (emacspeak-remote-get-current-remote-hostname)
-   (string-to-number  emacspeak-remote-default-port-to-connect)))
+  (declare (special emacspeak-remote-use-ssh))
+  (cond
+   (emacspeak-remote-use-ssh (emacspeak-ssh-tts-restart))
+   (t (emacspeak-remote-connect-to-server
+       (emacspeak-remote-get-current-remote-hostname)
+       (string-to-number  emacspeak-remote-default-port-to-connect)))))
 
 ;;;###autoload
 (defun emacspeak-remote-ssh-to-server(login)
@@ -176,15 +187,15 @@ server, typically the desktop machine.  Port is the tcp port that that
 host is listening on for speech requests."
   (interactive
    (progn (tts-restart)
-	  (list
-	   (completing-read "Remote host: "
-			    emacspeak-eterm-remote-hosts-table ;completion table
-			    nil				;predicate
-			    nil				;must-match
-			    (emacspeak-remote-get-current-remote-hostname) ;initial input
-			    ))
-	  (read-minibuffer "Remote port: "
-			   emacspeak-remote-default-port-to-connect)))
+          (list
+           (completing-read "Remote host: "
+                            emacspeak-eterm-remote-hosts-table ;completion table
+                            nil                         ;predicate
+                            nil                         ;must-match
+                            (emacspeak-remote-get-current-remote-hostname) ;initial input
+                            ))
+          (read-minibuffer "Remote port: "
+                           emacspeak-remote-default-port-to-connect)))
   (declare (special dtk-speaker-process
                     emacspeak-remote-use-telnet-to-connect
                     emacspeak-remote-default-port-to-connect

@@ -1,5 +1,5 @@
 ;;; emacspeak-auto.el --- Emacspeak Autoload Generator
-;;; $Id: emacspeak-autoload.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-autoload.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  RSS Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop RSS
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -59,7 +59,7 @@
 (declaim (special emacspeak-lisp-directory))
 (defcustom emacspeak-auto-autoloads-file
   (expand-file-name "emacspeak-loaddefs.el"
-		    emacspeak-lisp-directory)
+                    emacspeak-lisp-directory)
   "File that holds automatically generated autoloads for Emacspeak."
   :type 'file
   :group 'emacspeak-auto)

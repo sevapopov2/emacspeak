@@ -1,5 +1,5 @@
 ;;; emacspeak-winring.el --- Speech enable WinRing -- Manage multiple Emacs window configurations
-;;; $Id: emacspeak-winring.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-winring.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to winring
 ;;; Keywords: Emacspeak, Speak, Spoken Output, winring
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -54,7 +54,7 @@
 ;;{{{ Advice commands
 
 (defadvice winring-jump-to-configuration(after emacspeak pre
-					       act comp)
+                                               act comp)
   "provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
@@ -75,13 +75,13 @@
     (emacspeak-tapestry-describe-tapestry winring-name)))
 
 (defadvice winring-new-configuration(after emacspeak pre
-					   act comp)
+                                           act comp)
   "provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-mode-line)))
 (defadvice winring-delete-configuration(after emacspeak pre
-					      act comp)
+                                              act comp)
   "provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'delete-object)

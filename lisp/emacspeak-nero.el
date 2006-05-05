@@ -1,5 +1,5 @@
 ;;; emacspeak-nero.el --- Speech-Enable nero (interface to lynx)
-;;; $Id: emacspeak-nero.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-nero.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description: speech-enable nero (light-weight lynx rapper).
 ;;; Keywords: Emacspeak, nero
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -71,10 +71,10 @@
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
-	  "Provide auditory feedback."
-	  (when (interactive-p)
-	    (emacspeak-auditory-icon 'select-object)
-	    (emacspeak-speak-mode-line)))))
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'select-object)
+            (emacspeak-speak-mode-line)))))
 
 (loop for f in
       (list
@@ -83,15 +83,15 @@
       do
       (eval
        `(defadvice ,f (around emacspeak pre act comp)
-	  "Provide auditory feedback."
-	  (cond
-	   ((interactive-p)
-	    (emacspeak-auditory-icon 'select-object)
-	    ad-do-it
-	    (emacspeak-speak-mode-line)
-	    (emacspeak-auditory-icon 'open-object))
-	   (t ad-do-it))
-	  ad-return-value)))
+          "Provide auditory feedback."
+          (cond
+           ((interactive-p)
+            (emacspeak-auditory-icon 'select-object)
+            ad-do-it
+            (emacspeak-speak-mode-line)
+            (emacspeak-auditory-icon 'open-object))
+           (t ad-do-it))
+          ad-return-value)))
 
 (defadvice nero-move-to-next-link (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -104,10 +104,10 @@
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
-	  "Provide auditory feedback."
-	  (when (interactive-p)
-	    (emacspeak-auditory-icon 'close-object)
-	    (emacspeak-speak-mode-line)))))
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'close-object)
+            (emacspeak-speak-mode-line)))))
 
 (defadvice nero-kill-ring-save-current-url (after emacspeak pre act comp)
   "Provide auditory feedback."

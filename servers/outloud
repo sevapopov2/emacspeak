@@ -5,8 +5,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2005/11/25 16:30:52 $ |
-#  $Revision: 23.505 $ | 
+# $Date: 2006/05/03 02:54:04 $ |
+#  $Revision: 24.0 $ | 
 # Location undetermined
 #
 
@@ -287,7 +287,7 @@ proc clean {element} {
         regsub -all {([0-9a-zA-Z])([@!;/:()=\#,.\"])+([0-9a-zA-Z])} $element \
             {\1 `p5 \3} element
         regsub -all {``} $element { `ar } element
-        regsub -all {''} $element { `af } element
+        regsub -all {''} $element { `af} element
         regsub -all {' }  $element { `p1  } element
         regsub -all --  {--} $element { `p10  } element
         regsub -all -- {-}  $element { `p1   } element 

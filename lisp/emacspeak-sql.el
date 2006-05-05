@@ -1,5 +1,5 @@
 ;;; emacspeak-sql.el --- Speech enable sql-mode
-;;; $Id: emacspeak-sql.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-sql.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech enable sql-mode
 ;;; Keywords: Emacspeak, database interaction
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -67,13 +67,13 @@
 
 (defadvice sqlplus-back-command (after emacspeak pre act
                                        comp)"Move prompt appropriately,  and speak the line."
-				       (when (interactive-p)
-					 (emacspeak-auditory-icon 'large-movement)
-					 (forward-line 1)
-					 (emacspeak-speak-line)))
+                                       (when (interactive-p)
+                                         (emacspeak-auditory-icon 'large-movement)
+                                         (forward-line 1)
+                                         (emacspeak-speak-line)))
 
 (defadvice sqlplus-forward-command (after emacspeak pre act
-					  comp)
+                                          comp)
   "Move prompt appropriately,  and speak the line."
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)

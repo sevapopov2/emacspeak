@@ -1,5 +1,5 @@
 ;;; emacspeak-imcom.el --- Emacspeak interface to IMCom/Jabber
-;;; $Id: emacspeak-imcom.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-imcom.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains convenience imcom
 ;;; Keywords: Emacspeak,  Audio Desktop Imcom
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -53,7 +53,8 @@
 ;;{{{ Custom
 ;;;###autoload
 (defgroup emacspeak-imcom nil
-  "Jabber access from the Emacspeak audio desktop.")
+  "Jabber access from the Emacspeak audio desktop."
+  :group 'emacspeak)
 
 (defcustom emacspeak-imcom-client "imcom"
   "Name of IMCom command-line client."
@@ -69,8 +70,8 @@
 (defcustom emacspeak-imcom-default-jabber-server nil
   "Name of jabber server that is used by default."
   :type '(choice
-	  (const :tag "None" nil)
-	  (string :tag "Server"))
+          (const :tag "None" nil)
+          (string :tag "Server"))
   :group 'emacspeak-imcom)
 
 ;;}}}
@@ -104,7 +105,7 @@
       (emacspeak-imcom-mode)
       (run-hooks 'emacspeak-imcom-hooks)
       (setq emacspeak-imcom-process
-	    (get-buffer-process buffer)))))
+            (get-buffer-process buffer)))))
 
 (add-hook 'emacspeak-imcom-hooks
           'emacspeak-pronounce-refresh-pronunciations)
@@ -119,8 +120,8 @@
   (declare (special emacspeak-imcom-process))
   (unless
       (and (processp emacspeak-imcom-process)
-	   (eq 'run 
-	       (process-status  emacspeak-imcom-process)))
+           (eq 'run 
+               (process-status  emacspeak-imcom-process)))
     (emacspeak-imcom-start-process))
   (emacspeak-auditory-icon 'open-object)
   (switch-to-buffer (process-buffer
@@ -174,7 +175,7 @@ sessions.")
         (cons "session"
               (format "\"'%s'\""
                       session))))
-      (emacspeak-w3-preview-this-buffer)
+      (browse-url-of-buffer)
       (kill-buffer buffer))))
 
 ;;}}}

@@ -1,5 +1,5 @@
 ;;; emacspeak-gnus.el --- Speech enable GNUS -- Fluent spoken access to usenet
-;;; $Id: emacspeak-gnus.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-gnus.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable Gnus
 ;;; Keywords: Emacspeak, Gnus, Advice, Spoken Output, News
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -73,6 +73,10 @@
     'gnus-summary-show-some-headers)
   (define-key gnus-summary-mode-map '[left] 'emacspeak-gnus-summary-catchup-quietly-and-exit)
   (define-key gnus-summary-mode-map '[right] 'gnus-summary-show-article)
+  (define-key gnus-group-mode-map "\C-n" 'gnus-group-next-group)
+  (define-key gnus-group-mode-map [down] 'gnus-group-next-group)
+  (define-key gnus-group-mode-map [up] 'gnus-group-prev-group)
+  (define-key gnus-group-mode-map "\C-p" 'gnus-group-prev-group)
   (define-key gnus-group-mode-map '[right]
     'gnus-group-read-group))
 
@@ -125,6 +129,26 @@ reading news."
   (emacspeak-dtk-sync)
   (dtk-speak (gnus-summary-article-subject )))
 
+(defsubst emacspeak-gnus-speak-article-body ()
+  (declare (special emacspeak-gnus-large-article
+                    voice-lock-mode dtk-punctuation-mode))
+  (save-excursion
+    (set-buffer  "*Article*")
+    (goto-char (point-min))
+    (setq dtk-punctuation-mode 'some)
+    (voice-lock-mode 1)
+    (emacspeak-dtk-sync)
+    (cond
+     ((< (count-lines (point-min) (point-max))
+         emacspeak-gnus-large-article)
+      (emacspeak-speak-buffer  ))
+     (t (emacspeak-auditory-icon 'large-movement )
+        (let ((start (point)))
+          (move-to-window-line -1)
+          (end-of-line)
+          (emacspeak-speak-region start (point)))))))
+
+
 ;;}}}
 ;;{{{ Advise top-level gnus command
 
@@ -155,13 +179,29 @@ reading news."
 (defadvice gnus-group-get-new-news (around emacspeak pre act )
   "Temporarily deactivate advice on message"
   (dtk-speak  "Getting new  gnus")
+  (sit-for 2)
   (let ((emacspeak-speak-messages nil ))
     ad-do-it)
   (message "Gnus is ready ")
   (emacspeak-auditory-icon 'news))
 
+
+
 ;;}}}
 ;;{{{  Newsgroup selection
+
+(defadvice gnus-group-select-group (before emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)))
+
+(defadvice gnus-group-first-unread-group (after emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defadvice gnus-group-read-group  (after  emacspeak pre act)
   "Speak the first article line.
@@ -228,8 +268,245 @@ this group is being deselected."
     (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-speak-line )))
 
+(defadvice gnus-group-catchup-current (after emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-line)))
+
+(defadvice gnus-group-yank-group (after emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'yank-object)
+    (emacspeak-speak-line)))
+
+(defadvice gnus-group-get-new-news-this-group  (after emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
+
+(defadvice gnus-group-list-groups (after emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (dtk-speak "Listing groups... done")))
+
+(defadvice gnus-group-list-all-groups (after emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (dtk-speak "Listing all groups... done")))
+
+(defadvice gnus-group-list-all-matching (after emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (dtk-speak "Listing all matching groups... done")))
+
+(defadvice gnus-group-list-killed (after emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (dtk-speak "Listing killed groups... done")))
+
+(defadvice gnus-group-list-matching (after emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (dtk-speak "listing matching groups with unread articles... done")))
+
+(defadvice gnus-group-list-zombies (after emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (dtk-speak "Listing zombie groups... done")))
+
+(defadvice gnus-group-customize (before emacspeak pre act)
+  "Provide auditory feedback.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (message "Customizing group %s" (gnus-group-group-name))))
+
+
+
 ;;}}}
 ;;{{{  summary mode 
+
+(defadvice gnus-summary-clear-mark-backward  (around  emacspeak pre act)
+  "Speak the article  line.
+ Produce an auditory icon if possible."
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles")
+        (progn 
+          (emacspeak-auditory-icon 'select-object )
+          (dtk-speak (gnus-summary-article-subject )))))
+    ad-return-value ))
+
+(defadvice gnus-summary-clear-mark-forward  (around  emacspeak pre act)
+  "Speak the article  line.
+ Produce an auditory icon if possible."
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles")
+        (progn 
+          (emacspeak-auditory-icon 'select-object )
+          (dtk-speak (gnus-summary-article-subject )))))
+    ad-return-value ))
+
+(defadvice gnus-summary-mark-as-dormant (around  emacspeak pre act)
+  "Speak the article  line.
+ Produce an auditory icon if possible."
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles")
+        (progn 
+	  (emacspeak-auditory-icon 'mark-object)
+	  (emacspeak-gnus-summary-speak-subject ))))
+    ad-return-value ))
+
+(defadvice gnus-summary-mark-as-expirable (around  emacspeak pre act)
+  "Speak the article  line.
+ Produce an auditory icon if possible."
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles")
+        (progn 
+	  (emacspeak-auditory-icon 'mark-object)
+	  (emacspeak-gnus-summary-speak-subject ))))
+    ad-return-value ))
+
+(defadvice gnus-summary-mark-as-processable (around  emacspeak pre act)
+  "Speak the article  line.
+ Produce an auditory icon if possible."
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles")
+        (progn 
+	  (emacspeak-auditory-icon 'mark-object)
+	  (emacspeak-gnus-summary-speak-subject ))))
+    ad-return-value ))
+
+(defadvice gnus-summary-unmark-as-processable (after emacspeak pre act)
+  "Speak the line.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'deselect-object)
+    (emacspeak-gnus-summary-speak-subject )))
+
+(defadvice gnus-summary-tick-article-backward (around  emacspeak pre act)
+  "Speak the article  line.
+ Produce an auditory icon if possible."
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles")
+        (progn 
+	  (emacspeak-auditory-icon 'mark-object)
+	  (emacspeak-gnus-summary-speak-subject ))))
+    ad-return-value ))
+
+(defadvice gnus-summary-tick-article-forward (around  emacspeak pre act)
+  "Speak the article  line.
+ Produce an auditory icon if possible."
+  (let ((saved-point (point )))
+    ad-do-it
+    (when (interactive-p)
+      (if (= saved-point (point))
+          (dtk-speak "No more articles")
+        (progn 
+	  (emacspeak-auditory-icon 'mark-object)
+	  (emacspeak-gnus-summary-speak-subject ))))
+    ad-return-value ))
+
+(defadvice gnus-summary-delete-article (after emacspeak pre act)
+  "Speak the line.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon  'delete-object)
+    (emacspeak-gnus-summary-speak-subject )))
+
+(defadvice gnus-summary-catchup-from-here (after emacspeak pre act)
+  "Speak the line.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon  'mark-object)
+    (emacspeak-gnus-summary-speak-subject )))
+
+(defadvice gnus-summary-catchup-to-here (after emacspeak pre act)
+  "Speak the line.
+ Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon  'mark-object)
+    (emacspeak-gnus-summary-speak-subject )))
+
+(defadvice  gnus-summary-select-article-buffer (after emacspeak pre act)
+  "Speak the modeline.
+Indicate change of selection with
+  an auditory icon if possible."
+  (when (interactive-p )
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
+
+(defadvice gnus-summary-prev-article (after emacspeak pre act)
+  "Speak the article. "
+  (when (interactive-p)
+    (emacspeak-gnus-speak-article-body)))
+
+(defadvice gnus-summary-next-article (after emacspeak pre act)
+  "Speak the article. "
+  (when (interactive-p)
+    (emacspeak-gnus-speak-article-body)))
+
+(defadvice gnus-summary-exit-no-update  (around emacspeak pre act)
+  "Speak the modeline.
+Indicate change of selection with
+  an auditory icon if possible."
+  (let ((cur-group gnus-newsgroup-name ))
+    ad-do-it
+    (when (interactive-p )
+      (emacspeak-auditory-icon 'close-object)
+      (if (eq cur-group (gnus-group-group-name))
+          (dtk-speak "No more unread newsgroups")
+        (progn 
+	  (emacspeak-speak-line))))
+    ad-return-value ))
+
+(defadvice gnus-summary-exit  (around emacspeak pre act)
+  "Speak the modeline.
+Indicate change of selection with
+  an auditory icon if possible."
+  (let ((cur-group gnus-newsgroup-name ))
+    ad-do-it
+    (when (interactive-p )
+      (emacspeak-auditory-icon 'close-object)
+      (if (eq cur-group (gnus-group-group-name))
+          (dtk-speak "No more unread newsgroups")
+        (progn 
+	  (emacspeak-speak-line))))
+    ad-return-value ))
 
 (defadvice gnus-summary-prev-subject  (around  emacspeak pre act)
   "Speak the article  line.
@@ -394,6 +671,7 @@ Produce an auditory icon if possible."
 
 ;;}}}
 ;;{{{  Article reading
+
 (defun emacspeak-gnus-summary-catchup-quietly-and-exit ()
   "Catch up on all articles in current group."
   (interactive)
@@ -407,24 +685,7 @@ emacspeak-gnus-large-article lines will be considered to be a large article.
 A large article is not spoken all at once;
 instead you hear only the first screenful.")
 
-(defsubst emacspeak-gnus-speak-article-body ()
-  (declare (special emacspeak-gnus-large-article
-                    voice-lock-mode dtk-punctuation-mode))
-  (save-excursion
-    (set-buffer  "*Article*")
-    (goto-char (point-min))
-    (setq dtk-punctuation-mode 'some)
-    (voice-lock-mode 1)
-    (emacspeak-dtk-sync)
-    (cond
-     ((< (count-lines (point-min) (point-max))
-         emacspeak-gnus-large-article)
-      (emacspeak-speak-buffer  ))
-     (t (emacspeak-auditory-icon 'large-movement )
-        (let ((start (point)))
-          (move-to-window-line -1)
-          (end-of-line)
-          (emacspeak-speak-region start (point)))))))
+
            
            
 
@@ -503,6 +764,14 @@ instead you hear only the first screenful.")
   (when (interactive-p)
     (emacspeak-gnus-speak-article-body )))
 
+(defadvice gnus-article-show-summary  (after emacspeak pre act)
+  "Speak the modeline.
+Indicate change of selection with
+  an auditory icon if possible."
+  (when (interactive-p )
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
+
 (defadvice gnus-article-next-page (after emacspeak pre act )
   "Speak the current window full of news"
   (when (interactive-p)
@@ -542,6 +811,393 @@ instead you hear only the first screenful.")
     (emacspeak-speak-current-window)))
 
 ;;}}}
+
+;;{{{ rdc: refreshing the pronunciation 
+
+(add-hook 'gnus-article-mode-hook
+          (function (lambda ()
+                      (emacspeak-pronounce-refresh-pronunciations))))
+
+(add-hook 'gnus-group-mode-hook
+          (function (lambda ()
+                      (emacspeak-pronounce-refresh-pronunciations))))
+
+;; the following is for summary mode.  By default, the 
+;; summary mode hook is defined as gnus-agent-mode
+
+(add-hook 'gnus-agent-mode-hook
+          (function (lambda ()
+                      (emacspeak-pronounce-refresh-pronunciations))))
+
+(add-hook 'message-mode-hook
+          (function (lambda ()
+                      (emacspeak-pronounce-refresh-pronunciations))))
+
+(add-hook 'gnus-article-edit-mode-hook
+          (function (lambda ()
+                      (emacspeak-pronounce-refresh-pronunciations))))
+
+(add-hook 'gnus-category-mode-hook
+          (function (lambda ()
+                      (emacspeak-pronounce-refresh-pronunciations))))
+
+(add-hook 'gnus-score-mode-hook
+          (function (lambda ()
+                      (emacspeak-pronounce-refresh-pronunciations))))
+
+(add-hook 'gnus-server-mode-hook
+          (function (lambda ()
+                      (emacspeak-pronounce-refresh-pronunciations))))
+
+;;}}}
+;;{{{ rdc: mapping font faces to personalities 
+
+;; article buffer personalities
+
+;; Since citation does not normally go beyond 4 levels deep, in my 
+;; experience, there are separate voices for the first four levels
+;; and then they are repeated
+
+(def-voice-font emacspeak-gnus-cite-1-personality
+  voice-bolden
+  'gnus-cite-face-1
+  "level 1 citation personality.")
+
+(def-voice-font emacspeak-gnus-cite-2-personality
+  voice-lighten
+  'gnus-cite-face-2
+  "level 2 citation personality.")
+
+(def-voice-font emacspeak-gnus-cite-3-personality
+  voice-lighten-extra
+  'gnus-cite-face-3
+  "level 3 citation personality.")
+
+(def-voice-font emacspeak-gnus-cite-4-personality
+  voice-bolden-medium
+  'gnus-cite-face-4
+  "level 4 citation personality.")
+
+(def-voice-font emacspeak-gnus-cite-5-personality
+  voice-bolden
+  'gnus-cite-face-5
+  "level 5 citation personality.")
+
+(def-voice-font emacspeak-gnus-cite-6-personality
+  voice-lighten
+  'gnus-cite-face-6
+  "level 6 citation personality.")
+
+(def-voice-font emacspeak-gnus-cite-7-personality
+  voice-lighten-extra
+  'gnus-cite-face-7
+  "level 7 citation personality.")
+
+(def-voice-font emacspeak-gnus-cite-8-personality
+  voice-bolden-medium
+  'gnus-cite-face-8
+  "level 8 citation personality.")
+
+(def-voice-font emacspeak-gnus-cite-9-personality
+  voice-bolden
+  'gnus-cite-face-9
+  "level 9 citation personality.")
+
+(def-voice-font emacspeak-gnus-cite-10-personality
+  voice-lighten
+  'gnus-cite-face-10
+  "level 10 citation personality.")
+
+;; since this ends up getting changed when the text becomes cited,
+;; it is here only for completeness
+
+;; (def-voice-font emacspeak-gnus-cite-attribution-personality
+;;   voice-bolden
+;;   'gnus-cite-attribution-face
+;;  " Attribution line personality")
+
+(def-voice-font emacspeak-gnus-emphasis-bold-personality
+  voice-bolden-and-animate
+  'gnus-emphasis-bold
+  "Personality used for speaking *bold* words.")
+
+(def-voice-font emacspeak-gnus-emphasis-italic-personality
+  voice-lighten
+  'gnus-emphasis-italic
+  "Personality used for /italicized/ words.")
+
+(def-voice-font emacspeak-gnus-emphasis-underline-personality
+  voice-brighten-extra
+  'gnus-emphasis-underline
+  "Personality used for _underlined_ text.")
+
+(def-voice-font emacspeak-gnus-signature-personality
+  voice-animate
+  'gnus-signature-face
+  "Personality used to highlight signatures.")
+
+(def-voice-font emacspeak-gnus-header-content-personality
+  voice-bolden
+  'gnus-header-content-face
+  "Personality used for header content.")
+
+(def-voice-font emacspeak-gnus-header-name-personality
+  voice-animate
+  'gnus-header-name-face
+  " Personality used for displaying header names.")
+
+(def-voice-font emacspeak-gnus-header-from-personality
+  voice-bolden
+  'gnus-header-from-face
+  " Personality used for displaying from headers.")
+
+(def-voice-font emacspeak-gnus-header-newsgroups-personality
+  voice-bolden
+  'gnus-header-newsgroups-face
+  "Personality used for displaying newsgroups headers. ")
+
+(def-voice-font emacspeak-gnus-header-subject-personality
+  voice-bolden
+  'gnus-header-subject-face
+  "Personality used for displaying subject headers. ")
+
+;; ;; summary buffer personalities
+
+;; since there are so many distinctions, most variations
+;; on the same thing are given the same voice.  Any user that
+;; uses low and high interest is sufficiently advanced to change
+;; the voice to his own preferences
+
+(def-voice-font emacspeak-gnus-summary-normal-read-personality
+  voice-bolden
+  'gnus-summary-normal-read-face
+  "Personality used for read messages in the summary buffer.")
+
+(def-voice-font emacspeak-gnus-summary-high-read-personality
+  voice-bolden
+  'gnus-summary-high-read-face
+  "Personality used for high interest read articles.")
+
+(def-voice-font emacspeak-gnus-summary-low-read-personality
+  voice-bolden
+  'gnus-summary-low-read-face
+  "Personality used for low interest read articles.")
+
+(def-voice-font emacspeak-gnus-summary-normal-ticked-personality
+  voice-brighten
+  'gnus-summary-normal-ticked-face
+  "Personality used for ticked articles in the summary buffer.")
+
+(def-voice-font emacspeak-gnus-summary-high-ticked-personality
+  voice-brighten
+  'gnus-summary-high-ticked-face
+  "Personality used for high interest ticked articles.")
+
+(def-voice-font emacspeak-gnus-summary-low-ticked-personality
+  voice-brighten
+  'gnus-summary-low-ticked-face
+  "Personality used for low interest ticked articles.")
+
+(def-voice-font emacspeak-gnus-summary-normal-ancient-personality
+  voice-smoothen-extra
+  'gnus-summary-normal-ancient-face
+  "Personality used for normal interest ancient articles.")
+
+(def-voice-font emacspeak-gnus-summary-high-ancient-personality
+  voice-smoothen-extra
+  'gnus-summary-high-ancient-face
+  "Personality used for high interest ancient articles.")
+
+(def-voice-font emacspeak-gnus-summary-low-ancient-personality
+  voice-smoothen-extra
+  'gnus-summary-low-ancient-face
+  "Personality used for low interest ancient articles.")
+
+;; I believe the undownloaded articles should appear as normal text
+
+;; (def-voice-font emacspeak-gnus-summary-normal-undownloaded-personality
+;;   voice-bolden
+;;   'gnus-summary-normal-undownloaded-face
+;;   "Personality used for normal interest uncached articles.")
+
+;; (def-voice-font emacspeak-gnus-summary-high-undownloaded-personality
+;;   voice-bolden-and-animate
+;;   'gnus-summary-high-undownloaded-face
+;;   "Personality used for high interest uncached articles.")
+
+;; (def-voice-font emacspeak-gnus-summary-low-undownloaded-personality
+;;   voice-bolden
+;;   'gnus-summary-low-undownloaded-face
+;;   "Personality used for low interest uncached articles.")
+
+;; same with the below
+
+;; (def-voice-font emacspeak-gnus-summary-low-unread-personality
+;;   voice-bolden-extra
+;;   'gnus-summary-low-unread-face
+;;   "Personality used for low interest unread articles.")
+
+;; (def-voice-font emacspeak-gnus-summary-high-unread-personality
+;;   voice-bolden
+;;   'gnus-summary-high-unread-face
+;;   "Personality used for high interest unread articles.")
+
+(def-voice-font emacspeak-gnus-summary-selected-personality
+  voice-animate-extra
+  'gnus-summary-selected-face
+  "Personality used for selected articles in the summary buffer.")
+
+(def-voice-font emacspeak-gnus-summary-cancelled-personality
+  voice-bolden-extra
+  'gnus-summary-cancelled-face
+  "Personality used for cancelled articles.")
+
+;; group buffer personalities
+
+;; I think the voice used for the groups in the buffer should be the 
+;; default voice.  I might ask if there is a call for different voices 
+;; as they are only necessary if users have persistently visible groups
+;; in the case of empty groups, and voices for the various levels.
+
+;; (def-voice-font emacspeak-gnus-group-mail-1-empty-personality
+;;   voice-smoothen-extra
+;;   'gnus-group-mail-1-empty-face
+;;   "Level 1 empty mailgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-mail-1-personality
+;;   voice-bolden-extra
+;;   'gnus-group-mail-1-face
+;;   "Level 1 mailgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-mail-2-empty-personality
+;;   voice-smoothen-extra
+;;   'gnus-group-mail-2-empty-face
+;;   "Level 2 empty mailgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-mail-2-personality
+;;   voice-bolden
+;;   'gnus-group-mail-2-face
+;;   "Level 2 mailgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-mail-3-empty-personality
+;;   voice-bolden
+;;   'gnus-group-mail-3-empty-face
+;;   "Level 3 empty mailgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-mail-3-personality
+;;   voice-bolden
+;;   'gnus-group-mail-3-face
+;;   "Level 3 mailgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-mail-low-empty-personality
+;;   voice-bolden
+;;   'gnus-group-mail-low-empty-face
+;;   "Low level empty mailgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-mail-low-personality
+;;   voice-bolden
+;;   'gnus-group-mail-low-face
+;;   "Low level mailgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-1-empty-personality
+;;   voice-bolden
+;;   'gnus-group-news-1-empty-face
+;;   "Level 1 empty newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-1-personality
+;;   voice-bolden
+;;   'gnus-group-news-1-face
+;;   "Level 1 newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-2-empty-personality
+;;   voice-bolden
+;;   'gnus-group-news-2-empty-face
+;;   "Level 2 empty newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-2-personality
+;;   voice-bolden-extra
+;;   'gnus-group-news-2-face
+;;   "Level 2 newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-3-empty-personality
+;;   voice-bolden
+;;   'gnus-group-news-3-empty-face
+;;   "Level 3 empty newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-3-personality
+;;   voice-bolden
+;;   'gnus-group-news-3-face
+;;   "Level 3 newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-4-empty-personality
+;;   voice-bolden
+;;   'gnus-group-news-4-empty-face
+;;   "Level 4 empty newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-4-face
+;;   voice-bolden
+;;   'gnus-group-news-4-face
+;;   "Level 4 newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-5-empty-personality
+;;   voice-bolden
+;;   ' gnus-group-news-5-empty-face
+;;   "Level 5 empty newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-5-personality
+;;   voice-bolden
+;;   'gnus-group-news-5-face
+;;   "Level 5 newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-6-empty-personality
+;;   voice-bolden
+;;   'gnus-group-news-6-empty-face
+;;   "Level 6 empty newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-6-personality
+;;   voice-bolden-extra
+;;   'gnus-group-news-6-face
+;;   "Level 6 newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-low-empty-personality
+;;   voice-bolden-extra
+;;   'gnus-group-news-low-empty-face
+;;   "Low level empty newsgroup personality ")
+
+;; (def-voice-font emacspeak-gnus-group-news-low-personality
+;;   voice-bolden-extra
+;;   'gnus-group-news-low-face
+;;   "Low level newsgroup personality ")
+
+;; server buffer personalities
+
+(def-voice-font emacspeak-gnus-server-agent-personality
+  voice-bolden
+  'gnus-server-agent-face
+  "Personality used for displaying AGENTIZED servers")
+
+(def-voice-font emacspeak-gnus-server-closed-personality
+  voice-bolden-medium
+  'gnus-server-closed-face
+  "Personality used for displaying CLOSED servers")
+
+(def-voice-font emacspeak-gnus-server-denied-personality
+  voice-bolden-extra
+  'gnus-server-denied-face
+  "Personality used for displaying DENIED servers")
+
+(def-voice-font emacspeak-gnus-server-offline-personality
+  voice-animate
+  'gnus-server-offline-face
+  "Personality used for displaying OFFLINE servers")
+
+(def-voice-font emacspeak-gnus-server-opened-personality
+  voice-lighten
+  'gnus-server-opened-face
+  "Personality used for displaying OPENED servers")
+
+;;}}}
+
 (provide 'emacspeak-gnus)
 ;;{{{  end of file 
 

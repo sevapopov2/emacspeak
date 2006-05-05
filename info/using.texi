@@ -1,4 +1,4 @@
-@c $Id: using.texi,v 23.505 2005/11/25 16:30:53 raman Exp $
+@c $Id: using.texi,v 24.0 2006/05/03 02:54:04 raman Exp $
 @node Basic Usage
 @chapter Basic Usage.
 
@@ -16,10 +16,6 @@ the amount by which you moved.
 
 In addition, Emacspeak provides  basic reading functions that can be
 invoked to listen to chunks of text without moving.
-
-
-
-
 
 @menu
 * Overview::                     Basic Overview.

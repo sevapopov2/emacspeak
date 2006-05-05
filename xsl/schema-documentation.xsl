@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--$Id: schema-documentation.xsl,v 23.505 2005/11/25 16:30:54 raman Exp $-->
+<!--$Id: schema-documentation.xsl,v 24.0 2006/05/03 02:54:05 raman Exp $-->
 <!--Description:
 
 Extract documentation  from an XML Schema   and display as HTML
@@ -22,12 +22,15 @@ Extract documentation  from an XML Schema   and display as HTML
         Documentation For
         <xsl:choose>
           <xsl:when test="../../@name">
-            <em><xsl:value-of select="../../@name"/></em>
+            <em>
+              <xsl:value-of select="../../@name"/>
+            </em>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="name(../..)"/>
           </xsl:otherwise>
-      </xsl:choose></h2>
+        </xsl:choose>
+      </h2>
       <p>
         <xsl:apply-templates/>
       </p>

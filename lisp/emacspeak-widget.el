@@ -1,5 +1,5 @@
 ;;; emacspeak-widget.el --- Speech enable Emacs' native GUI widget library
-;;; $Id: emacspeak-widget.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-widget.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extensions to widgets
 ;;; Keywords:emacspeak, audio interface to emacs customized widgets
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -65,8 +65,9 @@
 (defgroup emacspeak-widget nil
   "Widgets on the Emacspeak Desktop."
   :group 'emacspeak
-  :group 'widgets
+  :group 'widget
   :prefix "emacspeak-widget-")
+
 (def-voice-font  emacspeak-widget-field-personality  voice-smoothen
   'widget-field-face
   "Personality for edit fields"
@@ -102,9 +103,6 @@
 (declaim (special widget-menu-minibuffer-flag))
 (setq  widget-menu-minibuffer-flag t)
 
-(define-widget-keywords :emacspeak-help
-  :caption)
-
 ;;}}}
 ;;{{{  helpers 
 
@@ -115,10 +113,10 @@ Returns a string with appropriate personality."
         (type   (widget-type w))
         (tag (widget-get w :tag)))
     (setq tag     
-	  (format " %s "
-		  (or tag type)))
+          (format " %s "
+                  (or tag type)))
     (put-text-property 0 (length tag)
-		       'personality emacspeak-widget-button-personality tag)
+                       'personality 'emacspeak-widget-button-personality tag)
     tag))
 
 (defsubst emacspeak-widget-help-echo (w)
@@ -378,7 +376,7 @@ Returns a string with appropriate personality."
   (let ((value (widget-get widget :value))
         (tag (widget-get widget :tag)))
     (format "Commentary  link   %s %s"
-	    (or tag "")
+            (or tag "")
             value)))
 
 (widget-put (get 'emacs-commentary-link 'widget-type)
@@ -509,8 +507,8 @@ Returns a string with appropriate personality."
           (cond
            (choice (widget-get choice :tag))
            (t (if value 
-		  (prin1-to-string value)
-		" no item ")))))
+                  (prin1-to-string value)
+                " no item ")))))
     (put-text-property 0  (length selected)
                        'personality emacspeak-widget-value-personality selected)
     (concat label
@@ -687,7 +685,7 @@ widget before summarizing."
   (loop for map in
         (list widget-keymap
               widget-field-keymap
-	      widget-text-keymap
+              widget-text-keymap
               )
         do
         (define-key map  emacspeak-prefix 'emacspeak-prefix-command)

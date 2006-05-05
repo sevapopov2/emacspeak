@@ -1,5 +1,5 @@
 ;;; emacspeak-rpm-spec.el --- Speech enable rpm spec editor
-;;; $Id: emacspeak-rpm-spec.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-rpm-spec.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, rpm-spec streaming media 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -73,7 +73,7 @@
                                   (quote (, f)))))
               (setq entry
                     (car (last
-			  (split-string entry "-"))))
+                          (split-string entry "-"))))
               (message
                (format "Inserted %s entry" entry))))))))
 
@@ -81,9 +81,9 @@
 ;;{{{ Advice navigation 
 (defvar emacspeak-rpm-spec-navigation-commands
   '(rpm-backward-section rpm-beginning-of-section 
-			 rpm-forward-section 
-			 rpm-end-of-section 
-			 rpm-goto-section )
+                         rpm-forward-section 
+                         rpm-end-of-section 
+                         rpm-goto-section )
   "Navigation commands in rpm-spec to speech-enable.")
 (loop for f in emacspeak-rpm-spec-navigation-commands
       do
@@ -116,7 +116,7 @@
           "Provide spoken feedback."
           (when (interactive-p)
             (let ((target  (format "%s"
-				   (quote (, f)))))
+                                   (quote (, f)))))
               (setq target
                     (car (last (split-string target "-"))))
               (emacspeak-auditory-icon 'task-done)

@@ -1,5 +1,5 @@
 ;;; emacspeak-pronounce.el --- Implements Emacspeak pronunciation dictionaries
-;;; $Id: emacspeak-pronounce.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-pronounce.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Emacspeak pronunciation dictionaries
 ;;; Keywords:emacspeak, audio interface to emacs customized pronunciation
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -65,7 +65,7 @@
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
 (eval-when-compile (require 'wid-edit)
-		   (require 'emacspeak-personality))
+                   (require 'emacspeak-personality))
 (require 'voice-setup)
 (require 'thingatpt)
 (eval-when (compile)
@@ -143,7 +143,7 @@ Arguments STRING and PRONUNCIATION specify what is being defined."
               emacspeak-pronounce-pronunciation-table)
   (when (interactive-p)
     (message "Added  local pronunciation in buffer %s"
-	     (buffer-name))))
+             (buffer-name))))
 
 ;;}}}
 ;;{{{ setting up inheritance relations
@@ -266,53 +266,53 @@ Modifies text and point in buffer."
                 (pp nil)
                 (personality nil))
             (when word 
-	      (goto-char (point-min))
-	      (cond
-	       ((stringp pronunciation)
-		(while (search-forward  word nil t)
-		  (setq personality (get-text-property (point) 'personality))
-		  (replace-match  pronunciation t t  )
-		  (put-text-property
-		   (match-beginning 0)
-		   (+ (match-beginning 0) (length pronunciation))
-		   'personality
-		   (apply
-		    'append
-		    (mapcar
-		     #'(lambda (p)
-			 (when p
-			   (if (atom p) (list p) p)))
-		     (list emacspeak-pronounce-pronunciation-personality personality))))))
-	       ((consp pronunciation )
-		(let ((matcher (car pronunciation))
-		      (pronouncer (cdr pronunciation))
-		      (pronunciation ""))
-		  (while (funcall matcher   word nil t)
-		    (setq personality
-			  (get-text-property (point) 'personality))
-		    (setq pronunciation
-			  (save-match-data 
-			    (funcall pronouncer
-				     (buffer-substring 
-				      (match-beginning 0)
-				      (match-end 0)))))
-		    (replace-match pronunciation t t  )
-		    ;; get personality if any from pronunciation
-		    (setq pp
-			  (get-text-property (match-beginning 0) 'personality))
-		    (put-text-property
-		     (match-beginning 0)
-		     (+ (match-beginning 0) (length pronunciation))
-		     'personality
-		     (apply 'append
-			    (mapcar
-			     #'(lambda (p)
-				 (when p
-				   (if (atom p) (list p) p)))
-			     (list
-			      emacspeak-pronounce-pronunciation-personality
-			      personality pp)))))))
-	       (t nil)))))))
+              (goto-char (point-min))
+              (cond
+               ((stringp pronunciation)
+                (while (search-forward  word nil t)
+                  (setq personality (get-text-property (point) 'personality))
+                  (replace-match  pronunciation t t  )
+                  (put-text-property
+                   (match-beginning 0)
+                   (+ (match-beginning 0) (length pronunciation))
+                   'personality
+                   (apply
+                    'append
+                    (mapcar
+                     #'(lambda (p)
+                         (when p
+                           (if (atom p) (list p) p)))
+                     (list emacspeak-pronounce-pronunciation-personality personality))))))
+               ((consp pronunciation )
+                (let ((matcher (car pronunciation))
+                      (pronouncer (cdr pronunciation))
+                      (pronunciation ""))
+                  (while (funcall matcher   word nil t)
+                    (setq personality
+                          (get-text-property (point) 'personality))
+                    (setq pronunciation
+                          (save-match-data 
+                            (funcall pronouncer
+                                     (buffer-substring 
+                                      (match-beginning 0)
+                                      (match-end 0)))))
+                    (replace-match pronunciation t t  )
+                    ;; get personality if any from pronunciation
+                    (setq pp
+                          (get-text-property (match-beginning 0) 'personality))
+                    (put-text-property
+                     (match-beginning 0)
+                     (+ (match-beginning 0) (length pronunciation))
+                     'personality
+                     (apply 'append
+                            (mapcar
+                             #'(lambda (p)
+                                 (when p
+                                   (if (atom p) (list p) p)))
+                             (list
+                              emacspeak-pronounce-pronunciation-personality
+                              personality pp)))))))
+               (t nil)))))))
 
 ;;}}}
 ;;{{{  loading, clearing  and saving dictionaries
@@ -337,11 +337,11 @@ Modifies text and point in buffer."
   (declare (special emacspeak-pronounce-dictionaries))
   (let* (
          (filename (read-file-name
-		    "Save pronunciation dictionaries to file: "
-		    emacspeak-resource-directory
+                    "Save pronunciation dictionaries to file: "
+                    emacspeak-resource-directory
                     nil nil 
-		    (file-name-nondirectory emacspeak-pronounce-dictionaries-file )))
-	 (buffer nil ))
+                    (file-name-nondirectory emacspeak-pronounce-dictionaries-file )))
+         (buffer nil ))
     (setq buffer (find-file-noselect filename))
     (save-excursion
       (set-buffer buffer)
@@ -459,7 +459,7 @@ Returns a pair of the form (key-type . key)."
           (completing-read
            "Define pronunciation that is specific to: "
            emacspeak-pronounce-pronunciation-keys nil t ) )))
-    (when (interactive-p)		;cleanup minibuffer history
+    (when (interactive-p)               ;cleanup minibuffer history
       (pop minibuffer-history))
     (cond
      ((eq key-type 'buffer)
@@ -614,11 +614,11 @@ Activates pronunciation dictionaries if not already active."
 modes.
 See http://oz.uc.edu/~solkode/smileys.html for a full list."
   :link '(url-link :tag "Smileys Dictionary "
-		   "http://oz.uc.edu/~solkode/smileys.html")
+                   "http://oz.uc.edu/~solkode/smileys.html")
   :type '(repeat
-	  (cons :tag "Dictionary Entry"
-		(string :tag "String")
-		(string :tag "Pronunciation")))
+          (cons :tag "Dictionary Entry"
+                (string :tag "String")
+                (string :tag "Pronunciation")))
   :group 'emacspeak-pronounce )
 
 ;;}}}
@@ -626,9 +626,12 @@ See http://oz.uc.edu/~solkode/smileys.html for a full list."
 
 (defcustom emacspeak-pronounce-common-xml-namespace-uri-pronunciations 
   '(
+    ("http://schemas.google.com/g/2005" . " gd ")
     ("http://www.w3.org/1999/02/22-rdf-syntax-ns#" . "RDF Syntax")
     ("http://www.w3.org/2002/06/xhtml2" . " xhtml2 ")
-    ("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" . "XUL" )
+    ("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+     . "XUL" )
+    ("http://www.mozilla.org/xbl" . " xbl ")
     ("http://www.w3.org/2003/XInclude" . "xinclude")
     ("http://www.w3.org/1999/XSL/Transform" . " XSLT ")
     ("http://www.w3.org/2002/xforms" . " XForms ")
@@ -643,9 +646,9 @@ See http://oz.uc.edu/~solkode/smileys.html for a full list."
     )
   "Pronunciations for well known namespace URIs."
   :type '(repeat
-	  (cons :tag "Dictionary Entry"
-		(string :tag "Namespace URI")
-		(string :tag "Pronunciation")))
+          (cons :tag "Dictionary Entry"
+                (string :tag "Namespace URI")
+                (string :tag "Pronunciation")))
   :group 'emacspeak-pronounce )
 
 ;;}}}
@@ -659,7 +662,7 @@ for the specified mode."
           do
           (unless (assoc (car e)
                          mode-alist)
-	    (push e mode-alist)))
+            (push e mode-alist)))
     (emacspeak-pronounce-set-dictionary mode mode-alist)))
 
 ;;}}}
@@ -726,20 +729,20 @@ specified pronunciation dictionary key."
   (interactive
    (list
     (let ((keys
-	   (loop for k being the hash-keys of
-		 emacspeak-pronounce-dictionaries
-		 collect
-		 (symbol-name k))))
+           (loop for k being the hash-keys of
+                 emacspeak-pronounce-dictionaries
+                 collect
+                 (symbol-name k))))
       (completing-read "Edit dictionary: "
-		       (mapcar
-			#'(lambda (k)
-			    (cons k k ))
-			keys)
-		       nil
-		       'REQUIRE-MATCH 
-		       nil
-		       'keys
-		       (car keys))))) 
+                       (mapcar
+                        #'(lambda (k)
+                            (cons k k ))
+                        keys)
+                       nil
+                       'REQUIRE-MATCH 
+                       nil
+                       'keys
+                       (car keys))))) 
   (declare (special emacspeak-pronounce-dictionaries))
   (emacspeak-pronounce-edit-generate-pronunciation-editor
    (intern key)))

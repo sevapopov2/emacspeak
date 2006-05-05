@@ -1,4 +1,4 @@
-# $Id: Makefile,v 23.505 2005/11/25 16:30:50 raman Exp $
+# $Id: Makefile,v 24.0 2006/05/03 02:54:02 raman Exp $
 # $Author: raman $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak, Dectalk, Makefile 
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu 
 # A speech interface to Emacs |
-# $Date: 2005/11/25 16:30:50 $ |
-#  $Revision: 23.505 $ | 
+# $Date: 2006/05/03 02:54:02 $ |
+#  $Revision: 24.0 $ | 
 # Location undetermined
 #
 
@@ -45,7 +45,7 @@ SRC=".."
 # How to run in batch mode
 BATCH = -batch -q -no-site-file
 DEPS=-l $(SRC)/lisp/emacspeak-load-path.el -l $(SRC)/lisp/emacspeak-loaddefs.el -l $(SRC)/lisp/emacspeak-cus-load.el
-COMPILE =  -f batch-byte-compile
+COMPILE =  -f batch-byte-compile 
 # How to compile 
 %.elc:  %.el
 	$(EMACS) $(BATCH)  $(DEPS)  $(COMPILE) $<
@@ -55,7 +55,7 @@ COMPILE =  -f batch-byte-compile
 #The various modules:
 DTK_OBJECTS = acss-structure.elc \
 dtk-speak.elc		dectalk-voices.elc\
-outloud-voices.elc  \
+outloud-voices.elc multispeech-voices.elc \
 dtk-interp.elc		
 
 SPEAK_OBJECTS =   \
@@ -85,11 +85,14 @@ emacspeak-alsaplayer.elc \
 emacspeak-amphetadesk.elc \
 emacspeak-analog.elc \
 emacspeak-ansi-color.elc \
+emacspeak-apt-sources.elc \
+emacspeak-apt-utils.elc \
 emacspeak-arc.elc \
 emacspeak-atom.elc \
+emacspeak-atom-blogger.elc \
 emacspeak-auctex.elc \
+emacspeak-autoload.el \
 emacspeak-aumix.elc \
-emacspeak-autoload.elc \
 emacspeak-babel.elc \
 emacspeak-bbdb.elc \
 emacspeak-bibtex.elc \
@@ -165,6 +168,7 @@ emacspeak-message.elc \
 emacspeak-metapost.elc \
 emacspeak-midge.elc \
 emacspeak-mpg123.elc \
+emacspeak-muse.elc \
 emacspeak-mspools.elc \
 emacspeak-nero.elc \
 emacspeak-net-utils.elc \
@@ -187,6 +191,7 @@ emacspeak-remote.elc \
 emacspeak-rmail.elc \
 emacspeak-rpm.elc  \
 emacspeak-rss.elc \
+emacspeak-ruby.elc \
 emacspeak-sawfish.elc \
 emacspeak-ses.elc \
 emacspeak-setup.el \
@@ -197,6 +202,7 @@ emacspeak-solitaire.elc \
 emacspeak-speedbar.elc \
 emacspeak-sql.elc \
 emacspeak-supercite.elc \
+emacspeak-sudoku.elc \
 emacspeak-swbuff.elc \
 emacspeak-tapestry.elc \
 emacspeak-tar.elc \
@@ -226,7 +232,7 @@ emacspeak-xslt.elc \
 emacspeak-xslt-process.elc  \
 xml-sexp.elc 
 
-ADDON_OBJECTS= tapestry.elc   xml-parse.elc 
+ADDON_OBJECTS= tapestry.elc   stack-f.elc string.elc xml-parse.elc 
 
 OBJECTS = $(DTK_OBJECTS) $(SPEAK_OBJECTS) $(CORE_OBJECTS)  \
 	$(AUX_OBJECTS) $(ADDON_OBJECTS)
@@ -268,6 +274,7 @@ dtk-speak.elc: dtk-speak.el  dtk-interp.elc
 acss-structure.elc: acss-structure.el
 dectalk-voices.elc: dectalk-voices.el voice-setup.elc
 outloud-voices.elc: outloud-voices.el voice-setup.elc
+multispeech-voices.elc: multispeech-voices.el voice-setup.elc
 voice-setup.elc: voice-setup.el acss-structure.elc
 html-outline.elc: html-outline.el
 emacspeak-alsaplayer.elc: emacspeak-alsaplayer.el
@@ -278,8 +285,11 @@ emacspeak-add-log.elc: emacspeak-add-log.el dtk-speak.elc voice-setup.elc
 emacspeak-advice.elc: emacspeak-advice.el dtk-speak.elc voice-setup.elc
 emacspeak-analog.elc: emacspeak-analog.el dtk-speak.elc voice-setup.elc
 emacspeak-ansi-color.elc: emacspeak-ansi-color.el dtk-speak.elc voice-setup.elc
+emacspeak-apt-sources.elc: emacspeak-apt-sources.el dtk-speak.elc voice-setup.elc
+emacspeak-apt-utils.elc: emacspeak-apt-utils.el dtk-speak.elc voice-setup.elc
 emacspeak-arc.elc: emacspeak-arc.el dtk-speak.elc voice-setup.elc
 emacspeak-atom.elc: emacspeak-atom.el dtk-speak.elc
+emacspeak-atom-blogger.elc: emacspeak-atom-blogger.el dtk-speak.elc
 emacspeak-auctex.elc: emacspeak-auctex.el dtk-speak.elc voice-setup.elc
 emacspeak-aumix.elc: emacspeak-aumix.el dtk-speak.elc voice-setup.elc
 emacspeak-autoload.elc: emacspeak-autoload.el
@@ -300,6 +310,7 @@ emacspeak-cedet.elc: emacspeak-cedet.el dtk-speak.elc voice-setup.elc
 emacspeak-checkdoc.elc: emacspeak-checkdoc.el dtk-speak.elc voice-setup.elc
 emacspeak-cperl.elc: emacspeak-cperl.el dtk-speak.elc voice-setup.elc
 emacspeak-custom.elc: emacspeak-custom.el dtk-speak.elc voice-setup.elc
+emacspeak-cyclebuffer.elc: emacspeak-cyclebuffer.el dtk-speak.elc
 emacspeak-daisy.elc: emacspeak-daisy.el dtk-speak.elc voice-setup.elc
 emacspeak-damlite.elc: emacspeak-damlite.el dtk-speak.elc voice-setup.elc
 emacspeak-desktop.elc: emacspeak-desktop.el dtk-speak.elc voice-setup.elc
@@ -361,6 +372,7 @@ emacspeak-message.elc: emacspeak-message.el dtk-speak.elc voice-setup.elc
 emacspeak-metapost.elc: emacspeak-metapost.el dtk-speak.elc voice-setup.elc
 emacspeak-midge.elc: emacspeak-midge.el dtk-speak.elc voice-setup.elc
 emacspeak-mpg123.elc: emacspeak-mpg123.el dtk-speak.elc voice-setup.elc
+emacspeak-muse.elc: emacspeak-muse.el dtk-speak.elc
 emacspeak-mspools.elc: emacspeak-mspools.el dtk-speak.elc voice-setup.elc
 emacspeak-nero.elc: emacspeak-nero.el dtk-speak.elc voice-setup.elc
 emacspeak-net-utils.elc: emacspeak-net-utils.el dtk-speak.elc voice-setup.elc
@@ -385,6 +397,7 @@ emacspeak-rpm-spec.elc: emacspeak-rpm-spec.el dtk-speak.elc voice-setup.elc
 emacspeak-remote.elc: emacspeak-remote.el
 emacspeak-replace.elc: emacspeak-replace.el dtk-speak.elc voice-setup.elc
 emacspeak-rss.elc: emacspeak-rss.el dtk-speak.elc voice-setup.elc
+emacspeak-ruby.elc: emacspeak-ruby.el dtk-speak.elc
 emacspeak-rmail.elc: emacspeak-rmail.el dtk-speak.elc voice-setup.elc
 emacspeak-sawfish.elc: emacspeak-sawfish.el dtk-speak.elc voice-setup.elc
 emacspeak-ses.elc: emacspeak-ses.el dtk-speak.elc voice-setup.elc
@@ -398,6 +411,7 @@ emacspeak-speak.elc: emacspeak-speak.el dtk-speak.elc voice-setup.elc
 emacspeak-speedbar.elc: emacspeak-speedbar.el dtk-speak.elc voice-setup.elc
 emacspeak-sql.elc: emacspeak-sql.el dtk-speak.elc voice-setup.elc
 emacspeak-supercite.elc: emacspeak-supercite.el dtk-speak.elc voice-setup.elc
+emacspeak-sudoku.elc: emacspeak-sudoku.el dtk-speak.elc
 emacspeak-swbuff.elc: emacspeak-swbuff.el dtk-speak.elc voice-setup.elc
 emacspeak-table-ui.elc: emacspeak-table-ui.el emacspeak-tabulate.elc  \
 emacspeak-table.elc
@@ -436,6 +450,9 @@ loaddefs: emacspeak-loaddefs.elc
 # {{{Development  target: indent 
 indent:
 	$(EMACS) -batch -q -no-site-file -l ../utils/indent-files.el
+
+elint:
+	$(EMACS) -batch -q -no-site-file -l ../utils/elint-files.el
 
 # }}}
 # {{{  user level target-- clean

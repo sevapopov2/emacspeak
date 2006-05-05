@@ -1,5 +1,5 @@
 ;;; emacspeak-eperiodic.el --- Speech-enable Periodic Table
-;;; $Id: emacspeak-eperiodic.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-eperiodic.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak speech-enabler for Periodic Table
 ;;; Keywords: Emacspeak, periodic  Table
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -52,78 +52,21 @@
 (require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ faces and voices 
-
-(def-voice-font emacspeak-eperiodic-header-personality voice-bolden
-  'eperiodic-header-face
-  "Personality used for the header."
-  :group 'eperiodic)
-
-(def-voice-font emacspeak-eperiodic-group-number-personality  voice-lighten
-  'eperiodic-group-number-face
-  "Personality used for group numbers."
-  :group 'eperiodic)
-
-(def-voice-font emacspeak-eperiodic-period-number-personality  voice-lighten
-  ' eperiodic-period-number-face
-  "Personality used for group numbers."
-  :group 'eperiodic)
-
-(def-voice-font emacspeak-eperiodic-s-block-personality voice-smoothen
-  'eperiodic-s-block-face
-  "Eperiodic face for s-block elements."
-  :group 'eperiodic)
-
-(def-voice-font emacspeak-eperiodic-p-block-personality voice-monotone
-  ' eperiodic-p-block-face
-  "Eperiodic face for p-block elements."
-  :group 'eperiodic)
-
-(def-voice-font emacspeak-eperiodic-d-block-personality voice-bolden-medium
-  ' eperiodic-d-block-face
-  "Eperiodic face for d-block elements."
-  :group 'eperiodic)
-
-(def-voice-font  emacspeak-eperiodic-f-block-personality  voice-lighten-extra
-  'eperiodic-f-block-face
-  "Eperiodic face for f-block elements."
-  :group 'eperiodic)
-
-(def-voice-font emacspeak-eperiodic-solid-personality  voice-bolden
-  ' eperiodic-solid-face
-  "Eperiodic face for solid elements."
-  :group 'eperiodic)
-
-(def-voice-font emacspeak-eperiodic-liquid-personality  voice-smoothen
-  ' eperiodic-liquid-face
-  "Eperiodic face for liquid elements."
-  :group 'eperiodic)
-
-(def-voice-font emacspeak-eperiodic-gas-personality  voice-lighten-extra
-  ' eperiodic-gas-face
-  "Eperiodic face for gaseous elements."
-  :group 'eperiodic)
-
-(def-voice-font
-  emacspeak-eperiodic-discovered-before-personality  voice-bolden
-  ' eperiodic-discovered-before-face
-  "Eperiodic face for discovered before elements."
-  :group 'eperiodic)
-
-(def-voice-font emacspeak-eperiodic-discovered-after-personality  voice-smoothen
-  ' eperiodic-discovered-after-face
-  "Eperiodic face for discovered after elements."
-  :group 'eperiodic)
-
-(def-voice-font emacspeak-eperiodic-discovered-in-personality  voice-lighten
-  ' eperiodic-discovered-in-face
-  
-  "Eperiodic face for discovered in elements."
-  :group 'eperiodic)
-
-(def-voice-font  emacspeak-eperiodic-unknown-personality  voice-monotone-medium
-  'eperiodic-unknown-face
-  "Eperiodic face for unknown elements."
-  :group 'eperiodic)
+(voice-setup-add-map
+ '(
+   (eperiodic-discovered-after-face voice-smoothen)
+   (eperiodic-discovered-before-face voice-brighten)
+   (eperiodic-discovered-in-face voice-lighten)
+   (eperiodic-f-block-face voice-lighten-medium)
+   (eperiodic-gas-face voice-lighten-extra)
+   (eperiodic-group-number-face voice-lighten)
+   (eperiodic-header-face voice-bolden)
+   (eperiodic-liquid-face voice-smoothen)
+   (eperiodic-p-block-face voice-monotone)
+   (eperiodic-period-number-face voice-lighten)
+   (eperiodic-s-block-face voice-smoothen-medium)
+   (eperiodic-solid-face voice-bolden-extra)
+   (eperiodic-unknown-face voice-bolden-and-animate)))
 
 ;;}}}
 ;;{{{ helpers 
@@ -140,12 +83,13 @@
         (personality (get-text-property (point) 'personality)))
     (add-text-properties  0 (length name)
                           (list 'face face 'personality
-				personality )
-			  name)
+                                personality )
+                          name)
     name))
 
 ;;}}}
 ;;{{{ additional  commands
+
 (defun emacspeak-eperiodic-previous-line ()
   "Move to next row and speak element."
   (interactive)
@@ -177,9 +121,28 @@
 (declaim (special eperiodic-mode-map))
 (define-key eperiodic-mode-map " " 'emacspeak-eperiodic-speak-current-element)
 (define-key  eperiodic-mode-map "x" 'emacspeak-eperiodic-goto-property-section)
-(define-key eperiodic-mode-map "n"
-  'emacspeak-eperiodic-next-line)
+(define-key eperiodic-mode-map "n" 'emacspeak-eperiodic-next-line)
 (define-key eperiodic-mode-map "p" 'emacspeak-eperiodic-previous-line)
+(define-key eperiodic-mode-map "l" 'emacspeak-eperiodic-play-description)
+;;}}}
+;;{{{  listen off the web:
+(defcustom emacspeak-eperiodic-media-location 
+  "http://www.webelements.com/webelements/elements/media/snds-description/%s.rm"
+  "Location of streaming media describing elements."
+  :type 'url
+  :group 'emacspeak-eperiodic)
+
+(defun emacspeak-eperiodic-play-description ()
+  "Play audio description from WebElements."
+  (interactive)
+  (declare (special emacspeak-eperiodic-media-location))
+  (let ((e (eperiodic-element-at)))
+    (unless e  (error "No element under point."))
+    (funcall emacspeak-media-player 
+             (format  emacspeak-eperiodic-media-location
+                      (eperiodic-get-element-property e 'symbol))
+             nil 'noselect)))
+   
 
 ;;}}}
 ;;{{{ advice interactive commands
@@ -232,7 +195,7 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (message "View %s"
-	     eperiodic-colour-element-function)))
+             eperiodic-colour-element-function)))
 
 ;;}}}
 (provide 'emacspeak-eperiodic)

@@ -1,4 +1,4 @@
-<!--$Id: mlb-alerts.xsl,v 23.505 2005/11/25 16:30:54 raman Exp $-->
+<!--$Id: mlb-alerts.xsl,v 24.0 2006/05/03 02:54:05 raman Exp $-->
 <!--Description: MLB Alerts.-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0">
@@ -28,7 +28,8 @@
           <!--<xsl:value-of select="@game_id"/>-->
         </xsl:attribute>
         <xsl:value-of select="@text"/>
-    </xsl:element></li>
+      </xsl:element>
+    </li>
   </xsl:template>
 </xsl:stylesheet>
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-sgml-mode.el --- Speech enable psgml package
-;;; $Id: emacspeak-psgml.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-psgml.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extension for psgml
 ;;; Keywords:emacspeak, audio interface to emacs psgml
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -163,7 +163,7 @@ window")))
       (emacspeak-speak-line))))
 
 (defadvice sgml-up-element (after emacspeak pre act
-				  comp)
+                                  comp)
   "Speak line we moved to"
   (when (interactive-p)
     (let ((emacspeak-show-point t))
@@ -290,12 +290,12 @@ window")))
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice sgml-edit-attrib-field-end (after emacspeak pre
-					     act comp)
+                                             act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)))
 (defadvice sgml-edit-attrib-next (after emacspeak pre
-					act comp)
+                                        act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
@@ -309,7 +309,7 @@ window")))
     (emacspeak-speak-line)))
 
 (defadvice sgml-edit-attrib-default  (after emacspeak pre act
-					    comp)
+                                            comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'deselect-object)
@@ -349,25 +349,25 @@ window")))
 
 (defvar emacspeak-sgml-markup-voices
   (list 
-   (cons 'start-tag 	  voice-bolden)
-   (cons 'end-tag 	  voice-bolden)
-   (cons 'comment 	  voice-monotone)
-   (cons 'pi 	   voice-animate)
-   (cons 'sgml 	  voice-animate)
-   (cons 'doctype 	  voice-lock-italic-personality)
-   (cons 'entity 	  voice-lock-italic-personality)
+   (cons 'start-tag       voice-bolden)
+   (cons 'end-tag         voice-bolden)
+   (cons 'comment         voice-monotone)
+   (cons 'pi       voice-animate)
+   (cons 'sgml    voice-animate)
+   (cons 'doctype         voice-animate)
+   (cons 'entity          voice-animate)
    (cons 'shortref     voice-bolden))
   "*List of markup to personality mappings.
 Element are of the form (MARKUP-TYPE . personality).
 Possible values for MARKUP-TYPE is:
-comment	- comment declaration
-doctype	- doctype declaration
+comment - comment declaration
+doctype - doctype declaration
 end-tag 
-ignored	- ignored marked section
-ms-end	- marked section start, if not ignored 
+ignored - ignored marked section
+ms-end  - marked section start, if not ignored 
 ms-start- marked section end, if not ignored
-pi	- processing instruction
-sgml	- SGML declaration
+pi      - processing instruction
+sgml    - SGML declaration
 start-tag
 entity  - general entity reference
 shortref- short reference")

@@ -1,5 +1,5 @@
 ;;; emacspeak-tcl.el --- Speech enable TCL development environment
-;;; $Id: emacspeak-tcl.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-tcl.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for tcl-mode
 ;;; Keywords:emacspeak, audio interface to emacs tcl
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -153,11 +153,11 @@ is a Tcl expression, and the last argument is Tcl commands.")
   (when (interactive-p)
     (let* ((start nil)
            (proc-line
-	    (save-excursion
-	      (tcl-beginning-of-defun)
-	      (setq start (point))
-	      (end-of-line)
-	      (buffer-substring start (point)))))
+            (save-excursion
+              (tcl-beginning-of-defun)
+              (setq start (point))
+              (end-of-line)
+              (buffer-substring start (point)))))
       (message "Evaluated  %s" proc-line ))))
 
 (defadvice tcl-help-on-word (after emacspeak pre act comp)

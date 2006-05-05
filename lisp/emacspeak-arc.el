@@ -1,5 +1,5 @@
 ;;; emacspeak-arc.el --- Speech enable archive-mode -- a  Emacs interface to zip and friends
-;;; $Id: emacspeak-arc.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-arc.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to archive mode
 ;;; Keywords: Emacspeak, Speak, Spoken Output, archive
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -161,8 +161,8 @@ first initializing it if necessary."
       (message "No file on this line"))
      (t
       (message "File: %s"
-	       (nth  (emacspeak-arc-get-field-index "File")
-		     (split-string (thing-at-point 'line))))))))
+               (nth  (emacspeak-arc-get-field-index "File")
+                     (split-string (thing-at-point 'line))))))))
 
 (defun emacspeak-arc-speak-file-size ()
   "Speak the size of the file on current line"
@@ -175,8 +175,8 @@ first initializing it if necessary."
       (message "No file on this line"))
      (t
       (message "Size: %s"
-	       (nth  (emacspeak-arc-get-field-index "Length")
-		     (split-string (thing-at-point 'line))))))))
+               (nth  (emacspeak-arc-get-field-index "Length")
+                     (split-string (thing-at-point 'line))))))))
 
 (defun emacspeak-arc-speak-file-modification-time ()
   "Speak modification time of the file on current line"
@@ -189,12 +189,12 @@ first initializing it if necessary."
       (message "No file on this line"))
      (t
       (let* ((fields (split-string (thing-at-point 'line)))
-	     (date (nth  (emacspeak-arc-get-field-index "Date")
-			 fields))
-	     (time (nth  (emacspeak-arc-get-field-index "Time")
-			 fields)))
-	(message "Modified on %s at %s"
-		 date time))))))
+             (date (nth  (emacspeak-arc-get-field-index "Date")
+                         fields))
+             (time (nth  (emacspeak-arc-get-field-index "Time")
+                         fields)))
+        (message "Modified on %s at %s"
+                 date time))))))
 
 (defun emacspeak-arc-speak-file-permissions()
   "Speak permissions of file current entry "
@@ -209,7 +209,7 @@ first initializing it if necessary."
      (t
       (setq mode
             (archive-int-to-mode
-	     (aref entry 3)))
+             (aref entry 3)))
       (message  "Permissions  %s "
                 mode)))))
 (defun emacspeak-arc-setup-keys ()

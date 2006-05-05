@@ -1,5 +1,5 @@
 ;;; emacspeak-tdtd.el --- Speech enable  DTD authoring 
-;;; $Id: emacspeak-tdtd.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-tdtd.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable tdtd 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -64,8 +64,8 @@
 (defun emacspeak-tdtd-voice-lock-setup()
   "Setup voice locking for tdtd mode."
   (declare (special 
-	    dtd-xml-flag 
-	    dtd-decl-flag dtd-sys-decl-flag ))
+            dtd-xml-flag 
+            dtd-decl-flag dtd-sys-decl-flag ))
   (cond
    (dtd-xml-flag)
    (dtd-decl-flag

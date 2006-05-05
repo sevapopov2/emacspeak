@@ -1,5 +1,5 @@
 ;;; emacspeak-wrolo.el --- Speech enable hyperbole's Rolodex
-;;; $Id: emacspeak-wrolo.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-wrolo.el,v 24.0 2006/05/03 02:54:02 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak enhancements for Rolodex (part of hyperbole)
 ;;; Keywords: Emacspeak, Rolodex, Spoken Output
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:02 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -88,7 +88,7 @@
                     (end-of-line)
                     (buffer-substring start (point )))))))
      (t (emacspeak-auditory-icon 'search-miss)
-	(dtk-speak "No matches found")))))
+        (dtk-speak "No matches found")))))
 
 (defadvice rolo-grep (after emacspeak pre act )
   "Speak the number of hits and the first match if any."
@@ -116,11 +116,11 @@
       (emacspeak-auditory-icon 'search-hit)
       (dtk-speak
        (format  "%s hits. First hit is %s"
-		ad-return-value
-		(let ((start (point)))
-		  (save-excursion
-		    (end-of-line)
-		    (buffer-substring start (point )))))))
+                ad-return-value
+                (let ((start (point)))
+                  (save-excursion
+                    (end-of-line)
+                    (buffer-substring start (point )))))))
      (t(emacspeak-auditory-icon 'search-miss)
        (dtk-speak "No matches found")))))
 

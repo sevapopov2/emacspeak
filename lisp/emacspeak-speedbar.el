@@ -1,5 +1,5 @@
 ;;; emacspeak-speedbar.el --- Speech enable speedbar -- Tool for context-sensitive navigation
-;;; $Id: emacspeak-speedbar.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-speedbar.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to speedbar
 ;;; Keywords: Emacspeak, Speedbar
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -273,7 +273,7 @@ An automatically updating speedbar consumes resources.")
   :type 'symbol
   :group 'emacspeak-speedbar)
 
-(defcustom emacspeak-speedbar-directory-personality voice-lock-function-name-personality
+(defcustom emacspeak-speedbar-directory-personality voice-bolden-medium
   "Speedbar personality for directory buttons"
   :type 'symbol
   :group 'emacspeak-speedbar)
@@ -328,7 +328,7 @@ An automatically updating speedbar consumes resources.")
 ;;{{{ keys 
 (declaim (special emacspeak-keymap))
 
-					;(define-key emacspeak-keymap '[insert] 'emacspeak-speedbar-goto-speedbar)
+                                        ;(define-key emacspeak-keymap '[insert] 'emacspeak-speedbar-goto-speedbar)
 
 ;;}}}
 (provide 'emacspeak-speedbar)

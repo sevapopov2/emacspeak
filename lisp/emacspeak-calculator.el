@@ -1,5 +1,5 @@
 ;;; emacspeak-calculator.el --- Speech enable  desktop calculator
-;;; $Id: emacspeak-calculator.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-calculator.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable desktop calculator
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -175,7 +175,7 @@
   ad-return-value)
 
 (defadvice calculator-clear (after emacspeak pre act
-				   comp)
+                                   comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'delete-object)

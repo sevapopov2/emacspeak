@@ -1,45 +1,51 @@
 Emacspeak News --History Of User-Visible Changes
-$Id: NEWS,v 23.505 2005/11/25 16:30:52 raman Exp $
+$Id: NEWS,v 24.0 2006/05/03 02:54:03 raman Exp $
 Author: T. V. Raman <raman@users.sf.net>
 
-* Emacspeak 23.0 Additions And Changes:
+* Emacspeak 24.0 Additions And Changes:
 
-Emacspeak 23.0 provides the following user level enhancements:
+Emacspeak 24.0 provides the following user level enhancements:
 
 * user Visible Changes:
+** emacspeak-muse:
 
-** Emacspeak-jabber.el:
+Speech-enables emacs Muse
 
-Speech-enables Emacs Jabber.
+**emacspeak-ruby:
 
-** ALSA DMix Support For Outloud:
-
-Emacspeak server library atcleci.cpp implements software TTS
-output using ALSA.
-See notes in directory server/linux-outloud  for usage tips.
-
-** New SSH speech servers:
-
-Speech servers ssh-dtk-exp and ssh-outloud let you run remote
-speech servers without first having to manually start a listener
-on port 2222.
-
-** Atom Support:
-
-emacspeak now supports Atom feeds.
-
-** Updated WebSearch:
-
-Search wizards have been updated to include PodCast searches.
-
-** Additional Smart URL Templates:
-
- New URL Templates including Blog Search.
- ** emacspeak-python.el
-
-Updated for python-mode available from Sourceforge.
+Speech-enables ruby-mode.
 
 
+** emacspeak-m-player:
+
+Updated for MPlayer release 1.0.
+
+** emacspeak-sudoku.el:
+
+Speech-enables sudoku.el --- the number placement SuDoku game.
+
+** New Option: tts-strip-octals
+
+Added new user option tts-strip-octals and associated toggle
+dtk-strip-octals
+to strip octals chars while speaking.
+
+** emacspeak-keymap.el
+
+Refactored keymaps and key-bindings.
+New modules should use emacspeak-keymap-update.
+
+** lisp/atom-blogger.el
+
+Light-weight client for posting/editting blogger.com entries.
+
+
+** emacspeak-atom-blogger:
+
+Speech-enables atom-blogger
+** voice-setup.el
+
+Refactored voice locking code to enable better customization via custom.
 
 Local variables:
  mode: outline

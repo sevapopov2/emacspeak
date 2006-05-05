@@ -1,5 +1,5 @@
 ;;; emacspeak-outline.el --- Speech enable Outline --   Browsing  Structured Documents
-;;; $Id: emacspeak-outline.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-outline.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for outline-mode
 ;;; Keywords:emacspeak, audio interface to emacs Outlines
@@ -9,7 +9,7 @@
 ;;; emacspeak| T. V. Raman |raman@crl.dec.com 
 ;;; A speech interface to Emacs |
 ;;; $date: $ |
-;;;  $Revision: 23.505 $ | 
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -70,7 +70,7 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (and (looking-at "^$")
-	 (skip-syntax-backward " "))
+         (skip-syntax-backward " "))
     (emacspeak-speak-line )))
 
 (defadvice outline-previous-visible-heading (after emacspeak pre act comp)
@@ -192,10 +192,10 @@ commands. "
             (setq end (point)))
         (error (setq end (point-max)))))
     (when (or  emacspeak-outline-dont-query-before-speaking
-	       (y-or-n-p
-		(format  "Speak %s lines from section %s"
-			 (count-lines start end )
-			 (thing-at-point 'line))))
+               (y-or-n-p
+                (format  "Speak %s lines from section %s"
+                         (count-lines start end )
+                         (thing-at-point 'line))))
       (emacspeak-speak-region start end ))))
 
 (defun emacspeak-outline-speak-next-heading ()

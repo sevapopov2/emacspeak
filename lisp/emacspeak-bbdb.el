@@ -1,6 +1,6 @@
 ;;; emacspeak-bbdb.el --- Speech enable BBDB -- a powerful address manager
 
-;;; $Id: emacspeak-bbdb.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-bbdb.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for bbdb 
 ;;; Keywords:emacspeak, audio interface to emacs bbdb 
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@crl.dec.com 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -95,7 +95,7 @@
     (emacspeak-auditory-icon 'delete-object)
     (save-excursion
       (when (looking-at  "?")
-	(forward-line 1))
+        (forward-line 1))
       (emacspeak-speak-line))))
 
 (defadvice bbdb-edit-current-field (before emacspeak pre act )
@@ -125,7 +125,7 @@
     (emacspeak-auditory-icon 'large-movement )
     (save-excursion
       (when (looking-at  "?")
-	(forward-line 1))
+        (forward-line 1))
       (emacspeak-speak-line ))))
 
 (defadvice bbdb-prev-record (after emacspeak pre act )
@@ -134,7 +134,7 @@
     (emacspeak-auditory-icon 'large-movement )
     (save-excursion
       (when (looking-at  "?")
-	(forward-line 1))
+        (forward-line 1))
       (emacspeak-speak-line ))))
 
 (defadvice bbdb-omit-record (after emacspeak pre act )

@@ -1,5 +1,5 @@
 ;;; emacspeak-ecb.el --- speech-enable Emacs Class Browser
-;;; $Id: emacspeak-ecb.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-ecb.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak module for speech-enabling Emacs
 ;;; Class Browser
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -189,8 +189,8 @@ available."
             (search-forward tree-buffer-incr-searchpattern)
             (setq end (point))
             (ems-modify-buffer-safely
-	     (ems-set-personality-temporarily
-	      beg end   voice-bolden
+             (ems-set-personality-temporarily
+              beg end   voice-bolden
               (emacspeak-speak-line)))
             (emacspeak-auditory-icon 'search-hit))))
        (t (emacspeak-auditory-icon 'search-miss)))))
@@ -210,7 +210,7 @@ available."
     (let ((node (ad-get-arg 0))) ;; note that logic is reversed
       (cond
        ((tree-node-is-expanded node)
-	(emacspeak-auditory-icon 'open-object))
+        (emacspeak-auditory-icon 'open-object))
        (t (emacspeak-auditory-icon 'close-object))))))
       
 (defadvice tree-buffer-update (after emacspeak pre act comp)

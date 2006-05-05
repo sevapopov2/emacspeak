@@ -1,5 +1,5 @@
 ;;; emacspeak-table.el --- Implements data model for table browsing
-;;; $Id: emacspeak-table.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-table.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -60,8 +60,8 @@
             (:constructor cons-emacspeak-table))
   row-header                            ;pointer to column  0
   column-header                         ;pointer to row 0
-  current-row				;row containing point 
-  current-column			;column containing point 
+  current-row                           ;row containing point 
+  current-column                        ;column containing point 
   elements                              ;  vector of  elements 
   )
 ;;;###autoload
@@ -95,8 +95,8 @@
 
 (defsubst emacspeak-table-current-element (table)
   (emacspeak-table-this-element table 
-				(emacspeak-table-current-row table )
-				(emacspeak-table-current-column table)))
+                                (emacspeak-table-current-row table )
+                                (emacspeak-table-current-column table)))
 
 (defsubst emacspeak-table-this-row (table index)
   (aref  (emacspeak-table-elements table) index))
@@ -196,7 +196,7 @@ Calls callback once per column."
       (setf (emacspeak-table-current-row table) row)
       (setf (emacspeak-table-current-column table) column))
      (t (error "Current table has %s rows and %s columns"
-	       row-count column-count )))))
+               row-count column-count )))))
         
 
 (defun emacspeak-table-move-up (table &optional count)

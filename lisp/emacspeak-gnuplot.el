@@ -1,5 +1,5 @@
 ;;; emacspeak-gnuplot.el --- speech-enable gnuplot mode
-;;; $Id: emacspeak-gnuplot.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-gnuplot.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech-enable
 ;;; gnuplot mode
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -68,16 +68,16 @@
     (emacspeak-speak-other-window 1)))
 
 (defadvice gnuplot-send-line-to-gnuplot (after emacspeak
-					       pre act
-					       comp)
+                                               pre act
+                                               comp)
   "Speak status."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-other-window 1)))
 
 (defadvice gnuplot-send-line-and-forward (after emacspeak
-						pre act
-						comp)
+                                                pre act
+                                                comp)
   "Speak status."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
@@ -91,8 +91,8 @@
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-other-window 1)))
 (defadvice gnuplot-send-file-to-gnuplot (after emacspeak
-					       pre act
-					       comp)
+                                               pre act
+                                               comp)
   "Speak status."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
@@ -106,8 +106,8 @@
      ((= (point) (point-max))
       (message "Sending EOF to comint process"))
      (t (dtk-tone 500 30 'force)
-	(and emacspeak-delete-char-speak-deleted-char
-	     (emacspeak-speak-char t))))
+        (and emacspeak-delete-char-speak-deleted-char
+             (emacspeak-speak-char t))))
     ad-do-it)
    (t ad-do-it))
   ad-return-value)

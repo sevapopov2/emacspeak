@@ -1,5 +1,5 @@
 ;;; emacspeak-hide.el --- Provides user commands for hiding and exposing blocks of text
-;;; $Id: emacspeak-hide.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-hide.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Hide and expose blocks of text
 ;;; Keywords: Emacspeak, Speak, Spoken Output, hide
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -53,7 +53,7 @@
 
 ;;}}}
 ;;; Code:
-(require 'emacspeak-preamble)	   
+(require 'emacspeak-preamble)      
 ;;}}}
 ;;{{{ voice locking for block header lines
 
@@ -169,8 +169,8 @@ STRING is the token's text."
 (defsubst emacspeak-hide-prefix-matches-this-line (prefix)
   (unless (eobp)
     (string-equal (nth 2 prefix)
-		  (buffer-substring-no-properties  (point)
-						   (+ (point) (nth 1  prefix))))))
+                  (buffer-substring-no-properties  (point)
+                                                   (+ (point) (nth 1  prefix))))))
 
 ;;}}}
 
@@ -273,13 +273,13 @@ Returns t if a block was found and hidden."
         (setq prefix (emacspeak-hide-parse-prefix))
         (cond
          ((and prefix
-	       (emacspeak-hide-current-block prefix))
-	  (incf count)
-	  (goto-char
-	   (next-single-property-change (point)
-					'emacspeak-hidden-block
-					(current-buffer)
-					(point-max))))
+               (emacspeak-hide-current-block prefix))
+          (incf count)
+          (goto-char
+           (next-single-property-change (point)
+                                        'emacspeak-hidden-block
+                                        (current-buffer)
+                                        (point-max))))
          (t (forward-line 1)))))
     (dtk-speak
      (format "Hid %s blocks" count))))
@@ -293,12 +293,12 @@ Returns t if a block was found and hidden."
     (save-excursion
       (goto-char (point-min))
       (while (not (eobp))
-	(setq block-end (emacspeak-hide-expose-block))
-	(cond
-	 (block-end
-	  (goto-char block-end)
-	  (incf count))
-	 (t (forward-line 1)))))
+        (setq block-end (emacspeak-hide-expose-block))
+        (cond
+         (block-end
+          (goto-char block-end)
+          (incf count))
+         (t (forward-line 1)))))
     (dtk-speak (format "Exposed %s blocks" count))))
 
 ;;}}}
@@ -309,7 +309,7 @@ Returns t if a block was found and hidden."
   (let ((block-prefix nil))
     (or (emacspeak-hide-parse-prefix)
         (when (and (not (looking-at "^[ \t]*$"))
-		   (y-or-n-p "Define a new block prefix? "))
+                   (y-or-n-p "Define a new block prefix? "))
           (setq block-prefix
                 (read-from-minibuffer "Specify prefix: "))
           (push

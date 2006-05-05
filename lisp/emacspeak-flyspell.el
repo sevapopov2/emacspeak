@@ -1,5 +1,5 @@
 ;;; emacspeak-ispell.el --- Speech enable Ispell -- Emacs' interactive spell checker
-;;; $Id: emacspeak-flyspell.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-flyspell.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  Emacspeak extension to speech enable flyspell
 ;;; Keywords: Emacspeak, Ispell, Spoken Output, fly spell checking
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -79,13 +79,13 @@
 
 (defadvice flyspell-unhighlight-at (before debug pre act comp)
   (let ((overlay-list (overlays-at pos))
-	(o nil))
+        (o nil))
     (while overlay-list 
       (setq o (car overlay-list))
       (when (flyspell-overlay-p o)
-	(put-text-property (overlay-start o)
-			   (overlay-end o)
-			   'personality  nil))
+        (put-text-property (overlay-start o)
+                           (overlay-end o)
+                           'personality  nil))
       (setq overlay-list (cdr overlay-list)))))
 
 ;;}}}

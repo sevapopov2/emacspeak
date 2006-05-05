@@ -1,5 +1,5 @@
 ;;; emacspeak-newsticker.el --- Speech-enable newsticker
-;;; $Id: emacspeak-newsticker.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-newsticker.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for NEWSTICKER 
 ;;; Keywords: Emacspeak, newsticker 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -70,7 +70,7 @@
 ;;{{{ advice functions
 
 (defadvice newsticker--cache-remove (around emacspeak pre act
-					    comp)
+                                            comp)
   "Silence messages temporarily to avoid chatter."
   (let ((emacspeak-speak-messages nil))
     ad-do-it
@@ -98,15 +98,15 @@
 (loop for f in
       '(newsticker-next-item newsticker-previous-item
                              newsticker-next-new-item
-			     newsticker-previous-new-item)
+                             newsticker-previous-new-item)
       do
       (eval
        (`
         (defadvice (, f) (after emacspeak pre act comp)
           "Provide spoken feedback."
           (when (interactive-p)
-	    (emacspeak-auditory-icon 'large-movement)
-	    (emacspeak-newsticker-summarize-item))))))
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-newsticker-summarize-item))))))
 
 ;;}}}
 ;;{{{  silence auto activity
@@ -118,9 +118,9 @@
       do
       (eval
        `(defadvice  ,f (around emacspeak pre act comp)
-	  "Silence messages."
-	  (let ((emacspeak-speak-messages nil))
-	    ad-do-it))))
+          "Silence messages."
+          (let ((emacspeak-speak-messages nil))
+            ad-do-it))))
 ;;}}}
 (provide 'emacspeak-newsticker)
 ;;{{{ end of file

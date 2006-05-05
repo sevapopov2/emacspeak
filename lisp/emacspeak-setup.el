@@ -1,5 +1,5 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-setup.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
@@ -7,8 +7,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -93,10 +93,15 @@ emacspeak is compiled or started.")
 pronunciation dictionaries are stored. ")
 
 ;;}}}
-;;{{{ speec rate 
+;;{{{ speech rate 
 
 (defcustom outloud-default-speech-rate 50
   "Default speech rate for outloud."
+  :group 'tts
+  :type 'integer)
+
+(defcustom multispeech-default-speech-rate 225
+  "Default speech rate for multispeech."
   :group 'tts
   :type 'integer)
 
@@ -114,13 +119,11 @@ pronunciation dictionaries are stored. ")
 (unless (featurep 'emacspeak)
   (setq load-path
         (cons emacspeak-lisp-directory 
-              load-path )))
-(defconst  emacspeak-xemacs-p
-  (when
-      (or (boundp 'running-xemacs)
-	  (string-match "Lucid\\|XEmacs" emacs-version))
-    t)
-  "T if we are running under XEmacs.")
+              load-path ))
+  (setq load-path
+        (cons
+         (expand-file-name "atom-blogger" emacspeak-lisp-directory )
+         load-path )))
 
 (load-library "emacspeak")
 (defvar dtk-startup-hook nil)
@@ -138,7 +141,16 @@ pronunciation dictionaries are stored. ")
 ;;; to add your personal settings. 
 
 ;;}}}
-
+;;{{{ auxiliarry autoloads
+(mapcar
+ #'(lambda (f)
+     (autoload f  "atom-blogger"
+       "Edit/post blogger entries using ATOM." t))
+ '(atom-blogger-new-entry atom-blogger-edit-entry
+                          atom-blogger-put-entry
+                          atom-blogger-post-entry
+                          atom-blogger-publish))
+;;}}}
 (emacspeak)
 (provide 'emacspeak-setup)
 ;;{{{  emacs local variables 

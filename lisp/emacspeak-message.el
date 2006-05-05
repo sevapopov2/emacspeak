@@ -1,5 +1,5 @@
 ;;; emacspeak-message.el --- Speech enable Message -- Used to compose news postings and replies
-;;; $Id: emacspeak-message.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-message.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extensions for posting
 ;;; Keywords:emacspeak, audio interface to emacs posting messages
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -77,6 +77,7 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
+
 (defadvice message-goto-fcc (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
@@ -153,6 +154,13 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
+
+(add-hook 'message-mode-hook
+          (lambda ()
+            (emacspeak-auditory-icon 'open-object)
+            (message "Starting message %s ... done"
+                     (buffer-name))))
+
 ;;}}}
 (provide  'emacspeak-message)
 ;;{{{  emacs local variables 

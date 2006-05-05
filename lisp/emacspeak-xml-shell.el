@@ -1,5 +1,5 @@
 ;;; emacspeak-xml-shell.el --- Implements a simple XML browser
-;;; $Id: emacspeak-xml-shell.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-xml-shell.el,v 24.0 2006/05/03 02:54:02 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Contains  xml-shell
 ;;; Keywords: Emacspeak,  Audio Desktop Xml-Shell
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:02 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -55,7 +55,8 @@
 ;;{{{ Customizations
 ;;;###autoload
 (defgroup emacspeak-xml-shell nil
-  "XML browser for the Emacspeak desktop.")
+  "XML browser for the Emacspeak desktop."
+  :group 'emacspeak)
 
 (defcustom emacspeak-xml-shell-command "xmllint"
   "Executable that provides the XML browser shell.
@@ -103,9 +104,9 @@ Interactive XML browser.
                        emacspeak-xml-shell-command
                        nil
                        (append emacspeak-xml-shell-options
-			       (if (string-match ".html?$" system-id)
-				   (list "--html")
-				 nil )
+                               (if (string-match ".html?$" system-id)
+                                   (list "--html")
+                                 nil )
                                (list system-id)))))
     (save-excursion
       (set-buffer buffer)
@@ -274,7 +275,7 @@ HTML head if none found."
   (goto-char (point-min))
   (let ((head   (search-forward "<head>" nil t)))
     (or head
-	(insert "<head>\n"))
+        (insert "<head>\n"))
     (insert
      (format "<base href=\"%s\">\n" base))
     (or head (insert "</head>\n"))))
@@ -292,7 +293,7 @@ HTML head if none found."
     (goto-char (point-min))
     (while (search-forward "-------" nil t)
       (replace-match "<br>")))
-  (emacspeak-w3-preview-this-buffer)
+  (browse-url-of-buffer)
   (setq emacspeak-xml-shell-display-buffer (current-buffer)))
 
 (defun emacspeak-xml-shell-browse-current ()

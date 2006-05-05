@@ -1,6 +1,6 @@
 ;;; html-outline.el --- Extends html-helper-mode to provide outline and imenu support
 ;;; Author: T. V. Raman
-;;; $Id: html-outline.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: html-outline.el,v 24.0 2006/05/03 02:54:02 raman Exp $
 ;;; Description: Outlining for HTML helper mode
 ;;; Implements the necessary extensions to make outline minor mode recognize
 ;;; html markup.
@@ -18,11 +18,11 @@
   (save-excursion
     (looking-at outline-regexp)
     (skip-chars-forward "<hH ")
-    (string-to-int (buffer-substring (point) (+ 1 (point))))))
+    (string-to-number (buffer-substring (point) (+ 1 (point))))))
 
 (declaim (special outline-level))
 (add-hook 'html-helper-mode-hook
-	  (function (lambda ()
+          (function (lambda ()
                       (require 'outline)
                       (make-local-variable 'outline-regexp)
                       (setq outline-regexp  "[\t ]*<[hH][1-6][]*>.*<\/[hH]")
@@ -38,14 +38,14 @@
  (function
   (lambda ()
     (declare (special imenu-generic-expression
-		      imenu-create-index-function))
+                      imenu-create-index-function))
     (require 'imenu)
     (setq imenu-create-index-function 'imenu-default-create-index-function)
     (setq imenu-generic-expression
-	  '(
-	    (nil
-	     "^ *<[hH][1-6] *><[aA][^>]+>\\(.*\\)</[aA]></[hH][1-6]>" 1)
-	    (nil "^ *<[hH][1-6] *>\\([^<]*\\)</[hH][1-6]>" 1))))))
+          '(
+            (nil
+             "^ *<[hH][1-6] *><[aA][^>]+>\\(.*\\)</[aA]></[hH][1-6]>" 1)
+            (nil "^ *<[hH][1-6] *>\\([^<]*\\)</[hH][1-6]>" 1))))))
 
 ;;}}}
 (provide 'html-outline)

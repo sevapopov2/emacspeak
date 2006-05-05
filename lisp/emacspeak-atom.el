@@ -1,5 +1,5 @@
 ;;; emacspeak-atom.el --- Emacspeak ATOM Wizard
-;;; $Id: emacspeak-atom.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-atom.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  ATOM Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop ATOM
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -60,9 +60,9 @@
   nil
   "Table of ATOM feeds."
   :type '(repeat
-	  (list :tag "ATOM Feed"
-		(string :tag "Title")
-		(string :tag "URI")))
+          (list :tag "ATOM Feed"
+                (string :tag "Title")
+                (string :tag "URI")))
   :group 'emacspeak-atom)
 
 ;;}}}
@@ -82,10 +82,10 @@ unescape HTML tags."
     (car
      (browse-url-interactive-arg "ATOM URL: "))))
   (declare (special emacspeak-atom-unescape-html
-		    emacspeak-xslt-directory))
+                    emacspeak-xslt-directory))
   (when (or (interactive-p)speak)
     (add-hook 'emacspeak-w3-post-process-hook
-	      'emacspeak-speak-buffer))
+              'emacspeak-speak-buffer))
   (emacspeak-w3-browse-xml-url-with-style
    (expand-file-name "atom.xsl" emacspeak-xslt-directory)
    atom-url
@@ -99,7 +99,7 @@ unescape HTML tags."
    (list
     (let ((completion-ignore-case t))
       (completing-read "Feed:"
-		       emacspeak-atom-feeds))))
+                       emacspeak-atom-feeds))))
   (let ((uri (cadr
               (assoc feed emacspeak-atom-feeds))))
     (emacspeak-atom-display uri 'speak)))

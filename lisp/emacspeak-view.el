@@ -1,5 +1,5 @@
 ;;; emacspeak-view.el --- Speech enable View mode -- Efficient browsing of read-only content
-;;; $Id: emacspeak-view.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-view.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for view
 ;;; Keywords:emacspeak, audio interface to emacs, view-mode
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -53,7 +53,7 @@
 (add-hook 'view-mode-hook
           (function (lambda ()
                       (local-unset-key emacspeak-prefix )
-		      (emacspeak-view-setup-keys))))
+                      (emacspeak-view-setup-keys))))
 ;;; Generate automatic advise:
 
 ;;}}}
@@ -80,9 +80,9 @@
     (emacspeak-speak-load-directory-settings)
     (outline-minor-mode 1)
     (if view-mode
-	(message "Entered view mode Press %s to exit"
-		 (key-description
-		  (where-is-internal 'View-exit view-mode-map 'firstonly)))
+        (message "Entered view mode Press %s to exit"
+                 (key-description
+                  (where-is-internal 'View-exit view-mode-map 'firstonly)))
       (message "Exited view mode"))))
 
 (defadvice View-quit (after emacspeak pre act comp)
@@ -245,7 +245,7 @@
       (emacspeak-auditory-icon 'large-movement)
       (dtk-speak
        (concat line-number
-	       (thing-at-point 'line))))))
+               (thing-at-point 'line))))))
 (defadvice View-scroll-to-buffer-end (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)

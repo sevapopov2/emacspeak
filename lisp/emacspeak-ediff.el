@@ -1,5 +1,5 @@
 ;;; emacspeak-ediff.el --- Speech enable Emacs interface to diff and merge
-;;; $Id: emacspeak-ediff.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-ediff.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; DescriptionEmacspeak extensions for ediff
 ;;; Keywords:emacspeak, audio interface to emacs, Comparing files 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -252,7 +252,7 @@
   "Voicify all the difference chunks"
   (declare (special ediff-buffer-A ediff-buffer-B
                     ediff-number-of-differences
-		    ediff-difference-vector-B ediff-difference-vector-A
+                    ediff-difference-vector-B ediff-difference-vector-A
                     emacspeak-ediff-A-personality
                     emacspeak-ediff-B-personality
                     emacspeak-ediff-fine-A-personality

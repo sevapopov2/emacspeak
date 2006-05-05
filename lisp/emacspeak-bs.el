@@ -1,5 +1,5 @@
 ;;; emacspeak-bs.el --- speech-enable bs buffer selection
-;;; $Id: emacspeak-bs.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-bs.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   extension to speech enable bs
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -73,7 +73,7 @@
             this-buffer-modified-p
             this-buffer-size
             this-buffer-mode-name
-	    mode-name
+            mode-name
             this-buffer-directory
             (dtk-stop-immediately nil))
         (put-text-property 0 (length document)
@@ -97,8 +97,8 @@
         (when this-buffer-modified-p (dtk-tone 700 70))
         (when this-buffer-read-only (dtk-tone 250 50))
         (put-text-property 0 (length this-buffer-mode-name)
-			   'personality voice-smoothen
-			   this-buffer-mode-name)
+                           'personality voice-smoothen
+                           this-buffer-mode-name)
         (dtk-speak
          (concat 
           name

@@ -1,5 +1,5 @@
 ;;; emacspeak-tapestry.el --- Speak information about current layout of windows
-;;; $Id: emacspeak-tapestry.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-tapestry.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak module to speak window tapestries
 ;;; Keywords:emacspeak, audio interface to emacs tapestry
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -68,36 +68,36 @@ displayed buffers."
                        'personality  voice-annotate
                        description)
     (setq windows 
-	  (cond
-	   (details 
-	    (loop for buffer in buffer-map
-		  and window in window-list
-		  collect
-		  (let ((w (format "%s "  (second buffer)))
-			(corners  (window-edges window))
-			(tl nil )
-			(br nil))
-		    (put-text-property 0 (length w)
-				       'personality
-				       voice-animate w)
-		    (setq tl
-			  (format  " %d %d "
-				   (first corners) (second corners))
-			  br  (format " %d %d "
-				      (third corners) (fourth corners)))
-		    (put-text-property 0 (length tl)
-				       'personality voice-bolden tl)
-		    (put-text-property 0 (length br)
-				       'personality voice-bolden br)
-		    (concat w
-			    " with top left "
-			    tl
-			    " and bottom right "
-			    br))))
-	   (t
-	    (loop for buffer in buffer-map
-		  collect
-		  (second buffer)))))
+          (cond
+           (details 
+            (loop for buffer in buffer-map
+                  and window in window-list
+                  collect
+                  (let ((w (format "%s "  (second buffer)))
+                        (corners  (window-edges window))
+                        (tl nil )
+                        (br nil))
+                    (put-text-property 0 (length w)
+                                       'personality
+                                       voice-animate w)
+                    (setq tl
+                          (format  " %d %d "
+                                   (first corners) (second corners))
+                          br  (format " %d %d "
+                                      (third corners) (fourth corners)))
+                    (put-text-property 0 (length tl)
+                                       'personality voice-bolden tl)
+                    (put-text-property 0 (length br)
+                                       'personality voice-bolden br)
+                    (concat w
+                            " with top left "
+                            tl
+                            " and bottom right "
+                            br))))
+           (t
+            (loop for buffer in buffer-map
+                  collect
+                  (second buffer)))))
     (tts-with-punctuations 'all
                            (dtk-speak
                             (concat description
@@ -117,7 +117,7 @@ but quickly switch to a window by name."
      "Select window: "
      (mapcar 
       #'(lambda (w)
-	  (list (buffer-name (window-buffer w))))
+          (list (buffer-name (window-buffer w))))
       (tapestry-window-list))
      nil 'must-match)))
   (pop-to-buffer buffer-name))
