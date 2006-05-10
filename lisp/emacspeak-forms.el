@@ -1,5 +1,5 @@
 ;;; emacspeak-forms.el --- Speech enable Emacs' forms mode  -- provides  a convenient database interface
-;;; $Id: emacspeak-forms.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-forms.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extensions for forms-mode 
 ;;; Keywords: emacspeak, audio interface to emacs forms 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -232,16 +232,16 @@ Assumes that point is at the front of a field value."
                                nil))))
   (let (ro)
     (setq forms--total-records
-	  (save-excursion
-	    (prog1
-		(progn
-		  ;;(message "forms: counting records...")
-		  (set-buffer forms--file-buffer)
-		  (bury-buffer (current-buffer))
-		  (setq ro buffer-read-only)
-		  (count-lines (point-min) (point-max))))))
+          (save-excursion
+            (prog1
+                (progn
+                  ;;(message "forms: counting records...")
+                  (set-buffer forms--file-buffer)
+                  (bury-buffer (current-buffer))
+                  (setq ro buffer-read-only)
+                  (count-lines (point-min) (point-max))))))
     (if ro
-	(setq forms-read-only t)))
+        (setq forms-read-only t)))
   (message "%s records after filtering"
            forms--total-records))
 

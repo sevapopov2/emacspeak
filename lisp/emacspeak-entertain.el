@@ -1,5 +1,5 @@
 ;;; emacspeak-entertain.el --- Speech enable misc games
-;;; $Id: emacspeak-entertain.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-entertain.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to diversions
 ;;; Keywords: Emacspeak, Speak, Spoken Output, games
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -120,8 +120,8 @@
           (aset  string  i
                  (aref hm-current-guess-string (* i 2 ))))
     (message  "%s:  %s "
-	      (length string)
-	      (downcase string))))
+              (length string)
+              (downcase string))))
 
 (defadvice hangman (after emacseak pre act comp)
   "Speech enable hangman."

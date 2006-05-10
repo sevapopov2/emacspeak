@@ -1,5 +1,5 @@
 ;;; emacspeak-analog.el --- Speech-enable
-;;; $Id: emacspeak-analog.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-analog.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for ANALOG log analyzer 
 ;;; Keywords: Emacspeak, analog 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -240,12 +240,12 @@ emacspeak-speak-and-skip-extent-upto-char "
   (mapcar 
    #'(lambda (cmd)
        (loop for k in
-	     (where-is-internal cmd)
-	     do
-	     (define-key analog-mode-map k
-	       'emacspeak-speak-and-skip-extent-upto-this-char )))
+             (where-is-internal cmd)
+             do
+             (define-key analog-mode-map k
+               'emacspeak-speak-and-skip-extent-upto-this-char )))
    (list 'emacspeak-self-insert-command
-	 'completion-separator-self-insert-command)))
+         'completion-separator-self-insert-command)))
 
 ;;}}}
 (provide 'emacspeak-analog)

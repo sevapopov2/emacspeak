@@ -7,8 +7,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -53,13 +53,17 @@
 ;;{{{ persoanlities 
 (def-voice-font emacspeak-compilation-info-personality
   voice-lighten
-  'compilation-info-face
+  'compilation-info
   "Personality used for information in compilation lines."
   :group 'emacspeak-compile)
-
+(def-voice-font emacspeak-compilation-error-personality
+  voice-animate-extra
+  'compilation-error
+  "Personality used for errors in compilation lines."
+  :group 'emacspeak-compile)
 (def-voice-font emacspeak-compilation-warning-personality
   voice-animate
-  'compilation-warning-face
+  'compilation-warning
   "Personality used for warnings in compilation lines."
   :group 'emacspeak-compile)
 
@@ -77,25 +81,25 @@
 ;;{{{  advice  interactive commands
 (loop for f in 
       '(
-	next-error previous-error
-	compilation-next-file compilation-previous-file
-	compile-goto-error compile-mouse-goto-error
-	)
+        next-error previous-error
+        compilation-next-file compilation-previous-file
+        compile-goto-error compile-mouse-goto-error
+        )
       do
       (eval
        (`
-	(defadvice (, f) (after  emacspeak pre act )
-	  "Speak the line containing the error. "
-	  (when (interactive-p)
+        (defadvice (, f) (after  emacspeak pre act )
+          "Speak the line containing the error. "
+          (when (interactive-p)
             (dtk-stop)
-	    (emacspeak-compilation-speak-error))))))
+            (emacspeak-compilation-speak-error))))))
 
 (loop for f in 
       '(
-	compilation-next-error
-	compilation-previous-error
-	next-error-no-select
-	previous-error-no-select)
+        compilation-next-error
+        compilation-previous-error
+        next-error-no-select
+        previous-error-no-select)
       do
       (eval
        (`

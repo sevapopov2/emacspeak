@@ -1,5 +1,5 @@
 ;;; emacspeak-sawfish.el --- speech-enable sawfish mode
-;;; $Id: emacspeak-sawfish.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-sawfish.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak extension to speech-enable
 ;;; sawfish mode
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -72,26 +72,26 @@
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice sawfish-eval-defun (after emacspeak pre act
-				     comp)
+                                     comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice sawfish-eval-expression (after emacspeak pre act
-					  comp)
+                                          comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice sawfish-eval-last-sexp (after emacspeak pre act
-					 comp)
+                                         comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-message-again)))
 
 (defadvice sawfish-eval-print-last-sexp (after emacspeak pre act
-					       comp)
+                                               comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)))
@@ -122,14 +122,14 @@
     (emacspeak-speak-buffer)))    
 
 (defadvice sawfish-info (after emacspeak pre act
-			       comp)
+                               comp)
   "Speak the info documentation. "
   (when (interactive-p)
     (emacspeak-auditory-icon 'help)
     (emacspeak-speak-buffer)))    
 
 (defadvice sawfish-rep-info (after emacspeak pre act
-				   comp)
+                                   comp)
   "Speak the info documentation. "
   (when (interactive-p)
     (emacspeak-auditory-icon 'help)

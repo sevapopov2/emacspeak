@@ -1,5 +1,5 @@
 ;;; emacspeak-ocr.el --- ocr Front-end for emacspeak desktop
-;;; $Id: emacspeak-ocr.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-ocr.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak front-end for OCR
 ;;; Keywords: Emacspeak, ocr
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -170,7 +170,7 @@ will be placed."
   "Return OCR working buffer."
   (get-buffer-create
    (format  "*%s-ocr*"
-	    (emacspeak-ocr-default-name))))
+            (emacspeak-ocr-default-name))))
 
 (defsubst emacspeak-ocr-get-text-name ()
   "Return name of current text document."
@@ -184,7 +184,7 @@ will be placed."
   (format "%s-p%s%s"
           emacspeak-ocr-document-name
           (1+ emacspeak-ocr-last-page-number)
-	  extension))
+          extension))
 
 (defsubst emacspeak-ocr-get-page-name ()
   "Return name of current page."
@@ -409,7 +409,7 @@ Pick a short but meaningful name."
                   emacspeak-ocr-image-extension)))))
     (when (interactive-p)
       (setq emacspeak-ocr-last-page-number
-	    (1+ emacspeak-ocr-last-page-number)))
+            (1+ emacspeak-ocr-last-page-number)))
     (message "Acquired  image to file %s"
              image-name)))
 
@@ -532,11 +532,11 @@ Prompts for image file if file corresponding to the expected
              emacspeak-ocr-last-page-number))
     (setq emacspeak-ocr-process
           (apply 'start-process 
-		 "ocr"
-		 (current-buffer)
-		 emacspeak-ocr-engine
-		 image-name
-		 emacspeak-ocr-engine-options))
+                 "ocr"
+                 (current-buffer)
+                 emacspeak-ocr-engine
+                 image-name
+                 emacspeak-ocr-engine-options))
     (set-process-sentinel emacspeak-ocr-process
                           'emacspeak-ocr-process-sentinel)
     (message "Launched OCR engine.")))

@@ -1,5 +1,5 @@
 ;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java 
-;;; $Id: emacspeak-c.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-c.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extensions for C and C++ mode
 ;;; Keywords: emacspeak, audio interface to emacs C, C++
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -144,7 +144,7 @@
     (let ((dtk-stop-immediately nil))
       (emacspeak-auditory-icon 'mark-object)
       (dtk-speak "Marked function containing %s lines "
-		 (count-lines (point) (mark)))
+                 (count-lines (point) (mark)))
       (emacspeak-speak-line ))))
 
 ;;}}}

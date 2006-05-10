@@ -1,5 +1,5 @@
 ;;; emacspeak-url-template.el --- Create library of URI templates
-;;; $Id: emacspeak-url-template.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-url-template.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   Implement library of URI templates
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -56,19 +56,19 @@
 ;;{{{ required modules
 
 (require 'emacspeak-preamble)
-(require 'webjump)
+(require 'emacspeak-websearch)
 (eval-when-compile (require 'emacspeak-w3))
 ;;}}}
-;;{{{  structures 
+;;{{{  structures
 
 (defstruct (emacspeak-url-template
             (:constructor emacspeak-url-template-constructor))
   name                                  ;Human-readable name
-  template                              ;template URL string 
+  template                              ;template URL string
   generators                            ; list of param generator
-  post-action			      ;action to perform after opening
+  post-action                    ;action to perform after opening
   documentation                         ;resource  documentation
-  fetcher                               ; custom fetcher 
+  fetcher                               ; custom fetcher
   )
 
 ;;}}}
@@ -77,6 +77,7 @@
 (defun emacspeak-url-template-url (ut)
   "Instantiate URL identified by URL template."
   (declare (special emacspeak-url-template-current-ut))
+  (setq emacspeak-url-template-current-ut nil)
   (apply 'format
          ( emacspeak-url-template-template ut)
          (mapcar
@@ -85,10 +86,10 @@
                 (setq input
                       (cond
                        ((stringp g)
-                        (webjump-url-encode (read-from-minibuffer g)))
+                        (emacspeak-url-encode (read-from-minibuffer g)))
                        (t (funcall g))))
-                (nconc emacspeak-url-template-current-ut
-                       (list input))
+                (setq emacspeak-url-template-current-ut
+                      (list (emacspeak-url-template-name ut) input))
                 input))
           (emacspeak-url-template-generators ut))))
 
@@ -103,19 +104,17 @@ This function is sensitive to calendar mode when prompting."
       (let ((date (calendar-cursor-to-nearest-date)))
         (setq default (format-time-string time-format-string
                                           (apply 'encode-time 0 0
-						 0
-						 (second date)
-						 (first date)
-						 (list (third date )))))))
+                                                 0
+                                                 (second date)
+                                                 (first date)
+                                                 (list (third date )))))))
     (read-from-minibuffer prompt
                           default
                           nil nil nil
                           default)))
-                                               
-    
 
 ;;}}}
-;;{{{  persistent store 
+;;{{{  persistent store
 
 (defvar emacspeak-url-template-table (make-hash-table :test 'equal)
   "Stores URL templates. ")
@@ -130,7 +129,7 @@ This function is sensitive to calendar mode when prompting."
   (gethash key emacspeak-url-template-table))
 
 ;;}}}
-;;{{{  define resources 
+;;{{{  define resources
 
 (defvar emacspeak-url-template-name-alist nil
   "Alist of url template names --used by completing-read when
@@ -167,7 +166,7 @@ documentation   Documents this template resource. "
                                        :documentation
                                        documentation
                                        :fetcher fetcher)))
-                               
+
 ;;;###autoload
 (defun emacspeak-url-template-load (file)
   "Load URL template resources from specified location."
@@ -208,7 +207,7 @@ documentation   Documents this template resource. "
       (kill-buffer buffer))))
 
 ;;}}}
-;;{{{  template resources 
+;;{{{  template resources
 
 ;;{{{  fedex, UPS
 (emacspeak-url-template-define
@@ -217,14 +216,13 @@ documentation   Documents this template resource. "
  (list "Tracking Number: ")
  nil
  "Display package tracking information from Fedex.")
- 
+
 (emacspeak-url-template-define
  "UPS Packages"
  "http://wwwapps.ups.com/WebTracking/processInputRequest?HTMLVersion=5.0&sort_by=status&tracknums_displayed=5&TypeOfInquiryNumber=T&loc=en_US&InquiryNumber1=%s&InquiryNumber2=&InquiryNumber3=&InquiryNumber4=&InquiryNumber5=&track.x=0&track.y=0&AgreeToTermsAndConditions=yes"
  (list "Tracking Number: ")
  nil
  "Display package tracking information from UPS.")
- 
 
 ;;}}}
 ;;{{{ amazon
@@ -259,7 +257,7 @@ documentation   Documents this template resource. "
      (emacspeak-lynx url)))
 
 ;;}}}
-;;{{{ shoutcast 
+;;{{{ shoutcast
 (defvar emacspeak-url-template-shoutcast-history nil
   "History to track shoutcast searchses.")
 
@@ -275,8 +273,8 @@ documentation   Documents this template resource. "
                                    nil nil
                                    'emacspeak-url-template-shoutcast-history)))
         (pushnew query emacspeak-url-template-shoutcast-history
-		 :test #'string-equal)
-        (webjump-url-encode query))))
+                 :test #'string-equal)
+        (emacspeak-url-encode query))))
  nil
  "Locate and display Shoutcast streams."
  #'(lambda (url)
@@ -286,7 +284,7 @@ documentation   Documents this template resource. "
       'speak)))
 
 ;;}}}
-;;{{{  old time radio 
+;;{{{  old time radio
 (emacspeak-url-template-define
  "Old Time Radio"
  "http://www.oldtimeradioprograms.com"
@@ -298,7 +296,7 @@ documentation   Documents this template resource. "
       (list 2 3 )
       url)))
 ;;}}}
-;;{{{ Netcraft surveys 
+;;{{{ Netcraft surveys
 (emacspeak-url-template-define
  "Netcraft Web Analysis"
  "http://uptime.netcraft.com/up/graph/?mode_u=off&mode_w=on&site=%s&submit=Examine "
@@ -328,7 +326,7 @@ documentation   Documents this template resource. "
 -- e.g. 1230 --
 to play a BBC Radio4 program on demand."
  #'(lambda (url)
-     (emacspeak-realaudio-play url)))
+     (funcall emacspeak-media-player  url 'play-list)))
 
 (emacspeak-url-template-define
  "BBC Radio7 On Demand"
@@ -339,7 +337,7 @@ to play a BBC Radio4 program on demand."
 -- e.g. 1230 --
 to play a BBC Radio7 program on demand."
  #'(lambda (url)
-     (emacspeak-realaudio-play url)))
+     (funcall emacspeak-media-player  url 'play-list)))
 
 (emacspeak-url-template-define
  "BBC Listen Again"
@@ -356,9 +354,9 @@ to play a BBC Radio7 program on demand."
       (expand-file-name "linearize-tables.xsl"
                         emacspeak-xslt-directory)
       url)))
-;;{{{ bbc channel 
+;;{{{ bbc channel
 
-(defvar  emacspeak-url-template-bbc-channels-content 
+(defvar  emacspeak-url-template-bbc-channels-content
   "http://www.bbc.co.uk/radio/aod/shows/rpms/"
   "Location of BBC audio content.")
 
@@ -367,18 +365,18 @@ to play a BBC Radio7 program on demand."
 content."
   (declare (special  emacspeak-url-template-bbc-channels-content))
   (let ((content (second
-		  (split-string url "?")))
-	(uri nil))
+                  (split-string url "?")))
+        (uri nil))
     (cond
      ((null content)
       (error "Cannot locate content particle in %s" url))
      (t
       (setq uri
-	    (concat emacspeak-url-template-bbc-channels-content
-		    content
-		    ".rpm"))
+            (concat emacspeak-url-template-bbc-channels-content
+                    content
+                    ".rpm"))
       (kill-new uri)
-      (emacspeak-realaudio-play uri)
+      (funcall emacspeak-media-player  uri 'play-list)
       (message "Playing content under point.")))))
 
 (emacspeak-url-template-define
@@ -392,7 +390,7 @@ content."
  "Display BBC Channel on demand.")
 
 ;;}}}
-;;{{{ bbc Genres 
+;;{{{ bbc Genres
 
 (emacspeak-url-template-define
  "BBC Genres On Demand"
@@ -413,7 +411,8 @@ content."
  (list "BBC Program: ")
  nil
  "Play BBC programs on demand."
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+     (funcall emacspeak-media-player url 'play-list)))
 
 (emacspeak-url-template-define
  "BBC News"
@@ -445,6 +444,45 @@ content."
  )
 
 ;;}}}
+;;{{{  answers.com
+(emacspeak-url-template-define
+ "answers.com"
+ "http://www.answers.com/main/ntquery?s=%s"
+ (list "Search answers.com for: ")
+ nil
+ "Search answers.com")
+
+;;}}}
+;;{{{ Google Reader:
+
+(emacspeak-url-template-define
+ "Google Reader"
+ "http://www.google.com/reader/public/atom/feed/%s?n=100"
+ (list "Feed:")
+ nil
+ "Google Reader"
+ 'emacspeak-atom-display)
+
+;;}}}
+;;{{{ google finance
+;;; pull google finance search results via the transcoder
+
+(emacspeak-url-template-define
+ "Finance Google Search"
+ "http://finance.google.com/finance?q=%s"
+ (list "Finance Search: ")
+ #'(lambda nil
+     (call-interactively 'emacspeak-imenu-goto-next-index-position))
+ "Perform Google Finance search and view results through the
+mobile transcoder."
+ #'(lambda (url)
+     (declare (special
+               emacspeak-url-template-google-transcoder-url))
+     (browse-url
+      (format emacspeak-url-template-google-transcoder-url
+              (emacspeak-url-encode url)))))
+
+;;}}}
 ;;{{{ google maps
 
 (defun emacspeak-url-template-google-maps-xml (url)
@@ -452,38 +490,38 @@ content."
   (switch-to-buffer (emacspeak-url-template-google-maps-get-xml
                      url))
   (let ((nxml-auto-insert-xml-declaration-flag nil))
-    (goto-char (point-min))
-    (nxml-mode)
-    (goto-char (point-min))
-    (search-forward "?>" nil t)
-    (while (search-forward "<" nil t)
-      (replace-match "
+  (goto-char (point-min))
+  (nxml-mode)
+  (goto-char (point-min))
+  (search-forward "?>" nil t)
+  (while (search-forward "<" nil t)
+    (replace-match "
 <"))
-    (indent-region (point-min) (point-max))))
+  (indent-region (point-min) (point-max))))
 
 (defun emacspeak-url-template-google-maps-get-xml (url)
   "Return buffer containing XML from google."
   (let ((buffer (get-buffer-create "*Google Maps")))
-    (save-excursion
-      (set-buffer buffer)
-      (erase-buffer)
-      (kill-all-local-variables)
-      (shell-command
-       (format "lynx -source '%s'" url)
-       (current-buffer))
-      (goto-char (point-min))
-      (search-forward "<page" nil t)
-      (search-backward "<?" nil t)
-      (delete-region (point-min) (point))
-      (search-forward "</page>" nil t)
-      (delete-region (point) (point-max))
-      (goto-char (point-min))
-      (while (search-forward "<?xml version=\"1.0\"?>" nil t)
-        (replace-match
-         "<?xml version=\"1.0\" encoding=\"iso-8859-14\"?>"))
-      (goto-char (point-min))
-      buffer)))
-  
+  (save-excursion
+    (set-buffer buffer)
+    (erase-buffer)
+    (kill-all-local-variables)
+    (shell-command
+     (format "lynx -source '%s'" url)
+     (current-buffer))
+    (goto-char (point-min))
+    (search-forward "<page" nil t)
+    (search-backward "<?" nil t)
+    (delete-region (point-min) (point))
+    (search-forward "</page>" nil t)
+    (delete-region (point) (point-max))
+    (goto-char (point-min))
+    (while (search-forward "<?xml version=\"1.0\"?>" nil t)
+      (replace-match
+       "<?xml version=\"1.0\" encoding=\"iso-8859-14\"?>"))
+    (goto-char (point-min))
+    buffer)))
+
 (emacspeak-url-template-define
  "Google Maps Give Me XML"
  emacspeak-websearch-google-maps-uri
@@ -510,7 +548,7 @@ Here are some examples:
  'emacspeak-url-template-google-maps-xml)
 
 (defun emacspeak-url-template-google-maps-speak (url &optional
-						     near speak)
+near speak)
   "Audio format map information from Google Maps.
 Optional arg `near' specifies reference location for generating direction links."
   (let ((buffer (emacspeak-url-template-google-maps-get-xml url))
@@ -522,28 +560,28 @@ Optional arg `near' specifies reference location for generating direction links.
                  (cons "near" (format "\"'%s'\"" near))))
           (t
            (list (cons "base" (format "\"'%s'\"" url)))))))
-    (save-excursion
-      (set-buffer buffer)
-      (emacspeak-xslt-region
-       (expand-file-name "emapspeak.xsl"
-                         emacspeak-xslt-directory)
-       (point-min) (point-max) params)
+  (save-excursion
+    (set-buffer buffer)
+    (emacspeak-xslt-region
+     (expand-file-name "emapspeak.xsl"
+                       emacspeak-xslt-directory)
+     (point-min) (point-max) params)
+    (add-hook 'emacspeak-w3-post-process-hook
+              #'(lambda ()
+                  (setq emacspeak-w3-url-executor
+                        'emacspeak-url-template-google-maps-speak)
+                  (emacspeak-speak-buffer)))
+    (when speak
       (add-hook 'emacspeak-w3-post-process-hook
-                #'(lambda ()
-                    (setq emacspeak-w3-url-executor
-                          'emacspeak-url-template-google-maps-speak)
-                    (emacspeak-speak-buffer)))
-      (when speak
-        (add-hook 'emacspeak-w3-post-process-hook
-                  'emacspeak-speak-buffer
-                  'at-end))
-      (emacspeak-w3-preview-this-buffer))))
+                'emacspeak-speak-buffer
+                'at-end))
+    (browse-url-of-buffer))))
 
 (emacspeak-url-template-define
  "EmapSpeak Via Google"
- "http://maps.google.com/maps?q=%s&btng=Search&output=js"
+ "http://maps.google.com/maps?q=%s&output=kml"
  (list "Query: ")
- nil
+ 'emacspeak-speak-buffer
  "EmapSpeak Via Google.
 
 Specify the query using English and  addresses as complete as
@@ -563,18 +601,23 @@ Here are some examples:
 
 <what> near <location address>
 "
- 'emacspeak-url-template-google-maps-speak)
-      
+ #'(lambda (url)
+     (let ((buffer 
+            (emacspeak-xslt-xml-url
+             (expand-file-name "kml2html.xsl" emacspeak-xslt-directory)
+             url )))
+       (browse-url-of-buffer buffer))))
+
 ;;}}}
-;;{{{ google scholar 
+;;{{{ google scholar
 
 (emacspeak-url-template-define
  "Google Books"
  "http://books.google.com/books?q=%s&btnG=Search+Books&hl=en"
  (list "Google Book Search: ")
  #'(lambda nil
-     (search-forward "pages" nil t)
-     (emacspeak-speak-line))
+ (search-forward "pages" nil t)
+ (emacspeak-speak-line))
  "Google Print Search")
 
 (emacspeak-url-template-define
@@ -582,9 +625,24 @@ Here are some examples:
  "http://scholar.google.com/scholar?ie=UTF-8&oe=UTF-8&hl=en&btnG=Search&num=25&q=%s"
  (list "Google Scholar Search: ")
  #'(lambda nil
-     (search-forward "Results" nil t)
-     (emacspeak-speak-line))
+ (search-forward "Results" nil t)
+ (emacspeak-speak-line))
  "Google Scholar Search")
+
+;;}}}
+;;{{{ google images
+
+(emacspeak-url-template-define
+ "Google Image Search"
+ "http://images.google.com/images?hl=en&tab=wi&ie=UTF-8&q=%s"
+ (list "Google Image Search: ")
+ #'(lambda ()
+ (search-forward "Showing" nil t)
+ (emacspeak-speak-line))
+ "Google Image Search"
+ #'(lambda (url)
+ (emacspeak-w3-without-xsl
+  (browse-url url))))
 
 ;;}}}
 ;;{{{ googl blogsearch
@@ -593,12 +651,12 @@ Here are some examples:
  "http://blogsearch.google.com/blogsearch?hl=en&q=%s&btnG=Search+Blogs&scoring=d"
  (list "Google Blog Search: ")
  #'(lambda nil
-     (search-forward "Results" nil t)
-     (emacspeak-speak-line))
+ (search-forward "Results" nil t)
+ (emacspeak-speak-line))
  "Google Print Search"
  #'(lambda (url)
-     (emacspeak-w3-without-xsl
-      (w3-fetch url))))
+ (emacspeak-w3-without-xsl
+  (w3-fetch url))))
 
 ;;}}}
 ;;{{{ google translation service
@@ -607,15 +665,50 @@ Here are some examples:
  "Translation Via Google"
  "http://translate.google.com/translate_c?hl=en&langpair=%s&u=%s"
  (list
-  "Translate from|To:"
-  "URI")
+ "Translate from|To:"
+ "URI")
  nil
  "Translate a Web page using google. Source and target languages
 are specified as two-letter language codes, e.g. en|de translates
 from English to German.")
 
 ;;}}}
-;;{{{  google filters 
+;;{{{ dictionary.com:
+(emacspeak-url-template-define
+ "Dictionary Lookup"
+ "http://dictionary.reference.com/search?q=%s"
+ (list "Dictionary Lookup: ")
+ #'(lambda ()
+ (search-forward "entries found for " nil t)
+ (emacspeak-speak-line))
+ "Dictionary Lookup"
+ #'(lambda (url)
+ (emacspeak-w3-without-xsl
+  (browse-url url))))
+
+;;}}}
+;;{{{ yubnub
+(emacspeak-url-template-define
+ "YubNub Web Command Line"
+ "http://yubnub.org/parser/parse?command=%s"
+ (list "YubNub Command: ")
+ nil
+ "YubNub Command Line"
+ )
+
+;;}}}
+;;{{{ Google Reader:
+
+(emacspeak-url-template-define
+ "Google Reader"
+ "http://www.google.com/reader/public/atom/feed/%s"
+ (list "Feed: ")
+ nil
+ "View feed via Google Reader."
+ 'emacspeak-atom-display)
+
+;;}}}
+;;{{{  google filters
 (emacspeak-url-template-define
  "Google WebQuotes"
  "http://labs.google.com/cgi-bin/webquotes?num_quotes=3&q=%s&btnG=Google+WebQuotes+Search&show_titles=1&bold_links=1&snippet_threshold=3"
@@ -632,29 +725,55 @@ from English to German.")
  "Google Hits"
  "http://www.google.com/search?q=%s&num=%s"
  (list "Google search:"
-       #'(lambda nil
-           (declare (special  emacspeak-websearch-google-number-of-results))
-           emacspeak-websearch-google-number-of-results))
  #'(lambda nil
-     (emacspeak-auditory-icon 'open-object))
+     (declare (special  emacspeak-websearch-google-number-of-results))
+     emacspeak-websearch-google-number-of-results))
+ #'(lambda nil
+ (emacspeak-auditory-icon 'open-object))
  "Only show Google hits."
  #'(lambda (url)
-     (declare (special emacspeak-xslt-directory))
-     (emacspeak-w3-browse-url-with-style
-      (expand-file-name "google-hits.xsl"
-                        emacspeak-xslt-directory)
-      url)))
+ (emacspeak-w3-extract-by-class "g" url 'speak)))
 
 ;;}}}
-;;{{{ google OverviewOfNews 
+;;{{{ NY Times
+(emacspeak-url-template-define
+ "NY Times RSS Feeds"
+ "http://www.nytimes.com/services/xml/rss/nyt/index.opml"
+ nil
+ nil
+ "Display browsable list of NY Times RSS Feeds."
+ #'(lambda (url)
+ (let ((buffer
+        (emacspeak-xslt-xml-url
+         (expand-file-name "opml.xsl"
+                           emacspeak-xslt-directory)
+         url )))
+   (save-excursion
+     (set-buffer buffer)
+     (browse-url-of-buffer)))))
+
+;;}}}
+;;{{{ Google Local:
+
+(emacspeak-url-template-define
+ "Google Local"
+ "http://local.google.com/local?output=html&q=%s"
+ (list "Google Local Search:")
+ #'(lambda ()
+ (search-forward "Local Search within" nil t)
+ (emacspeak-speak-line))
+ "Google Local Search.")
+
+;;}}}
+;;{{{ google OverviewOfNews
 
 (emacspeak-url-template-define
  "Google Print"
  "http://print.google.com/print?oi=print&q=%s"
  (list "Google Print Search:")
  #'(lambda nil
-     (search-forward "Print  Books" nil t)
-     (emacspeak-speak-rest-of-buffer))
+ (search-forward "Print  Books" nil t)
+ (emacspeak-speak-rest-of-buffer))
  "Google Print Search")
 
 (emacspeak-url-template-define
@@ -662,35 +781,74 @@ from English to German.")
  "http://news.google.com/news?ned=tus"
  nil
  #'(lambda nil
-     (emacspeak-speak-rest-of-buffer))
+ (emacspeak-speak-rest-of-buffer))
  "Retrieve and speak Google News Overview."
  #'(lambda (url)
-     (emacspeak-w3-without-xsl
-      (browse-url url))))
+ (emacspeak-w3-without-xsl
+  (browse-url url))))
 
 (emacspeak-url-template-define
  "Google Headline News"
  "http://www.google.com/news/newsheadlines.html"
  nil
  #'(lambda nil
-     (search-forward "Top Headlines")
-     (emacspeak-speak-rest-of-buffer))
+ (search-forward "Top Headlines")
+ (emacspeak-speak-rest-of-buffer))
  "Retrieve and speak Google News Overview.")
 
 (emacspeak-url-template-define
  "Google News Search"
- "http://news.google.com/news?hl=en&ned=tus&q=%s&scoring=d&btnG=Google+Search"
+ "http://news.google.com/news?hl=en&ned=tus&q=%s&btnG=Google+Search"
  (list "Search news for: ")
  #'(lambda nil
-     (or 
-      (search-forward "Sorted by" (point-max) 'no-error)
-      (search-forward "Top Stories" (point-max) 'no-error))
-     (forward-line 4)
-     (emacspeak-speak-line))
+ (or
+  (search-forward "Sorted by" (point-max) 'no-error)
+  (search-forward "Top Stories" (point-max) 'no-error))
+ (forward-line 4)
+ (emacspeak-speak-line))
  "Search Google news."
  #'(lambda (url)
-     (emacspeak-w3-without-xsl
-      (browse-url url))))
+ (emacspeak-w3-without-xsl
+  (browse-url url))))
+
+(emacspeak-url-template-define
+ "Google Recent News Search"
+ "http://news.google.com/news?hl=en&ned=tus&q=%s&scoring=d"
+ (list "Search news for: ")
+ #'(lambda nil
+ (or
+  (search-forward "Sorted by" (point-max) 'no-error)
+  (search-forward "Top Stories" (point-max) 'no-error))
+ (forward-line 4)
+ (emacspeak-speak-line))
+ "Search Google news."
+ #'(lambda (url)
+ (emacspeak-w3-without-xsl
+  (browse-url url))))
+
+(emacspeak-url-template-define
+ "Google Mobile Search"
+ "http://www.google.com/xhtml?q=%s&site=search&mrestrict=xhtml&num=25"
+ (list "Search For: ")
+ #'(lambda ()
+ (re-search-forward "^Results" nil t)
+ (emacspeak-speak-rest-of-buffer))
+ "Google Mobile Search")
+
+(defvar emacspeak-url-template-google-transcoder-url
+  "http://www.google.com/gwt/n?_gwt_noimg=1&u=%s"
+  "URL for  obtaining mobile transcoder page views.")
+
+(emacspeak-url-template-define
+ "Google Transcoder"
+ emacspeak-url-template-google-transcoder-url
+ (list
+ #'(lambda ()
+     (read-from-minibuffer "URL: "
+                           (or (browse-url-url-at-point)
+                               "http://"))))
+ 'emacspeak-speak-buffer
+ "Transcode site via Google.")
 
 (emacspeak-url-template-define
  "Google RSS News"
@@ -699,7 +857,16 @@ from English to German.")
  nil
  "Search Google news."
  #'(lambda (url)
-     (emacspeak-rss-display url 'speak)))
+ (emacspeak-rss-display url 'speak)))
+
+(emacspeak-url-template-define
+ "Google Atom News"
+ "http://news.google.com/news?ned=us&topic=%s&output=atom"
+ (list "Topic Code: ")
+ nil
+ "Display specified news feed."
+ #'(lambda (url)
+ (emacspeak-atom-display url 'speak)))
 
 (emacspeak-url-template-define
  "Google Feeds"
@@ -708,24 +875,24 @@ from English to German.")
  nil
  "List  Google news Feeds."
  #'(lambda (url)
-     (emacspeak-w3-extract-table-by-match "Sports"
-                                          url 'speak)))
+ (emacspeak-w3-extract-table-by-match "Sports"
+                                      url 'speak)))
 
 ;;}}}
-;;{{{  cnet news 
+;;{{{  cnet news
 
 (emacspeak-url-template-define
  "Tech News From CNet"
  "http://rss.com.com/2547-12-0-20.xml"
  nil
  #'(lambda nil
-     (declare (special emacspeak-w3-url-rewrite-rule))
-     (setq emacspeak-w3-url-rewrite-rule
-	   (list "$" "&tag=st_util_print"))
-     (emacspeak-speak-buffer))
+ (declare (special emacspeak-w3-url-rewrite-rule))
+ (setq emacspeak-w3-url-rewrite-rule
+       (list "$" "&tag=st_util_print"))
+ (emacspeak-speak-buffer))
  "Display tech news from CNET"
  #'(lambda (url)
-     (emacspeak-rss-display url))) 
+ (emacspeak-rss-display url)))
 
 ;;}}}
 ;;{{{ Infoworld RSS
@@ -736,10 +903,9 @@ from English to German.")
  nil
  "Produce  a set of RSS links published by InfoWorld."
  #'(lambda (url)
-     (emacspeak-w3-xslt-filter
-      "//a[contains(@href, \".rdf\") and @class]"
-      url  'speak)))
- 
+ (emacspeak-w3-xslt-filter
+  "//a[contains(@href, \".rdf\") and @class]"
+  url  'speak)))
 
 ;;}}}
 
@@ -749,42 +915,42 @@ from English to German.")
  "MapQuest Directions"
  "http://www.mapquest.com/directions/main.adp?go=1&do=nw&1y=US&2y=US&ct=NA&1a=%s&1c=%s&1c=%s&1z=%s&2a=%s&2c=%s&2s=%s&2z=%s"
  (list "Start Address:" "City:" "State:" "Zip:"
-       "Destination Address:" "City:" "State:" "Zip:")
+ "Destination Address:" "City:" "State:" "Zip:")
  nil
  "Retrieve and speak directions from MapQuest."
  #'(lambda (url)
-     (emacspeak-w3-extract-table-by-match "Maneuvers"
-                                          url 'speak)))
+ (emacspeak-w3-extract-table-by-match "Maneuvers"
+                                      url 'speak)))
 
 ;;}}}
-;;{{{ yahoo daily news 
+;;{{{ yahoo daily news
 (emacspeak-url-template-define
  "Yahoo RSS Feeds"
  "http://news.yahoo.com/rss"
  nil
  #'(lambda ()
-     (emacspeak-pronounce-add-buffer-local-dictionary-entry
-      "http://rss.news.yahoo.com/rss/" ""))
+ (emacspeak-pronounce-add-buffer-local-dictionary-entry
+  "http://rss.news.yahoo.com/rss/" ""))
  "List Yahoo RSS Feeds."
  #'(lambda (url)
-     (emacspeak-w3-xslt-filter
-      "//a[not(contains(@href,\"url\"))and  contains(@href, \"rss\") ]"
-      url 'speak)))
+ (emacspeak-w3-xslt-filter
+  "//a[not(contains(@href,\"url\"))and  contains(@href, \"rss\") ]"
+  url 'speak)))
 
 (defun emacspeak-url-template-yahoo-news-processor (url)
   "Process and speak Yahoo news."
   (declare (special emacspeak-w3-post-process-hook))
   (add-hook 'emacspeak-w3-post-process-hook
-	    #'(lambda nil
-		(declare (special  emacspeak-w3-url-rewrite-rule
-				   emacspeak-w3-class-filter))
-		(setq emacspeak-w3-class-filter "article"
-		      emacspeak-w3-url-rewrite-rule
-		      '("$" "&printer=1"))
-		(emacspeak-speak-buffer)))
+  #'(lambda nil
+      (declare (special  emacspeak-w3-url-rewrite-rule
+                         emacspeak-w3-class-filter))
+      (setq emacspeak-w3-class-filter "article"
+            emacspeak-w3-url-rewrite-rule
+            '("$" "&printer=1"))
+      (emacspeak-speak-buffer)))
   (emacspeak-w3-xslt-filter
-   "//*[@id=\"ynmain\"]"
-   url))
+  "//*[@id=\"ynmain\"]"
+  url))
 
 (emacspeak-url-template-define
  "Yahoo DailyNews"
@@ -899,7 +1065,7 @@ from English to German.")
  'emacspeak-url-template-yahoo-news-processor)
 
 ;;}}}
-;;{{{ Adobe pdf conversion 
+;;{{{ Adobe pdf conversion
 
 (emacspeak-url-template-define
  "pdf2txt"
@@ -920,20 +1086,20 @@ The PDF document needs to be available on the public Internet.")
 The PDF document needs to be available on the public Internet.")
 
 ;;}}}
-;;{{{ w3c 
+;;{{{ w3c
 
 (emacspeak-url-template-define
  "w3c IRC Logs"
  "http://www.w3.org/%s-%s-irc "
  (list
-  #'(lambda nil
-      (emacspeak-url-template-collect-date "Date: "
-                                           "%Y/%m/%d"))
-  "Channel Name: ")
+ #'(lambda nil
+     (emacspeak-url-template-collect-date "Date: "
+                                          "%Y/%m/%d"))
+ "Channel Name: ")
  #'(lambda ()
-     (let ((inhibit-read-only t))
-       (flush-lines "has joined #" (point-min) (point-max))
-       (flush-lines "has left #" (point-min) (point-max))))
+ (let ((inhibit-read-only t))
+   (flush-lines "has joined #" (point-min) (point-max))
+   (flush-lines "has left #" (point-min) (point-max))))
  "Use this to pull up the
 archived  logs from the W3C IRC. You need to know the exact
 name of the channel.")
@@ -942,8 +1108,8 @@ name of the channel.")
  "w3c Lists"
  "http://lists.w3.org/Archives/Member/%s/%s/"
  (list
-  'emacspeak-url-template-get-w3c-group 
-  'emacspeak-url-template-get-w3c-year/month)
+ 'emacspeak-url-template-get-w3c-group
+ 'emacspeak-url-template-get-w3c-year/month)
  nil
  "Use this to pull up the
 archived  mail from the W3C list. You need to know the exact
@@ -952,18 +1118,17 @@ name of the list.")
 (defun emacspeak-url-template-get-w3c-group ()
   "Get name of W3C group "
   (read-from-minibuffer "W3C group: "
-                        "w3c-"))
+  "w3c-"))
 
 (defun emacspeak-url-template-get-w3c-year/month ()
   "Get year/month"
   (emacspeak-url-template-collect-date "Date range: "
-                                       "%Y%h"))
-					    
+  "%Y%h"))
 
 ;;}}}
-;;{{{ cnn 
+;;{{{ cnn
 
-;;{{{ cnnfn content 
+;;{{{ cnnfn content
 (emacspeak-url-template-define
  "CNNFn Content"
  "http://www.cnnfn.com/"
@@ -971,12 +1136,12 @@ name of the list.")
  nil
  "Extract content links from CNN FN."
  #'(lambda (url)
-     (emacspeak-w3-extract-by-class-list
-      (list
-       "t1headline"
-       "t1tease"
-       "tease" "t2headline")
-      url 'speak)))
+ (emacspeak-w3-extract-by-class-list
+  (list
+   "t1headline"
+   "t1tease"
+   "tease" "t2headline")
+  url 'speak)))
 
 ;;}}}
 
@@ -987,41 +1152,39 @@ name of the list.")
  nil
  "Retrieve and speak headline news from CNN."
  #'(lambda (url)
-     (emacspeak-w3-extract-by-class "cnnMainT1" url 'speak)))
+ (emacspeak-w3-extract-by-class "cnnMainT1" url 'speak)))
 
 (defun emacspeak-url-template-date-YearMonthDate ()
   "Return today as yyyymmdd"
   (emacspeak-url-template-collect-date "Date:"
-                                       "%Y%m%d"))
+  "%Y%m%d"))
 
 (defun emacspeak-url-template-date-year/month/date ()
   "Return today as yyyy/mm/dd"
   (emacspeak-url-template-collect-date "Date:"
-                                       "%Y/%m/%d"))
+  "%Y/%m/%d"))
 
 (defun emacspeak-url-template-date-month/date ()
   "Return today as mm/dd"
   (emacspeak-url-template-collect-date "Date:"
-                                       "%m/%d") )
-                        
+  "%m/%d") )
 
 (emacspeak-url-template-define
  "CNN Tecnology "
  "http://www.cnn.com/TECH/"
  nil
  #'(lambda nil
-     (declare (special emacspeak-w3-class-filter))
-     (setq emacspeak-w3-class-filter "cnnStoryContent"))
+ (declare (special emacspeak-w3-class-filter))
+ (setq emacspeak-w3-class-filter "cnnStoryContent"))
  "CNN Technology news."
  #'(lambda (url)
-     (emacspeak-w3-extract-by-class-list
-      (list
-       "cnnSectT2s"
-       "cnnSectT2head"
-       "cnnSectBoxHeadW"
-       "cnnSectBox")
-      url 'speak)))
-     
+ (emacspeak-w3-extract-by-class-list
+  (list
+   "cnnSectT2s"
+   "cnnSectT2head"
+   "cnnSectBoxHeadW"
+   "cnnSectBox")
+  url 'speak)))
 
 (emacspeak-url-template-define
  "CNN Market News "
@@ -1030,9 +1193,9 @@ name of the list.")
  nil
  "CNN Money"
  #'(lambda (url)
-     (emacspeak-w3-extract-tables-by-position-list
-      '(10 12 15 18 20 21)
-      url 'speak)))
+ (emacspeak-w3-extract-tables-by-position-list
+  '(10 12 15 18 20 21)
+  url 'speak)))
 
 (emacspeak-url-template-define
  "CNN Market Data "
@@ -1041,8 +1204,8 @@ name of the list.")
  nil
  "CNN Money"
  #'(lambda (url)
-     (emacspeak-w3-extract-tables-by-position-list
-      '(14 15 20 21) url 'speak)))
+ (emacspeak-w3-extract-tables-by-position-list
+  '(14 15 20 21) url 'speak)))
 
 (emacspeak-url-template-define
  "CNN Content "
@@ -1051,87 +1214,99 @@ name of the list.")
  nil
  "CNN Content"
  #'(lambda (url)
-     (add-hook 'emacspeak-w3-post-process-hook
-               #'(lambda ()
-                   (declare (special emacspeak-w3-class-filter))
-                   (setq emacspeak-w3-class-filter "cnnStoryContent")))
-     (emacspeak-w3-extract-by-class-list
-      (list "cnnMainT1"
-            "cnnMainNewT2"
-            "cnnMainSections")
-      url
-      'speak)))
+ (add-hook 'emacspeak-w3-post-process-hook
+           #'(lambda ()
+               (declare (special emacspeak-w3-class-filter))
+               (setq emacspeak-w3-class-filter "cnnStoryContent")))
+ (emacspeak-w3-extract-by-class-list
+  (list "cnnBulletList" "cnnT1")
+  url
+  'speak)))
 
 ;;}}}
-;;{{{ pbs --pulpit 
+;;{{{ pbs --pulpit
 (emacspeak-url-template-define
  "Pulpit --- I Cringely"
  "http://www.pbs.org/cringely/pulpit/pulpit%s.html"
  (list
-  #'(lambda nil
-      (emacspeak-url-template-collect-date "Date: (most recent Thursday)"
-                                           "%Y%m%d")))
+ #'(lambda nil
+     (emacspeak-url-template-collect-date "Date: (most recent Thursday)"
+                                          "%Y%m%d")))
  nil
  "Read pulpit from PBS. Published on the Thursday of the week."
  #'(lambda (url)
-     (emacspeak-w3-xslt-filter
-      "//p|ul|ol|dl|h1|h2|h3|h4|h5|h6|blockquote" url 'speak)))
+ (emacspeak-w3-xslt-filter
+  "//p|ul|ol|dl|h1|h2|h3|h4|h5|h6|blockquote" url 'speak)))
 
 ;;}}}
-;;{{{  NPR programs 
+;;{{{  NPR programs
 
 (emacspeak-url-template-define
  "American Life On Demand."
-					;"http://www.wbez.org/ta/%s.rm"
+                                        ;"http://www.wbez.org/ta/%s.rm"
  "http://www.thislife.org/ra/%s.ram"
  (list "Episode: ")
  nil
  "Play This American Life  shows on demand."
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)))
 
 (emacspeak-url-template-define
  "Wait Wait, Dont Tell Me (NPR)"
  "http://www.npr.org/dmg/dmg.php?mediaURL=/waitwait/%s_waitwait&mediaType=RM"
  (list
-  #'(lambda ()
-      (emacspeak-url-template-collect-date "Date: (Saturdays)"
-                                           "%Y%m%d")))
+ #'(lambda ()
+     (emacspeak-url-template-collect-date "Date: (Saturdays)"
+                                          "%Y%m%d")))
  nil
  "Play Wait, Wait Dont Tell Me from NPR."
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)))
 
 (emacspeak-url-template-define
  "NPR On Demand"
  "http://www.npr.org/dmg/dmg.php?prgCode=%s&showDate=%s&segNum=%s&mediaPref=RM"
  (list
-  #'(lambda ()
-      (upcase (read-from-minibuffer "Program code:")))
-  #'(lambda ()
-      (emacspeak-url-template-collect-date "Date:"
-                                           "%d-%b-%Y"))
-  "Segment:")
+ #'(lambda ()
+     (upcase (read-from-minibuffer "Program code:")))
+ #'(lambda ()
+     (emacspeak-url-template-collect-date "Date:"
+                                          "%d-%b-%Y"))
+ "Segment:")
  nil
  "Play NPR shows on demand.
 Program is specified as a program code:
 
-ME Morning Edition
-ATC All Things Considered
+ME              Morning Edition
+ATC             All Things Considered
+day             Day To Day
+newsnotes       News And Notes
+totn            Talk Of The Nation
+fa              Fresh Air
+wesat           Weekend Edition Saturday
+wesun           Weekend Edition Sunday
+fool            The Motley Fool
 
 Segment is specified as a two digit number --specifying a blank value
 plays entire program."
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)
+ (emacspeak-w3-browse-xml-url-with-style
+  (expand-file-name "smil-anchors.xsl" emacspeak-xslt-directory)
+  url)))
 
 (emacspeak-url-template-define
  "All Things Considered Stream from NPR"
- 
+
  "http://www.npr.org/dmg/dmg.php?prgCode=ATC&showDate=%s&segNum=&mediaPref=RM"
  (list
-  #'(lambda ()
-      (emacspeak-url-template-collect-date "Date:"
-                                           "%d-%b-%Y")))
+ #'(lambda ()
+     (emacspeak-url-template-collect-date "Date:"
+                                          "%d-%b-%Y")))
  nil
  "Play NPR All Things Considered stream."
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)))
 
 (emacspeak-url-template-define
  "Talk Of The Nation  Stream from NPR"
@@ -1139,110 +1314,118 @@ plays entire program."
  (list 'emacspeak-url-template-date-YearMonthDate)
  nil
  "Play NPR Talk Of The Nation  stream."
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)))
 
 (emacspeak-url-template-define
  "Morning Edition Stream from NPR"
  "http://www.npr.org/dmg/dmg.php?prgCode=ME&showDate=%s&segNum=&mediaPref=RM"
  (list
-  #'(lambda ()
-      (emacspeak-url-template-collect-date "Date:"
-                                           "%d-%b-%Y")))
+ #'(lambda ()
+     (emacspeak-url-template-collect-date "Date:"
+                                          "%d-%b-%Y")))
  nil
  "Play NPR Morning Edition  stream."
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)))
 
 (emacspeak-url-template-define
  "Motley Fool Radio from NPR"
  "http://www.npr.org/dmg/dmg.php?prgCode=FOOL&showDate=%s&segNum=&mediaPref=RM"
  (list
-  #'(lambda ()
-      (emacspeak-url-template-collect-date "Date:"
-                                           "%d-%b-%Y")))
+ #'(lambda ()
+     (emacspeak-url-template-collect-date "Date:"
+                                          "%d-%b-%Y")))
  nil
  "Play NPR Motley Fool   stream."
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)))
 
 (emacspeak-url-template-define
  "Talk Of The Nation from NPR"
  "rtsp://audio.npr.org/totn/%s_totn_%s.rm"
  (list
-  'emacspeak-url-template-date-YearMonthDate
-  "Segment: ")
+ 'emacspeak-url-template-date-YearMonthDate
+ "Segment: ")
  nil
  "Play NPR Talk Of The Nation segment."
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)))
 
 (emacspeak-url-template-define
- "All Things Considered from NPR" 
+ "All Things Considered from NPR"
  "rtsp://audio.npr.org/atc/%s_atc_%s.rm"
  (list
-  'emacspeak-url-template-date-YearMonthDate
-  "Segment: ")
+ 'emacspeak-url-template-date-YearMonthDate
+ "Segment: ")
  nil
  "Play All Things Considered segment."
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)))
 
 (emacspeak-url-template-define
- "Morning Edition from NPR" 
- "rtsp://audio.npr.org/me/%s_me_%s.rm" 
+ "Morning Edition from NPR"
+ "rtsp://audio.npr.org/me/%s_me_%s.rm"
  (list
-  'emacspeak-url-template-date-YearMonthDate
-  "Segment:")
+ 'emacspeak-url-template-date-YearMonthDate
+ "Segment:")
  nil
  "Play Morning Edition segment."
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)))
 
 ;;}}}
-;;{{{  The Linux Show 
+;;{{{  The Linux Show
 (emacspeak-url-template-define
- "Geek Linux Daily" 
+ "Geek Linux Daily"
  "http://thelinuxdaily.com/shows/%s.m3u"
  (list
-  #'(lambda ()
-      (emacspeak-url-template-collect-date "Date:"
-                                           "%Y/%m/%d")))
+ #'(lambda ()
+     (emacspeak-url-template-collect-date "Date:"
+                                          "%Y/%m/%d")))
  nil
  "Play specified edition of Geek  Linux DailyShow"
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)))
 
 (emacspeak-url-template-define
- "Redhat Linux Show" 
+ "Redhat Linux Show"
  "http://www.thelinuxshow.com/archives/%s.mp3"
  (list
-  #'(lambda ()
-      (let ((mm-dd-yy
-             (emacspeak-url-template-collect-date
-              "Date: (Tuesday)"
-              "%m-%d-%Y")))
-        (format "%s/tls-%s"
-                (third (split-string mm-dd-yy "-"))
-                mm-dd-yy))))
+ #'(lambda ()
+     (let ((mm-dd-yy
+            (emacspeak-url-template-collect-date
+             "Date: (Tuesday)"
+             "%m-%d-%Y")))
+       (format "%s/tls-%s"
+               (third (split-string mm-dd-yy "-"))
+               mm-dd-yy))))
  nil
  "Play specified edition of Redhat Linux Show"
- 'emacspeak-realaudio-play)
+ #'(lambda (url)
+ (funcall emacspeak-media-player url 'play-list)))
 
 ;;}}}
 ;;{{{ technet cast from DDJ
 
 (emacspeak-url-template-define
- "DDJ TechNetCast Save" 
+ "DDJ TechNetCast Save"
  "http://technetcast.ddj.com/tnc_save_mp3.html?stream_id=%s"
  (list "Download Stream ")
  nil
  "Browse to a specified DDJ Technetcast stream and save  it.")
 
 (emacspeak-url-template-define
- "DDJ TechNetCast Play" 
+ "DDJ TechNetCast Play"
  "http://technetcast.ddj.com/tnc_play.m3u?stream_id=%s"
  (list "Stream Id")
  nil
  "Play Technetcast stream from DDJ."
  #'(lambda (url)
-     (emacspeak-realaudio-play url)))
+ (funcall emacspeak-media-player  url 'play-list)))
 
 ;;}}}
-;;{{{  linux today 
+;;{{{  linux today
 
 (emacspeak-url-template-define
  "Linux Today News"
@@ -1251,234 +1434,201 @@ plays entire program."
  nil
  "Get news column from Linux Today."
  #'(lambda (url)
-     (emacspeak-w3-xslt-filter
-      "(//table)[2]/tr/td[2]"
-      url
-      'speak)))
+ (emacspeak-w3-xslt-filter
+  "(//table)[2]/tr/td[2]"
+  url
+  'speak)))
 
 ;;}}}
 ;;{{{ sourceforge
 
 (emacspeak-url-template-define
- "sourceforge Stats" 
+ "sourceforge Stats"
  "http://sourceforge.net/project/stats/?group_id=%s"
  (list
-  (lambda nil 
-    (read-from-minibuffer "Project Id"
-                          "2238")))
+ (lambda nil
+   (read-from-minibuffer "Project Id"
+                         "2238")))
  nil
  "Display project usage statistics."
  #'(lambda (url)
-     (emacspeak-w3-extract-tables-by-match-list
-      (list "Date" "Lifespan")
-      url)))
+ (emacspeak-w3-extract-tables-by-match-list
+  (list "Date" "Lifespan")
+  url)))
 
 (emacspeak-url-template-define
- "sourceforge project" 
+ "sourceforge project"
  "http://sourceforge.net/projects/%s"
  (list "Project name")
  nil
  "Open specified project page at SourceForge.")
 
 (emacspeak-url-template-define
- "sourceforge browse mirrors" 
+ "sourceforge browse mirrors"
  "http://prdownloads.sourceforge.net/%s/?sort_by=date"
  (list "Project name")
  #'(lambda ()
-     (declare (special emacspeak-w3-url-rewrite-rule))
-     (setq emacspeak-w3-url-rewrite-rule
-           '("prdownloads.sourceforge.net"
-             "ovh.dl.sourceforge.net/sourceforge")))
+ (declare (special emacspeak-w3-url-rewrite-rule))
+ (setq emacspeak-w3-url-rewrite-rule
+       '("prdownloads.sourceforge.net"
+         "ovh.dl.sourceforge.net/sourceforge")))
  "Retrieve download table  at Sourceforge for specified project."
  #'(lambda (url)
-     (emacspeak-w3-extract-table-by-match "Current"
-                                          url)))
+ (emacspeak-w3-extract-table-by-match "Current"
+                                      url)))
 
 ;;}}}
 ;;{{{  MLB scores
+;;; standings:
+
 (emacspeak-url-template-define
- "MLB Alerts"
- "http://gd2.mlb.com/components/game/mlb/year_2005/alerts.xml"
+ "mlb standings"
+ "http://midatlantic.comcastsportsnet.com/apfeed/sportstats/BBN/STND/mlb-standings.xml"
  nil
- 'emacspeak-speak-buffer
- "Show MLB Scorecard."
+ nil
+ "Get XML feed containing team standings."
  #'(lambda (url)
-     (emacspeak-w3-browse-xml-url-with-style
-      (expand-file-name "mlb-alerts.xsl" emacspeak-xslt-directory)
-      url)))
+     (let ((buffer (get-buffer-create "MLB Standings")))
+       (save-excursion
+         (set-buffer  buffer)
+         (erase-buffer)
+         (shell-command
+          (format "xsltproc  %s %s 2>/dev/null"
+                   "http://midatlantic.comcastsportsnet.com/baseball-standings.xsl "
+                  url)
+          (current-buffer)))
+       (browse-url-of-buffer buffer)
+       (goto-char (point-min))
+       (emacspeak-speak-mode-line))))
+ 
 
 (emacspeak-url-template-define
  "MLB Scorecard"
- "http://gd.mlb.com/components/game/mlb/%s/master_scoreboard.xml"
+ ;"http://gd.mlb.com/components/game/mlb/%s/master_scoreboard.xml"
+ "http://gd.mlb.com/components/game/mlb/%s/scoreboard.xml"
  (list
-  #'(lambda nil
-      (let ((date 
-             (emacspeak-url-template-collect-date
-              "Date: "
-              "%Y-%m-%d"))
-            (fields nil)
-            (result nil))
-        (setq fields (split-string date "-"))
-        (setq result 
-              (format 
-               "year_%s/month_%s/day_%s"
-               (first fields)
-               (second fields)
-               (third fields)))
-        result))
-  )
+ #'(lambda nil
+     (let ((date
+            (emacspeak-url-template-collect-date
+             "Date: "
+             "%Y-%m-%d"))
+           (fields nil)
+           (result nil))
+       (setq fields (split-string date "-"))
+       (setq result
+             (format
+              "year_%s/month_%s/day_%s"
+              (first fields)
+              (second fields)
+              (third fields)))
+       result))
+ )
  'emacspeak-speak-buffer
  "Show MLB Scorecard."
  #'(lambda (url)
-     (emacspeak-w3-browse-xml-url-with-style
-      (expand-file-name "mlb-scorecard.xsl" emacspeak-xslt-directory)
-      url)))
+ (emacspeak-w3-browse-xml-url-with-style
+  (expand-file-name "mlb-scorecard.xsl" emacspeak-xslt-directory)
+  url)))
 
 (emacspeak-url-template-define
- "Baseball summary" 
- "http://www.mlb.com/NASApp/mlb/index.jsp?c_id=%s"
- (list
-  #'(lambda nil
-      (read-from-minibuffer  "Team Code: "
-                             "sf")))
- nil
- "Display baseball team summary."
- #'(lambda (url)
-     (emacspeak-w3-extract-table-by-match 
-      "PCT"
-      url 'speak)))
-(emacspeak-url-template-define
- "Baseball standings" 
+ "Baseball standings"
  "http://www.mlb.com/NASApp/mlb/mlb/standings/index.jsp"
  nil
  nil
  "Display MLB standings."
  #'(lambda (url)
-     (emacspeak-w3-extract-table-by-match 
-      "Standings"
-      url 'speak)))
+ (emacspeak-w3-extract-table-by-match
+  "Standings"
+  url 'speak)))
 
 (emacspeak-url-template-define
- "Baseball Game Index" 
- "http://gd.mlb.com/components/game/%s"
+ "Baseball Game Index"
+ ;"http://gd.mlb.com/components/game/%s"
+"http://gd.mlb.com/components/game/mlb/%s/"
  (list
-  #'(lambda nil
-      (let ((date 
-             (emacspeak-url-template-collect-date "Date: "
-                                                  "%Y-%m-%d"))
-            (fields nil)
-            (result nil))
-        (setq fields (split-string date "-"))
-        (setq result 
-              (format 
-               "year_%s/month_%s/day_%s/"
-               (first fields)
-               (second fields)
-               (third fields)))
-        result)))
+ #'(lambda nil
+     (let ((date
+            (emacspeak-url-template-collect-date "Date: "
+                                                 "%Y-%m-%d"))
+           (fields nil)
+           (result nil))
+       (setq fields (split-string date "-"))
+       (setq result
+             (format
+              "year_%s/month_%s/day_%s/"
+              (first fields)
+              (second fields)
+              (third fields)))
+       result)))
  nil
  "Display baseball Play By Play."
  )
 
 (emacspeak-url-template-define
- "Baseball Play By Play" 
+ "Baseball Play By Play"
  "http://gd.mlb.com/components/game/%s_%smlb_%smlb_1/playbyplay.html"
  (list
-  #'(lambda nil
-      (let ((date 
-             (emacspeak-url-template-collect-date
-              "Date: "
-              "%Y-%m-%d"))
-            (fields nil)
-            (result nil))
-        (setq fields (split-string date "-"))
-        (setq result 
-              (format 
-               "year_%s/month_%s/day_%s/gid_%s_%s_%s"
-               (first fields)
-               (second fields)
-               (third fields)
-               (first fields)
-               (second fields)
-               (third fields)))
-        result))
-  "Visiting Team: "
-  "Home Team: ")
+ #'(lambda nil
+     (let ((date
+            (emacspeak-url-template-collect-date
+             "Date: "
+             "%Y-%m-%d"))
+           (fields nil)
+           (result nil))
+       (setq fields (split-string date "-"))
+       (setq result
+             (format
+              "year_%s/month_%s/day_%s/gid_%s_%s_%s"
+              (first fields)
+              (second fields)
+              (third fields)
+              (first fields)
+              (second fields)
+              (third fields)))
+       result))
+ "Visiting Team: "
+ "Home Team: ")
  nil
  "Display baseball Play By Play."
  )
 
 (emacspeak-url-template-define
- "Baseball scores" 
+ "Baseball scores"
  "http://gd.mlb.com/components/game/mlb/%s_%smlb_%smlb_1/boxscore.html"
  (list
-  #'(lambda nil
-      (let ((date 
-             (emacspeak-url-template-collect-date
-              "Date: "
-              "%Y-%m-%d"))
-            (fields nil)
-            (result nil))
-        (setq fields (split-string date "-"))
-        (setq result 
-              (format 
-               "year_%s/month_%s/day_%s/gid_%s_%s_%s"
-               (first fields)
-               (second fields)
-               (third fields)
-               (first fields)
-               (second fields)
-               (third fields)))
-        result))
-  "Visiting Team: "
-  "Home Team: ")
+ #'(lambda nil
+     (let ((date
+            (emacspeak-url-template-collect-date
+             "Date: "
+             "%Y-%m-%d"))
+           (fields nil)
+           (result nil))
+       (setq fields (split-string date "-"))
+       (setq result
+             (format
+              "year_%s/month_%s/day_%s/gid_%s_%s_%s"
+              (first fields)
+              (second fields)
+              (third fields)
+              (first fields)
+              (second fields)
+              (third fields)))
+       result))
+ "Visiting Team: "
+ "Home Team: ")
  nil
  "Display baseball scores."
  )
 
-(emacspeak-url-template-define
- "Baseball Results"
- "http://gd.mlb.com/components/game/%s/gameLite.txt"
- (list
-  #'(lambda nil
-      (let ((date 
-             (emacspeak-url-template-collect-date
-              "Date: "
-	      "%Y-%m-%d"))
-            (fields nil)
-            (result nil))
-        (setq fields (split-string date "-"))
-        (setq result 
-              (format 
-               "year_%s/month_%s/day_%s"
-               (first fields)
-               (second fields)
-               (third fields)))
-        result)))
- #'(lambda nil
-     (ems-modify-buffer-safely
-      (save-excursion
-        (goto-char (point-min))
-        (while (search-forward "<br>" nil t)
-          (replace-match " " nil t))
-        (goto-char (point-min))
-        (while (search-forward "&" nil t)
-          (replace-match "\n"))
-        (flush-lines"|" (point-min) (point-max))
-        (flush-lines "^ *$" (point-min) (point-max))
-        (goto-char (point-min))
-        (emacspeak-speak-line))))
- "Baseball results for a given date.")
-
 ;;}}}
-;;{{{  Virtually There --Sabre Trip Reports 
+;;{{{  Virtually There --Sabre Trip Reports
 ;; (emacspeak-url-template-define
-;;  "Sabre Travel From Virtually There" 
+;;  "Sabre Travel From Virtually There"
 ;;  "https://www.virtuallythere.com/new/printerFriendly.html?pnr=%s&name=%s&style=3&language=0&clocktype=12&host=1W&emailAddr=%s"
 ;;  (list
-;;   #'(lambda nil 
+;;   #'(lambda nil
 ;;       (read-from-minibuffer "Record Locator: "))
-;;   #'(lambda nil 
+;;   #'(lambda nil
 ;;       (read-from-minibuffer "User Name"))
 ;;   #'(lambda nil
 ;;       (read-from-minibuffer "Email: ")))
@@ -1500,42 +1650,42 @@ plays entire program."
  "Travelocity Lookup"
  "http://dps1.travelocity.com/dparflifo.ctl?Service=TRAVELOCITY&GUEST=Y&last_pgd_page=ushpdeparr.pgd&aln_name=%s&flt_num=%s"
  (list
-  "Airline:"
-  "Flight Number:")
+ "Airline:"
+ "Flight Number:")
  nil
  "Show arrival/departure information from Travelocity."
  #'(lambda (url)
-     (emacspeak-w3-extract-table-by-match
-      "Schedule" url 'speak)))
+ (emacspeak-w3-extract-table-by-match
+  "Schedule" url 'speak)))
 
 ;;}}}
 ;;{{{  viewtrip --travel reports
 (emacspeak-url-template-define
- "Travel itenerary from ViewTrip.com" 
+ "Travel itenerary from ViewTrip.com"
  "https://www.viewtrip.com/vt.asp"
  nil
  nil
  "Display Trip Details"
  #'(lambda (url)
-     (let ((pnr (read-from-minibuffer "Record locator: "))
-	   (name (read-from-minibuffer "Last name: ")))
-       (emacspeak-websearch-do-post "POST"
-				    url
-				    (format "rloc=%s&lastname=%s"
-					    pnr name)))))
+ (let ((pnr (read-from-minibuffer "Record locator: "))
+       (name (read-from-minibuffer "Last name: ")))
+   (emacspeak-websearch-do-post "POST"
+                                url
+                                (format "rloc=%s&lastname=%s"
+                                        pnr name)))))
 
 ;;}}}
-;;{{{  times of india 
+;;{{{  times of india
 
-;;; create url rewrite url to get print page 
+;;; create url rewrite url to get print page
 (emacspeak-url-template-define
  "Times Of India"
  "http://www.timesofindia.com"
  nil
  #'(lambda ()
-     (declare (special emacspeak-w3-url-rewrite-rule))
-     (setq emacspeak-w3-url-rewrite-rule
-           (list "$" "&prtPage=1")))
+ (declare (special emacspeak-w3-url-rewrite-rule))
+ (setq emacspeak-w3-url-rewrite-rule
+       (list "$" "&prtPage=1")))
  "Retrieve Times Of India.
 Set up URL rewrite rule to get print page."
  )
@@ -1544,96 +1694,96 @@ Set up URL rewrite rule to get print page."
  "Cartoon You Said It By Laxman"
  "http://www1.indiatimes.com/cartoon/%scart%s.htm"
  (list
-  (lambda ()
-    (read-from-minibuffer "Month: "
-                          (downcase
-                           (format-time-string "%h"))))
-  (lambda ()
-    (read-from-minibuffer "Date: "
-                          (format-time-string "%d"))))
+ (lambda ()
+   (read-from-minibuffer "Month: "
+                         (downcase
+                          (format-time-string "%h"))))
+ (lambda ()
+   (read-from-minibuffer "Date: "
+                         (format-time-string "%d"))))
  'emacspeak-speak-buffer
  "Retrieve Cartoon Times Of India."
  )
 
 ;;}}}
-;;{{{ meerkat 
+;;{{{ meerkat
 (defvar emacspeak-url-template-meerkat-profiles (make-hash-table
-                                                 :test #'equal)
+:test #'equal)
   "Map Meerkat profile names to profile codes.
 Meerkat realy needs an xml-rpc method for getting this.")
 
 (loop for e in
       (list
-       '(1 "DEFAULT")
-       '(10586 ".NET")
-       '(1064 "Perl")
-       '(1065 "Macintosh")
-       '(13886 "WebServices.XML.com")
-       '(1398 "O'ReillyNetForums")
-       '(1665 "BSD")
-       '(17 "Python")
-       '(1746 "PHP")
-       '(19 "Software")
-       '(2281 "XML")
-       '(27 "Web")
-       '(4 "Apache")
-       '(441 "Mozilla")
-       '(4862 "P2P")
-       '(4999 "O'Reilly")
-       '(5 "Linux")
-       '(563 "O'ReillyNetwork")
-       '(6304 "XML.com")
-       '(760 "Weblogs")
-       '(9 "Wireless"))
+      '(1 "DEFAULT")
+      '(10586 ".NET")
+      '(1064 "Perl")
+      '(1065 "Macintosh")
+      '(13886 "WebServices.XML.com")
+      '(1398 "O'ReillyNetForums")
+      '(1665 "BSD")
+      '(17 "Python")
+      '(1746 "PHP")
+      '(19 "Software")
+      '(2281 "XML")
+      '(27 "Web")
+      '(4 "Apache")
+      '(441 "Mozilla")
+      '(4862 "P2P")
+      '(4999 "O'Reilly")
+      '(5 "Linux")
+      '(563 "O'ReillyNetwork")
+      '(6304 "XML.com")
+      '(760 "Weblogs")
+      '(9 "Wireless"))
       do
       (puthash (second e)  (first e)
-               emacspeak-url-template-meerkat-profiles))
+      emacspeak-url-template-meerkat-profiles))
 
 (defsubst emacspeak-url-template-meerkat-profile-names ()
   "Return alist of Meerkat profile names."
   (declare (special emacspeak-url-template-meerkat-profiles))
-  (loop for k being the hash-keys of 
-        emacspeak-url-template-meerkat-profiles
-        collect (cons k k )))
+  (loop for k being the hash-keys of
+  emacspeak-url-template-meerkat-profiles
+  collect (cons k k )))
 
 (emacspeak-url-template-define
  "Meerkat Profile"
  "http://meerkat.oreillynet.com/?_fl=rss10&p=%s"
  (list
-  #'(lambda nil
-      (let((completion-ignore-case t)
-           (profile 
-            (completing-read "Meerkat Profile:"
-                             (emacspeak-url-template-meerkat-profile-names)
-                             nil t)))
-        (gethash profile emacspeak-url-template-meerkat-profiles))))
+ #'(lambda nil
+     (let((completion-ignore-case t)
+          (profile
+           (completing-read "Meerkat Profile:"
+                            (emacspeak-url-template-meerkat-profile-names)
+                            nil t)))
+       (gethash profile emacspeak-url-template-meerkat-profiles))))
  nil
  "Meerkat Profile"
  #'(lambda (url)
-     (emacspeak-rss-display url 'speak))) 
+ (emacspeak-rss-display url 'speak)))
 
 (emacspeak-url-template-define
  "Meerkat Recipe"
  "http://meerkat.oreillynet.com/?_fl=rss10&%s"
  (list
-  #'(lambda nil
-      (read-from-minibuffer "Meerkat recipe: ")))
+ #'(lambda nil
+     (read-from-minibuffer "Meerkat recipe: ")))
  nil
  "Meerkat tool"
  #'(lambda (url)
-     (emacspeak-rss-display url 'speak)))
+ (emacspeak-rss-display url 'speak)))
 
 ;;}}}
-;;{{{  flight arrival 
+;;{{{  flight arrival
 (emacspeak-url-template-define
  "Flight Tracker"
  "http://tracker.flightview.com/fvAirwise/fvCPL.exe?qtype=htm&AL=%s&acid=%s&FIND1=Find+flight"
  (list "Airline: " "Flight number: ")
  #'(lambda nil
-     (search-forward "Airline: " nil t)
-     (emacspeak-speak-line))
+ (search-forward "Airline: " nil t)
+ (emacspeak-speak-line))
  "Display flight arrival and departure information.")
-      
+
 ;;}}}
 ;;{{{ weather underground
 
@@ -1643,10 +1793,7 @@ Meerkat realy needs an xml-rpc method for getting this.")
  (list "Zip: ")
  nil
  "Weather forecast from weather underground mobile."
- #'(lambda (url)
-     (emacspeak-w3-extract-tables-by-match-list
-      (list "Today" "Observed" "Tonight")
-      url 'speak)))
+ )
 
 ;;}}}
 ;;{{{ airport conditions:
@@ -1657,13 +1804,25 @@ Meerkat realy needs an xml-rpc method for getting this.")
  nil
  "Display airport conditions from the FAA."
  #'(lambda (url)
-     (emacspeak-w3-extract-table-by-match "Status"
-                                          url 'speak)))
+ (emacspeak-w3-extract-table-by-match "Status"
+                                      url 'speak)))
+
+;;}}}
+;;{{{ emacs wiki search
+
+(emacspeak-url-template-define
+ "EmacsWiki Search"
+ "http://www.emacswiki.org/cgi-bin/wiki?search=%s"
+ (list "Search EmacsWiki For: ")
+ #'(lambda nil
+ (search-forward "Result page" nil t)
+ (emacspeak-speak-line))
+ "EmacsWiki Search")
 
 ;;}}}
 
 ;;}}}
-;;{{{ Interactive commands 
+;;{{{ Interactive commands
 
 ;;;###autoload
 (defun emacspeak-url-template-open (ut)
@@ -1672,23 +1831,23 @@ Meerkat realy needs an xml-rpc method for getting this.")
   (let ((fetcher (or (emacspeak-url-template-fetcher ut)
                      'browse-url))
         (url (emacspeak-url-template-url ut)))
-    (when (and (emacspeak-url-template-post-action ut)
-               (or (emacspeak-url-template-fetcher ut)
-		   (eq browse-url-browser-function 'w3-fetch)
-		   (eq browse-url-browser-function 'browse-url-w3)))
-      (add-hook 'emacspeak-w3-post-process-hook
-		(emacspeak-url-template-post-action ut))
-      (add-hook 'emacspeak-w3-post-process-hook
-		#'(lambda ()
-                    (declare (special
-                              emacspeak-url-template-current-ut))
-                    (rename-buffer
-                     (downcase
-                      (mapconcat #'identity emacspeak-url-template-current-ut ": "))
-                     'unique))))
-    (kill-new url)
-    (funcall fetcher   url)))
-
+  (when (and (emacspeak-url-template-post-action ut)
+             (or (emacspeak-url-template-fetcher ut)
+                 (eq browse-url-browser-function 'w3-fetch)
+                 (eq browse-url-browser-function 'browse-url-w3)))
+    (add-hook 'emacspeak-w3-post-process-hook
+              (emacspeak-url-template-post-action ut))
+    (add-hook 'emacspeak-w3-post-process-hook
+              #'(lambda ()
+                  (declare (special emacspeak-w3-post-process-hook
+                                    emacspeak-url-template-current-ut))
+                  (rename-buffer
+                   (downcase
+                    (mapconcat #'identity emacspeak-url-template-current-ut ": "))
+                   'unique)
+                  (setq emacspeak-w3-post-process-hook nil))))
+  (kill-new url)
+  (funcall fetcher   url)))
 (defsubst emacspeak-url-template-help-internal (name)
   "Display and speak help."
   (with-output-to-temp-buffer "*Help*"
@@ -1718,22 +1877,21 @@ Optional interactive prefix arg displays documentation for specified resource."
   (interactive "P")
   (declare (special emacspeak-url-template-name-alist
                     emacspeak-url-template-current-ut
-		    emacspeak-speak-messages))
+                    emacspeak-speak-messages))
   (let ((completion-ignore-case t)
         (emacspeak-speak-messages nil)
-        (name nil))
-    (setq name (completing-read "Resource: "
-                                emacspeak-url-template-name-alist
-                                nil
-                                'must-match))
-    (cond
-     (documentation (emacspeak-url-template-help-internal name))
-     (t
-      (setq emacspeak-url-template-current-ut (list name))
-      (emacspeak-url-template-open
-       (emacspeak-url-template-get
-        name))
-      (emacspeak-auditory-icon 'open-object)))))
+        (name  nil))
+    (setq name
+        (completing-read "Resource: "
+                              emacspeak-url-template-name-alist
+                              nil
+                              'must-match))
+  (cond
+   (documentation (emacspeak-url-template-help-internal name))
+   (t
+    (emacspeak-url-template-open
+     (emacspeak-url-template-get name))
+    (emacspeak-auditory-icon 'open-object)))))
 
 (defun emacspeak-url-template-help ()
   "Display documentation for  a URL template.
@@ -1743,10 +1901,10 @@ resources."
   (declare (special emacspeak-url-template-name-alist))
   (let ((completion-ignore-case t)
         (name nil))
-    (setq name
-          (completing-read "Resource: "
-                           emacspeak-url-template-name-alist))
-    (emacspeak-url-template-help-internal  name)))
+  (setq name
+        (completing-read "Resource: "
+                         emacspeak-url-template-name-alist))
+  (emacspeak-url-template-help-internal  name)))
 
 ;;}}}
 ;;{{{ Generate texinfo documentation for all defined url
@@ -1756,17 +1914,17 @@ resources."
   templates."
   (declare (special emacspeak-url-template-table))
   (insert
-   "@node URL Templates \n@section  URL Templates\n\n")
+  "@node URL Templates \n@section  URL Templates\n\n")
   (insert
-   (format 
-    "This section is generated automatically from the source-level documentation.
+  (format
+   "This section is generated automatically from the source-level documentation.
 Any errors or corrections should be made to the source-level
 documentation.
 This section documents a total of %d URL Templates.\n\n"
-    (hash-table-count emacspeak-url-template-table)))
+   (hash-table-count emacspeak-url-template-table)))
   (insert
-   (format
-    "All of these URL templates can be invoked via command
+  (format
+   "All of these URL templates can be invoked via command
   @kbd{M-x emacspeak-url-template-fetch} normally bound to
   @kbd{%s}.
 This command prompts for the name of the template, and completion
@@ -1782,23 +1940,23 @@ Each URL template carries out the following steps:
 As an example, the URL templates that enable access to NPR media
 streams prompt for a program id and date, and automatically
 launch the realmedia player after fetching the resource.\n\n"
-    (mapconcat #'key-description
-	       (where-is-internal
-		'emacspeak-url-template-fetch)
-	       " ")))
+   (mapconcat #'key-description
+              (where-is-internal
+               'emacspeak-url-template-fetch)
+              " ")))
   (let ((keys
-         (sort 
-	  (loop for key being the hash-keys of emacspeak-url-template-table
-		collect key)
-	  'string-lessp)))
-    (loop for key in keys
-          do
-	  (insert
-	   (format "@kbd{%s}\n\n" key))
-	  (insert
-	   (emacspeak-url-template-documentation
-	    (emacspeak-url-template-get key)))
-	  (insert "\n\n"))))
+         (sort
+          (loop for key being the hash-keys of emacspeak-url-template-table
+                collect key)
+          'string-lessp)))
+  (loop for key in keys
+        do
+        (insert
+         (format "@kbd{%s}\n\n" key))
+        (insert
+         (emacspeak-url-template-documentation
+          (emacspeak-url-template-get key)))
+        (insert "\n\n"))))
 
 ;;}}}
 (provide 'emacspeak-url-template)

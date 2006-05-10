@@ -1,22 +1,22 @@
 ;;; voice-setup.el --- Setup voices for voice-lock
-;;; $Id: voice-setup.el,v 23.505 2005/11/25 16:30:50 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: voice-setup.el,v 24.0 2006/05/03 02:54:02 raman Exp $
+;;; $Author: raman $
 ;;; Description:  Voice lock mode for Emacspeak
-;;{{{  LCD Archive entry: 
+;;{{{  LCD Archive entry:
 ;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:02 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2004, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
-;;; All Rights Reserved. 
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -35,22 +35,23 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
-;;{{{ Introduction 
+;;{{{ Introduction
 
 ;;; Commentary:
+
 ;;; A voice is to audio as a font is to a visual display.
-;;; A personality is to audio as a face is to a visual display. 
-;;; 
-;; Voice-lock-mode is a minor mode that causes your comments to be 
+;;; A personality is to audio as a face is to a visual display.
+;;;
+;; Voice-lock-mode is a minor mode that causes your comments to be
 ;; spoken in one personality, strings in another, reserved words in another,
 ;; documentation strings in another, and so on.
 ;;
-;; Comments will be spoken in `voice-lock-comment-personality'.
-;; Strings will be spoken in `voice-lock-string-personality'.
-;; Doc strings will be spoken in `voice-lock-doc-string-personality'.
+;; Comments will be spoken in `emacspeak-voice-lock-comment-personality'.
+;; Strings will be spoken in `emacspeak-voice-lock-string-personality'.
+;; Doc strings will be spoken in `emacspeak-voice-lock-doc-string-personality'.
 ;; Function and variable names (in their defining forms) will be
-;;  spoken in `voice-lock-function-name-personality'.
-;; Reserved words will be spoken in `voice-lock-keyword-personality'.
+;;  spoken in `emacspeak-voice-lock-function-name-personality'.
+;; Reserved words will be spoken in `emacspeak-voice-lock-keyword-personality'.
 ;;
 ;; To make the text you type be voiceified, use M-x voice-lock-mode.
 ;; When this minor mode is on, the voices of the current line are
@@ -59,27 +60,28 @@
 
 ;;
 
-;;; How faces map to voices:
-;;; TTS engine specific modules e.g., dectalk-voices.el and
-;;; outloud-voices.el 
-;;; define a standard set of voice names.
-;;; This module maps standard "personality" names to these pre-defined
-;;; voices.
-;;; It  does this via special form def-voice-font 
-;;; which takes a personality name, a voice name and a face name to
-;;; set up the mapping between face and personality, and personality
-;;; and voice.
-;;; See many instances of this usage in this module.
-;;; This special form is available for use from other emacspeak
-;;; modules.
+;;; How faces map to voices: TTS engine specific modules e.g.,
+;;; dectalk-voices.el and outloud-voices.el define a standard set
+;;; of voice names.  This module maps standard "personality"
+;;; names to these pre-defined voices.  It does this via special
+;;; form def-voice-font which takes a personality name, a voice
+;;; name and a face name to set up the mapping between face and
+;;; personality, and personality and voice.
+;;; Newer Emacspeak modules should use voice-setup-add-map when
+;;; defining face->personality mappings.
+;;; Older code calls def-voice-font directly, but over time those
+;;; calls will be changed to the more succinct form provided by
+;;; voice-setup-add-map. For use from other moduels, also see
+;;; function voice-setup-map-face which is useful when mapping a
+;;; single face.
+;;; Both voice-setup-add-map and voice-setup-map-face call
+;;; special form def-voice-font.
 
-;;; Special form def-voice-font sets up the personality name to be
-;;; available via custom.
-
-;;; new voices can be defined using CSS style specifications 
-;;; see special form defvoice
-;;; Voices defined via defvoice can be customized via custom 
-;;; see the documentation for defvoice.
+;;; Special form def-voice-font sets up the personality name to
+;;; be available via custom.  new voices can be defined using CSS
+;;; style specifications see special form defvoice Voices defined
+;;; via defvoice can be customized via custom see the
+;;; documentation for defvoice.
 
 ;;}}}
 ;;{{{ Required modules
@@ -93,8 +95,11 @@
 (require 'outloud-voices)
 (require 'multispeech-voices)
 (require 'dectalk-voices)
+(require 'string)
+
 ;;}}}
-;;{{{ customization group 
+;;{{{ customization group
+
 (defgroup voice-fonts nil
   "Customization group for setting voices."
   :group 'emacspeak)
@@ -113,7 +118,7 @@
                (list 'const voice))
            v))
     (setq menu
-          (cons 
+          (cons
            (list 'symbol :tag "Other")
            menu))
     (cons 'choice menu)))
@@ -132,7 +137,8 @@
       table))))
 
 ;;}}}
-;;{{{ map faces to voices 
+
+;;{{{ map faces to voices
 
 (defvar voice-setup-face-voice-table (make-hash-table)
   "Hash table holding face to voice mapping.")
@@ -145,47 +151,77 @@
 (defsubst voice-setup-get-voice-for-face (face)
   "Map face --a symbol-- to relevant voice."
   (declare (special  voice-setup-face-voice-table))
-  (symbol-value (gethash face voice-setup-face-voice-table)))
-    
-
-;;; voiceifies faces not already voiceified as specified in
-;;; voice-setup-face-voice-table
+  (gethash face voice-setup-face-voice-table))
 
 ;;}}}
-;;{{{ special form def-voice-font 
+;;{{{ special form def-voice-font
 
-;;; note that when defined, personalities are registered as observers
-;;; with the  voice they use
-;;; this gets unregistered when the mapping is changed via custom.
-;;; when  the personality is modified via the customize interface.
+;;; note that when defined, personalities are registered as
+;;; observers with the voice they use this gets unregistered when
+;;; the mapping is changed via custom.
 
 (defmacro  def-voice-font (personality voice face doc &rest args)
   "Define personality and map it to specified face."
-  (`
-   (progn
-     (defcustom (, personality)
-       (, voice)
-       (, doc)
-       :type (voice-setup-custom-menu)
-       :group 'voice-fonts
-       :set '(lambda (sym val)
-               (let ((observing  (get sym 'observing)))
-                 (when (and (symbolp sym)
-                            (symbolp observing))
-		   (remprop observing sym))
-                 (set-default sym val)))
-       (,@ args))
-;;; other actions performed at define time 
-     (voice-setup-set-voice-for-face (, face) '(, personality))
+  (let ((documentation
+         (concat
+          doc
+          (format "\nThis personality uses  %s whose  effect can be changed globally by customizing %s-settings."
+                  voice  voice))))
+    (`
+     (progn
+       (unless (boundp '(, personality))
+;;; New Personality
+         (defcustom  (, personality)
+           (, voice)
+           (, documentation)
+           :type (voice-setup-custom-menu)
+           :group 'voice-fonts
+           :set '(lambda (sym val)
+                   (let ((observing  (get sym 'observing)))
+                     (when (and (symbolp sym)
+                                (symbolp observing))
+                       (remprop observing sym))
+                     (set-default sym val)))
+           (,@ args)))
+;;; other actions performed at define time
+       (voice-setup-set-voice-for-face (, face) '(, personality))
 ;;;record  personality as an
 ;;;observer of  voice and vice versa
-     (when (symbolp '(, personality))
-       (put  '(, personality) 'observing '(, voice)))
-     (when (symbolp '(, voice))
-       (put  '(, voice) '(, personality) t)))))
+       (when (symbolp '(, personality))
+         (put  '(, personality) 'observing '(, voice)))
+       (when (symbolp '(, voice))
+         (put  '(, voice) '(, personality) t))))))
+(defsubst voice-setup-name-personality (face-name)
+  "Compute personality name to use."
+  (let ((name nil))
+    (setq name
+          (or
+           (string-replace-match "face$" face-name "personality")
+           face-name))
+    (setq name
+          (or
+           (string-replace-match "font" name "voice")
+           name))
+    (when (string-equal name face-name)
+      (setq name (format "%s-voice" name)))
+    (concat "emacspeak-" name)))
+
+(defun voice-setup-map-face (face voice)
+  "Invoke def-voice-font with appropriately generated personality name."
+  (let ((doc (format "Personality used for %s" face))
+        (personality
+         (intern (voice-setup-name-personality (symbol-name face)))))
+    (eval
+     `(def-voice-font ,personality ,voice  ',face  ,doc))))
+
+(defun voice-setup-add-map (fv-alist )
+  "Sets up face to voice mapping given in fv-alist."
+  (loop for fv in fv-alist
+        do
+        (voice-setup-map-face (first fv) (second fv))))
 
 ;;}}}
-;;{{{  special form defvoice 
+;;{{{  special form defvoice
 
 (defvar voice-setup-personality-table (make-hash-table)
   "Maps personality names to ACSS  settings.
@@ -220,55 +256,64 @@ VOICE-NAME are  changed."
   (let ((value (symbol-value personality))
         (observers (voice-setup-observing-personalities personality)))
     (loop for o in observers
-          do				;o is already quoted 
+          do                            ;o is already quoted
           (set o value))))
 
-;;; note that for now we dont use  gain settings 
+;;; note that for now we dont use  gain settings
 
 (defmacro defvoice (personality settings doc)
   "Define voice using CSS setting.  Setting is a list of the form
 (list paul 5 5 5 5 'all) which defines a standard male voice
 that speaks `all' punctuations.  Once
 defined, the newly declared personality can be customized by calling
-command \\[customize-variable] on <personality>-settings."
+command \\[customize-variable] on <personality>-settings.. "
   (`
-   (defcustom (, (intern (format "%s-settings"  personality)))
-     (, settings)
-     (, doc)
-     :type  '(list
-              (choice :tag "Family"
-                      (const :tag "Unspecified" nil)
-                      (symbol :tag "Name"))
-              (choice :tag "Average Pitch"
-                      (const :tag "Unspecified" nil)
-                      (integer :tag "Number"))
-              (choice :tag "Pitch Range"
-                      (const :tag "Unspecified" nil)
-                      (integer :tag "Number"))
-              (choice :tag "Stress"
-                      (const :tag "Unspecified" nil)
-                      (integer :tag "Number"))
-              (choice :tag "Richness"
-                      (const :tag "Unspecified" nil)
-                      (integer :tag "Number"))
-              (choice :tag "Punctuation Mode "
-                      (const :tag "Unspecified" nil)
-                      (const :tag "All punctuations" all)
-                      (const :tag "Some punctuations" some)
-                      (const :tag "No punctuations" none)))
-     :group 'voice-fonts
-     :set
-     '(lambda  (sym val)
-        (let ((voice-name (voice-setup-personality-from-style val)))
-          (setq (, personality) voice-name)
-;;; update all observers		; ; ;
-          (voice-setup-update-personalities '(, personality))
-          (set-default sym val))))))
+   (progn
+     (defvar  (, personality)
+       (voice-setup-personality-from-style (, settings))
+       (concat
+        (, doc)
+        (, (format "Customize this overlay via %s-settings."
+                 personality ))))
+     (defcustom (, (intern (format "%s-settings"  personality)))
+       (, settings)
+       (, doc)
+       :type  '(list
+                (choice :tag "Family"
+                        (const :tag "Unspecified" nil)
+                        (const  :tag "Paul" paul)
+(const :tag "Harry" harry)
+(const :tag "Betty" betty))
+(choice :tag "Average Pitch"
+        (const :tag "Unspecified" nil)
+        (integer :tag "Number"))
+(choice :tag "Pitch Range"
+        (const :tag "Unspecified" nil)
+        (integer :tag "Number"))
+(choice :tag "Stress"
+        (const :tag "Unspecified" nil)
+        (integer :tag "Number"))
+(choice :tag "Richness"
+        (const :tag "Unspecified" nil)
+        (integer :tag "Number"))
+(choice :tag "Punctuation Mode "
+        (const :tag "Unspecified" nil)
+        (const :tag "All punctuations" all)
+        (const :tag "Some punctuations" some)
+        (const :tag "No punctuations" none)))
+:group 'voice-fonts
+:set
+'(lambda  (sym val)
+(let ((voice-name (voice-setup-personality-from-style val)))
+  (setq (, personality) voice-name)
+;;; update all observers                ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
+  (voice-setup-update-personalities '(, personality))
+  (set-default sym val)))))))
 
-;;}}}					; ; ; ;
-;;{{{ voices defined using ACSS		; ; ;
+;;}}}                                   ; ;
+;;{{{ voices defined using ACSS         ; ;
 
-;;; these voices are device independent	; ; ;
+;;; these voices are device independent ; ;
 
 (defvoice  voice-punctuations-all (list nil nil nil nil  nil 'all)
   "Turns current voice into one that  speaks all
@@ -276,7 +321,7 @@ punctuations.")
 
 (defvoice  voice-punctuations-some (list nil nil nil nil  nil 'some)
   "Turns current voice into one that  speaks some
-punctuations.")  
+punctuations.")
 
 (defvoice  voice-punctuations-none (list nil nil nil nil  nil "none")
   "Turns current voice into one that  speaks no punctuations.")
@@ -339,7 +384,7 @@ punctuations.")
   "Apply first female voice.")
 
 ;;}}}
-;;{{{  indentation and annotation 
+;;{{{  indentation and annotation
 
 (defvoice voice-indent (list nil nil 3 1 3 )
   "Indicate indentation .")
@@ -348,7 +393,7 @@ punctuations.")
   "Indicate annotation.")
 
 ;;}}}
-;;{{{ voice overlays 
+;;{{{ voice overlays
 
 ;;; these are suitable to use as "overlay voices".
 (defvoice voice-lock-overlay-0
@@ -369,108 +414,38 @@ punctuations.")
 
 ;;}}}
 ;;{{{  Define some voice personalities:
-
-(def-voice-font voice-lock-highlight-personality voice-bolden
-  'match
-  "Personality used for  matched text.")
-
-(def-voice-font voice-lock-highlight-personality voice-animate
-  'highlight
-  "Personality used for highlighting text.")
-
-(def-voice-font voice-lock-highlight-personality voice-animate
-  'highlight-face
-  "Personality used for highlighting text.")
-
-(def-voice-font voice-lock-region-personality voice-brighten
-  'region
-  "Personality used for highlighting region.")
-(def-voice-font voice-lock-button-personality voice-bolden
-  'button
-  "Personality used for button text.")
-(def-voice-font voice-lock-fixed-personality voice-monotone
-  'fixed
-  "Personality to use for fixed pitch  text.")
-
-(def-voice-font voice-lock-fixed-pitch-personality voice-monotone
-  'fixed-pitch
-  "Personality to use for fixed pitch  text.")
-
-(def-voice-font voice-lock-comment-personality voice-monotone
-  'font-lock-comment-face
-  "Personality to use for comments.")
-
-(def-voice-font voice-lock-doc-personality voice-monotone-medium
-  'font-lock-doc-face
-  "Personality to use for documentation.")
-
-          
-(def-voice-font voice-lock-underline-personality voice-brighten-medium
-  'underline
-  "Personality to use for underline text.")
-  
-(def-voice-font voice-lock-bold-personality voice-bolden
-  'bold
-  "Personality to use for bold  text.")
-
-(def-voice-font voice-lock-italic-personality 
-  voice-animate
-  'italic
-  "Personality to use for italic  text.")
-
-(def-voice-font voice-lock-bold-italic-personality 
-  voice-bolden-and-animate
-  'bold-italic
-  "Personality to use for bold  italic text.")
-
-  
-(def-voice-font voice-lock-doc-string-personality
-  voice-smoothen-extra
-  'font-lock-doc-string-face
-  "Personality to use for documentation strings.")
-  
-(def-voice-font voice-lock-constant-personality voice-lighten
-  'font-lock-constant-face
-  "Personality to use for  constants.")
-  
-(def-voice-font voice-lock-string-personality voice-lighten-extra
-  'font-lock-string-face
-  "Personality to use for string constants.")
-
-(def-voice-font voice-lock-function-name-personality voice-bolden-medium
-  'font-lock-function-name-face
-  "Personality to use for function names.")
-  
-(def-voice-font voice-lock-warning-personality voice-bolden-and-animate
-  'font-lock-warning-face
-  "Personality to use for warnings.")
-
-(def-voice-font voice-lock-preprocessor-personality voice-monotone-medium
-  'font-lock-preprocessor-face
-  "Personality to use for preprocessor directives.")
-
-(def-voice-font voice-lock-keyword-personality voice-animate-extra
-  'font-lock-keyword-face
-  "Personality to use for keywords.")
-  
-(def-voice-font voice-lock-builtin-personality voice-bolden
-  'font-lock-builtin-face
-  "Personality to use for built-in keywords.")
-
-(def-voice-font voice-lock-variable-name-personality voice-animate
-  'font-lock-variable-name-face
-  "Personality to use for variables.")
-  
-(def-voice-font voice-lock-type-personality voice-smoothen
-  'font-lock-type-face
-  "Personality to use for data types.")
-  
-(def-voice-font voice-lock-reference-personality voice-animate-medium
-  'font-lock-reference-face
-  "Personality to use for references.")
+(voice-setup-add-map
+ '(
+   (bold voice-bolden)
+   (bold-italic voice-bolden-and-animate)
+   (button voice-bolden)
+   (fixed voice-monotone)
+   (fixed-pitch voice-monotone)
+   (font-lock-builtin-face voice-bolden)
+   (font-lock-comment-face voice-monotone)
+   (font-lock-constant-face voice-lighten)
+   (font-lock-doc-face voice-monotone-medium)
+   (font-lock-doc-string-face voice-smoothen-extra)
+   (font-lock-function-name-face voice-bolden-medium)
+   (font-lock-keyword-face voice-animate-extra)
+   (font-lock-preprocessor-face voice-monotone-medium)
+   (font-lock-reference-face voice-animate-medium)
+   (font-lock-string-face voice-lighten-extra)
+   (font-lock-type-face voice-smoothen)
+   (font-lock-variable-name-face voice-bolden)
+   (font-lock-warning-face voice-bolden-and-animate)
+   (gui-button voice-bolden)
+   (help-argument-name voice-smoothen)
+   (highlight voice-animate)
+   (highlight-face voice-animate)
+   (italic voice-animate)
+   (match voice-animate)
+   (region voice-brighten)
+   (underline voice-lighten-medium)
+   ))
 
 ;;}}}
-;;{{{ new light-weight voice lock 
+;;{{{ new light-weight voice lock
 
 (defcustom voice-lock-mode t
   "Determines  if property personality results in text being
@@ -489,10 +464,10 @@ font-lock.  Voicification is effective only if font lock is on."
   ;; Don't turn on Voice Lock mode if we don't have a display (we're running a
   ;; batch job) or if the buffer is invisible (the name starts with a space).
   (let ((on-p (and (not noninteractive)
-		   (not (eq (aref (buffer-name) 0) ?\ ))
-		   (if arg
-		       (> (prefix-numeric-value arg) 0)
-		     (not voice-lock-mode)))))
+                   (not (eq (aref (buffer-name) 0) ?\ ))
+                   (if arg
+                       (> (prefix-numeric-value arg) 0)
+                     (not voice-lock-mode)))))
     (set (make-local-variable 'voice-lock-mode) on-p)
     ;; Turn on Voice Lock mode.
     (when on-p
@@ -520,19 +495,33 @@ font-lock.  Voicification is effective only if font lock is on."
   (setq minor-mode-alist (cons '(voice-lock-mode " Voice") minor-mode-alist)))
 
 ;;}}}
+;;{{{ list-voices-display
+
+(defcustom voice-setup-sample-text
+  "This is a test."
+  "Sample text used  when displaying available voices."
+  :type 'string
+  :group 'voice-fonts)
+
+(defun voice-setup-list-voices (pattern)
+  "Show all defined voice-face mappings  in a help buffer.
+Sample text to use comes from variable
+  `voice-setup-sample-text'. "
+  (interactive (list (and current-prefix-arg
+                          (read-string "List faces matching regexp: "))))
+  (declare (special voice-setup-sample-text
+                    list-faces-sample-text))
+  (let ((list-faces-sample-text voice-setup-sample-text))
+    (list-faces-display pattern)
+    (message "Displayed voice-face mappings in other window.")))
+
+;;}}}
 (provide 'voice-setup)
-;;{{{ end of file 
+;;{{{ end of file
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}
-(def-voice-font voice-lock-button-personality voice-bolden
-  'button
-  "Personality for buttons.")
-
-(def-voice-font voice-lock-gui-button-personality voice-bolden
-  'gui-button
-  "Personality for buttons.")

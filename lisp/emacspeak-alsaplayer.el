@@ -1,5 +1,5 @@
 ;;; emacspeak-alsaplayer.el --- Control alsaplayer from Emacs
-;;; $Id: emacspeak-alsaplayer.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-alsaplayer.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description: Controlling alsaplayer from emacs 
 ;;; Keywords: Emacspeak, alsaplayer
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -163,7 +163,7 @@ Alsaplayer session."
             (emacspeak-alsaplayer-get-session))
       (put 'emacspeak-alsaplayer-session 'buffer (current-buffer))
       (setq emacspeak-alsaplayer-session-id
-	    (second
+            (second
              (split-string emacspeak-alsaplayer-session "-")))
       (erase-buffer)
       (setq process
@@ -192,19 +192,19 @@ Optional second arg no-refresh is used to avoid getting status twice."
     (erase-buffer)
     (let ((process nil))
       (setq process
-	    (apply 'start-process
-		   "alsaplayer"
-		   (current-buffer) emacspeak-alsaplayer-program
-		   "-n" emacspeak-alsaplayer-session-id
-		   command-list))
+            (apply 'start-process
+                   "alsaplayer"
+                   (current-buffer) emacspeak-alsaplayer-program
+                   "-n" emacspeak-alsaplayer-session-id
+                   command-list))
       (set-process-coding-system process emacspeak-alsaplayer-coding-system)
       (unless no-refresh
-	(setq process
-	      (start-process
-	       "alsaplayer" (current-buffer)   emacspeak-alsaplayer-program
-	       "-n" emacspeak-alsaplayer-session-id
-	       "--status"))
-	(set-process-coding-system process emacspeak-alsaplayer-coding-system)))))
+        (setq process
+              (start-process
+               "alsaplayer" (current-buffer)   emacspeak-alsaplayer-program
+               "-n" emacspeak-alsaplayer-session-id
+               "--status"))
+        (set-process-coding-system process emacspeak-alsaplayer-coding-system)))))
 
 (defun emacspeak-alsaplayer-add-to-queue (resource)
   "Add specified resource to queue."
@@ -212,11 +212,11 @@ Optional second arg no-refresh is used to avoid getting status twice."
    (list
     (read-file-name "Media Resource: "
                     (if 
-			(string-match (format ".*%s.*"
-					      emacspeak-alsaplayer-media-directory)
-				      (expand-file-name default-directory))
-			default-directory
-		      emacspeak-alsaplayer-media-directory))))
+                        (string-match (format ".*%s.*"
+                                              emacspeak-alsaplayer-media-directory)
+                                      (expand-file-name default-directory))
+                        default-directory
+                      emacspeak-alsaplayer-media-directory))))
   (emacspeak-alsaplayer-send-command
    (cond
     ((file-directory-p resource)

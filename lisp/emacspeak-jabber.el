@@ -1,15 +1,15 @@
-;;; emacspeak-jabber.el --- Speech-Enable jabber 
-;;; $Id: emacspeak-jabber.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; emacspeak-jabber.el --- Speech-Enable jabber
+;;; $Id: emacspeak-jabber.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
-;;; Description: speech-enable jabber 
+;;; Description: speech-enable jabber
 ;;; Keywords: Emacspeak, jabber
-;;{{{  LCD Archive entry: 
+;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -17,7 +17,7 @@
 ;;{{{  Copyright:
 
 ;;; Copyright (c) 1995 -- 2004, T. V. Raman
-;;; All Rights Reserved. 
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -52,6 +52,30 @@
 
 (require 'emacspeak-preamble)
 ;;}}}
+;;{{{ map voices
+
+(voice-setup-add-map
+ '(
+   (jabber-activity-face        voice-animate)
+   (jabber-chat-error           voice-bolden-and-animate)
+   (jabber-chat-prompt-foreign  voice-brighten-medium)
+   (jabber-chat-prompt-local    voice-smoothen-medium)
+   (jabber-chat-prompt-system   voice-brighten-extra)
+   (jabber-chat-text-foreign    voice-brighten)
+   (jabber-chat-text-local      voice-smoothen)
+   (jabber-rare-time-face       voice-animate-extra)
+   (jabber-roster-user-away     voice-smoothen-extra)
+   (jabber-roster-user-chatty   voice-brighten)
+   (jabber-roster-user-dnd      voice-lighten-medium)
+   (jabber-roster-user-error    voice-bolden-and-animate)
+   (jabber-roster-user-offline  voice-smoothen-extra)
+   (jabber-roster-user-online   voice-bolden)
+   (jabber-roster-user-xa       voice-lighten)
+   (jabber-title-large          voice-bolden-extra)
+   (jabber-title-medium         voice-bolden)
+   (jabber-title-small          voice-lighten)
+   ))
+;;}}}
 ;;{{{ Advice interactive commands:
 
 (defadvice jabber-connect (after emacspeak pre act comp)
@@ -79,16 +103,16 @@
 ;;}}}
 ;;{{{ silence keepalive
 
-(loop for f in 
+(loop for f in
       '(jabber-keepalive-do
-	jabber-keepalive-got-response)
+        jabber-keepalive-got-response)
       do
       (eval
        `(defadvice ,f (around emacspeak pre act comp)
-	  "Silence keepalive messages."
-	  (let ((emacspeak-speak-messages nil))
-	    ad-do-it
-	    ad-return-value))))
+          "Silence keepalive messages."
+          (let ((emacspeak-speak-messages nil))
+            ad-do-it
+            ad-return-value))))
 
 ;;}}}
 ;;{{{ chat buffer:
@@ -97,16 +121,16 @@
   "Produce auditory icon."
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)))
-(loop for f in 
+(loop for f in
       '(jabber-chat-with
-	jabber-chat-with-jid-at-point)
+        jabber-chat-with-jid-at-point)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
-	  "Silence keepalive messages."
-	  (when (interactive-p)
-	    (emacspeak-auditory-icon 'open-object)
-	    (emacspeak-speak-mode-line)))))
+          "Silence keepalive messages."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'open-object)
+            (emacspeak-speak-mode-line)))))
 ;;}}}
 ;;{{{ alerts
 (defcustom emacspeak-jabber-speak-presence-alerts nil
@@ -127,12 +151,13 @@
 (defun emacspeak-jabber-message-default-message (from buffer
                                                       text)
   "Speak the message."
+  (declare (special jabber-message-alert-same-buffer))
   (when (or jabber-message-alert-same-buffer
-	    (not (memq (selected-window) (get-buffer-window-list buffer))))
+            (not (memq (selected-window) (get-buffer-window-list buffer))))
     (if (jabber-muc-sender-p from)
-	(format "Private message from %s in %s"
-		(jabber-jid-resource from)
-		(jabber-jid-displayname (jabber-jid-user from)))
+        (format "Private message from %s in %s"
+                (jabber-jid-resource from)
+                (jabber-jid-displayname (jabber-jid-user from)))
       (format "%s: %s" (jabber-jid-displayname from) text))))
 
 ;;{{{ interactive commands:
@@ -140,7 +165,12 @@
 (defun emacspeak-jabber-popup-roster ()
   "Pop to Jabber roster."
   (interactive)
-  (declare (special jabber-roster-buffer))
+  (declare (special jabber-roster-buffer
+                    *jabber-connected*))
+  (unless (buffer-live-p jabber-roster-buffer)
+    (jabber-display-roster))
+  (unless *jabber-connected*
+    (jabber-connect))
   (pop-to-buffer jabber-roster-buffer)
   (goto-char (point-min))
   (emacspeak-auditory-icon 'select-object)
@@ -149,10 +179,10 @@
 ;;}}}
 
 ;;}}}
-;;{{{ Pronunciations 
+;;{{{ Pronunciations
 (declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
 (emacspeak-pronounce-augment-pronunciations 'jabber-chat-mode
-					    emacspeak-pronounce-internet-smileys-pronunciations)
+                                            emacspeak-pronounce-internet-smileys-pronunciations)
 (emacspeak-pronounce-augment-pronunciations 'jabber-mode
                                             emacspeak-pronounce-internet-smileys-pronunciations)
 
@@ -231,11 +261,11 @@
 
 ;;}}}
 (provide 'emacspeak-jabber)
-;;{{{ end of file 
+;;{{{ end of file
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}

@@ -1,5 +1,5 @@
 ;;; emacspeak-jde.el --- Speech enable JDE -- An integrated Java Development Environment
-;;; $Id: emacspeak-jde.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-jde.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to JDE
 ;;; Keywords: Emacspeak, Speak, Spoken Output, Java
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -49,7 +49,7 @@
 
 ;;}}}
 ;;{{{ voice lock 
-(def-voice-font  emacspeak-jde-number-personality voice-lock-constant-personality
+(def-voice-font  emacspeak-jde-number-personality voice-lighten
   'jde-java-font-lock-number-face
   "Personality used for numbers."
   :group 'emacspeak-jde)
@@ -59,7 +59,7 @@
   "Personality used for java operators."
   :group 'emacspeak-jde)
 
-(def-voice-font emacspeak-jde-constant-personality voice-lock-constant-personality
+(def-voice-font emacspeak-jde-constant-personality voice-lighten
   'jde-java-font-lock-constant-face
   "Personality used for constants."
   :group 'emacspeak-jde)
@@ -257,9 +257,9 @@
       '(
         jde-debug-step-into
         jde-debug-step-out
-	jde-debug-step-over
-	jde-debug-up
-	jde-debug-down)
+        jde-debug-step-over
+        jde-debug-up
+        jde-debug-down)
       do
       (eval
        (`
@@ -333,8 +333,8 @@ If we are on the last call, do nothing."
   (emacspeak-auditory-icon 'open-object)
   (dtk-speak
    (ad-get-arg 0)))
-	    
-	    
+            
+            
 
 ;;}}}
 (provide 'emacspeak-jde )

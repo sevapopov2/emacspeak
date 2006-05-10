@@ -1,5 +1,5 @@
 ;;; emacspeak-eshell.el --- Speech-enable EShell - Emacs Shell
-;;; $Id: emacspeak-eshell.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-eshell.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:   Speech-enable EShell
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -158,78 +158,38 @@ personalities."
   :type 'boolean
   :group 'emacspeak-eshell)
 
-(def-voice-font  emacspeak-eshell-ls-directory-personality
-  'ursula
-  'eshell-ls-directory-face
-  "Personality for directory names."
-  :group 'emacspeak-eshell)
+;;}}}
+;;{{{ voices 
 
-(def-voice-font  emacspeak-eshell-ls-symlink-personality
-  voice-bolden
-  'eshell-ls-symlink-face
-  "Personality for symlinks."
-  :group 'emacspeak-eshell)
+(voice-setup-add-map
+ '(
+   (eshell-ls-archive voice-lighten-extra)
+   (eshell-ls-archive-face voice-lighten-extra)
+   (eshell-ls-backup voice-monotone-medium)
+   (eshell-ls-backup-face voice-monotone-medium)
+   (eshell-ls-clutter voice-smoothen-extra)
+   (eshell-ls-clutter-face voice-smoothen-extra)
+   (eshell-ls-directory voice-bolden)
+   (eshell-ls-directory-face voice-bolden)
+   (eshell-ls-executable voice-animate-extra)
+   (eshell-ls-executable-face voice-animate-extra)
+   (eshell-ls-missing voice-brighten)
+   (eshell-ls-missing-face voice-brighten)
+   (eshell-ls-picture-face voice-lighten)
+   (eshell-ls-product voice-lighten-medium)
+   (eshell-ls-product-face voice-lighten-medium)
+   (eshell-ls-readonly voice-monotone)
+   (eshell-ls-readonly-face voice-monotone)
+   (eshell-ls-special voice-lighten-extra)
+   (eshell-ls-special-face voice-lighten-extra)
+   (eshell-ls-symlink voice-smoothen)
+   (eshell-ls-symlink-face voice-smoothen)
+   (eshell-ls-unreadable voice-monotone-medium)
+   (eshell-ls-unreadable-face voice-monotone-medium)
+   (eshell-prompt voice-animate)
+   (eshell-prompt-face voice-animate)
+   ))
 
-(def-voice-font  emacspeak-eshell-ls-executable-personality
-  voice-animate-extra
-  'eshell-ls-executable-face
-  "Personality for executables."
-  :group 'emacspeak-eshell)
-
-(def-voice-font  emacspeak-eshell-ls-readonly-personality
-  voice-monotone
-  'eshell-ls-readonly-face
-  "Personality for read only files."
-  :group 'emacspeak-eshell)
-
-(def-voice-font  emacspeak-eshell-ls-unreadable-personality 'kid
-  'eshell-ls-unreadable-face
-  "Personality for files that are not readable."
-  :group 'emacspeak-eshell)
-
-(defcustom emacspeak-eshell-ls-special-personality voice-smoothen
-  "Personality for special files."
-  :group 'emacspeak-eshell)
-  
-
-(def-voice-font  emacspeak-eshell-ls-missing-personality
-  voice-brighten
-  'eshell-ls-missing-face
-  "Personality for missing file."
-  :group 'emacspeak-eshell)
-
-(def-voice-font  emacspeak-eshell-ls-archive-personality
-  voice-lighten-extra
-  'eshell-ls-archive-face
-  "Personality for archive files."
-  :group 'emacspeak-eshell)
-
-(def-voice-font  emacspeak-eshell-ls-backup-personality
-  voice-monotone-medium
-  'eshell-ls-backup-face
-  "Personality for backup files. "
-  :group 'emacspeak-eshell)
-
-(def-voice-font  emacspeak-eshell-ls-product-personality
-  voice-bolden
-  'eshell-ls-product-face
-  "Personality for files that can be recreated."
-  :group 'emacspeak-eshell)
-
-(def-voice-font   emacspeak-eshell-ls-clutter-personality
-  voice-lighten-extra
-  'eshell-ls-clutter-face
-  "Personality for transients."
-  :group 'emacspeak-eshell)
-(def-voice-font   emacspeak-eshell-special-personality
-  voice-smoothen-extra
-  'eshell-ls-special-face
-  "Personality for specials."
-  :group 'emacspeak-eshell)
-(def-voice-font  emacspeak-eshell-prompt-personality voice-monotone-medium
-  'eshell-prompt-face
-  "Personality used for highlighting eshell prompts --emacs 21."
-  :group 'emacspeak-eshell)
 ;;}}}
 ;;{{{ Advice em-prompt
 (loop for f in 

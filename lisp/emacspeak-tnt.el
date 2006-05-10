@@ -1,5 +1,5 @@
 ;;; emacspeak-tnt.el --- Instant Messenger 
-;;; $Id: emacspeak-tnt.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-tnt.el,v 24.0 2006/05/03 02:54:01 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Speech-enable AOL Instant Messenger Client TNT
 ;;; Keywords: Emacspeak, Instant Messaging 
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:01 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -60,7 +60,7 @@
     (emacspeak-auditory-icon 'close-object)))
 (declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
 (emacspeak-pronounce-augment-pronunciations 'tnt-im-mode
-					    emacspeak-pronounce-internet-smileys-pronunciations)
+                                            emacspeak-pronounce-internet-smileys-pronunciations)
 (emacspeak-pronounce-augment-pronunciations 'tnt-chat-mode
                                             emacspeak-pronounce-internet-smileys-pronunciations)
 
@@ -221,7 +221,7 @@ automatically."
     (setq emacspeak-tnt-autospeak (default-value 'emacspeak-tnt-autospeak )))
    (t (make-local-variable 'emacspeak-tnt-autospeak)
       (setq emacspeak-tnt-autospeak
-	    (not emacspeak-tnt-autospeak ))))
+            (not emacspeak-tnt-autospeak ))))
   (when (interactive-p)
     (emacspeak-auditory-icon
      (if emacspeak-tnt-autospeak 'on 'off))

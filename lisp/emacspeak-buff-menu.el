@@ -1,5 +1,5 @@
 ;;; emacspeak-buff-menu.el --- Speech enable Buffer Menu Mode -- used to manage buffers
-;;; $Id: emacspeak-buff-menu.el,v 23.505 2005/11/25 16:30:49 raman Exp $
+;;; $Id: emacspeak-buff-menu.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Auditory interface to buff-menu
 ;;; Keywords: Emacspeak, Speak, Spoken Output, buff-menu
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:49 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -67,8 +67,8 @@
    ((eq major-mode 'Buffer-menu-mode)
     (let*((buffer (Buffer-menu-buffer t)))
       (if (get-buffer buffer)
-	  (dtk-speak (buffer-name  buffer))
-	(error "No valid buffer on this line"))))
+          (dtk-speak (buffer-name  buffer))
+        (error "No valid buffer on this line"))))
    (t (error "This command can be used only in buffer menus"))))
 
 (defun emacspeak-list-buffers-speak-buffer-line ()
@@ -112,10 +112,10 @@
                     (if (or file this-buffer-directory)
                         (format "visiting %s"
                                 (or file this-buffer-directory))
-		      "")
+                      "")
                     this-buffer-size))))
        (t(emacspeak-auditory-icon 'error)
-	 (emacspeak-speak-line)))))
+         (emacspeak-speak-line)))))
    (t (error "This command can be used only in buffer menus"))))
 
 (defun emacspeak-list-buffers-next-line (count)

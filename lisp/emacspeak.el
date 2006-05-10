@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ |
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ |
 ;;; Location undetermined
 ;;;
 
@@ -65,7 +65,7 @@
 ;;}}}
 ;;{{{  Customize groups 
 (defconst emacspeak-version
-  (let ((x "$Revision: 23.505 $"))
+  (let ((x "$Revision: 24.0 $"))
     (string-match "[0-9.]+" x)
     (substring x (match-beginning 0)
                (match-end 0)))
@@ -73,29 +73,52 @@
 
 (defgroup emacspeak nil
   "Emacspeak: The Complete Audio Desktop  "
-  :link '(url-link :tag "SourceForge" "http://emacspeak.sf.net")
-  :link '(url-link :tag "Papers" "http://emacspeak.sf.net/publications")
+  :link '(url-link :tag "Web" "http://emacspeak.sf.net"
+                   :help-echo "Visit Emacspeak Web Site")
+  :link '(url-link :tag "Blog" "http://emacspeak.blogspot.com"
+                   :help-echo "Read Emacspeak Blog")
+  :link '(url-link :tag "Papers"
+                   "http://emacspeak.sf.net/publications"
+                   :help-echo "Read papers describing Emacspeak
+design and implementation.")
   :link '(url-link :tag "Mail"
-                   "http://www.cs.vassar.edu/~priestdo/emacspeak/")
-  :link '(url-link :tag "Search" "http://www.cs.vassar.edu/cgi-bin/emacspeak-search")
-  :link '(url-link :tag "Applications"
-                   "http://emacspeak.sf.net/applications.html")
+                   "http://www.cs.vassar.edu/~priestdo/emacspeak/"
+                   :help-echo "Browse Emacspeak mail archive at Vassar.")
+  :link '(url-link :tag "Search"
+                   "http://www.cs.vassar.edu/cgi-bin/emacspeak-search"
+                   :help-echo "Search Emacspeak mail archive at Vassar.")
+  :link '(url-link :tag "Apps"
+                   "http://emacspeak.sf.net/applications.html"
+                   :help-echo "Browse available  applications on
+the Emacspeak desktop." )
   :link '(url-link :tag "Guide"
-                   "http://emacspeak.sf.net/user-guide")
+                   "http://emacspeak.sf.net/user-guide"
+                   :help-echo "Read online user guide.")
   :link '(url-link :tag "Tips"
-                   "http://emacspeak.sf.net/tips.html")
-  :link   (list 'file-link :tag "NEWS" (expand-file-name "etc/NEWS" emacspeak-directory))
-  :link   (list 'file-link :tag "FAQ" (expand-file-name "etc/FAQ" emacspeak-directory))
+                   "http://emacspeak.sf.net/tips.html"
+                   :help-echo "Read Emacspeak Tips and Tricks.")
+  :link   (list 'file-link :tag "NEWS" (expand-file-name
+                                        "etc/NEWS"
+                                        emacspeak-directory)
+                :help-echo "What's New In This Release")
+  :link   (list 'file-link :tag "FAQ" (expand-file-name "etc/FAQ"
+                                                        emacspeak-directory)
+                :help-echo "Read the Emacspeak FAQ")
   :link '(custom-manual "(emacspeak)Top")
 ;;; end links 
   :prefix "emacspeak-"
   :group 'applications
-  :group 'accessibility
-  :version emacspeak-version)
+  :group 'accessibility)
 
 (defcustom emacspeak-startup-hook nil
   "Hook to run after starting emacspeak."
   :type 'hook
+  :group 'emacspeak)
+;;;###autoload
+(defcustom emacspeak-media-player 'emacspeak-m-player
+  "Default media player to use.
+This is a Lisp function that takes a resource locator."
+  :type 'function
   :group 'emacspeak)
 
 ;;}}}
@@ -107,19 +130,11 @@ This function  adds the appropriate form to
 `after-load-alist' to set up Emacspeak support for a given
 package.
 Argument MODULE specifies the emacspeak module that implements the speech-enabling extensions."
-  (declare (special load-history))
-  (cond
-   ((assoc package load-history)
-    (require module)
-    (emacspeak-fix-commands-loaded-from package))
-   (t
-    (add-hook 'after-load-alist
-              (`
-               ((, package)
-                (progn
-                  (require (quote (, module )))
-                  (emacspeak-fix-commands-loaded-from (, package)))))))))
-
+  (eval-after-load package
+    `(progn
+    (require ',module)
+    (emacspeak-fix-commands-that-use-interactive))))
+  
 ;;}}}
 ;;{{{ Setup package extensions
 (emacspeak-do-package-setup "add-log" 'emacspeak-add-log)
@@ -129,6 +144,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "apt-utils" 'emacspeak-apt-utils)
 (emacspeak-do-package-setup "arc-mode" 'emacspeak-arc)
 (emacspeak-do-package-setup "asm-mode" 'emacspeak-asm)
+(emacspeak-do-package-setup "atom-blogger" 'emacspeak-atom-blogger)
 (emacspeak-do-package-setup "babel" 'emacspeak-babel )
 (emacspeak-do-package-setup "bbdb" 'emacspeak-bbdb )
 (emacspeak-do-package-setup "bibtex" 'emacspeak-bibtex)
@@ -199,6 +215,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "message" 'emacspeak-message)
 (emacspeak-do-package-setup "meta-mode" 'emacspeak-metapost)
 (emacspeak-do-package-setup "mpg123" 'emacspeak-mpg123)
+(emacspeak-do-package-setup "muse-mode" 'emacspeak-muse)
 (emacspeak-do-package-setup "midge-mode" 'emacspeak-midge)
 (emacspeak-do-package-setup "mpuz" 'emacspeak-entertain)
 (emacspeak-do-package-setup "mspools" 'emacspeak-mspools)
@@ -224,6 +241,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "rmail" 'emacspeak-rmail)
 (emacspeak-do-package-setup "rpm" 'emacspeak-rpm)
 (emacspeak-do-package-setup "rpm-spec-mode" 'emacspeak-rpm-spec)
+(emacspeak-do-package-setup "ruby-mode" 'emacspeak-ruby)
 (emacspeak-do-package-setup "sgml-mode" 'emacspeak-sgml-mode)
 (emacspeak-do-package-setup "sh-script" 'emacspeak-sh-script)
 (emacspeak-do-package-setup "sigbegone" 'emacspeak-sigbegone)
@@ -234,6 +252,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "sql-mode" 'emacspeak-sql)
 (emacspeak-do-package-setup "sql" 'emacspeak-sql)
 (emacspeak-do-package-setup "supercite" 'emacspeak-supercite)
+(emacspeak-do-package-setup "sudoku" 'emacspeak-sudoku)
 (emacspeak-do-package-setup "swbuff" 'emacspeak-swbuff)
 (emacspeak-do-package-setup "tar-mode" 'emacspeak-tar)
 (emacspeak-do-package-setup "tcl" 'emacspeak-tcl)
@@ -256,8 +275,10 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "w3m" 'emacspeak-w3m)
 (emacspeak-do-package-setup "wget" 'emacspeak-wget)
 (emacspeak-do-package-setup "wdired" 'emacspeak-wdired)
+(emacspeak-do-package-setup "cus-edit" 'emacspeak-custom)
 (emacspeak-do-package-setup "wid-edit" 'emacspeak-widget)
 (emacspeak-do-package-setup "emacs-wiki" 'emacspeak-wiki)
+(emacspeak-do-package-setup "widget" 'emacspeak-widget)
 (emacspeak-do-package-setup "windmove" 'emacspeak-windmove)
 (emacspeak-do-package-setup "winring" 'emacspeak-winring)
 (emacspeak-do-package-setup "wrolo" 'emacspeak-wrolo)
@@ -274,10 +295,10 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
               (unless (file-newer-than-file-p
                        (expand-file-name
                         "emacspeak-finder-inf.el" 
-			emacspeak-lisp-directory)
+                        emacspeak-lisp-directory)
                        (expand-file-name
                         emacspeak-lisp-directory
-			"emacspeak.el"))
+                        "emacspeak.el"))
                 (emacspeak-finder-compile-keywords))
               (load-library "emacspeak-finder-inf")
               (push
@@ -375,12 +396,14 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
          'midge-mode-hook
          'meta-common-mode-hook
          'perl-mode-hook
+         'muse-mode-hook
          'cperl-mode-hook
          'sh-mode-hook
+         'ruby-mode-hook
          'sql-mode-hook
          'sgml-mode-hook
          'xml-mode-hook
-	 'nxml-mode-hook
+         'nxml-mode-hook
          'xsl-mode-hook
          'makefile-mode-hook
 	 'texinfo-mode-hook
@@ -450,6 +473,10 @@ functions for details.   "
     (setq default-enable-multibyte-characters nil))
   (emacspeak-export-environment)
   (require 'emacspeak-aumix)
+  (when (featurep 'ido)
+    (require 'emacspeak-ido))
+  (require 'custom)
+  (require 'emacspeak-widget)
   (require 'emacspeak-sounds)
   (dtk-initialize)
   (require 'emacspeak-personality)
@@ -470,14 +497,14 @@ functions for details.   "
     (emacspeak-pronounce-load-dictionaries emacspeak-pronounce-dictionaries-file))
   (run-hooks 'emacspeak-startup-hook)
   (emacspeak-setup-programming-modes)
-					;(require 'emacspeak-wizards)
+                                        ;(require 'emacspeak-wizards)
   (tts-with-punctuations 'some
-			 (dtk-speak
-			  (format "  Press %s to get an   overview of emacspeak  %s \
+                         (dtk-speak
+                          (format "  Press %s to get an   overview of emacspeak  %s \
  I am  completely operational,  and all my circuits are functioning perfectly! "
-				  (substitute-command-keys
-				   "\\[emacspeak-describe-emacspeak]" )
-				  emacspeak-version))))
+                                  (substitute-command-keys
+                                   "\\[emacspeak-describe-emacspeak]" )
+                                  emacspeak-version))))
 
 (defun emacspeak-describe-emacspeak ()
   "Give a brief overview of emacspeak."

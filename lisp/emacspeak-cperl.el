@@ -1,5 +1,5 @@
 ;;; emacspeak-cperl.el --- Speech enable CPerl Mode 
-;;; $Id: emacspeak-cperl.el,v 23.505 2005/11/25 16:30:50 raman Exp $
+;;; $Id: emacspeak-cperl.el,v 24.0 2006/05/03 02:54:00 raman Exp $
 ;;; $Author: raman $ 
 ;;; Description: Emacspeak extensions for CPerl mode
 ;;; Keywords: emacspeak, audio interface to emacs CPerl
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2005/11/25 16:30:50 $ |
-;;;  $Revision: 23.505 $ | 
+;;; $Date: 2006/05/03 02:54:00 $ |
+;;;  $Revision: 24.0 $ | 
 ;;; Location undetermined
 ;;;
 
@@ -75,8 +75,8 @@
 Cue electric insertion with a tone."
           (when (interactive-p)
             (let ((emacspeak-speak-messages nil))
-	      (emacspeak-speak-this-char last-input-char)
-	      (dtk-tone 800 50 t)))))))
+              (emacspeak-speak-this-char last-input-char)
+              (dtk-tone 800 50 t)))))))
 
 (defadvice cperl-electric-backspace (around emacspeak pre act)
   "Speak character you're deleting."
@@ -124,8 +124,8 @@ Otherwise cue user to the line just created. "
     (message "Displayed info in other window")))
 
 (defadvice cperl-info-on-command (after emacspeak
-					pre act
-					comp)
+                                        pre act
+                                        comp)
   "Speak the displayed info"
   (when (interactive-p)
     (emacspeak-auditory-icon 'help)
@@ -201,6 +201,19 @@ Otherwise cue user to the line just created. "
   (when (interactive-p)
     (emacspeak-auditory-icon 'task-done)
     (emacspeak-speak-mode-line)))
+
+;;}}}
+;;{{{ set up hooks 
+
+(add-hook 'cperl-mode-hook
+          (function (lambda ()
+                      (voice-lock-mode 1)
+                      (dtk-set-punctuations 'all)
+                      (or dtk-split-caps
+                          (dtk-toggle-split-caps))
+                      (or emacspeak-audio-indentation
+                          (emacspeak-toggle-audio-indentation))
+                      (emacspeak-dtk-sync))))
 
 ;;}}}
 (provide  'emacspeak-cperl)
