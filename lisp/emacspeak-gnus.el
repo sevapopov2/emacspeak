@@ -99,10 +99,6 @@
   "Article headers to ignore when only important article headers are to be
 spoken.
 See command \\[gnus-summary-show-some-headers].")
-(declaim (special gnus-ignored-headers))
-(setq gnus-ignored-headers "^.*:")
-(declaim (special gnus-visible-headers))
-(setq gnus-visible-headers "^Subject:")
 
 (defun gnus-summary-show-some-headers ()
   "Show only the important article headers,
