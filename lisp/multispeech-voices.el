@@ -473,9 +473,9 @@ and TABLE gives the values along that dimension."
   (setq-default dtk-speak-nonprinting-chars nil)
   (unless russian-spelling-data-loaded-p
     (let ((coding-system-for-read 'raw-text))
-      (load-library "Russian-spelling"))
+      (load-library "russian-spelling"))
     (let ((coding-system-for-read 'cyrillic-koi8))
-      (load-library "Russian-spelling"))
+      (load-library "russian-spelling"))
     (setq russian-spelling-data-loaded-p t)))
 
 ;;}}}
