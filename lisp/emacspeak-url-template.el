@@ -497,7 +497,7 @@ mobile transcoder."
   (while (search-forward "<" nil t)
     (replace-match "
 <"))
-  (indent-region (point-min) (point-max))))
+  (indent-region (point-min) (point-max) nil)))
 
 (defun emacspeak-url-template-google-maps-get-xml (url)
   "Return buffer containing XML from google."
