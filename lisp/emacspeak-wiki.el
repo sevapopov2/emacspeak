@@ -92,45 +92,17 @@
 ;;}}}
 ;;{{{ mapping font faces to personalities 
 
-(def-voice-font  emacspeak-wiki-link-personality
-  voice-bolden
-  'emacs-wiki-link-face
-  "emacs-wiki-link-face")
-
-(def-voice-font  emacspeak-wiki-bad-link-personality
-  voice-lighten
-  'emacs-wiki-bad-link-face
-  "emacs-wiki-bad-link-face")
-
-(def-voice-font  emacspeak-wiki-header-1-personality
-  voice-brighten
-  'emacs-wiki-header-1-face
-  "emacs-wiki-header-1-face")
-
-(def-voice-font  emacspeak-wiki-header-2-personality
-  voice-brighten
-  'emacs-wiki-header-2-face
-  "emacs-wiki-header-2-face")
-
-(def-voice-font  emacspeak-wiki-header-3-personality
-  voice-brighten
-  'emacs-wiki-header-3-face
-  "emacs-wiki-header-3-face")
-
-(def-voice-font  emacspeak-wiki-header-4-personality
-  voice-brighten
-  'emacs-wiki-header-4-face
-  "emacs-wiki-header-4-face")
-
-(def-voice-font  emacspeak-wiki-header-5-personality
-  voice-brighten
-  'emacs-wiki-header-5-face
-  "emacs-wiki-header-5-face")
-
-(def-voice-font  emacspeak-wiki-header-6-personality
-  voice-brighten
-  'emacs-wiki-header-6-face
-  "emacs-wiki-header-6-face")
+(voice-setup-add-map
+ '(
+   (emacs-wiki-link-face voice-bolden)
+   (emacs-wiki-bad-link-face voice-lighten)
+   (emacs-wiki-header-1-face voice-brighten)
+   (emacs-wiki-header-2-face voice-brighten)
+   (emacs-wiki-header-3-face voice-brighten)
+   (emacs-wiki-header-4-face voice-brighten)
+   (emacs-wiki-header-5-face voice-brighten)
+   (emacs-wiki-header-6-face voice-brighten)
+   ))
 
 ;;}}}
 (provide 'emacspeak-wiki)

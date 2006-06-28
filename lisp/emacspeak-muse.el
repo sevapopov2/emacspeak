@@ -84,45 +84,17 @@
 ;;}}}
 ;;{{{ mapping font faces to personalities 
 
-(def-voice-font  emacspeak-muse-link-personality
-  voice-bolden
-  'muse-link-face
-  "muse-link-face")
-
-(def-voice-font  emacspeak-muse-bad-link-personality
-  voice-lighten
-  'muse-bad-link-face
-  "muse-bad-link-face")
-
-(def-voice-font  emacspeak-muse-header-1-personality
-  voice-brighten
-  'muse-header-1-face
-  "muse-header-1-face")
-
-(def-voice-font  emacspeak-muse-header-2-personality
-  voice-brighten
-  'muse-header-2-face
-  "muse-header-2-face")
-
-(def-voice-font  emacspeak-muse-header-3-personality
-  voice-brighten
-  'muse-header-3-face
-  "muse-header-3-face")
-
-(def-voice-font  emacspeak-muse-header-4-personality
-  voice-brighten
-  'muse-header-4-face
-  "muse-header-4-face")
-
-(def-voice-font  emacspeak-muse-header-5-personality
-  voice-brighten
-  'muse-header-5-face
-  "muse-header-5-face")
-
-(def-voice-font  emacspeak-muse-header-6-personality
-  voice-brighten
-  'muse-header-6-face
-  "muse-header-6-face")
+(voice-setup-add-map
+ '(
+   (muse-link-face voice-bolden)
+   (muse-bad-link-face voice-lighten)
+   (muse-header-1-face voice-brighten)
+   (muse-header-2-face voice-brighten)
+   (muse-header-3-face voice-brighten)
+   (muse-header-4-face voice-brighten)
+   (muse-header-5-face voice-brighten)
+   (muse-header-6-face voice-brighten)
+   ))
 
 ;;}}}
 (provide 'emacspeak-muse)
