@@ -74,8 +74,6 @@
   (define-key gnus-summary-mode-map '[left] 'emacspeak-gnus-summary-catchup-quietly-and-exit)
   (define-key gnus-summary-mode-map '[right] 'gnus-summary-show-article)
   (define-key gnus-group-mode-map "\C-n" 'gnus-group-next-group)
-  (define-key gnus-group-mode-map [down] 'gnus-group-next-group)
-  (define-key gnus-group-mode-map [up] 'gnus-group-prev-group)
   (define-key gnus-group-mode-map "\C-p" 'gnus-group-prev-group)
   (define-key gnus-group-mode-map '[right]
     'gnus-group-read-group))
@@ -215,11 +213,12 @@ reading news."
 ;;}}}
 ;;{{{  Newsgroup selection
 
-(defadvice gnus-group-select-group (before emacspeak pre act)
+(defadvice gnus-group-select-group (after emacspeak pre act)
   "Provide auditory feedback.
  Produce an auditory icon if possible."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice gnus-group-first-unread-group (after emacspeak pre act)
   "Provide auditory feedback.
@@ -484,11 +483,9 @@ this group is being deselected."
     ad-return-value ))
 
 (defadvice gnus-summary-delete-article (after emacspeak pre act)
-  "Speak the line.
- Produce an auditory icon if possible."
+  "Produce an auditory icon if possible."
   (when (interactive-p)
-    (emacspeak-auditory-icon  'delete-object)
-    (emacspeak-gnus-summary-speak-subject )))
+    (emacspeak-auditory-icon  'delete-object)))
 
 (defadvice gnus-summary-catchup-from-here (after emacspeak pre act)
   "Speak the line.
@@ -627,6 +624,24 @@ the previous group was closed."
 	(emacspeak-speak-line ))
     ad-do-it)
   ad-return-value)
+
+(defadvice gnus-topic-goto-next-topic (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'item)
+    (emacspeak-speak-line)))
+
+(defadvice gnus-topic-goto-previous-topic (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'item)
+    (emacspeak-speak-line)))
+
+(defadvice gnus-summary-mail-forward (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defadvice gnus-summary-post-news (after emacspeak pre act comp)
   "Provide auditory feedback"
