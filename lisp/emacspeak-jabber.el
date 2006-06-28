@@ -58,17 +58,17 @@
  '(
    (jabber-activity-face        voice-animate)
    (jabber-chat-error           voice-bolden-and-animate)
-   (jabber-chat-prompt-foreign  voice-brighten-medium)
-   (jabber-chat-prompt-local    voice-smoothen-medium)
+   (jabber-chat-prompt-foreign  voice-animate-medium)
+   (jabber-chat-prompt-local    voice-bolden-medium)
    (jabber-chat-prompt-system   voice-brighten-extra)
-   (jabber-chat-text-foreign    voice-brighten)
+   (jabber-chat-text-foreign    voice-animate)
    (jabber-chat-text-local      voice-smoothen)
    (jabber-rare-time-face       voice-animate-extra)
    (jabber-roster-user-away     voice-smoothen-extra)
    (jabber-roster-user-chatty   voice-brighten)
    (jabber-roster-user-dnd      voice-lighten-medium)
    (jabber-roster-user-error    voice-bolden-and-animate)
-   (jabber-roster-user-offline  voice-smoothen-extra)
+   (jabber-roster-user-offline  voice-lighten-extra)
    (jabber-roster-user-online   voice-bolden)
    (jabber-roster-user-xa       voice-lighten)
    (jabber-title-large          voice-bolden-extra)
@@ -185,79 +185,6 @@
                                             emacspeak-pronounce-internet-smileys-pronunciations)
 (emacspeak-pronounce-augment-pronunciations 'jabber-mode
                                             emacspeak-pronounce-internet-smileys-pronunciations)
-
-;;}}}
-;;{{{ Voices
-
-(def-voice-font emacspeak-jabber-roster-user-online-personality
-  voice-bolden
-  'jabber-roster-user-online
-  "Personality for online jabber users.")
-
-(def-voice-font emacspeak-jabber-roster-user-offline-personality
-  voice-lighten-extra
-  'jabber-roster-user-offline
-  "Personality for offline jabber users.")
-
-(def-voice-font emacspeak-jabber-roster-user-away-personality
-  voice-lighten
-  'jabber-roster-user-away
-  "Personality for away jabber users.")
-
-(def-voice-font emacspeak-jabber-roster-user-xa-personality
-  voice-lighten-extra
-  'jabber-roster-user-xa
-  "Personality for extended away jabber users.")
-
-(def-voice-font emacspeak-jabber-roster-user-dnd-personality
-  voice-animate-extra
-  'jabber-roster-user-dnd
-  "Personality for do not disturb jabber users.")
-
-(def-voice-font emacspeak-jabber-roster-user-chatty-personality
-  voice-animate
-  'jabber-roster-user-chatty
-  "Personality for chatty jabber users.")
-
-(def-voice-font emacspeak-jabber-roster-user-error-personality
-  voice-bolden-and-animate
-  'jabber-roster-user-error
-  "Personality for jabber users sending presence errors.")
-
-(def-voice-font emacspeak-jabber-chat-prompt-local-personality
-  voice-bolden
-  'jabber-chat-prompt-local
-  "Personality for jabber chat prompt for what you type.")
-
-(def-voice-font emacspeak-jabber-chat-prompt-foreign-personality
-  voice-bolden-and-animate
-  'jabber-chat-prompt-foreign
-  "Personality for jabber chat prompt for what they send.")
-
-(def-voice-font emacspeak-jabber-chat-prompt-system-personality
-  voice-monotone
-  'jabber-chat-prompt-system
-  "Personality for jabber special and system messages.")
-
-(def-voice-font emacspeak-jabber-rare-time-personality
-  voice-smoothen-extra
-  'jabber-rare-time-face
-  "Personality for the rare time info in jabber chat buffer.")
-
-(def-voice-font emacspeak-jabber-title-small-personality
-  voice-animate
-  'jabber-title-small
-  "Personality for jabber small titles.")
-
-(def-voice-font emacspeak-jabber-title-medium-personality
-  voice-smoothen
-  'jabber-title-medium
-  "Personality for jabber medium titles.")
-
-(def-voice-font emacspeak-jabber-title-large-personality
-  voice-bolden
-  'jabber-title-large
-  "Personality for jabber large titles.")
 
 ;;}}}
 (provide 'emacspeak-jabber)
