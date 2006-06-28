@@ -449,6 +449,14 @@ this group is being deselected."
 	  (emacspeak-gnus-summary-speak-subject ))))
     ad-return-value ))
 
+(defadvice gnus-summary-mark-region-as-read (after emacspeak pre act comp)
+  "Produce an auditory feedback."
+  (when (interactive-p )
+    (emacspeak-auditory-icon 'mark-object )
+    (message "%s articles marked as read"
+             (count-lines (region-beginning)
+                          (region-end)))))
+
 (defadvice gnus-summary-unmark-as-processable (after emacspeak pre act)
   "Speak the line.
  Produce an auditory icon if possible."
