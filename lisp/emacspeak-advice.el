@@ -1337,10 +1337,10 @@ in completion buffers"
       (let ((completions-buffer (get-buffer "*Completions*")))
         (when (and completions-buffer
                    (window-live-p (get-buffer-window completions-buffer )))
-          (emacspeak-auditory-icon 'help)))))
+          (emacspeak-auditory-icon 'help)))
       (if (> (point) prior)
           (tts-with-punctuations 'all
-                                 (dtk-speak (buffer-substring prior (point )))))
+                                 (dtk-speak (buffer-substring prior (point )))))))
    (t ad-do-it))
   ad-return-value)
 
