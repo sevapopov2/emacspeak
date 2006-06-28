@@ -196,18 +196,6 @@ instead of the modeline."
               "off")
             emacspeak-w3m-form-personality))))
 
-(defun emacspeak-w3m-speak-form-input-checkbox (form name value)
-  "Speak checkbox"
-  (declare (special emacspeak-w3m-form-personality))
-  (dtk-speak
-   (format "checkbox %s is %s"
-	   name
-	   (emacspeak-w3m-personalize-string
-	    (if (emacspeak-w3m-form-get form name)
-		"on"
-	      "off")
-	    emacspeak-w3m-form-personality))))
-
 (defun emacspeak-w3m-speak-form-input-password (form name)
   "Speech-enable password form element."
   (declare (special emacspeak-w3m-form-personality))
