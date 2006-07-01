@@ -88,6 +88,12 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'off)))
 
+(defadvice jabber-customize (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
+
 (loop for f in
       '(jabber-roster-mode
 	jabber-chat-mode
