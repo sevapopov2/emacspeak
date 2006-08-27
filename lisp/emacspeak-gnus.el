@@ -70,13 +70,7 @@
   (define-key gnus-summary-mode-map "\C-t" 'gnus-summary-toggle-header)
   (define-key gnus-summary-mode-map "T" 'gnus-summary-hide-all-headers )
   (define-key gnus-summary-mode-map "t"
-    'gnus-summary-show-some-headers)
-  (define-key gnus-summary-mode-map '[left] 'emacspeak-gnus-summary-catchup-quietly-and-exit)
-  (define-key gnus-summary-mode-map '[right] 'gnus-summary-show-article)
-  (define-key gnus-group-mode-map "\C-n" 'gnus-group-next-group)
-  (define-key gnus-group-mode-map "\C-p" 'gnus-group-prev-group)
-  (define-key gnus-group-mode-map '[right]
-    'gnus-group-read-group))
+    'gnus-summary-show-some-headers))
 
 (add-hook 'gnus-started-hook 'emacspeak-gnus-setup-keys)
 
