@@ -1218,40 +1218,38 @@ in completion buffers"
 (defadvice comint-next-matching-input-from-input  (after
                                                    emacspeak
                                                    pre act com)
-  "Speak the line showing where point is."
+  "Speak the line after prompt showing where point is."
   (when (interactive-p)
     (let ((emacspeak-show-point t)
           (voice-lock-mode t))
       (emacspeak-auditory-icon 'select-object)
-      (emacspeak-speak-line))))
+      (emacspeak-speak-current-field))))
 
 (defadvice comint-previous-matching-input-from-input  (after
                                                        emacspeak
                                                        pre act com)
-  "Speak the line showing where point is."
+  "Speak the line after prompt showing where point is."
   (when (interactive-p)
     (let ((emacspeak-show-point t)
           (voice-lock-mode t))
       (emacspeak-auditory-icon 'select-object)
-      (emacspeak-speak-line))))
+      (emacspeak-speak-current-field))))
 
 (defadvice shell-forward-command (after emacspeak pre act
                                         comp)
-  "Speak the line showing where point is."
+  "Speak the line from point."
   (when (interactive-p)
-    (let ((emacspeak-show-point t)
-          (voice-lock-mode t))
+    (let ((voice-lock-mode t))
       (emacspeak-auditory-icon 'select-object)
-      (emacspeak-speak-line))))
+      (emacspeak-speak-line 1))))
 
 (defadvice shell-backward-command (after emacspeak pre act
                                          comp)
-  "Speak the line showing where point is."
+  "Speak the line from point."
   (when (interactive-p)
-    (let ((emacspeak-show-point t)
-          (voice-lock-mode t))
+    (let ((voice-lock-mode t))
       (emacspeak-auditory-icon 'select-object)
-      (emacspeak-speak-line))))
+      (emacspeak-speak-line 1))))
 
 (defadvice comint-show-output (after emacspeak pre act
                                      comp)
@@ -1284,8 +1282,9 @@ in completion buffers"
                                         comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'yank-object)
-    (emacspeak-speak-line)))
+    (let ((pmark (process-mark (get-buffer-process (current-buffer)))))
+      (emacspeak-auditory-icon 'yank-object )
+      (emacspeak-speak-region  pmark (point)))))
 
 (defadvice comint-output-filter (around emacspeak pre act)
   "Make comint speak its output."
@@ -1345,33 +1344,33 @@ in completion buffers"
   ad-return-value)
 
 (defadvice comint-next-input (after emacspeak pre act)
-  "Speak the line."
+  "Speak the line after prompt."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (tts-with-punctuations 'all
-                           (emacspeak-speak-line ))))
+                           (emacspeak-speak-current-field ))))
 
 (defadvice comint-next-matching-input (after emacspeak pre act)
-  "Speak the line."
+  "Speak the line after prompt."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (tts-with-punctuations 'all
-                           (emacspeak-speak-line ))))
+                           (emacspeak-speak-current-field ))))
 
 (defadvice comint-previous-input (after emacspeak pre act)
-  "Speak the line."
+  "Speak the line after prompt."
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (tts-with-punctuations 'all
-                           (emacspeak-speak-line ))))
+                           (emacspeak-speak-current-field ))))
 
 (defadvice comint-previous-matching-input (after emacspeak pre act)
-  "Speak the line."
+  "Speak the line after prompt."
   (when (interactive-p)
     (comint-skip-prompt)
     (emacspeak-auditory-icon 'select-object)
     (tts-with-punctuations 'all
-                           (emacspeak-speak-line))))
+                           (emacspeak-speak-current-field))))
 
 (defadvice comint-send-input (after emacspeak pre act)
   "Flush any ongoing speech."
