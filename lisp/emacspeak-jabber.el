@@ -137,8 +137,23 @@
           (when (interactive-p)
             (emacspeak-auditory-icon 'open-object)
             (emacspeak-speak-mode-line)))))
+
+;;}}}
+;;{{{ roster buffer:
+
+(defadvice jabber-go-to-next-jid (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (dtk-speak (buffer-substring
+                (previous-single-property-change
+                 (1+ (point)) 'jabber-jid)
+                (next-single-property-change
+                 (point) 'jabber-jid)))))
+
 ;;}}}
 ;;{{{ alerts
+
 (defcustom emacspeak-jabber-speak-presence-alerts nil
   "Set to T if you want to hear presence alerts."
   :type  'boolean
