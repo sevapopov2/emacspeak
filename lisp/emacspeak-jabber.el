@@ -148,7 +148,9 @@
                                                    act comp)
   "Allow emacspeak to control if the message is spoken."
   (cond
-   (emacspeak-jabber-speak-presence-alerts ad-do-it)
+   (emacspeak-jabber-speak-presence-alerts
+    (let ((emacspeak-speak-messages t))
+      ad-do-it))
    (t (let ((emacspeak-speak-messages nil))
         ad-do-it)))
   ad-return-value)

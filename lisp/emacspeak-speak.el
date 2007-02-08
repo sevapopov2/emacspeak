@@ -2377,12 +2377,12 @@ Otherwise just display a message."
 (defun emacspeak-speak-window-information ()
   "Speaks information about current window."
   (interactive)
-  (message "Current window has %s lines and %s columns with
-top left %s %s "
-           (window-height)
-           (window-width)
-           (first (window-edges))
-           (second (window-edges))))
+  (let ((emacspeak-speak-messages t))
+    (message "Current window has %s lines and %s columns with top left %s %s "
+             (window-height)
+             (window-width)
+             (first (window-edges))
+             (second (window-edges)))))
 
 (defun emacspeak-speak-current-window ()
   "Speak contents of current window.

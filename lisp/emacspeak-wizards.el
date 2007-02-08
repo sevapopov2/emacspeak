@@ -411,7 +411,8 @@ previous window configuration."
 (defun emacspeak-speak-hostname ()
   "Speak host name."
   (interactive)
-  (message (system-name)))
+  (let ((emacspeak-speak-messages t))
+    (message (system-name))))
 
 (defcustom emacspeak-speak-show-active-network-interfaces-command
   "echo `/sbin/ifconfig | grep -v '^lo' | grep '^[a-z]' | awk '{print $1}'`"
