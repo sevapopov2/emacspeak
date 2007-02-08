@@ -58,29 +58,29 @@
   "Speak line we moved to"
   (when (interactive-p)
     (let ((emacspeak-show-point t))
-      (emacspeak-speak-line)
-      (emacspeak-auditory-icon 'large-movement))))
+      (emacspeak-auditory-icon 'large-movement)
+      (emacspeak-speak-line))))
 
 (defadvice makefile-browser-next-line (after emacspeak pre act
                                              comp)
   "Speak line we moved to"
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defadvice makefile-browser-previous-line (after emacspeak pre act
                                                  comp)
   "Speak line we moved to"
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defadvice makefile-previous-dependency (after emacspeak pre act comp)
   "Speak line we moved to"
   (when (interactive-p)
     (let ((emacspeak-show-point t))
-      (emacspeak-speak-line)
-      (emacspeak-auditory-icon 'large-movement))))
+      (emacspeak-auditory-icon 'large-movement)
+      (emacspeak-speak-line))))
 
 (defadvice makefile-complete (around emacspeak pre act comp)
   "Speak what we completed"
@@ -96,17 +96,17 @@
                                             act comp)
   "Speak how many lines we backslashed"
   (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
     (message "Backslashed region containing %s lines"
              (count-lines (region-beginning)
-                          (region-end)))
-    (emacspeak-auditory-icon 'select-object)))
+                          (region-end)))))
 
 (defadvice makefile-browser-quit (after emacspeak pre act
                                         comp)
   "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'close-object)))
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice makefile-switch-to-browser (after emacspeak pre
                                              act comp)
@@ -140,20 +140,6 @@
     (message
      "Inserted selections into client  %s"
      (buffer-name makefile-browser-client))))
-
-;;}}}
-;;{{{ setup mode hook:
-
-(add-hook 'makefile-mode-hook
-          (function (lambda ()
-                      (declare (special dtk-split-caps))
-                      (voice-lock-mode 1)
-                      (dtk-set-punctuations 'all)
-                      (or dtk-split-caps
-                          (dtk-toggle-split-caps))
-                      (or emacspeak-audio-indentation
-                          (emacspeak-toggle-audio-indentation))
-                      (emacspeak-dtk-sync))))
 
 ;;}}}
 (provide 'emacspeak-make-mode)

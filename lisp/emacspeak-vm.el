@@ -172,6 +172,14 @@ Note that some badly formed mime messages  cause trouble."
                      (string-match  (user-login-name) to)))
             (lines (vm-su-line-count message))
             (summary nil))
+      (cond 
+       ((and self-p
+             (= 0 self-p)                    ) ;mail to me and others 
+        (emacspeak-auditory-icon 'item))
+       (self-p				;mail to others including me
+        (emacspeak-auditory-icon 'mark-object))
+       (t			     ;got it because of a mailing list
+        (emacspeak-auditory-icon 'select-object)))
       (dtk-speak
        (vm-decode-mime-encoded-words-in-string
         (format "%s %s %s   %s %s "
@@ -180,15 +188,7 @@ Note that some badly formed mime messages  cause trouble."
                 (if subject (format "on %s" subject) "")
                 (if (and to (< (length to) 80))
                     (format "to %s" to) "")
-                (if lines (format "%s lines" lines) ""))))
-      (cond 
-       ((and self-p
-             (= 0 self-p)                    ) ;mail to me and others 
-        (emacspeak-auditory-icon 'item))
-       (self-p                          ;mail to others including me
-        (emacspeak-auditory-icon 'mark-object))
-       (t                            ;got it because of a mailing list
-        (emacspeak-auditory-icon 'select-object ))))))
+                (if lines (format "%s lines" lines) "")))))))
 
 (defun emacspeak-vm-speak-labels ()
   "Speak a message's labels"
@@ -314,8 +314,8 @@ Then speak the screenful. "
 (defadvice vm-kill-subject (after emacspeak pre act)
   "Provide auditory feedback. "
   (when (interactive-p)
-    (dtk-speak "Killed this thread ")
-    (emacspeak-auditory-icon 'delete-object)))
+    (emacspeak-auditory-icon 'delete-object)
+    (dtk-speak "Killed this thread ")))
 
 ;;}}}
 ;;{{{  Sending mail:
@@ -354,8 +354,8 @@ Then speak the screenful. "
 (defadvice vm-mail-send (after emacspeak pre act comp)
   "Provide auditory context"
   (when  (interactive-p)
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'close-object)))
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice vm-mail-send-and-exit (after emacspeak pre act comp)
   "Provide auditory context"
@@ -387,8 +387,8 @@ Then speak the screenful. "
   (vm-goto-message 1)
   (vm-delete-message
    (read vm-ml-highest-message-number))
-  (message "All messages have been marked as deleted.")
-  (emacspeak-auditory-icon 'delete-object))
+  (emacspeak-auditory-icon 'delete-object)
+  (message "All messages have been marked as deleted."))
 
 ;;}}}
 ;;{{{  Keybindings:

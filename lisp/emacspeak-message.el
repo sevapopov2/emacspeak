@@ -155,8 +155,38 @@
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
+(defadvice message-newline-and-reformat (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-speak-line)))
+
+(defadvice message-send (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'task-done)))
+
+(defadvice message-send-and-exit (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)))
+
+(defadvice message-kill-buffer (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)))
+
+;;}}}
+;;{{{ Pronunciation settings
+
+(declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
+(emacspeak-pronounce-augment-pronunciations 'message-mode
+					    emacspeak-pronounce-internet-smileys-pronunciations)
+
 (add-hook 'message-mode-hook
           (lambda ()
+            (declare (special voice-lock-mode))
+            (emacspeak-pronounce-refresh-pronunciations)
+            (setq voice-lock-mode t)
             (emacspeak-auditory-icon 'open-object)
             (message "Starting message %s ... done"
                      (buffer-name))))

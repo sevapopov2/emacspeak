@@ -208,14 +208,14 @@ instead of the modeline."
 
 (defun emacspeak-w3m-speak-form-submit (form &optional name value)
   "Speak submit button."
-  (declare (special emacspeak-w3m-button-personality))
+  (declare (special emacspeak-w3m-form-button-personality))
   (dtk-speak
    (if (equal value "")
        "submit button"
      (format "button %s"
              (emacspeak-w3m-personalize-string
               value
-              emacspeak-w3m-button-personality)))))
+              emacspeak-w3m-form-button-personality)))))
 
 (defun emacspeak-w3m-speak-form-input-radio (form name value)
   "speech enable radio buttons."
@@ -259,12 +259,12 @@ instead of the modeline."
 
 (defun emacspeak-w3m-speak-form-reset (form)
   "Reset button."
-  (declare (special emacspeak-w3m-button-personality))
+  (declare (special emacspeak-w3m-form-button-personality))
   (dtk-speak
    (format "button %s"
            (emacspeak-w3m-personalize-string
             "reset"
-            emacspeak-w3m-button-personality))))
+            emacspeak-w3m-form-button-personality))))
 
 ;;}}}
 ;;{{{  advice interactive commands.
@@ -276,7 +276,8 @@ instead of the modeline."
     (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
       ad-do-it))
-   (t ad-do-it))ad-return-value)
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice w3m-redisplay-this-page (around emacspeak pre act)
   "Speech-enable W3M."
@@ -285,7 +286,8 @@ instead of the modeline."
     (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
       ad-do-it))
-   (t ad-do-it))ad-return-value)
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice w3m-reload-this-page (around emacspeak pre act)
   "Speech-enable W3M."
@@ -294,7 +296,8 @@ instead of the modeline."
     (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
       ad-do-it))
-   (t ad-do-it))ad-return-value)
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice w3m-print-current-url (after emacspeak pre act comp)
   "Produce auditory icon."
@@ -592,7 +595,8 @@ instead of the modeline."
       ad-do-it)
     (when (eq (ad-get-arg 0) 'popup)
       (emacspeak-speak-mode-line)))
-   (t ad-do-it))ad-return-value)
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice w3m-process-stop (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -873,62 +877,21 @@ With prefix argument makes this transformation persistent."
 ;;}}}
 ;;{{{ tvr: mapping font faces to personalities 
 
-(def-voice-font  emacspeak-w3m-arrived-anchor-personality
-  voice-lighten
-  'w3m-arrived-anchor-face
-  "w3m-arrived-anchor-face")
-
-(def-voice-font  emacspeak-w3m-anchor-personality
-  voice-bolden
-  'w3m-anchor-face
-  "w3m-anchor-face")
-
-(def-voice-font emacspeak-w3m-bold-personality
-  voice-bolden
-  'w3m-bold-face
-  "w3m-bold-face")
-
-(def-voice-font  emacspeak-w3m-underline-personality
-  voice-brighten
-  'w3m-underline-face
-  "w3m-underline-face")
-
-(def-voice-font  emacspeak-w3m-header-line-location-title-personality
-  voice-bolden
-  'w3m-header-line-location-title-face
-  "w3m-header-line-location-title-face")
-
-(def-voice-font  emacspeak-w3m-header-line-location-content-personality
-  voice-animate
-  'w3m-header-line-location-content-face
-  "w3m-header-line-location-content-face")
-
-(def-voice-font  emacspeak-w3m-button-personality
-  voice-smoothen
-  'w3m-form-button-face
-  "w3m-form-button-face")
-
-(def-voice-font  emacspeak-w3m-form-button-pressed-personality
-  voice-animate
-  'w3m-form-button-pressed-face
-  "w3m-form-button-pressed-face")
-
-(def-voice-font  emacspeak-w3m-tab-unselected-personality
-  voice-monotone
-  'w3m-tab-unselected-face
-  "w3m-tab-unselected-face")
-
-(def-voice-font  emacspeak-w3m-tab-selected-personality
-  voice-animate-extra
-  'w3m-tab-selected-face
-  "w3m-tab-selected-face")
-(def-voice-font emacspeak-w3m-form-personality voice-brighten
-  'w3m-form-face
-  "Personality for forms.")
-(def-voice-font emacspeak-w3m-image-personality
-  voice-brighten
-  'w3m-image-face
-  "Image personality.")
+(voice-setup-add-map
+ '(
+   (w3m-arrived-anchor-face voice-lighten)
+   (w3m-anchor-face voice-bolden)
+   (w3m-bold-face voice-bolden)
+   (w3m-underline-face voice-brighten)
+   (w3m-header-line-location-title-face voice-bolden)
+   (w3m-header-line-location-content-face voice-animate)
+   (w3m-form-button-face voice-smoothen)
+   (w3m-form-button-pressed-face voice-animate)
+   (w3m-tab-unselected-face voice-monotone)
+   (w3m-tab-selected-face voice-animate-extra)
+   (w3m-form-face voice-brighten)
+   (w3m-image-face voice-brighten)
+   ))
 
 (defadvice w3m-mode (after emacspeak pre act comp)
   "Set punctuation mode and refresh punctuations."

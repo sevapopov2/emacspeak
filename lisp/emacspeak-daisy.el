@@ -699,8 +699,8 @@ No-op if content under point is not currently displayed."
   (interactive)
   (forward-line -1)
   (beginning-of-line)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'select-object))
+  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-speak-line))
 
 (defun emacspeak-daisy-define-outline-pattern (regexp)
   "Define persistent outline regexp for this book."
@@ -728,8 +728,8 @@ No-op if content under point is not currently displayed."
   (interactive)
   (forward-line 1)
   (beginning-of-line)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'select-object))
+  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-speak-line))
 
 ;;}}}
 ;;{{{ Configure w3 post processor hook to record viewer buffer:

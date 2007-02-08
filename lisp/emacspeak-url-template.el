@@ -497,7 +497,7 @@ mobile transcoder."
   (while (search-forward "<" nil t)
     (replace-match "
 <"))
-  (indent-region (point-min) (point-max))))
+  (indent-region (point-min) (point-max) nil)))
 
 (defun emacspeak-url-template-google-maps-get-xml (url)
   "Return buffer containing XML from google."
@@ -1851,18 +1851,18 @@ Meerkat realy needs an xml-rpc method for getting this.")
 (defsubst emacspeak-url-template-help-internal (name)
   "Display and speak help."
   (with-output-to-temp-buffer "*Help*"
-  (princ name)
-  (princ "\n\n")
-  (princ
-   (emacspeak-url-template-documentation
-    (emacspeak-url-template-get name)))
-  (save-excursion
-    (set-buffer standard-output)
-    (fill-region (point-min)
-                 (point-max)))
-  (print-help-return-message))
-  (emacspeak-speak-help)
-  (emacspeak-auditory-icon 'help))
+    (princ name)
+    (princ "\n\n")
+    (princ
+     (emacspeak-url-template-documentation
+      (emacspeak-url-template-get name)))
+    (save-excursion
+      (set-buffer standard-output)
+      (fill-region (point-min)
+                   (point-max)))
+    (print-help-return-message))
+  (emacspeak-auditory-icon 'help)
+  (emacspeak-speak-help))
 
 (defvar emacspeak-url-template-current-ut nil
   "Records name and args of URL template we're executing.")
