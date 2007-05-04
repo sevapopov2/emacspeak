@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-#$Id: ocr-client.pl,v 24.0 2006/05/03 02:54:03 raman Exp $
+#$Id: ocr-client.pl 4047 2006-08-11 19:11:17Z tv.raman.tv $
 #Description: Invoke ocrxtr client. Pipe result to stdout
 #Usage: ocr-client.pl image-file [hostname]
 use strict;

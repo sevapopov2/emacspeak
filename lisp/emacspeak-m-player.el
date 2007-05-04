@@ -1,6 +1,6 @@
 ;;; emacspeak-m-player.el --- Control mplayer from Emacs
-;;; $Id: emacspeak-m-player.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-m-player.el 4246 2006-11-02 15:48:01Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, m-player streaming media 
 ;;{{{  LCD Archive entry: 
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-11-02 07:48:01 -0800 (Thu, 02 Nov 2006) $ |
+;;;  $Revision: 4246 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2004, T. V. Raman
+;;; Copyright (c) 1995 -- 2006, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -125,9 +125,11 @@
                    nil 'norecord)
     (set-window-text-height nil 3)
     (emacspeak-speak-mode-line))
-   (t (call-interactively
+   (t
+    (save-window-excursion
+      (call-interactively
        (lookup-key emacspeak-m-player-mode-map
-                   (format "%c" command-char))))))
+                   (format "%c" command-char)))))))
 
 (emacspeak-fix-interactive-command-if-necessary
  'emacspeak-m-player-command)
@@ -147,9 +149,8 @@ The player is placed in a buffer in emacspeak-m-player-mode."
        emacspeak-realaudio-shortcuts-directory " shortcuts/ ")
       (read-file-name "MP3 Resource: "
                       (if
-                          (string-match (format ".*%s.*"
-                                                emacspeak-realaudio-shortcuts-directory)
-                                        (expand-file-name default-directory))
+                          (string-match
+                           "mp3" (expand-file-name default-directory))
                           default-directory
                         emacspeak-realaudio-shortcuts-directory)
                       (when (eq major-mode 'dired-mode)
@@ -197,6 +198,7 @@ The player is placed in a buffer in emacspeak-m-player-mode."
     (save-excursion
       (set-buffer (process-buffer emacspeak-m-player-process))
       (emacspeak-m-player-mode)
+      (setq buffer-undo-list t)
       (ansi-color-for-comint-mode-on))
     (unless noselect
       (switch-to-buffer (process-buffer emacspeak-m-player-process))
@@ -342,9 +344,10 @@ The player is placed in a buffer in emacspeak-m-player-mode."
 (defun emacspeak-m-player-quit ()
   "Quit media player."
   (interactive)
-  (emacspeak-m-player-dispatch "quit")
+  (when (eq (process-status emacspeak-m-player-process) 'run)
+    (emacspeak-m-player-dispatch "quit"))
   (unless (eq (process-status emacspeak-m-player-process) 'exit)
-      (delete-process  emacspeak-m-player-process))
+    (delete-process  emacspeak-m-player-process))
   (bury-buffer)
   (emacspeak-speak-mode-line))
 

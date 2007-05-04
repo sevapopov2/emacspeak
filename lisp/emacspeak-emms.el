@@ -1,6 +1,6 @@
-;;; emacspeak-emms.el --- Speech-enable EMMS
-;;; $Id: emacspeak-emms.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $
+;;; emacspeak-emms.el --- Speech-enable EMMS Multimedia UI
+;;; $Id: emacspeak-emms.el 4150 2006-08-30 00:25:40Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable EMMS
 ;;; Keywords: Emacspeak, Multimedia
 ;;{{{  LCD Archive entry:
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-29 17:25:40 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4150 $ |
 ;;; Location undetermined
 ;;;
 
@@ -56,7 +56,6 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
-
 ;;{{{ module emms:
 
 (defun emacspeak-emms-speak-current-track ()
@@ -66,63 +65,62 @@
    (cdr (assoc 'name (emms-playlist-current-track)))))
 
 (loop for f in
-      '(emms-next emms-next-noerror
-                  emms-previous)
+      '(emms-next emms-next-noerror emms-previous)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Speak track name."
           (when (interactive-p)
-            (emacspeak-emms-speak-current-track)))))
+            (emacspeak-auditory-icon 'select-object)))))
 
-(defadvice emms-start (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (dtk-speak "Started playing.")))
-
-(defadvice emms-stop (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (dtk-speak "Stopped playing.")))
-
-(defadvice emms-shuffle (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (dtk-speak "Shuffled playlist.")))
-(defadvice emms-sort (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (dtk-speak "Sorted playlist.")))
-
-;;}}}
-;;{{{ Module emms-pbi:
+;;; these commands should not be made to talk since that would  interferes
+;;; with real work.
 (loop for f in
-      '(emms-pbi emms-pbi-open-playlist
-                 emms-pbi-quit
-                 emms-pbi-popup-revert emms-pbi-popup-playlist
-                 )
+      '(emms-start emms-stop emms-sort
+                   emms-shuffle emms-random)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory icon."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'select-object)))))
+
+(loop for f in
+      '(emms-playlist-first emms-playlist-last
+                            emms-playlist-mode-first emms-playlist-mode-last)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
-            (emacspeak-speak-mode-line)))))
-
-(loop for f in
-      '(emms-pbi-recenter emms-pbi-play-current-line)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-          "Provide auditory feedback."
-          (when (interactive-p)
-            (emacspeak-emms-speak-current-track)))))
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ Module emms-streaming:
+(declaim (special emms-stream-mode-map))
+(defadvice emms-stream-mode (after emacspeak pre act comp)
+  "Update keymaps."
+  (define-key emms-stream-mode-map "\C-e"
+    'emacspeak-prefix-command))
+
+(defadvice emms-stream-delete-bookmark (after emacspeak pre act
+                                              comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'delete-object)
+    (emacspeak-speak-line)))
+
+(defadvice emms-stream-save-bookmarks-file (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'save-object)
+    (message "Saved stream bookmarks.")))
 
 (loop for f in
       '(emms-streams emms-stream-quit
                      emms-stream-popup emms-stream-popup-revert
+                     emms-playlist-mode-go
                      )
       do
       (eval
@@ -130,6 +128,7 @@
           "Provide auditory feedback."
           (when (interactive-p)
             (emacspeak-speak-mode-line)))))
+
 (loop for f in
       '(emms-stream-next-line emms-stream-previous-line)
       do

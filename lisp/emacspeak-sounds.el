@@ -1,6 +1,6 @@
 ;;; emacspeak-sounds.el --- Defines Emacspeak auditory icons
-;;; $Id: emacspeak-sounds.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-sounds.el 4244 2006-11-02 03:28:31Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Module for adding sound cues to emacspeak
 ;;; Keywords:emacspeak, audio interface to emacs, auditory icons
 ;;{{{  LCD Archive entry:
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-11-01 19:28:31 -0800 (Wed, 01 Nov 2006) $ |
+;;;  $Revision: 4244 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -68,7 +68,6 @@
 (require 'custom)
 (eval-when (compile)
   (require 'dtk-speak)
-  (require 'emacspeak-load-path)
   (require 'emacspeak-aumix))
 
 ;;}}}
@@ -180,7 +179,9 @@ If we add new icons we should declare them here. ")
 ;;;###autoload
 (defcustom emacspeak-play-program
   (cond
-   ((getenv "EMACSPEAK_PLAY_PROGRAM"))
+   ((getenv "EMACSPEAK_PLAY_PROGRAM")
+    (getenv "EMACSPEAK_PLAY_PROGRAM"))
+   ((file-exists-p "/usr/bin/aplay") "/usr/bin/aplay")
    ((file-exists-p "/usr/bin/play") "/usr/bin/play")
    ((file-exists-p "/usr/bin/audioplay") "/usr/bin/audioplay")
    ((file-exists-p "/usr/demo/SOUND/play") "/usr/demo/SOUND/play")
@@ -313,12 +314,12 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
   (declare (special  emacspeak-use-auditory-icons emacspeak-play-program))
   (and emacspeak-use-auditory-icons
        (let ((process-connection-type nil))
-		 (condition-case err
-			 (start-process
-			  "play" nil emacspeak-play-program
-			  (emacspeak-get-sound-filename sound-name))
-		   (error
-			(message (error-message-string err)))))))
+         (condition-case err
+             (start-process
+              "play" nil emacspeak-play-program
+              (emacspeak-get-sound-filename sound-name))
+           (error
+            (message (error-message-string err)))))))
 
 ;;}}}
 ;;{{{  queue a midi icon

@@ -1,4 +1,4 @@
-#$Id: Makefile,v 24.0 2006/05/03 02:54:04 raman Exp $
+#$Id: Makefile 4047 2006-08-11 19:11:17Z tv.raman.tv $
 SF_HOME=raman@emacspeak.sf.net:~/www-emacspeak/htdocs
 HTML_FILES=$(shell find . -name '*.html' -print)
 TEXINDEX=texindex

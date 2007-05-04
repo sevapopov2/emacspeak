@@ -1,6 +1,6 @@
 ;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
-;;; $Id: emacspeak-dired.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-dired.el 4241 2006-10-28 01:16:12Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enable dired
 ;;; Keywords: Emacspeak, Dired, Spoken Output
 ;;{{{  LCD Archive entry:
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-10-27 18:16:12 -0700 (Fri, 27 Oct 2006) $ |
+;;;  $Revision: 4241 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -54,54 +54,17 @@
 (require 'dired)
 ;;}}}
 ;;{{{ Define personalities 
-
-(def-voice-font emacspeak-dired-header-personality
-  voice-smoothen
-  'dired-header
-  "Personality for dired header line."
-  :group 'emacspeak-dired)
-
-(def-voice-font emacspeak-dired-mark-personality
-  voice-lighten
-  'dired-mark
-  "Personality for dired mark."
-  :group 'emacspeak-dired)
-
-(def-voice-font emacspeak-dired-marked-personality
-  voice-bolden-and-animate
-  'dired-marked
-  "Personality for marked files in dired."
-  :group 'emacspeak-dired)
-
-(def-voice-font emacspeak-dired-flag-personality
-  voice-bolden-and-animate
-  'dired-flag
-  "Personality for flag in dired."
-  :group 'emacspeak-dired)
-
-(def-voice-font emacspeak-dired-warning-personality
-  voice-monotone
-  'dired-warning
-  "Personality for dired warnings."
-  :group 'emacspeak-dired)
-(def-voice-font emacspeak-dired-directory-personality
-  voice-bolden-medium
-  'dired-directory
-  "Personality for directories in dired."
-  :group 'emacspeak-dired)
-
-(def-voice-font emacspeak-dired-symlink-personality
-  voice-animate-extra
-  'dired-symlink
-  "Personality for symlinks."
-  :group 'emacspeak-group)
-
-(def-voice-font emacspeak-dired-ignored-personality
-  voice-lighten-extra
-  'dired-ignored
-  "Personality for ignored lines in dired."
-  :group 'emacspeak-dired)
-
+(voice-setup-add-map
+ '(
+   (dired-header voice-smoothen)
+   (dired-mark voice-lighten)
+   (dired-marked voice-bolden-and-animate)
+   (dired-warning voice-animate-extra)
+   (dired-directory voice-bolden-medium)
+   (dired-symlink voice-animate-extra)
+   (dired-ignored voice-lighten-extra)
+   (dired-flagged voice-animate-extra)
+   ))
 ;;}}}
 ;;{{{  configure dired
 
@@ -183,7 +146,6 @@ pronunciations only once.")
       (emacspeak-speak-mode-line))))
 (defun emacspeak-dired-initialize ()
   "Set up emacspeak dired."
-  (font-lock-mode 1)
   (emacspeak-dired-label-fields)
   (emacspeak-auditory-icon 'open-object )
   (emacspeak-speak-mode-line))

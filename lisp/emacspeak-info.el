@@ -1,6 +1,6 @@
 ;;; emacspeak-info.el --- Speech enable Info -- Emacs' online documentation viewer
-;;; $Id: emacspeak-info.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-info.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $ 
 ;;; Description:  Module for customizing Emacs info
 ;;; Keywords:emacspeak, audio interface to emacs
 ;;{{{  LCD Archive entry: 
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -55,52 +55,20 @@
 
 ;;}}}
 ;;{{{  Voices 
-
-  
-
-(def-voice-font emacspeak-info-title-1-face voice-bolden
-  'Info-title-1-face
-  "Personality used for Info-title-1-face."
-  :group 'emacspeak-info)
-
-(def-voice-font emacspeak-info-title-2-face voice-bolden
-  'Info-title-2-face
-  "Personality used for Info-title-2-face."
-  :group 'emacspeak-info)
-(def-voice-font emacspeak-info-title-3-face voice-bolden
-  'Info-title-3-face
-  "Personality used for Info-title-3-face."
-  :group 'emacspeak-info)
-(def-voice-font emacspeak-info-title-4-face voice-bolden
-  'Info-title-4-face
-  "Personality used for Info-title-4-face."
-  :group 'emacspeak-info)
-
-(def-voice-font emacspeak-info-header-node voice-smoothen
-  'info-header-node
-  "Personality used for info-header-node."
-  :group 'emacspeak-info)
-(def-voice-font emacspeak-info-header-xref voice-brighten
-  'info-header-xref
-  "Personality used for info-header-xref."
-  :group 'emacspeak-info)
-
-(def-voice-font emacspeak-info-menu-5 voice-lighten
-  'info-menu-5
-  "Personality used for info-menu-5."
-  :group 'emacspeak-info)
-(def-voice-font emacspeak-info-menu-header voice-bolden-medium
-  'info-menu-header
-  "Personality used for info-menu-header."
-  :group 'emacspeak-info)
-(def-voice-font emacspeak-info-node voice-monotone
-  'info-node
-  "Personality used for info-node."
-  :group 'emacspeak-info)
-(def-voice-font emacspeak-info-xref voice-animate-extra
-  'info-xref
-  "Personality used for info-xref."
-  :group 'emacspeak-info)
+(voice-setup-add-map
+ '(
+   (info-title-1 voice-bolden-extra)
+   (info-title-2 voice-bolden-medium)
+   (info-title-3 voice-bolden)
+   (info-title-4 voice-lighten)
+   (info-header-node voice-smoothen)
+   (info-header-xref voice-brighten)
+   (info-menu-5 voice-lighten)
+   (info-menu-header voice-bolden-medium)
+   (info-node voice-monotone)
+   (info-xref voice-animate-extra)
+   (info-menu-star voice-brighten)
+   ))
 
 ;;}}}
 ;;{{{ advice

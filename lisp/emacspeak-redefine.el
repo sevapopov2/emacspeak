@@ -1,6 +1,6 @@
 ;;; emacspeak-redefine.el --- Redefines some key Emacs builtins to speak
-;;; $Id: emacspeak-redefine.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-redefine.el 4174 2006-09-08 00:23:56Z tv.raman.tv $
+;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak's redefinition of some key functions.
 ;;; Emacspeak does most of its work by advising other functions to speak.
 ;;; This module contains those functions that have to be explicitly redefined.
@@ -10,14 +10,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-09-07 17:23:56 -0700 (Thu, 07 Sep 2006) $ |
+;;;  $Revision: 4174 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -62,19 +62,15 @@
 
 (defun emacspeak-redefine (function-name )
   "Redefines function-name to its emacspeak version. "
-  (let
-      ((save-name (intern (format "Orig-%s" function-name )))
-       (new-name (intern (format "emacspeak-%s" function-name ))))
+  (let ((save-name (intern (format "Orig-%s" function-name )))
+        (new-name (intern (format "emacspeak-%s" function-name ))))
     (fset   save-name (symbol-function  function-name ))
-    (fset function-name new-name ))
-  )
+    (fset function-name new-name )))
 
 (defun emacspeak-undo-redefinition (function-name)
   "Undo the effect of having called emacs-redefine on function-name. "
-  (let
-      ((restore-name (intern (format "Orig-%s" function-name ))))
-    (fset function-name (symbol-function restore-name )))
-  )
+  (let ((restore-name (intern (format "Orig-%s" function-name ))))
+    (fset function-name (symbol-function restore-name ))))
 
 ;;}}}
 ;;{{{  The new functions: 
@@ -87,37 +83,32 @@ See  command emacspeak-toggle-word-echo bound to
 Toggle variable dtk-stop-immediately-while-typing if you want to have
 speech flush as you type."
   (interactive "p")
-  (or arg (setq arg 1))
-  (declare (special last-input-char
-                    dtk-stop-immediately-while-typing dtk-program 
+  (declare (special last-command-event dtk-stop-immediately-while-typing  
                     buffer-undo-list  buffer-read-only
-                    emacspeak-character-echo
-                    emacspeak-word-echo))
+                    emacspeak-character-echo emacspeak-word-echo))
+  (or arg (setq arg 1))
   (when buffer-read-only
-    (signal 'buffer-read-only
-            (list (current-buffer))))
-  (when (and (listp buffer-undo-list)
-             (null (car buffer-undo-list)))
-    (pop buffer-undo-list ))
+    (signal 'buffer-read-only (list (current-buffer))))
+  (and (listp buffer-undo-list)
+       (null (car buffer-undo-list))
+       (pop buffer-undo-list ))
   (self-insert-command  arg )
-  (cond
-   ((and emacspeak-word-echo
-         (interactive-p)
-         (= last-input-char 32 ))
-    (save-excursion
-      (condition-case nil
-          (forward-word -1)
-        (error nil))
-      (emacspeak-speak-word)))
-   ((and emacspeak-character-echo
-         (interactive-p ))
-    (when dtk-stop-immediately-while-typing (dtk-stop))
-    (emacspeak-speak-this-char last-input-char )))
-  (and
-   (= (char-syntax  last-input-char) 32)
-   (>= (current-column) fill-column)
-   auto-fill-function
-   (funcall auto-fill-function)))
+  (when (interactive-p)
+    (cond
+     ((and emacspeak-word-echo
+           (= (char-syntax last-command-event )32 ))
+      (save-excursion
+        (condition-case nil
+            (forward-word -1)
+          (error nil))
+        (emacspeak-speak-word)))
+     (emacspeak-character-echo
+      (when dtk-stop-immediately-while-typing (dtk-stop))
+      (emacspeak-speak-this-char last-command-event ))))
+  (and auto-fill-function
+       (= (char-syntax  last-command-event) 32)
+       (>= (current-column) fill-column)
+       (funcall auto-fill-function)))
 
 (defun emacspeak-forward-char (&optional arg)
   "Forward-char redefined to speak char moved to. "
@@ -152,16 +143,13 @@ speech flush as you type."
 
 (defun emacspeak-rebind(old-fn new-fn &optional keymap)
   "Rebinds new-fn to all those keys that normally invoke old-fn"
-  (let
-      ((keys (where-is-internal old-fn keymap)))
+  (let ((keys (where-is-internal old-fn keymap)))
     (mapcar
      (if keymap
-         (function
-          (lambda (key)
-            (define-key keymap  key new-fn )))
-       (function
-        (lambda (key)
-          (global-set-key key new-fn ))))
+         #'(lambda (key)
+             (define-key keymap  key new-fn ))
+       #'(lambda (key)
+           (global-set-key key new-fn )))
      keys )))
 
 (defvar emacspeak-functions-that-bypass-function-cell 
@@ -169,19 +157,19 @@ speech flush as you type."
   "These commands are activated directly through C,
 rather than through their function cell.
 They have to be redefined and rebound to make them talk. " )
+
 (mapcar 
- (function
-  (lambda (f)
-    (emacspeak-rebind f
-                      (intern (format "emacspeak-%s" f )))))
+ #'(lambda (f)
+     (emacspeak-rebind f
+                       (intern (format "emacspeak-%s" f ))))
  emacspeak-functions-that-bypass-function-cell )
 
 ;;}}}
 ;;{{{  fix ding 
-;;;###autoload
+
 (when (subrp (symbol-function 'ding))
   (fset 'orig-ding (symbol-function 'ding))
-
+;;;###autoload
   (defun ding ( &optional arg)
     "Beep, or flash the screen.
 Also, unless an argument is given,

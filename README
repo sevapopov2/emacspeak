@@ -1,6 +1,5 @@
-This is Emacspeak from  Tue May  2 19:54:06 PDT 2006
-Distribution created by tvraman on labrador
-Unpack the  distribution 
-And type make config 
-To configure the source files. Then type make
+Emacspeak  Revision 4287:4288
+Distribution created by raman on labrador
+Unpack the  distribution And type make config 
+Then type make
 See the Makefile for details. 

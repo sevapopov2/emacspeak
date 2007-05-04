@@ -1,6 +1,6 @@
 ;;; emacspeak-pcl-cvs.el --- Speech enabled CVS access 
-;;; $Id: emacspeak-pcl-cvs.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-pcl-cvs.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable CVS
 ;;; access 
 ;;; Keywords: Emacspeak, CVS, Audio Desktop
@@ -9,15 +9,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2004, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2006, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -53,31 +53,21 @@
 (require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  define voices 
-(def-voice-font emacspeak-pcl-cvs-filename-face voice-bolden
-  'cvs-filename-face
-  "Personality used for file names in CVS buffers.")
 
-(def-voice-font emacspeak-pcl-cvs-handled-face
-  voice-monotone-medium
-  'cvs-handled-face
-  "Personality to match cvs-handle-face.")
+(voice-setup-add-map
+ '(
+   (cvs-filename-face voice-bolden)
 
-(def-voice-font emacspeak-pcl-cvs-header-face voice-bolden
-  'cvs-header-face
-  "Personality for CVS header lines.")
+   (cvs-handled-face voice-monotone-medium)
 
-(def-voice-font emacspeak-pcl-cvs-marked-face
-  voice-brighten-medium
-  'cvs-marked-face
-  "Personality for marked lines in CVS.")
+   (cvs-header-face voice-bolden)
 
-(def-voice-font emacspeak-pcl-cvs-msg-face voice-monotone-medium
-  'cvs-msg-face
-  "Personality for CVS messages.")
+   (cvs-marked-face voice-brighten-medium)
 
-(def-voice-font emacspeak-pcl-cvs-need-action-face voice-brighten
-  'cvs-need-action-face
-  "Personality for CVS lines needing an action.")
+   (cvs-msg-face voice-monotone-medium)
+
+   (cvs-need-action-face voice-brighten)
+   ))
 
 ;;}}}
 

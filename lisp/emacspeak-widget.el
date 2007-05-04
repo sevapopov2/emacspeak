@@ -1,6 +1,6 @@
 ;;; emacspeak-widget.el --- Speech enable Emacs' native GUI widget library
-;;; $Id: emacspeak-widget.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-widget.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $ 
 ;;; Description: Emacspeak extensions to widgets
 ;;; Keywords:emacspeak, audio interface to emacs customized widgets
 ;;{{{  LCD Archive entry: 
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -66,39 +66,17 @@
   "Widgets on the Emacspeak Desktop."
   :group 'emacspeak
   :group 'widget
-  :prefix "emacspeak-widget-")
+  :prefix "emacspeak-widget")
 
-(def-voice-font  emacspeak-widget-field-personality  voice-smoothen
-  'widget-field-face
-  "Personality for edit fields"
-  :group 'emacspeak-widget
-  :type 'symbol)
-
-(def-voice-font  emacspeak-widget-single-line-field-personality  voice-smoothen
-  'widget-single-line-field-face
-  "Personality for edit fields"
-  :group 'emacspeak-widget
-  :type 'symbol)
-
-(defcustom emacspeak-widget-value-personality voice-animate
-  "Personality for values"
-  :group 'emacspeak-widget)
-
-(def-voice-font emacspeak-widget-button-personality voice-bolden
-  'widget-button-face
-  "Personality for buttons"
-  :group 'emacspeak-widget)
-
-(def-voice-font emacspeak-widget-documentation-personality
-  voice-smoothen-extra
-  'widget-documentation-face
-  "Personality for documentation"
-  :group 'emacspeak-widget)
-
-(def-voice-font emacspeak-widget-inactive-personality  voice-lighten
-  'widget-inactive-face
-  "Personality for inactive fields"
-  :group 'emacspeak-widget)
+(voice-setup-add-map
+ '(
+   (widget-field voice-smoothen)
+   (widget-single-line-field voice-smoothen)
+   (widget-button voice-bolden)
+   (widget-button-pressed voice-bolden-extra)
+   (widget-documentation voice-smoothen-extra)
+   (widget-inactive voice-lighten)
+   ))
 
 (declaim (special widget-menu-minibuffer-flag))
 (setq  widget-menu-minibuffer-flag t)
@@ -198,7 +176,7 @@ Returns a string with appropriate personality."
            (t (prin1-to-string v 'no-escape)))))
     (when  value
       (put-text-property 0 (length value)
-                         'personality emacspeak-widget-value-personality value))
+                         'personality voice-bolden value))
     (concat label
             help-echo
             value)))
@@ -428,7 +406,7 @@ Returns a string with appropriate personality."
                       (value (prin1-to-string value))
                       (t " no items  "))))
     (put-text-property 0  (length selections)
-                       'personality emacspeak-widget-value-personality selections)
+                       'personality voice-bolden selections)
     (concat label
             " has "
             selections 
@@ -510,7 +488,7 @@ Returns a string with appropriate personality."
                   (prin1-to-string value)
                 " no item ")))))
     (put-text-property 0  (length selected)
-                       'personality emacspeak-widget-value-personality selected)
+                       'personality voice-bolden selected)
     (concat label
             " is "
             selected)))
@@ -529,7 +507,7 @@ Returns a string with appropriate personality."
         (help-echo (emacspeak-widget-help-echo widget)))
     (when value
       (put-text-property 0 (length value)
-                         'personality emacspeak-widget-value-personality value))
+                         'personality voice-bolden value))
     (concat label
             help-echo
             (or value ""))))

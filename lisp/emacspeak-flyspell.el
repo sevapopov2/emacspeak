@@ -1,6 +1,6 @@
 ;;; emacspeak-ispell.el --- Speech enable Ispell -- Emacs' interactive spell checker
-;;; $Id: emacspeak-flyspell.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-flyspell.el 4271 2006-11-15 02:20:53Z tv.raman.tv $
+;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension to speech enable flyspell
 ;;; Keywords: Emacspeak, Ispell, Spoken Output, fly spell checking
 ;;{{{  LCD Archive entry: 
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-11-14 18:20:53 -0800 (Tue, 14 Nov 2006) $ |
+;;;  $Revision: 4271 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -57,10 +57,10 @@
   :group 'flyspell
   :prefix "emacspeak-flyspell-")
 
-(def-voice-font  emacspeak-flyspell-highlight-personality
-  voice-bolden
-  'flyspell-incorrect-face
-  "Voice used to highlight spelling errors. ")
+(voice-setup-add-map
+ '(
+   (flyspell-incorrect-face voice-bolden)
+   ))
 
 ;;}}}
 ;;{{{ advice
@@ -93,11 +93,11 @@
 
 (defun emacspeak-flyspell-highlight-incorrect-word (beg end ignore)
   "Put property personality with value
-`emacspeak-flyspell-highlight-personality' from beg to end"
-  (declare (special emacspeak-flyspell-highlight-personality))
+`voice-animate' from beg to end"
+  (declare (special voice-animate))
   (ems-modify-buffer-safely
    (put-text-property beg end 'personality
-                      emacspeak-flyspell-highlight-personality))
+                      voice-animate))
   (emacspeak-speak-region beg end)
   nil)
 

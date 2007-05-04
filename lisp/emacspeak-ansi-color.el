@@ -1,6 +1,6 @@
-;;; emacspeak-ansi-color.el --- Voiceify ansi-color 
-;;; $Id: emacspeak-ansi-color.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $
+;;; emacspeak-ansi-color.el --- Speech-enable ansi-color terminal
+;;; $Id: emacspeak-ansi-color.el 4150 2006-08-30 00:25:40Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak module for ansi-color
 ;;; Keywords: Emacspeak, ansi-color
 ;;{{{  LCD Archive entry:
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-29 17:25:40 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4150 $ |
 ;;; Location undetermined
 ;;;
 
@@ -41,6 +41,7 @@
 ;;{{{  Introduction:
 
 ;;; Commentary:
+
 ;;; Module ansi-color (bundled with Emacs 21)
 ;;; handles ansi escape sequences and turns them into
 ;;; appropriate faces.

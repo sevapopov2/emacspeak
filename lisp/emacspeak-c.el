@@ -1,6 +1,6 @@
 ;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java 
-;;; $Id: emacspeak-c.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-c.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $ 
 ;;; DescriptionEmacspeak extensions for C and C++ mode
 ;;; Keywords:emacspeak, audio interface to emacs C, C++
 ;;{{{  LCD Archive entry: 
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -38,22 +38,19 @@
 ;;}}}
 ;;{{{ Introduction:
 
+;;; Commentary:
+
 ;;; Make some of C and C++ mode more emacspeak friendly
 ;;; Works with both boring c-mode 
 ;;; and the excellent cc-mode
 
 ;;}}}
 ;;{{{  Required modules
+
+;;; Code:
+
 (require 'emacspeak-preamble)
 (require 'cc-mode)
-
-;;}}}
-;;{{{  emacs 19.30
-
-;;; things got renamed in 19.30.
-
-(when  (string-lessp emacs-version "19.29")
-  (defalias 'c-guess-basic-syntax 'c-guess-basic-semantics))
 
 ;;}}}
 ;;{{{ advice electric deletion
@@ -440,6 +437,14 @@ and their meanings. ")
                           (dtk-toggle-split-caps))
                       (or dtk-allcaps-beep
                           (dtk-toggle-allcaps-beep)))))
+
+;;}}}
+;;{{{ personalities 
+
+(voice-setup-add-map
+ '(
+   (c-nonbreakable-space-face voice-brighten)
+   ))
 
 ;;}}}
 (provide  'emacspeak-c)

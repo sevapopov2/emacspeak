@@ -1,6 +1,6 @@
 ;;; emacspeak-auctex.el --- Speech enable AucTeX -- a powerful TeX/LaTeX authoring environment
-;;; $Id: emacspeak-auctex.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-auctex.el 4268 2006-11-13 19:13:52Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; DescriptionEmacspeak extensions for auctex-mode
 ;;; Keywords:emacspeak, audio interface to emacs AUCTEX
 ;;{{{  LCD Archive entry: 
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-11-13 11:13:52 -0800 (Mon, 13 Nov 2006) $ |
+;;;  $Revision: 4268 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -133,13 +133,18 @@ Provide auditory feedback after formatting region"
 ;;}}}
 ;;{{{  Inserting structures
 
+(defadvice TeX-newline (after emacspeak pre act comp)
+  "Provide auditory feedback to indicate indentation."
+  (when (interactive-p)
+    (emacspeak-speak-line)))
+
 (defadvice LaTeX-insert-item (after emacspeak pre act)
   "Provide auditory feedback. "
   (when (interactive-p)
     (emacspeak-speak-line )))
 
 (defadvice LaTeX-environment (after emacspeak pre act)
-  "Provide auditory feedback, by speaking 
+  "Provide auditory feedback, by speaking
 the opening line of the newly inserted environment. "
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)

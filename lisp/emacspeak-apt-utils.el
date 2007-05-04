@@ -30,6 +30,7 @@
 ;;{{{ required modules
 
 (require 'emacspeak-preamble)
+
 ;;}}}
 ;;{{{  Introduction:
 
@@ -39,24 +40,34 @@
 ;;; that is included in the debian-el package
 ;;; and provides a nice interface to searching and browsing
 ;;; Debian packages.
+;;; Code:
 
 ;;}}}
-;;{{{
+;;{{{  Initial setup
 
-;;; Code:
+(defun emacspeak-apt-utils-grab-package-at-point ()
+  "Copy package under point to kill ring."
+  (interactive)
+  (unless (eq major-mode 'apt-utils-mode)
+    (error "Not in APT Info buffer."))
+  (let ((package (apt-utils-package-at)))
+  (emacspeak-auditory-icon 'yank-object)
+  (dtk-speak package)
+  (kill-new package)))
 
 (defsubst emacspeak-apt-utils-speak-package-name ()
   "Speak package name at point."
   (let ((package (apt-utils-package-at)))
     (put-text-property 0 (length package)
-		       'personality (get-text-property (point) 'personality)
-		       package)
+                       'personality (get-text-property (point) 'personality)
+                       package)
     (dtk-speak package)))
 
 (defadvice apt-utils-mode (after emacspeak pre act comp)
   "Setup Emacspeak extensions"
   (voice-lock-mode 1)
-  (dtk-set-punctuations "all"))
+  (dtk-set-punctuations "all")
+  (define-key apt-utils-mode-map "y" 'emacspeak-apt-utils-grab-package-at-point))
 
 ;;}}}
 ;;{{{ Advice interactive commands to speak.
@@ -173,33 +184,16 @@
 ;;}}}
 ;;{{{ mapping font faces to personalities 
 
-(def-voice-font emacspeak-apt-normal-package-personality voice-bolden
-  'apt-utils-normal-package-face
-  "Personality for apt-utils-normal-package-face")
-
-(def-voice-font emacspeak-apt-utils-virtual-package-personality voice-animate
-  'apt-utils-virtual-package-face
-  "Personality for apt-utils-virtual-package-face")
-
-(def-voice-font emacspeak-apt-utils-field-keyword-personality voice-animate-extra
-  'apt-utils-field-keyword-face
-  "Personality for apt-utils-field-keyword-face")
-
-(def-voice-font emacspeak-apt-utils-field-contents-personality voice-lighten-extra
-  'apt-utils-field-contents-face
-  "Personality for apt-utils-field-contents-face")
-
-(def-voice-font emacspeak-apt-utils-description-personality voice-smoothen-extra
-  'apt-utils-description-face
-  "Personality for apt-utils-description-face")
-
-(def-voice-font emacspeak-apt-utils-version-personality voice-lighten
-  'apt-utils-version-face
-  "Personality for apt-utils-version-face")
-
-(def-voice-font emacspeak-apt-utils-broken-personality voice-bolden-and-animate
-  'apt-utils-broken-face
-  "Personality for apt-utils-broken-face")
+(voice-setup-add-map
+ '(
+   (apt-utils-normal-package-face voice-bolden)
+   (apt-utils-virtual-package-face voice-animate)
+   (apt-utils-field-keyword-face voice-animate-extra)
+   (apt-utils-field-contents-face voice-lighten-extra)
+   (apt-utils-description-face voice-smoothen-extra)
+   (apt-utils-version-face voice-lighten)
+   (apt-utils-broken-face voice-bolden-and-animate)
+   ))
 
 ;;}}}
 (provide 'emacspeak-apt-utils)

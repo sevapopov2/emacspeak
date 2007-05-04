@@ -1,6 +1,6 @@
 ;;; emacspeak-wizards.el --- Implements Emacspeak  convenience wizards
-;;; $Id: emacspeak-wizards.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-wizards.el 4258 2006-11-09 15:19:54Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Contains convenience wizards
 ;;; Keywords: Emacspeak,  Audio Desktop Wizards
 ;;{{{  LCD Archive entry:
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-11-09 07:19:54 -0800 (Thu, 09 Nov 2006) $ |
+;;;  $Revision: 4258 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -294,7 +294,7 @@ command `emacspeak-table-display-table-in-region' normally bound to
                           nil           ;read
                           'emacspeak-speak-run-shell-command-history)
     current-prefix-arg))
-  (let ((buffer-name (format "*%s-output*" command))
+  (let ((buffer-name (format "%s" command))
         (start nil)
         (end nil))
     (when as-root
@@ -338,7 +338,7 @@ command `emacspeak-table-display-table-in-region' normally bound to
 (defun emacspeak-speak-browse-linux-howto (howto)
   "Browse a Linux Howto file.
 We cleanup underlining, and set up outline mode correctly."
-  (interactive 
+  (interactive
    (list
     (read-file-name "Howto file: "
                     emacspeak-wizards-linux-howto-directory
@@ -358,7 +358,7 @@ We cleanup underlining, and set up outline mode correctly."
       (set-buffer output)
       (view-mode 1)
       (outline-minor-mode t)
-      (setq outline-regexp 
+      (setq outline-regexp
             "^ *[1-9][0-9.]* ")
       (goto-char (point-min)))
     (kill-buffer buffer)
@@ -370,7 +370,7 @@ We cleanup underlining, and set up outline mode correctly."
 howto document.")))
 
 ;;}}}
-;;{{{ pop up messages buffer 
+;;{{{ pop up messages buffer
 
                                         ; Internal variable to memoize window configuration
 
@@ -445,15 +445,15 @@ also copied to the kill ring for convenient yanking."
                     emacspeak-speak-show-active-network-interfaces-command
                     emacspeak-speak-show-active-network-interfaces-addresses))
   (let ((command nil))
-    (cond 
+    (cond
      (address  (setq command
                      (format
                       emacspeak-speak-show-active-network-interfaces-addresses
                       (read-from-minibuffer
                        "Specify interface: "
-                       nil nil nil 
+                       nil nil nil
                        'emacspeak-speak-network-interfaces-list  ))))
-     (t (setq command 
+     (t (setq command
               emacspeak-speak-show-active-network-interfaces-command)))
     (shell-command command )
     (when (and address
@@ -461,7 +461,7 @@ also copied to the kill ring for convenient yanking."
       (kill-new emacspeak-last-message))))
 
 ;;}}}
-;;{{{  simple phone book 
+;;{{{  simple phone book
 (defcustom emacspeak-speak-telephone-directory
   (expand-file-name "tel-dir" emacspeak-resource-directory)
   "File holding telephone directory.
@@ -495,13 +495,13 @@ With prefix arg, opens the phone book for editting."
              emacspeak-speak-telephone-directory))))
 
 ;;}}}
-;;{{{  launch a root shell 
+;;{{{  launch a root shell
 
 (require 'comint)
 
 ;;; convenience to launch a root shell.
 
-(defvar emacspeak-wizards-root-buffer 
+(defvar emacspeak-wizards-root-buffer
   "*root*"
   "Name of buffer where we run as root.")
 ;;;###autoload
@@ -523,7 +523,7 @@ default-directory after switching."
       (let* ((prog (or explicit-shell-file-name
                        (getenv "ESHELL")
                        (getenv "SHELL")
-                       "/bin/sh"))                   
+                       "/bin/sh"))
              (name (file-name-nondirectory prog))
              (startfile (concat "~/.emacs_" name))
              (xargs-name (intern-soft (concat "explicit-" name "-args")))
@@ -588,6 +588,7 @@ default-directory after switching."
   (declare (special emacspeak-wizards-ppp-status-command))
   (zerop (shell-command emacspeak-wizards-ppp-status-command)))
 
+;;;###autoload
 (defun emacspeak-wizards-ppp-toggle ()
   "Bring up or bring down ppp."
   (interactive)
@@ -629,12 +630,12 @@ default-directory after switching."
       (shell-command
        (format "%s &"
                emacspeak-wizards-vpn-end-command))
-    (shell-command 
+    (shell-command
      (format  "%s&"
               emacspeak-wizards-vpn-start-command))))
 
 ;;}}}
-;;;###autoload 
+;;;###autoload
 (defun emacspeak-wizards-edit-file-as-root (filename)
   "Edit file as root using sudo vi.
 See /etc/sudoers for how to set up sudo."
@@ -648,15 +649,16 @@ See /etc/sudoers for how to set up sudo."
     (generate-new-buffer-name
      (format "vi-%s"
              (file-name-nondirectory filename)))
-    "sudo" 
+    "sudo"
     nil
-    "vi" 
+    "vi"
     filename))
   (term-char-mode)
   (emacspeak-auditory-icon 'open-object))
 
 ;;}}}
-;;{{{ edit file as root using sudo vi 
+;;{{{ edit file as root using sudo vi
+;;;###autoload
 (defun emacspeak-wizards-vi-as-su-file (file)
   "Launch sudo vi on specified file in a terminal."
   (interactive
@@ -674,7 +676,7 @@ See /etc/sudoers for how to set up sudo."
     nil
     "vi"
     file))
-  (emacspeak-eterm-record-window   1 
+  (emacspeak-eterm-record-window   1
                                    (cons 0 1)
                                    (cons 79 20)
                                    'right-stretch 'left-stretch)
@@ -684,7 +686,7 @@ See /etc/sudoers for how to set up sudo."
   (emacspeak-speak-line))
 
 ;;}}}
-;;{{{ setup CVS access to sourceforge 
+;;{{{ setup CVS access to sourceforge
 
 (defcustom emacspeak-cvs-local-directory
   (expand-file-name "~/sourceforge/cvs-emacspeak")
@@ -704,13 +706,13 @@ See /etc/sudoers for how to set up sudo."
   (emacspeak-cvs-sf-get-project-snapshot "emacspeak"))
 
 (defvar emacspeak-cvs-sf-anonymous-cvsroot-pattern
-  ":pserver:anonymous@cvs.sourceforge.net:/cvsroot/%s"
+  ":pserver:anonymous@%s.cvs.sourceforge.net:/cvsroot/%s"
   "CVSROOT pattern for project CVS repository at
 sourceforge.
 Typically %s is replaced by project name.")
 
 (defvar emacspeak-cvs-gnu-anonymous-cvsroot-pattern
-  ":pserver:anoncvs@subversions.gnu.org:/cvsroot/%s"
+  ":pserver:anonymous@cvs.sv.gnu.org:/sources/%s"
   "CVSROOT pattern for project CVS repository at
 GNU.
 Typically %s is replaced by project name.")
@@ -733,7 +735,7 @@ Typically %s is replaced by project name.")
 Ask for module name if prefix argument is given"
   (interactive
    (let ((project (read-string "Project name: ")))
-     (list project 
+     (list project
            (if current-prefix-arg
                (read-string "Module name: ")
              project))))
@@ -741,7 +743,7 @@ Ask for module name if prefix argument is given"
                     emacspeak-cvs-sf-anonymous-cvsroot-pattern))
   (emacspeak-cvs-get-project-snapshot
    (format emacspeak-cvs-sf-anonymous-cvsroot-pattern
-           project)
+           project project)
    (expand-file-name
     (format emacspeak-cvs-local-directory-pattern
             project))
@@ -752,7 +754,7 @@ Ask for module name if prefix argument is given"
 Ask for module name if prefix argument is given"
   (interactive
    (let ((project (read-string "Project name: ")))
-     (list project 
+     (list project
            (if current-prefix-arg
                (read-string "Module name: ")
              project))))
@@ -760,7 +762,7 @@ Ask for module name if prefix argument is given"
                     emacspeak-cvs-gnu-anonymous-cvsroot-pattern))
   (emacspeak-cvs-get-project-snapshot
    (format emacspeak-cvs-gnu-anonymous-cvsroot-pattern
-           project project)
+           project)
    (expand-file-name
     (format emacspeak-cvs-local-directory-pattern
             project))
@@ -771,7 +773,7 @@ Ask for module name if prefix argument is given"
 Ask for module name if prefix argument is given"
   (interactive
    (let ((project (read-string "Project name: ")))
-     (list project 
+     (list project
            (if current-prefix-arg
                (read-string "Module name: ")
              project))))
@@ -784,7 +786,6 @@ Ask for module name if prefix argument is given"
     (format emacspeak-cvs-local-directory-pattern
             project))
    (or module project)))
-;;;###autoload
 (defun emacspeak-cvs-get-project-snapshot  (cvsroot dir module)
   "Grab CVS snapshot  of specified project"
   (unless (file-exists-p dir)
@@ -824,7 +825,8 @@ Ask for module name if prefix argument is given"
                           'emacspeak-cvs-done-alert)))
 
 ;;}}}
-;;{{{ browse chunks 
+;;{{{ browse chunks
+;;;###autoload
 (defun emacspeak-wizards-move-and-speak (command count)
   "Speaks a chunk of text bounded by point and a target position.
 Target position is specified using a navigation command and a
@@ -891,7 +893,6 @@ To leave, press \\[keyboard-quit]."
                  (string-lessp a b))
                 (t nil)))))
     options))
-           
 
 (defsubst emacspeak-list-emacspeak-commands ()
   "List all Emacspeak commands."
@@ -933,7 +934,7 @@ Warning! Contents of file filename will be overwritten."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (insert "DOC --- Automatically generated by command emacspeak-generate-documentation\n\$Id: emacspeak-wizards.el,v 24.0 2006/05/03 02:54:01 raman Exp $\n")
+      (insert "DOC --- Automatically generated by command emacspeak-generate-documentation\n\$Id: emacspeak-wizards.el 4258 2006-11-09 15:19:54Z tv.raman.tv $\n")
       (mapcar
        (function
         (lambda (f)
@@ -1001,11 +1002,11 @@ Warning! Contents of file commands.texi will be overwritten."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (insert"@c $Id: emacspeak-wizards.el,v 24.0 2006/05/03 02:54:01 raman Exp $\n")
+      (insert"@c $Id: emacspeak-wizards.el 4258 2006-11-09 15:19:54Z tv.raman.tv $\n")
       (insert
        "@node Emacspeak Commands\n@chapter Emacspeak Commands\n\n")
       (insert
-       (format 
+       (format
         "This chapter is generated automatically from the source-level documentation.
 Any errors or corrections should be made to the source-level
 documentation.
@@ -1027,21 +1028,21 @@ This chapter documents a total of %d commands.\n\n"
               (setq this-module
                     (file-name-sans-extension this-module))
               (when commentary
-                (setq commentary 
+                (setq commentary
                       (ems-cleanup-commentary commentary)))
               (setq this-module
                     (file-name-nondirectory this-module)))
             (unless (string-equal module this-module)
-              (if this-module 
+              (if this-module
                   (setq module this-module)
                 (setq module nil))
-              (when module 
+              (when module
                 (insert
                  (format
                   "@node %s\n@section %s\n\n\n"
                   module module )))
               (insert
-               (format "\n\n%s\n\n" 
+               (format "\n\n%s\n\n"
                        (or commentary "")))
               (insert
                (format
@@ -1079,6 +1080,7 @@ for commands defined in module  %s.\n\n"
       (save-buffer)))
   (emacspeak-auditory-icon 'task-done))
 
+;;;###autoload
 (defun emacspeak-generate-texinfo-option-documentation (filename)
   "Generate texinfo documentation  for all emacspeak
 options  into file filename.
@@ -1091,11 +1093,11 @@ Warning! Contents of file filename will be overwritten."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (insert"@c $Id: emacspeak-wizards.el,v 24.0 2006/05/03 02:54:01 raman Exp $\n")
+      (insert"@c $Id: emacspeak-wizards.el 4258 2006-11-09 15:19:54Z tv.raman.tv $\n")
       (insert
        "@node Emacspeak Customizations\n@chapter Emacspeak Customizations \n\n")
       (insert
-       (format 
+       (format
         "This chapter is generated automatically from the source-level documentation.
 Any errors or corrections should be made to the source-level
 documentation.
@@ -1115,21 +1117,21 @@ This chapter documents a total of %d user customizable
                (setq this-module
                      (file-name-sans-extension this-module))
                (when commentary
-                 (setq commentary 
+                 (setq commentary
                        (ems-cleanup-commentary commentary)))
                (setq this-module
                      (file-name-nondirectory this-module)))
              (unless (string-equal module this-module)
-               (if this-module 
+               (if this-module
                    (setq module this-module)
                  (setq module nil))
-               (when module 
+               (when module
                  (insert
                   (format
                    "@node %s Options\n@section %s Options\n\n\n"
                    module module )))
                (insert
-                (format "\n\n%s\n\n" 
+                (format "\n\n%s\n\n"
                         (or commentary "")))
                (insert
                 (format
@@ -1142,7 +1144,7 @@ These options are customizable via Emacs' Custom interface.\n\n"
              (insert
               (or
                (ems-texinfo-escape
-                (documentation-property  o 'variable-documentation))                        
+                (documentation-property  o 'variable-documentation))
                ""))
              (insert "\n@end defvar\n\n")))
        (emacspeak-list-emacspeak-options))
@@ -1404,7 +1406,7 @@ Prompts for a variable name and displays its value in a separate buffer.
 Lists are displayed one element per line.
 Argument VAR specifies variable whose value is to be displayed."
   (interactive "SDisplay variable:")
-  (let ((buffer 
+  (let ((buffer
          (format "*emacspeak:%s*" var))
         (symbol (symbol-value var)))
     (with-output-to-temp-buffer buffer
@@ -1452,7 +1454,7 @@ Argument VAR specifies variable whose value is to be displayed."
     (emacspeak-speak-mode-line)))
 
 ;;}}}
-;;{{{ emergency tts restart 
+;;{{{ emergency tts restart
 
 (defcustom emacspeak-emergency-tts-server
   "dtk-exp"
@@ -1468,7 +1470,7 @@ It's useful to bind the above command to a convenient key."
 ;;;###autoload
 (defun emacspeak-emergency-tts-restart ()
   "For use in an emergency.
-Will start TTS engine specified by 
+Will start TTS engine specified by
 emacspeak-emergency-tts-server."
   (interactive)
   (declare (special emacspeak-emergency-tts-server))
@@ -1502,7 +1504,7 @@ personal customizations."
                     custom-file)))
   (declare (special custom-file))
   (let* ((buffer (find-file-noselect custom-file))
-         (settings  
+         (settings
           (save-excursion
             (set-buffer buffer)
             (goto-char (point-min))
@@ -1645,7 +1647,7 @@ Signals beginning  of buffer."
       (modify-syntax-entry 10 (format "%c" save-syntax )))))
 
 ;;}}}
-;;{{{  launch lynx 
+;;{{{  launch lynx
 (defcustom emacspeak-wizards-links-program "links"
   "Name of links executable."
   :type 'file
@@ -1668,7 +1670,7 @@ Signals beginning  of buffer."
     emacspeak-wizards-links-program
     nil
     url))
-  (emacspeak-eterm-record-window   1 
+  (emacspeak-eterm-record-window   1
                                    (cons 0 1)
                                    (cons 79 20)
                                    'right-stretch 'left-stretch)
@@ -1701,9 +1703,9 @@ Signals beginning  of buffer."
     nil
     "-show-cursor=yes"
     url))
-  (emacspeak-eterm-record-window   1 
+  (emacspeak-eterm-record-window   1
                                    (cons 0 1)
-                                   (cons 
+                                   (cons
                                     (- term-width 1)
                                     (- term-height 1))
                                    'right-stretch 'left-stretch)
@@ -1721,6 +1723,7 @@ Signals beginning  of buffer."
   :type 'file
   :group 'emacspeak-wizards)
 
+;;;###autoload
 (defun emacspeak-curl (url)
   "Grab URL using Curl, and preview it with W3."
   (interactive
@@ -1729,6 +1732,8 @@ Signals beginning  of buffer."
   (declare (special emacspeak-wizards-curl-program
                     emacspeak-curl-cookie-store))
   (let ((results (get-buffer-create " *curl-download* ")))
+    (erase-buffer)
+    (kill-all-local-variables)
     (shell-command
      (format
       "curl -s --location-trusted --cookie-jar %s --cookie %s '%s' 2>/dev/null"
@@ -1739,8 +1744,8 @@ Signals beginning  of buffer."
     (kill-buffer results)))
 
 ;;}}}
-;;{{{ ansi term 
-;;;###AUTOLOAD
+;;{{{ ansi term
+;;;###autoload
 (defun emacspeak-wizards-terminal (program)
   "Launch terminal and rename buffer appropriately."
   (interactive (list (read-from-minibuffer "Run program: ")))
@@ -1859,10 +1864,9 @@ annotation is inserted into the working buffer when complete."
   (when  (or reset
              (null emacspeak-annotate-working-buffer))
     (setq emacspeak-annotate-working-buffer
-          (get-buffer-create
-           (read-buffer "Annotation working buffer: "
-                        (cadr
-                         (emacspeak-annotate-make-buffer-list))))))
+          (get-buffer-create (read-buffer "Annotation working buffer: "
+                                          (cadr
+                                           (emacspeak-annotate-make-buffer-list))))))
   (let ((annotation nil)
         (work-buffer emacspeak-annotate-working-buffer)
         (parent-buffer (current-buffer)))
@@ -1881,13 +1885,13 @@ annotation is inserted into the working buffer when complete."
 ;;}}}
 ;;{{{ shell-toggle
 
-;;; inspired by eshell-toggle 
-;;; switch to the shell buffer, and cd to the directory 
+;;; inspired by eshell-toggle
+;;; switch to the shell buffer, and cd to the directory
 ;;; that is the default-directory for the previously current
 ;;; buffer.
 ;;;###autoload
 (defun emacspeak-wizards-shell-toggle ()
-  "Switch to the shell buffer and cd to 
+  "Switch to the shell buffer and cd to
  the directory of the current buffer."
   (interactive )
   (declare (special default-directory))
@@ -1964,12 +1968,15 @@ visiting the xls file."
   (cond
    ((null emacspeak-wizards-xlhtml-program)
     (message "Not using Emacspeak XLHTML wizard."))
-   (t 
+   (t
     (let ((filename (buffer-file-name))
           (xl-buffer (current-buffer))
           (buffer (get-buffer-create " *xl scratch*")))
       (save-excursion
         (set-buffer buffer)
+        (setq buffer-undo-list t)
+        (erase-buffer)
+        (kill-all-local-variables)
         (shell-command
          (format "%s -a -te %s"
                  emacspeak-wizards-xlhtml-program filename)
@@ -2016,12 +2023,15 @@ visiting the ppt file."
    (cond
     ((null emacspeak-wizards-ppthtml-program)
      (message "Not using Emacspeak PPTHTML wizard."))
-    (t 
+    (t
      (let ((filename (buffer-file-name))
            (ppt-buffer (current-buffer))
            (buffer (get-buffer-create " *ppt scratch*")))
        (save-excursion
+         (setq buffer-undo-list t)
          (set-buffer buffer)
+         (erase-buffer)
+         (kill-all-local-variables)
          (shell-command
           (format "%s  %s"
                   emacspeak-wizards-ppthtml-program filename)
@@ -2067,10 +2077,12 @@ visiting the DVI file."
   (cond
    ((null emacspeak-wizards-dvi2txt-program)
     (message "Not using Emacspeak DVI wizard."))
-   (t 
+   (t
     (let ((filename (buffer-file-name))
           (dvi-buffer (current-buffer))
           (buffer (get-buffer-create " *dvi preview*")))
+      (erase-buffer)
+      (kill-all-local-variables)
       (shell-command
        (format "%s  %s &"
                emacspeak-wizards-dvi2txt-program filename)
@@ -2083,8 +2095,8 @@ visiting the DVI file."
  'emacspeak-wizards-dvi-mode)
 
 ;;}}}
-;;{{{ detailed quotes 
-(defcustom emacspeak-wizards-quote-command 
+;;{{{ detailed quotes
+(defcustom emacspeak-wizards-quote-command
   (expand-file-name "quotes.pl"
                     emacspeak-etc-directory)
   "Command for pulling up detailed stock quotes.
@@ -2093,7 +2105,7 @@ this requires Perl module Finance::YahooQuote."
   :group 'emacspeak-wizards)
 (defcustom emacspeak-wizards-quote-row-filter
   '(1 " closed at " 2
-      "giving it a P/E ratio of " 16 
+      "giving it a P/E ratio of " 16
       " and a market cap of " 20 "at earning of " 15 " per share. "
       "The intra-day range was " 13
       ", and the 52 week range is " 14 ". ")
@@ -2106,7 +2118,7 @@ this requires Perl module Finance::YahooQuote."
 
 ;;;###autoload
 (defun emacspeak-wizards-portfolio-quotes ()
-  "Bring up detailed stock quotes for portfolio specified by 
+  "Bring up detailed stock quotes for portfolio specified by
 emacspeak-websearch-personal-portfolio."
   (interactive)
   (declare (special emacspeak-websearch-personal-portfolio
@@ -2115,8 +2127,8 @@ emacspeak-websearch-personal-portfolio."
   (let ((temp-file
          (format "/tmp/%s.csv"
                  (gensym "quotes"))))
-    (shell-command 
-     (format 
+    (shell-command
+     (format
       "echo '%s' | perl %s > %s"
       emacspeak-websearch-personal-portfolio
       emacspeak-wizards-quote-command
@@ -2130,9 +2142,9 @@ emacspeak-websearch-personal-portfolio."
     (delete-file temp-file)))
 
 ;;}}}
-;;{{{ find wizard 
+;;{{{ find wizard
 
-(define-derived-mode emacspeak-wizards-finder-mode  fundamental-mode 
+(define-derived-mode emacspeak-wizards-finder-mode  fundamental-mode
   "Emacspeak Finder"
   "Emacspeak Finder\n\n"
   )
@@ -2236,7 +2248,7 @@ emacspeak-websearch-personal-portfolio."
                      #'(lambda (&rest ignore)
                          (call-interactively
                           'emacspeak-wizards-finder-find)))
-      (widget-create 'info-link 
+      (widget-create 'info-link
                      :tag "Help"
                      :help-echo "Read the online help."
                      "(find)Finding Files")
@@ -2342,16 +2354,16 @@ directory to where find is to be launched."
             start end 'interactive))
 
 ;;}}}
-;;{{{  file specific  headers via occur 
+;;{{{  file specific  headers via occur
 
 (defvar emacspeak-occur-pattern nil
-  "Regexp pattern used to identify header lines by command 
+  "Regexp pattern used to identify header lines by command
 emacspeak-wizards-occur-header-lines.")
 (make-variable-buffer-local 'emacspeak-occur-pattern)
 ;;;###autoload
 (defun emacspeak-wizards-how-many-matches (start end &optional prefix)
-  "If you define a file local variable 
-called `emacspeak-occur-pattern' that holds a regular expression 
+  "If you define a file local variable
+called `emacspeak-occur-pattern' that holds a regular expression
 that matches  lines of interest, you can use this command to conveniently
 run `how-many' to count  matching header lines.
 With interactive prefix arg, prompts for and remembers the file local pattern."
@@ -2408,7 +2420,7 @@ prompts for and sets value of the file local pattern."
     (emacspeak-speak-mode-line )))
 
 ;;}}}
-;;{{{  spotting words 
+;;{{{  spotting words
 
 (defcustom emacspeak-wizards-spot-words-extension ".tex"
   "Default file extension  used when spotting words."
@@ -2425,12 +2437,12 @@ for `word' and displays hits in a compilation buffer."
     (read-from-minibuffer "Word: "
                           (thing-at-point 'word))))
   (declare (special emacspeak-wizards-spot-words-extension))
-  (compile 
+  (compile
    (format
     "find . -type f -name '*%s' -print0 | xargs -0 -e grep -n -e \"\\b%s\\b\" "
     ext word))
   (setq emacspeak-wizards-spot-words-extension ext)
-  (emacspeak-auditory-icon 'task-done)) 
+  (emacspeak-auditory-icon 'task-done))
 ;;;###autoload
 (defun emacspeak-wizards-fix-typo (ext word correction)
   "Search and replace  recursively in all files with extension `ext'
@@ -2445,7 +2457,7 @@ Use with caution."
     (read-from-minibuffer "Correction: "
                           (thing-at-point 'word))))
   (declare (special emacspeak-wizards-spot-words-extension))
-  (compile 
+  (compile
    (format
     "find . -type f -name '*%s' -print0 | xargs -0 -e  perl -pi -e    \'s/%s/%s/g' "
     ext word correction))
@@ -2453,17 +2465,17 @@ Use with caution."
   (emacspeak-auditory-icon 'task-done))
 
 ;;}}}
-;;{{{ fix text that has gotten read-only accidentally 
+;;{{{ fix text that has gotten read-only accidentally
 ;;;###autoload
 (defun emacspeak-wizards-fix-read-only-text (start end)
   "Nuke read-only property on text range."
   (interactive "r")
   (let ((inhibit-read-only t))
-    (put-text-property start end 
+    (put-text-property start end
                        'read-only nil)))
 
 ;;}}}
-;;{{{ VC viewer 
+;;{{{ VC viewer
 (defcustom emacspeak-wizards-vc-viewer-command
   "sudo setterm -dump %s -file %s"
   "Command line for dumping out virtual console."
@@ -2556,7 +2568,7 @@ Use with caution."
 (define-key  emacspeak-wizards-vc-viewer-mode-map "\C-l" 'emacspeak-wizards-vc-viewer-refresh)
 
 ;;}}}
-;;{{{ google hits 
+;;{{{ google hits
 
 ;;;###autoload
 (defun emacspeak-wizards-google-hits ()
@@ -2566,7 +2578,7 @@ hits."
   (let ((name   "Google Hits"))
     (emacspeak-url-template-open
      (emacspeak-url-template-get name))))
-
+;;;###autoload
 (defun emacspeak-wizards-google-transcode ()
   "View Web through Google Transcoder."
   (interactive)
@@ -2575,7 +2587,7 @@ hits."
      (emacspeak-url-template-get name))))
 
 ;;}}}
-;;{{{ longest line in region 
+;;{{{ longest line in region
 ;;;###autoload
 (defun emacspeak-wizards-find-longest-line-in-region (start end)
   "Find longest line in region.
@@ -2587,7 +2599,7 @@ Moves to the longest line when called interactively."
       (goto-char start)
       (while (and (not (eobp))
                   (< (point) end))
-        (when 
+        (when
             (< max
                (- (line-end-position)
                   (line-beginning-position)))
@@ -2602,7 +2614,7 @@ Moves to the longest line when called interactively."
     max))
 
 ;;}}}
-;;{{{ longest para in region 
+;;{{{ longest para in region
 ;;;###autoload
 (defun emacspeak-wizards-find-longest-paragraph-in-region (start end)
   "Find longest paragraph in region.
@@ -2616,7 +2628,7 @@ Moves to the longest paragraph when called interactively."
       (while (and (not (eobp))
                   (< (point) end))
         (forward-paragraph 1)
-        (when 
+        (when
             (< max (- (point) para-start ))
           (setq max(- (point)  para-start))
           (setq where para-start))
@@ -2628,10 +2640,11 @@ Moves to the longest paragraph when called interactively."
     max))
 
 ;;}}}
-;;{{{ find grep using compile 
+;;{{{ find grep using compile
 
+;;;###autoload
 (defun emacspeak-wizards-find-grep (glob pattern)
-  "Run compile using find and grep. 
+  "Run compile using find and grep.
 Interactive  arguments specify filename pattern and search pattern."
   (interactive
    (list
@@ -2674,8 +2687,6 @@ Interactive  arguments specify filename pattern and search pattern."
       (goto-char (point-min))
       (emacspeak-speak-mode-line)
       (emacspeak-auditory-icon 'open-object))))
-             
-   
 
 ;;}}}
 ;;{{{ voice sample
@@ -2701,10 +2712,10 @@ for the current voice family."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (loop for  s from 0 to 9 by step do 
+      (loop for  s from 0 to 9 by step do
             (loop for p from 0 to 9 by step do
-                  (loop for a from 0 to 9 by step do 
-                        (loop for r from 0 to 9 by step do 
+                  (loop for a from 0 to 9 by step do
+                        (loop for r from 0 to 9 by step do
                               (setq voice (voice-setup-personality-from-style
                                            (list nil a p s r )))
                               (insert
@@ -2721,7 +2732,7 @@ for the current voice family."
     (goto-char (point-min))))
 
 ;;}}}
-;;{{{ tramp wizard 
+;;{{{ tramp wizard
 (defcustom emacspeak-wizards-tramp-locations nil
   "Tramp locations used by Emacspeak tramp wizard.
 Locations added here via custom can be opened using command
@@ -2749,9 +2760,10 @@ Location is specified by name."
     (find-file location)))
 
 ;;}}}
-;;{{{ ISO dates 
+;;{{{ ISO dates
 ;;; implementation based on icalendar.el
 
+;;;###autoload
 (defun emacspeak-wizards-speak-iso-datetime (iso)
   "Make ISO date-time speech friendly."
   (interactive
@@ -2770,6 +2782,7 @@ Location is specified by name."
   "Toggled by wizard to record how we are pronouncing mm-dd-yyyy
 dates.")
 
+;;;###autoload
 (defun emacspeak-wizards-toggle-mm-dd-yyyy-date-pronouncer ()
   "Toggle pronunciation of mm-dd-yyyy dates."
   (interactive)
@@ -2789,10 +2802,11 @@ dates.")
   English."
            (if emacspeak-wizards-mm-dd-yyyy-date-pronounce "" "
   not ")))
-    
+
 ;;}}}
 ;;{{{ units wizard
 
+;;;###autoload
 (defun emacspeak-wizards-units ()
   "Run units in a comint sub-process."
   (interactive)
@@ -2804,20 +2818,20 @@ dates.")
   (unless emacspeak-comint-autospeak
     (emacspeak-toggle-comint-autospeak))
   (emacspeak-speak-mode-line))
-      
+
 ;;}}}
 ;;{{{ rivo
 
 (defvar emacspeak-wizards-rivo-program
   (expand-file-name "rivo.pl" emacspeak-etc-directory)
   "Rivo script used by emacspeak.")
-
-(defun emacspeak-wizards-rivo (when channel length output directory)
+;;;###autoload
+(defun emacspeak-wizards-rivo (when channel stop-time output directory)
   "Rivo wizard.
 Prompts for relevant information and schedules a rivo job using
   UNIX AT scheduling facility.
 RIVO is implemented by rivo.pl ---
- a Perl script  that can be used to launch realaudio and record
+ a Perl script  that can be used to launch streaming media and record
    streaming media for  a specified duration."
   (interactive
    (list
@@ -2836,17 +2850,29 @@ RIVO is implemented by rivo.pl ---
     (read-minibuffer "Output Name:")
     (read-directory-name "Output Directory:")))
   (let ((command
-         (format "%s -c %s -l %s -o %s -d %s\n"
+         (format "%s -c %s -s %s -o %s -d %s\n"
                  emacspeak-wizards-rivo-program
-                 channel length output directory)))
+                 channel stop-time output directory)))
     (shell-command
      (format "echo '%s' | at %s"
              command when ))))
 
 ;;}}}
-;;{{{ show commentary:
-;;;###autoload
+;;{{{ shell history:
 
+;;;### utoload
+(defun emacspeak-wizards-refresh-shell-history ()
+  "Refresh shell history from disk.
+This is for use in conjunction with bash to allow multiple emacs
+  shell buffers to   share history information."
+  (interactive)
+  (comint-read-input-ring)
+  (emacspeak-auditory-icon 'select-object))
+
+;;}}}
+;;{{{ show commentary:
+
+;;;###autoload
 (defun emacspeak-wizards-show-commentary (&optional file)
   "Display commentary. Default is to display commentary from current buffer."
   (interactive "P")
@@ -2868,11 +2894,87 @@ RIVO is implemented by rivo.pl ---
 ;;}}}
 ;;{{{ unescape URIs
 
-;;;###AUTOLOAD
+;;;###autoload
 (defun emacspeak-wizards-unhex-uri (uri)
   "UnEscape URI"
   (interactive "sURL:")
   (message (url-unhex-string uri)))
+
+;;}}}
+;;{{{ Add autoload cookies:
+(defvar emacspeak-autoload-cookie-pattern
+  ";;;###autoload"
+  "autoload cookie pattern.")
+
+;;;###autoload
+(defun emacspeak-wizards-add-autoload-cookies (&optional f)
+  "Add autoload cookies to file f.
+Default is to add autoload cookies to current file."
+  (interactive)
+  (declare (special emacspeak-autoload-cookie-pattern))
+  (or f (setq f (buffer-file-name)))
+  (let ((buffer (find-file-noselect f))
+        (count 0))
+    (save-excursion
+      (set-buffer buffer)
+      (goto-char (point-min))
+      (unless (eq major-mode'emacs-lisp-mode)
+        (error "Not an Emacs Lisp file."))
+      (goto-char (point-min))
+      (condition-case nil
+          (while    (not (eobp))
+            (re-search-forward "^ *(interactive")
+            (beginning-of-defun)
+            (forward-line -1)
+            (unless (looking-at emacspeak-autoload-cookie-pattern)
+              (incf count)
+              (forward-line 1)
+              (beginning-of-line)
+              (insert
+               (format "%s\n"emacspeak-autoload-cookie-pattern)))
+            (end-of-defun))
+        (error "Added %d autoload cookies." count)))))
+
+;;}}}
+
+;;{{{ specialized input buffers:
+
+;;; Taken from a message on the org mailing list.
+
+;;;###autoload
+(defun emacspeak-wizards-popup-input-buffer (mode)
+  "Provide an input buffer in a specified mode."
+  (interactive
+   (list
+    (intern
+     (completing-read
+      "Mode: "
+      (mapcar (lambda (e)
+                (list (symbol-name e)))
+              (apropos-internal "-mode$" 'commandp))
+      nil t))))
+  (let ((buffer-name (generate-new-buffer-name "*input*")))
+    (pop-to-buffer (make-indirect-buffer (current-buffer) buffer-name))
+    (narrow-to-region (point) (point))
+    (funcall mode)
+    (let ((map (copy-keymap (current-local-map))))
+      (define-key map (kbd "C-c C-c")
+        (lambda ()
+          (interactive)
+          (kill-buffer nil)
+          (delete-window)))
+      (use-local-map map))
+    (shrink-window-if-larger-than-buffer)))
+
+;;}}}
+;;{{{ quick-edit emacspeak sources:
+
+;;;###autoload
+(defun emacspeak-wizards-find-emacspeak-source ()
+  "Like find-file, but binds default-directory to emacspeak-directory."
+  (interactive)
+  (let ((default-directory emacspeak-directory))
+    (call-interactively 'find-file)))
 
 ;;}}}
 (provide 'emacspeak-wizards)

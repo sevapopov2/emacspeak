@@ -1,4 +1,4 @@
-<!--$Id: mlb-scorecard.xsl,v 24.0 2006/05/03 02:54:05 raman Exp $-->
+<!--$Id: mlb-scorecard.xsl 4047 2006-08-11 19:11:17Z tv.raman.tv $-->
 <!--Description: Summarize baseball games.-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0">

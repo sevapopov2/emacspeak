@@ -1,53 +1,55 @@
 Emacspeak News --History Of User-Visible Changes
-$Id: NEWS,v 24.0 2006/05/03 02:54:03 raman Exp $
+$Id: NEWS 4262 2006-11-10 03:08:22Z tv.raman.tv $
 Author: T. V. Raman <raman@users.sf.net>
 
-* Emacspeak 24.0 Additions And Changes:
+* Emacspeak 25.0 Additions And Changes:
 
-Emacspeak 24.0 provides the following user level enhancements:
+Emacspeak 25.0 provides the following user level enhancements:
 
 * user Visible Changes:
-** emacspeak-muse:
 
-Speech-enables emacs Muse
+**  ssh-<tts_server> 
 
-**emacspeak-ruby:
+accepts hostnames of the form host:port.
+This is useful for setting up ones firewall to allow ssh through
+a non-standard port.
 
-Speech-enables ruby-mode.
+**  emacspeak-etable:
 
-
-** emacspeak-m-player:
-
-Updated for MPlayer release 1.0.
-
-** emacspeak-sudoku.el:
-
-Speech-enables sudoku.el --- the number placement SuDoku game.
-
-** New Option: tts-strip-octals
-
-Added new user option tts-strip-octals and associated toggle
-dtk-strip-octals
-to strip octals chars while speaking.
-
-** emacspeak-keymap.el
-
-Refactored keymaps and key-bindings.
-New modules should use emacspeak-keymap-update.
-
-** lisp/atom-blogger.el
-
-Light-weight client for posting/editting blogger.com entries.
+Speech-enables Emacs' table.el table editor.
+Note that character echo in the table editor is painfully slow.
 
 
-** emacspeak-atom-blogger:
+** emacspeak-org.el:
 
-Speech-enables atom-blogger
-** voice-setup.el
+Completed speech-enabling org-mode, including its simplified
+table editor (orgtbl).
 
-Refactored voice locking code to enable better customization via custom.
+**  emacspeak-wizards:
+
+  - Added a wizard for generating a custom popup input buffer.
+  -  Use this in emacspeak-org.
+** Dropping Obsolete Extensions:
+
+The following extensions have been made obsolete --- they can
+still be found under lisp/obsolete in CVS.
+
+  - emacspeak-hyperbole.el
+  - emacspeak-oo-browser.el
+  - emacspeak-kotl.el
+  - emacspeak-wrolo.el
+  - emacspeak-freeamp.el
+
+** emacspeak-url-template:
+
+  - Added a Google Video searcher
+
+**  emacspeak-emms:
+
+Updated to support emms-2.0.
+
 
 Local variables:
- mode: outline
+ mode: org
  paragraph-separate: "[ ]*$"
 end:

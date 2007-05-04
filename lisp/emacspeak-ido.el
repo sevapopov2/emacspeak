@@ -1,6 +1,6 @@
 ;;; emacspeak-ido.el --- speech-enable ido
-;;; $Id: emacspeak-ido.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-ido.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:   extension to speech enable ido
 ;;; Keywords: Emacspeak, Audio Desktop
 ;;{{{  LCD Archive entry:
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2004, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2006, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -230,29 +230,14 @@ The default value of 12 is too high for using ido effectively with speech. "
   "Emacspeak ido customizations."
   :group  'emacspeak
   )
-
-(def-voice-font emacspeak-ido-first-match-personality voice-animate-medium
-  'ido-first-match-face
-  "Personality for first match in ido."
-  :group 'emacspeak-ido)
-(def-voice-font emacspeak-ido-only-match-personality voice-bolden-extra
-  'ido-only-match-face
-  "Personality for only match in ido."
-  :group 'emacspeak-ido)
-
-(def-voice-font emacspeak-ido-only-match-personality voice-bolden-extra
-  'ido-only-match-face
-  "Personality for only match in ido."
-  :group 'emacspeak-ido)
-
-(def-voice-font emacspeak-ido-subdir-personality voice-smoothen
-  'ido-subdir-face
-  "Personality for subdirs in ido."
-  :group 'emacspeak-ido)
-(def-voice-font emacspeak-ido-indicator-personality voice-lighten
-  'ido-indicator-face
-  "Personality for indicator in ido."
-  :group 'emacspeak-ido)
+(voice-setup-add-map
+ '(
+   (ido-first-match voice-brighten-extra)
+   (ido-only-match voice-bolden)
+   (ido-subdir voice-lighten-extra)
+   (ido-indicator voice-smoothen)
+   (ido-incomplete-regexp voice-monotone)
+   ))
 
 ;;}}}
 ;;{{{ Additional keybindings 

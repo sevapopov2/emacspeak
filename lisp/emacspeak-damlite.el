@@ -1,6 +1,6 @@
 ;;; emacspeak-damlite.el --- Speech-enable damlite
-;;; $Id: emacspeak-damlite.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-damlite.el 4074 2006-08-19 17:48:45Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for daml  authoring mode 
 ;;; Keywords: Emacspeak, damlite 
 ;;{{{  LCD Archive entry:
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-19 10:48:45 -0700 (Sat, 19 Aug 2006) $ |
+;;;  $Revision: 4074 $ |
 ;;; Location undetermined
 ;;;
 
@@ -52,59 +52,22 @@
 (require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ define personalities 
-(def-voice-font emacspeak-daml-class-face voice-smoothen
-  'daml-class-face
-  "Personality used for DAML classes.")
 
-(def-voice-font emacspeak-daml-class-ref-face
-  voice-lighten
-  'daml-class-ref-face
-  "Personality used for class references.")
+(voice-setup-add-map
+ '(
+   (daml-class-face voice-smoothen)
+   (daml-class-ref-face voice-lighten)
+   (daml-comment-face voice-monotone)
+   (daml-keyword-face voice-animate-extra)
+   (daml-normal-face (quote paul))
+   (daml-other-face (quote voice-bolden-extra))
+   (daml-property-face voice-animate)
+   (daml-property-ref-face voice-animate-extra)
+   (daml-string-face voice-lighten-extra)
+   (daml-substitution-face voice-smoothen)
+   (daml-tag-face voice-bolden)
+   ))
 
-(def-voice-font emacspeak-daml-comment-face
-  voice-monotone
-  'daml-comment-face
-  "Personality used for DAML comments.")
-
-(def-voice-font emacspeak-daml-keyword-face
-  voice-animate-extra
-  'daml-keyword-face
-  "Personality for keywords in DAML.")
-
-(def-voice-font emacspeak-daml-normal-face
-  'paul
-  'daml-normal-face
-  "Normal face in DAML.")
-
-(def-voice-font emacspeak-daml-other-face
-  'voice-bolden-extra
-  'daml-other-face
-  "Personality for other elements in DAML.")
-
-(def-voice-font emacspeak-daml-property-face
-  voice-animate
-  'daml-property-face
-  "personality for DAML properties.")
-
-(def-voice-font emacspeak-daml-property-ref-face
-  voice-animate-extra
-  'daml-property-ref-face
-  "Personality for DAML property references.")
-
-(def-voice-font emacspeak-daml-string-face
-  voice-lighten-extra
-  'daml-string-face
-  "Personality for DAML strings.")
-
-(def-voice-font emacspeak-daml-substitution-face
-  voice-smoothen
-  'daml-substitution-face
-  "Personality for substitutions in DAML.")
-
-(def-voice-font emacspeak-daml-tag-face
-  voice-bolden
-  'daml-tag-face
-  "Personality for tags in DAML.")
 ;;}}}
 (provide 'emacspeak-damlite)
 ;;{{{ end of file

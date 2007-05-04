@@ -1,6 +1,6 @@
-;;;$Id: tools.jl,v 24.0 2006/05/03 02:54:04 raman Exp $
+;;;$Id: tools.jl 4047 2006-08-11 19:11:17Z tv.raman.tv $
 ;;; tools.jl --- Emacs tool for sawfish
-;;; $Author: raman $
+;;; $Author: tv.raman.tv $
 ;;; Description:   Commands for launching or switching to
 ;;; a running Emacs
 ;;; Keywords: Sawfish, Emacspeak, Audio Desktop
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:04 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-11 12:11:17 -0700 (Fri, 11 Aug 2006) $ |
+;;;  $Revision: 4047 $ |
 ;;; Location undetermined
 ;;;
 

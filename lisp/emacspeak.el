@@ -1,6 +1,6 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak.el 4175 2006-09-08 18:04:13Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
 ;;{{{  LCD Archive entry:
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-09-08 11:04:13 -0700 (Fri, 08 Sep 2006) $ |
+;;;  $Revision: 4175 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -36,7 +36,7 @@
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;}}}
-;;{{{ Introduction 
+;;{{{ Introduction
 
 ;;; Commentary:
 ;;;The complete audio desktop.
@@ -60,16 +60,12 @@
 ;;{{{ autoloads
 
 (load-library "emacspeak-loaddefs")
-(load-library "emacspeak-cus-load")
+(load-file
+ (expand-file-name "emacspeak-cus-load.el"
+                   emacspeak-lisp-directory))
 
 ;;}}}
-;;{{{  Customize groups 
-(defconst emacspeak-version
-  (let ((x "$Revision: 24.0 $"))
-    (string-match "[0-9.]+" x)
-    (substring x (match-beginning 0)
-               (match-end 0)))
-  "Version number for Emacspeak.")
+;;{{{  Customize groups
 
 (defgroup emacspeak nil
   "Emacspeak: The Complete Audio Desktop  "
@@ -105,7 +101,7 @@ the Emacspeak desktop." )
                                                         emacspeak-directory)
                 :help-echo "Read the Emacspeak FAQ")
   :link '(custom-manual "(emacspeak)Top")
-;;; end links 
+;;; end links
   :prefix "emacspeak-"
   :group 'applications
   :group 'accessibility)
@@ -132,14 +128,14 @@ package.
 Argument MODULE specifies the emacspeak module that implements the speech-enabling extensions."
   (eval-after-load package
     `(progn
-    (require ',module)
-    (emacspeak-fix-commands-that-use-interactive))))
-  
+       (require ',module)
+       (emacspeak-fix-commands-that-use-interactive))))
+
 ;;}}}
 ;;{{{ Setup package extensions
 (emacspeak-do-package-setup "add-log" 'emacspeak-add-log)
 (emacspeak-do-package-setup "analog" 'emacspeak-analog)
-(emacspeak-do-package-setup "ansi-color" 'emacspeak-ansi-color)                            
+(emacspeak-do-package-setup "ansi-color" 'emacspeak-ansi-color)
 (emacspeak-do-package-setup "apt-sources" 'emacspeak-apt-sources)
 (emacspeak-do-package-setup "apt-utils" 'emacspeak-apt-utils)
 (emacspeak-do-package-setup "arc-mode" 'emacspeak-arc)
@@ -194,8 +190,6 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "gdb-ui" 'emacspeak-gud)
 (emacspeak-do-package-setup "hangman" 'emacspeak-entertain)
 (emacspeak-do-package-setup "hideshow" 'emacspeak-hideshow)
-                                        ;(emacspeak-do-package-setup "html-helper-mode" 'html-voice )
-(emacspeak-do-package-setup "hyperbole" 'emacspeak-hyperbole)
 (emacspeak-do-package-setup "imenu" 'emacspeak-imenu)
 (emacspeak-do-package-setup "ibuffer" 'emacspeak-ibuffer)
 (emacspeak-do-package-setup "ido" 'emacspeak-ido)
@@ -205,7 +199,6 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "jabber" 'emacspeak-jabber)
 (emacspeak-do-package-setup "jde" 'emacspeak-jde)
 (emacspeak-do-package-setup "kmacro" 'emacspeak-kmacro)
-(emacspeak-do-package-setup "kotl" 'emacspeak-kotl)
 (emacspeak-do-package-setup "make-mode" 'emacspeak-make-mode)
 (emacspeak-do-package-setup "man" 'emacspeak-man)
 (emacspeak-do-package-setup "message" 'emacspeak-message)
@@ -219,7 +212,6 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "net-utils" 'emacspeak-net-utils)
 (emacspeak-do-package-setup "newsticker" 'emacspeak-newsticker)
 (emacspeak-do-package-setup "nxml-mode" 'emacspeak-nxml)
-(emacspeak-do-package-setup "oobr" 'emacspeak-oo-browser)
 (emacspeak-do-package-setup "org" 'emacspeak-org)
 (emacspeak-do-package-setup "outline" 'emacspeak-outline)
 (emacspeak-do-package-setup "perl-mode" 'emacspeak-perl)
@@ -245,6 +237,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "supercite" 'emacspeak-supercite)
 (emacspeak-do-package-setup "sudoku" 'emacspeak-sudoku)
 (emacspeak-do-package-setup "swbuff" 'emacspeak-swbuff)
+(emacspeak-do-package-setup "table" 'emacspeak-etable)
 (emacspeak-do-package-setup "tar-mode" 'emacspeak-tar)
 (emacspeak-do-package-setup "tcl" 'emacspeak-tcl)
 (emacspeak-do-package-setup "tdtd" 'emacspeak-tdtd)
@@ -270,30 +263,6 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "widget" 'emacspeak-widget)
 (emacspeak-do-package-setup "windmove" 'emacspeak-windmove)
 (emacspeak-do-package-setup "winring" 'emacspeak-winring)
-(emacspeak-do-package-setup "wrolo" 'emacspeak-wrolo)
-
-;;}}}
-;;{{{ finder
-
-;;; Finder is special -- it needs to conditionally
-;;; regenerate the database
-(add-hook 'after-load-alist
-          '("finder"
-            (progn
-              (load-library "emacspeak-finder")
-              (unless (file-newer-than-file-p
-                       (expand-file-name
-                        "emacspeak-finder-inf.el" 
-                        emacspeak-lisp-directory)
-                       (expand-file-name
-                        emacspeak-lisp-directory
-                        "emacspeak.el"))
-                (emacspeak-finder-compile-keywords))
-              (load-library "emacspeak-finder-inf")
-              (push
-               (cons 'emacspeak "Audio Desktop")
-               finder-known-keywords))))
-
 ;;}}}
 ;;{{{  Submit bugs
 
@@ -352,7 +321,7 @@ Emacs 20.3"
   )
 
 ;;}}}
-;;{{{ setup programming modes 
+;;{{{ setup programming modes
 
 ;;; turn on automatic voice locking , split caps and punctuations for programming modes
 ;;;###autoload
@@ -402,7 +371,7 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
          'dired-mode-hook)))
 
 ;;}}}
-;;{{{ set up after-init-hook to fix interactive functions 
+;;{{{ set up after-init-hook to fix interactive functions
 
 (add-hook 'after-init-hook
           'emacspeak-fix-commands-that-use-interactive)
@@ -415,7 +384,7 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
   :type 'boolean
   :group 'emacspeak)
 (defvar emacspeak-unibyte t
-  "Set this to nil before starting  emacspeak 
+  "Set this to nil before starting  emacspeak
 if you are running in a multibyte enabled environment.")
 
 (defun emacspeak()
@@ -454,7 +423,7 @@ functions for details.   "
                     emacspeak-unibyte
                     emacspeak-play-program
                     emacspeak-sounds-directory))
-;;; fixes transient mark mode in emacspeak 
+;;; fixes transient mark mode in emacspeak
   (setq mark-even-if-inactive t)
 ;;; force unibyte
   (when emacspeak-unibyte
@@ -474,7 +443,7 @@ functions for details.   "
   (require 'emacspeak-advice)
   (require 'emacspeak-replace)
   (require 'emacspeak-buff-menu)
-  (when (and  emacspeak-play-emacspeak-startup-icon 
+  (when (and  emacspeak-play-emacspeak-startup-icon
               (file-exists-p "/usr/bin/mpg123"))
     (start-process "mp3" nil "mpg123"
                    "-q"

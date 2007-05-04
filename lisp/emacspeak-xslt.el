@@ -1,6 +1,6 @@
 ;;; emacspeak-xslt.el --- Implements Emacspeak  xslt transform engine
-;;; $Id: emacspeak-xslt.el,v 24.0 2006/05/03 02:54:02 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-xslt.el 4258 2006-11-09 15:19:54Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  xslt transformation routines 
 ;;; Keywords: Emacspeak,  Audio Desktop XSLT
 ;;{{{  LCD Archive entry:
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:02 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-11-09 07:19:54 -0800 (Thu, 09 Nov 2006) $ |
+;;;  $Revision: 4258 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -179,6 +179,7 @@ part of the libxslt package."
                        " 2>/dev/null "))))
     (save-excursion
       (set-buffer result)
+      (kill-all-local-variables)
       (erase-buffer)
       (shell-command command (current-buffer)
                      (when emacspeak-xslt-keep-errors
@@ -229,6 +230,7 @@ part of the libxslt package."
                      " 2>/dev/null ")))
     (save-excursion
       (set-buffer result)
+      (kill-all-local-variables)
       (erase-buffer)
       (shell-command command
                      (current-buffer)

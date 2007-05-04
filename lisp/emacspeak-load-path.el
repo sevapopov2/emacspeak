@@ -1,20 +1,20 @@
 ;;; emacspeak-load-path.el -- Setup Emacs load-path for compiling Emacspeak
-;;; $Id: emacspeak-load-path.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-load-path.el 4158 2006-08-31 03:16:54Z tv.raman.tv $
+;;; $Author: tv.raman.tv $ 
 ;;; Description:  Sets up load-path for emacspeak compilation and installation
 ;;; Keywords: Emacspeak, Speech extension for Emacs
 ;;{{{  LCD Archive entry: 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-08-30 20:16:54 -0700 (Wed, 30 Aug 2006) $ |
+;;;  $Revision: 4158 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -43,10 +43,13 @@
   (expand-file-name "lisp/" emacspeak-directory)
   "Directory containing lisp files for  Emacspeak.")  
 
-(or (member emacspeak-lisp-directory load-path )
-    (setq load-path
-          (cons emacspeak-lisp-directory 
-                load-path )))
+(unless (member emacspeak-lisp-directory load-path )
+  (setq load-path
+        (cons emacspeak-lisp-directory load-path ))
+  (setq load-path
+        (cons
+         (expand-file-name "atom-blogger" emacspeak-lisp-directory )
+         load-path )))
 
 (defvar emacspeak-resource-directory (expand-file-name "~/.emacspeak")
   "Directory where Emacspeak resource files such as pronunciation dictionaries are stored. ")

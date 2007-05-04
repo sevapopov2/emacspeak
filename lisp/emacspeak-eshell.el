@@ -1,6 +1,6 @@
 ;;; emacspeak-eshell.el --- Speech-enable EShell - Emacs Shell
-;;; $Id: emacspeak-eshell.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-eshell.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:   Speech-enable EShell
 ;;; Keywords: Emacspeak, Audio Desktop
 ;;{{{  LCD Archive entry:
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2004, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2006, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -176,7 +176,6 @@ personalities."
    (eshell-ls-executable-face voice-animate-extra)
    (eshell-ls-missing voice-brighten)
    (eshell-ls-missing-face voice-brighten)
-   (eshell-ls-picture-face voice-lighten)
    (eshell-ls-product voice-lighten-medium)
    (eshell-ls-product-face voice-lighten-medium)
    (eshell-ls-readonly voice-monotone)

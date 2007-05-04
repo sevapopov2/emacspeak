@@ -1,6 +1,6 @@
 ;;; emacspeak-add-log.el --- Speech-enable add-log
-;;; $Id: emacspeak-add-log.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-add-log.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  speech-enable change-log-mode
 ;;; Keywords: Emacspeak,  Audio Desktop ChangeLogs
 ;;{{{  LCD Archive entry:
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -64,52 +64,17 @@
   "Customize Emacspeak for change-log-mode and friends."
   :group 'emacspeak)
 
-(def-voice-font emacspeak-change-log-acknowledgement-personality
-  voice-smoothen
-  'change-log-acknowledgement-face
-  "Personality used for acknowledgements."
-  :group 'emacspeak-add-log)
-(def-voice-font emacspeak-change-log-conditionals-personality 
-  voice-animate
-  'change-log-conditionals-face
-  "Personality used for conditionals."
-  :group 'emacspeak-add-log)
-
-(def-voice-font emacspeak-change-log-date-personality
-  voice-brighten
-  'change-log-date-face
-  "Personality used for dates."
-  :group 'emacspeak-add-log)
-
-(def-voice-font emacspeak-change-log-email-personality
-  voice-womanize-1
-  'change-log-email-face
-  "Personality used for email address."
-  :group 'emacspeak-add-log)
-
-(def-voice-font emacspeak-change-log-file-personality
-  voice-bolden
-  'change-log-file-face
-  "Personality used for file names."
-  :group 'emacspeak-add-log)
-
-(def-voice-font emacspeak-change-log-function-personality
-  voice-bolden-extra
-  'change-log-function-face
-  "Personality used for function names."
-  :group 'emacspeak-add-log)
-
-(def-voice-font emacspeak-change-log-list-personality
-  voice-lighten
-  'change-log-list-face
-  "Personality used for lists."
-  :group 'emacspeak-add-log)
-
-(def-voice-font emacspeak-change-log-name-personality
-  voice-lighten-extra
-  'change-log-name-face
-  "Personality used for names."
-  :group 'emacspeak-add-log)
+(voice-setup-add-map
+ '(
+   (change-log-acknowledgement voice-smoothen)
+   (change-log-conditionals voice-animate)
+   (change-log-email voice-womanize-1)
+   (change-log-function voice-bolden-extra)
+   (change-log-file voice-bolden)
+   (change-log-email voice-womanize-1)
+   (change-log-list voice-lighten)
+   (change-log-name voice-lighten-extra)
+   ))
 
 ;;}}}
 

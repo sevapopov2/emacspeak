@@ -1,6 +1,6 @@
 ;;; emacspeak-realaudio.el --- Play realaudio from Emacs
-;;; $Id: emacspeak-realaudio.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-realaudio.el 4163 2006-09-01 13:23:42Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description: Single click access to RealAudio from emacspeak
 ;;; Keywords: Emacspeak, RealAudio
 ;;{{{  LCD Archive entry: 
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-09-01 06:23:42 -0700 (Fri, 01 Sep 2006) $ |
+;;;  $Revision: 4163 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2004, T. V. Raman
+;;; Copyright (c) 1995 -- 2006, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -455,7 +455,9 @@ commands via single keystrokes."
   (define-key emacspeak-realaudio-mode-map "w"
     'emacspeak-realaudio-write-mp3-clip)
   (define-key emacspeak-realaudio-mode-map [left] 'emacspeak-aumix-wave-decrease)
-  (define-key emacspeak-realaudio-mode-map [right] 'emacspeak-aumix-wave-increase)
+  (define-key emacspeak-realaudio-mode-map [right]
+    'emacspeak-aumix-wave-increase)
+  (define-key emacspeak-realaudio-mode-map "q" 'bury-buffer)
   (loop for c in emacspeak-realaudio-trplayer-keys
         do
         (define-key emacspeak-realaudio-mode-map

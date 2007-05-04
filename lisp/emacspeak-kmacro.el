@@ -1,6 +1,6 @@
 ;;; emacspeak-kmacro.el --- Speech-enable kbd macro interface
-;;; $Id: emacspeak-kmacro.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-kmacro.el 4241 2006-10-28 01:16:12Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for KMACRO 
 ;;; Keywords: Emacspeak, kmacro 
 ;;{{{  LCD Archive entry:
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-10-27 18:16:12 -0700 (Fri, 27 Oct 2006) $ |
+;;;  $Revision: 4241 $ |
 ;;; Location undetermined
 ;;;
 
@@ -94,7 +94,7 @@
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-mode-lin)))
+    (emacspeak-speak-mode-line)))
 (defadvice kmacro-call-ring-2nd-repeat (before emacspeak pre act
                                                comp)
   "Provide auditory feedback."

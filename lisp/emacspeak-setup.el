@@ -1,21 +1,21 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-setup.el 4288 2006-11-23 16:30:56Z tv.raman.tv $
+;;; $Author: tv.raman.tv $ 
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
 ;;{{{  LCD Archive entry: 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-11-23 08:30:56 -0800 (Thu, 23 Nov 2006) $ |
+;;;  $Revision: 4288 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -91,6 +91,38 @@ emacspeak is compiled or started.")
 (defvar emacspeak-resource-directory (expand-file-name "~/.emacspeak/")
   "Directory where Emacspeak resource files such as
 pronunciation dictionaries are stored. ")
+;;;###autoload
+(defvar emacspeak-readme-file
+  (expand-file-name "README"
+                    emacspeak-directory)
+  "README file from where we get SVN revision number.")
+
+;;;###autoload
+(defconst emacspeak-version
+  (format
+   "25.0 %s"
+   (cond
+    ((file-exists-p emacspeak-readme-file)
+     (let ((buffer (find-file-noselect emacspeak-readme-file))
+           (revision nil))
+       (save-excursion
+         (set-buffer buffer)
+         (goto-char (point-min))
+         (setq revision
+               (format "Revision %s"
+                       (nth 2 (split-string
+                               (buffer-substring-no-properties
+                                (line-beginning-position)
+                                (line-end-position)))))))
+       (kill-buffer buffer)
+       revision))
+    (t "")))
+  "Version number for Emacspeak.")
+
+;;;###autoload
+(defconst emacspeak-codename
+  "ActiveDog"
+  "Code name of present release.")
 
 ;;}}}
 ;;{{{ speech rate 
@@ -140,16 +172,6 @@ pronunciation dictionaries are stored. ")
 ;;; Use (add-hook 'emacspeak-startup-hook ...)
 ;;; to add your personal settings. 
 
-;;}}}
-;;{{{ auxiliarry autoloads
-(mapcar
- #'(lambda (f)
-     (autoload f  "atom-blogger"
-       "Edit/post blogger entries using ATOM." t))
- '(atom-blogger-new-entry atom-blogger-edit-entry
-                          atom-blogger-put-entry
-                          atom-blogger-post-entry
-                          atom-blogger-publish))
 ;;}}}
 (emacspeak)
 (provide 'emacspeak-setup)
