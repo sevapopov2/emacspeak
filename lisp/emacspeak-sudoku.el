@@ -1,21 +1,21 @@
 ;;; emacspeak-sudoku.el --- Play SuDoku 
-;;; $Id: emacspeak-sudoku.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-sudoku.el 4285 2006-11-20 02:29:37Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description: Playing SuDoku ;;; Keywords: Emacspeak, sudoku
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-11-19 18:29:37 -0800 (Sun, 19 Nov 2006) $ |
+;;;  $Revision: 4285 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2004, T. V. Raman
+;;; Copyright (c) 1995 -- 2006, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -391,6 +391,7 @@ See
   "Pop saved state off stack and redraw board."
   (interactive)
   (declare (special emacspeak-sudoku-history-stack
+                    sudoku-onscreen-instructions
                     start-board
                     current-board))
   (let ((original (sudoku-get-cell-from-point (point))))

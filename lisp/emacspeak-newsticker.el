@@ -1,6 +1,6 @@
 ;;; emacspeak-newsticker.el --- Speech-enable newsticker
-;;; $Id: emacspeak-newsticker.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-newsticker.el 4074 2006-08-19 17:48:45Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for NEWSTICKER 
 ;;; Keywords: Emacspeak, newsticker 
 ;;{{{  LCD Archive entry:
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-19 10:48:45 -0700 (Sat, 19 Aug 2006) $ |
+;;;  $Revision: 4074 $ |
 ;;; Location undetermined
 ;;;
 
@@ -53,19 +53,12 @@
 (require 'backquote)
 ;;}}}
 ;;{{{ define personalities 
-(def-voice-font emacspeak-newsticker-new-item-personality
-  voice-brighten
-  'newsticker-new-item-face
-  "Personality for new items.")
-(def-voice-font emacspeak-newsticker-old-item-personality
-  voice-monotone
-  'newsticker-old-item-face
-  "Personality for old items.")
-
-(def-voice-font emacspeak-newsticker-feed-personality
-  voice-animate
-  'newsticker-feed-face
-  "Personality for news feed.")
+(voice-setup-add-map
+ '(
+   (newsticker-new-item-face voice-brighten)
+   (newsticker-old-item-face voice-monotone)
+   (newsticker-feed-face voice-animate)
+   ))
 ;;}}}
 ;;{{{ advice functions
 

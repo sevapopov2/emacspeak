@@ -1,6 +1,6 @@
 ;;; emacspeak-eterm.el --- Speech enable eterm -- Emacs' terminal emulator  term.el
-;;; $Id: emacspeak-eterm.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-eterm.el 4199 2006-09-22 02:24:22Z tv.raman.tv $
+;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension to speech enable eterm. 
 ;;; Keywords: Emacspeak, Eterm, Terminal emulation, Spoken Output
 ;;{{{  LCD Archive entry: 
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-09-21 19:24:22 -0700 (Thu, 21 Sep 2006) $ |
+;;;  $Revision: 4199 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -553,10 +553,8 @@ without sending input to the terminal itself."
                     eterm-char-mode
                     buffer-read-only emacspeak-eterm-keymap term-raw-map))
   (emacspeak-eterm-nuke-cached-info )
-  (or (assq 'emacspeak-eterm-review-p  minor-mode-alist)
-      (setq minor-mode-alist
-            (append minor-mode-alist
-                    '((emacspeak-eterm-review-p " Review")))))
+  (setq mode-line-process
+        '("review"))
   (if eterm-char-mode 
       (cond 
        (emacspeak-eterm-review-p        ;turn it off 
@@ -567,12 +565,10 @@ without sending input to the terminal itself."
         (message "Entering terminal review mode press  q  to return to normal")
         (setq emacspeak-eterm-review-p t)
         (use-local-map emacspeak-eterm-keymap)))
-    (message "Terminal review should be used when eterm is in
-character mode "))
+    (message
+     "Terminal review should be used when eterm is in character mode "))
   (emacspeak-auditory-icon
-   (if emacspeak-eterm-review-p
-       'on
-     'off)))
+   (if emacspeak-eterm-review-p 'on 'off)))
 
 ;;}}}
 ;;{{{  Cut and paste while reviewing:
@@ -1085,23 +1081,20 @@ Use command emacspeak-eterm-toggle-pointer-mode bound to
 
 (defadvice  term-emulate-terminal (around emacspeak pre act compile )
   "Record position, emulate, then speak what happened.
-Also keep track of terminal highlighting etc.
-Feedback is limited to current window 
-If a `current window`
-is set (see command emacspeak-eterm-set-filter-window
-bound to \\[emacspeak-eterm-set-filter-window].
-How output is spoken  depends on whether the terminal is in
-character or line mode.
-When in character mode, output is spoken like off a real terminal.
-When in line mode,
-behavior resembles that of comint mode;
-i.e. you hear the output if emacspeak-eterm-autospeak is t.
-Do not set this variable by hand:
-See command emacspeak-toggle-eterm-autospeak bound to 
+Also keep track of terminal highlighting etc.  Feedback is
+limited to current window If a `current window` is set (see
+command emacspeak-eterm-set-filter-window bound to
+\\[emacspeak-eterm-set-filter-window].  How output is spoken
+depends on whether the terminal is in character or line mode.
+
+When in character mode, output is spoken like off a real
+terminal.  When in line mode, behavior resembles that of comint
+mode; i.e. you hear the output if emacspeak-eterm-autospeak is t.
+Do not set this variable by hand: See command
+emacspeak-toggle-eterm-autospeak bound to
 \\[emacspeak-toggle-eterm-autospeak]"
   (declare (special emacspeak-eterm-row emacspeak-eterm-column
                     eterm-line-mode eterm-char-mode
-                    focus
                     emacspeak-eterm-filter-window emacspeak-eterm-pointer-mode
                     emacspeak-eterm-autospeak 
                     term-current-row term-current-column))
@@ -1154,7 +1147,8 @@ See command emacspeak-toggle-eterm-autospeak bound to
           (error nil )))
        (emacspeak-eterm-focus-window
         (emacspeak-eterm-speak-window emacspeak-eterm-focus-window))
-       ((and (= last-input-event 127)
+       ((and (or (eq last-command-event 127) ; xterm/console sends 127
+                 (eq last-command-event 'backspace)) ; X sends 'backspace
              (= new-row emacspeak-eterm-row )
              (= -1 (- new-column emacspeak-eterm-column ))
              current-char)              ;you backspaced?
@@ -1163,7 +1157,7 @@ See command emacspeak-toggle-eterm-autospeak bound to
         (dtk-tone 500 50))
        ((and (= new-row emacspeak-eterm-row )
              (= 1 (- new-column emacspeak-eterm-column ))) ;you inserted a character:
-        (if (= 32 last-input-event )
+        (if (eq 32 last-command-event )
             (save-excursion
               (backward-char 2)
               (emacspeak-speak-word nil))
@@ -1199,20 +1193,15 @@ there is terminal activity.")
       (emacspeak-speak-region saved-point (point)))
     ad-return-value )
   )
-
-(def-voice-font emacspeak-eterm-underline-personality
-  voice-brighten-medium
-  'term-underline
-  "Underline personality for eterm.")
-
+(voice-setup-add-map
+ '(
+   (term-underline voice-brighten-medium)
+   ))
 (defadvice term-line-mode (after emacspeak pre act)
   "Announce that you entered line mode. "
-  (declare (special eterm-char-mode  eterm-line-mode))
   (make-local-variable 'eterm-line-mode)
-  (or (assq 'eterm-line-mode minor-mode-alist)
-      (setq minor-mode-alist
-            (append minor-mode-alist
-                    '((eterm-line-mode " Line")))))
+  (setq mode-line-process
+        '("line"))
   (setq eterm-char-mode nil 
         eterm-line-mode t )
   (when (interactive-p)
@@ -1220,12 +1209,8 @@ there is terminal activity.")
 
 (defadvice term-char-mode (after emacspeak pre act)
   "Announce you entered character mode. "
-  (declare (special eterm-char-mode  eterm-line-mode))
-  (make-local-variable'term-char-mode)
-  (or (assq 'eterm-char-mode minor-mode-alist)
-      (setq minor-mode-alist
-            (append minor-mode-alist
-                    '((eterm-char-mode " Character")))))
+  (setq mode-line-process
+        '("char"))
   (setq eterm-char-mode t
         eterm-line-mode nil )
   (emacspeak-eterm-setup-raw-keys)

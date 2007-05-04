@@ -1,6 +1,6 @@
-;;; emacspeak-gridtext.el --- gridtext
-;;; $Id: emacspeak-gridtext.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $
+;;; emacspeak-gridtext.el --- Overlay Grids To filter columnar text
+;;; $Id: emacspeak-gridtext.el 4150 2006-08-30 00:25:40Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak module for laying grids on text
 ;;; Keywords: Emacspeak, gridtext
 ;;{{{  LCD Archive entry:
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-29 17:25:40 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4150 $ |
 ;;; Location undetermined
 ;;;
 
@@ -215,7 +215,6 @@ end   as specified by grid."
 (defvar emacspeak-gridtext-keymap nil
   "Prefix keymap used by gridtext.")
 
-;;;###autoload
 (define-prefix-command  'emacspeak-gridtext 'emacspeak-gridtext-keymap)
 (define-key emacspeak-gridtext-keymap "a" 'emacspeak-gridtext-apply)
 (define-key emacspeak-gridtext-keymap "l"

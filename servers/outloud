@@ -5,8 +5,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2006/05/03 02:54:04 $ |
-#  $Revision: 24.0 $ | 
+# $Date: 2006-11-03 07:12:59 -0800 (Fri, 03 Nov 2006) $ |
+#  $Revision: 4248 $ | 
 # Location undetermined
 #
 
@@ -178,7 +178,7 @@ proc tts_allcaps_beep {flag} {
 
 proc tts_reset {} {
     global tts 
-    synth  -reset
+    #synth  -reset
     queue_clear
     synth "Resetting engine to factory defaults."
 }
@@ -237,7 +237,7 @@ proc speech_task {} {
             }
             a {
                 set sound [lindex $event 1]
-                exec $tts(play) $sound >/dev/null   &
+                catch "exec $tts(play) $sound > /dev/null &" errCode
             }
             b {
                 if {$tts(beep)} {
@@ -362,6 +362,7 @@ if {[file exists /usr/include/alsa/asoundlib.h]
 }
 
 service
+alsaState
 
 #Start the main command loop:
 

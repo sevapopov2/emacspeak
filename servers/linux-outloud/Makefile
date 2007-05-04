@@ -1,4 +1,4 @@
-#$Id: Makefile,v 24.0 2006/05/03 02:54:04 raman Exp $
+#$Id: Makefile 3963 2006-05-31 15:42:51Z raman $
 CC=g++
 INSTALL = install
 PREFIX = /usr
@@ -8,10 +8,9 @@ CFLAGS=   -g    -O2 -fPIC  -DPIC -pedantic -ansi -Wall
 LIBS= -ltcl -ldl
 
 TTS=tcleci.so eci.ini VIAVOICE
-ATTS=atcleci.cpp  ALSA asoundrc
-
+ATTS=atcleci.so atcleci.cpp  ALSA asoundrc
+MISC=alsaparams.c
 all: tcleci.so 
-
 
 tcleci.lo: tcleci.cpp
 	libtool --mode=compile $(CC) $(CFLAGS) -c $<
@@ -25,11 +24,16 @@ atcleci.lo: atcleci.cpp
 atcleci.so: atcleci.lo
 	libtool --mode=link $(CC) $(CFLAGS) -g -o $@ atcleci.lo -lasound $(LIBS)  -shared
 
+alsaparams.o: alsaparams.c
+	libtool --mode=compile $(CC) $(CFLAGS) -c $<
 
+alsaparams: alsaparams.o
+	libtool --mode=link $(CC) $(CFLAGS) -g -o $@ $<  -lasound 
 clean:
-	rm -f tcleci.so tcleci.o tcleci.lo
+	rm -f *.so *.o *.lo \
+atcleci.so atcleci.o atcleci.lo
 
-install: tcleci.so
+install:  tcleci.so
 	if test ! -d $(libdir) ; then mkdir $(libdir); fi ; \
 	chmod 755 $(libdir); \
 	$(INSTALL) -m 0644 $(TTS) $(ATTS) $(libdir)

@@ -1,6 +1,6 @@
 ;;; emacspeak-imcom.el --- Emacspeak interface to IMCom/Jabber
-;;; $Id: emacspeak-imcom.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-imcom.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Contains convenience imcom
 ;;; Keywords: Emacspeak,  Audio Desktop Imcom
 ;;{{{  LCD Archive entry:
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;

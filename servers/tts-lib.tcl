@@ -1,11 +1,11 @@
-#$Id: tts-lib.tcl,v 24.0 2006/05/03 02:54:04 raman Exp $
+#$Id: tts-lib.tcl 4151 2006-08-30 00:44:57Z tv.raman.tv $
 # {{{ LCD Entry: 
 #x
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2006/05/03 02:54:04 $ |
-#  $Revision: 24.0 $ | 
+# $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+#  $Revision: 4151 $ | 
 # Location undetermined
 #
 
@@ -13,7 +13,7 @@
 # {{{ Copyright:
 
 #x
-#Copyright (C) 1995 -- 2003, T. V. Raman 
+#Copyright (C) 1995 -- 2006, T. V. Raman 
 #All Rights Reserved
 # Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 # All Rights Reserved. 

@@ -1,23 +1,23 @@
 ;;; emacspeak-finder.el --- Generate a database of keywords and descriptions for all Emacspeak  packages
-;;; $Id: emacspeak-finder.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $ 
-;;; Description: Auditory interface 
+;;; $Id: emacspeak-finder.el 4164 2006-09-02 17:25:18Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
+;;; Description: Auditory interface
 ;;; Keywords: Emacspeak, Finder
-;;{{{  LCD Archive entry: 
+;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-09-02 10:25:18 -0700 (Sat, 02 Sep 2006) $ |
+;;;  $Revision: 4164 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2004, T. V. Raman
-;;; All Rights Reserved. 
+;;; Copyright (c) 1995 -- 2006, T. V. Raman
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -39,20 +39,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;Inspired by finder.el
-;;{{{ requires 
-
-(require 'emacspeak-preamble)
+;;; Not to be loaded at runtime.
+;;{{{ requires
+(require 'cl)
+(require 'finder)
 (require 'lisp-mnt)
 
 ;;}}}
+;;{{{ initial
 
 (defvar emacspeak-finder-inf-file
   (concat emacspeak-lisp-directory "/" "emacspeak-finder-inf.el")
   "File where we save the keyword/package associations for Emacspeak")
 
 (defvar emacspeak-finder-preamble
-  (concat 
-   ";;;$Id: emacspeak-finder.el,v 24.0 2006/05/03 02:54:00 raman Exp $\n"
+  (concat
+   ";;;$Id: emacspeak-finder.el 4164 2006-09-02 17:25:18Z tv.raman.tv $\n"
    ";;; emacspeak-finder-inf.el --- keyword-to-package mapping\n"
    ";; Keywords: help\n"
    ";;; Commentary:\n"
@@ -62,72 +64,78 @@
    "(require 'cl)\n"
    "\n(setq emacspeak-finder-package-info '(\n")
   "Preamble inserted at the front of emacspeak-finder-inf.el")
+
+;;}}}
 ;;{{{ compile emacspeak keywords
 
-(defvar emacspeak-finder-postamble 
+(defvar emacspeak-finder-postamble
   (concat
    "))\n\n"
    "(loop for l  in (reverse emacspeak-finder-package-info) do\n (push l finder-package-info))\n"
    "(provide 'emacspeak-finder-inf)\n\n;;; emacspeak-finder-inf.el ends here\n")
   "Text to insert at the end of emacspeak-finder-inf")
+(if (=  22 emacs-major-version)
+    (defun emacspeak-finder-compile-keywords ()
+      "Generate finder keywords for emacspeak."
+      (let ((generated-finder-keywords-file
+             (expand-file-name
+              "emacspeak-finder-inf.el" emacspeak-lisp-directory)))
+        (finder-compile-keywords emacspeak-lisp-directory
+                                 (expand-file-name "atom-blogger"
+                                                   emacspeak-lisp-directory))))
 
-(defun emacspeak-finder-compile-keywords ()
-  "Generate the keywords association list into the file
+;;; older version for pre-22
+  (defun emacspeak-finder-compile-keywords ()
+    "Generate the keywords association list into the file
 emacspeak-finder-inf.el."
-  (declare (special emacspeak-lisp-directory emacspeak-finder-inf-file
-                    emacspeak-finder-preamble))
-  (save-excursion
-    (let ((processed nil)
-          (d emacspeak-lisp-directory))
-      (find-file emacspeak-finder-inf-file)
-      (erase-buffer)
-      (insert emacspeak-finder-preamble)
-      (mapcar
-       (lambda (f) 
-         (if (and (string-match "^[^=.].*\\.el$" f)
-                  (not (member f processed)))
-             (let (summary keystart keywords)
-               (setq processed (cons f processed))
-               (save-excursion
-                 (set-buffer (get-buffer-create "*finder-scratch*"))
-                 (buffer-disable-undo (current-buffer))
-                 (erase-buffer)
-                 (insert-file-contents
-                  (concat (file-name-as-directory (or d ".")) f))
-                 (setq summary (lm-synopsis))
-                 (setq keywords (lm-keywords)))
-               (insert
-                (format "    (\"%s\"\n        " f))
-               (prin1 summary (current-buffer))
-               (insert
-                "\n        ")
-               (setq keystart (point))
-               (insert
-                (if keywords (format "(%s)" keywords) "nil")
-                ")\n")
-               (subst-char-in-region keystart (point) ?, ? )
-               )))
-       (directory-files (or d ".")))
-      (insert emacspeak-finder-postamble)
-      (kill-buffer "*finder-scratch*")
-      (eval-buffer) ;; So we get the new keyword list immediately
-      (basic-save-buffer)
-      (kill-buffer nil))))
-
-;;}}}
-;;{{{ advice
-
-(defadvice finder-mode (after emacspeak pre act comp)
-  "Provide auditory feedback"
-  (emacspeak-auditory-icon 'open-object))
+    (declare (special emacspeak-lisp-directory emacspeak-finder-inf-file
+                      emacspeak-finder-preamble))
+    (save-excursion
+      (let ((processed nil)
+            (d emacspeak-lisp-directory)
+            (buffer (find-file-noselect  emacspeak-finder-inf-file)))
+        (set-buffer buffer)
+        (erase-buffer)
+        (insert emacspeak-finder-preamble)
+        (mapcar
+         (lambda (f)
+           (if (and (string-match "^[^=.].*\\.el$" f)
+                    (not (member f processed)))
+               (let (summary keystart keywords)
+                 (push f processed)
+                 (save-excursion
+                   (set-buffer (get-buffer-create "*finder-scratch*"))
+                   (buffer-disable-undo (current-buffer))
+                   (erase-buffer)
+                   (insert-file-contents
+                    (concat (file-name-as-directory (or d ".")) f))
+                   (setq summary (lm-synopsis))
+                   (setq keywords (lm-keywords)))
+                 (insert
+                  (format "    (\"%s\"\n        " f))
+                 (prin1 summary (current-buffer))
+                 (insert
+                  "\n        ")
+                 (setq keystart (point))
+                 (insert
+                  (if keywords (format "(%s)" keywords) "nil")
+                  ")\n")
+                 (subst-char-in-region keystart (point) ?, ? )
+                 )))
+         (directory-files (or d ".")))
+        (insert emacspeak-finder-postamble)
+        (kill-buffer "*finder-scratch*")
+        (eval-buffer) ;; So we get the new keyword list immediately
+        (basic-save-buffer)
+        (kill-buffer nil)))))
 
 ;;}}}
 (provide 'emacspeak-finder)
-;;{{{ end of file 
+;;{{{ end of file
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}

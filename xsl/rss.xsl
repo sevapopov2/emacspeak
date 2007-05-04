@@ -60,6 +60,7 @@ View an RSS feed as clean HTML
         </xsl:attribute>
         <xsl:apply-templates select="rss:title|nsrss:title"/>
       </xsl:element>
+	  <br/>
       <xsl:apply-templates select="rss:description|nsrss:description"/>
     </li>
   </xsl:template>
@@ -106,7 +107,9 @@ View an RSS feed as clean HTML
         </xsl:attribute>
         <xsl:apply-templates select="title"/>
       </xsl:element>
+	  <br/>
       <xsl:apply-templates select="description"/>
+	  <br/>
       <xsl:apply-templates select="enclosure"/>
     </li>
   </xsl:template>
@@ -131,14 +134,14 @@ View an RSS feed as clean HTML
     </xsl:element>
   </xsl:template>
   <xsl:template match="title|description">
-    <xsl:apply-templates/>
+    <xsl:value-of select="." disable-output-escaping="yes"/>
   </xsl:template>
   <!-- } -->
   <!-- {identity default  -->
   <xsl:template match="*|@*">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
-      <xsl:apply-templates select="node()"/>
+      <xsl:apply-templates select="node()" disable-output-escaping="yes"/>
     </xsl:copy>
   </xsl:template>
   <!-- } -->

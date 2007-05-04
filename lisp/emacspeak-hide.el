@@ -1,6 +1,6 @@
 ;;; emacspeak-hide.el --- Provides user commands for hiding and exposing blocks of text
-;;; $Id: emacspeak-hide.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-hide.el 4157 2006-08-30 23:43:47Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Hide and expose blocks of text
 ;;; Keywords: Emacspeak, Speak, Spoken Output, hide
 ;;{{{  LCD Archive entry:
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-30 16:43:47 -0700 (Wed, 30 Aug 2006) $ |
+;;;  $Revision: 4157 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -41,7 +41,7 @@
 ;;{{{  Required modules
 
 ;;; Commentary:
-;; 
+;;
 ;;{{{  Introduction
 
 ;;; Flexible hide and show for emacspeak.
@@ -53,7 +53,7 @@
 
 ;;}}}
 ;;; Code:
-(require 'emacspeak-preamble)      
+(require 'emacspeak-preamble)
 ;;}}}
 ;;{{{ voice locking for block header lines
 
@@ -393,6 +393,7 @@ and when you have heard enough navigate easily  to move past the block."
         (setq block (concat "^"
                             (regexp-quote block-prefix)))
         (set-buffer scratch-buffer)
+        (setq buffer-undo-list t)
         (ems-modify-buffer-safely
          (erase-buffer)
          (insert contents)
