@@ -1,24 +1,39 @@
-;; emacspeak-muse.el -- Speech support for muse authoring environment
+;;; emacspeak-muse.el --- Speech-enable Muse
+;;; $Id: emacspeak-muse.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
+;;; Description:  Speech-enable Muse
+;;; Keywords: Emacspeak,  Audio Desktop Muse
+;;{{{  LCD Archive entry:
 
-;; Copyright  (C)  2005  Sergei V. Fleytin <fleytin@mail.ru>
+;;; LCD Archive Entry:
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
+;;; A speech interface to Emacs |
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ |
+;;; Location undetermined
+;;;
 
-;; Version: 0.1
-;; Keywords: emacspeak, hypermedia, document authoring
-
-;; Author: Sergei V. Fleytin <fleytin@mail.ru>
-;; Maintainer: Sergei V. Fleytin <fleytin@mail.ru>
-
-;; Note: Most of the code in this module is stolen from emacspeak-wiki.el by Igor B. Poretsky <master@goga.energo.ru>
-
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License
-;; as published by the Free Software Foundation; either version 2
-;; of the License, or (at your option) any later version.
-
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
+;;}}}
+;;{{{  Copyright:
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
+;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
+;;; All Rights Reserved.
+;;;
+;;; This file is not part of GNU Emacs, but the same permissions apply.
+;;;
+;;; GNU Emacs is free software; you can redistribute it and/or modify
+;;; it under the terms of the GNU General Public License as published by
+;;; the Free Software Foundation; either version 2, or (at your option)
+;;; any later version.
+;;;
+;;; GNU Emacs is distributed in the hope that it will be useful,
+;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; GNU General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU General Public License
+;;; along with GNU Emacs; see the file COPYING.  If not, write to
+;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, write to the Free Software

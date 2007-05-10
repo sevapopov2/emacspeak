@@ -1,6 +1,6 @@
 ;;; emacspeak-make-mode.el --- Speech enable make-mode
-;;; $Id: emacspeak-make-mode.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-make-mode.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension to speech enable make-mode
 ;;; Keywords: Emacspeak, Make
 ;;{{{  LCD Archive entry: 
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -140,6 +140,31 @@
     (message
      "Inserted selections into client  %s"
      (buffer-name makefile-browser-client))))
+
+;;}}}
+;;{{{ personalities 
+
+(voice-setup-add-map
+ '(
+   (makefile-space voice-monotone)
+   (makefile-targets voice-bolden)
+   (makefile-shell voice-animate)
+   (makefile-makepp-perl voice-smoothen)
+   ))
+
+;;}}}
+;;{{{ setup mode hook:
+
+(add-hook 'makefile-mode-hook
+          (function (lambda ()
+                      (declare (special dtk-split-caps))
+                      (voice-lock-mode 1)
+                      (dtk-set-punctuations 'all)
+                      (or dtk-split-caps
+                          (dtk-toggle-split-caps))
+                      (or emacspeak-audio-indentation
+                          (emacspeak-toggle-audio-indentation))
+                      (emacspeak-dtk-sync))))
 
 ;;}}}
 (provide 'emacspeak-make-mode)

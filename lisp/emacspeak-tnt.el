@@ -1,6 +1,6 @@
 ;;; emacspeak-tnt.el --- Instant Messenger 
-;;; $Id: emacspeak-tnt.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-tnt.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Speech-enable AOL Instant Messenger Client TNT
 ;;; Keywords: Emacspeak, Instant Messaging 
 ;;{{{  LCD Archive entry:
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2004, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2006, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -240,34 +240,15 @@ automatically."
 
 ;;}}}
 ;;{{{ set up face to voice mapping
-
-(def-voice-font emacspeak-tnt-my-name-personality
-  voice-smoothen
-  'tnt-my-name-face
-  "tnt-my-name-face")
-
-(def-voice-font  emacspeak-tnt-buddy-list-active-face voice-animate
-  'tnt-buddy-list-active-face
-  "Personality for active buddies.")
-(def-voice-font emacspeak-tnt-buddy-list-inactive-face
-  voice-monotone-medium
-  'tnt-buddy-list-inactive-face
-  "Personality for inactive buddies.")
-
-(def-voice-font emacspeak-tnt-buddy-list-idle-face
-  voice-smoothen-medium
-  'tnt-buddy-list-idle-face
-  "Personality for idle buddies.")
-
-(def-voice-font emacspeak-tnt-buddy-list-away-face
-  voice-monotone
-  'tnt-buddy-list-away-face
-  "Personality for away buddies.")
-(def-voice-font emacspeak-tnt-buddy-list-pounce-face
-  'ursula
-  'tnt-buddy-list-pounce-face
-  "Personality for pounce buddies.")
-
+(voice-setup-add-map
+ '(
+   (tnt-my-name-face voice-smoothen)
+   (tnt-buddy-list-active-face voice-animate)
+   (tnt-buddy-list-inactive-face voice-monotone-medium)
+   (tnt-buddy-list-idle-face voice-smoothen-medium)
+   (tnt-buddy-list-away-face voice-monotone)
+   (tnt-buddy-list-pounce-face (quote ursula))
+   ))
 ;;}}}
 ;;{{{  Activate pronunciations 
 (add-hook 'tnt-buddy-list-mode-hook

@@ -1,5 +1,5 @@
 ;;; emacspeak-compile.el --- Speech enable  navigation of  compile errors, grep matches
-;;; $Author: raman $ 
+;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extensions to  the compile package 
 ;;; Keywords: Emacspeak compile
 ;;{{{  LCD Archive entry: 
@@ -7,14 +7,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -50,22 +50,15 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
-;;{{{ persoanlities 
-(def-voice-font emacspeak-compilation-info-personality
-  voice-lighten
-  'compilation-info
-  "Personality used for information in compilation lines."
-  :group 'emacspeak-compile)
-(def-voice-font emacspeak-compilation-error-personality
-  voice-animate-extra
-  'compilation-error
-  "Personality used for errors in compilation lines."
-  :group 'emacspeak-compile)
-(def-voice-font emacspeak-compilation-warning-personality
-  voice-animate
-  'compilation-warning
-  "Personality used for warnings in compilation lines."
-  :group 'emacspeak-compile)
+;;{{{ Personalities  
+(voice-setup-add-map
+ '(
+   (compilation-line-number voice-smoothen)
+   (compilation-column-number voice-smoothen)
+   (compilation-info voice-lighten)
+   (compilation-error voice-animate-extra)
+   (compilation-warning voice-animate)
+   ))
 
 ;;}}}
 ;;{{{  functions

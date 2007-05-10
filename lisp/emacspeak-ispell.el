@@ -1,23 +1,23 @@
 ;;; emacspeak-ispell.el --- Speech enable Ispell -- Emacs' interactive spell checker
-;;; $Id: emacspeak-ispell.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-ispell.el 4276 2006-11-17 18:01:30Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enable ispell
 ;;; Keywords: Emacspeak, Ispell, Spoken Output, Ispell version 2.30
-;;{{{  LCD Archive entry: 
+;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-11-17 10:01:30 -0800 (Fri, 17 Nov 2006) $ |
+;;;  $Revision: 4276 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
-;;; All Rights Reserved. 
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -43,7 +43,7 @@
 ;;; This module speech enables ispell.
 ;;; Implementation note: This is hard because of how  ispell.el is written
 ;;; Namely, all of the work is done by one huge hairy function.
-;;; This makes advising it hard. 
+;;; This makes advising it hard.
 
 ;;; Original version of this extension was written under emacs-19.28
 ;;; for ispell.el version 2.30
@@ -57,19 +57,15 @@
 ;;}}}
 ;;{{{  define personalities
 
-(defcustom ispell-highlight-personality voice-bolden
-  "Voice used to highlight spelling errors. "
-  :type 'symbol
-  :group 'emacspeak-ispell)
+(voice-setup-add-map
+ '(
+   (ispell-highlight-face voice-bolden)
+))
 
 ;;}}}
-;;{{{  first set up voice  highlighting in 2.30:
-(declaim (special ispell-version))
-(when  (string-lessp ispell-version "2.37")
-  (fset 'ispell-highlight-spelling-error
-        (symbol-function 'ispell-highlight-spelling-error-overlay))
+;;{{{  first set up voice  highlighting
 
-  (defadvice ispell-highlight-spelling-error (after emacspeak act )
+(defadvice ispell-highlight-spelling-error (after emacspeak act )
     "Use voice locking to highlight the error.
 Will clobber any existing personality property defined on start end"
     (let ((start (ad-get-arg 0))
@@ -77,10 +73,9 @@ Will clobber any existing personality property defined on start end"
           (highlight (ad-get-arg 2 )))
       (if highlight
           (put-text-property  start end
-                              'personality  ispell-highlight-personality )
+                              'personality  voice-bolden)
         (put-text-property start end
                            'personality  nil ))))
-  )
 
 ;;}}}
 ;;{{{  ispell command loop:
@@ -107,17 +102,20 @@ many available corrections."
 (defadvice ispell-command-loop (before emacspeak pre act )
   "Speak the line containing the incorrect word.
  Then speak  the possible corrections. "
-  (let ((choices  (ad-get-arg 0 ))
-        (scratch-buffer (get-buffer-create " *dtk-scratch-buffer* "))
+  (let ((scratch-buffer (get-buffer-create " *dtk-scratch-buffer* "))
+        (choices  (ad-get-arg 0 ))
         (line nil)
         (start (ad-get-arg 3))
         (end (ad-get-arg 4))
         (position 0))
-    (setq line 
-          (ems-set-personality-temporarily start end ispell-highlight-personality
-                                           (thing-at-point 'line)))
+    (setq line
+          (ems-set-personality-temporarily start end voice-bolden
+                                           (thing-at-point
+  'line)))
     (save-excursion
       (set-buffer scratch-buffer)
+      (setq voice-lock-mode t)
+      (setq buffer-undo-list t)
       (dtk-set-punctuations 'all)
       (erase-buffer)
       (insert line)
@@ -135,9 +133,8 @@ many available corrections."
       (dtk-speak (buffer-string )))))
 
 ;;}}}
-  
 
-(defadvice ispell-comments-and-strings (around emacspeak pre act comp) 
+(defadvice ispell-comments-and-strings (around emacspeak pre act comp)
   "Stop chatter by turning off messages"
   (cond
    ((interactive-p)
@@ -197,13 +194,12 @@ many available corrections."
   ad-return-value)
 
 ;;}}}
-
 (provide 'emacspeak-ispell)
-;;{{{  emacs local variables 
+;;{{{  emacs local variables
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}

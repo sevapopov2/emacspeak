@@ -1,6 +1,6 @@
 ;;; emacspeak-xslt-process.el --- speech-enable xslt-process 
-;;; $Id: emacspeak-xslt-process.el,v 24.0 2006/05/03 02:54:02 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-xslt-process.el 4074 2006-08-19 17:48:45Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak module for speech-enabling
 ;;; xslt-process mode
 ;;; Keywords: Emacspeak, xslt-process
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:02 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-19 10:48:45 -0700 (Sat, 19 Aug 2006) $ |
+;;;  $Revision: 4074 $ |
 ;;; Location undetermined
 ;;;
 

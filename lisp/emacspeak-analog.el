@@ -1,6 +1,6 @@
-;;; emacspeak-analog.el --- Speech-enable
-;;; $Id: emacspeak-analog.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $
+;;; emacspeak-analog.el --- Speech-enable analog -- a log viewer
+;;; $Id: emacspeak-analog.el 4150 2006-08-30 00:25:40Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for ANALOG log analyzer 
 ;;; Keywords: Emacspeak, analog 
 ;;{{{  LCD Archive entry:
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-08-29 17:25:40 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4150 $ |
 ;;; Location undetermined
 ;;;
 
@@ -38,8 +38,9 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Commentary:
+
 ;;{{{  Introduction:
+;;; Commentary:
 
 ;;; Speech-enables package analog --convenient log analyzer 
 
@@ -87,11 +88,10 @@
 
 ;;}}}
 ;;{{{ voice setup 
-
-(def-voice-font emacspeak-analog-entry-header-personality voice-bolden
-  'analog-entry-header-face
-  "Personality used for header lines.")
-
+(voice-setup-add-map
+ '(
+   (analog-entry-header-face voice-bolden)
+   ))
 ;;}}}
 ;;{{{ field navigation
 

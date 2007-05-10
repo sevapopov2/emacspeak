@@ -1,6 +1,6 @@
 ;;; emacspeak-buff-menu.el --- Speech enable Buffer Menu Mode -- used to manage buffers
-;;; $Id: emacspeak-buff-menu.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-buff-menu.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to buff-menu
 ;;; Keywords: Emacspeak, Speak, Spoken Output, buff-menu
 ;;{{{  LCD Archive entry: 
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
+;;;  $Revision: 4151 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2004, T. V. Raman
+;;; Copyright (c) 1995 -- 2006, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -51,11 +51,10 @@
 
 ;;}}}
 ;;{{{ voice personalities
-
-(def-voice-font  emacspeak-buffer-menu-buffer-face
-  voice-bolden
-  'Buffer-menu-buffer-face
-  "Personality for highlighting buffer name in buffer-menu.")
+(voice-setup-add-map
+ '(
+   (Buffer-menu-buffer voice-bolden)
+   ))
 
 ;;}}}
 ;;{{{  list buffers 

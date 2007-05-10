@@ -1,20 +1,20 @@
 ;;; voice-setup.el --- Setup voices for voice-lock
-;;; $Id: voice-setup.el,v 24.0 2006/05/03 02:54:02 raman Exp $
-;;; $Author: raman $
+;;; $Id: voice-setup.el 4267 2006-11-13 03:44:53Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Voice lock mode for Emacspeak
 ;;{{{  LCD Archive entry:
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:02 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-11-12 19:44:53 -0800 (Sun, 12 Nov 2006) $ |
+;;;  $Revision: 4267 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2004, T. V. Raman
+;;;Copyright (C) 1995 -- 2006, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -153,6 +153,15 @@
   (declare (special  voice-setup-face-voice-table))
   (gethash face voice-setup-face-voice-table))
 
+(defun voice-setup-show-rogue-voices ()
+  "Return list of voices that map to non-existent faces."
+  (declare (special voice-setup-face-voice-table))
+  (loop
+   for v being the hash-keys of
+   voice-setup-face-voice-table
+   unless (facep v)
+   collect v))
+        
 ;;}}}
 ;;{{{ special form def-voice-font
 
@@ -423,6 +432,10 @@ punctuations.")
    (fixed-pitch voice-monotone)
    (font-lock-builtin-face voice-bolden)
    (font-lock-comment-face voice-monotone)
+   (font-lock-comment-delimiter-face voice-monotone-medium)
+   (font-lock-regexp-grouping-construct voice-smoothen)
+   (font-lock-regexp-grouping-backslash voice-smoothen-extra)
+   (font-lock-negation-char-face voice-brighten-extra)
    (font-lock-constant-face voice-lighten)
    (font-lock-doc-face voice-monotone-medium)
    (font-lock-doc-string-face voice-smoothen-extra)
@@ -434,10 +447,8 @@ punctuations.")
    (font-lock-type-face voice-smoothen)
    (font-lock-variable-name-face voice-bolden)
    (font-lock-warning-face voice-bolden-and-animate)
-   (gui-button voice-bolden)
    (help-argument-name voice-smoothen)
    (highlight voice-animate)
-   (highlight-face voice-animate)
    (italic voice-animate)
    (match voice-animate)
    (region voice-brighten)
@@ -498,7 +509,7 @@ font-lock.  Voicification is effective only if font lock is on."
 ;;{{{ list-voices-display
 
 (defcustom voice-setup-sample-text
-  "This is a test."
+  "Emacspeak --- The Complete Audio Desktop!"
   "Sample text used  when displaying available voices."
   :type 'string
   :group 'voice-fonts)
@@ -514,6 +525,36 @@ Sample text to use comes from variable
   (let ((list-faces-sample-text voice-setup-sample-text))
     (list-faces-display pattern)
     (message "Displayed voice-face mappings in other window.")))
+
+;;}}}
+;;{{{ interactively silence personalities 
+(defvar voice-setup-buffer-face-voice-table (make-hash-table)
+  "Hash table used to store buffer local face->personality mappings.")
+;;;###autoload
+(defun voice-setup-toggle-silence-personality ()
+  "Toggle audibility of personality under point  .
+If personality at point is currently audible, its
+face->personality map is cached in a buffer local variable, and
+its face->personality map is replaced by face->inaudible.  If
+personality at point is inaudible, and there is a cached value,
+then the original face->personality mapping is restored.  In
+either case, the buffer is refontified to have the new mapping
+take effect."
+  (interactive)
+  (declare (special voice-setup-buffer-face-voice-table))
+  (let* ((personality (get-text-property (point) 'personality))
+         (face (get-text-property (point) 'face))
+         (orig (gethash face voice-setup-buffer-face-voice-table)))
+    (cond
+     ((eq personality  'inaudible)
+      (voice-setup-set-voice-for-face face  orig)
+      (emacspeak-auditory-icon 'open-object))    
+     (t (voice-setup-set-voice-for-face face 'inaudible)
+        (setf
+         (gethash face voice-setup-buffer-face-voice-table)
+         personality)
+        (emacspeak-auditory-icon 'close-object)))
+    (normal-mode)))
 
 ;;}}}
 (provide 'voice-setup)

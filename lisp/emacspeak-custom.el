@@ -1,6 +1,6 @@
 ;;; emacspeak-custom.el --- Speech enable interactive Emacs customization 
-;;; $Id: emacspeak-custom.el,v 24.0 2006/05/03 02:54:00 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-custom.el 4165 2006-09-03 22:21:49Z tv.raman.tv $
+;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to custom
 ;;; Keywords: Emacspeak, Speak, Spoken Output, custom
 ;;{{{  LCD Archive entry: 
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:00 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-09-03 15:21:49 -0700 (Sun, 03 Sep 2006) $ |
+;;;  $Revision: 4165 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2004, T. V. Raman
+;;; Copyright (c) 1995 -- 2006, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -163,6 +163,11 @@
     (emacspeak-auditory-icon 'large-movement)
     (voice-lock-mode 1)
     (emacspeak-speak-line)))
+
+(defadvice Custom-newline (after emacspeak pre act comp)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'button)))
 
 ;;}}}
 ;;{{{ custom hook

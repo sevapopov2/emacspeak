@@ -1,24 +1,24 @@
 ;;; emacspeak-vm.el --- Speech enable VM -- A powerful mail agent (and the one I use)
-;;; $Id: emacspeak-vm.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $ 
+;;; $Id: emacspeak-vm.el 4253 2006-11-09 00:46:51Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enhance vm
 ;;; Keywords: Emacspeak, VM, Email, Spoken Output, Voice annotations
-;;{{{  LCD Archive entry: 
+;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ | 
+;;; $Date: 2006-11-08 16:46:51 -0800 (Wed, 08 Nov 2006) $ |
+;;;  $Revision: 4253 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
-;;; All Rights Reserved. 
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -137,7 +137,7 @@ Note that some badly formed mime messages  cause trouble."
             (to (vm-to-of message ))
             (header nil))
       (while (not header)
-        (setq header 
+        (setq header
               (case
                   (read-char "f From s Subject t To")
                 (?s subject)
@@ -188,7 +188,15 @@ Note that some badly formed mime messages  cause trouble."
                 (if subject (format "on %s" subject) "")
                 (if (and to (< (length to) 80))
                     (format "to %s" to) "")
-                (if lines (format "%s lines" lines) "")))))))
+                (if lines (format "%s lines" lines) ""))))
+      (cond
+       ((and self-p
+             (= 0 self-p)                    ) ;mail to me and others
+        (emacspeak-auditory-icon 'item))
+       (self-p                          ;mail to others including me
+        (emacspeak-auditory-icon 'mark-object))
+       (t                            ;got it because of a mailing list
+        (emacspeak-auditory-icon 'select-object ))))))
 
 (defun emacspeak-vm-speak-labels ()
   "Speak a message's labels"
@@ -217,7 +225,7 @@ Note that some badly formed mime messages  cause trouble."
        (format "Message %s of %s from virtual folder %s"
                vm-ml-message-number vm-ml-highest-message-number
                (car vm-virtual-folder-definition))))
-     (t (dtk-speak 
+     (t (dtk-speak
          (format "Message %s of %s,    %s %s %s  %s"
                  vm-ml-message-number vm-ml-highest-message-number
                  (if vm-ml-message-new "new" "")
@@ -234,8 +242,6 @@ Note that some badly formed mime messages  cause trouble."
                                     value))
                                  (t "")))))
                   (cdr vm-ml-message-attributes-alist)   " ")))))))
-    
-    
 
 ;;}}}
 ;;{{{  Moving between messages
@@ -315,7 +321,7 @@ Then speak the screenful. "
   "Provide auditory feedback. "
   (when (interactive-p)
     (emacspeak-auditory-icon 'delete-object)
-    (dtk-speak "Killed this thread ")))
+    (call-interactively 'vm-next-message)))
 
 ;;}}}
 ;;{{{  Sending mail:
@@ -340,7 +346,7 @@ Then speak the screenful. "
   (when (interactive-p)
     (message "Folluwing up")
     (emacspeak-speak-mode-line)))
-      
+
 (defadvice vm-reply-include-text (after emacspeak pre act)
   "Provide aural feedback."
   (when (interactive-p)
@@ -466,14 +472,14 @@ Leave point at front of decoded attachment."
     ad-do-it))
 
 ;;}}}
-;;{{{ advice password prompt 
+;;{{{ advice password prompt
 
 (defadvice vm-read-password(before emacspeak pre act comp)
   "Speak the prompt"
   (let ((prompt (ad-get-arg 0))
         (confirm (ad-get-arg 1)))
     (emacspeak-auditory-icon 'open-object)
-    (dtk-speak 
+    (dtk-speak
      (format "%s %s"
              prompt
              (if confirm "Confirm by retyping" "")))))
@@ -484,31 +490,36 @@ Leave point at front of decoded attachment."
            (lambda nil
              (emacspeak-pronounce-refresh-pronunciations))))
 (declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
-(loop for hook in 
+(loop for hook in
       (list 'mail-mode-hook
             'vm-presentation-mode-hook)
-      do 
+      do
       (add-hook hook 'emacspeak-pronounce-refresh-pronunciations
                 'append ))
 
-(loop for mode in 
-      '(vm-presentation-mode 
+(loop for mode in
+      '(vm-presentation-mode
         mail-mode)
-      do 
+      do
       (emacspeak-pronounce-augment-pronunciations mode
                                                   emacspeak-pronounce-internet-smileys-pronunciations)
       (emacspeak-pronounce-add-dictionary-entry mode
                                                 emacspeak-speak-embedded-url-pattern
                                                 (cons 're-search-forward
                                                       #'(lambda
-                                                          (url) " Link ")))
+                                                          (url) "
+      Link ")))
+      (emacspeak-pronounce-add-dictionary-entry mode
+                                                emacspeak-speak-rfc-3339-datetime-pattern
+                                                (cons 're-search-forward
+                                                      'emacspeak-speak-decode-rfc-3339-datetime))
       (emacspeak-pronounce-add-dictionary-entry mode
                                                 emacspeak-speak-iso-datetime-pattern
                                                 (cons 're-search-forward
-                                                      'emacspeak-speak-decode-iso-datetime)))          
+                                                      'emacspeak-speak-decode-iso-datetime)))
 
 ;;}}}
-;;{{{ advice button motion 
+;;{{{ advice button motion
 (defadvice vm-next-button (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
@@ -516,14 +527,14 @@ Leave point at front of decoded attachment."
     (emacspeak-speak-text-range  'w3-hyperlink-info)))
 
 ;;}}}
-;;{{{  misc 
+;;{{{  misc
 
 (defadvice vm-count-messages-in-file (around emacspeak-fix pre act comp)
   (ad-set-arg 1 'quiet)
   ad-do-it)
 
 ;;}}}
-;;{{{  button motion in vm 
+;;{{{  button motion in vm
 
 (defun emacspeak-vm-next-button (n)
   "Move point to N buttons forward.
@@ -554,10 +565,10 @@ If N is negative, move backward instead."
     n))
 
 ;;}}}
-;;{{{ saving mime attachment under point 
+;;{{{ saving mime attachment under point
 
 ;;}}}
-;;{{{ configure and customize vm 
+;;{{{ configure and customize vm
 
 ;;; This is how I customize VM
 
@@ -571,12 +582,12 @@ If N is negative, move backward instead."
 Emacspeak."
   (declare (special
             vm-mime-charset-converter-alist
-            vm-mime-default-face-charsets 
-            vm-frame-per-folder 
-            vm-frame-per-composition 
-            vm-frame-per-edit 
-            vm-frame-per-help 
-            vm-frame-per-summary 
+            vm-mime-default-face-charsets
+            vm-frame-per-folder
+            vm-frame-per-composition
+            vm-frame-per-edit
+            vm-frame-per-help
+            vm-frame-per-summary
             vm-index-file-suffix
             vm-primary-inbox
             vm-folder-directory
@@ -614,7 +625,7 @@ Emacspeak."
         vm-move-after-deleting nil
         emacspeak-vm-voice-lock-messages t)
   t)
-  
+
 (when emacspeak-vm-use-raman-settings
   (emacspeak-vm-use-raman-settings))
 
@@ -666,7 +677,7 @@ text using wvText."
        #'(lambda  (i)
            (string-equal (car i) (car convertor)))
        vm-mime-type-converter-alist)
-    (push   convertor 
+    (push   convertor
             vm-mime-type-converter-alist)))
 
 (defun emacspeak-vm-customize-mime-settings ()
@@ -707,7 +718,6 @@ text using wvText."
         vm-mime-base64-encoder-program "base64-encode"
         vm-mime-base64-decoder-program "base64-decode")
   t)
-   
 
 (when emacspeak-vm-customize-mime-settings
   (emacspeak-vm-customize-mime-settings))
@@ -719,6 +729,6 @@ text using wvText."
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}

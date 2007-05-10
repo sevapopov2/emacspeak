@@ -1,4 +1,5 @@
-;;;$Id: emacspeak-w3m.el,v 24.0 2006/05/03 02:54:01 raman Exp $;;; emacspeak-w3m.el --- speech-enables w3m-el
+;;; emacspeak-w3m.el --- speech-enables w3m-el
+;;;$Id: emacspeak-w3m.el 4270 2006-11-15 02:14:01Z tv.raman.tv $
 ;;{{{ Copyright
 
 ;;; This file is not part of Emacs, but the same terms and
@@ -35,11 +36,14 @@
 
 (require 'emacspeak-preamble)
 (require 'emacspeak-w3)
+(require 'emacspeak-rss)
 (require 'easymenu)
+(require 'emacspeak-m-player)
 (require 'custom)
 (eval-when-compile
   (condition-case nil
-        (require 'w3m)
+      (require 'w3m)
+    (require 'url)
     (error nil)))
 (eval-when (load)
   (require 'w3m-util)
@@ -75,6 +79,14 @@ instead of the modeline."
 (define-key w3m-mode-map [right] 'emacspeak-forward-char)
 (define-key w3m-mode-map [left] 'emacspeak-backward-char)
 (define-key w3m-mode-map "j" 'emacspeak-w3m-jump-to-title-in-content)
+(define-key w3m-mode-map "l" 'emacspeak-w3m-play-stream) 
+(define-key w3m-mode-map "\C-t" 'emacspeak-w3m-transcode-current-url-via-google)
+(define-key w3m-mode-map "\M-t" 'emacspeak-w3m-transcode-via-google)
+(define-key w3m-mode-map "\C-c\C-g" 'emacspeak-w3m-google-on-this-site)
+(define-key w3m-mode-map "\C-c\C-x" 'emacspeak-w3m-google-extract-from-cache)
+(define-key w3m-mode-map "\C-c\C-l" 'emacspeak-w3m-google-similar-to-this-page)
+(define-key w3m-mode-map "\C-c\C-r" 'emacspeak-w3m-browse-rss-at-point)
+
 ;;}}}
 ;;{{{ helpers
 
@@ -110,6 +122,10 @@ instead of the modeline."
                        newstring)
     newstring))
 
+(defsubst emacspeak-w3m-url-at-point ()
+  "Return the url at point in w3m."
+  (or (w3m-anchor (point)) (w3m-image (point))))
+
 ;;}}}
 ;;{{{ jump to title in document
 
@@ -118,15 +134,16 @@ instead of the modeline."
   (interactive)
   (declare (special w3m-current-title))
   (let ((title (w3m-current-title)))
-  (condition-case nil
-      (progn
-        (goto-char (point-min))
-        (goto-char
-         (search-forward
-          (substring title 0 (min 10 (length title)))))
-        (emacspeak-speak-line)
-        (emacspeak-auditory-icon 'large-movement))
-    (error "Title not found in body."))))
+    (condition-case nil
+        (progn
+          (if (not (eq last-command 'emacspeak-w3m-jump-to-title-in-content))
+              (goto-char (point-min)))
+          (goto-char
+           (search-forward
+            (substring title 0 (min 10 (length title)))))
+          (emacspeak-speak-line)
+          (emacspeak-auditory-icon 'large-movement))
+      (error "Title not found in body."))))
  
 ;;}}}
 ;;{{{ anchors
@@ -337,7 +354,7 @@ instead of the modeline."
     (declare (special w3m-current-title))    
     (emacspeak-auditory-icon 'select-object)
     (if emacspeak-w3m-speak-titles-on-switch 
-	(dtk-speak w3m-current-title)
+        (dtk-speak w3m-current-title)
       (emacspeak-speak-mode-line))))
 
 (defadvice w3m-previous-buffer (after emacspeak pre act comp)
@@ -346,14 +363,17 @@ instead of the modeline."
     (declare (special w3m-current-title))
     (emacspeak-auditory-icon 'select-object)
     (if emacspeak-w3m-speak-titles-on-switch 
-	(dtk-speak w3m-current-title)
+        (dtk-speak w3m-current-title)
       (emacspeak-speak-mode-line))))
 
 (defadvice w3m-delete-buffer (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
+    (declare (special w3m-current-title))
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (if emacspeak-w3m-speak-titles-on-switch 
+        (dtk-speak w3m-current-title)
+      (emacspeak-speak-mode-line))))
 
 (defadvice w3m-delete-other-buffers (after emacspeak pre act comp)
   "Produce auditory icon."
@@ -660,10 +680,10 @@ instead of the modeline."
 
 (add-hook 'w3m-display-hook
           (lambda (url)
-	    (declare (special w3m-current-title))
+            (declare (special w3m-current-title))
             (emacspeak-auditory-icon 'open-object)
             (when (stringp w3m-current-title)
-	      (dtk-speak w3m-current-title)))
+              (dtk-speak w3m-current-title)))
           t)
 
 ;;}}}
@@ -834,6 +854,69 @@ With prefix argument makes this transformation persistent."
        (point-max))))
   (setq emacspeak-w3m-xsl-once nil))
 
+;; Helper function for xslt functionality
+;;;###autoload
+(defun emacspeak-w3m-preview-this-buffer ()
+  "Preview this buffer in w3m."
+  (interactive)
+  (let ((filename
+         (format "/tmp/%s.html"
+                 (make-temp-name "w3m"))))
+    (write-region (point-min) 
+                  (point-max)
+                  filename)
+    (w3m-find-file filename)
+    (delete-file filename)))
+
+;;;###autoload
+(defun emacspeak-w3m-browse-xml-url-with-style (style url &optional unescape-charent)
+  "Browse XML URL with specified XSL style in w3m."
+  (interactive
+   (list
+    (expand-file-name
+     (read-file-name "XSL Transformation: "
+                     emacspeak-xslt-directory))
+    (read-string "URL: " (browse-url-url-at-point))))
+  (let ((src-buffer
+         (emacspeak-xslt-xml-url
+          style
+          url
+          (list
+           (cons "base"
+                 (format "\"'%s'\""
+                         url))))))
+    (save-excursion
+      (set-buffer src-buffer)
+      (when unescape-charent
+        (emacspeak-w3-unescape-charent))
+      (emacspeak-w3m-preview-this-buffer))
+    (kill-buffer src-buffer)))
+
+;;;###autoload
+(defun emacspeak-w3m-browse-url-with-style (style url)
+  "Browse URL with specified XSL style. in w3m."
+  (interactive
+   (list
+    (expand-file-name
+     (read-file-name "XSL Transformation: "
+                     emacspeak-xslt-directory))
+    (read-string "URL: " (browse-url-url-at-point))))
+  (setq emacspeak-w3m-xsl-once style)
+  (w3m-goto-url-new-session url))
+
+(defun emacspeak-w3m-browse-rss-at-point ()
+  "Browses RSS url under point from w3m."
+  (interactive)
+  (unless (eq major-mode 'w3m-mode)
+    (error "Not in a W3m buffer."))
+  (let ((url (emacspeak-w3m-url-at-point)))
+    (cond
+     (url
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-w3m-browse-xml-url-with-style
+       (expand-file-name "rss.xsl" emacspeak-xslt-directory)
+       url t))
+     (t (error "No URL under point.")))))
 ;;}}}
 ;;{{{  xsl keymap
 
@@ -882,7 +965,7 @@ With prefix argument makes this transformation persistent."
    (w3m-arrived-anchor-face voice-lighten)
    (w3m-anchor-face voice-bolden)
    (w3m-bold-face voice-bolden)
-   (w3m-underline-face voice-brighten)
+   (w3m-underline-face voice-brighten-extra)
    (w3m-header-line-location-title-face voice-bolden)
    (w3m-header-line-location-content-face voice-animate)
    (w3m-form-button-face voice-smoothen)
@@ -901,6 +984,119 @@ With prefix argument makes this transformation persistent."
   (define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command))
 
 ;;}}}
+;;{{{ ll: m-player integration
+
+(defun emacspeak-w3m-play-stream ()
+  "Load the URL under point in w3m into m-player."
+  (interactive)
+  (unless (eq major-mode 'w3m-mode)
+    (error "Not in a W3m buffer."))
+  (let ((url (emacspeak-w3m-url-at-point)))
+    (when url
+      (emacspeak-m-player url))))
+
+;; }}}
+;;{{{ google tools
+(defun emacspeak-w3m-google-who-links-to-this-page ()
+  "Perform a google search to locate documents that link to the
+ current page."
+  (interactive)
+  (declare (special major-mode))
+  (unless (eq major-mode 'w3m-mode)
+    (error "This command cannot be used outside w3m buffers."))
+  (emacspeak-websearch-google
+   (format "link:%s" w3m-current-url)))
+ 
+(defun emacspeak-w3m-google-similar-to-this-page ()
+  "Ask Google to find documents similar to this one."
+  (interactive)
+  (declare (special emacspeak-w3-google-related-uri
+                    major-mode))
+  (unless (eq major-mode 'w3m-mode)
+    (error "This command cannot be used outside w3m buffers."))
+  (let ((url w3m-current-url))
+    (browse-url
+     (format
+      "%s%s"
+      emacspeak-w3-google-related-uri
+      url))))
+ 
+;; In the original version of this function, and the one in w3, the cache:
+;; is preceeded by "+".  In my tests, using www.debian.org, the result was a
+;; google results page that didn't even have the debian homepage listed.
+;; Therefore, I removed it and it now seems to work fine.
+;; NOTE: I also changed it so that it gets the link under point, instead of the 
+;; current page.  It seems more likely that one would be looking for the cached 
+;; copy of an unavailable page.
+(defun emacspeak-w3m-google-extract-from-cache ()
+  "Extract url at point from the Google cache."
+  (interactive)
+  (declare (special major-mode))
+  (unless (eq major-mode 'w3m-mode)
+    (error "This command cannot be used outside w3m buffers."))
+  (unless (emacspeak-w3m-url-at-point)
+    (error "No url at point"))
+  (emacspeak-websearch-google
+   (format "cache:%s" (emacspeak-w3m-url-at-point))))
+
+(defun emacspeak-w3m-google-on-this-site ()
+  "Perform a google search restricted to the current WWW site."
+  (interactive)
+  (declare (special major-mode))
+  (unless (eq major-mode 'w3m-mode)
+    (error "This command cannot be used outside W3m buffers."))
+  (emacspeak-websearch-google
+   (format "site:%s %s"
+           (aref
+            (url-generic-parse-url w3m-current-url)
+            3)
+           (read-from-minibuffer "Search this site for: "))))
+
+(defun emacspeak-w3m-transcode-via-google (&optional untranscode)
+  "Transcode URL under point via Google.
+ Reverse effect with prefix arg for links on a transcoded page."
+  (interactive "P")
+  (unless (eq major-mode 'w3m-mode)
+    (error "Not in W3m buffer."))
+  (unless (emacspeak-w3m-url-at-point)
+    (error "Not on a link."))
+  (let ((url-mime-encoding-string "gzip"))
+    (cond
+     ((null untranscode)
+      (browse-url
+       (format "http://www.google.com/gwt/n?_gwt_noimg=1&u=%s"
+               (emacspeak-url-encode
+                (emacspeak-w3m-url-at-point)))))
+     (t
+      (let ((plain-url nil)
+            (prefix "http://www.google.com/gwt/n?u=")
+            (unhex (url-unhex-string (emacspeak-w3m-url-at-point))))
+        (setq plain-url (substring  unhex (length prefix)))
+        (when plain-url
+          (browse-url plain-url)))))))
+
+(defun emacspeak-w3m-transcode-current-url-via-google (&optional untranscode)
+  "Transcode current URL via Google.
+ Reverse effect with prefix arg for links on a transcoded page."
+  (interactive "P")
+  (unless (eq major-mode 'w3m-mode)
+    (error "Not in W3m buffer."))
+  (let ((url-mime-encoding-string "gzip"))
+    (cond
+     ((null untranscode)
+      (browse-url
+       (format "http://www.google.com/gwt/n?_gwt_noimg=1&u=%s"
+               (emacspeak-url-encode w3m-current-url))))
+     (t
+      (let ((plain-url nil)
+            (prefix "http://www.google.com/gwt/n?u=")
+            (unhex (url-unhex-string w3m-current-url)))
+        (setq plain-url (substring  unhex (length prefix)))
+        (when plain-url
+          (browse-url plain-url)))))))
+
+;;}}}
+
 (provide 'emacspeak-w3m)
 ;;{{{ end of file 
 

@@ -1,6 +1,6 @@
 ;;; emacspeak-personality.el ---Emacspeak's new personality interface
-;;; $Id: emacspeak-personality.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-personality.el 4267 2006-11-13 03:44:53Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Voice lock implementation
 ;;; Keywords: Emacspeak,  Spoken Output, audio formatting
 ;;{{{  LCD Archive entry:
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-11-12 19:44:53 -0800 (Sun, 12 Nov 2006) $ |
+;;;  $Revision: 4267 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman 
+;;;Copyright (C) 1995 -- 2006, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -94,14 +94,15 @@
     (setq-default voice-lock-mode t)))
 
 ;;}}}
-;;{{{ cumulative personalities 
+;;{{{ cumulative personalities
 
 ;;;###autoload
 (defsubst emacspeak-personality-put (start end personality object)
   "Apply personality to specified region, over-writing any current
 personality settings."
   (when (and (integer-or-marker-p start)
-             (integer-or-marker-p end ))
+             (integer-or-marker-p end )
+             (not (= start end)))
     (let ((v (if (listp personality)
                  (remove-duplicates personality :test #'eq)
                personality)))
@@ -113,7 +114,8 @@ personality settings."
   "Append specified personality to text bounded by start and end.
 Existing personality properties on the text range are preserved."
   (when (and (integer-or-marker-p start)
-             (integer-or-marker-p end ))
+             (integer-or-marker-p end )
+             (not (= start end)))
     (ems-modify-buffer-safely
      (let ((v (if (listp personality)
                   (remove-duplicates personality :test #'eq)
@@ -148,7 +150,8 @@ Existing personality properties on the text range are preserved."
   "Prepend specified personality to text bounded by start and end.
 Existing personality properties on the text range are preserved."
   (when (and (integer-or-marker-p start)
-             (integer-or-marker-p end ))
+             (integer-or-marker-p end )
+             (not (= start end)))
     (ems-modify-buffer-safely
      (let ((v (if (listp personality)
                   (remove-duplicates personality :test #'eq)
@@ -184,7 +187,8 @@ Existing personality properties on the text range are preserved."
 Other existing personality properties on the text range are
 preserved."
   (when (and (integer-or-marker-p start)
-             (integer-or-marker-p end ))
+             (integer-or-marker-p end )
+             (not (= start end)))
     (ems-modify-buffer-safely
      (let ((orig (get-text-property start 'personality object))
            (new nil)
@@ -202,7 +206,7 @@ preserved."
                 ((listp orig)
                  (remove personality orig))
                 (t nil)))
-         (if new 
+         (if new
              (put-text-property start extent
                                 'personality new object)
            (remove-text-properties start extent
@@ -221,7 +225,7 @@ preserved."
       (memq 'font-lock-face plist)))
 (defsubst ems-plain-cons-p (value)
   "Help identify (a . b)."
-  (and (consp value)    
+  (and (consp value)
        (equal value (last value))
        (cdr value)))
 
@@ -254,7 +258,7 @@ displayed in the messages area."
 (defvar emacspeak-personality-unmapped-faces (make-hash-table)
   "Records faces that we have not yet mapped to personalities.")
 
-(defadvice put-text-property (after emacspeak-personality  pre act) 
+(defadvice put-text-property (after emacspeak-personality  pre act)
   "Used by emacspeak to augment font lock."
   (let ((start (ad-get-arg 0))
         (end (ad-get-arg 1 ))
@@ -263,6 +267,7 @@ displayed in the messages area."
         (object (ad-get-arg 4))
         (voice nil))
     (when (and  emacspeak-personality-voiceify-faces
+                (not (= start end))
                 (or (eq prop 'face) (eq prop 'font-lock-face)))
       (condition-case nil
           (progn
@@ -272,7 +277,7 @@ displayed in the messages area."
              ((ems-plain-cons-p value)) ;;pass on plain cons
              ( (listp value)
                (setq voice
-                     (delq nil 
+                     (delq nil
                            (mapcar   #'voice-setup-get-voice-for-face value))))
              (t (message "Got %s" value)))
             (when voice
@@ -287,7 +292,7 @@ displayed in the messages area."
                (t (puthash  value t emacspeak-personality-unmapped-faces)))))
         (error nil)))))
 
-(defadvice add-text-properties (after emacspeak-personality  pre act) 
+(defadvice add-text-properties (after emacspeak-personality  pre act)
   "Used by emacspeak to augment font lock."
   (let ((start (ad-get-arg 0))
         (end (ad-get-arg 1 ))
@@ -308,7 +313,7 @@ displayed in the messages area."
              ((ems-plain-cons-p value)) ;;pass on plain cons
              ( (listp value)
                (setq voice
-                     (delq nil 
+                     (delq nil
                            (mapcar   #'voice-setup-get-voice-for-face value))))
              (t (message "Got %s" value)))
             (when voice
@@ -323,7 +328,7 @@ displayed in the messages area."
                (t (puthash  value t emacspeak-personality-unmapped-faces)))))
         (error nil)))))
 
-(defadvice set-text-properties (after emacspeak-personality  pre act) 
+(defadvice set-text-properties (after emacspeak-personality  pre act)
   "Used by emacspeak to augment font lock."
   (let ((start (ad-get-arg 0))
         (end (ad-get-arg 1 ))
@@ -344,7 +349,7 @@ displayed in the messages area."
              ((ems-plain-cons-p value)) ;;pass on plain cons
              ( (listp value)
                (setq voice
-                     (delq nil 
+                     (delq nil
                            (mapcar   #'voice-setup-get-voice-for-face value))))
              (t (message "Got %s" value)))
             (when voice
@@ -361,7 +366,7 @@ displayed in the messages area."
         (error nil))
       )))
 
-(defadvice propertize (around emacspeak-personality  pre act) 
+(defadvice propertize (around emacspeak-personality  pre act)
   "Used by emacspeak to augment font lock."
   (let ((string (ad-get-arg 0))
         (properties (ad-get-args 1))
@@ -384,7 +389,7 @@ displayed in the messages area."
              ;;               nil)
              ( (listp value)
                (setq voice
-                     (delq nil 
+                     (delq nil
                            (mapcar   #'voice-setup-get-voice-for-face value))))
              (t (message "Got %s" value)))
             (when voice
@@ -411,12 +416,26 @@ displayed in the messages area."
          (object (ad-get-arg 3))
          (voice nil)
          (face nil))
-    (when (emacspeak-personality-plist-face-p props) ;;; simple minded for now
+    (when (and (not (= start end))
+               (emacspeak-personality-plist-face-p props) ) ;;; simple minded for now
+      (put-text-property start end
+                         'personality nil object))))
+
+(defadvice remove-list-of-text-properties (before emacspeak-personality pre act comp)
+  "Undo any voiceification if needed."
+  (let  ((start (ad-get-arg 0))
+         (end (ad-get-arg 1))
+         (props (ad-get-arg 2))
+         (object (ad-get-arg 3))
+         (voice nil)
+         (face nil))
+    (when (and (not (= start end))
+               (emacspeak-personality-plist-face-p props) ) ;;; simple minded for now
       (put-text-property start end
                          'personality nil object))))
 
 ;;}}}
-;;{{{ advice overlay-put 
+;;{{{ advice overlay-put
 
 (defcustom emacspeak-personality-voiceify-overlays
   'emacspeak-personality-prepend
@@ -433,7 +452,7 @@ Append means place corresponding personality at the end."
                  (const :tag "Append" emacspeak-personality-append))
   :group 'emacspeak-personality)
 
-(defadvice overlay-put (after emacspeak-personality  pre act) 
+(defadvice overlay-put (after emacspeak-personality  pre act)
   "Used by emacspeak to augment font lock."
   (let ((overlay (ad-get-arg 0))
         (prop (ad-get-arg 1))
@@ -473,7 +492,7 @@ Append means place corresponding personality at the end."
          (t (puthash  value t
                       emacspeak-personality-unmapped-faces)))))))
 
-(defadvice move-overlay (before emacspeak-personality  pre act) 
+(defadvice move-overlay (before emacspeak-personality  pre act)
   "Used by emacspeak to augment font lock."
   (let ((overlay (ad-get-arg 0))
         (beg (ad-get-arg 1))
@@ -491,6 +510,18 @@ Append means place corresponding personality at the end."
        voice object)
       (funcall emacspeak-personality-voiceify-overlays
                beg end voice))))
+
+;;}}}
+;;{{{ silence font-lock's error messages
+
+(loop for f in
+      '(font-lock-default-fontify-region
+        font-lock-default-fontify-buffer)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
+          "Silence auditory feedback from redisplay errors."
+          (ems-with-errors-silenced ad-do-it))))
 
 ;;}}}
 (provide 'emacspeak-personality )

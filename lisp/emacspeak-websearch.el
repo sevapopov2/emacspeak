@@ -1,6 +1,6 @@
 ;;; emacspeak-websearch.el --- search utilities
-;;; $Id: emacspeak-websearch.el,v 24.0 2006/05/03 02:54:01 raman Exp $
-;;; $Author: raman $
+;;; $Id: emacspeak-websearch.el 4258 2006-11-09 15:19:54Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to make Web searching convenient
 ;;; Keywords: Emacspeak, WWW interaction
 ;;{{{  LCD Archive entry:
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006/05/03 02:54:01 $ |
-;;;  $Revision: 24.0 $ |
+;;; $Date: 2006-11-09 07:19:54 -0800 (Thu, 09 Nov 2006) $ |
+;;;  $Revision: 4258 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2004, T. V. Raman
+;;;Copyright (C) 1995 -- 2006, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -223,106 +223,6 @@ ARGS specifies additional arguments to SPEAKER if any."
 
 ;;}}}
 ;;{{{ websearch utilities
-
-;;{{{ Google News
-
-(emacspeak-websearch-set-searcher 'google-news
-                                  'emacspeak-websearch-google-news)
-
-(emacspeak-websearch-set-key ?n 'google-news )
-
-(defun emacspeak-websearch-google-news ()
-  "Invoke Google News url template."
-  (interactive)
-  (let ((name "Google News Search"))
-    (emacspeak-url-template-open
-     (emacspeak-url-template-get name))))
-;;}}}
-;;{{{  EmapSpeak
-(emacspeak-websearch-set-searcher 'emaps
-                                  'emacspeak-websearch-emaps-search)
-
-(emacspeak-websearch-set-key ?e  'emaps)
-;;;###autoload
-(defvar emacspeak-websearch-google-maps-uri
-  "http://maps.google.com/maps?q=%s&output=kml"
-  "URL template for Google maps.")
-
-(defcustom emacspeak-websearch-emapspeak-my-location ""
-  "Specifies location near we look by default."
-  :type 'string
-  :group 'emacspeak-websearch)
-
-(defun emacspeak-websearch-emaps-search (query &optional use-near)
-  "Perform EmapSpeak search.
-Query is a Google Maps query in plain English.
-Interactive prefix arg `use-near' searches near our previously cached  location."
-  (interactive
-   (list
-    (emacspeak-websearch-read-query
-     (if current-prefix-arg
-         (format "Find what near  %s: "
-                 emacspeak-websearch-emapspeak-my-location)
-       "EMap Query: "))
-    current-prefix-arg))
-  (declare (special emacspeak-websearch-google-maps-uri
-                    emacspeak-websearch-emapspeak-my-location))
-  (let ((near-p
-         (unless use-near
-           (save-match-data
-             (and (string-match "near" query)
-                  (match-end 0)))))
-        (near "")
-        (uri nil))
-    (when near-p
-      (setq near (substring query near-p))
-      (setq emacspeak-websearch-emapspeak-my-location near))
-    (setq uri
-          (cond
-           (use-near
-            (format emacspeak-websearch-google-maps-uri
-                    (emacspeak-url-encode
-                     (format "%s near %s"
-                             query emacspeak-websearch-emapspeak-my-location))))
-           (t (format emacspeak-websearch-google-maps-uri
-                      (emacspeak-url-encode query)))))
-    (add-hook 'emacspeak-w3-post-process-hook 'emacspeak-speak-buffer)
-    (add-hook  'emacspeak-w3-post-process-hook
-               #'(lambda nil
-                   (emacspeak-pronounce-add-buffer-local-dictionary-entry
-  " mi"
-  " miles ")))
-    (browse-url-of-buffer
-    (emacspeak-xslt-xml-url
-     (expand-file-name "kml2html.xsl"
-                       emacspeak-xslt-directory)
-     uri))))
-                                              
-                                              
-
-;;;###autoload
-(defun emacspeak-websearch-emapspeak-near-my-location (query)
-  "Perform search relative to `my-location'."
-  (interactive
-   (list
-    (emacspeak-websearch-read-query
-     (format "Find what near  %s: "
-             emacspeak-websearch-emapspeak-my-location))))
-  (declare (special emacspeak-websearch-emapspeak-my-location))
-  (unless emacspeak-websearch-emapspeak-my-location
-    (setq emacspeak-websearch-emapspeak-my-location
-          (read-from-minibuffer "Near Location: ")))
-  (let ((uri
-         (format emacspeak-websearch-google-maps-uri
-                 (emacspeak-url-encode
-                  (format "%s near %s" query
-                          emacspeak-websearch-emapspeak-my-location)))))
-    (emacspeak-url-template-google-maps-speak uri
-                                              (emacspeak-url-encode
-                                               emacspeak-websearch-emapspeak-my-location)
-                                              'speak)))
-
-;;}}}
 ;;{{{ display form
 
 (emacspeak-websearch-set-searcher 'display-form
@@ -349,6 +249,7 @@ Interactive prefix arg `use-near' searches near our previously cached  location.
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
+      (kill-all-local-variables)
       (insert-file  form-markup)
       (add-hook 'emacspeak-w3-post-process-hook
                 #'(lambda ()
@@ -635,7 +536,7 @@ Interactive prefix arg `use-near' searches near our previously cached  location.
 (emacspeak-websearch-set-key ?F 'foldoc)
 
 (defvar emacspeak-websearch-foldoc-uri
-  "http://wombat.doc.ic.ac.uk/foldoc/foldoc.cgi?action=Search&query="
+  "http://wombat.doc.ic.ac.uk/foldoc/foldoc.cgi?query="
   "*URI for launching a FolDoc  search.")
 
 (defun emacspeak-websearch-foldoc-search (query)
@@ -662,26 +563,26 @@ Interactive prefix arg `use-near' searches near our previously cached  location.
 (emacspeak-websearch-set-key ?q 'quotes-yahoo)
 
 (defvar emacspeak-websearch-quotes-yahoo-uri
-  "http://finance.yahoo.com/q?o=t&s="
+  "http://finance.yahoo.com/q?s="
   "*URI for launching a Yahoo Quotes  search.")
 
 (defvar emacspeak-websearch-quotes-csv-yahoo-uri
-  "http://finance.yahoo.com/d/quotes.csv?f=sl1d1t1c1ohgv&s="
-  "*URI for launching a Yahoo Quotes  search.")
+  "http://quote.yahoo.com/d/quotes.csv?f=snl1d1t1c1p2va2bapomwerr1dyj1x&s="
+  "*URI for launching a Yahoo Quotes  search.
+See http://www.gummy-stuff.org/Yahoo-data.htm and Perl module Finance::Yahoo")
 
 (defvar emacspeak-websearch-quotes-yahoo-options
   "&d=v1"
   "*Additional default options to pass to Yahoo.")
 
-;;;###autoload
 (defcustom emacspeak-websearch-personal-portfolio ""
   "Set this to the stock tickers you want to check by
 default."
   :type 'string
   :group 'emacspeak-websearch)
 
-(defvar emacspeak-websearch-lynx-program "lynx"
-  "Name of lynx executable")
+(defvar emacspeak-websearch-curl-program "curl"
+  "Name of curl executable")
 
 (defun emacspeak-websearch-quotes-yahoo-search (query &optional prefix)
   "Perform a Quotes Yahoo .
@@ -700,35 +601,33 @@ emacspeak-websearch-quotes-yahoo-options to an appropriate string."
     current-prefix-arg))
   (declare (special emacspeak-websearch-quotes-yahoo-uri
                     emacspeak-websearch-quotes-yahoo-options
-                    emacspeak-websearch-lynx-program
+                    emacspeak-websearch-curl-program
                     emacspeak-websearch-personal-portfolio
                     emacspeak-websearch-quotes-csv-yahoo-uri))
-  (let (
-        )
-    (cond
-     ((null prefix)
-      (let ((uri (concat emacspeak-websearch-quotes-csv-yahoo-uri
-                         (emacspeak-url-encode (format "%s" query))))
-            (results "*quotes-table*")
-            (process nil))
+  (cond
+   ((null prefix)
+    (let ((uri (concat emacspeak-websearch-quotes-csv-yahoo-uri
+                       (emacspeak-url-encode (format "%s" query))))
+          (results "*quotes-table*")
+          (process nil))
 ;;; nuke old results if any
-        (when (get-buffer results )
-          (kill-buffer results))
-        (setq process
-              (start-process   "lynx"
-                               results
-                               emacspeak-websearch-lynx-program
-                               "-dump"
-                               uri))
-        (set-process-sentinel process 'emacspeak-websearch-view-csv-data)))
-     (t
-      (browse-url
-       (concat emacspeak-websearch-quotes-yahoo-uri
-               (emacspeak-url-encode query)
-               emacspeak-websearch-quotes-yahoo-options))
-      (emacspeak-websearch-post-process
-       "Symbol"
-       'emacspeak-speak-line)))))
+      (when (get-buffer results )
+        (kill-buffer results))
+      (setq process
+            (start-process   "lynx"
+                             results
+                             emacspeak-websearch-curl-program
+                             "--silent"
+                             uri))
+      (set-process-sentinel process 'emacspeak-websearch-view-csv-data)))
+   (t
+    (browse-url
+     (concat emacspeak-websearch-quotes-yahoo-uri
+             (emacspeak-url-encode query)
+             emacspeak-websearch-quotes-yahoo-options))
+    (emacspeak-websearch-post-process
+     "Symbol"
+     'emacspeak-speak-line))))
 
 ;;}}}
 ;;{{{  koders
@@ -758,10 +657,10 @@ emacspeak-websearch-quotes-yahoo-options to an appropriate string."
 
 (emacspeak-websearch-set-searcher 'company-news
                                   'emacspeak-websearch-company-news)
-(emacspeak-websearch-set-key ?C 'company-news)
+(emacspeak-websearch-set-key ?c 'company-news)
 
 (defvar emacspeak-websearch-company-news-uri
-  "http://biz.yahoo.com/"
+  "http://finance.yahoo.com/q"
   "*URI for launching a company news lookup")
 
 (defvar emacspeak-websearch-yahoo-charts-uri
@@ -769,7 +668,7 @@ emacspeak-websearch-quotes-yahoo-options to an appropriate string."
   "*URI for locating historical chart data.")
 
 (defvar emacspeak-websearch-yahoo-csv-charts-uri
-  "http://chart.yahoo.com/table.csv?"
+  "http://itable.finance.yahoo.com/table.csv?"
   "*URI for locating historical chart data.")
 
 (defvar emacspeak-websearch-yahoo-company-news-quotes-uri
@@ -784,35 +683,34 @@ Retrieves company news, research, profile, insider trades,  or upgrades/downgrad
     (emacspeak-websearch-read-query
      "Enter stock ticker of company to lookup: ")
     current-prefix-arg))
-  (declare (special emacspeak-websearch-company-news-uri
-                    emacspeak-websearch-yahoo-company-news-quotes-uri))
-  (let (
-
-        (type nil)
-        (type-char
+  (declare (special emacspeak-websearch-company-news-uri))
+  (let ((type-char
          (read-char
-          "c Upgrades, h history, n news, r Research, p profile, q Quotes, t insider trades")))
-    (setq type
-          (case type-char
-            (?r "z/a")
-            (otherwise (format "%c" type-char))))
+          "b basic, c Upgrades, h history, i insider, n news, o options, r Research, p profile, q Quotes, t technical")))
     (cond
      ((char-equal type-char ?h)
       (emacspeak-websearch-yahoo-historical-chart ticker prefix)
       (emacspeak-auditory-icon 'select-object)
       (message "Fetching data --just a minute."))
-     ((char-equal type-char ?q)
-      (browse-url
-       (concat
-        emacspeak-websearch-yahoo-company-news-quotes-uri
-        (format "&s=%s" ticker)))
-      (emacspeak-websearch-post-process "Markets close" 'emacspeak-speak-line))
      (t
       (browse-url
        (concat emacspeak-websearch-company-news-uri
-               (format "%s/" type)
-               (format "%c/" (aref ticker 0))
-               (format "%s.html" ticker)))
+               (format "%s?"
+                       (case type-char
+                         (?n "/h")
+                         (?p "/pr")
+                         (?r "/ae")
+                         (?c "/ao")
+                         (?i "/it")
+                         (?q "")
+                         (?k "/ks")
+                         (?b "/bc")
+                         (?t "/ta")
+                         (?e "/ce")
+                         (?o "/op")
+                         (?s "/sec")
+                         ))
+               (format "s=%s" ticker)))
       (emacspeak-websearch-post-process
        (format-time-string "%Y")
        'emacspeak-speak-line)))))
@@ -829,7 +727,7 @@ Optional second arg as-html processes the results as HTML rather than data."
    (list
     (emacspeak-websearch-read-query "Stock ticker:")
     current-prefix-arg))
-  (declare (special emacspeak-websearch-lynx-program
+  (declare (special emacspeak-websearch-curl-program
                     emacspeak-websearch-yahoo-charts-uri
                     emacspeak-websearch-yahoo-csv-charts-uri))
   (let (
@@ -872,8 +770,8 @@ Optional second arg as-html processes the results as HTML rather than data."
         (setq process
               (start-process   "lynx"
                                results
-                               emacspeak-websearch-lynx-program
-                               "-dump"
+                               emacspeak-websearch-curl-program
+                               "--silent" "--location"
                                uri))
         (set-process-sentinel process 'emacspeak-websearch-view-csv-data)))
      (t (browse-url
@@ -1131,6 +1029,13 @@ Optional second arg as-html processes the results as HTML rather than data."
   "http://www.google.com/search?q="
   "*URI for Google search")
 
+(defcustom emacspeak-websearch-google-options nil
+  "Additional options to pass to Google e.g. &xx=yy..."
+  :type '(choice
+          (const :tag "None" nil)
+          (string :tag "Options"))
+  :group 'emacspeak-websearch)
+
 ;;;###autoload
 (defun emacspeak-websearch-google (query &optional lucky)
   "Perform a Google search.
@@ -1143,13 +1048,15 @@ I'm Feeling Lucky button on Google."
              (if current-prefix-arg "Lucky Search" " Query")))
     current-prefix-arg))
   (declare (special emacspeak-websearch-google-uri
+                    emacspeak-websearch-google-options
                     emacspeak-websearch-google-number-of-results))
   (emacspeak-w3-without-xsl
    (browse-url
     (concat emacspeak-websearch-google-uri
             (emacspeak-url-encode query)
-            (format "&num=%s"
-                    emacspeak-websearch-google-number-of-results)
+            (format "&num=%s%s"
+                    emacspeak-websearch-google-number-of-results
+                    (or emacspeak-websearch-google-options ""))
             (when lucky
               (concat
                "&btnI="
@@ -1160,6 +1067,29 @@ I'm Feeling Lucky button on Google."
     (emacspeak-websearch-post-process
      "results"
      'emacspeak-speak-line)))
+
+;;{{{ IMFA
+
+(emacspeak-websearch-set-searcher 'agoogle
+                                  'emacspeak-websearch-accessible-google)
+
+(emacspeak-websearch-set-key ?i 'agoogle)
+;;}}}
+
+(defvar emacspeak-websearch-accessible-google-url
+  "http://google.com/cse?cx=000183394137052953072%3Azc1orsc6mbq&q="
+  "Google Accessible Search -- see http://labs.google.com/accessible")
+
+(defun emacspeak-websearch-accessible-google(query)
+  "Google Accessible Search -- see http://labs.google.com/accessible"
+  (interactive
+   (list
+    (emacspeak-websearch-read-query "Google For: ")))
+  (declare (special emacspeak-websearch-accessible-google-url
+                    emacspeak-websearch-google-uri))
+  (let ((emacspeak-websearch-google-uri
+         emacspeak-websearch-accessible-google-url))
+    (emacspeak-websearch-google query)))
 
 (emacspeak-websearch-set-searcher 'google-lucky
                                   'emacspeak-websearch-google-feeling-lucky)
@@ -1188,7 +1118,7 @@ http://www.google.com/options/specialsearches.html "
     (emacspeak-websearch-read-query
      "Specialize google Search On: ")
     (emacspeak-websearch-read-query
-     "Google Query:")))
+     "Google for:")))
   (let ((emacspeak-websearch-google-uri
          (format "http://www.google.com/%s?q="
                  specialize)))
@@ -1223,7 +1153,7 @@ http://www.google.com/options/specialsearches.html "
 (emacspeak-websearch-set-key 6 'froogle)
 
 (defvar emacspeak-websearch-froogle-uri
-  "http://froogle.google.com/froogle?q=%s/"
+  "http://froogle.google.com/froogle?q="
   "*URI for Froogle search")
 
 (defun emacspeak-websearch-froogle (query &optional local-flag)
@@ -1248,6 +1178,86 @@ Optional interactive  prefix arg local-flag prompts for local
      (emacspeak-websearch-post-process
       query
       'emacspeak-speak-line))))
+
+;;}}}
+;;{{{ Google Swiss Army Knife:
+(emacspeak-websearch-set-searcher 'google-sak
+                                  'emacspeak-websearch-google-sak)
+
+(emacspeak-websearch-set-key ?\' 'google-sak )
+(defvar emacspeak-websearch-google-images
+  "http://images.google.com/images?hl=en&ie=UTF-8&q="
+  "URI for Google Image Search.")
+
+(defvar emacspeak-websearch-google-news-uri
+  "http://groups.google.com/grphp?hl=en&ie=UTF-8&q="
+  "URI for Google News search.")
+
+(defvar emacspeak-websearch-froogle-uri
+  "http://froogle.google.com/frghp?hl=en&ie=UTF-8&q="
+  "URI for Google Froogle.")
+(defvar emacspeak-websearch-google-html-maps-uri
+  "http://maps.google.com/?output=html&hl=en&ie=UTF-8&q="
+  "URI for Google Maps using plain HTML.")
+
+(defvar emacspeak-websearch-google-scholar-uri
+  "http://scholar.google.com/scholar?ie=UTF-8&oe=UTF-8&hl=en&num=25&q="
+  "URI for Google Scholar search.")
+
+(defvar emacspeak-websearch-google-books-uri
+  "http://books.google.com/books?btnG=Search+Books&hl=en&q="
+  "URI for Google Book Search.")
+
+(defvar emacspeak-websarch-google-videos-uri
+  "http://video.google.com/videofeed?type=search&q="
+  "URI for Google Video search.")
+
+(defvar emacspeak-websearch-google-launch-uris
+  (list
+   (cons "web" emacspeak-websearch-google-uri)
+   (cons "images"  emacspeak-websearch-google-images)
+   (cons "news" emacspeak-websearch-google-news-uri)
+   (cons "froogle" emacspeak-websearch-froogle-uri)
+   (cons "books" emacspeak-websearch-google-books-uri)
+   (cons "scholar" emacspeak-websearch-google-scholar-uri)
+   (cons "maps" emacspeak-websearch-google-html-maps-uri)
+   (cons "videos" emacspeak-websarch-google-videos-uri))
+  "Association list of Google search URIs.")
+
+(defun emacspeak-websearch-google-sak(engine query)
+  "Perform a Google query against a specific index."
+  (interactive
+   (list
+    (completing-read "Engine: "
+                     emacspeak-websearch-google-launch-uris)
+    (emacspeak-websearch-read-query "Google For: ")))
+  (declare (special emacspeak-websearch-read-query))
+  (browse-url
+   (concat (cdr (assoc engine
+                       emacspeak-websearch-google-launch-uris))
+           (emacspeak-url-encode query))))
+
+;;}}}
+;;{{{  technorati tag search:
+
+(emacspeak-websearch-set-searcher 'technorati
+                                  'emacspeak-websearch-technorati)
+
+(emacspeak-websearch-set-key ?t 'technorati)
+
+(defvar emacspeak-websearch-technorati-uri
+  "http://www.technorati.com/tags/"
+  "URI for Technorati tag search.")
+
+(defun emacspeak-websearch-technorati (query)
+  "Perform a Technorati tag search."
+  (interactive
+   (list
+    (emacspeak-websearch-read-query "Tag: ")))
+  (declare (special emacspeak-websearch-technorati-uri))
+  (browse-url
+   (concat emacspeak-websearch-technorati-uri
+           (emacspeak-url-encode query))))
 
 ;;}}}
 ;;{{{ teoma
@@ -1293,6 +1303,129 @@ Optional interactive  prefix arg local-flag prompts for local
   (emacspeak-websearch-display-form emacspeak-websearch-google-advanced-form))
 
 ;;}}}
+;;{{{ google mobile
+(emacspeak-websearch-set-searcher 'google-mobile
+                                  'emacspeak-websearch-google-mobile)
+
+(emacspeak-websearch-set-key ?\; 'google-mobile)
+
+(defvar emacspeak-websearch-google-mobile-uri
+  "http://www.google.com/xhtml?q="
+  "Google mobile search.")
+
+(defun emacspeak-websearch-google-mobile (query)
+  "Google mobile search."
+  (interactive
+   (list
+    (emacspeak-websearch-read-query "Google for: ")))
+  (declare (special emacspeak-websearch-google-mobile-uri))
+  (browse-url
+   (concat emacspeak-websearch-google-mobile-uri
+           (emacspeak-url-encode query)))
+  (emacspeak-websearch-post-process
+   query
+   'emacspeak-speak-rest-of-buffer))
+
+;;}}}
+;;{{{ Google News
+
+(emacspeak-websearch-set-searcher 'google-news
+                                  'emacspeak-websearch-google-news)
+
+(emacspeak-websearch-set-key ?n 'google-news )
+
+(defun emacspeak-websearch-google-news ()
+  "Invoke Google News url template."
+  (interactive)
+  (let ((name "Google News Search"))
+    (emacspeak-url-template-open
+     (emacspeak-url-template-get name))))
+
+;;}}}
+;;{{{  EmapSpeak
+(emacspeak-websearch-set-searcher 'emaps
+                                  'emacspeak-websearch-emaps-search)
+
+(emacspeak-websearch-set-key ?e  'emaps)
+;;;###autoload
+(defvar emacspeak-websearch-google-maps-uri
+  "http://maps.google.com/maps?q=%s&output=kml"
+  "URL template for Google maps.")
+
+(defcustom emacspeak-websearch-emapspeak-my-location ""
+  "Specifies location near we look by default."
+  :type 'string
+  :group 'emacspeak-websearch)
+
+(defun emacspeak-websearch-emaps-search (query &optional use-near)
+  "Perform EmapSpeak search.
+Query is a Google Maps query in plain English.
+Interactive prefix arg `use-near' searches near our previously cached  location."
+  (interactive
+   (list
+    (emacspeak-websearch-read-query
+     (if current-prefix-arg
+         (format "Find what near  %s: "
+                 emacspeak-websearch-emapspeak-my-location)
+       "EMap Query: "))
+    current-prefix-arg))
+  (declare (special emacspeak-websearch-google-maps-uri
+                    emacspeak-websearch-emapspeak-my-location))
+  (let ((near-p
+         (unless use-near
+           (save-match-data
+             (and (string-match "near" query)
+                  (match-end 0)))))
+        (near "")
+        (uri nil))
+    (when near-p
+      (setq near (substring query near-p))
+      (setq emacspeak-websearch-emapspeak-my-location near))
+    (setq uri
+          (cond
+           (use-near
+            (format emacspeak-websearch-google-maps-uri
+                    (emacspeak-url-encode
+                     (format "%s near %s"
+                             query emacspeak-websearch-emapspeak-my-location))))
+           (t (format emacspeak-websearch-google-maps-uri
+                      (emacspeak-url-encode query)))))
+    (kill-new uri)
+    (add-hook 'emacspeak-w3-post-process-hook 'emacspeak-speak-buffer)
+    (add-hook  'emacspeak-w3-post-process-hook
+               #'(lambda nil
+                   (emacspeak-pronounce-add-buffer-local-dictionary-entry
+                    " mi"
+                    " miles ")))
+    (browse-url-of-buffer
+     (emacspeak-xslt-xml-url
+      (expand-file-name "kml2html.xsl"
+                        emacspeak-xslt-directory)
+      uri))))
+
+;;;###autoload
+(defun emacspeak-websearch-emapspeak-near-my-location (query)
+  "Perform search relative to `my-location'."
+  (interactive
+   (list
+    (emacspeak-websearch-read-query
+     (format "Find what near  %s: "
+             emacspeak-websearch-emapspeak-my-location))))
+  (declare (special emacspeak-websearch-emapspeak-my-location))
+  (unless emacspeak-websearch-emapspeak-my-location
+    (setq emacspeak-websearch-emapspeak-my-location
+          (read-from-minibuffer "Near Location: ")))
+  (let ((uri
+         (format emacspeak-websearch-google-maps-uri
+                 (emacspeak-url-encode
+                  (format "%s near %s" query
+                          emacspeak-websearch-emapspeak-my-location)))))
+    (browse-url-of-buffer
+     (emacspeak-xslt-xml-url
+      (expand-file-name "kml2html.xsl" emacspeak-xslt-directory)
+      uri))))
+
+;;}}}
 ;;{{{  advanced usenet search
 
 (emacspeak-websearch-set-searcher 'google-usenet-advanced
@@ -1319,7 +1452,7 @@ Optional interactive  prefix arg local-flag prompts for local
 (emacspeak-websearch-set-key ?j 'jeeves)
 
 (defvar emacspeak-websearch-jeeves-uri
-  "http://www.askjeeves.com/main/askJeeves.asp?site_name=Jeeves&metasearch=yes&ask="
+  "http://www.ask.com/web?qsrc=0&o=0&ASKDSBHO=0&q="
   "URI for Ask Jeeves  search")
 
 (defun emacspeak-websearch-ask-jeeves (query)
@@ -1333,7 +1466,7 @@ Optional interactive  prefix arg local-flag prompts for local
      (concat emacspeak-websearch-jeeves-uri
              (emacspeak-url-encode query)))
     (emacspeak-websearch-post-process
-     "You asked"
+     query
      'emacspeak-speak-line)))
 
 ;;}}}
@@ -1586,7 +1719,7 @@ Optional prefix arg no-rss scrapes information from HTML."
 (emacspeak-websearch-set-key ?w 'weather)
 
 (defvar emacspeak-websearch-weather-uri
-  "http://www.srh.noaa.gov/zipcity.php?inputstring-equal"
+  "http://www.srh.noaa.gov/zipcity.php?inputstring="
   "*URI for getting weather forecast.")
 
 (defun emacspeak-websearch-weather (query)
@@ -1594,8 +1727,8 @@ Optional prefix arg no-rss scrapes information from HTML."
   (interactive
    (list (emacspeak-websearch-read-query "City,State or Zip: ")))
   (declare (special emacspeak-websearch-weather-uri))
-  (emacspeak-w3-extract-tables-by-position-list
-   (list 5 6 7 8 9 )
+  (emacspeak-w3-extract-tables-by-match-list
+   (list "Area" "Humidity" )
    (concat emacspeak-websearch-weather-uri
            (emacspeak-url-encode query))
    'speak))
