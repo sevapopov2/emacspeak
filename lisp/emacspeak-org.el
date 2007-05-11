@@ -95,8 +95,8 @@
        `(defadvice ,f(after emacspeak pre act comp)
           "Provide spoken feedback."
           (when (interactive-p)
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'large-movement)))))
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-line)))))
 
 (loop for f in
       '(org-cycle org-shifttab
@@ -128,8 +128,8 @@
        `(defadvice ,f(after emacspeak pre act comp)
           "Provide spoken feedback."
           (when (interactive-p)
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'open-object)))))
+            (emacspeak-auditory-icon 'open-object)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ cut and paste:
@@ -142,8 +142,8 @@
        `(defadvice ,f(after emacspeak pre act comp)
           "Provide spoken feedback."
           (when (interactive-p)
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'yank-object)))))
+            (emacspeak-auditory-icon 'yank-object)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ completion:

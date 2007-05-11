@@ -55,11 +55,11 @@
 ;;}}}
 ;;{{{  Define locations 
 
-(defvar emacspeak-unibyte t
+(defvar emacspeak-unibyte nil
   "Emacspeak will force emacs to unibyte unless this
 variable is set to nil.
-To use emacspeak with emacs running in multibyte mode, this
-variable should be set to nil *before* 
+To use emacspeak with emacs running in unibyte mode, this
+variable should be set to t *before* 
 emacspeak is compiled or started.")
 ;;;###autoload
 (defvar emacspeak-directory

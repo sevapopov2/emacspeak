@@ -2,7 +2,7 @@
 ;;; tools.jl --- Emacs tool for sawfish
 ;;; $Author: tv.raman.tv $
 ;;; Description:   Commands for launching or switching to
-;;; a running Emacs
+;;; a running Emacs and some other useful stuff
 ;;; Keywords: Sawfish, Emacspeak, Audio Desktop
 ;;{{{  LCD Archive entry:
 
@@ -45,12 +45,27 @@
 ;;}}}
 (require 'tts)
 ;;; Set this to the executable you wish to run  via command `emacs'
-(defcustom emacs-program
- "emacs -i &"
+(defcustom emacs-program "emacs"
   "Emacs executable to run.")
-(defcustom xemacs-program
- "/usr/bin/xemacs -i &"
-  "Emacs executable to run.")
+(defcustom emacs-args "-i"
+  "Emacs arguments to pass through command line.")
+
+(defcustom xemacs-program "xemacs"
+  "XEmacs executable to run.")
+(defcustom xemacs-args "-i"
+  "XEmacs arguments to pass through command line.")
+
+
+(defun launch-or-switch-to  (program #!optional args #!key class)
+  "Launch specified program or switch to it if it is already running."
+  (let ((w (car
+            (delete-if-not
+             (lambda (x)
+               (string-equal (window-class x) (or class program)))
+             (managed-windows)))))
+    (if w
+	(display-window w)
+      (system (format nil "%s %s &" program (or args ""))))))
 
 
 ;;; Interactive command to start emacs or switch to an
@@ -59,58 +74,29 @@
 (defun emacs  ()
   "Switch to a running emacs or start one if necessary."
   (interactive)
-  (let ((w (car
-            (delete-if-not
-             (lambda (x)
-               (string= (window-class x) "Emacs"))
-             (managed-windows)))))
-    (if w
-	(display-window w)
-      (system emacs-program))
-    (and (tts-running-p) (tts-say-current-window))))
-
+  (launch-or-switch-to emacs-program emacs-args #:class "emacs"))
 
 (defun xemacs  ()
   "Switch to a running xemacs or start one if necessary."
   (interactive)
-  (let ((w (car
-            (delete-if-not
-             (lambda (x)
-               (string= (window-class x) "xEmacs"))
-             (managed-windows)))))
-    (if w
-	(display-window w)
-      (system xemacs-program))
-    (and (tts-running-p) (tts-say-current-window))))
-(defun switch-to-emacs  ()
-  "Switch to a running emacs "
+  (launch-or-switch-to xemacs-program xemacs-args #:class "xemacs"))
+
+
+;;; Interactive command to start Gnopernicus or switch to an
+;;; existing one.
+
+(defun gnopernicus  ()
+  "Switch to a running Gnopernicus or start one if necessary."
   (interactive)
-  (let ((w (car
-            (delete-if-not
-             (lambda (x)
-               (string= (window-class x) "Emacs"))
-             (managed-windows)))))
-    (if w
-	(display-window w))
-    (and (tts-running-p) (tts-say-current-window))))
+  (launch-or-switch-to "gnopernicus"))
+
 
 (defun delete-this-window-safely ()
   "Delete current window safely."
   (interactive)
-  (delete-window-safely (car (managed-windows))))
-
-(defun launch  (program)
-  "Launch specified program or switch to it if it is already running."
-  (interactive "sRun program:")
-  (let ((w (car
-            (delete-if-not
-             (lambda (x)
-               (string= (window-class x) program))
-             (managed-windows)))))
-    (if w
-	(display-window w)
-      (system program))
-    (and (tts-running-p) (tts-say-current-window))))
+  (let ((current-window (input-focus)))
+    (when current-window
+      (delete-window-safely current-window))))
 
 (message "Loaded tools.jl")
 

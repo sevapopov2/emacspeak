@@ -1,20 +1,28 @@
 ;;;$Id: sawfishrc 4047 2006-08-11 19:11:17Z tv.raman.tv $
 (setq load-path
       (cons
-      (expand-file-name  "~/emacs/lisp/emacspeak/sawfish")
+      (expand-file-name  "/usr/local/share/emacs/site-lisp/emacspeak/sawfish")
       load-path))
-(load "tts")
 (load "tools")
+
 (bind-keys global-keymap
-           "M-e" 'emacs
-           "M-t" 'tts-say-current-window
-"M-F4" 'delete-this-window-safeley
-"M-F12" 'quit
-)
+           "C-F1" 'gnopernicus
+           "C-F2" 'emacs
+           "C-F3" 'xterm
+	   "C-F4" 'delete-this-window-safely
+           "C-F5" 'tts-say-current-window
+	   "C-F6" 'tts-say-window-details
+	   "C-F7" 'tts-toggle-speaking-events
+	   "C-F12" 'gnome-logout
+	   )
 
 (require 'audio-events)
 (setq audio-events-enabled t)
 (setq play-sample-program "/usr/bin/play")
-(emacs)
+(setq emacs-program "emacspeak")
+(setq xterm-program "x-terminal-emulator")
+(setq tts-server "multispeech")
 (tts-open)
-(tts-say-window-on-focus t)
+(tts-speak-events t)
+
+(emacs)

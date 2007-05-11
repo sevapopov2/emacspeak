@@ -81,6 +81,31 @@
   :type 'string
   :group 'emacspeak-alsaplayer)
 
+(defcustom emacspeak-alsaplayer-output nil
+  "Alsaplayer driver for sound output."
+  :type '(choice (const :tag "default" nil)
+		 (const "alsa")
+		 (const "oss")
+		 (const "jack")
+		 (const "nas")
+		 (const "sgi")
+		 (const "sparc")
+		 (string :tag "Driver name"))
+  :group 'emacspeak-alsaplayer)
+
+(defcustom emacspeak-alsaplayer-sound-device nil
+  "Alsaplayer sound device.
+Default is hw:0,0 for ALSA and /dev/dsp for OSS output."
+  :type '(choice (const :tag "default" nil)
+		 (string :tag "Device specification"))
+  :group 'emacspeak-alsaplayer)
+
+(defcustom emacspeak-alsaplayer-coding-system nil
+  "Alsaplayer output coding system.
+It is used for tags decoding."
+  :type '(coding-system :size 0)
+  :group 'emacspeak-alsaplayer)
+
 (defcustom emacspeak-alsaplayer-media-directory
   (expand-file-name "~/mp3/")
   "Directory to look for media files."
@@ -95,15 +120,42 @@
 user is placed in a buffer associated with the newly created
 Alsaplayer session."
   (interactive)
-  (declare (special emacspeak-alsaplayer-program
-                    emacspeak-alsaplayer-buffer))
-  (let ((buffer (get-buffer-create emacspeak-alsaplayer-buffer)))
+  (declare (special emacspeak-alsaplayer-session
+                    emacspeak-alsaplayer-session-id))
+  (let ((process-connection-type t)
+        (process nil)
+	(options (nconc (list "-r" "-i" "daemon")
+			(when emacspeak-alsaplayer-output
+			  (list "-o" emacspeak-alsaplayer-output))
+			(when emacspeak-alsaplayer-sound-device
+			  (list "-d" emacspeak-alsaplayer-sound-device))))
+        (buffer (get-buffer-create "alsaplayer")))
     (save-excursion
       (set-buffer buffer)
-      (setq buffer-undo-list t)
-      (shell-command
-       (format "%s -r -i daemon &" emacspeak-alsaplayer-program)
-       (current-buffer)))
+      (emacspeak-alsaplayer-mode)
+      (setq process
+            (apply 'start-process
+		   "alsaplayer"
+		   (current-buffer)
+		   emacspeak-alsaplayer-program
+		   options))
+      (set-process-coding-system process emacspeak-alsaplayer-coding-system)
+      (accept-process-output process)
+      (setq emacspeak-alsaplayer-session
+            (emacspeak-alsaplayer-get-session))
+      (put 'emacspeak-alsaplayer-session 'buffer (current-buffer))
+      (setq emacspeak-alsaplayer-session-id
+            (second
+             (split-string emacspeak-alsaplayer-session "-")))
+      (erase-buffer)
+      (setq process
+            (start-process
+             "alsaplayer" (current-buffer) emacspeak-alsaplayer-program
+             "-n"
+             (or emacspeak-alsaplayer-session-id
+                 "0")
+             "--status"))
+      (set-process-coding-system process emacspeak-alsaplayer-coding-system))
     (switch-to-buffer buffer)
     (emacspeak-alsaplayer-mode)
     (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
@@ -122,19 +174,22 @@ Optional second arg watch-pattern specifies line of output to
   (save-excursion
     (set-buffer (get-buffer-create emacspeak-alsaplayer-buffer))
     (erase-buffer)
-    (shell-command
-     (format "%s %s %s"
-             emacspeak-alsaplayer-program
-             command
-             (if no-refresh
-                 ""
-               "; alsaplayer --status"))
-     (current-buffer)))
-  (when (and watch-pattern
-             (eq (current-buffer) (get-buffer emacspeak-alsaplayer-buffer)))
-    (goto-char (point-min))
-    (search-forward watch-pattern  nil t)))
-         
+    (let ((process nil))
+      (setq process
+            (apply 'start-process
+                   "alsaplayer"
+                   (current-buffer) emacspeak-alsaplayer-program
+                   "-n" emacspeak-alsaplayer-session-id
+                   command-list))
+      (set-process-coding-system process emacspeak-alsaplayer-coding-system)
+      (unless no-refresh
+        (setq process
+              (start-process
+               "alsaplayer" (current-buffer)   emacspeak-alsaplayer-program
+               "-n" emacspeak-alsaplayer-session-id
+               "--status"))
+        (set-process-coding-system process emacspeak-alsaplayer-coding-system)))))
+
 (defun emacspeak-alsaplayer-add-to-queue (resource)
   "Add specified resource to queue."
   (interactive

@@ -293,7 +293,8 @@ instead of the modeline."
     (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
       ad-do-it))
-   (t ad-do-it))ad-return-value)
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice w3m-redisplay-this-page (around emacspeak pre act)
   "Speech-enable W3M."
@@ -302,7 +303,8 @@ instead of the modeline."
     (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
       ad-do-it))
-   (t ad-do-it))ad-return-value)
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice w3m-reload-this-page (around emacspeak pre act)
   "Speech-enable W3M."
@@ -311,7 +313,8 @@ instead of the modeline."
     (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
       ad-do-it))
-   (t ad-do-it))ad-return-value)
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice w3m-print-current-url (after emacspeak pre act comp)
   "Produce auditory icon."
@@ -612,7 +615,8 @@ instead of the modeline."
       ad-do-it)
     (when (eq (ad-get-arg 0) 'popup)
       (emacspeak-speak-mode-line)))
-   (t ad-do-it))ad-return-value)
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice w3m-process-stop (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -955,6 +959,7 @@ With prefix argument makes this transformation persistent."
 
 ;;}}}
 ;;{{{ tvr: mapping font faces to personalities 
+
 (voice-setup-add-map
  '(
    (w3m-arrived-anchor-face voice-lighten)
@@ -970,6 +975,7 @@ With prefix argument makes this transformation persistent."
    (w3m-form-face voice-brighten)
    (w3m-image-face voice-brighten)
    ))
+
 (defadvice w3m-mode (after emacspeak pre act comp)
   "Set punctuation mode and refresh punctuations."
   (declare (special dtk-punctuation-mode))

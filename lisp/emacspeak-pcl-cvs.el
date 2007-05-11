@@ -70,13 +70,16 @@
    ))
 
 ;;}}}
+;;{{{  speech enable interactive commands
 
-;;{{{  speech enable interactive commands 
+(defsubst emacspeak-pcl-cvs-summarize-line ()
+  (emacspeak-speak-line))
+
 (defadvice cvs-mode-add (after emacspeak pre act comp)
-  "Provide spoken feedback."
+  "Provide auditory icon if possible."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
+    (emacspeak-auditory-icon 'select-object)))
+
 (defadvice cvs-mode-kill-buffers (after emacspeak pre act
                                         comp)
   "Produce an auditory icon."
@@ -90,25 +93,74 @@
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
-(defsubst emacspeak-pcl-cvs-summarize-line ()
-  (emacspeak-speak-line))
+(defadvice cvs-mode-find-file (around emacspeak pre act comp)
+  "Provide an auditory icon."
+  (if (and (interactive-p)
+	   (not (file-directory-p (cvs-fileinfo->full-path
+				   (cvs-mode-marked nil nil :one t)))))
+      (progn ad-do-it
+	     (emacspeak-auditory-icon 'open-object))
+    ad-do-it)
+  ad-return-value)
+
+(defadvice log-edit (after emacspeak pre act comp)
+  "Provide an auditory icon."
+  (emacspeak-auditory-icon 'open-object))
+
+(defadvice log-edit-done (after emacspeak pre act comp)
+  "Provide an auditory icon."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)))
 
 (defadvice cvs-mode-next-line (after emacspeak pre act comp)
   "Provide auditory feedback. "
   (when (interactive-p)
-    (emacspeak-pcl-cvs-summarize-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-pcl-cvs-summarize-line)))
 (defadvice cvs-mode-previous-line (after emacspeak pre act comp)
   "Provide auditory feedback. "
   (when (interactive-p)
-    (emacspeak-pcl-cvs-summarize-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-pcl-cvs-summarize-line)))
 
 (defadvice cvs-mode-mark (after emacspeak  pre act comp)
   "Provide auditory feedback. "
   (when (interactive-p)
-    (emacspeak-pcl-cvs-summarize-line)
-    (emacspeak-auditory-icon 'mark-object)))
+    (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-pcl-cvs-summarize-line)))
+
+(defadvice cvs-mode-unmark (after emacspeak  pre act comp)
+  "Provide auditory feedback. "
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'deselect-object)
+    (emacspeak-pcl-cvs-summarize-line)))
+
+(defadvice cvs-mode-add-change-log-entry-other-window (after emacspeak
+							     pre act comp)
+  "Provide auditory icon if possible. "
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'yank-object)))
+
+(defadvice cvs-status-trees (after emacspeak pre act comp)
+  "Provide auditory icon if possible. "
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)))
+
+(defadvice cvs-status-cvstrees (after emacspeak pre act comp)
+  "Provide auditory icon if possible. "
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)))
+
+(defadvice  cvs-sentinel (after emacspeak pre act )
+  "Provide auditory feedback"
+  (emacspeak-auditory-icon 'task-done))
+
+(defadvice cvs-bury-buffer (after emacspeak pre act)
+  "Produce auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (with-current-buffer (window-buffer)
+      (emacspeak-speak-mode-line))))
 
 ;;}}}
 (provide 'emacspeak-pcl-cvs)
