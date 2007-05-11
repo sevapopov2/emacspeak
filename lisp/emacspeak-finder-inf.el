@@ -227,7 +227,7 @@
         (emacspeak  audio desktop))
     ("emacspeak-gnuplot.el"
         "speech-enable gnuplot mode"
-        (emacspeak  www interaction))
+        (emacspeak  mathematics  gnuplot interaction))
     ("emacspeak-gnus.el"
         "Speech enable GNUS -- Fluent spoken access to usenet"
         (emacspeak  gnus  advice  spoken output  news))
@@ -311,7 +311,7 @@
         (emacspeak  midi ))
     ("emacspeak-mpg123.el"
         "Speech enable MP3 Player"
-        (emacspeak  www interaction))
+        (emacspeak  streaming media  mpg123 interaction))
     ("emacspeak-mspools.el"
         "Speech enable MSpools -- Monitor multiple mail drops"
         (emacspeak  speak  spoken output  mspools))
@@ -329,7 +329,7 @@
         (emacspeak  newsticker ))
     ("emacspeak-nxml.el"
         "Speech enable nxml mode"
-        (emacspeak  nxml streaming media ))
+        (emacspeak  nxml ))
     ("emacspeak-ocr.el"
         "ocr Front-end for emacspeak desktop"
         (emacspeak  ocr))
@@ -500,7 +500,7 @@
         (emacspeak  w3m))
     ("emacspeak-wdired.el"
         "Speech-enable wdired"
-        (emacspeak  multimedia))
+        (emacspeak  directory editing))
     ("emacspeak-websearch.el"
         "search utilities"
         (emacspeak  www interaction))
