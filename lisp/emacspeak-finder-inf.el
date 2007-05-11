@@ -78,6 +78,9 @@
     ("emacspeak-bibtex.el"
         "Speech enable bibtex -- Supports maintaining bibliographies in bibtex format"
         (emacspeak  audio interface to emacs  bibtex))
+    ("emacspeak-bmk-mgr.el"
+        "speech-enables bmk-mgr.el"
+        (emacspeak  bmk-mgr))
     ("emacspeak-bookmark.el"
         "Speech enable Emacs' builtin bookmarks"
         (emacspeak  speak  spoken output  bookmark))
@@ -255,9 +258,6 @@
     ("emacspeak-ido.el"
         "speech-enable ido"
         (emacspeak  audio desktop))
-    ("emacspeak-imcom.el"
-        "Emacspeak interface to IMCom/Jabber"
-        (emacspeak   audio desktop imcom))
     ("emacspeak-imenu.el"
         "Speech enable Imenu -- produce buffer-specific table of contents"
         (emacspeak  speak  spoken output  indices))
@@ -537,9 +537,15 @@
     ("emacspeak-xslt.el"
         "Implements Emacspeak  xslt transform engine"
         (emacspeak   audio desktop xslt))
+    ("emacspeak-zinf.el"
+        "Control zinf from Emacs"
+        (emacspeak  zinf))
     ("emacspeak.el"
         "Emacspeak -- The Complete Audio Desktop"
         (emacspeak  speech  dectalk ))
+    ("espeak-voices.el"
+        "Define various device independent voices in terms of Espeak tags"
+        (voice  personality  espeak))
     ("flite-voices.el"
         "Emacspeak FLite"
         (emacspeak   audio desktop flite))
@@ -570,7 +576,49 @@
     ("xml-parse.el"
         "code to efficiently read/write XML data with Elisp"
         (convenience languages lisp xml parse data))
+    ("g-auth.el"
+        "Google Authentication Module"
+        (google   auth))
+    ("g-autogen.el"
+        "Generate autoloads for G"
+        (google services))
+    ("g-cus-load.el"
+        "automatically extracted custom dependencies"
+        nil)
+    ("g-load-path.el"
+        "Setup Emacs load-path for compiling grep"
+        (g-client  google services  for emacs))
+    ("g-loaddefs.el"
+        nil
+        nil)
+    ("g-utils.el"
+        "Google Client Utilities"
+        (google   atom api  google services))
+    ("g.el"
+        "Google Client"
+        (emacs g-client  google   atom api  google services))
+    ("gblogger.el"
+        "new Atom Blogger API client"
+        (g-client  blogger atom api))
+    ("gcal.el"
+        "Google Calendar"
+        (google   atom api))
+    ("gnotebook.el"
+        "Google Notebook"
+        (google   services))
+    ("greader.el"
+        "Google Reader"
+        (google   atom api))
+    ("gsheet.el"
+        "Google Spreadsheets"
+        (spreadsheets  gdata  google   atom api))
+    ("json.el"
+        "JavaScript Object Notation parser / generator"
+        (convenience))
     ("atom-blogger.el"
+        "Utilities for Atom Blogger API"
+        (blogger atom api))
+    ("old-atom-blogger.el"
         "Utilities for Atom Blogger API"
         (blogger atom api))
 ))

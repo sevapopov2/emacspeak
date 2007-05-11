@@ -1,5 +1,5 @@
 ;;; emacspeak-ocr.el --- ocr Front-end for emacspeak desktop
-;;; $Id: emacspeak-ocr.el 4105 2006-08-23 05:00:40Z tv.raman.tv $
+;;; $Id: emacspeak-ocr.el 4448 2007-04-11 03:23:39Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for OCR
 ;;; Keywords: Emacspeak, ocr
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-22 22:00:40 -0700 (Tue, 22 Aug 2006) $ |
-;;;  $Revision: 4105 $ |
+;;; $Date: 2007-04-10 20:23:39 -0700 (Tue, 10 Apr 2007) $ |
+;;;  $Revision: 4448 $ |
 ;;; Location undetermined
 ;;;
 
@@ -83,7 +83,9 @@ OCR engine for optical character recognition."
 
 (defcustom emacspeak-ocr-compress-image "tiffcp"
   "Command used to compress the scanned tiff file."
-  :type 'string
+  :type '(choice
+          (const :tag "None" nil)
+          (string :tag "Command"))
   :group 'emacspeak-ocr)
 
 (defcustom emacspeak-ocr-image-extension ".tiff"
@@ -396,24 +398,27 @@ Pick a short but meaningful name."
     (let ((emacspeak-speak-messages nil))
       (shell-command
        (concat
-        (format "%s %s > temp%s;\n"
-                emacspeak-ocr-scan-image
-                emacspeak-ocr-scan-image-options 
-                emacspeak-ocr-image-extension)
-        (format "%s %s  temp%s %s ;\n"
-                emacspeak-ocr-compress-image
-                emacspeak-ocr-compress-image-options
-                emacspeak-ocr-image-extension
-                image-name)
-        (if emacspeak-ocr-keep-uncompressed-image
-            (format "echo \'Uncompressed image not removed.'")
+        (format
+         "%s %s > %s;\n"
+         emacspeak-ocr-scan-image
+         emacspeak-ocr-scan-image-options 
+         (cond
+          ((not emacspeak-ocr-compress-image) image-name)
+          (t (format "temp%s" emacspeak-ocr-image-extension))))
+        (when emacspeak-ocr-compress-image
+          (format "%s %s  temp%s %s ;\n"
+                  emacspeak-ocr-compress-image
+                  emacspeak-ocr-compress-image-options
+                  emacspeak-ocr-image-extension
+                  image-name))
+        (when emacspeak-ocr-keep-uncompressed-image
           (format "rm -f temp%s"
-                  emacspeak-ocr-image-extension)))))
-    (when (interactive-p)
-      (setq emacspeak-ocr-last-page-number
-            (1+ emacspeak-ocr-last-page-number)))
-    (message "Acquired  image to file %s"
-             image-name)))
+                  emacspeak-ocr-image-extension))))
+      (when (interactive-p)
+        (setq emacspeak-ocr-last-page-number
+              (1+ emacspeak-ocr-last-page-number)))
+      (message "Acquired  image to file %s"
+               image-name))))
 
 ;;;###autoload
 (defun emacspeak-ocr-scan-photo (&optional metadata)

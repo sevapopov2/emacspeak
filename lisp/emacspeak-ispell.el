@@ -1,5 +1,5 @@
 ;;; emacspeak-ispell.el --- Speech enable Ispell -- Emacs' interactive spell checker
-;;; $Id: emacspeak-ispell.el 4276 2006-11-17 18:01:30Z tv.raman.tv $
+;;; $Id: emacspeak-ispell.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enable ispell
 ;;; Keywords: Emacspeak, Ispell, Spoken Output, Ispell version 2.30
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-17 10:01:30 -0800 (Fri, 17 Nov 2006) $ |
-;;;  $Revision: 4276 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2006, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -60,22 +60,22 @@
 (voice-setup-add-map
  '(
    (ispell-highlight-face voice-bolden)
-))
+   ))
 
 ;;}}}
 ;;{{{  first set up voice  highlighting
 
 (defadvice ispell-highlight-spelling-error (after emacspeak act )
-    "Use voice locking to highlight the error.
+  "Use voice locking to highlight the error.
 Will clobber any existing personality property defined on start end"
-    (let ((start (ad-get-arg 0))
-          (end (ad-get-arg 1 ))
-          (highlight (ad-get-arg 2 )))
-      (if highlight
-          (put-text-property  start end
-                              'personality  voice-bolden)
-        (put-text-property start end
-                           'personality  nil ))))
+  (let ((start (ad-get-arg 0))
+        (end (ad-get-arg 1 ))
+        (highlight (ad-get-arg 2 )))
+    (if highlight
+        (put-text-property  start end
+                            'personality  voice-bolden)
+      (put-text-property start end
+                         'personality  nil ))))
 
 ;;}}}
 ;;{{{  ispell command loop:
@@ -111,7 +111,7 @@ many available corrections."
     (setq line
           (ems-set-personality-temporarily start end voice-bolden
                                            (thing-at-point
-  'line)))
+                                            'line)))
     (save-excursion
       (set-buffer scratch-buffer)
       (setq voice-lock-mode t)

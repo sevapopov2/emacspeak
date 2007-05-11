@@ -1,5 +1,5 @@
 ;;; dtk-speak.el --- Provides Emacs Lisp interface to speech server
-;;;$Id: dtk-speak.el 4156 2006-08-30 23:02:41Z tv.raman.tv $
+;;;$Id: dtk-speak.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacs interface to TTS
 ;;; Keywords: Dectalk Emacs Elisp
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-30 16:02:41 -0700 (Wed, 30 Aug 2006) $ |
-;;;  $Revision: 4156 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2006, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -59,6 +59,7 @@
 (require 'dectalk-voices)
 (require 'outloud-voices)
 (require 'multispeech-voices)
+(require 'espeak-voices)
 
 ;;}}}
 ;;{{{  user customizations:
@@ -113,6 +114,7 @@ dtk-exp     For the Dectalk Express.
 dtk-mv      for the Multivoice and older Dectalks.
 outloud     For IBM ViaVoice Outloud
 multispeech For Multilingual speech server
+espeak      For eSpeak
 The default is dtk-exp.")
 
 (defvar dtk-quiet nil
@@ -181,6 +183,75 @@ Do not modify this variable directly; use command  `dtk-set-rate'
 
 ;;;declared here to help compilation
 (defvar voice-lock-mode nil)
+
+;;}}}
+;;{{{ helper: apply pronunciations 
+;;; moved here from the emacspeak-pronounce module for efficient
+;;compilation
+
+(defsubst tts-apply-pronunciations (pronunciation-table )
+  "Applies pronunciations specified in pronunciation table to current buffer.
+Modifies text and point in buffer."
+  (declare (special emacspeak-pronounce-pronunciation-personality))
+  (let ((words
+         (sort 
+          (loop for  key  being the hash-keys  of pronunciation-table collect key)
+          #'(lambda (a b ) 
+              (> (length  a) (length  b))))))
+    (loop for key in words 
+          do
+          (let ((word  key)
+                (pronunciation (gethash  key pronunciation-table))
+                (pp nil)
+                (personality nil))
+            (when word 
+              (goto-char (point-min))
+              (cond
+               ((stringp pronunciation)
+                (while (search-forward  word nil t)
+                  (setq personality (get-text-property (point) 'personality))
+                  (replace-match  pronunciation t t  )
+                  (put-text-property
+                   (match-beginning 0)
+                   (+ (match-beginning 0) (length pronunciation))
+                   'personality
+                   (apply
+                    'append
+                    (mapcar
+                     #'(lambda (p)
+                         (when p
+                           (if (atom p) (list p) p)))
+                     (list emacspeak-pronounce-pronunciation-personality personality))))))
+               ((consp pronunciation )
+                (let ((matcher (car pronunciation))
+                      (pronouncer (cdr pronunciation))
+                      (pronunciation ""))
+                  (while (funcall matcher   word nil t)
+                    (setq personality
+                          (get-text-property (point) 'personality))
+                    (setq pronunciation
+                          (save-match-data 
+                            (funcall pronouncer
+                                     (buffer-substring 
+                                      (match-beginning 0)
+                                      (match-end 0)))))
+                    (replace-match pronunciation t t  )
+                    ;; get personality if any from pronunciation
+                    (setq pp
+                          (get-text-property (match-beginning 0) 'personality))
+                    (put-text-property
+                     (match-beginning 0)
+                     (+ (match-beginning 0) (length pronunciation))
+                     'personality
+                     (apply 'append
+                            (mapcar
+                             #'(lambda (p)
+                                 (when p
+                                   (if (atom p) (list p) p)))
+                             (list
+                              emacspeak-pronounce-pronunciation-personality
+                              personality pp)))))))
+               (t nil)))))))
 
 ;;}}}
 ;;{{{  Helpers to handle invisible text:
@@ -289,6 +360,58 @@ Optional argument FORCE  flushes the command to the speech server."
     (when (and dtk-use-tones
                dtk-speak-server-initialized)
       (dtk-interp-tone pitch duration force))))
+
+(defun dtk-set-language (lang)
+  "Set language according to the argument lang."
+  (interactive "sEnter new language: \n")
+  (declare (special dtk-quiet dtk-speaker-process
+                    dtk-speak-server-initialized))
+  ;;  (unless dtk-quiet
+  (when dtk-speak-server-initialized
+    (dtk-interp-language lang (interactive-p))))
+;;)
+
+(defun dtk-set-next-language ()
+  "Switch to the next available language"
+  (interactive)
+  (declare (special dtk-speak-server-initialized))
+  (when dtk-speak-server-initialized
+    (dtk-interp-next-language (interactive-p))))
+;;)
+
+(defun dtk-set-previous-language ()
+  "Switch to the previous available language"
+  (interactive)
+  (declare (special dtk-quiet dtk-speaker-process
+                    dtk-speak-server-initialized))
+  ;;  (unless dtk-quiet
+  (when dtk-speak-server-initialized
+    (dtk-interp-previous-language (interactive-p))))
+;;)
+
+(defun dtk-set-preferred-language (alias lang)
+  "Set the alias of the preferred language: 
+For example if alias=\"en\" lang=\"en_GB\", 
+then the following call:
+ dtk-set-language(\"en\") 
+will set \"en_GB\".
+"
+  (interactive "s")
+  (declare (special dtk-quiet dtk-speaker-process
+                    dtk-speak-server-initialized))
+  ;;  (unless dtk-quiet
+  (when dtk-speak-server-initialized
+    (dtk-interp-preferred-language alias lang)))
+;;)
+
+(defun dtk-list-language ()
+  "Say the available languages."
+  (declare (special dtk-quiet dtk-speaker-process
+                    dtk-speak-server-initialized))
+  (unless dtk-quiet
+    (when dtk-speak-server-initialized
+      (dtk-interp-list-language)))
+  )
 
 ;;; helper function:
 
@@ -1008,7 +1131,7 @@ no line --with no white space."
       (set-buffer scratch)
       (setq buffer-undo-list t)
       (erase-buffer)
-      (insert-file
+      (insert-file-contents
        (expand-file-name ".servers"
                          emacspeak-servers-directory))
       (goto-char (point-min))
@@ -1450,6 +1573,8 @@ This is setup on a per engine basis.")
     (outloud-configure-tts))
    ((string-match "multispeech" tts-name)
     (multispeech-configure-tts))
+   ((string-match "espeak" tts-name)
+    (espeak-configure-tts))
    ((string-match "dtk-" tts-name)      ;all dectalks
     (dectalk-configure-tts))
    (t (dectalk-configure-tts)           ; will become
@@ -1669,7 +1794,7 @@ only speak upto the first ctrl-m."
           (insert  text)
           (delete-invisible-text)
           (when pronunciation-table
-            (emacspeak-pronounce-apply-pronunciations
+            (tts-apply-pronunciations
              pronunciation-table))
           (dtk-handle-repeating-patterns mode)
           (dtk-quote mode))
@@ -1700,8 +1825,7 @@ only speak upto the first ctrl-m."
   "Speak a  list of strings.
 Argument TEXT  is the list of strings to speak.
 Optional argument group-count specifies grouping for intonation."
-
-  (declare (special dtk-speaker-process dtk-stop-immediately))
+  (declare (special dtk-speaker-process))
   (let ((dtk-scratch-buffer (get-buffer-create " *dtk-scratch-buffer* "))
         (contents nil)
         (counter 1)
@@ -1714,7 +1838,7 @@ Optional argument group-count specifies grouping for intonation."
       (loop  for element in text
              do
              (insert
-              (format "%s%s\n"
+              (format "%s%s "
                       element
                       (cond
                        ((null group-count) "")

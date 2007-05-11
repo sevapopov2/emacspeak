@@ -1,23 +1,23 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el 4288 2006-11-23 16:30:56Z tv.raman.tv $
-;;; $Author: tv.raman.tv $ 
+;;; $Id: emacspeak-setup.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
-;;{{{  LCD Archive entry: 
+;;{{{  LCD Archive entry:
 ;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-23 08:30:56 -0800 (Thu, 23 Nov 2006) $ |
-;;;  $Revision: 4288 $ | 
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2006, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
-;;; All Rights Reserved. 
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -44,7 +44,7 @@
 ;;; Code:
 
 ;;}}}
-;;{{{ Required Modules 
+;;{{{ Required Modules
 
 (eval-when-compile (require 'cl))
 (declaim  (optimize  (safety 0) (speed 3)))
@@ -53,13 +53,13 @@
   (require 'emacspeak-preamble))
 
 ;;}}}
-;;{{{  Define locations 
+;;{{{  Define locations
 
 (defvar emacspeak-unibyte nil
   "Emacspeak will force emacs to unibyte unless this
 variable is set to nil.
-To use emacspeak with emacs running in unibyte mode, this
-variable should be set to t *before* 
+To use emacspeak with emacs running in multibyte mode, this
+variable should be set to nil *before*
 emacspeak is compiled or started.")
 ;;;###autoload
 (defvar emacspeak-directory
@@ -100,7 +100,7 @@ pronunciation dictionaries are stored. ")
 ;;;###autoload
 (defconst emacspeak-version
   (format
-   "25.0 %s"
+   "26.0 %s"
    (cond
     ((file-exists-p emacspeak-readme-file)
      (let ((buffer (find-file-noselect emacspeak-readme-file))
@@ -110,10 +110,12 @@ pronunciation dictionaries are stored. ")
          (goto-char (point-min))
          (setq revision
                (format "Revision %s"
-                       (nth 2 (split-string
-                               (buffer-substring-no-properties
-                                (line-beginning-position)
-                                (line-end-position)))))))
+                       (or
+                        (nth 2 (split-string
+                                (buffer-substring-no-properties
+                                 (line-beginning-position)
+                                 (line-end-position))))
+                        "unknown"))))
        (kill-buffer buffer)
        revision))
     (t "")))
@@ -121,11 +123,11 @@ pronunciation dictionaries are stored. ")
 
 ;;;###autoload
 (defconst emacspeak-codename
-  "ActiveDog"
+  "LeadDog"
   "Code name of present release.")
 
 ;;}}}
-;;{{{ speech rate 
+;;{{{ speech rate
 
 (defcustom outloud-default-speech-rate 50
   "Default speech rate for outloud."
@@ -142,6 +144,11 @@ pronunciation dictionaries are stored. ")
   :group 'tts
   :type 'integer)
 
+(defcustom espeak-default-speech-rate 170
+  "Default speech rate for eSpeak."
+  :group 'tts
+  :type 'integer)
+
 (defvar tts-default-speech-rate dectalk-default-speech-rate
   "Setup on a per engine basis.")
 
@@ -150,8 +157,11 @@ pronunciation dictionaries are stored. ")
 
 (unless (featurep 'emacspeak)
   (setq load-path
-        (cons emacspeak-lisp-directory 
-              load-path ))
+        (cons emacspeak-lisp-directory load-path ))
+  (setq load-path
+        (cons
+         (expand-file-name "g-client" emacspeak-lisp-directory )
+         load-path ))
   (setq load-path
         (cons
          (expand-file-name "atom-blogger" emacspeak-lisp-directory )
@@ -164,22 +174,22 @@ pronunciation dictionaries are stored. ")
   (dtk-set-rate tts-default-speech-rate t)
   (dtk-interp-sync))
 
-(add-hook 'dtk-startup-hook 
+(add-hook 'dtk-startup-hook
           'emacspeak-tts-startup-hook)
 
 (defvar emacspeak-startup-hook nil)
 
 ;;; Use (add-hook 'emacspeak-startup-hook ...)
-;;; to add your personal settings. 
+;;; to add your personal settings.
 
 ;;}}}
 (emacspeak)
 (provide 'emacspeak-setup)
-;;{{{  emacs local variables 
+;;{{{  emacs local variables
 
 ;;; local variables:
 ;;; major-mode: emacs-lisp-mode
 ;;; folded-file: t
-;;; end: 
+;;; end:
 
 ;;}}}

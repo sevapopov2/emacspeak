@@ -1,5 +1,5 @@
 ;;; emacspeak-mpg123.el --- Speech enable MP3 Player
-;;; $Id: emacspeak-mpg123.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Id: emacspeak-mpg123.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable MP3 player
 ;;; Keywords: Emacspeak, streaming media, MPG123 interaction
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
-;;;  $Revision: 4151 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2006, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2007, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.

@@ -3,6 +3,14 @@
 ;;; Keywords: Emacspeak, apt, Debian Package Manager
 ;;{{{  LCD Archive entry:
 
+;;; LCD Archive Entry:
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
+;;; A speech interface to Emacs |
+;;; $Date: 2007/05/11 13:19:59 $ |
+;;;  $Revision: 1.1.1.3 $ |
+;;; Location undetermined
+;;;
+
 ;;}}}
 ;;{{{  Copyright:
 
@@ -27,11 +35,6 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{ required modules
-
-(require 'emacspeak-preamble)
-
-;;}}}
 ;;{{{  Introduction:
 
 ;;; Commentary:
@@ -43,6 +46,11 @@
 ;;; Code:
 
 ;;}}}
+;;{{{ required modules
+
+(require 'emacspeak-preamble)
+
+;;}}}
 ;;{{{  Initial setup
 
 (defun emacspeak-apt-utils-grab-package-at-point ()
@@ -51,9 +59,9 @@
   (unless (eq major-mode 'apt-utils-mode)
     (error "Not in APT Info buffer."))
   (let ((package (apt-utils-package-at)))
-  (emacspeak-auditory-icon 'yank-object)
-  (dtk-speak package)
-  (kill-new package)))
+    (emacspeak-auditory-icon 'yank-object)
+    (dtk-speak package)
+    (kill-new package)))
 
 (defsubst emacspeak-apt-utils-speak-package-name ()
   "Speak package name at point."
@@ -172,17 +180,15 @@
 (defadvice apt-utils-previous-package (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-apt-utils-speak-package-name)))
+    (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice apt-utils-next-package (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-apt-utils-speak-package-name)))
+    (emacspeak-auditory-icon 'large-movement)))
 
 ;;}}}
-;;{{{ mapping font faces to personalities 
+;;{{{ mapping font faces to personalities
 
 (voice-setup-add-map
  '(

@@ -1,5 +1,5 @@
 ;;; emacspeak-alsaplayer.el --- Control alsaplayer from Emacs
-;;; $Id: emacspeak-alsaplayer.el 4267 2006-11-13 03:44:53Z tv.raman.tv $
+;;; $Id: emacspeak-alsaplayer.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Controlling alsaplayer from emacs 
 ;;; Keywords: Emacspeak, alsaplayer
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-12 19:44:53 -0800 (Sun, 12 Nov 2006) $ |
-;;;  $Revision: 4267 $ | 
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2006, T. V. Raman
+;;; Copyright (c) 1995 -- 2007, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -221,7 +221,8 @@ Optional second arg watch-pattern specifies line of output to
            (if (file-directory-p resource)
                (format "%s/*" resource)
              resource))
-   "playlist"_length:)
+   "playlist"
+   "_length:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
     (emacspeak-speak-line)
@@ -318,7 +319,7 @@ Optional second arg watch-pattern specifies line of output to
   "Set volume."
   (interactive "sVolume")
   (emacspeak-alsaplayer-send-command
-   (format "--volume" setting)
+   (format "--volume %d" setting)
    "volume:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))

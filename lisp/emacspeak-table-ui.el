@@ -1,5 +1,5 @@
 ;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
-;;; $Id: emacspeak-table-ui.el 4277 2006-11-17 20:16:02Z tv.raman.tv $
+;;; $Id: emacspeak-table-ui.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-17 12:16:02 -0800 (Fri, 17 Nov 2006) $ |
-;;;  $Revision: 4277 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2006, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1995 by T. V. Raman
 ;;; All Rights Reserved.
 ;;;
@@ -444,7 +444,24 @@ Optional prefix arg prompts for a new filter."
 
 ;;}}}
 ;;{{{  opening a file of table data
-;;;###autoload
+
+;;{{{ csv helpers:
+
+(defsubst ems-csv-forward-field ()
+  "Skip forward over one field."
+  (if (eq (following-char) ?\")
+      (forward-sexp)
+    (skip-chars-forward "^,\n")))
+
+(defsubst ems-csv-backward-field ()
+  "Skip backward over one field."
+  (if (eq (preceding-char) ?\")
+      (backward-sexp)
+    (skip-chars-backward "^,\n")))
+
+;;}}}
+
+
 (defsubst emacspeak-table-prepare-table-buffer (table buffer
                                                       &optional filename)
   "Prepare tabular data."
@@ -458,6 +475,7 @@ Optional prefix arg prompts for a new filter."
           (column-start 1)
           (inhibit-read-only t))
       (setq truncate-lines t)
+      (setq buffer-undo-list t)
       (erase-buffer)
       (set (make-local-variable 'emacspeak-table) table)
       (set (make-local-variable 'positions)
@@ -487,11 +505,12 @@ Optional prefix arg prompts for a new filter."
             (put-text-property row-start (point) 'row i)
             (setq row-start (point))
             (incf i))
-      (emacspeak-table-mode)
-      (goto-char (point-min))))
+      (emacspeak-table-mode)))
   (switch-to-buffer buffer)
+  (emacspeak-table-goto-cell emacspeak-table 0 0)
   (setq truncate-lines t)
   (message "Use Emacspeak Table UI to browse this table."))
+
 ;;;###autoload
 (defun emacspeak-table-find-file (filename)
   "Open a file containing table data and display it in table mode.
@@ -513,6 +532,27 @@ the documentation on the table browser."
     (kill-buffer data )
     (emacspeak-table-prepare-table-buffer table buffer filename )))
 
+(defsubst ems-csv-get-fields ()
+  "Return list of fields on this line."
+  (let ((fields nil)
+        (this-field nil)
+        (start (line-beginning-position)))
+    (save-excursion
+      (goto-char start)
+      (while (not (eolp))
+        (ems-csv-forward-field)
+        (setq this-field
+              (cond
+               ((= (preceding-char) ?\")
+                (buffer-substring-no-properties (1+ start)
+                                                (1- (point))))
+               (t (buffer-substring-no-properties start  (point)))))
+        (push this-field fields)
+        (when (= (char-after) ?,)
+          (forward-char 1))
+        (setq start (point))))
+    (nreverse fields)))
+        
 ;;;###autoload
 (defun emacspeak-table-find-csv-file (filename)
   "Process a csv (comma separated values) file.
@@ -522,35 +562,30 @@ The processed  data and presented using emacspeak table navigation. "
         (table nil)
         (elements nil)
         (this-row nil)
-        (this-line nil)
         (fields nil)
         (buffer (get-buffer-create
                  (format "*%s-table*"
                          (file-name-nondirectory filename)))))
     (save-excursion
       (set-buffer scratch)
+      (fundamental-mode)
       (setq buffer-undo-list t)
       (erase-buffer)
-      (insert-file filename)
+      (insert-file-contents filename)
+      (flush-lines "^ *$")
       (goto-char (point-min))
-      (setq elements (make-vector (count-lines (point-min)
-                                               (point-max)) nil))
+      (setq elements
+            (make-vector (count-lines (point-min) (point-max))
+                         nil))
       (loop for i from 0 to (1- (length elements))
             do
-            (setq this-line
-                  (buffer-substring (line-beginning-position)
-                                    (line-end-position)))
-            (setq fields (split-string this-line ","))
-            (setq this-row (make-vector (length fields) nil))
-            (loop for j from 0 to (1- (length  fields))
-                  do
-                  (aset this-row j (nth j fields)))
-            (forward-line 1)
-            (aset elements i this-row))
+            (setq fields (ems-csv-get-fields))
+            (aset elements i (apply 'vector fields))
+            (forward-line 1))
       (setq table (emacspeak-table-make-table elements)))
     (kill-buffer scratch)
-    (emacspeak-table-prepare-table-buffer table buffer
-                                          filename )))
+    (emacspeak-table-prepare-table-buffer table buffer filename )
+    (emacspeak-table-speak-current-element)))
 
 ;;;###autoload
 (defun emacspeak-table-view-csv-buffer (&optional buffer-name)
@@ -742,7 +777,7 @@ browsing table elements"
     (error "Cannot find table associated with this buffer"))
    (t(emacspeak-table-move-right emacspeak-table count )
      (emacspeak-table-synchronize-display)
-     (funcall 'emacspeak-table-speak-column-header-and-element))))
+     (funcall emacspeak-table-speak-element))))
 
 (defun emacspeak-table-previous-column (&optional count)
   "Move to the previous column  if possible"
@@ -754,7 +789,7 @@ browsing table elements"
     (error "Cannot find table associated with this buffer"))
    (t (emacspeak-table-move-left emacspeak-table count )
       (emacspeak-table-synchronize-display)
-      (funcall 'emacspeak-table-speak-column-header-and-element))))
+      (funcall emacspeak-table-speak-element))))
 
 (defun emacspeak-table-goto (row column)
   "Prompt for a table cell coordinates and jump to it."
@@ -1103,8 +1138,7 @@ markup to use."
                     emacspeak-table-speak-row-filter))
   (unless (eq major-mode  'emacspeak-table-mode )
     (error "This command should be used in emacspeak table mode."))
-  (let* ((column  (emacspeak-table-current-column
-                   emacspeak-table))
+  (let* ((column  (emacspeak-table-current-column emacspeak-table))
          (row-filter emacspeak-table-speak-row-filter)
          (elements
           (loop for e across (emacspeak-table-elements emacspeak-table)
@@ -1115,20 +1149,19 @@ markup to use."
     (setq sorted-list
           (sort
            elements
-           (function
-            (lambda (x y)
-              (cond
-               ((and (numberp (read (aref x column)))
-                     (numberp (read (aref y column))))
-                (< (read (aref x column))
-                   (read (aref y column))))
-               ((and (stringp  (aref x column))
-                     (stringp (aref y column)))
-                (string-lessp (aref x column)
-                              (aref y column)))
-               (t (string-lessp
-                   (format "%s" (aref x column))
-                   (format "%s" (aref y column)))))))))
+           #'(lambda (x y)
+               (cond
+                ((and (numberp (read (aref x column)))
+                      (numberp (read (aref y column))))
+                 (< (read (aref x column))
+                    (read (aref y column))))
+                ((and (stringp  (aref x column))
+                      (stringp (aref y column)))
+                 (string-lessp (aref x column)
+                               (aref y column)))
+                (t (string-lessp
+                    (format "%s" (aref x column))
+                    (format "%s" (aref y column))))))))
     (setq sorted-table (make-vector (length sorted-list) nil))
     (loop for i from 0 to (1- (length sorted-list))
           do

@@ -1,4 +1,4 @@
-# $Id: Makefile 4280 2006-11-20 01:47:15Z tv.raman.tv $
+# $Id: Makefile 4533 2007-05-04 01:19:32Z tv.raman.tv $
 # $Author: tv.raman.tv $
 # Description:  Makefile for Emacspeak
 # Keywords: Emacspeak,  TTS,Makefile
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2006-11-19 17:47:15 -0800 (Sun, 19 Nov 2006) $ |
-#  $Revision: 4280 $ |
+# $Date: 2007-05-03 18:19:32 -0700 (Thu, 03 May 2007) $ |
+#  $Revision: 4533 $ |
 # Location undetermined
 #
 
@@ -44,7 +44,7 @@
 # cd to the  directory where you placed the sources.
 # This directory is referred to henceforth as EMACSPEAK_DIR.
 # and then type
-#    make config 
+#    make config
 # Now type
 #    make emacspeak
 # to compile the files, then (as superuser)
@@ -151,11 +151,13 @@ FORMS =etc/forms/*.el
 REALAUDIO=realaudio
 SHOUTCAST=shoutcast
 ECI=servers/linux-outloud
+ESPEAK=servers/linux-espeak
 DTKTTS=servers/software-dtk/tcldtk.c \
 servers/software-dtk/DTK \
 servers/software-dtk/Makefile
 
 OUTLOUD=${ECI}/eci.ini \
+${ECI}/*.h \
 ${ECI}/*.cpp \
 ${ECI}/VIAVOICE ${ECI}/ALSA ${ECI}/asoundrc \
 ${ECI}/Makefile
@@ -168,6 +170,7 @@ TCL_PROGRAMS = servers/.servers \
 servers/dtk-exp  servers/ssh-dtk-exp\
 servers/dtk-mv \
 servers/dtk-soft \
+servers/espeak \
 servers/outloud  servers/ssh-outloud \
 servers/dsp-outloud \
 servers/tts-lib.tcl \
@@ -175,6 +178,7 @@ servers/remote-tcl \
 servers/speech-server
 ELISP = lisp/*.el \
 lisp/atom-blogger \
+lisp/g-client \
 lisp/xml-forms/*.xml \
 lisp/Makefile
 TEMPLATES = etc/emacspeak.sh.def etc/Makefile
@@ -259,6 +263,7 @@ install:
 	  $(INSTALL) -d $(libdir)/lisp
 	$(INSTALL) -d $(libdir)/lisp/xml-forms
 	$(INSTALL) -d $(libdir)/lisp/atom-blogger
+	$(INSTALL) -d $(libdir)/lisp/g-client
 	$(INSTALL) -d $(libdir)/etc
 	$(INSTALL) -d $(libdir)/sawfish
 	$(INSTALL) -d $(libdir)/xsl
@@ -268,7 +273,8 @@ install:
 	  $(INSTALL) -m 0644  lisp/*.el lisp/*.elc  $(libdir)/lisp
 	$(INSTALL) -m 0644  lisp/xml-forms/*.xml   $(libdir)/lisp/xml-forms
 	$(INSTALL) -m 0644  lisp/atom-blogger/*.el    $(libdir)/lisp/atom-blogger
-	$(INSTALL) -m 0644  lisp/atom-blogger/*.xsl    $(libdir)/lisp/atom-blogger
+	$(INSTALL) -m 0644  lisp/g-client/*.el    $(libdir)/lisp/g-client
+	$(INSTALL) -m 0644  lisp/g-client/*.xsl    $(libdir)/lisp/g-client
 	$(INSTALL) -m 0644  sawfish/*.jl sawfish/sawfishrc   $(libdir)/sawfish
 	$(INSTALL) -m 0644  xsl/*.xsl    $(libdir)/xsl
 	$(INSTALL) -m 0644  ${UGUIDE}   $(libdir)/user-guide
@@ -277,6 +283,8 @@ install:
 	$(INSTALL) -d $(libdir)/servers
 	$(INSTALL) -d $(libdir)/servers/linux-outloud
 	$(INSTALL)  -m 755 ${OUTLOUD}  $(libdir)/servers/linux-outloud
+	$(INSTALL) -d $(libdir)/servers/linux-espeak
+	$(INSTALL)  -m 755 ${ESPEAK}  $(libdir)/servers/linux-espeak
 	$(INSTALL) -d $(libdir)/servers/software-dtk
 	$(INSTALL)  -m 755 ${DTKTTS}  $(libdir)/servers/software-dtk
 	$(INSTALL)  -m 755 ${TCL_PROGRAMS}  $(libdir)/servers

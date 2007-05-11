@@ -1,20 +1,20 @@
 ;;; voice-setup.el --- Setup voices for voice-lock
-;;; $Id: voice-setup.el 4267 2006-11-13 03:44:53Z tv.raman.tv $
+;;; $Id: voice-setup.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Voice lock mode for Emacspeak
 ;;{{{  LCD Archive entry:
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-12 19:44:53 -0800 (Sun, 12 Nov 2006) $ |
-;;;  $Revision: 4267 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2006, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -94,6 +94,7 @@
 (require 'acss-structure)
 (require 'outloud-voices)
 (require 'multispeech-voices)
+(require 'espeak-voices)
 (require 'dectalk-voices)
 (require 'string)
 
@@ -137,7 +138,6 @@
       table))))
 
 ;;}}}
-
 ;;{{{ map faces to voices
 
 (defvar voice-setup-face-voice-table (make-hash-table)
@@ -432,7 +432,7 @@ punctuations.")
    (fixed-pitch voice-monotone)
    (font-lock-builtin-face voice-bolden)
    (font-lock-comment-face voice-monotone)
-   (font-lock-comment-delimiter-face voice-monotone-medium)
+   (font-lock-comment-delimiter-face voice-smoothen-medium)
    (font-lock-regexp-grouping-construct voice-smoothen)
    (font-lock-regexp-grouping-backslash voice-smoothen-extra)
    (font-lock-negation-char-face voice-brighten-extra)
@@ -442,6 +442,7 @@ punctuations.")
    (font-lock-function-name-face voice-bolden-medium)
    (font-lock-keyword-face voice-animate-extra)
    (font-lock-preprocessor-face voice-monotone-medium)
+   (shadow voice-monotone-medium)
    (font-lock-reference-face voice-animate-medium)
    (font-lock-string-face voice-lighten-extra)
    (font-lock-type-face voice-smoothen)

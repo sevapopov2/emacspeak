@@ -1,5 +1,5 @@
 ;;; emacspeak-erc.el --- speech-enable erc irc client
-;;; $Id: emacspeak-erc.el 4074 2006-08-19 17:48:45Z tv.raman.tv $
+;;; $Id: emacspeak-erc.el 4502 2007-05-01 00:29:30Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak module for speech-enabling erc.el
 ;;; Keywords: Emacspeak, erc
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-19 10:48:45 -0700 (Sat, 19 Aug 2006) $ |
-;;;  $Revision: 4074 $ |
+;;; $Date: 2007-04-30 17:29:30 -0700 (Mon, 30 Apr 2007) $ |
+;;;  $Revision: 4502 $ |
 ;;; Location undetermined
 ;;;
 

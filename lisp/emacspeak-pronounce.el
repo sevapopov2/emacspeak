@@ -1,5 +1,5 @@
 ;;; emacspeak-pronounce.el --- Implements Emacspeak pronunciation dictionaries
-;;; $Id: emacspeak-pronounce.el 4263 2006-11-10 15:26:54Z tv.raman.tv $
+;;; $Id: emacspeak-pronounce.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak pronunciation dictionaries
 ;;; Keywords:emacspeak, audio interface to emacs customized pronunciation
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-10 07:26:54 -0800 (Fri, 10 Nov 2006) $ |
-;;;  $Revision: 4263 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2006, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman 
 ;;; All Rights Reserved.
 ;;;
@@ -248,69 +248,6 @@ This is the personality used when speaking  things that have a pronunciation
 applied."
   :group 'emacspeak-pronounce
   :type (voice-setup-custom-menu))
-(defsubst emacspeak-pronounce-apply-pronunciations (pronunciation-table )
-  "Applies pronunciations specified in pronunciation table to current buffer.
-Modifies text and point in buffer."
-  (declare (special emacspeak-pronounce-pronunciation-personality))
-  (let ((words
-         (sort 
-          (loop for  key  being the hash-keys  of pronunciation-table collect key)
-          #'(lambda (a b ) 
-              (> (length  a) (length  b))))))
-    (loop for key in words 
-          do
-          (let ((word  key)
-                (pronunciation (gethash  key pronunciation-table))
-                (pp nil)
-                (personality nil))
-            (when word 
-              (goto-char (point-min))
-              (cond
-               ((stringp pronunciation)
-                (while (search-forward  word nil t)
-                  (setq personality (get-text-property (point) 'personality))
-                  (replace-match  pronunciation t t  )
-                  (put-text-property
-                   (match-beginning 0)
-                   (+ (match-beginning 0) (length pronunciation))
-                   'personality
-                   (apply
-                    'append
-                    (mapcar
-                     #'(lambda (p)
-                         (when p
-                           (if (atom p) (list p) p)))
-                     (list emacspeak-pronounce-pronunciation-personality personality))))))
-               ((consp pronunciation )
-                (let ((matcher (car pronunciation))
-                      (pronouncer (cdr pronunciation))
-                      (pronunciation ""))
-                  (while (funcall matcher   word nil t)
-                    (setq personality
-                          (get-text-property (point) 'personality))
-                    (setq pronunciation
-                          (save-match-data 
-                            (funcall pronouncer
-                                     (buffer-substring 
-                                      (match-beginning 0)
-                                      (match-end 0)))))
-                    (replace-match pronunciation t t  )
-                    ;; get personality if any from pronunciation
-                    (setq pp
-                          (get-text-property (match-beginning 0) 'personality))
-                    (put-text-property
-                     (match-beginning 0)
-                     (+ (match-beginning 0) (length pronunciation))
-                     'personality
-                     (apply 'append
-                            (mapcar
-                             #'(lambda (p)
-                                 (when p
-                                   (if (atom p) (list p) p)))
-                             (list
-                              emacspeak-pronounce-pronunciation-personality
-                              personality pp)))))))
-               (t nil)))))))
 
 ;;}}}
 ;;{{{  loading, clearing  and saving dictionaries
