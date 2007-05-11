@@ -1,4 +1,4 @@
-# $Id: Makefile 4274 2006-11-16 15:44:32Z tv.raman.tv $
+# $Id: Makefile 4519 2007-05-03 01:29:19Z tv.raman.tv $
 # $Author: tv.raman.tv $
 # Description:  Makefile for Emacspeak
 # Keywords: Emacspeak, Dectalk, Makefile
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2006-11-16 07:44:32 -0800 (Thu, 16 Nov 2006) $ |
-#  $Revision: 4274 $ |
+# $Date: 2007-05-02 18:29:19 -0700 (Wed, 02 May 2007) $ |
+#  $Revision: 4519 $ |
 # Location undetermined
 #
 
@@ -43,7 +43,7 @@
 EMACS = emacs
 SRC=".."
 # How to run in batch mode
-BATCH = -batch -q -no-site-file
+BATCH = -batch -q -no-site-file   -eval '(setq vc-handled-backends nil)'
 DEPS=-l $(SRC)/lisp/emacspeak-load-path.el -l $(SRC)/lisp/emacspeak-loaddefs.el -l $(SRC)/lisp/emacspeak-cus-load.el
 COMPILE =  -f batch-byte-compile
 # How to compile
@@ -56,7 +56,7 @@ COMPILE =  -f batch-byte-compile
 DTK_OBJECTS = acss-structure.elc \
 dtk-speak.elc		dectalk-voices.elc\
 outloud-voices.elc multispeech-voices.elc \
-dtk-interp.elc
+espeak-voices.elc dtk-interp.elc
 
 SPEAK_OBJECTS =   \
 	emacspeak-speak.elc  \
@@ -97,6 +97,7 @@ emacspeak-babel.elc \
 emacspeak-bbdb.elc \
 emacspeak-bibtex.elc \
 emacspeak-bookmark.elc \
+emacspeak-bmk-mgr.elc \
 emacspeak-browse-kill-ring.elc \
 emacspeak-bs.elc \
 emacspeak-buff-menu.elc \
@@ -149,7 +150,6 @@ emacspeak-hide.elc \
 emacspeak-hideshow.elc \
 emacspeak-ibuffer.elc \
 emacspeak-ido.elc \
-emacspeak-imcom.elc \
 emacspeak-imenu.elc \
 emacspeak-info.elc\
 emacspeak-ispell.elc \
@@ -226,7 +226,9 @@ emacspeak-wizards.elc  \
 emacspeak-xml-shell.elc \
 emacspeak-xslide.elc  \
 emacspeak-xslt.elc \
-emacspeak-xslt-process.elc  
+emacspeak-xslt-process.elc   \
+emacspeak-zinf.elc
+
 ADDON_OBJECTS= tapestry.elc   stack-f.elc string.elc xml-parse.elc
 
 OBJECTS = $(DTK_OBJECTS) $(SPEAK_OBJECTS) $(CORE_OBJECTS)  \
@@ -236,6 +238,7 @@ OBJECTS = $(DTK_OBJECTS) $(SPEAK_OBJECTS) $(CORE_OBJECTS)  \
 # {{{  User level targets all
 
 all: $(OBJECTS)
+	cd g-client && $(MAKE)
 
 force:
 
@@ -255,7 +258,7 @@ emacspeak-loaddefs.el: force
 
 emacspeak-cus-load.el: force
 	$(EMACS) $(BATCH) -l ./emacspeak-load-path.el  -l cus-dep -l ./emacspeak-autoload.el \
--f emacspeak-auto-custom-make-dependencies "."  "./atom-blogger"
+-f emacspeak-auto-custom-make-dependencies "."  "./atom-blogger" "./g-client"
 	mv cus-load.el emacspeak-cus-load.el
 
 # }}}
@@ -273,6 +276,7 @@ acss-structure.elc: acss-structure.el
 dectalk-voices.elc: dectalk-voices.el voice-setup.elc
 outloud-voices.elc: outloud-voices.el voice-setup.elc
 multispeech-voices.elc: multispeech-voices.el voice-setup.elc
+espeak-voices.elc: espeak-voices.el voice-setup.elc
 voice-setup.elc: voice-setup.el acss-structure.elc
 html-outline.elc: html-outline.el
 emacspeak-alsaplayer.elc: emacspeak-alsaplayer.el
@@ -295,6 +299,7 @@ emacspeak-babel.elc: emacspeak-babel.el dtk-speak.elc voice-setup.elc
 emacspeak-bbdb.elc: emacspeak-bbdb.el dtk-speak.elc voice-setup.elc
 emacspeak-bibtex.elc: emacspeak-bibtex.el dtk-speak.elc voice-setup.elc
 emacspeak-bookmark.elc: emacspeak-bookmark.el dtk-speak.elc voice-setup.elc
+emacspeak-bmk-mgr.elc: emacspeak-bmk-mgr.el dtk-speak.elc voice-setup.elc
 emacspeak-browse-kill-ring.elc: emacspeak-browse-kill-ring.el dtk-speak.elc voice-setup.elc
 emacspeak-bs.elc: emacspeak-bs.el dtk-speak.elc voice-setup.elc
 emacspeak-buff-menu.elc: emacspeak-buff-menu.el dtk-speak.elc voice-setup.elc
@@ -348,7 +353,6 @@ emacspeak-hide.elc: emacspeak-hide.el emacspeak-speak.elc
 emacspeak-hideshow.elc: emacspeak-hideshow.el dtk-speak.elc voice-setup.elc
 emacspeak-ibuffer.elc: emacspeak-ibuffer.el dtk-speak.elc voice-setup.elc
 emacspeak-ido.elc: emacspeak-ido.el dtk-speak.elc voice-setup.elc
-emacspeak-imcom.elc: emacspeak-imcom.el dtk-speak.elc voice-setup.elc
 emacspeak-imenu.elc: emacspeak-imenu.el dtk-speak.elc voice-setup.elc
 emacspeak-info.elc: emacspeak-info.el dtk-speak.elc voice-setup.elc
 emacspeak-ispell.elc: emacspeak-ispell.el dtk-speak.elc voice-setup.elc
@@ -438,6 +442,7 @@ emacspeak-xml-shell.elc: emacspeak-xml-shell.el dtk-speak.elc voice-setup.elc
 emacspeak-xslide.elc: emacspeak-xslide.el dtk-speak.elc voice-setup.elc
 emacspeak-xslt.elc: emacspeak-xslt.el
 emacspeak-xslt-process.elc: emacspeak-xslt-process.el dtk-speak.elc voice-setup.elc
+emacspeak-zinf.elc: emacspeak-zinf.el dtk-speak.elc voice-setup.elc
 emacspeak.elc: emacspeak.el
 loaddefs: emacspeak-loaddefs.elc
 # }}}

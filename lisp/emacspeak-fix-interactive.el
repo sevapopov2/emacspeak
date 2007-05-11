@@ -1,5 +1,5 @@
 ;;; emacspeak-fix-interactive.el --- Tools to make  Emacs' builtin prompts   speak
-;;; $Id: emacspeak-fix-interactive.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Id: emacspeak-fix-interactive.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Fixes functions that use interactive to prompt for args.
 ;;; Approach suggested by hans@cs.buffalo.edu
@@ -9,14 +9,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
-;;;  $Revision: 4151 $ | 
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2006, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -89,7 +89,10 @@
 
 (defsubst ems-prompt-without-minibuffer-p (prompt)
   "Check if this interactive prompt uses the minibuffer."
-  (string-match  "^[ckK]" prompt ))
+  (string-match  "^\*?[ckK]" prompt ))
+(defvar emacspeak-fix-interactive-problematic-functions nil
+  "Functions whose interactive prompt we will need to fix by hand
+because auto-advising was not possible.")
 
 ;;;###autoload
 (defun emacspeak-fix-interactive (sym)
@@ -98,14 +101,19 @@ Fix the function definition of sym to make its interactive form
 speak its prompts. This function needs to do very little work as
 of Emacs 21 since all interactive forms except `c' and `k' now
 use the minibuffer."
-  (let ((prompts
-         (split-string
-          (second (ad-interactive-form (symbol-function sym )))
-          "\n")))
+  (declare (special emacspeak-fix-interactive-problematic-functions))
+  (let* ((prompts
+          (split-string
+           (second (ad-interactive-form (symbol-function sym )))
+           "\n"))
+         (count (count-if 'ems-prompt-without-minibuffer-p  prompts )))
                                         ;memoize call
     (put sym 'emacspeak-checked-interactive t)
                                         ; advice if necessary
-    (when (some 'ems-prompt-without-minibuffer-p  prompts )
+    (cond
+     ((zerop count) t)                  ;do nothing
+     ((= 1 count)
+                                        ; generate auto advice
       (eval
        (`
         (defadvice (, sym)
@@ -123,13 +131,16 @@ use the minibuffer."
                        (emacspeak-auditory-icon 'open-object)
                        (tts-with-punctuations 'all
                                               (dtk-speak
-                                               (format " %s "
-                                                       (or (substring (, prompt) 1 ) "")))))
+                                               (or (substring (, prompt) 1 ) ""))))
                      (call-interactively
                       #'(lambda (&rest args)
                           (interactive (, prompt))
                           args) nil))))
-              prompts)))))))))
+              prompts))))))))
+     (t
+      ;; cannot handle automatically -- tell developer
+      (push sym emacspeak-fix-interactive-problematic-functions)
+      (message "Not auto-advicing %s" sym))))
   t)
 
 ;;; inline function for use from other modules:

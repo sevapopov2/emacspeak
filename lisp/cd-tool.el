@@ -1,9 +1,9 @@
 ;;; cd-tool.el --- Play  CDs from Emacs
-;;;$Id: cd-tool.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;;$Id: cd-tool.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;;Emacs front-end to CDTool
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2006, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2007, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.

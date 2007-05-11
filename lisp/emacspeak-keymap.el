@@ -1,5 +1,5 @@
 ;;; emacspeak-keymap.el --- Setup all keymaps and keybindings provided by Emacspeak
-;;; $Id: emacspeak-keymap.el 4261 2006-11-10 03:02:09Z tv.raman.tv $
+;;; $Id: emacspeak-keymap.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description:  Module for setting up emacspeak keybindings
 ;;; Keywords: Emacspeak
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-09 19:02:09 -0800 (Thu, 09 Nov 2006) $ |
-;;;  $Revision: 4261 $ | 
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2006, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -401,7 +401,6 @@ field in the customization buffer.  You can use the notation
         ("w" emacspeak-speak-word)
         ("{" emacspeak-speak-paragraph)
         ("|" emacspeak-speak-line-set-column-filter)
-        ([(control down)] emacspeak-cvs-get-anonymous)
         ([(control left)] emacspeak-select-this-buffer-previous-display)
         ([(control right)] emacspeak-select-this-buffer-next-display)
         ([aleft] emacspeak-speak-this-buffer-previous-display)

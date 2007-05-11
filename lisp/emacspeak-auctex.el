@@ -1,5 +1,5 @@
 ;;; emacspeak-auctex.el --- Speech enable AucTeX -- a powerful TeX/LaTeX authoring environment
-;;; $Id: emacspeak-auctex.el 4268 2006-11-13 19:13:52Z tv.raman.tv $
+;;; $Id: emacspeak-auctex.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; DescriptionEmacspeak extensions for auctex-mode
 ;;; Keywords:emacspeak, audio interface to emacs AUCTEX
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-13 11:13:52 -0800 (Mon, 13 Nov 2006) $ |
-;;;  $Revision: 4268 $ | 
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2006, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -124,6 +124,16 @@ Provide auditory feedback after formatting region"
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-read-previous-line)))
+
+(defadvice TeX-insert-quote(around emacspeak pre act com)
+  "Speak quotes that were inserted."
+  (cond
+   ((interactive-p)
+    (let ((orig (point)))
+      ad-do-it
+      (emacspeak-speak-region orig (point))))
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice TeX-insert-dollar (after emacspeak pre act comp)
   "Speak what you inserted"

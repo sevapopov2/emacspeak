@@ -1,5 +1,5 @@
 ;;; emacspeak-speak.el --- Implements Emacspeak's core speech services
-;;; $Id: emacspeak-speak.el 4278 2006-11-17 20:19:38Z tv.raman.tv $
+;;; $Id: emacspeak-speak.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Contains the functions for speaking various chunks of text
 ;;; Keywords: Emacspeak,  Spoken Output
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-17 12:19:38 -0800 (Fri, 17 Nov 2006) $ |
-;;;  $Revision: 4278 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2006, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -304,7 +304,6 @@ Value returned is compatible with `encode-time'."
          60)
        (+ (* 60 (first fields))
           (second fields)))))))
-
 
 (defsubst emacspeak-speak-decode-rfc-3339-datetime (rfc-3339)
   "Return a speakable string description."
@@ -747,7 +746,7 @@ the sense of the filter. "
     (message "Unset column filter")
     (setq emacspeak-speak-line-column-filter nil))))
 
-;;}}}                                   ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
+;;}}}                                   ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
 
 (defcustom emacspeak-speak-space-regexp
   "^[ \t\r]+$"
@@ -759,10 +758,10 @@ the sense of the filter. "
   (defun format-mode-line (spec)
     "Process mode line format spec."
     (cond
-;;; leaves                              ; ;
+;;; leaves                              ; ; ; ;
      ((symbolp spec) (symbol-value  spec))
      ((stringp spec) spec)
-;;; leaf + tree:                        ; ;
+;;; leaf + tree:                        ; ; ; ;
      ((and (listp spec)
            (stringp (car spec)))
       (concat
@@ -2253,19 +2252,10 @@ you want your shell to speak its results.  Interactive
 PREFIX arg means toggle the global default value, and then
 set the current local value to the result.")
 
-(defcustom emacspeak-comint-split-speech-on-newline  nil
-  "*Option to have comint split speech on newlines.
-Non-nil means we split speech on newlines in comint buffer."
-  :group 'emacspeak-speak
-  :type 'boolean)
-
 (defun emacspeak-comint-speech-setup ()
   "Set up splitting of speech into chunks in comint modes."
-  (declare (special
-            emacspeak-comint-split-speech-on-newline ))
+  (declare (special))
   (dtk-set-punctuations 'all)
-  (when emacspeak-comint-split-speech-on-newline
-    (modify-syntax-entry 10 ">"))
   (emacspeak-pronounce-refresh-pronunciations))
 
 (add-hook 'comint-mode-hook 'emacspeak-comint-speech-setup)

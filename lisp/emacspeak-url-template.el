@@ -1,5 +1,5 @@
 ;;; emacspeak-url-template.el --- Create library of URI templates
-;;; $Id: emacspeak-url-template.el 4267 2006-11-13 03:44:53Z tv.raman.tv $
+;;; $Id: emacspeak-url-template.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:   Implement library of URI templates
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-12 19:44:53 -0800 (Sun, 12 Nov 2006) $ |
-;;;  $Revision: 4267 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2006, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2007, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -69,7 +69,7 @@
   post-action                         ;action to perform after opening
   documentation                         ;resource  documentation
   fetcher                               ; custom fetcher
-  )
+  dont-url-encode)
 
 ;;}}}
 ;;{{{ Helpers
@@ -86,7 +86,9 @@
                 (setq input
                       (cond
                        ((stringp g)
-                        (emacspeak-url-encode (read-from-minibuffer g)))
+                        (if (emacspeak-url-template-dont-url-encode ut)
+                            (read-from-minibuffer g)
+                          (emacspeak-url-encode (read-from-minibuffer g))))
                        (t (funcall g))))
                 (setq emacspeak-url-template-current-ut
                       (list (emacspeak-url-template-name ut) input))
@@ -137,7 +139,8 @@ prompting for a template.")
 ;;;###autoload
 (defun emacspeak-url-template-define (name template
                                            &optional generators post-action
-                                           documentation fetcher)
+                                           documentation fetcher
+                                           dont-url-encode)
   "Define a URL template.
 
 name            Name used to identify template
@@ -151,7 +154,8 @@ post-action     Function called to apply post actions.
 fetcher         Unless specified, browse-url retrieves URL.
                 If specified, fetcher is a function of one arg
                 that is called with the URI to retrieve.
-documentation   Documents this template resource. "
+documentation   Documents this template resource.
+dont-url-encode if true then url arguments are not url-encoded "
   (declare (special emacspeak-url-template-table
                     emacspeak-url-template-name-alist))
   (unless (emacspeak-url-template-get  name)
@@ -159,13 +163,14 @@ documentation   Documents this template resource. "
           emacspeak-url-template-name-alist))
   (emacspeak-url-template-set
    name
-   (emacspeak-url-template-constructor :name name
-                                       :template template
-                                       :generators generators
-                                       :post-action  post-action
-                                       :documentation
-                                       documentation
-                                       :fetcher fetcher)))
+   (emacspeak-url-template-constructor
+    :name name
+    :template template
+    :generators generators
+    :post-action  post-action
+    :documentation documentation
+    :fetcher fetcher
+    :dont-url-encode dont-url-encode)))
 
 ;;;###autoload
 (defun emacspeak-url-template-load (file)
@@ -208,7 +213,16 @@ documentation   Documents this template resource. "
 
 ;;}}}
 ;;{{{  template resources
+;;{{{  wordnet
 
+(emacspeak-url-template-define
+ "WordNet Search"
+ "http://wordnet.princeton.edu/perl/webwn?s=%s"
+ (list "WordNet Define: ")
+ 'emacspeak-speak-buffer
+ "Look up term in WordNet.")
+
+;;}}}
 ;;{{{  fedex, UPS
 (emacspeak-url-template-define
  "fedex packages"
@@ -299,10 +313,24 @@ documentation   Documents this template resource. "
 ;;{{{ Netcraft surveys
 (emacspeak-url-template-define
  "Netcraft Web Analysis"
- "http://uptime.netcraft.com/up/graph/?mode_u=off&mode_w=on&site=%s&submit=Examine "
+ "http://uptime.netcraft.com/up/graph?display=uptime&site=%s"
  (list "Site to analyze: ")
  nil
- "Analyze WWW site using Netcraft.")
+ "Analyze WWW site using Netcraft."
+ #'(lambda (url)
+     (emacspeak-w3-extract-tables-by-match-list
+      (list "running" "average")
+      url 'speak)))
+
+(emacspeak-url-template-define
+ "Netcraft Site Report"
+ "http://toolbar.netcraft.com/site_report?url=%s"
+ (list "Site Report: ")
+ 'emacspeak-speak-buffer
+ "Analyze WWW site using Netcraft."
+ nil
+ 'dont-url-encode)
+
 ;;}}}
 ;;{{{  digg
 
@@ -320,7 +348,12 @@ documentation   Documents this template resource. "
 (emacspeak-url-template-define
  "BBC 7 Schedule"
  "http://www.bbc.co.uk/bbc7/listings/index.shtml?%s"
- (list "BBC 7 Schedule: ")
+ (list
+  #'(lambda ()
+      (read-from-minibuffer
+       "BBC 7 Schedule: "
+       (when (eq major-mode 'calendar-mode)
+         (calendar-day-name (calendar-cursor-to-date))))))
  nil
  "Retrieve BBC7 schedule for specified day."
  #'(lambda (url)
@@ -462,6 +495,39 @@ content."
  (list "Search answers.com for: ")
  nil
  "Search answers.com")
+
+;;}}}
+;;{{{ Anonimize google search
+
+(emacspeak-url-template-define
+ "Anonymize Google Search"
+ "http://www.google.com/accounts/Logout"
+ nil
+ nil
+ "Logout from Google to do an anonymous search.")
+
+;;}}}
+;;{{{ gmail:
+
+(emacspeak-url-template-define
+ "GMail Mobile"
+ "http://mail.google.com/mail/x/"
+ nil
+ 'emacspeak-speak-buffer
+ "GMail Mobile XHTML version --- light-weight, fast!")
+
+;;}}}
+;;{{{  google patent search:
+
+(emacspeak-url-template-define
+ "Patent Search From Google"
+ "http://www.google.com/patents?ie=ISO-8859-1&q=%s"
+ (list "Google For Patents: ")
+ #'(lambda nil
+     (search-forward " Patent Search" nil t)
+     (beginning-of-line)
+     (emacspeak-speak-rest-of-buffer))
+ "Perform patent search via Google")
 
 ;;}}}
 ;;{{{ google code search
@@ -707,15 +773,11 @@ Here are some examples:
 ;;{{{ googl blogsearch
 (emacspeak-url-template-define
  "BlogSearch Google"
- "http://blogsearch.google.com/blogsearch?hl=en&q=%s&btnG=Search+Blogs&scoring=d"
+ "http://blogsearch.google.com/blogsearch_feeds?hl=en&q=%s&scoring=d&ie=utf-8&num=10&output=atom"
  (list "Google Blog Search: ")
- #'(lambda nil
-     (search-forward "Results" nil t)
-     (emacspeak-speak-line))
- "Google Print Search"
- #'(lambda (url)
-     (emacspeak-w3-without-xsl
-      (w3-fetch url))))
+ nil
+ "Google Blog Search"
+ 'emacspeak-atom-display)
 
 ;;}}}
 ;;{{{ google translation service
@@ -1354,8 +1416,9 @@ Segment is specified as a two digit number --specifying a blank value
 plays entire program."
  #'(lambda (url)
      (funcall emacspeak-media-player url 'play-list)
-     (emacspeak-w3-browse-xml-url-with-style
-      (expand-file-name "smil-anchors.xsl" emacspeak-xslt-directory)
+     (emacspeak-w3-browse-url-with-style
+      (expand-file-name "smil-anchors.xsl"
+                        emacspeak-xslt-directory)
       url)))
 
 (emacspeak-url-template-define
@@ -1506,20 +1569,6 @@ plays entire program."
 ;;{{{ sourceforge
 
 (emacspeak-url-template-define
- "sourceforge Stats"
- "http://sourceforge.net/project/stats/?group_id=%s"
- (list
-  (lambda nil
-    (read-from-minibuffer "Project Id"
-                          "2238")))
- nil
- "Display project usage statistics."
- #'(lambda (url)
-     (emacspeak-w3-extract-tables-by-match-list
-      (list "Date" "Lifespan")
-      url)))
-
-(emacspeak-url-template-define
  "sourceforge project"
  "http://sourceforge.net/projects/%s"
  (list "Project name")
@@ -1530,15 +1579,17 @@ plays entire program."
  "sourceforge browse mirrors"
  "http://prdownloads.sourceforge.net/%s/?sort_by=date"
  (list "Project name")
- #'(lambda ()
-     (declare (special emacspeak-w3-url-rewrite-rule))
-     (setq emacspeak-w3-url-rewrite-rule
-           '("prdownloads.sourceforge.net"
-             "easynews.dl.sourceforge.net/sourceforge")))
- "Retrieve download table  at Sourceforge for specified project."
- #'(lambda (url)
-     (emacspeak-w3-extract-table-by-match "Current"
-                                          url)))
+ nil
+ "Retrieve download page  at Sourceforge for specified project.")
+
+(emacspeak-url-template-define
+ "sourceforge Download"
+ "http://prdownloads.sourceforge.net/%s"
+ (list "File: project/filename: ")
+ nil
+ "Download specified file."
+ 'browse-url
+ 'dont-url-encode)
 
 ;;}}}
 ;;{{{  MLB scores
@@ -1849,6 +1900,25 @@ Meerkat realy needs an xml-rpc method for getting this.")
 
 ;;}}}
 ;;{{{ weather underground
+;;;###autoload
+(defcustom emacspeak-url-template-weather-city-state
+  "CA/San_Jose"
+  "Default city/state for weather forecasts"
+  :type 'string
+  :group 'emacspeak-url-template)
+
+(emacspeak-url-template-define
+ "rss weather from wunderground"
+ "http://www.wunderground.com/auto/rss_full/%s.xml?units=both"
+ (list
+  #'(lambda nil
+      (declare (special emacspeak-url-template-weather-city-state))
+      (read-from-minibuffer "State/City:"
+                            emacspeak-url-template-weather-city-state)))
+ nil
+ "Pull RSS weather feed for specified state/city."
+ #'(lambda (url)
+     (emacspeak-rss-display url 'speak)))
 
 (emacspeak-url-template-define
  "Weather forecast from Weather Underground"
@@ -1957,6 +2027,7 @@ Meerkat realy needs an xml-rpc method for getting this.")
                     (setq emacspeak-w3-post-process-hook nil))))
     (kill-new url)
     (funcall fetcher   url)))
+
 (defsubst emacspeak-url-template-help-internal (name)
   "Display and speak help."
   (with-output-to-temp-buffer "*Help*"

@@ -1,5 +1,5 @@
 ;;; emacspeak-message.el --- Speech enable Message -- Used to compose news postings and replies
-;;; $Id: emacspeak-message.el 4270 2006-11-15 02:14:01Z tv.raman.tv $
+;;; $Id: emacspeak-message.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Emacspeak extensions for posting
 ;;; Keywords:emacspeak, audio interface to emacs posting messages
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-14 18:14:01 -0800 (Tue, 14 Nov 2006) $ |
-;;;  $Revision: 4270 $ | 
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2006, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -46,20 +46,36 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ customize
+(defgroup emacspeak-message nil
+  "Emacspeak customizations for message mode"
+  :group 'emacspeak
+  :group 'message
+  :prefix "emacspeak-message-")
+
+(defcustom emacspeak-message-punctuation-mode  'some
+  "Pronunciation mode to use for message buffers."
+  :type '(choice
+          (const  :tag "Ignore" nil)
+          (const  :tag "some" some)
+          (const  :tag "all" all))
+  :group 'emacspeak-message)
+
+;;}}}
 ;;{{{ voice mapping
 
 (voice-setup-add-map
  '(
-   (message-cited-text-face voice-bolden)  ;; pre-emacs22
+   (message-cited-text-face voice-bolden) ;; pre-emacs22
    (message-header-cc-face voice-bolden)  ;; pre-emacs22
-   (message-header-name-face voice-animate)  ;; pre-emacs22
+   (message-header-name-face voice-animate)       ;; pre-emacs22
    (message-header-newsgroups-face voice-bolden)  ;; pre-emacs22
-   (message-header-other-face voice-bolden)  ;; pre-emacs22
-   (message-header-subject-face voice-bolden)  ;; pre-emacs22
-   (message-header-to-face voice-bolden)  ;; pre-emacs22
-   (message-header-xheader-face voice-bolden)  ;; pre-emacs22
-   (message-mml-face voice-brighten)  ;; pre-emacs22
-   (message-separator-face voice-bolden-extra)  ;; pre-emacs22
+   (message-header-other-face voice-bolden)       ;; pre-emacs22
+   (message-header-subject-face voice-bolden)     ;; pre-emacs22
+   (message-header-to-face voice-bolden)          ;; pre-emacs22
+   (message-header-xheader-face voice-bolden)     ;; pre-emacs22
+   (message-mml-face voice-brighten)              ;; pre-emacs22
+   (message-separator-face voice-bolden-extra)    ;; pre-emacs22
 
    (message-cited-text voice-bolden)
    (message-header-cc voice-bolden)
@@ -187,7 +203,7 @@
   "Stop speech first."
   (when (interactive-p) (dtk-stop )
         (emacspeak-auditory-icon 'select-object)
-	(dtk-speak "beginning of line")))
+        (dtk-speak "beginning of line")))
 
 (defadvice message-goto-from (after emacspeak pre act comp)
   "Provide auditory feedback"
@@ -207,11 +223,10 @@
     (emacspeak-auditory-icon 'fill-object )
     (message "newline and reformat")))
 
-
-
-
 (add-hook 'message-mode-hook
           (lambda ()
+            (dtk-set-punctuations emacspeak-message-punctuation-mode)
+            (emacspeak-pronounce-refresh-pronunciations)
             (emacspeak-auditory-icon 'open-object)
             (message "Starting message %s ... done"
                      (buffer-name))))

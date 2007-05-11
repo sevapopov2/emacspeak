@@ -1,5 +1,5 @@
 ;;; emacspeak-org.el --- Speech-enable org
-;;; $Id: emacspeak-org.el 4074 2006-08-19 17:48:45Z tv.raman.tv $
+;;; $Id: emacspeak-org.el 4347 2007-01-27 18:39:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for ORG
 ;;; Keywords: Emacspeak, org
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-19 10:48:45 -0700 (Sat, 19 Aug 2006) $ |
-;;;  $Revision: 4074 $ |
+;;; $Date: 2007-01-27 10:39:40 -0800 (Sat, 27 Jan 2007) $ |
+;;;  $Revision: 4347 $ |
 ;;; Location undetermined
 ;;;
 
@@ -83,6 +83,7 @@
 
 (loop for f in
       '(org-mark-ring-goto
+        org-next-link org-previous-link
         org-goto  org-goto-ret
         org-goto-left org-goto-right
         org-goto-quit
@@ -288,6 +289,7 @@
 ;;{{{ fix misc commands:
 (loop for f in
       '(org-occur
+        org-next-link org-previous-link
         org-insert-heading org-insert-todo-heading)
       do
       (eval

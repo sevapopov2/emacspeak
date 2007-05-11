@@ -1,4 +1,4 @@
-#$Id: Makefile 3963 2006-05-31 15:42:51Z raman $
+#$Id: Makefile 4464 2007-04-21 03:03:52Z tv.raman.tv $
 CC=g++
 INSTALL = install
 PREFIX = /usr
@@ -10,19 +10,22 @@ LIBS= -ltcl -ldl
 TTS=tcleci.so eci.ini VIAVOICE
 ATTS=atcleci.so atcleci.cpp  ALSA asoundrc
 MISC=alsaparams.c
-all: tcleci.so 
+all: tcleci.so  atcleci.so
 
 tcleci.lo: tcleci.cpp
 	libtool --mode=compile $(CC) $(CFLAGS) -c $<
 
-tcleci.so: tcleci.lo
-	libtool --mode=link $(CC) $(CFLAGS) -g -o $@ tcleci.lo $(LIBS) -shared
+langswitch.lo: langswitch.cpp
+	libtool --mode=compile $(CC) $(CFLAGS) -c $<
+
+tcleci.so: tcleci.lo langswitch.lo
+	libtool --mode=link $(CC) $(CFLAGS) -g -o $@ $^ $(LIBS) -shared
 
 atcleci.lo: atcleci.cpp
 	libtool --mode=compile $(CC) $(CFLAGS) -c $<
 
-atcleci.so: atcleci.lo
-	libtool --mode=link $(CC) $(CFLAGS) -g -o $@ atcleci.lo -lasound $(LIBS)  -shared
+atcleci.so: atcleci.lo langswitch.lo
+	libtool --mode=link $(CC) $(CFLAGS) -g -o $@ $^ -lasound $(LIBS)  -shared
 
 alsaparams.o: alsaparams.c
 	libtool --mode=compile $(CC) $(CFLAGS) -c $<
@@ -33,7 +36,7 @@ clean:
 	rm -f *.so *.o *.lo \
 atcleci.so atcleci.o atcleci.lo
 
-install:  tcleci.so
+install:  tcleci.so atcleci.so
 	if test ! -d $(libdir) ; then mkdir $(libdir); fi ; \
 	chmod 755 $(libdir); \
 	$(INSTALL) -m 0644 $(TTS) $(ATTS) $(libdir)

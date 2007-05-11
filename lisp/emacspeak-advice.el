@@ -1,5 +1,5 @@
 ;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak intelligently
-;;; $Id: emacspeak-advice.el 4199 2006-09-22 02:24:22Z tv.raman.tv $
+;;; $Id: emacspeak-advice.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Core advice forms that make emacspeak work
 ;;; Keywords: Emacspeak, Speech, Advice, Spoken  output
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-09-21 19:24:22 -0700 (Thu, 21 Sep 2006) $ |
-;;;  $Revision: 4199 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2006, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1995, 1996,  1997 by T. V. Raman
 ;;; All Rights Reserved.
 ;;;
@@ -103,6 +103,18 @@
 (defadvice backward-word (after emacspeak pre act)
   "Speak the word you just moved to."
   (when (interactive-p) (emacspeak-speak-word )))
+
+(defadvice next-buffer (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
+ 
+(defadvice previous-buffer (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice beginning-of-buffer (after emacspeak pre act)
   "Speak the line."
@@ -1287,7 +1299,6 @@ in completion buffers"
           'personality
           'emacspeak-comint-prompt-personality
           'rear-sticky nil)))
-      (when emacspeak-comint-split-speech-on-newline (modify-syntax-entry 10 ">"))
       (when (and (or emacspeak-comint-autospeak emacspeak-speak-comint-output)
                  (or
                   monitor
@@ -1707,8 +1718,6 @@ Produce an auditory icon if possible."
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
-;;; These functions have to be advised by hand:
-
 (defadvice kill-buffer (around emacspeak pre act)
   "Speech-enabled by emacspeak."
   (cond
@@ -1845,10 +1854,6 @@ Indicate change of selection with
   "Speak the help."
   (when (interactive-p)
     (emacspeak-speak-help )))
-(add-hook 'help-mode-hook
-          (function
-           (lambda nil
-             (modify-syntax-entry 10 " "))))
 
 (defadvice help-with-tutorial (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -2732,12 +2737,16 @@ Produce auditory icons if possible."
              (ad-get-arg 0 ))))
 
 ;;}}}
-;;{{{  Modify syntax entries for modes where necessary:
+;;{{{  set up clause boundaries for specific modes:
+(defsubst emacspeak-speak-adjust-clause-boundaries ()
+  "Adjust clause boundaries so that newlines dont delimit clauses."
+  (declare (special dtk-chunk-separator-syntax))
+  (setq dtk-chunk-separator-syntax
+        ".)$\""))
 
 (add-hook 'text-mode-hook
-          (function (lambda ()
-                      (modify-syntax-entry 10 " "))))
-
+          'emacspeak-speak-adjust-clause-boundaries)
+(add-hook 'help-mode-hook 'emacspeak-speak-adjust-clause-boundaries)
 ;;}}}
 ;;{{{ setup minibuffer hooks:
 (defvar emacspeak-minibuffer-enter-auditory-icon t
@@ -2750,9 +2759,8 @@ emacspeak running."
   (let ((inhibit-field-text-motion t))
     (when emacspeak-minibuffer-enter-auditory-icon
       (emacspeak-auditory-icon 'open-object))
-    (unwind-protect
-        (tts-with-punctuations 'all
-                               (emacspeak-speak-buffer)))))
+    (tts-with-punctuations 'all
+                           (emacspeak-speak-buffer))))
 
 (add-hook  'minibuffer-setup-hook 'emacspeak-minibuffer-setup-hook)
 

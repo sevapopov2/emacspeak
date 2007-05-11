@@ -1,4 +1,4 @@
-/*$Id: tcleci.cpp 4231 2006-10-13 02:43:46Z tv.raman.tv $*/
+/*$Id: tcleci.cpp 4501 2007-05-01 00:26:48Z tv.raman.tv $*/
 /* Tcl ViaVoiceOutloud Interface program
    (c) Copyright 1999 by Paige Phault
 
@@ -57,6 +57,7 @@ you like after a command.
 #include <sys/ioctl.h>
 #include <tcl.h>
 #include <dlfcn.h>
+#include "langswitch.h"
 
 #define PACKAGENAME "tts"
 #define PACKAGEVERSION "1.0"
@@ -112,7 +113,8 @@ typedef enum
 }
 ECIParam;
 static void (*_eciVersion) (char *);
-static void *(*_eciNew) ();
+static void *(*_eciNewEx) (enum ECILanguageDialect);
+static int (*_eciGetAvailableLanguages) (enum ECILanguageDialect *, int *);
 static void (*_eciDelete) (void *);
 static int (*_eciReset) (void *);
 static int (*_eciStop) (void *);
@@ -142,6 +144,7 @@ int SpeakingP (ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
 int Synchronize (ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
 int Pause (ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
 int Resume (ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
+int SetLanguage (ClientData, Tcl_Interp *, int, Tcl_Obj *CONST[]);
 int setOutput (ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
 int closeDSP (ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
 int eciCallback (void *, int, long, void *);
@@ -174,39 +177,40 @@ Tcleci_Init (Tcl_Interp * interp)
       return TCL_ERROR;
     }
 
-  _eciVersion = (void (*)(char *)) dlsym (eciLib, "eciVersion");
-  _eciNew = (void *(*)()) dlsym (eciLib, "eciNew");
-  _eciDelete = (void (*)(void *)) dlsym (eciLib, "eciDelete");
-  _eciReset = (int (*)(void *)) dlsym (eciLib, "eciReset");
-  _eciStop = (int (*)(void *)) dlsym (eciLib, "eciStop");
-  _eciClearInput = (int (*)(void *)) dlsym (eciLib, "eciClearInput");
-  _eciPause = (int (*)(void *, int)) dlsym (eciLib, "eciPause");
-  _eciSynthesize = (int (*)(void *)) dlsym (eciLib, "eciSynthesize");
-  _eciSynchronize = (int (*)(void *)) dlsym (eciLib, "eciSynchronize");
-  _eciSpeaking = (int (*)(void *)) dlsym (eciLib, "eciSpeaking");
-  _eciInsertIndex = (int (*)(void *, int)) dlsym (eciLib, "eciInsertIndex");
-  _eciAddText = (int (*)(void *, char *)) dlsym (eciLib, "eciAddText");
-  _eciSetParam = (int (*)(void *, int, int)) dlsym (eciLib, "eciSetParam");
+  _eciVersion = (void (*)(char *)) (unsigned long) dlsym (eciLib, "eciVersion");
+  _eciGetAvailableLanguages = (int (*)(enum ECILanguageDialect *, int *)) (unsigned long) dlsym (eciLib, "eciGetAvailableLanguages");
+  _eciNewEx = (void *(*)(enum ECILanguageDialect)) (unsigned long) dlsym (eciLib, "eciNewEx");
+  _eciDelete = (void (*)(void *)) (unsigned long) dlsym (eciLib, "eciDelete");
+  _eciReset = (int (*)(void *)) (unsigned long) dlsym (eciLib, "eciReset");
+  _eciStop = (int (*)(void *)) (unsigned long) dlsym (eciLib, "eciStop");
+  _eciClearInput = (int (*)(void *)) (unsigned long) dlsym (eciLib, "eciClearInput");
+  _eciPause = (int (*)(void *, int)) (unsigned long) dlsym (eciLib, "eciPause");
+  _eciSynthesize = (int (*)(void *)) (unsigned long) dlsym (eciLib, "eciSynthesize");
+  _eciSynchronize = (int (*)(void *)) (unsigned long) dlsym (eciLib, "eciSynchronize");
+  _eciSpeaking = (int (*)(void *)) (unsigned long) dlsym (eciLib, "eciSpeaking");
+  _eciInsertIndex = (int (*)(void *, int)) (unsigned long) dlsym (eciLib, "eciInsertIndex");
+  _eciAddText = (int (*)(void *, char *)) (unsigned long) dlsym (eciLib, "eciAddText");
+  _eciSetParam = (int (*)(void *, int, int)) (unsigned long) dlsym (eciLib, "eciSetParam");
   _eciGetVoiceParam = (int (*)(void *, int, int))
-    dlsym (eciLib, "eciGetVoiceParam");
+    (unsigned long) dlsym (eciLib, "eciGetVoiceParam");
   _eciSetVoiceParam = (int (*)(void *, int, int, int))
-    dlsym (eciLib, "eciSetVoiceParam");
+    (unsigned long) dlsym (eciLib, "eciSetVoiceParam");
   _eciRegisterCallback = (void
                           (*)(void *, int (*)(void *, int, long, void *),
-                              void *)) dlsym (eciLib, "eciRegisterCallback");
+                              void *)) (unsigned long) dlsym (eciLib, "eciRegisterCallback");
   _eciSetOutputBuffer =
-    (int (*)(void *, int, short *)) dlsym (eciLib, "eciSetOutputBuffer");
+    (int (*)(void *, int, short *)) (unsigned long) dlsym (eciLib, "eciSetOutputBuffer");
   _eciSetOutputDevice =
-    (int (*)(void *, int)) dlsym (eciLib, "eciSetOutputDevice");
+    (int (*)(void *, int)) (unsigned long) dlsym (eciLib, "eciSetOutputDevice");
 
   //>
   //< check for needed symbols 
 
   int okay = 1;
-  if (!_eciNew)
+  if (!_eciNewEx)
     {
       okay = 0;
-      Tcl_AppendResult (interp, "eciNew undef\n", NULL);
+      Tcl_AppendResult (interp, "eciNewEx undef\n", NULL);
     }
   if (!_eciDelete)
     {
@@ -303,7 +307,18 @@ Tcleci_Init (Tcl_Interp * interp)
       return TCL_ERROR;
     }
 
-  eciHandle = _eciNew ();
+  static enum ECILanguageDialect aLanguages[LANG_INFO_MAX];
+  int nLanguages = LANG_INFO_MAX;
+  _eciGetAvailableLanguages(aLanguages, &nLanguages);
+
+  enum ECILanguageDialect aDefaultLanguage = initLanguage (interp, aLanguages, nLanguages);
+  if (aDefaultLanguage == NODEFINEDCODESET)
+    {
+      Tcl_AppendResult (interp, "No language found", PACKAGENAME, NULL);
+      return TCL_ERROR;
+    }
+
+  eciHandle = _eciNewEx (aDefaultLanguage);
   if (eciHandle == 0)
     {
       Tcl_AppendResult (interp, "Could not open text-to-speech engine", NULL);
@@ -349,6 +364,7 @@ Tcleci_Init (Tcl_Interp * interp)
                         (ClientData) eciHandle, TclEciFree);
   Tcl_CreateObjCommand (interp, "closeDSP", closeDSP, (ClientData) eciHandle,
                         TclEciFree);
+  Tcl_CreateObjCommand (interp, "setLanguage", SetLanguage, (ClientData) eciHandle, TclEciFree);
   //>
   rc = Tcl_Eval (interp, "proc index x {global tts; \
 set tts(last_index) $x}");
@@ -485,12 +501,18 @@ Say (ClientData eciHandle, Tcl_Interp * interp, int objc,
       else
         {
           // assume objv[i] is text to synthesize...
-          rc = _eciAddText (eciHandle, Tcl_GetStringFromObj (objv[i], NULL));
-          if (!rc)
-            {
-              Tcl_SetResult (interp, "Internal tts error", TCL_STATIC);
-              return TCL_ERROR;
-            }
+
+	  char *dest = convertFromUTF8 (interp, Tcl_GetStringFromObj(objv[i], NULL));
+	  if (dest)
+	    {
+	      rc = _eciAddText (eciHandle, dest);
+	      free (dest);
+	      if (!rc)
+		{
+		  Tcl_SetResult (interp, "Internal tts error", TCL_STATIC);
+		  return TCL_ERROR;
+		}
+	    }
         }
     }
   if (Tcl_StringMatch (Tcl_GetStringFromObj (objv[0], NULL), "synth"))
@@ -689,6 +711,24 @@ getTTSVersion (ClientData eciHandle, Tcl_Interp * interp, int objc,
   return TCL_OK;
 }
 
+//<SetLanguage
+
+int SetLanguage (ClientData eciHandle, Tcl_Interp *interp,
+		  int objc, Tcl_Obj *CONST objv[]) 
+{
+  int aIndex;
+  const char* code = getAnnotation (interp, &aIndex);
+  if (code)
+    {
+      int rc;
+      char buffer[ANNOTATION_MAX_SIZE];
+      snprintf(buffer, ANNOTATION_MAX_SIZE, "`l%s", code);
+      rc = _eciAddText (eciHandle, buffer);
+    }
+  return TCL_OK;
+}
+
+//>
 //<end of file 
 //local variables:
 //folded-file: t

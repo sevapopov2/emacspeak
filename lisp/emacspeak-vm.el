@@ -1,5 +1,5 @@
 ;;; emacspeak-vm.el --- Speech enable VM -- A powerful mail agent (and the one I use)
-;;; $Id: emacspeak-vm.el 4253 2006-11-09 00:46:51Z tv.raman.tv $
+;;; $Id: emacspeak-vm.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enhance vm
 ;;; Keywords: Emacspeak, VM, Email, Spoken Output, Voice annotations
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-11-08 16:46:51 -0800 (Wed, 08 Nov 2006) $ |
-;;;  $Revision: 4253 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2006, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -119,6 +119,7 @@ Note that some badly formed mime messages  cause trouble."
 
 ;;}}}
 ;;{{{  Helper functions:
+
 (defvar emacspeak-vm-user-full-name (user-full-name)
   "Full name of user using this session")
 
@@ -151,6 +152,17 @@ Note that some badly formed mime messages  cause trouble."
   speaking email headers."
   :type 'boolean
   :group 'emacspeak-vm)
+
+(defun emacspeak-vm-speak-message ()
+  "Move point to the message body."
+  (interactive)
+  (goto-char (point-min))
+  (search-forward  (format "%c%c" 10 10) nil)
+  (condition-case nil
+      (emacspeak-hide-all-blocks-in-buffer)
+    (error nil))
+  (emacspeak-auditory-icon 'large-movement)
+  (emacspeak-speak-rest-of-buffer))
 
 (defun emacspeak-vm-summarize-message ()
   "Summarize the current vm message. "
@@ -396,6 +408,7 @@ Then speak the screenful. "
                    emacspeak-keymap))
 (define-key vm-mode-map "C" 'emacspeak-vm-catch-up-all-messages)
 (define-key vm-mode-map "\M-j" 'emacspeak-vm-locate-subject-line)
+(define-key vm-mode-map "," 'emacspeak-vm-speak-message)
 (define-key vm-mode-map "\M-l" 'emacspeak-vm-speak-labels)
 (define-key vm-mode-map
   (concat emacspeak-prefix "m")
@@ -477,10 +490,10 @@ Leave point at front of decoded attachment."
              (if confirm "Confirm by retyping" "")))))
 ;;}}}
 ;;{{{ setup presentation buffer correctly
+
 (add-hook 'vm-presentation-mode-hook
-          (function
-           (lambda nil
-             (emacspeak-pronounce-refresh-pronunciations))))
+          #'(lambda nil
+              (emacspeak-pronounce-refresh-pronunciations)))
 (declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
 (loop for hook in
       (list 'mail-mode-hook
