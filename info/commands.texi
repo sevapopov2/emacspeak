@@ -1,11 +1,11 @@
-@c $Id: emacspeak-wizards.el 4258 2006-11-09 15:19:54Z tv.raman.tv $
+@c $Id: commands.texi 4520 2007-05-03 01:35:16Z tv.raman.tv $
 @node Emacspeak Commands
 @chapter Emacspeak Commands
 
 This chapter is generated automatically from the source-level documentation.
 Any errors or corrections should be made to the source-level
 documentation.
-This chapter documents a total of 770 commands.
+This chapter documents a total of 773 commands.
 
 @menu
 * cd-tool::                     
@@ -41,7 +41,6 @@ This chapter documents a total of 770 commands.
 * emacspeak-gridtext::          
 * emacspeak-hide::              
 * emacspeak-ibuffer::           
-* emacspeak-imcom::             
 * emacspeak-imenu::             
 * emacspeak-info::              
 * emacspeak-jabber::            
@@ -76,6 +75,7 @@ This chapter documents a total of 770 commands.
 * emacspeak-w3::                
 * emacspeak-w3m::               
 * emacspeak-websearch::         
+* emacspeak-webutils::          
 * emacspeak-widget::            
 * emacspeak-wizards::           
 * emacspeak-xml-shell::         
@@ -83,6 +83,7 @@ This chapter documents a total of 770 commands.
 * voice-setup::                 
 * emacspeak-w3search::          
 * emacspeak-org::               
+* emacspeak-zinf::              
 * URL Templates ::              
 @end menu
 
@@ -213,6 +214,14 @@ classified into various syntactic classes.
 Argument S specifies the syntax class.
 @end deffn
 
+@deffn {Interactive Command} dtk-set-language (LANG)
+Set language according to the argument lang.
+@end deffn
+
+@deffn {Interactive Command} dtk-set-next-language ()
+Switch to the next available language
+@end deffn
+
 @deffn {Interactive Command} dtk-set-predefined-speech-rate (&optional PREFIX)
 @kbd{ control e d 9   control e d 8   control e d 7   control e d 6   control e d 5   control e d 4   control e d 3   control e d 2   control e d 1   control e d 0 }
 
@@ -220,6 +229,19 @@ Set speech rate to one of nine predefined levels.
 Interactive PREFIX arg says to set the rate globally.
 Formula used is:
 rate = dtk-speech-rate-base + dtk-speech-rate-step * level.
+@end deffn
+
+@deffn {Interactive Command} dtk-set-preferred-language (ALIAS LANG)
+Set the alias of the preferred language: 
+For example if alias="en" lang="en_GB", 
+then the following call:
+ dtk-set-language("en") 
+will set "en_GB".
+
+@end deffn
+
+@deffn {Interactive Command} dtk-set-previous-language ()
+Switch to the previous available language
 @end deffn
 
 @deffn {Interactive Command} dtk-set-punctuations (MODE &optional PREFIX)
@@ -667,7 +689,7 @@ for commands defined in module  emacspeak-calendar.
 Speaks the most recently displayed appointment message if any.
 @end deffn
 
-@deffn {Interactive Command} emacspeak-speak-calendar-date ()
+@deffn {Interactive Command} emacspeak-calendar-speak-date ()
 Speak the date under point when called in Calendar Mode. 
 @end deffn
 
@@ -1143,6 +1165,11 @@ in a non eterm buffer if executed via C-e C-e
 Paste contents of REGISTER at current location.
 If the specified register contains text, then that text is
 sent to the terminal as if it were typed by the user.
+
+This function is advised.
+
+Before-advice `emacspeak-auto':
+Automatically defined advice to speak interactive prompts. 
 @end deffn
 
 @deffn {Interactive Command} emacspeak-eterm-pointer-backward-word (COUNT)
@@ -1564,35 +1591,6 @@ for commands defined in module  emacspeak-ibuffer.
 
 @deffn {Interactive Command} emacspeak-ibuffer-speak-buffer-line ()
 Speak information about this buffer
-@end deffn
-
-@node emacspeak-imcom
-@section emacspeak-imcom
-
-Automatically generated documentation
-for commands defined in module  emacspeak-imcom.
-
-@deffn {Interactive Command} emacspeak-imcom ()
-Start IMCom.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-imcom-mode ()
-Major mode for Jabber interaction using IMCom.
-
-key             binding
----             -------
-
-C-c		Prefix Command
-
-C-c v		emacspeak-imcom-view-chat-session
-
-In addition to any hooks its parent mode `comint-mode' might have run,
-this mode runs the hook `emacspeak-imcom-mode-hook', as the final step
-during initialization.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-imcom-view-chat-session (SESSION)
-Display specified chat session.
 @end deffn
 
 @node emacspeak-imenu
@@ -3786,6 +3784,10 @@ If N is negative, move backward instead.
 Speak a message's labels
 @end deffn
 
+@deffn {Interactive Command} emacspeak-vm-speak-message ()
+Move point to the message body.
+@end deffn
+
 @deffn {Interactive Command} emacspeak-vm-yank-header ()
 Yank specified header into kill ring.
 @end deffn
@@ -3992,33 +3994,12 @@ Tables are specified by their position in the list
 nested of tables found in the page.
 @end deffn
 
-@deffn {Interactive Command} emacspeak-w3-google-extract-from-cache ()
-Extract current  page from the Google cache.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3-google-on-this-site ()
-Perform a google search restricted to the current WWW site.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3-google-similar-to-this-page (URL)
-Ask Google to find documents similar to this one.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3-google-who-links-to-this-page ()
-Perform a google search to locate documents that link to the
-current page.
-@end deffn
-
 @deffn {Interactive Command} emacspeak-w3-javascript-follow-link ()
 Follow URL hidden inside a javascript link
 @end deffn
 
 @deffn {Interactive Command} emacspeak-w3-jump-to-submit ()
 Jump to next available submit button.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3-jump-to-title-in-content ()
-Jumps to the occurrence of document title in page body.
 @end deffn
 
 @deffn {Interactive Command} emacspeak-w3-junk-by-class-list (CLASSES &optional PROMPT-URL SPEAK)
@@ -4037,10 +4018,6 @@ present only to help me iron out the remaining problems with
 the table structure extraction code in W3.
 @end deffn
 
-@deffn {Interactive Command} emacspeak-w3-mplayer-play-url-at-point ()
-Play url under point using mplayer
-@end deffn
-
 @deffn {Interactive Command} emacspeak-w3-next-block ()
 Move by block level displays.
 @end deffn
@@ -4053,10 +4030,6 @@ specifies by how many eleemnts to move.
 
 @deffn {Interactive Command} emacspeak-w3-next-parsed-item ()
 Move to and speak next parsed item.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3-play-media-at-point ()
-Play media url under point 
 @end deffn
 
 @deffn {Interactive Command} emacspeak-w3-previous-doc-element (&optional COUNT)
@@ -4090,13 +4063,15 @@ Speak next document element.
 Speak document element under point.
 @end deffn
 
-@deffn {Interactive Command} emacspeak-w3-toggle-table-borders ()
-Toggle drawing of W3 table borders
+@deffn {Interactive Command} emacspeak-w3-style-filter (STYLE &optional PROMPT-URL SPEAK)
+Extract elements matching specified style
+from HTML.  Extracts specified elements from current WWW
+page and displays it in a separate buffer.  Optional arg url
+specifies the page to extract contents  from.
 @end deffn
 
-@deffn {Interactive Command} emacspeak-w3-transcode-via-google (&optional UNTRANSCODE)
-Transcode URL under point via Google.
-Reverse effect with prefix arg for links on a transcoded page.
+@deffn {Interactive Command} emacspeak-w3-toggle-table-borders ()
+Toggle drawing of W3 table borders
 @end deffn
 
 @deffn {Interactive Command} emacspeak-w3-url-expand-and-execute ()
@@ -4186,43 +4161,8 @@ Browse URL with specified XSL style. in w3m.
 Browse XML URL with specified XSL style in w3m.
 @end deffn
 
-@deffn {Interactive Command} emacspeak-w3m-google-extract-from-cache ()
-Extract url at point from the Google cache.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3m-google-on-this-site ()
-Perform a google search restricted to the current WWW site.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3m-google-similar-to-this-page ()
-Ask Google to find documents similar to this one.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3m-google-who-links-to-this-page ()
-Perform a google search to locate documents that link to the
- current page.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3m-jump-to-title-in-content ()
-Jumps to the occurrence of document title in page body.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3m-play-stream ()
-Load the URL under point in w3m into m-player.
-@end deffn
-
 @deffn {Interactive Command} emacspeak-w3m-preview-this-buffer ()
 Preview this buffer in w3m.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3m-transcode-current-url-via-google (&optional UNTRANSCODE)
-Transcode current URL via Google.
- Reverse effect with prefix arg for links on a transcoded page.
-@end deffn
-
-@deffn {Interactive Command} emacspeak-w3m-transcode-via-google (&optional UNTRANSCODE)
-Transcode URL under point via Google.
- Reverse effect with prefix arg for links on a transcoded page.
 @end deffn
 
 @deffn {Interactive Command} emacspeak-w3m-xsl-add-submit-button (&optional PERSISTENT)
@@ -4412,7 +4352,7 @@ Displays key mapping used by Emacspeak Websearch.
 Perform a koders.com  search
 @end deffn
 
-@deffn {Interactive Command} emacspeak-websearch-map-directions-search (QUERY &optional MAP)
+@deffn {Interactive Command} emacspeak-websearch-map-yahoo-directions-search (QUERY &optional MAP)
 Get driving directions from Yahoo.
 With optional interactive prefix arg MAP shows the location map instead.
 @end deffn
@@ -4519,6 +4459,65 @@ Perform an Yahoo  search
 @deffn {Interactive Command} emacspeak-websearch-yahoo-historical-chart (TICKER &optional AS-HTML)
 Look up historical stock data.
 Optional second arg as-html processes the results as HTML rather than data.
+@end deffn
+
+@node emacspeak-webutils
+@section emacspeak-webutils
+
+Commentary:
+This module provides common Web utilities for emacspeak.
+This is to avoid duplication of code between emacspeak-w3.el
+and emacspeak-w3m.el
+
+Automatically generated documentation
+for commands defined in module  emacspeak-webutils.
+
+@deffn {Interactive Command} emacspeak-webutils-google-extract-from-cache (&optional PREFIX)
+Extract current  page from the Google cache.
+With a prefix argument, extracts url under point.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-webutils-google-on-this-site ()
+Perform a google search restricted to the current WWW site.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-webutils-google-similar-to-this-page (URL)
+Ask Google to find documents similar to this one.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-webutils-google-who-links-to-this-page ()
+Perform a google search to locate documents that link to the
+current page.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-webutils-jump-to-title-in-content ()
+Jumps to the title in web document.
+The first time it is called, it jumps to the first 
+instance  of the title.  Repeated calls jump to further 
+instances.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-webutils-open-in-other-browser ()
+Opens link in alternate browser.
+ If using default browser is w3, uses w3m and vice-versa
+@end deffn
+
+@deffn {Interactive Command} emacspeak-webutils-play-media-at-point ()
+Play media url under point 
+@end deffn
+
+@deffn {Interactive Command} emacspeak-webutils-transcode-current-url-via-google (&optional UNTRANSCODE)
+Transcode current URL via Google.
+  Reverse effect with prefix arg.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-webutils-transcode-via-google (&optional UNTRANSCODE)
+Transcode URL under point via Google.
+ Reverse effect with prefix arg for links on a transcoded page.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-webutils-view-feed-via-google-reader ()
+Pulls feed under point via Google Reader.
 @end deffn
 
 @node emacspeak-widget
@@ -4631,8 +4630,6 @@ Ask for module name if prefix argument is given
 @end deffn
 
 @deffn {Interactive Command} emacspeak-cvs-get-anonymous ()
-@kbd{ control e <control down> }
-
 Get latest cvs snapshot of emacspeak.
 @end deffn
 
@@ -4895,6 +4892,7 @@ SUDo command --run command as super user.
 
 @deffn {Interactive Command} emacspeak-switch-to-previous-buffer ()
 Switch to most recently used interesting buffer.
+Obsoleted by `previous-buffer' in Emacs 22
 @end deffn
 
 @deffn {Interactive Command} emacspeak-symlink-current-file ()
@@ -4983,6 +4981,11 @@ Find longest paragraph in region.
 Moves to the longest paragraph when called interactively.
 @end deffn
 
+@deffn {Interactive Command} emacspeak-wizards-find-shortest-line-in-region (START END)
+Find shortest line in region.
+Moves to the shortest line when called interactively.
+@end deffn
+
 @deffn {Interactive Command} emacspeak-wizards-finder-find (DIRECTORY)
 Run find-dired on specified switches after prompting for the
 directory to where find is to be launched.
@@ -5047,6 +5050,10 @@ run `how-many' to count  matching header lines.
 With interactive prefix arg, prompts for and remembers the file local pattern.
 @end deffn
 
+@deffn {Interactive Command} emacspeak-wizards-i810-display-status ()
+Show display status on thinkpads using i810switch.
+@end deffn
+
 @deffn {Interactive Command} emacspeak-wizards-move-and-speak (COMMAND COUNT)
 Speaks a chunk of text bounded by point and a target position.
 Target position is specified using a navigation command and a
@@ -5062,6 +5069,10 @@ If you define a file local variable called
 matches header lines, you can use this command to conveniently
 run `occur' to find matching header lines. With prefix arg,
 prompts for and sets value of the file local pattern.
+@end deffn
+
+@deffn {Interactive Command} emacspeak-wizards-pdf-open (FILENAME)
+Open pdf file as text.
 @end deffn
 
 @deffn {Interactive Command} emacspeak-wizards-popup-input-buffer (MODE)
@@ -5442,13 +5453,45 @@ Pops up an org input area.
 (fn)
 @end deffn
 
+@node emacspeak-zinf
+@section emacspeak-zinf
+
+Commentary:
+Defines a simple derived mode for interacting with
+zinf.
+zinf == zinf is not freeamp
+zinf navigation commands then work via single keystrokes.
+
+Automatically generated documentation
+for commands defined in module  emacspeak-zinf.
+
+@deffn {Interactive Command} emacspeak-zinf ()
+Play specified resource using zinf.
+Resource is an  MP3 file or m3u playlist.
+The player is placed in a buffer in emacspeak-zinf-mode.
+
+(fn RESOURCE)
+@end deffn
+
+@deffn {Interactive Command} emacspeak-zinf-zinf-call-command ()
+Call appropriate zinf command.
+
+(fn)
+@end deffn
+
+@deffn {Interactive Command} emacspeak-zinf-zinf-command ()
+Execute Zinf command.
+
+(fn CHAR)
+@end deffn
+
 @node URL Templates 
 @section  URL Templates
 
 This section is generated automatically from the source-level documentation.
 Any errors or corrections should be made to the source-level
 documentation.
-This section documents a total of 116 URL Templates.
+This section documents a total of 122 URL Templates.
 
 All of these URL templates can be invoked via command
   @kbd{M-x emacspeak-url-template-fetch} normally bound to
@@ -5486,6 +5529,10 @@ Retrieve product details from Amazon by either ISBN or ASIN.
 @kbd{American Life On Demand.}
 
 Play This American Life  shows on demand.
+
+@kbd{Anonymize Google Search}
+
+Logout from Google to do an anonymous search.
 
 @kbd{Archive News Search}
 
@@ -5557,7 +5604,7 @@ Display MLB standings.
 
 @kbd{BlogSearch Google}
 
-Google Print Search
+Google Blog Search
 
 @kbd{BookShare}
 
@@ -5644,6 +5691,10 @@ mobile transcoder.
 @kbd{Flight Tracker}
 
 Display flight arrival and departure information.
+
+@kbd{GMail Mobile}
+
+GMail Mobile XHTML version --- light-weight, fast!
 
 @kbd{Geek Linux Daily}
 
@@ -5811,6 +5862,10 @@ plays entire program.
 
 Display browsable list of NY Times RSS Feeds.
 
+@kbd{Netcraft Site Report}
+
+Analyze WWW site using Netcraft.
+
 @kbd{Netcraft Web Analysis}
 
 Analyze WWW site using Netcraft.
@@ -5818,6 +5873,10 @@ Analyze WWW site using Netcraft.
 @kbd{Old Time Radio}
 
 This months Old Time Radio Programing
+
+@kbd{Patent Search From Google}
+
+Perform patent search via Google
 
 @kbd{Pulpit --- I Cringely}
 
@@ -5877,6 +5936,10 @@ Play Wait, Wait Dont Tell Me from NPR.
 @kbd{Weather forecast from Weather Underground}
 
 Weather forecast from weather underground mobile.
+
+@kbd{WordNet Search}
+
+Look up term in WordNet.
 
 @kbd{Yahoo Business News}
 
@@ -5970,13 +6033,17 @@ Use access.adobe.com to  convert a remote PDF document to plain
  text.
 The PDF document needs to be available on the public Internet.
 
-@kbd{sourceforge Stats}
+@kbd{rss weather from wunderground}
 
-Display project usage statistics.
+Pull RSS weather feed for specified state/city.
+
+@kbd{sourceforge Download}
+
+Download specified file.
 
 @kbd{sourceforge browse mirrors}
 
-Retrieve download table  at Sourceforge for specified project.
+Retrieve download page  at Sourceforge for specified project.
 
 @kbd{sourceforge project}
 

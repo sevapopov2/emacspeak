@@ -1,5 +1,5 @@
 ;;; emacspeak-autoload.el --- Emacspeak Autoload Generator
-;;; $Id: emacspeak-autoload.el 4151 2006-08-30 00:44:57Z tv.raman.tv $
+;;; $Id: emacspeak-autoload.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  autoload Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop autoload
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-29 17:44:57 -0700 (Tue, 29 Aug 2006) $ |
-;;;  $Revision: 4151 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2006, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -81,6 +81,8 @@ Emacspeak.")
         (generated-autoload-file emacspeak-auto-autoloads-file))
     (funcall emacspeak-update-autoloads-from-directories
              emacspeak-lisp-directory)
+    (funcall emacspeak-update-autoloads-from-directories
+             (expand-file-name "g-client" emacspeak-lisp-directory))
     (funcall emacspeak-update-autoloads-from-directories
              (expand-file-name "atom-blogger" emacspeak-lisp-directory))))
 

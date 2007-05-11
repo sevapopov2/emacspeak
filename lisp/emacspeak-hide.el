@@ -1,5 +1,5 @@
 ;;; emacspeak-hide.el --- Provides user commands for hiding and exposing blocks of text
-;;; $Id: emacspeak-hide.el 4157 2006-08-30 23:43:47Z tv.raman.tv $
+;;; $Id: emacspeak-hide.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Hide and expose blocks of text
 ;;; Keywords: Emacspeak, Speak, Spoken Output, hide
@@ -8,15 +8,15 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-30 16:43:47 -0700 (Wed, 30 Aug 2006) $ |
-;;;  $Revision: 4157 $ |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2006, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -281,8 +281,9 @@ Returns t if a block was found and hidden."
                                         (current-buffer)
                                         (point-max))))
          (t (forward-line 1)))))
-    (dtk-speak
-     (format "Hid %s blocks" count))))
+    (when (interactive-p)
+      (dtk-speak
+       (format "Hid %s blocks" count)))))
 
 (defun emacspeak-hide-expose-hidden-blocks-in-buffer ()
   "Expose any hidden blocks in current buffer."
@@ -329,7 +330,6 @@ starting on the current line.  A block of text is defined as
 a portion of the buffer in which all lines start with a
 common PREFIX.  Optional interactive prefix arg causes all
 blocks in current buffer to be hidden or exposed."
-
   (interactive "P")
   (save-excursion
     (dtk-stop)
@@ -358,7 +358,8 @@ blocks in current buffer to be hidden or exposed."
 (defun emacspeak-hide-or-expose-all-blocks ()
   "Hide or expose all blocks in buffer."
   (interactive)
-  (emacspeak-hide-or-expose-block 'all))
+  (let ((current-prefix-arg t))
+  (call-interactively 'emacspeak-hide-or-expose-block)))
 
 ;;}}}
 ;;{{{  speaking blocks sans prefix

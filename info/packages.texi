@@ -1,7 +1,6 @@
-@c $Id: packages.texi 4047 2006-08-11 19:11:17Z tv.raman.tv $
+@c $Id: packages.texi 4396 2007-02-28 01:39:28Z tv.raman.tv $
 @node Emacs Packages
 @chapter Emacs Packages.
-
 
 Emacs -- The extensible, self-documenting editor, derives its
 functionality from its powerful extension mechanism. This extension
@@ -13,90 +12,102 @@ sections that each pertain to a specific class of tasks; in individual
 subsections within a section give a brief overview of particular Emacs
 packages that have been speech-enabled.
 
-
 @menu
 * Document Authoring:: Document Authoring
 * Structured Editing:: Structured Editing
-* Browsing Structure :: Browsing Structure 
-* Messaging :: Messaging 
+* Browsing Structure:: Browsing Structure
+* Web Browsing:: Web Browsing
+* Messaging:: Messaging
 * Editting Program Source:: Editting Program Source
 * Development Environment:: Development Environment
 * Desktop Management:: Desktop Management
 * Personal Information Management:: Personal Information Management
 * Desktop Applications:: Desktop Applications
 @end  menu
+
 @include documents.texi
 @include structure.texi
-@node Browsing Structure 
+
+@node Browsing Structure
 @section Browsing Structured Information
 
 This section describes packages that allow you to browse structured
-information  --these are distinct from the 
-tools described in @ref{Structured Editing},
- in that they are typically
-used for working with  content that is read-only e.g., online
-documentation.
+information --these are distinct from the tools described in
+@ref{Structured Editing}, in that they are typically used for working
+with content that is read-only e.g., online documentation.
 
-@c  emacspeak-w3.el
-@c  emacspeak-info.el
-@c  emacspeak-man.el
-@c  emacspeak-table-ui.el
-@c  emacspeak-table.el
-@c  emacspeak-tabulate.el
-@c  emacspeak-view.el
+@unnumberedsec Related Packages
 
-@node Messaging 
+@menu
+* Web Browsing:: Web Browsing
+*  emacspeak-w3:: emacspeak-w3
+*  emacspeak-w3m:: emacspeak-w3m
+*  emacspeak-info:: emacspeak-info
+*  emacspeak-man:: emacspeak-man
+*  emacspeak-table-ui:: emacspeak-table-ui
+*  emacspeak-tabulate:: emacspeak-tabulate
+*  emacspeak-view:: emacspeak-view
+@end menu
+@include web-browsing.texi
+
+
+@node Messaging
 @section Electronic Messaging Applications
-
 
 Working with messaging applications involves both authoring and browsing
 content.
 Emacspeak provides a rich set of speech-enabled messaging tools.
-Further, all of the tools described in the previous sections 
+Further, all of the tools described in the previous sections
 integrate smoothly with the messaging applications described here; this
-means that you do not need to re-learn a new set of 
+means that you do not need to re-learn a new set of
 work habits when dealing with content in your messaging application.
 
-@c  emacspeak-bbdb.el
-@c  emacspeak-gnus.el
-@c  emacspeak-message.el
-@c  emacspeak-rmail.el
-@c  emacspeak-vm.el
-@c  emacspeak-supercite.el
-@c  emacspeak-mspools.el
+@unnumberedsec Related Packages
+
+@menu
+  * emacspeak-bbdb:: emacspeak-bbdb
+  * emacspeak-gnus:: emacspeak-gnus
+  * emacspeak-message:: emacspeak-message
+  * emacspeak-rmail:: emacspeak-rmail
+  * emacspeak-vm:: emacspeak-vm
+  * emacspeak-supercite:: emacspeak-supercite
+  * emacspeak-mspools:: emacspeak-mspools
+@end menu
+
 @node Editting Program Source
 @section Editting Program Source Code
 
 Files containing program source code form a very specific class of
 @b{structured} documents.
 Unlike documents meant for human consumption that are often only loosely
-structured, program source 
+structured, program source
 (as a concession to the computer's intolerance of lack of structure)
-are per force well-structured and adhere to a fairly stringent  syntax. 
+are per force well-structured and adhere to a fairly stringent  syntax.
 
 The Emacs environment provides editting modes that are specific to
-creating and maintaining software written in 
+creating and maintaining software written in
 most popular programming languages. Many of these editting modes are
 speech-enabled by Emacspeak.
-Speech-enabling these modes includes providing 
-a rich set of navigational  commands that allow you to move 
+Speech-enabling these modes includes providing
+a rich set of navigational  commands that allow you to move
 through the source efficiently. In addition, Emacspeak's core
-@b{voice-lock} facilities are used to produce audio formatted output 
+@b{voice-lock} facilities are used to produce audio formatted output
 --this helps you spot errors quickly.
 
+@unnumberedsec Related Packages
 
-@c  emacspeak-c.el
-@c  emacspeak-perl.el
-@c  emacspeak-tcl.el
-@c  emacspeak-python.el
-@c  emacspeak-jde.el
-@c  emacspeak-make-mode.el
-@c  emacspeak-sql.el
-
+@menu
+  * emacspeak-c:: emacspeak-c
+  * emacspeak-perl:: emacspeak-perl
+  * emacspeak-tcl:: emacspeak-tcl
+  * emacspeak-python:: emacspeak-python
+  * emacspeak-jde:: emacspeak-jde
+  * emacspeak-make-mode:: emacspeak-make-mode
+  * emacspeak-sql:: emacspeak-sql
+@end menu
 
 @node Development Environment
 @section Software Development Environment
-
 
 In addition to providing specialized editting modes for creating and
 maintaining program source,
@@ -104,16 +115,16 @@ Emacs provides a rich set of software development tools that can be
 combined to create powerful Integrated Development Environments (IDE).
 These IDEs are speech-enabled by Emacspeak to provide a versatile and
 powerful  environment for eyes-free software development.
+@unnumberedsec Related Packages
 
-@c  emacspeak-compile.el
-@c  emacspeak-ediff.el
-@c  emacspeak-gud.el
-@c  emacspeak-jde.el
-@c  emacspeak-jde-help.el
-@c  emacspeak-speedbar.el
-@c  emacspeak-imenu.el
-
-
+@menu
+  * emacspeak-compile:: emacspeak-compile
+  * emacspeak-ediff:: emacspeak-ediff
+  * emacspeak-gud:: emacspeak-gud
+  * emacspeak-jde:: emacspeak-jde
+  * emacspeak-speedbar:: emacspeak-speedbar
+  * emacspeak-imenu:: emacspeak-imenu
+@end menu
 
 @node Desktop Management
 @section Desktop Management
@@ -121,41 +132,43 @@ powerful  environment for eyes-free software development.
 Emacs provides an integrated environment for performing all of ones
 day-to-day computing tasks ranging from electronic messaging to software
 development.
-The environment derives its power from the fact that 
+The environment derives its power from the fact that
 this integration allows for content to be handled across different tasks
-in a seamless manner. 
+in a seamless manner.
 In order to work effectively with large Emacs sessions with many
 documents and applications open at the same time, the Emacspeak desktop
-provides 
+provides
 a powerful collection of desktop management tools designed to help the
 user easily locate objects that pertain to a given task.
+@unnumberedsec Related Packages
 
-@c  emacspeak-buff-sel.el
-@c  emacspeak-buff-menu.el
-@c  emacspeak-dired.el
-@c  emacspeak-view-process.el
-@c  emacspeak-tar.el
-@c  emacspeak-arc.el
-@c  emacspeak-bookmark.el
-@c  emacspeak-custom.el
-@c  emacspeak-winring.el
-@c   emacspeak-finder.el
-
-
+@menu
+  * emacspeak-buff-menu.el:: emacspeak-buff-menu.el
+  * emacspeak-dired.el:: emacspeak-dired.el
+  * emacspeak-view-process.el:: emacspeak-view-process.el
+  * emacspeak-tar.el:: emacspeak-tar.el
+  * emacspeak-arc.el:: emacspeak-arc.el
+  * emacspeak-bookmark.el:: emacspeak-bookmark.el
+  * emacspeak-custom.el:: emacspeak-custom.el
+  * emacspeak-winring.el:: emacspeak-winring.el
+   * emacspeak-finder.el:: emacspeak-finder.el
+@end menu
 
 @node Personal Information Management
-@section Personal Information Management 
+@section Personal Information Management
 This section describes speech-enabled tools designed to aid in personal
 information management such as maintaining a daily calendar.
 
+@unnumberedsec Related Packages
 
-@c  emacspeak-calendar.el
-@c  emacspeak-bbdb.el
-@c  emacspeak-bookmark.el
+@menu
+  * emacspeak-calendar:: emacspeak-calendar
+  * emacspeak-bbdb:: emacspeak-bbdb
+  * emacspeak-bookmark:: emacspeak-bookmark
+@end menu
 
 @node  Desktop Applications
-@section Desktop Applications 
-
+@section Desktop Applications
 
 @subsection Spread Sheets
 
@@ -186,17 +199,15 @@ The Emacs spread-sheet package @code{dismal} can be retrieved from
 
 @subsection Forms Mode
 
-
 @emph{ Forms} mode  an Emacs mode designed to edit structured data
 records like the line shown from file @code{ /etc/passwd} presents a
 user-friendly visual interface that displays the field name along with the field
 value.  The user can edit the field value and save the file, at which point
 the data is written out using the underlying @code{ :} delimited
 representation.  Mode @emph{ forms} provides a flexible interface to
-associating meaning to the fields of such structured data files.  
+associating meaning to the fields of such structured data files.
 For details on it use, see the forms-mode section of the online Emacs
 info documentation.
-
 
 @subsection OCR --Reading Print Documents
 Module @code{emacspeak-ocr} implements an OCR front-end for the
@@ -209,7 +220,6 @@ for browsing the results. This buffer is placed in mode
 @code{emacspeak-ocr-mode} a specialized mode for reading and scanning
 documents.
 
-
 @subsubsection  Emacspeak OCR Mode
 
 Emacspeak OCR mode is a special major  mode for document scanning and
@@ -219,9 +229,9 @@ Pre-requisites:
 
 @itemize @bullet
 
-@item  A working scanner back-end like SANE on Linux.
+@item   A working scanner back-end like SANE on Linux.
 
-@item  An OCR engine.
+@item   An OCR engine.
 @end itemize
 
  Make sure your scanner back-end works, and that you have the utilities
@@ -272,74 +282,79 @@ key-bindings and a brief description:
                @dfn{emacspeak-ocr-page}
 Jumps to specified page in the OCR output.
 
-@item @kbd{c}
+@item  @kbd{c}
                @dfn{emacspeak-ocr-set-compress-image-options}
 
 Interactively update  image compression options.
 Prompts with current setting in the minibuffer.
 Setting persists for current Emacs session.
 
-@item @kbd{i}
+@item  @kbd{i}
                @dfn{emacspeak-ocr-set-scan-image-options}
 Interactively update scan image options.
 Prompts with current setting in the minibuffer.
 Setting persists for current Emacs session.
 
-@item @kbd{spc}
+@item  @kbd{spc}
              @dfn{emacspeak-ocr-read-current-page}
 Speaks current page.
-@item @kbd{s}
+@item  @kbd{s}
                @dfn{emacspeak-ocr-save-current-page}
 Saves current page as a text file.
 
-@item @kbd{p}
+@item  @kbd{p}
                @dfn{emacspeak-ocr-page}
 Prompts for a page number and moves to the specified page.
 
-@item @kbd{]}
+@item  @kbd{]}
                @dfn{emacspeak-ocr-forward-page}
 Move forward to the next page.
 
-@item @kbd{[}
+@item  @kbd{[}
                @dfn{emacspeak-ocr-backward-page}
 Move back to the previous page.
 
-@item @kbd{d}
+@item  @kbd{d}
                @dfn{emacspeak-ocr-open-working-directory}
 Open directory containing the results of OCR.
 
-@item @kbd{n}
+@item  @kbd{n}
                @dfn{emacspeak-ocr-name-document}
 Name current document.
 
-@item @kbd{o}
+@item  @kbd{o}
                @dfn{emacspeak-ocr-recognize-image}
 Launch OCR engine on a scanned image.
 
-@item @kbd{i}
+@item  @kbd{i}
                @dfn{emacspeak-ocr-scan-image}
 Acquire an image using @code{scanimage}.
 
-@item @kbd{RET}
+@item  @kbd{RET}
              @dfn{emacspeak-ocr-scan-and-recognize}
 Scan and recognize a page.
 
-@item @kbd{w}
+@item  @kbd{w}
                @dfn{emacspeak-ocr-write-document}
 Write all pages of current document to a text file.
 
-@item @kbd{q}
+@item  @kbd{q}
                @dfn{bury-buffer}
 Bury the OCR buffer.
-@item @kbd{c}
+@item  @kbd{c}
                @dfn{emacspeak-ocr-customize}
 Customize Emacspeak OCR settings.
 
-@item @kbd{?}
+@item  @kbd{?}
                @dfn{describe-mode}
 Describe OCR mode.
 @end table
-@c  emacspeak-calc.el
-@c  emacspeak-dismal.el
-@c  emacspeak-remote.el
-@c  emacspeak-entertain.el
+
+@unnumberedsec Related Packages
+
+@menu
+  * emacspeak-calc:: emacspeak-calc
+  * emacspeak-dismal:: emacspeak-dismal
+  * emacspeak-remote:: emacspeak-remote
+  * emacspeak-entertain:: emacspeak-entertain
+@end menu

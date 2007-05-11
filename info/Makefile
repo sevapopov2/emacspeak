@@ -1,4 +1,4 @@
-#$Id: Makefile 4047 2006-08-11 19:11:17Z tv.raman.tv $
+#$Id: Makefile 4388 2007-02-27 02:10:44Z tv.raman.tv $
 SF_HOME=raman@emacspeak.sf.net:~/www-emacspeak/htdocs
 HTML_FILES=$(shell find . -name '*.html' -print)
 TEXINDEX=texindex
@@ -81,8 +81,8 @@ introducing-emacspeak.html: introducing-emacspeak.texi
 	perl add-css.pl introducing-emacspeak.html
 
 pub:  html/index.html introducing-emacspeak.html
-	scp introducing-emacspeak.html ${SF_HOME}/info
-	scp -r html ${SF_HOME}/info/
+	rsync introducing-emacspeak.html ${SF_HOME}/info/
+	rsync -avz  html ${SF_HOME}/info/
 
 %.pdf: %.ps
 	ps2pdf    $<
