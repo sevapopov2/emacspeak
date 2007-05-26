@@ -146,7 +146,13 @@ Alsaplayer session."
       (erase-buffer)
       (call-process emacspeak-alsaplayer-program
                     nil t t
-                    "--status"))
+                    "--status")
+      (goto-char (point-min))
+      (when (search-forward "path: " nil t)
+        (encode-coding-region (point) (line-end-position)
+                              emacspeak-alsaplayer-coding-system)
+        (decode-coding-region (point) (line-end-position)
+                              (car default-process-coding-system))))
     (switch-to-buffer buffer))
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
     (emacspeak-auditory-icon 'open-object)
@@ -176,7 +182,13 @@ Optional second arg watch-pattern specifies line of output to
         (call-process
          emacspeak-alsaplayer-program
          nil t t
-         "--status"))))
+         "--status")))
+    (goto-char (point-min))
+    (when (search-forward "path: " nil t)
+      (encode-coding-region (point) (line-end-position)
+                            emacspeak-alsaplayer-coding-system)
+      (decode-coding-region (point) (line-end-position)
+                            (car default-process-coding-system))))
   (when (and watch-pattern
              (eq (current-buffer) (get-buffer emacspeak-alsaplayer-buffer)))
     (goto-char (point-min))
