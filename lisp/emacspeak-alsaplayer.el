@@ -122,9 +122,16 @@ user is placed in a buffer associated with the newly created
 Alsaplayer session."
   (interactive)
   (declare (special emacspeak-alsaplayer-program
+                    emacspeak-alsaplayer-process
                     emacspeak-alsaplayer-buffer))
+  (if (and emacspeak-alsaplayer-process
+           (eq 'run (process-status
+                     emacspeak-alsaplayer-process)))
+      (when (y-or-n-p "Stop currently playing music? ")
+        (emacspeak-alsaplayer-quit)
+        (setq emacspeak-alsaplayer-process nil))
+    (setq emacspeak-alsaplayer-process nil))
   (let ((process-connection-type t)
-        (process nil)
         (coding-system-for-read emacspeak-alsaplayer-coding-system)
         (options (nconc (list "-r" "-i" "daemon")
                         (when emacspeak-alsaplayer-output
@@ -136,23 +143,24 @@ Alsaplayer session."
       (set-buffer buffer)
       (setq buffer-undo-list t)
       (emacspeak-alsaplayer-mode)
-      (setq process
-            (apply 'start-process
-                   "alsaplayer"
-                   (current-buffer)
-                   emacspeak-alsaplayer-program
-                   options))
-      (accept-process-output process)
-      (erase-buffer)
-      (call-process emacspeak-alsaplayer-program
-                    nil t t
-                    "--status")
-      (goto-char (point-min))
-      (when (search-forward "path: " nil t)
-        (encode-coding-region (point) (line-end-position)
-                              emacspeak-alsaplayer-coding-system)
-        (decode-coding-region (point) (line-end-position)
-                              (car default-process-coding-system))))
+      (unless emacspeak-alsaplayer-process
+        (setq emacspeak-alsaplayer-process
+              (apply 'start-process
+                     "alsaplayer"
+                     (current-buffer)
+                     emacspeak-alsaplayer-program
+                     options))
+        (accept-process-output emacspeak-alsaplayer-process)
+        (erase-buffer)
+        (call-process emacspeak-alsaplayer-program
+                      nil t t
+                      "--status")
+        (goto-char (point-min))
+        (when (search-forward "path: " nil t)
+          (encode-coding-region (point) (line-end-position)
+                                emacspeak-alsaplayer-coding-system)
+          (decode-coding-region (point) (line-end-position)
+                                (car default-process-coding-system)))))
     (switch-to-buffer buffer))
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
     (emacspeak-auditory-icon 'open-object)
