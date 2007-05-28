@@ -200,7 +200,7 @@ Optional second arg watch-pattern specifies line of output to
   (when (and watch-pattern
              (eq (current-buffer) (get-buffer emacspeak-alsaplayer-buffer)))
     (goto-char (point-min))
-    (search-forward watch-pattern  nil t)))
+    (re-search-forward watch-pattern  nil t)))
 
 (defun emacspeak-alsaplayer-add-to-queue (resource)
   "Add specified resource to queue."
@@ -281,7 +281,7 @@ Optional second arg watch-pattern specifies line of output to
   "Next  alsaplayer"
   (interactive)
   (emacspeak-alsaplayer-send-command "--next"
-                                     "path:")
+                                     "\\(title\\|path\\):")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
     (emacspeak-speak-line)
@@ -291,7 +291,7 @@ Optional second arg watch-pattern specifies line of output to
   "Previous  alsaplayer"
   (interactive)
   (emacspeak-alsaplayer-send-command "--prev"
-                                     "path:")
+                                     "\\(title\\|path\\):")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
     (emacspeak-speak-line)
@@ -366,7 +366,7 @@ Optional second arg watch-pattern specifies line of output to
   (interactive "sTrack Number:")
   (emacspeak-alsaplayer-send-command
    (list "--jump" track)
-   "path:")
+   "\\(title\\|path\\):")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
     (emacspeak-speak-line)
