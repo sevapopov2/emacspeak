@@ -231,7 +231,7 @@ Optional second arg watch-pattern specifies line of output to
   "Replace currently playing music."
   (interactive
    (list
-    (read-file-name "New MP3 Resource: "
+    (read-file-name "New Media Resource: "
                     (if 
                         (string-match (format "^%s"
                                               emacspeak-alsaplayer-media-directory)
@@ -239,7 +239,7 @@ Optional second arg watch-pattern specifies line of output to
                         default-directory
                       emacspeak-alsaplayer-media-directory))))
   (emacspeak-alsaplayer-send-command
-   (nconc (list "--enqueue")
+   (nconc (list "--replace")
           (if (file-directory-p resource)
               (directory-files
                (expand-file-name resource)
