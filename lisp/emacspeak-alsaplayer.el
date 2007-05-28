@@ -262,7 +262,6 @@ Optional second arg watch-pattern specifies line of output to
     (unless (eq (current-buffer)
                 (get-buffer emacspeak-alsaplayer-buffer))
       (switch-to-buffer emacspeak-alsaplayer-buffer))
-    (emacspeak-speak-line)
     (when  emacspeak-alsaplayer-auditory-feedback
       (emacspeak-speak-line)
       (emacspeak-auditory-icon 'select-object))))
