@@ -224,8 +224,8 @@ Optional second arg watch-pattern specifies line of output to
    "playlist_length:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-replace-queue (resource)
   "Replace currently playing music."
@@ -249,8 +249,8 @@ Optional second arg watch-pattern specifies line of output to
    "playlist_length:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-status ()
   "Show alsaplayer status"
@@ -263,8 +263,8 @@ Optional second arg watch-pattern specifies line of output to
                 (get-buffer emacspeak-alsaplayer-buffer))
       (switch-to-buffer emacspeak-alsaplayer-buffer))
     (when  emacspeak-alsaplayer-auditory-feedback
-      (emacspeak-speak-line)
-      (emacspeak-auditory-icon 'select-object))))
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-speak-line))))
 
 (defun emacspeak-alsaplayer-pause ()
   "Pause or resume alsaplayer"
@@ -273,8 +273,8 @@ Optional second arg watch-pattern specifies line of output to
                                      "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'button)))
+    (emacspeak-auditory-icon 'button)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-next ()
   "Next  alsaplayer"
@@ -283,8 +283,8 @@ Optional second arg watch-pattern specifies line of output to
                                      "\\(title\\|path\\):")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-previous ()
   "Previous  alsaplayer"
@@ -293,8 +293,8 @@ Optional second arg watch-pattern specifies line of output to
                                      "\\(title\\|path\\):")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
     
 (defun emacspeak-alsaplayer-start ()
   "Start  alsaplayer"
@@ -303,8 +303,8 @@ Optional second arg watch-pattern specifies line of output to
                                      "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-stop ()
   "Stop  alsaplayer"
@@ -313,8 +313,8 @@ Optional second arg watch-pattern specifies line of output to
                                      "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'close-object)))
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-relative (offset)
   "Relative seek  alsaplayer"
@@ -324,8 +324,8 @@ Optional second arg watch-pattern specifies line of output to
    "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-speed (setting)
   "Set speed in alsaplayer."
@@ -335,8 +335,8 @@ Optional second arg watch-pattern specifies line of output to
    "speed:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-volume (setting)
   "Set volume."
@@ -346,8 +346,8 @@ Optional second arg watch-pattern specifies line of output to
    "volume:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-seek (offset)
   "Absolute seek  alsaplayer"
@@ -357,8 +357,8 @@ Optional second arg watch-pattern specifies line of output to
    "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-jump (track)
   "Jump to specified track."
@@ -368,8 +368,8 @@ Optional second arg watch-pattern specifies line of output to
    "\\(title\\|path\\):")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-clear ()
   "Clear or resume alsaplayer"
@@ -378,8 +378,8 @@ Optional second arg watch-pattern specifies line of output to
                                      "playlist_length:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'delete-object)))
+    (emacspeak-auditory-icon 'delete-object)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-quit ()
   "Quit or resume alsaplayer"
@@ -388,8 +388,8 @@ Optional second arg watch-pattern specifies line of output to
   (when (eq major-mode 'emacspeak-alsaplayer-mode)
     (kill-buffer (current-buffer)))
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'close-object)))
 
 ;;}}}
 ;;{{{ additional temporal navigation 
