@@ -219,7 +219,7 @@ Optional second arg watch-pattern specifies line of output to
               (directory-files
                (expand-file-name resource)
                'full
-               "\\(mp3\\)\\|\\(ogg\\)$")
+               "\\([Mm][Pp][23]\\)\\|\\([Oo][Gg][Gg]\\)\\|\\([Ww][Aa][Vv]\\)$")
             (expand-file-name resource)))
    "playlist_length:")
   (when (and emacspeak-alsaplayer-auditory-feedback
@@ -244,7 +244,7 @@ Optional second arg watch-pattern specifies line of output to
               (directory-files
                (expand-file-name resource)
                'full
-               "\\(mp3\\)\\|\\(ogg\\)$")
+               "\\([Mm][Pp][23]\\)\\|\\([Oo][Gg][Gg]\\)\\|\\([Ww][Aa][Vv]\\)$")
             (expand-file-name resource)))
    "playlist_length:")
   (when (and emacspeak-alsaplayer-auditory-feedback
