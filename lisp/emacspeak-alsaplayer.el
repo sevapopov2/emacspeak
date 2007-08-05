@@ -75,6 +75,11 @@
   :type 'boolean
   :group 'emacspeak-alsaplayer)
 
+(defcustom emacspeak-alsaplayer-rewind-step 2
+  "Forward or backward rewind step in seconds."
+  :type 'integer
+  :group 'emacspeak-alsaplayer)
+
 (defcustom emacspeak-alsaplayer-program
   "alsaplayer"
   "Alsaplayer executable."
@@ -394,19 +399,22 @@ Optional second arg watch-pattern specifies line of output to
 ;;}}}
 ;;{{{ additional temporal navigation 
 
-(defun emacspeak-alsaplayer-forward-10-seconds ( )
+(defun emacspeak-alsaplayer-forward-step (seconds)
   "Skip forward by  seconds."
-  (interactive)
-  (emacspeak-alsaplayer-send-command (list "--relative" "10")
-                                     "position:")
+  (interactive "p")
+  (emacspeak-alsaplayer-send-command
+   (list "--relative"
+	 (format "%i" (or seconds emacspeak-alsaplayer-rewind-step)))
+   "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
     (emacspeak-speak-line)))
 
-(defun emacspeak-alsaplayer-backward-10-seconds()
-  "Skip backward by  10 seconds."
-  (interactive)
+(defun emacspeak-alsaplayer-backward-step (seconds)
+  "Skip backward by seconds."
+  (interactive "p")
   (emacspeak-alsaplayer-send-command
-   (list "--relative" "-10")
+   (list "--relative"
+	 (format "-%i" (or seconds emacspeak-alsaplayer-rewind-step)))
    "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
     (emacspeak-speak-line)))
@@ -416,7 +424,7 @@ Optional second arg watch-pattern specifies line of output to
   (interactive "p")
   (emacspeak-alsaplayer-send-command
    (list "--relative"
-           (* 60 (or minutes 1)))
+	 (format "%i" (* 60 (or minutes 1))))
    "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
     (emacspeak-speak-line)))
@@ -427,7 +435,7 @@ Optional second arg watch-pattern specifies line of output to
   (emacspeak-alsaplayer-send-command
    (list
     "--relative"
-    (format "-%s" (* 60 (or minutes 1))))
+    (format "-%i" (* 60 (or minutes 1))))
    "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
     (emacspeak-speak-line)))
@@ -438,7 +446,7 @@ Optional second arg watch-pattern specifies line of output to
   (emacspeak-alsaplayer-send-command
    (list
     "--relative"
-    (* 600 (or minutes 1)))
+    (format "%i" (* 600 (or minutes 1))))
    "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
     (emacspeak-speak-line)))
@@ -449,7 +457,7 @@ Optional second arg watch-pattern specifies line of output to
   (emacspeak-alsaplayer-send-command
    (list
     "--relative"
-    (format "-%s" (* 600 (or minutes 1))))
+    (format "-%i" (* 600 (or minutes 1))))
    "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
     (emacspeak-speak-line)))
@@ -559,9 +567,9 @@ Optional second arg watch-pattern specifies line of output to
         ("m" emacspeak-alsaplayer-mark-position)
         ("w" emacspeak-alsaplayer-where)
         ("x" emacspeak-alsaplayer-clip)
-        ("." emacspeak-alsaplayer-forward-10-seconds)
+        ("." emacspeak-alsaplayer-forward-step)
         ("i" emacspeak-alsaplayer-info)
-        ("," emacspeak-alsaplayer-backward-10-seconds)
+        ("," emacspeak-alsaplayer-backward-step)
         (">" emacspeak-alsaplayer-forward-minute)
         ("<" emacspeak-alsaplayer-backward-minute)
         ("]" emacspeak-alsaplayer-forward-ten-minutes)
