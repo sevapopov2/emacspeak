@@ -1553,6 +1553,22 @@ in completion buffers"
              (count-lines (region-beginning)
                           (region-end)))))
 
+(defadvice tabify (after emacspeak pre act)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'fill-object )
+    (message "Tabified current region containing %s lines"
+             (count-lines (region-beginning)
+                          (region-end)))))
+
+(defadvice untabify (after emacspeak pre act)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'fill-object )
+    (message "Untabified current region containing %s lines"
+             (count-lines (region-beginning)
+                          (region-end)))))
+
 ;;}}}
 ;;{{{  vc:
 
