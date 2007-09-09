@@ -138,6 +138,9 @@
     ("emacspeak-damlite.el"
         "Speech-enable damlite"
         (emacspeak  damlite ))
+    ("emacspeak-debian-bug.el"
+        "Speech enable Debian bug reports"
+        (emacspeak  debian bug tracking system))
     ("emacspeak-desktop.el"
         "Speech-enable desktop"
         (emacspeak   audio desktop  desktop))
