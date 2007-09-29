@@ -105,9 +105,9 @@ pronunciations only once.")
         (personality (get-text-property (point) 'personality)))
     (cond
      (filename
-      (put-text-property  0  (length filename)
-                          'personality personality filename )
-      (dtk-speak filename)
+      (dtk-speak (propertize (directory-file-name
+                              (file-relative-name filename))
+                             'personality personality))
       (setq emacspeak-speak-last-spoken-word-position (point)))
      (t (emacspeak-speak-line )))))
 
