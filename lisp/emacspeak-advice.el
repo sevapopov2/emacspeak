@@ -472,6 +472,15 @@ current after deletion."
         (dtk-tone 500 30)
         (emacspeak-speak-region (point) start )))))
 
+(loop for f in
+      '(delete-rectangle kill-rectangle)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'delete-object)))))
+
 ;;; Large deletions also produce auditory icons if possible
 
 (defadvice kill-line(before emacspeak pre act)
@@ -2423,6 +2432,11 @@ Also produce an auditory icon if possible."
   (when (interactive-p )
     (emacspeak-auditory-icon 'yank-object)
     (emacspeak-speak-region (point) (mark 'force))))
+
+(defadvice yank-rectangle (after emacspeak pre act)
+  "Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'yank-object)))
 
 ;;}}}
 ;;{{{  simple searching:
