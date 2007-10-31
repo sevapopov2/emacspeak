@@ -55,7 +55,7 @@
 ;;}}}
 ;;{{{  Define locations
 
-(defvar emacspeak-unibyte t
+(defvar emacspeak-unibyte nil
   "Emacspeak will force emacs to unibyte unless this
 variable is set to nil.
 To use emacspeak with emacs running in multibyte mode, this

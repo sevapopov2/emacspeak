@@ -83,7 +83,6 @@
 (defadvice pcomplete-list (after emacspeak pre act )
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'help)
     (emacspeak-auditory-icon 'help)))
 
 (defadvice pcomplete (around emacspeak pre act)
@@ -282,20 +281,20 @@ personalities."
 (defadvice eshell-toggle (after emacspeak pre act comp)
   "Provide spoken context feedback."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
     (cond
      ((eq major-mode 'eshell-mode)
       (emacspeak-setup-programming-mode)
       (emacspeak-speak-line))
-     (t (emacspeak-speak-mode-line)))
-    (emacspeak-auditory-icon 'select-object)))
+     (t (emacspeak-speak-mode-line)))))
 (defadvice eshell-toggle-cd (after emacspeak pre act comp)
   "Provide spoken context feedback."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
     (cond
      ((eq major-mode 'eshell-mode)
       (emacspeak-speak-line))
-     (t (emacspeak-speak-mode-line)))
-    (emacspeak-auditory-icon 'select-object)))
+     (t (emacspeak-speak-mode-line)))))
 
 ;;}}}
 

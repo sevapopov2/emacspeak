@@ -139,6 +139,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "apt-sources" 'emacspeak-apt-sources)
 (emacspeak-do-package-setup "apt-utils" 'emacspeak-apt-utils)
 (emacspeak-do-package-setup "arc-mode" 'emacspeak-arc)
+(emacspeak-do-package-setup "asm-mode" 'emacspeak-asm)
 (emacspeak-do-package-setup "atom-blogger" 'emacspeak-atom-blogger)
 (emacspeak-do-package-setup "babel" 'emacspeak-babel )
 (emacspeak-do-package-setup "bbdb" 'emacspeak-bbdb )
@@ -159,9 +160,12 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "cmuscheme" 'emacspeak-cmuscheme)
 (emacspeak-do-package-setup "compile" 'emacspeak-compile)
 (emacspeak-do-package-setup "cperl-mode" 'emacspeak-cperl)
+(emacspeak-do-package-setup "cyclebuffer" 'emacspeak-cyclebuffer)
+(emacspeak-do-package-setup "database" 'emacspeak-edb)
 (emacspeak-do-package-setup "ecb" 'emacspeak-ecb)
 (emacspeak-do-package-setup "cus-edit" 'emacspeak-custom)
 (emacspeak-do-package-setup "damlite" 'emacspeak-damlite)
+(emacspeak-do-package-setup "debian-bug" 'emacspeak-debian-bug )
 (emacspeak-do-package-setup "desktop" 'emacspeak-desktop )
 (emacspeak-do-package-setup "dired" 'emacspeak-dired )
 (emacspeak-do-package-setup "dismal" 'emacspeak-dismal)
@@ -190,7 +194,9 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "gud" 'emacspeak-gud)
 (emacspeak-do-package-setup "gdb-ui" 'emacspeak-gud)
 (emacspeak-do-package-setup "hangman" 'emacspeak-entertain)
+(emacspeak-do-package-setup "hexl" 'emacspeak-hexl)
 (emacspeak-do-package-setup "hideshow" 'emacspeak-hideshow)
+(emacspeak-do-package-setup "html-helper-mode" 'html-outline)
 (emacspeak-do-package-setup "imenu" 'emacspeak-imenu)
 (emacspeak-do-package-setup "ibuffer" 'emacspeak-ibuffer)
 (emacspeak-do-package-setup "ido" 'emacspeak-ido)
@@ -209,6 +215,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "midge-mode" 'emacspeak-midge)
 (emacspeak-do-package-setup "mpuz" 'emacspeak-entertain)
 (emacspeak-do-package-setup "mspools" 'emacspeak-mspools)
+(emacspeak-do-package-setup "muse" 'emacspeak-muse)
 (emacspeak-do-package-setup "nero" 'emacspeak-nero)
 (emacspeak-do-package-setup "net-utils" 'emacspeak-net-utils)
 (emacspeak-do-package-setup "newsticker" 'emacspeak-newsticker)
@@ -219,11 +226,15 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "php-mode" 'emacspeak-php-mode)
 (emacspeak-do-package-setup "pcl-cvs" 'emacspeak-pcl-cvs)
 (emacspeak-do-package-setup "pcvs" 'emacspeak-pcl-cvs)
+(emacspeak-do-package-setup "planner" 'emacspeak-planner)
+(emacspeak-do-package-setup "planner-tasks-overview" 'emacspeak-planner)
 (emacspeak-do-package-setup "psgml" 'emacspeak-psgml)
+(emacspeak-do-package-setup "ps-mode" 'emacspeak-ps)
 (emacspeak-do-package-setup "python-mode" 'emacspeak-python)
 (emacspeak-do-package-setup "re-builder" 'emacspeak-re-builder)
 (emacspeak-do-package-setup "reftex" 'emacspeak-reftex)
 (emacspeak-do-package-setup "rmail" 'emacspeak-rmail)
+(emacspeak-do-package-setup "rpm" 'emacspeak-rpm)
 (emacspeak-do-package-setup "rpm-spec-mode" 'emacspeak-rpm-spec)
 (emacspeak-do-package-setup "ruby-mode" 'emacspeak-ruby)
 (emacspeak-do-package-setup "sgml-mode" 'emacspeak-sgml-mode)
@@ -258,9 +269,11 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "vm" 'emacspeak-vm)
 (emacspeak-do-package-setup "w3" 'emacspeak-w3)
 (emacspeak-do-package-setup "w3m" 'emacspeak-w3m)
+(emacspeak-do-package-setup "wget" 'emacspeak-wget)
 (emacspeak-do-package-setup "wdired" 'emacspeak-wdired)
 (emacspeak-do-package-setup "cus-edit" 'emacspeak-custom)
 (emacspeak-do-package-setup "wid-edit" 'emacspeak-widget)
+(emacspeak-do-package-setup "emacs-wiki" 'emacspeak-wiki)
 (emacspeak-do-package-setup "widget" 'emacspeak-widget)
 (emacspeak-do-package-setup "windmove" 'emacspeak-windmove)
 (emacspeak-do-package-setup "winring" 'emacspeak-winring)
@@ -346,6 +359,8 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
                (add-hook hook
                          'emacspeak-setup-programming-mode)))
    (list 'c-mode-common-hook
+	 'asm-mode-hook
+         'python-mode-hook
          'prolog-mode-hook
          'lisp-mode-hook
          'emacs-lisp-mode-hook
@@ -363,9 +378,11 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
          'nxml-mode-hook
          'xsl-mode-hook
          'makefile-mode-hook
+	 'texinfo-mode-hook
          'TeX-mode-hook
          'LaTeX-mode-hook
          'bibtex-mode-hook
+	 'ps-mode-hook
          'tcl-mode-hook
          'html-helper-mode-hook
          'scheme-mode-hook
@@ -380,13 +397,10 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
 ;;}}}
 ;;{{{ Emacspeak:
 
-(defcustom emacspeak-play-emacspeak-startup-icon nil
+(defcustom emacspeak-play-emacspeak-startup-icon t
   "If set to T, emacspeak plays its icon as it launches."
   :type 'boolean
   :group 'emacspeak)
-(defvar emacspeak-unibyte t
-  "Set this to nil before starting  emacspeak
-if you are running in a multibyte enabled environment.")
 
 (defun emacspeak()
   "Starts the Emacspeak speech subsystem.  Use emacs as you
@@ -439,6 +453,7 @@ functions for details.   "
   (dtk-initialize)
   (require 'emacspeak-personality)
   (require 'emacspeak-redefine)
+  (require 'emacspeak-personality)
   (require 'emacspeak-fix-interactive)
   (require 'emacspeak-keymap)
   (require 'emacspeak-advice)

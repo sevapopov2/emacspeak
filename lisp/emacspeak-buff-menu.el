@@ -141,8 +141,8 @@
       'emacspeak-list-buffers-speak-buffer-line)
     (define-key Buffer-menu-mode-map "n" 'emacspeak-list-buffers-next-line)
     (define-key Buffer-menu-mode-map "p" 'emacspeak-list-buffers-previous-line)
-    (emacspeak-list-buffers-speak-buffer-line)
-    (emacspeak-auditory-icon 'task-done)))
+    (emacspeak-auditory-icon 'task-done)
+    (emacspeak-list-buffers-speak-buffer-line)))
 
 (defadvice buffer-menu (after emacspeak pre act )
   "Provide auditory feedback"
@@ -154,7 +154,7 @@
 (defadvice Buffer-menu-bury (after emacspeak pre act)
   "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'close-object)
     (emacspeak-list-buffers-speak-buffer-line )))
 
 (defadvice Buffer-menu-delete-backwards (after emacspeak pre act)
@@ -218,10 +218,10 @@
 (defadvice Buffer-menu-not-modified (after emacspeak pre act )
   "Provide auditory feedback "
   (when (interactive-p)
-    (emacspeak-list-buffers-speak-buffer-line)
     (if (ad-get-arg 0)
         (emacspeak-auditory-icon 'modified-object )
-      (emacspeak-auditory-icon 'unmodified-object))))
+      (emacspeak-auditory-icon 'unmodified-object))
+    (emacspeak-list-buffers-speak-buffer-line)))
 
 (defadvice Buffer-menu-visit-tags-table (before emacspeak pre act )
   "Provide auditory feedback"
@@ -234,20 +234,20 @@
 (defadvice Buffer-menu-1-window (after emacspeak pre act)
   "Announce the newly selected buffer."
   (when (interactive-p )
-    (emacspeak-speak-mode-line )
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line )))
 
 (defadvice Buffer-menu-2-window (after emacspeak pre act)
   "Announce the newly selected buffer."
   (when (interactive-p )
-    (emacspeak-speak-mode-line )
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line )))
 
 (defadvice Buffer-menu-this-window (after emacspeak pre act)
   "Announce the newly selected buffer."
   (when (interactive-p )
-    (emacspeak-speak-mode-line )
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line )))
 (defadvice Buffer-menu-other-window (after emacspeak pre act)
   "Provide auditory feedback"
   (when (interactive-p )

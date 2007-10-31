@@ -1,8 +1,8 @@
 ;;; emacspeak-auctex.el --- Speech enable AucTeX -- a powerful TeX/LaTeX authoring environment
 ;;; $Id: emacspeak-auctex.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
-;;; DescriptionEmacspeak extensions for auctex-mode
-;;; Keywords:emacspeak, audio interface to emacs AUCTEX
+;;; Description: Emacspeak extensions for auctex-mode
+;;; Keywords: emacspeak, audio interface to emacs AUCTEX
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
@@ -79,15 +79,15 @@
   "Speak the first line. 
 Also provide an auditory icon. "
   (when (interactive-p) 
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'mark-object)))
+    (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-speak-line)))
 
 (defadvice LaTeX-mark-environment (after emacspeak pre act)
   "Speak the first line. 
 Also provide an auditory icon. "
   (when (interactive-p) 
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'mark-object)))
+    (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-speak-line)))
 
 (defadvice LaTeX-format-paragraph (after emacspeak pre act )
   "Provide auditory feedback"
@@ -172,26 +172,26 @@ the opening line of the newly inserted environment. "
 (defadvice TeX-comment-region (after emacspeak pre act)
   "Provide spoken and auditory feedback. "
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defadvice TeX-un-comment (after emacspeak pre act)
   "Provide spoken and auditory feedback. "
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defadvice TeX-un-comment-region (after emacspeak pre act)
   "Provide spoken and auditory feedback. "
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defadvice TeX-comment-paragraph (after emacspeak pre act)
   "Provide spoken and auditory feedback. "
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 ;;}}}
 ;;{{{  Debugging tex

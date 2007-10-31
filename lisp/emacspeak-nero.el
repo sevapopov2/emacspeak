@@ -88,8 +88,8 @@
            ((interactive-p)
             (emacspeak-auditory-icon 'select-object)
             ad-do-it
-            (emacspeak-speak-mode-line)
-            (emacspeak-auditory-icon 'open-object))
+            (emacspeak-auditory-icon 'open-object)
+            (emacspeak-speak-mode-line))
            (t ad-do-it))
           ad-return-value)))
 

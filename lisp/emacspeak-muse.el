@@ -35,62 +35,89 @@
 ;;; along with GNU Emacs; see the file COPYING.  If not, write to
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
-;;}}}
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;{{{  introduction
+;; You should have received a copy of the GNU General Public License
+;; along with this program; if not, write to the Free Software
+;; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+;; 02111-1307, USA.
 
-;;; Commentary:
-;;; Speech enable Muse
+;; Commentary:
 
-;;}}}
-;;{{{  Required modules
+;; This module provides speech support for the muse publishing and
+;; authoring environment which allows emacs users to create complex
+;; documents using simple markup rules. Muse can be downloaded at ;;
+;; http://www.newartisans.com/johnw/Emacs/muse.tar.gz. Muse is very
+;; similar to emacs-wiki.el. The only difference is that it allows output
+;; in several formats including latex, pdf, texinfo and so on.
 
-;;; Code:
+;; Code:
 
+;;{{{ required modules
 (require 'emacspeak-preamble)
-(require 'browse-url)
-(require 'emacspeak-outline)
 
 ;;}}}
-;;{{{ Voice definitions:
+;;{{{ Advice interactive commands to speak.
+
+(defadvice muse-mode (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
+
+(defadvice muse-next-reference (after emacspeak pre act comp)
+  "Provide speech feedback."
+  (when (interactive-p)
+    (if (not (muse-link-at-point))
+	(let ((emacspeak-speak-messages t))
+	  (emacspeak-auditory-icon 'warn-user)
+	  (message "No links on this page"))
+      (emacspeak-auditory-icon 'large-movement)
+      (emacspeak-speak-text-range 'keymap))))
+
+(defadvice muse-previous-reference (after emacspeak pre act comp)
+  "Provide speech feedback."
+  (when (interactive-p)
+    (if (not (muse-link-at-point))
+	(let ((emacspeak-speak-messages t))
+	  (emacspeak-auditory-icon 'warn-user)
+	  (message "No links on this page"))
+      (emacspeak-auditory-icon 'large-movement)
+      (emacspeak-speak-text-range 'keymap))))
+
+(defadvice muse-follow-name-at-point (after emacspeak pre act comp)
+  "Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
+
+
+(defadvice muse-index (after emacspeak pre act comp)
+  "Produce an auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
+
+;;}}}
+;;{{{ mapping font faces to personalities 
+
 (voice-setup-add-map
  '(
-   (muse-bad-link-face voice-bolden-and-animate)
-   (muse-emphasis-1 voice-lighten)
-   (muse-emphasis-2 voice-lighten-medium)
-   (muse-emphasis-3 voice-lighten-extra)
-   (muse-header-1 voice-bolden)
-   (muse-header-2 voice-bolden-medium)
-   (muse-header-3 voice-bolden-extra)
-   (muse-header-4 voice-bolden-extra)
-   (muse-header-5 voice-bolden-extra)
-   (muse-link-face voice-brighten)
-   (muse-verbatim-face voice-monotone)
+   (muse-link-face voice-bolden)
+   (muse-bad-link-face voice-lighten)
+   (muse-header-1-face voice-brighten)
+   (muse-header-2-face voice-brighten)
+   (muse-header-3-face voice-brighten)
+   (muse-header-4-face voice-brighten)
+   (muse-header-5-face voice-brighten)
+   (muse-header-6-face voice-brighten)
    ))
 
 ;;}}}
-;;{{{ advice interactive commands
-(loop for f in
-      '(muse-follow-name-at-point
-        muse-follow-name-at-point-other-window
-        muse-next-reference
-        muse-previous-reference)
-      do
-      (eval
-       `(defadvice   ,f (after emacspeak pre act comp)
-          "Provide auditory feedback."
-          (when (interactive-p)
-            (emacspeak-auditory-icon 'large-movement)
-            (emacspeak-speak-line)))))
-
-;;}}}
 (provide 'emacspeak-muse)
-;;{{{ end of file
+;;{{{  emacs local variables 
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end:
+;;; end: 
 
 ;;}}}

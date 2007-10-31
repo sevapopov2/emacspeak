@@ -67,7 +67,7 @@
 (defadvice analog-bury-buffer (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
 (loop for command in
@@ -83,8 +83,8 @@
         (defadvice (, command) (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'select-object))))))
+            (emacspeak-auditory-icon 'select-object)
+            (emacspeak-speak-line))))))
 
 ;;}}}
 ;;{{{ voice setup 
@@ -121,8 +121,8 @@ Speak field or char moved to."
   (let ((fields (emacspeak-analog-get-field-spec)))
     (cond
      (fields (emacspeak-analog-next-field fields)
-             (emacspeak-analog-speak-field fields)
-             (emacspeak-auditory-icon 'large-movement))
+             (emacspeak-auditory-icon 'large-movement)
+             (emacspeak-analog-speak-field fields))
      (t (call-interactively 'emacspeak-forward-char)))))
 
 (defun emacspeak-analog-backward-field-or-char ()
@@ -133,8 +133,8 @@ Speak field or char moved to."
   (let ((fields (emacspeak-analog-get-field-spec)))
     (cond
      (fields (emacspeak-analog-previous-field fields)
-             (emacspeak-analog-speak-field fields)
-             (emacspeak-auditory-icon 'large-movement))
+             (emacspeak-auditory-icon 'large-movement)
+             (emacspeak-analog-speak-field fields))
      (t (call-interactively 'emacspeak-backward-char)))))
 
 (defun emacspeak-analog-speak-field (fields)

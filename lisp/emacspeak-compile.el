@@ -99,16 +99,16 @@
         (defadvice (, f) (after emacspeak pre act comp)
           "Provide spoken feedback."
           (when (interactive-p)
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'select-object))))))
+            (emacspeak-auditory-icon 'select-object)
+            (emacspeak-speak-line))))))
 ;;}}}
 ;;{{{ advise process filter and sentinels
 
 (defadvice compile (after emacspeak pre act )
   "provide auditory confirmation"
   (when (interactive-p)
-    (message "Launched compilation")
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (message "Launched compilation")))
 
 (defadvice  compilation-sentinel (after emacspeak pre act )
   "Provide auditory feedback"

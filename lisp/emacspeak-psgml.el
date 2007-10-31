@@ -340,7 +340,6 @@ window")))
  (function
   (lambda ()
     (declare (special sgml-mode-map))
-    (emacspeak-setup-programming-mode)
     (define-key sgml-mode-map "\C-c\C-b"
       'emacspeak-xml-browse-mode))))
            
