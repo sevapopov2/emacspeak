@@ -1,11 +1,11 @@
-#$Id: tts-lib.tcl 4532 2007-05-04 01:13:44Z tv.raman.tv $
+#$Id: tts-lib.tcl 4669 2007-06-24 04:12:03Z tv.raman.tv $
 # {{{ LCD Entry: 
 #x
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-#  $Revision: 4532 $ | 
+# $Date: 2007-06-23 21:12:03 -0700 (Sat, 23 Jun 2007) $ |
+#  $Revision: 4669 $ | 
 # Location undetermined
 #
 
@@ -83,12 +83,6 @@ proc q {{element ""}} {
     if {[string length element]} {
         set queue($tts(q_tail)) [list s $element]
         incr tts(q_tail)
-        if {$tts(midi) == 1} {
-            set mod [expr ($tts(q_tail) - $tts(q_head)) % 50]
-            if {$mod == 0}   {
-                note 1 60 .5
-            }
-        }
         return ""
     }
 }
@@ -191,65 +185,6 @@ proc p {sound} {
     global tts
     catch "exec $tts(play) $sound >/dev/null  &" errCode
     speech_task
-}
-
-# }}}
-# {{{notes: 
-
-#Simple notes player
-#Uses stdio music player 
-
-proc note {i p d {target 0} {step 5}} {
-    global tts
-    set f $tts(notes)
-    if {$target == 0} {
-        puts $f "n $i $p 127"
-        select {} {} {} $d
-        puts $f "x $i $p 127"
-    } else {
-        loop freq $p $target $step {
-            puts $f "n $i $freq 127"
-        }
-        select {} {} {} $d
-        loop freq $p $target $step {
-            puts $f "x $i $freq 127"
-        }
-    }
-    return 0
-}
-proc notes_shutdown  {} {
-    global tts
-    if {$tts(midi) == 0} return
-    set notes $tts(notes)
-    puts $notes "q\n"
-    close $tts(notes)
-    set tts(midi) 0
-}
-
-proc notes_initialize {} {
-    global tts
-    if {[info exists tts(midi)]
-        && $tts(midi) == 1}  {
-        puts stderr "Notes already initialized "
-        return 1
-    }
-    set tts(midi) 0
-    if {![file executable /usr/bin/stdiosynth]} {
-        return
-    }
-    set result [catch {set tts(notes) [open "|stdiosynth " w]} err]
-    if {$result != 0}  {
-        puts stderr "$err: Notes not initialized --unable to start stdiosynth"
-        return
-    }
-    fcntl $tts(notes) nobuf 1 
-    set result [catch {note 1 60 .1 } err]
-    if {$result == 0} {
-        set tts(midi) 1
-    } else {
-        puts stderr "Error playing test note "
-        set tts(midi) 0
-    }
 }
 
 # }}}

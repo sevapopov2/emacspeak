@@ -1,5 +1,5 @@
 ;;; emacspeak-emms.el --- Speech-enable EMMS Multimedia UI
-;;; $Id: emacspeak-emms.el 4150 2006-08-30 00:25:40Z tv.raman.tv $
+;;; $Id: emacspeak-emms.el 5228 2007-08-28 00:54:54Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable EMMS
 ;;; Keywords: Emacspeak, Multimedia
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-29 17:25:40 -0700 (Tue, 29 Aug 2006) $ |
+;;; $Date: 2007-08-27 17:54:54 -0700 (Mon, 27 Aug 2007) $ |
 ;;;  $Revision: 4150 $ |
 ;;; Location undetermined
 ;;;
@@ -137,6 +137,11 @@
           "Provide auditory feedback."
           (when (interactive-p)
             (emacspeak-speak-line)))))
+(defadvice emms-playlist-mode-bury-buffer (after emacspeak pre act)
+  "Announce the buffer that becomes current."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line )))
       
 ;;}}}
 (provide 'emacspeak-emms)

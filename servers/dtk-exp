@@ -1,5 +1,5 @@
 #!/usr/bin/tcl
-# $Id: dtk-exp 4248 2006-11-03 15:12:59Z tv.raman.tv $
+# $Id: dtk-exp 4929 2007-07-25 23:53:23Z tv.raman.tv $
 # Description:  Interfacing to a Dectalk via TCL.
 # Keywords: Emacspeak, Dectalk, TCL
 # {{{ LCD Entry:
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2006-11-03 07:12:59 -0800 (Fri, 03 Nov 2006) $ |
-#  $Revision: 4248 $ |
+# $Date: 2007-07-25 16:53:23 -0700 (Wed, 25 Jul 2007) $ |
+#  $Revision: 4929 $ |
 # Location undetermined
 #
 
@@ -109,11 +109,12 @@ proc l {text} {
     set tts(not_stopped) 1
     set r $tts(speech_rate)
     set f  $tts(say_rate)
-    tts_gobble_acknowledgements
+    tts_gobble_acknowledgements 0.001
     puts -nonewline  $tts(write)\
         "\[_]\[:ra $f]\[:sa le]$text\[:sa c]"
         return ""
 }
+
 #formerly called tts_speak
 
 proc d {} {
@@ -126,42 +127,6 @@ proc tts_resume  {} {
     queue_restore
     if {[queue_empty?]} {
         puts -nonewline  $tts(write) {  [:sa c] No speech to resume. }
-        set tts(not_stopped) 1
-    } else {
-        speech_task
-    }
-    return ""
-}
-
-proc tts_fastForward  {{step 1}} {
-    global tts
-    if {[queue_empty?]} {
-        puts -nonewline  $tts(write) {[:sa c] No speech to fast forward. }
-        set tts(not_stopped) 1
-    } else {
-        queue_advance ($step)
-        speech_task
-    }
-    return ""
-}
-
-proc tts_fastRewind  {{step 1}} {
-    global tts
-    if {$tts(q_head) == 0} {
-        puts -nonewline  $tts(write) {[:sa c] No speech to fast rewind. }
-        set tts(not_stopped) 1
-    } else {
-        queue_retreat ($step)
-        speech_task
-    }
-    return ""
-}
-
-proc tts_repeat  {} {
-    global tts
-    queue_rewind
-    if {[queue_empty?]} {
-        puts -nonewline  $tts(write) {[:sa c] No speech to repeat.}
         set tts(not_stopped) 1
     } else {
         speech_task
@@ -198,12 +163,6 @@ proc t  {{pitch 440} {duration 50}} {
     set tone "\[:to $pitch $duration\]"
     set queue($tts(q_tail)) [list t $tone]
     incr tts(q_tail)
-    if {$tts(midi)} {
-        set inst 9
-        set len .1
-        set note [expr $pitch / 10]
-        n $inst $note $len
-    }
     return ""
 }
 
@@ -234,15 +193,6 @@ proc tts_allcaps_beep {flag} {
     return ""
 }
 
-proc  read_pending_p  {file_handle} {
-    set status   [lsearch [select [list  $file_handle]  {} {} 0] $file_handle]
-    expr $status >= 0
-}
-
-#note that we cannot use stdin here due to a tcl bug.
-#in tcl 7.4 we could always say file0
-#in 7.5 and above  (only tested in 7.5 and 8.0)
-#we need to say sock0 when we are a server
 
 proc tts_get_acknowledgement {} {
     global tts
@@ -253,7 +203,7 @@ proc tts_get_acknowledgement {} {
         set tts(talking?) 0
     } else {
         set r $tts(read)
-        while {[lsearch [select [list  $r] {} {} 0.1] $r] >= 0  } {
+        while {[lsearch [select [list  $r] {} {} 0.08] $r] >= 0  } {
             append code [read $r  1]
         }
     }
@@ -262,7 +212,7 @@ proc tts_get_acknowledgement {} {
 
 #Gobble up any garbage the Dectalk has returned.
 
-proc tts_gobble_acknowledgements {{delay 0.001}} {
+proc tts_gobble_acknowledgements {{delay 0.005}} {
     global tts
     set r $tts(read)
     while {[lsearch [select [list  $r] {} {} $delay] $r] >= 0  } {
@@ -324,12 +274,6 @@ proc speech_task {} {
             a {
                 set sound [lindex $event 1]
                 catch "exec $tts(play) $sound > /dev/null &" errCode
-            }
-            n {
-                if {$tts(midi)} {
-                    lvarpop event
-                    catch {eval note $event} err
-                }
             }
         }
         if {$tts(talking?) == 0} {break;}
@@ -419,7 +363,6 @@ tts_initialize
 set tts(speech_rate)  225
 set tts(say_rate) [round \
                        [expr $tts(speech_rate) * $tts(char_factor)]]
-notes_initialize
 set tts(input) file0
 if {[info exists server_p]} {
     set tts(input) sock0

@@ -1,5 +1,5 @@
 ;;; dtk-interp.el --- Language specific (e.g. TCL) interface to speech server
-;;; $Id: dtk-interp.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: dtk-interp.el 5241 2007-09-01 21:42:21Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Interfacing to the speech server
 ;;; Keywords: TTS, Dectalk, Speech Server
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ |
+;;; $Date: 2007-09-01 14:42:21 -0700 (Sat, 01 Sep 2007) $ |
+;;;  $Revision: 4670 $ |
 ;;; Location undetermined
 ;;;
 
@@ -61,25 +61,24 @@
 
 (defmacro tts-with-punctuations (setting &rest body)
   "Safely set punctuation mode for duration of body form."
-  (`
-   (progn
+  `(progn
      (declare (special dtk-punctuation-mode))
      (let    ((save-punctuation-mode dtk-punctuation-mode))
        (unwind-protect
            (progn
-             (unless (eq (, setting) save-punctuation-mode)
+             (unless (eq ,setting save-punctuation-mode)
                (process-send-string dtk-speaker-process
                                     (format "tts_set_punctuations %s  \n "
-                                            (, setting)))
-               (setq dtk-punctuation-mode (, setting)))
-             (,@ body)
+                                            ,setting))
+               (setq dtk-punctuation-mode ,setting))
+             ,@body
              (dtk-force))
-         (unless (eq  (, setting)  save-punctuation-mode)
+         (unless (eq  ,setting  save-punctuation-mode)
            (setq dtk-punctuation-mode save-punctuation-mode)
            (process-send-string dtk-speaker-process
                                 (format "tts_set_punctuations %s  \n "
                                         dtk-punctuation-mode ))
-           (dtk-force)))))))
+           (dtk-force))))))
 
 ;;}}}
 ;;{{{ silence
@@ -100,25 +99,6 @@
                        (format "t %d %d%s\n"
                                pitch duration
                                (if force "\nd" ""))))
-
-(defsubst dtk-interp-notes-initialize()
-  (declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process "notes_initialize\n"))
-
-(defsubst dtk-interp-notes-shutdown()
-  (declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process "notes_shutdown\n"))
-
-(defsubst dtk-interp-note (instrument pitch duration
-                                      &optional target step force)
-  (declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "n %s %s %s %s %s %s\n"
-                               instrument pitch duration
-                               (or target 0)
-                               (or step 5)
-                               (if force "\nd" ""))))
-
 ;;}}}
 ;;{{{  queue
 

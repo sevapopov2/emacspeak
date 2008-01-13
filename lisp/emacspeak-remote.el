@@ -1,15 +1,15 @@
 ;;; emacspeak-remote.el --- Enables running remote Emacspeak sessions
-;;; $Id: emacspeak-remote.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
-;;; $Author: tv.raman.tv $ 
+;;; $Id: emacspeak-remote.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description: Auditory interface to remote speech server
 ;;; Keywords: Emacspeak, Speak, Spoken Output, remote server
-;;{{{  LCD Archive entry: 
+;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ | 
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
@@ -17,7 +17,7 @@
 ;;{{{  Copyright:
 
 ;;; Copyright (c) 1995 -- 2007, T. V. Raman
-;;; All Rights Reserved. 
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -148,7 +148,6 @@ server. Default is to use Emacs' built-in open-network-stream.")
   :type 'boolean
   :group 'emacspeak-remote)
 
-  
 ;;;###autoload
 (defun emacspeak-remote-quick-connect-to-server()
   "Connect to remote server.
@@ -164,21 +163,43 @@ Use this once you are sure the guesses are usually correct."
        (string-to-number  emacspeak-remote-default-port-to-connect)))))
 
 ;;;###autoload
-(defun emacspeak-remote-ssh-to-server(login)
+(defun emacspeak-remote-home()
+  "Open ssh session to where we came from.
+Uses value returned by `emacspeak-remote-get-current-remote-hostname'."
+  (interactive)
+  (unless (require 'ssh)
+    (error "You do not have module ssh.el installed."))
+  (let
+      ((spec (emacspeak-remote-get-current-remote-hostname))
+       fields host port user)
+    (setq fields (split-string spec "[@:]"))
+    (setq
+     user  (first fields)
+     host (second fields)
+     port (third fields))
+    (ssh
+     (format "%s -p %s -l %s"
+             host port user)
+     (format "Remote-%s"
+             host))))
+
+;;;###autoload
+(defun emacspeak-remote-ssh-to-server(login host port)
   "Open ssh session to where we came from."
   (interactive
    (list
     (read-from-minibuffer "Login: "
-                          (user-login-name))))
+                          (user-login-name))
+    (read-from-minibuffer "Host: ")
+    (read-from-minibuffer "Port: "
+                          "22")))
   (unless (require 'ssh)
     (error "You do not have module ssh.el installed."))
-  (ssh  
-   (format "%s -l %s"
-           (emacspeak-remote-get-current-remote-hostname)
-           login)
+  (ssh
+   (format "%s -p %s -l %s"
+           host port login)
    "remote-ssh"))
-           
-   
+
 ;;;###autoload
 (defun  emacspeak-remote-connect-to-server (host port)
   "Connect to and start using remote speech server running on host host
@@ -190,8 +211,8 @@ host is listening on for speech requests."
           (list
            (completing-read "Remote host: "
                             emacspeak-eterm-remote-hosts-table ;completion table
-                            nil                         ;predicate
-                            nil                         ;must-match
+                            nil         ;predicate
+                            nil         ;must-match
                             (emacspeak-remote-get-current-remote-hostname) ;initial input
                             ))
           (read-minibuffer "Remote port: "
@@ -226,15 +247,13 @@ host is listening on for speech requests."
      (t (error "Failed to connect to speech server on host %s port %s"
                host port )))))
 
-(emacspeak-fix-interactive-command-if-necessary 'emacspeak-remote-connect-to-server)
-
 ;;}}}
 (provide 'emacspeak-remote )
-;;{{{ end of file 
+;;{{{ end of file
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}

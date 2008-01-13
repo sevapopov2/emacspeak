@@ -303,6 +303,12 @@ user."
   (concat greader-base-url
           "api/0/subscription/list?output=json")
   "URL for retrieving list of subscribed feeds.")
+
+(defvar greader-subscription-opml-url
+  (concat greader-base-url
+          "subscriptions/export")
+  "URL for retrieving list of subscribed feeds.")
+
 (defvar greader-tag-list-url
   (concat greader-base-url
           "api/0/tag/list?output=json")
@@ -365,6 +371,21 @@ arrived articles."
                        (< (string-to-number (g-json-get 'firstitemmsec b))
                           (string-to-number (g-json-get 'firstitemmsec a)))))))
     (greader-view-json-subscriptions subscriptions)))
+
+;;;###autoload
+
+(defun greader-opml ()
+  "Retrieve OPML representation of our subscription list."
+  (interactive)
+  (declare (special greader-auth-handle greader-subscription-opml-url
+                    g-curl-program g-curl-common-options))
+  (g-auth-ensure-token greader-auth-handle)
+  (shell-command
+   (format
+    "%s %s --cookie SID='%s' %s 2>/dev/null"
+    g-curl-program g-curl-common-options
+    (g-cookie "SID" greader-auth-handle)
+    greader-subscription-opml-url)))
 
 (defun greader-view-json-tags (tags)
   "View Greader tag list."
@@ -443,6 +464,7 @@ arrived articles."
     (read-from-minibuffer "Feed URL: "
                           (funcall g-url-under-point))))
   (greader-update-subscription feed-url 'title))
+
 ;;;###autoload
 (defun greader-tag-feed (feed-url )
   "Tag  specified feed."
@@ -490,7 +512,7 @@ arrived articles."
                      ('add-tags "Add Tag:")
                      ('remove-tags "Remove Tag:")))
                 "")))
-     (setq cl (format "-H Content-length:%s" (buffer-size)))
+     (setq cl (format "-H Content-length:%s" (g-buffer-bytes)))
      (shell-command-on-region
       (point-min) (point-max)
       (format
@@ -506,6 +528,7 @@ arrived articles."
      (message "%s %s" action feed-url))
     (t (error "Error %s: %s"
               action (buffer-string))))))
+
 (defsubst greader-read-item-url (prompt)
   "Smart reader for fetching item urls."
   (let ((guess (and (fboundp g-url-under-point)
@@ -593,7 +616,61 @@ arrived articles."
      g-atom-view-xsl)))
 
 ;;}}}
+;;{{{ Searching:
+
+(defvar greader-search-url
+  (concat greader-base-url
+          "api/0/search/items/ids?output=json&num=100&q=%s")
+          "URL template for GReader search.")
+
+(defvar greader-contents-rest-url
+  "http://www.google.com/reader/api/0/stream/items/contents"
+  "REST endpoint for getting content.")
+;;;###autoload
+(defun greader-search (query)
+  "GReader search."
+  (interactive "sQuery:")
+  (declare (special greader-auth-handle
+                    g-curl-program g-curl-common-options
+                    greader-contents-rest-url
+                    g-atom-x
+                    greader-search-url g-atom-view-xsl))
+  (g-auth-ensure-token greader-auth-handle)
+  (let ((results 
+         (g-json-get 'results
+                     (g-json-get-result
+                      (format
+                       "%s %s --cookie SID='%s' '%s' 2>/dev/null"
+                       g-curl-program g-curl-common-options
+                       (g-cookie "SID" greader-auth-handle)
+                       (format greader-search-url
+                               (g-url-encode query))))))
+        (docids nil))
+    (setq docids 
+          (loop for i across results
+                collect (cdr (assq 'id i))))
+    (g-using-scratch
+     (let ((cl  nil))
+       (insert 
+        (format "T=%s" (g-auth-token greader-auth-handle)))
+       (loop for i in docids 
+             do
+             (insert (format "&i=%s" i)))
+       (setq cl (format "-H Content-length:%s" (g-buffer-bytes)))
+       (shell-command-on-region
+        (point-min) (point-max)
+        (format
+         "%s %s --cookie SID='%s' %s -X POST --data-binary @- %s 2>/dev/null"
+         g-curl-program g-curl-common-options
+         (g-cookie "SID" greader-auth-handle)
+         cl                             ; content-length header
+         greader-contents-rest-url)
+        (current-buffer) 'replace))
+     (g-display-xml-string (buffer-string) g-atom-view-xsl))))
+
+;;}}}
 ;;{{{ Sign out:
+;;;###autoload
 (defun greader-sign-out()
   "Resets client so you can start with a different userid."
   (interactive)
@@ -606,7 +683,18 @@ arrived articles."
     (setq greader-user-email nil
           greader-user-password nil)
     (setq greader-auth-handle (make-greader-auth)))
-   (t (message "You've not used Reader in this emacs session."))))
+   (t (message "You've not used Reader in this emacs
+session."))))
+
+;;;###autoload
+(defun greader-sign-in()
+  "Resets client so you can start with a different userid."
+  (interactive)
+  (declare (special greader-auth-handle greader-user-email ))
+  (setq greader-user-email
+        (read-from-minibuffer "User Email:"))
+  (setq greader-auth-handle (make-greader-auth))
+  (g-authenticate greader-auth-handle))
 
 ;;}}}
 

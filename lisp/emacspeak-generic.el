@@ -1,15 +1,15 @@
 ;;; emacspeak-generic.el --- Speech enable  generic modes
-;;; $Id: emacspeak-generic.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-generic.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
-;;; Description:   extension to speech enable generic 
+;;; Description:   extension to speech enable generic
 ;;; Keywords: Emacspeak, Audio Desktop
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;;  $Revision: 4599 $ |
 ;;; Location undetermined
 ;;;
 
@@ -54,18 +54,17 @@
 ;;; Code:
 
 ;;}}}
-;;{{{ voice locking 
+;;{{{ voice locking
 
 ;;}}}
-;;{{{  generic setup 
-
-(defadvice define-generic-mode (after emacspeak pre act comp)
-  "Advice generated mode command to setup emacspeak extensions. "
-  (let ((name (ad-get-arg 0)))
-    (eval
-     `(defadvice  ,name (after emacspeak pre act comp)
-        "Setup Emacspeak programming mode hooks."
-        (emacspeak-setup-programming-mode)))))
+;;{{{  generic setup
+(loop for mode in generic-mode-list
+      do
+      (when (functionp mode)
+        (eval
+         `(defadvice ,mode (after emacspeak pre act comp)
+            "Setup Emacspeak programming mode hooks."
+            (emacspeak-setup-programming-mode)))))
 
 ;;}}}
 (provide 'emacspeak-generic)

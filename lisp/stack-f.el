@@ -1,4 +1,4 @@
-;;;; $Id: stack-f.el 4047 2006-08-11 19:11:17Z tv.raman.tv $
+;;;; $Id: stack-f.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;;; This file implements a simple LIFO stack.
 
 ;; Copyright (C) 1991-1995 Free Software Foundation

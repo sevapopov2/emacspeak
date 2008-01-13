@@ -1,5 +1,5 @@
 ;;; emacspeak-ido.el --- speech-enable ido
-;;; $Id: emacspeak-ido.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-ido.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:   extension to speech enable ido
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ |
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
+;;;  $Revision: 4555 $ |
 ;;; Location undetermined
 ;;;
 
@@ -162,8 +162,7 @@ The default value of 12 is too high for using ido effectively with speech. "
                       ido-find-file-read-only-other-window ido-find-file-read-only-other-frame)
       do
       (eval
-       (`
-        (defadvice   (, f)(around emacspeak pre act comp)
+       `(defadvice   ,f(around emacspeak pre act comp)
           "Provide auditory feedback."
           (cond
            ((interactive-p)
@@ -173,7 +172,7 @@ The default value of 12 is too high for using ido effectively with speech. "
               (emacspeak-auditory-icon 'open-object)
               (emacspeak-speak-mode-line)))
            (t ad-do-it))
-          ad-return-value))))
+          ad-return-value)))
 
 (loop for f in
       '(ido-switch-buffer ido-switch-buffer-other-window
@@ -181,8 +180,7 @@ The default value of 12 is too high for using ido effectively with speech. "
                           ido-display-buffer)
       do
       (eval
-       (`
-        (defadvice   (, f)(around emacspeak pre act comp)
+       `(defadvice   ,f(around emacspeak pre act comp)
           "Provide auditory feedback."
           (cond
            ((interactive-p)
@@ -192,7 +190,7 @@ The default value of 12 is too high for using ido effectively with speech. "
               (emacspeak-auditory-icon 'select-object)
               (emacspeak-speak-mode-line)))
            (t ad-do-it))
-          ad-return-value))))
+          ad-return-value)))
 
 ;;; note that though these are after advice fragments,
 ;;; ido-matches does not reflect the change at the time we
@@ -221,7 +219,8 @@ The default value of 12 is too high for using ido effectively with speech. "
 (defadvice ido-kill-buffer (after emacspeak pre act comp)
   "Provide auditory icon."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)))
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 ;;}}}
 ;;{{{ define personalities 

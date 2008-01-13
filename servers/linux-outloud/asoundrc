@@ -1,4 +1,5 @@
-# $Id: asoundrc 3990 2006-06-25 06:35:36Z raman $
+# $Id: asoundrc 4566 2007-05-22 14:33:39Z tv.raman.tv $
+# Not needed for ALSA 1.0.9 or later.
 # these numbers work on the following:
 #  aplay -l | head 1
 #  I82801DBICH4 [Intel 82801DB-ICH4] (IBM Thinkpads)

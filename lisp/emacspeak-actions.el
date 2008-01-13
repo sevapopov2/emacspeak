@@ -1,5 +1,5 @@
 ;;; emacspeak-actions.el --- Emacspeak actions -- callbacks that can be associated with portions of a buffer
-;;; $Id: emacspeak-actions.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-actions.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Define emacspeak actions for various modes
 ;;; Keywords:emacspeak, audio interface to emacs actions
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -61,7 +61,7 @@
   "Setup action on right parens.
 The defined   emacspeak action   causes
 emacspeak to show the matching paren when the cursor moves across a right paren."
-  (save-excursion
+  (save-current-buffer
     (goto-char (point-min))
     (ems-modify-buffer-safely
      (while (search-forward ")" nil t )
@@ -78,7 +78,7 @@ emacspeak to show the matching paren when the cursor moves across a right paren.
 The defined  action    causes
 emacspeak to speak the semantics of the line
  when the cursor moves across a right brace."
-  (save-excursion
+  (save-current-buffer
     (goto-char (point-min))
     (ems-modify-buffer-safely
      (while (search-forward "}" nil t )

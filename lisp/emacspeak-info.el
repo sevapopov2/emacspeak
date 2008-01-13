@@ -1,23 +1,23 @@
 ;;; emacspeak-info.el --- Speech enable Info -- Emacs' online documentation viewer
-;;; $Id: emacspeak-info.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
-;;; $Author: tv.raman.tv $ 
+;;; $Id: emacspeak-info.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Module for customizing Emacs info
 ;;; Keywords:emacspeak, audio interface to emacs
-;;{{{  LCD Archive entry: 
+;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ | 
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;;  $Revision: 4558 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
-;;; All Rights Reserved. 
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -43,7 +43,7 @@
 ;;}}}
 ;;{{{ requires
 (require 'emacspeak-preamble)
-
+(eval-when-compile (require 'info))
 ;;}}}
 ;;{{{  Variables:
 
@@ -54,7 +54,7 @@
   "*Maximum size of menu to voiceify if `Info-voiceify' is non-nil.")
 
 ;;}}}
-;;{{{  Voices 
+;;{{{  Voices
 (voice-setup-add-map
  '(
    (info-title-1 voice-bolden-extra)
@@ -88,7 +88,7 @@ node -- speak the entire node."
   "Speak current window in info buffer."
   (let ((start  (point ))
         (window (get-buffer-window (current-buffer ))))
-    (save-excursion 
+    (save-excursion
       (forward-line (window-height window))
       (emacspeak-speak-region start (point )))))
 
@@ -106,7 +106,7 @@ node -- speak the entire node."
      (t (emacspeak-speak-line)))))
 
 (defadvice Info-select-node (after emacspeak pre act)
-  "Voiceify the Info node if requested. 
+  "Voiceify the Info node if requested.
 Speak the selected node based on setting of
 emacspeak-info-select-node-speak-chunk"
   (emacspeak-info-visit-node))
@@ -117,23 +117,23 @@ emacspeak-info-select-node-speak-chunk"
     (emacspeak-auditory-icon 'help)
     (emacspeak-speak-line)))
 
-(defadvice Info-scroll-up (after emacspeak pre act) 
+(defadvice Info-scroll-up (after emacspeak pre act)
   "Speak the screenful."
   (when (interactive-p)
     (emacspeak-auditory-icon 'scroll)
     (let ((start  (point ))
           (window (get-buffer-window (current-buffer ))))
-      (save-excursion 
+      (save-excursion
         (forward-line (window-height window))
         (emacspeak-speak-region start (point ))))))
 
-(defadvice Info-scroll-down (after emacspeak pre act) 
+(defadvice Info-scroll-down (after emacspeak pre act)
   "Speak the screenful."
   (when (interactive-p)
     (emacspeak-auditory-icon 'scroll)
     (let ((start  (point ))
           (window (get-buffer-window (current-buffer ))))
-      (save-excursion 
+      (save-excursion
         (forward-line (window-height window))
         (emacspeak-speak-region start (point ))))))
 
@@ -170,11 +170,11 @@ and then cue the next selected buffer."
            Info-header-line)
       (dtk-speak Info-header-line))
      (t (save-excursion
-          (beginning-of-buffer)
+          (goto-char (point-min))
           (emacspeak-speak-line))))))
 
 ;;}}}
-;;{{{  Emacs 21 
+;;{{{  Emacs 21
 ;;; There is a bug in Emacs 21 that causes info-extract-pointer to be
 ;;; called erroneously.
 
@@ -205,11 +205,11 @@ node-spec."
 
 ;;}}}
 (provide  'emacspeak-info)
-;;{{{  emacs local variables 
+;;{{{  emacs local variables
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}

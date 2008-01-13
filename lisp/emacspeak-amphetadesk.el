@@ -1,5 +1,5 @@
 ;;; emacspeak-amphetadesk.el --- Emacspeak News Portal Interface
-;;; $Id: emacspeak-amphetadesk.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-amphetadesk.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  RSS Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop RSS
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -55,10 +55,8 @@
 (require 'browse-url)
 (require 'emacspeak-preamble)
 (require 'imenu)
-(eval-when-compile
-  (condition-case nil
-      (require 'emacspeak-w3)
-    (error nil)))
+(require 'emacspeak-webutils)
+(require 'emacspeak-we)
 ;;}}}
 ;;{{{ amphetadesk
 
@@ -102,7 +100,7 @@
 Interactive prefix-arg use-opml opens the myChannels.opml file."
   (interactive "P")
   (declare (special browse-url-browser-function
-                    emacspeak-w3-post-process-hook))
+                    emacspeak-web-post-process-hook))
   (cond
    (use-opml
     (emacspeak-opml-display
@@ -110,15 +108,15 @@ Interactive prefix-arg use-opml opens the myChannels.opml file."
              (file-name-directory emacspeak-amphetadesk-program))))
    (t (emacspeak-amphetadesk-ensure-live)
       (cond
-       ((and (featurep 'w3)
-             (or (eq browse-url-browser-function 'w3-fetch)
-                 (eq browse-url-browser-function 'browse-url-w3)))
-        (add-hook  'emacspeak-w3-post-process-hook
+       ((or   (eq browse-url-browser-function 'w3-fetch)
+              (eq browse-url-browser-function 'browse-url-w3)
+              (eq browse-url-browser-function 'w3m-browse-url))
+        (add-hook  'emacspeak-web-post-process-hook
                    #'(lambda ()
                        (imenu--make-index-alist)
                        (goto-char (point-min))
                        (emacspeak-speak-mode-line)))
-        (emacspeak-w3-without-xsl
+        (emacspeak-webutils-without-xsl
          (browse-url "http://127.0.0.1:8888/")))
        (t (browse-url emacspeak-amphetadesk-uri))))))
 
@@ -126,23 +124,13 @@ Interactive prefix-arg use-opml opens the myChannels.opml file."
 
 (defun emacspeak-amphetadesk-quick-add (url)
   "Quick add URL to Amphetadesk by prompting for URL."
-  (interactive
-   (list
-    (cond
-     ((and (eq major-mode 'w3-mode)
-           (w3-view-this-url 'no-show))
-      (w3-view-this-url 'no-show))
-     (t
-      (read-from-minibuffer "URL:")))))
+  (interactive (list (emacspeak-webutils-read-url)))
   (declare (special emacspeak-amphetadesk-uri))
   (browse-url 
    (concat emacspeak-amphetadesk-uri
            "my_channels.html?add_url="
            (emacspeak-url-encode
             url))))
-(declaim (special w3-mode-map))
-(when (boundp 'w3-mode-map)
-  (define-key w3-mode-map "aa" 'emacspeak-amphetadesk-quick-add))
 
 ;;}}}
 (provide 'emacspeak-amphetadesk)

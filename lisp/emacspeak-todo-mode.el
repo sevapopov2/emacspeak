@@ -1,5 +1,5 @@
 ;;; emacspeak-todo-mode.el --- speech-enable todo-mode
-;;; $Id: emacspeak-todo-mode.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-todo-mode.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: todo-mode  for maintaining todo lists 
 ;;; Keywords: Emacspeak, todo-mode 
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -63,12 +63,11 @@
 (loop for f in emacspeak-todo-mode-navigation-commands
       do
       (eval
-       (`
-        (defadvice (, f) (after emacspeak pre act comp)
+       `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
             (emacspeak-auditory-icon 'select-object)
-            (emacspeak-speak-line))))))
+            (emacspeak-speak-line)))))
 
 (defadvice todo-save (after emacspeak pre act comp)
   "Provide auditory feedback."

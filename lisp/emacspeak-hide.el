@@ -1,5 +1,5 @@
 ;;; emacspeak-hide.el --- Provides user commands for hiding and exposing blocks of text
-;;; $Id: emacspeak-hide.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-hide.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Hide and expose blocks of text
 ;;; Keywords: Emacspeak, Speak, Spoken Output, hide
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;;  $Revision$ |
 ;;; Location undetermined
 ;;;
 
@@ -38,22 +38,24 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  Required modules
-
-;;; Commentary:
-;;
 ;;{{{  Introduction
 
+;;; Commentary:
 ;;; Flexible hide and show for emacspeak.
 ;;; This module allows one to easily hide or expose
 ;;; blocks of lines starting with a common prefix.
 ;;; It is motivated by the need to flexibly hide quoted text in email
 ;;; but is designed to be more general.
 ;;; the prefix parsing is inspired by filladapt.el
+;;; Code:
 
 ;;}}}
-;;; Code:
+;;{{{  Required modules
+
+(require 'cl)
+(declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
+
 ;;}}}
 ;;{{{ voice locking for block header lines
 
@@ -182,13 +184,11 @@ STRING is the token's text."
 Blocks are portions of the buffer having a common prefix.
 Hiding results in only the first line of the block being visible.
 Returns t if a block was found and hidden."
-  (let ((begin nil)
+  (let ((begin (line-beginning-position))
         (start nil)
         (continue t)
         (count 1))
     (save-excursion
-      (beginning-of-line)
-      (setq begin (point))
       (cond
        ((not prefix)
         (message "Not on a block")
@@ -281,9 +281,8 @@ Returns t if a block was found and hidden."
                                         (current-buffer)
                                         (point-max))))
          (t (forward-line 1)))))
-    (when (interactive-p)
-      (dtk-speak
-       (format "Hid %s blocks" count)))))
+    (dtk-speak
+     (format "Hid %s blocks" count))))
 
 (defun emacspeak-hide-expose-hidden-blocks-in-buffer ()
   "Expose any hidden blocks in current buffer."
@@ -330,6 +329,7 @@ starting on the current line.  A block of text is defined as
 a portion of the buffer in which all lines start with a
 common PREFIX.  Optional interactive prefix arg causes all
 blocks in current buffer to be hidden or exposed."
+
   (interactive "P")
   (save-excursion
     (dtk-stop)
@@ -358,8 +358,7 @@ blocks in current buffer to be hidden or exposed."
 (defun emacspeak-hide-or-expose-all-blocks ()
   "Hide or expose all blocks in buffer."
   (interactive)
-  (let ((current-prefix-arg t))
-  (call-interactively 'emacspeak-hide-or-expose-block)))
+  (emacspeak-hide-or-expose-block 'all))
 
 ;;}}}
 ;;{{{  speaking blocks sans prefix
