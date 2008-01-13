@@ -35,14 +35,15 @@ relevant tables bubble to the top.
 -->
 <!-- } -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:h="http://www.w3.org/1999/xhtml"
   xmlns:set="http://exslt.org/sets"
-  version="1.0">
+  version="1.0"
+  exclude-result-prefixes="set">
   <xsl:param name="base"/>
   <xsl:output method="html" indent="yes" encoding="iso8859-15"/>
   <xsl:include href="object.xsl"/>
   <xsl:include href="identity.xsl"/>
   <xsl:include href="auto-rss-discover.xsl"/>
+  <!--<xsl:include href="auto-atom-discover.xsl"/>-->
   <!-- { html body  -->
   <!-- handle images -->
   <xsl:template match="img">
@@ -67,12 +68,13 @@ relevant tables bubble to the top.
     <body>
       <xsl:apply-templates select="@*"/>
       <xsl:call-template name="generate-rss"/>
+      <!--<xsl:call-template name="generate-atom"/>-->
       <xsl:variable name="i" select="//table//table"/>
       <xsl:if test="count($i)  &gt; 0">
-        <table>
-          <caption>
+<p>
             <a href="#__about_sorted_tables">Tables Sorted</a>
-          </caption>
+</p>
+        <table>
           <tr>
             <td>
               <a href="#__nested_tables">

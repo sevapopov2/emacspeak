@@ -1,5 +1,5 @@
 ;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
-;;; $Id: emacspeak-table-ui.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-table-ui.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -80,7 +80,7 @@
         ("x" emacspeak-table-copy-current-element-to-register)
         ("w" emacspeak-table-copy-current-element-to-kill-ring)
         ("\t" emacspeak-table-next-column)
-        ( [<shift> tab] emacspeak-table-previous-column)
+        ( [(shift tab)] emacspeak-table-previous-column)
         ("j" emacspeak-table-goto)
         ([up] emacspeak-table-previous-row)
         ("p" emacspeak-table-previous-row)
@@ -460,7 +460,6 @@ Optional prefix arg prompts for a new filter."
     (skip-chars-backward "^,\n")))
 
 ;;}}}
-
 
 (defsubst emacspeak-table-prepare-table-buffer (table buffer
                                                       &optional filename)

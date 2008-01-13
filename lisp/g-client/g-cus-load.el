@@ -2,13 +2,17 @@
 ;;
 ;;; Code:
 
-(put 'atom-blogger 'custom-loads '("gblogger"))
+(put 'gnotebook 'custom-loads '(gnotebook))
+(put 'gphoto 'custom-loads '(gphoto))
 (put 'greader 'custom-loads '(greader))
 (put 'applications 'custom-loads '(g))
 (put 'g-auth 'custom-loads '(g-auth))
+(put 'gskeleton 'custom-loads '(gskeleton))
 (put 'gcal 'custom-loads '(gcal))
-(put 'gblogger 'custom-loads '("gblogger"))
-(put 'g 'custom-loads '(g-utils g-auth "gblogger" gcal greader))
+(put 'gsheet 'custom-loads '(gsheet))
+(put 'gtube 'custom-loads '(gtube))
+(put 'gblogger 'custom-loads '(gblogger))
+(put 'g 'custom-loads '(g-utils g-auth gblogger gcal gnotebook gphoto greader gsheet gskeleton gtube))
 ;; These are for handling :version.  We need to have a minimum of
 ;; information so `customize-changed-options' could do its job.
 

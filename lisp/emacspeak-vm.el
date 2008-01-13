@@ -1,5 +1,5 @@
 ;;; emacspeak-vm.el --- Speech enable VM -- A powerful mail agent (and the one I use)
-;;; $Id: emacspeak-vm.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-vm.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enhance vm
 ;;; Keywords: Emacspeak, VM, Email, Spoken Output, Voice annotations
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;;  $Revision: 4557 $ |
 ;;; Location undetermined
 ;;;
 
@@ -89,15 +89,13 @@ Note that some badly formed mime messages  cause trouble."
         (dtk-stop-immediately t))
     (emacspeak-kill-buffer-carefully "*Completions*")
     ad-do-it
-    (let ((completions-buffer (get-buffer "*Completions*")))
-      (if (> (point) prior)
-          (dtk-speak (buffer-substring prior (point )))
-        (when (and completions-buffer
-                   (window-live-p (get-buffer-window completions-buffer )))
-          (save-excursion
-            (set-buffer completions-buffer )
-            (emacspeak-prepare-completions-buffer)
-            (dtk-speak (buffer-string ))))))
+    (if (> (point) prior)
+        (tts-with-punctuations
+         'all
+         (if (> (length (emacspeak-get-minibuffer-contents)) 0)
+             (dtk-speak (emacspeak-get-minibuffer-contents))
+           (emacspeak-speak-line)))
+      (emacspeak-speak-completions-if-available))
     ad-return-value))
 
 (defadvice vm-minibuffer-complete-word-and-exit (around emacspeak pre act)
@@ -106,15 +104,13 @@ Note that some badly formed mime messages  cause trouble."
         (dtk-stop-immediately t))
     (emacspeak-kill-buffer-carefully "*Completions*")
     ad-do-it
-    (let ((completions-buffer (get-buffer "*Completions*")))
-      (if (> (point) prior)
-          (dtk-speak (buffer-substring prior (point )))
-        (when (and completions-buffer
-                   (window-live-p (get-buffer-window completions-buffer )))
-          (save-excursion
-            (set-buffer completions-buffer )
-            (emacspeak-prepare-completions-buffer)
-            (dtk-speak (buffer-string ))))))
+    (if (> (point) prior)
+        (tts-with-punctuations
+         'all
+         (if (> (length (emacspeak-get-minibuffer-contents)) 0)
+             (dtk-speak (emacspeak-get-minibuffer-contents))
+           (emacspeak-speak-line)))
+      (emacspeak-speak-completions-if-available))
     ad-return-value))
 
 ;;}}}
@@ -299,10 +295,8 @@ Then speak the screenful. "
 (declaim (special vm-mode-map))
 (define-key vm-mode-map "\M-\C-m" 'widget-button-press)
 (define-key vm-mode-map "y" 'emacspeak-vm-yank-header)
-(define-key vm-mode-map "\M-\t"
-  'emacspeak-vm-next-button)
-(define-key vm-mode-map  "j"
-  'emacspeak-hide-or-expose-all-blocks)
+(define-key vm-mode-map "\M-\t" 'emacspeak-vm-next-button)
+(define-key vm-mode-map  "j" 'emacspeak-hide-or-expose-all-blocks)
 (define-key vm-mode-map  "\M-g" 'vm-goto-message)
 (define-key vm-mode-map "J" 'vm-discard-cached-data)
 (define-key vm-mode-map "." 'emacspeak-vm-browse-message)
@@ -385,7 +379,9 @@ Then speak the screenful. "
 (defadvice vm-quit (after emacspeak pre act )
   "Provide an auditory icon if requested"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)))
+    (emacspeak-auditory-icon 'close-object)
+    (message "%s"
+             (emacspeak-speak-mode-line))))
 
 ;;}}}
 ;;{{{ catching up on folders
@@ -406,7 +402,7 @@ Then speak the screenful. "
                    global-map
                    emacspeak-prefix
                    emacspeak-keymap))
-(define-key vm-mode-map "C" 'emacspeak-vm-catch-up-all-messages)
+(define-key vm-mode-map "\M-c" 'emacspeak-vm-catch-up-all-messages)
 (define-key vm-mode-map "\M-j" 'emacspeak-vm-locate-subject-line)
 (define-key vm-mode-map "," 'emacspeak-vm-speak-message)
 (define-key vm-mode-map "\M-l" 'emacspeak-vm-speak-labels)

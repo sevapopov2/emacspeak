@@ -1,5 +1,5 @@
 ;;; emacspeak-wizards.el --- Implements Emacspeak  convenience wizards
-;;; $Id: emacspeak-wizards.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-wizards.el 5347 2007-11-01 03:22:00Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Contains convenience wizards
 ;;; Keywords: Emacspeak,  Audio Desktop Wizards
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ |
+;;; $Date: 2007-10-31 20:22:00 -0700 (Wed, 31 Oct 2007) $ |
+;;;  $Revision: 4638 $ |
 ;;; Location undetermined
 ;;;
 
@@ -63,12 +63,9 @@
 (require 'texinfo)
 (require 'term)
 (require 'cus-edit)
+(require 'emacspeak-webutils)
+(require 'emacspeak-we)
 (require 'emacspeak-xslt)
-(eval-when-compile
-  (condition-case nil
-      (require 'emacspeak-w3)
-    (error nil)))
-
 ;;}}}
 ;;{{{ custom
 
@@ -122,7 +119,7 @@ navigate this document."
   "Browse  Emacspeak productivity tips."
   (interactive)
   (declare (special emacspeak-etc-directory))
-  (emacspeak-w3-without-xsl
+  (emacspeak-webutils-without-xsl
    (browse-url
     (format "file:///%stips.html"
             emacspeak-etc-directory)))
@@ -372,7 +369,7 @@ howto document.")))
 ;;}}}
 ;;{{{ pop up messages buffer
 
-                                        ; Internal variable to memoize window configuration
+;;; Internal variable to memoize window configuration
 
 (defvar emacspeak-popup-messages-config-0 nil
   "Memoizes window configuration.")
@@ -406,6 +403,68 @@ previous window configuration."
     (emacspeak-speak-line))))
 
 ;;}}}
+;;{{{ Elisp Utils:
+
+;;;###autoload
+(defun  emacspeak-wizards-byte-compile-current-buffer()
+  "byte compile current buffer"
+  (interactive)
+  (byte-compile-file  (buffer-file-name )))
+;;;###autoload
+(defun emacspeak-wizards-load-current-file ()
+  (interactive)
+  "load file into emacs"
+  (load-file (buffer-file-name)))
+
+(defun emacspeak-wizards-next-interactive-defun ()
+  "Move point to the next interactive defun"
+  (interactive)
+  (end-of-defun)
+  (re-search-forward "^ *(interactive")
+  (beginning-of-defun)
+  (emacspeak-speak-line))
+
+;;}}}
+;;{{{ tex utils:
+
+;;;###autoload
+(defun emacspeak-wizards-end-of-word(arg)
+  "move to end of word"
+  (interactive "P")
+  (if arg
+      (forward-word arg)
+    (forward-word 1)))
+
+;;;###autoload
+(defun emacspeak-wizards-comma-at-end-of-word()
+  (interactive)
+  "Move point to end of word and put a comma."
+  (forward-word 1)
+  (insert-char
+   (string-to-char ",") 1))
+
+;;;###autoload
+(defun emacspeak-wizards-lacheck-buffer-file()
+  (interactive)
+  "Lacheck file visited in current buffer"
+  (compile (format "lacheck %s"
+                   (buffer-file-name (current-buffer)))))
+
+;;;###autoload
+(defun emacspeak-wizards-tex-tie-current-word(n)
+  (interactive "P")
+  "Tie the next n  words."
+  (or n (setq n 1))
+  (while
+      (> n 0)
+    (setq n (- n 1))
+    (forward-word 1)
+    (delete-horizontal-space)
+    (insert-char 126 1)
+    )
+  (forward-word 1))
+
+;;}}}
 ;;{{{ Show active network interfaces
 ;;;###autoload
 (defun emacspeak-speak-hostname ()
@@ -432,8 +491,7 @@ previous window configuration."
   (list  "eth0" "ppp0" "eth1" "ppp1" "tr0" "tr1")
   "Used whne prompting for an interface to query.")
 ;;;###autoload
-(defun emacspeak-speak-show-active-network-interfaces
-  (&optional address)
+(defun emacspeak-speak-show-active-network-interfaces (&optional address)
   "Shows all active network interfaces in the echo area.
 With interactive prefix argument ADDRESS it prompts for a
 specific interface and shows its address. The address is
@@ -455,7 +513,7 @@ also copied to the kill ring for convenient yanking."
                        'emacspeak-speak-network-interfaces-list  ))))
      (t (setq command
               emacspeak-speak-show-active-network-interfaces-command)))
-    (shell-command command )
+    (emacspeak-shell-command command )
     (when (and address
                (not emacspeak-speak-message-again-should-copy-to-kill-ring))
       (kill-new emacspeak-last-message))))
@@ -486,11 +544,12 @@ With prefix arg, opens the phone book for editting."
     (emacspeak-speak-mode-line)
     (emacspeak-auditory-icon 'open-object))
    ((file-exists-p emacspeak-speak-telephone-directory)
-    (shell-command
+    (emacspeak-shell-command
      (format "%s %s %s"
              emacspeak-speak-telephone-directory-command
              (read-from-minibuffer "Lookup number for: ")
-             emacspeak-speak-telephone-directory)))
+             emacspeak-speak-telephone-directory))
+    (emacspeak-speak-message-again))
    (t (error "First create your phone directory in %s"
              emacspeak-speak-telephone-directory))))
 
@@ -552,25 +611,10 @@ default-directory after switching."
 ;;;###autoload
 (defun emacspeak-sudo (command)
   "SUDo command --run command as super user."
-  (interactive
-   (list
-    (read-from-minibuffer "SUDO Command: ")))
-  (let* ((name  (car (split-string command)))
-         (buffer (format "*sudo-%s*" name)))
-    (shell-command
-     (format "sudo %s" command)
-     buffer)
-    (cond
-     ((> 1
-         (save-excursion
-           (set-buffer buffer)
-           (count-lines (point-min) (point-max))))
-      (pop-to-buffer buffer)
-      (emacspeak-speak-line)
-      (emacspeak-auditory-icon 'open-object))
-     (t (save-excursion
-          (set-buffer buffer)
-          (message (buffer-string)))))))
+  (interactive "sSuDo Command: ")
+  (let* ((name  (car (split-string command))))
+    (emacspeak-shell-command
+     (format "sudo %s" command))))
 
 ;;;###autoload
 
@@ -863,11 +907,11 @@ command."
   "Helps you learn the keys.  You can press keys and hear what they do.
 To leave, press \\[keyboard-quit]."
   (interactive)
-  (let ((continue t ))
+  (let ((continue t )
+        (dtk-stop-immediately nil))
     (while continue
       (call-interactively 'describe-key-briefly)
-      (if (= last-input-event 7)
-          (setq continue nil )))
+      (when (= last-input-event 7) (setq continue nil )))
     (message "Leaving learn mode ")))
 
 ;;}}}
@@ -946,7 +990,7 @@ Warning! Contents of file filename will be overwritten."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (insert "DOC --- Automatically generated by command emacspeak-generate-documentation\n\$Id: emacspeak-wizards.el 4532 2007-05-04 01:13:44Z tv.raman.tv $\n")
+      (insert "DOC --- Automatically generated by command emacspeak-generate-documentation\n\$Id: emacspeak-wizards.el 5347 2007-11-01 03:22:00Z tv.raman.tv $\n")
       (mapcar
        (function
         (lambda (f)
@@ -1014,7 +1058,7 @@ Warning! Contents of file commands.texi will be overwritten."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (insert"@c $Id: emacspeak-wizards.el 4532 2007-05-04 01:13:44Z tv.raman.tv $\n")
+      (insert"@c $Id: emacspeak-wizards.el 5347 2007-11-01 03:22:00Z tv.raman.tv $\n")
       (insert
        "@node Emacspeak Commands\n@chapter Emacspeak Commands\n\n")
       (insert
@@ -1105,7 +1149,7 @@ Warning! Contents of file filename will be overwritten."
     (save-excursion
       (set-buffer buffer)
       (erase-buffer)
-      (insert"@c $Id: emacspeak-wizards.el 4532 2007-05-04 01:13:44Z tv.raman.tv $\n")
+      (insert"@c $Id: emacspeak-wizards.el 5347 2007-11-01 03:22:00Z tv.raman.tv $\n")
       (insert
        "@node Emacspeak Customizations\n@chapter Emacspeak Customizations \n\n")
       (insert
@@ -1207,7 +1251,8 @@ With optional interactive prefix arg `frame', move to next frame instead."
    (t
     (bury-buffer)
     (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-current-buffer-name))))
+    (emacspeak-speak-mode-line))))
+
 ;;;###autoload
 (defun emacspeak-previous-frame-or-buffer (&optional frame)
   "Move to previous buffer.
@@ -1229,7 +1274,7 @@ With optional interactive prefix arg `frame', move to previous frame instead."
       (switch-to-buffer (nth (1- (length l))
                              l))
       (emacspeak-auditory-icon 'select-object)
-      (emacspeak-speak-current-buffer-name)))))
+      (emacspeak-speak-mode-line)))))
 
 ;;}}}
 ;;{{{  readng different displays of same buffer
@@ -1412,35 +1457,31 @@ the emacspeak table clipboard instead."
 ;;}}}
 ;;{{{ utilities
 ;;;###autoload
-(defun emacspeak-wizards-show-list-variable (var)
-  "Convenience command to view Emacs variables that are long lists.
-Prompts for a variable name and displays its value in a separate buffer.
-Lists are displayed one element per line.
-Argument VAR specifies variable whose value is to be displayed."
-  (interactive "SDisplay variable:")
-  (let ((buffer
-         (format "*emacspeak:%s*" var))
-        (symbol (symbol-value var)))
-    (with-output-to-temp-buffer buffer
-      (prin1 symbol))
-    (save-excursion
+(defun emacspeak-wizards-show-eval-result (form)
+  "Convenience command to pretty-print and view Lisp evaluation results."
+  (interactive
+   (list
+    (let ((minibuffer-completing-symbol t))
+      (read-from-minibuffer "Eval: "
+                            nil read-expression-map t
+                            'read-expression-history))))
+  (let ((buffer (get-buffer-create "*emacspeak:Eval*" )))
+    (save-current-buffer
       (set-buffer buffer)
-      (setq buffer-read-only nil)
-      (goto-char (point-min))
-      (while (re-search-forward "\n" nil t)
-        (replace-match " "))
-      (goto-char (point-min))
-      (while (re-search-forward "(" nil t)
-        (replace-match "\n("))
-      (goto-char (point-min))
-      (fill-paragraph 'justify)
-      (indent-sexp)
-      (emacs-lisp-mode))
+      (setq buffer-undo-list t)
+      (erase-buffer)
+      (cl-prettyprint (eval form))
+      (set-buffer-modified-p nil))
     (pop-to-buffer buffer)
+    (emacs-lisp-mode)
+    (goto-char (point-min))
+    (forward-line 1)
+
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
+
 ;;;###autoload
-(defun emacspeak-speak-show-memory-used ()
+(defun emacspeak-wizards-show-memory-used ()
   "Convenience command to view state of memory used in this session so far."
   (interactive)
   (let ((buffer (get-buffer-create "*emacspeak-memory*")))
@@ -1737,7 +1778,7 @@ Signals beginning  of buffer."
 
 ;;;###autoload
 (defun emacspeak-curl (url)
-  "Grab URL using Curl, and preview it with W3."
+  "Grab URL using Curl, and preview it with a browser ."
   (interactive
    (list
     (read-from-minibuffer "URL: ")))
@@ -1935,9 +1976,6 @@ annotation is inserted into the working buffer when complete."
   (search-forward "Summary" nil t)
   (emacspeak-speak-line))
 
-(declaim (special dired-mode-map))
-(when (boundp 'dired-mode-map)
-  (define-key dired-mode-map "r" 'emacspeak-wizards-rpm-query-in-dired))
 ;;}}}
 ;;{{{ auto mode alist utility
 
@@ -1957,7 +1995,7 @@ annotation is inserted into the working buffer when complete."
 (define-derived-mode emacspeak-wizards-xl-mode text-mode
   "Browsing XL Files."
   "Major mode for browsing XL spreadsheets.\n\n
-XL Sheets are converted to HTML and previewed using W3."
+XL Sheets are converted to HTML and previewed using a browser."
   (emacspeak-wizards-xl-display))
 
 (defcustom emacspeak-wizards-xlhtml-program "xlhtml"
@@ -2029,7 +2067,10 @@ visiting the xls file."
                                 (file-name-nondirectory filename)))))
     (shell-command
      (format "%s %s  %s - | cat -s "
-             emacspeak-wizards-pdf-to-text-program emacspeak-wizards-pdf-to-text-options filename)
+             emacspeak-wizards-pdf-to-text-program
+             emacspeak-wizards-pdf-to-text-options
+             (shell-quote-argument
+              (expand-file-name filename)))
      output-buffer)
     (switch-to-buffer output-buffer)
     (set-buffer-modified-p nil)
@@ -2045,7 +2086,7 @@ visiting the xls file."
 (define-derived-mode emacspeak-wizards-ppt-mode text-mode
   "Browsing PPT Files."
   "Major mode for browsing PPT slides.\n\n
-PPT files  are converted to HTML and previewed using W3."
+PPT files  are converted to HTML and previewed using a browser."
   (emacspeak-wizards-ppt-display))
 
 (defcustom emacspeak-wizards-ppthtml-program "ppthtml"
@@ -2065,7 +2106,7 @@ visiting the ppt file."
   (interactive)
   (declare (special emacspeak-wizards-ppthtml-program
                     emacspeak-wizards-ppt-preview-buffer))
-  (emacspeak-w3-without-xsl
+  (emacspeak-webutils-without-xsl
    (cond
     ((null emacspeak-wizards-ppthtml-program)
      (message "Not using Emacspeak PPTHTML wizard."))
@@ -2162,12 +2203,18 @@ this requires Perl module Finance::YahooQuote."
                   (string :tag "Text: ")))
   :group 'emacspeak-wizards)
 
+(defcustom emacspeak-wizards-personal-portfolio ""
+  "Set this to the stock tickers you want to check by
+default."
+  :type 'string
+  :group 'emacspeak-wizards)
+
 ;;;###autoload
 (defun emacspeak-wizards-portfolio-quotes ()
   "Bring up detailed stock quotes for portfolio specified by
-emacspeak-websearch-personal-portfolio."
+emacspeak-wizards-personal-portfolio."
   (interactive)
-  (declare (special emacspeak-websearch-personal-portfolio
+  (declare (special emacspeak-wizards-personal-portfolio
                     emacspeak-wizards-quote-command
                     emacspeak-wizards-quote-row-filter))
   (let ((temp-file
@@ -2176,7 +2223,7 @@ emacspeak-websearch-personal-portfolio."
     (shell-command
      (format
       "echo '%s' | perl %s > %s"
-      emacspeak-websearch-personal-portfolio
+      emacspeak-wizards-personal-portfolio
       emacspeak-wizards-quote-command
       temp-file))
     (emacspeak-table-find-csv-file temp-file)
@@ -2310,11 +2357,10 @@ emacspeak-websearch-personal-portfolio."
 
 (defun emacspeak-wizards-generate-finder-callback ()
   "Generate a callback for use in the Emacspeak Finder."
-  (`
-   (lambda (widget &rest ignore)
+  '(lambda (widget &rest ignore)
      (declare (special emacspeak-wizards-finder-args))
      (let ((value (widget-value widget)))
-       (setq emacspeak-wizards-finder-args value)))))
+       (setq emacspeak-wizards-finder-args value))))
 ;;;###autoload
 (defun emacspeak-wizards-finder-find (directory)
   "Run find-dired on specified switches after prompting for the
@@ -2510,6 +2556,30 @@ Use with caution."
     ext word correction))
   (setq emacspeak-wizards-spot-words-extension ext)
   (emacspeak-auditory-icon 'task-done))
+
+;;}}}
+;;{{{ pod -- perl online docs
+
+;;;###autoload
+(defun emacspeak-wizards-display-pod-as-manpage (filename)
+  "Create a virtual manpage in Emacs from the Perl Online Documentation."
+  (interactive
+   (list
+    (expand-file-name
+     (read-file-name "Enter name of POD file: "))))
+  (require 'man)
+  (let* ((pod2man-args (concat filename " | nroff -man "))
+         (bufname (concat "Man " filename))
+         (buffer (generate-new-buffer bufname)))
+    (save-excursion
+      (set-buffer buffer)
+      (let ((process-environment (copy-sequence process-environment)))
+        ;; Prevent any attempt to use display terminal fanciness.
+        (setenv "TERM" "dumb")
+        (set-process-sentinel
+         (start-process pod2man-program buffer "sh" "-c"
+                        (format (cperl-pod2man-build-command) pod2man-args))
+         'Man-bgproc-sentinel)))))
 
 ;;}}}
 ;;{{{ fix text that has gotten read-only accidentally
@@ -2882,8 +2952,9 @@ dates.")
 (defun emacspeak-wizards-units ()
   "Run units in a comint sub-process."
   (interactive)
-  (make-comint "units" "units"
-               nil "--verbose")
+  (let ((process-environment '("PAGER=cat")))
+    (make-comint "units" "units"
+		 nil "--verbose"))
   (switch-to-buffer "*units*")
   (emacspeak-auditory-icon 'select-object)
   (goto-char (point-max))
@@ -2921,6 +2992,7 @@ RIVO is implemented by rivo.pl ---
     (read-minibuffer "Length:" "00:30:00")
     (read-minibuffer "Output Name:")
     (read-directory-name "Output Directory:")))
+  (declare (special emacspeak-realaudio-last-url))
   (let ((command
          (format "%s -c %s -s %s -o %s -d %s\n"
                  emacspeak-wizards-rivo-program
@@ -2932,7 +3004,7 @@ RIVO is implemented by rivo.pl ---
 ;;}}}
 ;;{{{ shell history:
 
-;;;### utoload
+;;;###autoload
 (defun emacspeak-wizards-refresh-shell-history ()
   "Refresh shell history from disk.
 This is for use in conjunction with bash to allow multiple emacs
@@ -2940,6 +3012,16 @@ This is for use in conjunction with bash to allow multiple emacs
   (interactive)
   (comint-read-input-ring)
   (emacspeak-auditory-icon 'select-object))
+
+;;;###autoload
+(defun emacspeak-wizards-shell-bind-keys ()
+  "Set up additional shell mode keys."
+  (loop for b in
+        '(
+          ("\C-ch" emacspeak-wizards-refresh-shell-history)
+          ("\C-cr" comint-redirect-send-command))
+        do
+        (define-key shell-mode-map (first b) (second b))))
 
 ;;}}}
 ;;{{{ show commentary:
@@ -3008,7 +3090,17 @@ Default is to add autoload cookies to current file."
         (error "Added %d autoload cookies." count)))))
 
 ;;}}}
+;;{{{ mail signature:
 
+;;;###autoload
+(defun emacspeak-wizards-thanks-mail-signature()
+  "insert thanks , --Raman at the end of mail message"
+  (interactive)
+  (goto-char (point-max))
+  (insert
+   (format "\n Thanks, \n --%s\n" (user-full-name))))
+
+;;}}}
 ;;{{{ specialized input buffers:
 
 ;;; Taken from a message on the org mailing list.

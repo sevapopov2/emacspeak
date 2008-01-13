@@ -1,5 +1,5 @@
 ;;; emacspeak-jde.el --- Speech enable JDE -- An integrated Java Development Environment
-;;; $Id: emacspeak-jde.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-jde.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to JDE
 ;;; Keywords: Emacspeak, Speak, Spoken Output, Java
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -236,12 +236,11 @@
         jde-debug-down)
       do
       (eval
-       (`
-        (defadvice (, command) (after emacspeak pre act comp)
+       `(defadvice ,command (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
             (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'select-object))))))
+            (emacspeak-auditory-icon 'select-object)))))
 
 (defadvice jde-db-run (after emacspeak pre act comp)
   "Provide auditory feedback."

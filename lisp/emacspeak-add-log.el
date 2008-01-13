@@ -1,5 +1,5 @@
 ;;; emacspeak-add-log.el --- Speech-enable add-log
-;;; $Id: emacspeak-add-log.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-add-log.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  speech-enable change-log-mode
 ;;; Keywords: Emacspeak,  Audio Desktop ChangeLogs
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -41,7 +41,7 @@
 ;;{{{  introduction
 ;;; Commentary:
 
-;;; speech-enables change-log-mode 
+;;; speech-enables change-log-mode
 ;;;Code:
 
 ;;}}}
@@ -50,13 +50,7 @@
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
-(require 'browse-url)
 (require 'emacspeak-preamble)
-(eval-when-compile
-  (condition-case nil
-      (require 'emacspeak-w3)
-    (error nil)))
-
 ;;}}}
 ;;{{{ define personalities
 

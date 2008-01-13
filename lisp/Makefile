@@ -1,4 +1,4 @@
-# $Id: Makefile 4519 2007-05-03 01:29:19Z tv.raman.tv $
+# $Id: Makefile 5267 2007-09-07 14:02:20Z tv.raman.tv $
 # $Author: tv.raman.tv $
 # Description:  Makefile for Emacspeak
 # Keywords: Emacspeak, Dectalk, Makefile
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2007-05-02 18:29:19 -0700 (Wed, 02 May 2007) $ |
-#  $Revision: 4519 $ |
+# $Date: 2007-06-24 15:56:04 -0700 (Sun, 24 Jun 2007) $ |
+#  $Revision: 4673 $ |
 # Location undetermined
 #
 
@@ -43,7 +43,8 @@
 EMACS = emacs
 SRC=".."
 # How to run in batch mode
-BATCH = -batch -q -no-site-file   -eval '(setq vc-handled-backends nil)'
+BATCH = -batch -q -no-site-file   -eval '(setq vc-handled-backends nil\
+byte-compile-warnings t)'
 DEPS=-l $(SRC)/lisp/emacspeak-load-path.el -l $(SRC)/lisp/emacspeak-loaddefs.el -l $(SRC)/lisp/emacspeak-cus-load.el
 COMPILE =  -f batch-byte-compile
 # How to compile
@@ -62,13 +63,13 @@ SPEAK_OBJECTS =   \
 	emacspeak-speak.elc  \
         emacspeak-actions.elc \
 	voice-setup.elc \
-	html-outline.elc \
 	emacspeak-personality.elc \
         emacspeak-pronounce.elc \
 	emacspeak-sounds.elc
 
 CORE_OBJECTS =  \
 	emacspeak.elc \
+	emacspeak-setup.elc \
 	emacspeak-advice.elc\
 	emacspeak-keymap.elc\
 	emacspeak-fix-interactive.elc\
@@ -80,6 +81,7 @@ emacspeak-re-builder.elc \
 	emacspeak-tabulate.elc
 
 AUX_OBJECTS =  cd-tool.elc \
+amixer.elc \
 emacspeak-add-log.elc \
 emacspeak-alsaplayer.elc \
 emacspeak-amphetadesk.elc \
@@ -88,8 +90,6 @@ emacspeak-ansi-color.elc \
 emacspeak-apt-sources.elc \
 emacspeak-apt-utils.elc \
 emacspeak-arc.elc \
-emacspeak-atom.elc \
-emacspeak-atom-blogger.elc \
 emacspeak-auctex.elc \
 emacspeak-autoload.el \
 emacspeak-aumix.elc \
@@ -130,6 +130,7 @@ emacspeak-entertain.elc \
 emacspeak-eperiodic.elc \
 emacspeak-erc.elc \
 emacspeak-eshell.elc \
+emacspeak-ess.elc \
 emacspeak-eterm.elc \
 emacspeak-eudc.elc \
 emacspeak-facemenu.elc \
@@ -165,6 +166,7 @@ emacspeak-message.elc \
 emacspeak-metapost.elc \
 emacspeak-midge.elc \
 emacspeak-mpg123.elc \
+emacspeak-moz.elc \
 emacspeak-muse.elc \
 emacspeak-mspools.elc \
 emacspeak-nero.elc \
@@ -186,7 +188,6 @@ emacspeak-rpm-spec.elc \
 emacspeak-remote.elc \
 emacspeak-rmail.elc \
 emacspeak-rpm.elc  \
-emacspeak-rss.elc \
 emacspeak-ruby.elc \
 emacspeak-sawfish.elc \
 emacspeak-ses.elc \
@@ -217,7 +218,10 @@ emacspeak-vm.elc \
 emacspeak-w3.elc \
 emacspeak-w3m.elc \
 emacspeak-wdired.elc \
+emacspeak-we.elc \
+emacspeak-webspace.elc \
 emacspeak-webutils.elc \
+emacspeak-webmarks.elc \
 emacspeak-websearch.elc \
 emacspeak-widget.elc \
 emacspeak-windmove.elc \
@@ -229,7 +233,7 @@ emacspeak-xslt.elc \
 emacspeak-xslt-process.elc   \
 emacspeak-zinf.elc
 
-ADDON_OBJECTS= tapestry.elc   stack-f.elc string.elc xml-parse.elc
+ADDON_OBJECTS= tapestry.elc   stack-f.elc  xml-parse.elc
 
 OBJECTS = $(DTK_OBJECTS) $(SPEAK_OBJECTS) $(CORE_OBJECTS)  \
 	$(AUX_OBJECTS) $(ADDON_OBJECTS)
@@ -238,7 +242,7 @@ OBJECTS = $(DTK_OBJECTS) $(SPEAK_OBJECTS) $(CORE_OBJECTS)  \
 # {{{  User level targets all
 
 all: $(OBJECTS)
-	cd g-client && $(MAKE)
+	cd g-client; $(MAKE)
 
 force:
 
@@ -258,7 +262,7 @@ emacspeak-loaddefs.el: force
 
 emacspeak-cus-load.el: force
 	$(EMACS) $(BATCH) -l ./emacspeak-load-path.el  -l cus-dep -l ./emacspeak-autoload.el \
--f emacspeak-auto-custom-make-dependencies "."  "./atom-blogger" "./g-client"
+-f emacspeak-auto-custom-make-dependencies "."
 	mv cus-load.el emacspeak-cus-load.el
 
 # }}}
@@ -278,10 +282,10 @@ outloud-voices.elc: outloud-voices.el voice-setup.elc
 multispeech-voices.elc: multispeech-voices.el voice-setup.elc
 espeak-voices.elc: espeak-voices.el voice-setup.elc
 voice-setup.elc: voice-setup.el acss-structure.elc
-html-outline.elc: html-outline.el
 emacspeak-alsaplayer.elc: emacspeak-alsaplayer.el
 emacspeak-amphetadesk.elc: emacspeak-amphetadesk.el
 cd-tool.elc: cd-tool.el
+amixer.elc: amixer.el
 emacspeak-actions.elc: emacspeak-actions.el
 emacspeak-add-log.elc: emacspeak-add-log.el dtk-speak.elc voice-setup.elc
 emacspeak-advice.elc: emacspeak-advice.el dtk-speak.elc voice-setup.elc
@@ -290,8 +294,6 @@ emacspeak-ansi-color.elc: emacspeak-ansi-color.el dtk-speak.elc voice-setup.elc
 emacspeak-apt-sources.elc: emacspeak-apt-sources.el dtk-speak.elc voice-setup.elc
 emacspeak-apt-utils.elc: emacspeak-apt-utils.el dtk-speak.elc voice-setup.elc
 emacspeak-arc.elc: emacspeak-arc.el dtk-speak.elc voice-setup.elc
-emacspeak-atom.elc: emacspeak-atom.el dtk-speak.elc
-emacspeak-atom-blogger.elc: emacspeak-atom-blogger.el dtk-speak.elc
 emacspeak-auctex.elc: emacspeak-auctex.el dtk-speak.elc voice-setup.elc
 emacspeak-aumix.elc: emacspeak-aumix.el dtk-speak.elc voice-setup.elc
 emacspeak-autoload.elc: emacspeak-autoload.el
@@ -332,6 +334,7 @@ emacspeak-entertain.elc: emacspeak-entertain.el dtk-speak.elc voice-setup.elc
 emacspeak-eperiodic.elc: emacspeak-eperiodic.el dtk-speak.elc voice-setup.elc
 emacspeak-erc.elc: emacspeak-erc.el dtk-speak.elc voice-setup.elc
 emacspeak-eshell.elc: emacspeak-eshell.el dtk-speak.elc voice-setup.elc
+emacspeak-ess.elc: emacspeak-ess.el dtk-speak.elc voice-setup.elc
 emacspeak-eterm.elc: emacspeak-eterm.el dtk-speak.elc voice-setup.elc
 emacspeak-eudc.elc: emacspeak-eudc.el dtk-speak.elc voice-setup.elc
 emacspeak-facemenu.elc: emacspeak-facemenu.el dtk-speak.elc voice-setup.elc
@@ -371,6 +374,7 @@ emacspeak-message.elc: emacspeak-message.el dtk-speak.elc voice-setup.elc
 emacspeak-metapost.elc: emacspeak-metapost.el dtk-speak.elc voice-setup.elc
 emacspeak-midge.elc: emacspeak-midge.el dtk-speak.elc voice-setup.elc
 emacspeak-mpg123.elc: emacspeak-mpg123.el dtk-speak.elc voice-setup.elc
+emacspeak-moz.elc: emacspeak-moz.el dtk-speak.elc voice-setup.elc
 emacspeak-muse.elc: emacspeak-muse.el dtk-speak.elc
 emacspeak-mspools.elc: emacspeak-mspools.el dtk-speak.elc voice-setup.elc
 emacspeak-nero.elc: emacspeak-nero.el dtk-speak.elc voice-setup.elc
@@ -394,7 +398,6 @@ emacspeak-reftex.elc: emacspeak-reftex.el dtk-speak.elc voice-setup.elc
 emacspeak-rpm-spec.elc: emacspeak-rpm-spec.el dtk-speak.elc voice-setup.elc
 emacspeak-remote.elc: emacspeak-remote.el
 emacspeak-replace.elc: emacspeak-replace.el dtk-speak.elc voice-setup.elc
-emacspeak-rss.elc: emacspeak-rss.el dtk-speak.elc voice-setup.elc
 emacspeak-ruby.elc: emacspeak-ruby.el dtk-speak.elc
 emacspeak-rmail.elc: emacspeak-rmail.el dtk-speak.elc voice-setup.elc
 emacspeak-sawfish.elc: emacspeak-sawfish.el dtk-speak.elc voice-setup.elc
@@ -425,15 +428,18 @@ emacspeak-tetris.elc: emacspeak-tetris.el dtk-speak.elc voice-setup.elc
 emacspeak-texinfo.elc: emacspeak-texinfo.el dtk-speak.elc voice-setup.elc
 emacspeak-tnt.elc: emacspeak-tnt.el dtk-speak.elc voice-setup.elc
 emacspeak-todo-mode.elc: emacspeak-todo-mode.el dtk-speak.elc voice-setup.elc
-emacspeak-url-template.elc: emacspeak-url-template.el dtk-speak.elc voice-setup.elc
+emacspeak-url-template.elc: emacspeak-url-template.el emacspeak-webutils.elc emacspeak-we.elc
 emacspeak-view-process.elc: emacspeak-view-process.el dtk-speak.elc voice-setup.elc
 emacspeak-view.elc: emacspeak-view.el dtk-speak.elc voice-setup.elc
 emacspeak-vm.elc: emacspeak-vm.el dtk-speak.elc voice-setup.elc
-emacspeak-w3.elc: emacspeak-w3.el dtk-speak.elc voice-setup.elc
-emacspeak-w3m.elc: emacspeak-w3m.el dtk-speak.elc voice-setup.elc
+emacspeak-w3.elc: emacspeak-w3.el emacspeak-webutils.elc emacspeak-we.elc
+emacspeak-w3m.elc: emacspeak-w3m.el emacspeak-webutils.elc emacspeak-we.elc
 emacspeak-wdired.elc: emacspeak-wdired.el dtk-speak.elc voice-setup.elc
-emacspeak-webutils.elc: emacspeak-webutils.el
-emacspeak-websearch.elc: emacspeak-websearch.el emacspeak-w3.elc
+emacspeak-we.elc: emacspeak-we.el emacspeak-webutils.elc
+emacspeak-webutils.elc: emacspeak-webutils.el dtk-speak.elc voice-setup.elc
+emacspeak-webspace.elc: emacspeak-webspace.el emacspeak-webutils.elc
+emacspeak-websearch.elc: emacspeak-websearch.el emacspeak-we.elc
+emacspeak-webmarks.elc: emacspeak-webmarks.el emacspeak-we.elc
 emacspeak-widget.elc: emacspeak-widget.el dtk-speak.elc voice-setup.elc
 emacspeak-winring.elc: emacspeak-winring.el dtk-speak.elc voice-setup.elc
 emacspeak-windmove.elc: emacspeak-windmove.el dtk-speak.elc voice-setup.elc
@@ -444,6 +450,7 @@ emacspeak-xslt.elc: emacspeak-xslt.el
 emacspeak-xslt-process.elc: emacspeak-xslt-process.el dtk-speak.elc voice-setup.elc
 emacspeak-zinf.elc: emacspeak-zinf.el dtk-speak.elc voice-setup.elc
 emacspeak.elc: emacspeak.el
+emacspeak-setup.elc: emacspeak-setup.el
 loaddefs: emacspeak-loaddefs.elc
 # }}}
 # {{{Development  target: indent

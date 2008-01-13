@@ -1,5 +1,5 @@
 ;;; emacspeak-personality.el ---Emacspeak's new personality interface
-;;; $Id: emacspeak-personality.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-personality.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Voice lock implementation
 ;;; Keywords: Emacspeak,  Spoken Output, audio formatting
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;;  $Revision: 4555 $ |
 ;;; Location undetermined
 ;;;
 
@@ -104,7 +104,7 @@ personality settings."
              (integer-or-marker-p end )
              (not (= start end)))
     (let ((v (if (listp personality)
-                 (remove-duplicates personality :test #'eq)
+                 (delete-duplicates personality :test #'eq)
                personality)))
       (ems-modify-buffer-safely
        (ad-Orig-put-text-property start end 'personality v object)))))
@@ -118,7 +118,7 @@ Existing personality properties on the text range are preserved."
              (not (= start end)))
     (ems-modify-buffer-safely
      (let ((v (if (listp personality)
-                  (remove-duplicates personality :test #'eq)
+                  (delete-duplicates personality :test #'eq)
                 personality))
            (orig (get-text-property start 'personality object))
            (new nil)
@@ -135,8 +135,8 @@ Existing personality properties on the text range are preserved."
                      (listp orig)
                      (and (listp orig)(memq v orig)))
            (setq new
-                 (remove-duplicates
-                  (append
+                 (delete-duplicates
+                  (nconc
                    (if (listp orig) orig (list orig))
                    (if (listp v) v (list v)))))
            (ad-Orig-put-text-property start extent
@@ -154,7 +154,7 @@ Existing personality properties on the text range are preserved."
              (not (= start end)))
     (ems-modify-buffer-safely
      (let ((v (if (listp personality)
-                  (remove-duplicates personality :test #'eq)
+                  (delete-duplicates personality :test #'eq)
                 personality))
            (orig (get-text-property start 'personality object))
            (new nil)
@@ -171,8 +171,8 @@ Existing personality properties on the text range are preserved."
                      (listp orig)
                      (and (listp orig) (memq v orig)))
            (setq new
-                 (remove-duplicates
-                  (append
+                 (delete-duplicates
+                  (nconc
                    (if (listp v) v (list v))
                    (if (listp orig) orig (list orig)))))
            (ad-Orig-put-text-property start extent

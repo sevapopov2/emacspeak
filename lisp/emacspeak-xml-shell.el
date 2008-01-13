@@ -1,5 +1,5 @@
 ;;; emacspeak-xml-shell.el --- Implements a simple XML browser
-;;; $Id: emacspeak-xml-shell.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-xml-shell.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Contains  xml-shell
 ;;; Keywords: Emacspeak,  Audio Desktop Xml-Shell
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -202,11 +202,10 @@ content.
 Post-processor accepts a region of text to process specified by start
 and end."
   (declare (special emacspeak-xml-shell-display-buffer))
-  (`
-   (lambda (process output)
-     (let ((stream  (, accumulate))
-           (processor (function (, post-processor)))
-           (done  (, terminator)))
+  `(lambda (process output)
+     (let ((stream  ,accumulate)
+           (processor (function ,post-processor))
+           (done  ,terminator))
        (save-excursion
          (set-buffer stream)
          (goto-char (point-max))
@@ -226,7 +225,7 @@ and end."
              (set-buffer (process-buffer process))
              (goto-char (point-max))
              (comint-send-input)))
-          (t (insert output))))))))
+          (t (insert output)))))))
 
 (defvar emacspeak-xml-shell-cat
   (cond

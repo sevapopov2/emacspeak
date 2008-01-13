@@ -1,5 +1,5 @@
 ;;; emacspeak-auctex.el --- Speech enable AucTeX -- a powerful TeX/LaTeX authoring environment
-;;; $Id: emacspeak-auctex.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-auctex.el 5315 2007-09-27 16:14:42Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; DescriptionEmacspeak extensions for auctex-mode
 ;;; Keywords:emacspeak, audio interface to emacs AUCTEX
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-27 09:14:42 -0700 (Thu, 27 Sep 2007) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -134,11 +134,15 @@ Provide auditory feedback after formatting region"
       (emacspeak-speak-region orig (point))))
    (t ad-do-it))
   ad-return-value)
-
-(defadvice TeX-insert-dollar (after emacspeak pre act comp)
-  "Speak what you inserted"
-  (when (interactive-p)
-    (emacspeak-speak-this-char  (preceding-char ))))
+(loop for f in
+      '(TeX-insert-dollar TeX-insert-backslash
+                          LaTeX-babel-insert-hyphen)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Speak what you inserted"
+	  (when (interactive-p)
+	    (emacspeak-speak-this-char  (preceding-char ))))))
 
 ;;}}}
 ;;{{{  Inserting structures

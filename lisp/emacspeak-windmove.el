@@ -1,5 +1,5 @@
 ;;; emacspeak-windmove.el --- speech-enable windmove 
-;;; $Id: emacspeak-windmove.el 4074 2006-08-19 17:48:45Z tv.raman.tv $
+;;; $Id: emacspeak-windmove.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for WINDMOVE
 ;;; Keywords: Emacspeak, windmove
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-19 10:48:45 -0700 (Sat, 19 Aug 2006) $ |
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
 ;;;  $Revision: 4074 $ |
 ;;; Location undetermined
 ;;;
@@ -63,12 +63,11 @@
             'windmove-down)
       do
       (eval
-       (`
-        (defadvice  (, f) (after emacspeak pre act comp)
+       `(defadvice  ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
             (emacspeak-auditory-icon 'select-object)
-            (emacspeak-speak-mode-line))))))
+            (emacspeak-speak-mode-line)))))
 
 ;;}}}
 

@@ -1,14 +1,14 @@
 ;;; emacspeak-analog.el --- Speech-enable analog -- a log viewer
-;;; $Id: emacspeak-analog.el 4150 2006-08-30 00:25:40Z tv.raman.tv $
+;;; $Id: emacspeak-analog.el 5245 2007-09-01 22:12:15Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
-;;; Description:  Emacspeak front-end for ANALOG log analyzer 
-;;; Keywords: Emacspeak, analog 
+;;; Description:  Emacspeak front-end for ANALOG log analyzer
+;;; Keywords: Emacspeak, analog
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-29 17:25:40 -0700 (Tue, 29 Aug 2006) $ |
+;;; $Date: 2007-09-01 15:12:15 -0700 (Sat, 01 Sep 2007) $ |
 ;;;  $Revision: 4150 $ |
 ;;; Location undetermined
 ;;;
@@ -51,6 +51,12 @@
 (require 'cl)
 (require 'emacspeak-preamble)
 ;;}}}
+;;{{{ autoloads to help compiler
+
+(autoload 'analog-get-entry-property "analog")
+
+;;}}}
+
 ;;{{{ advice interactive commands
 (defadvice analog (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -79,12 +85,11 @@
         analog-toggle-timer-and-redisplay)
       do
       (eval
-       (`
-        (defadvice (, command) (after emacspeak pre act comp)
+       `(defadvice ,command (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
             (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'select-object))))))
+            (emacspeak-auditory-icon 'select-object)))))
 
 ;;}}}
 ;;{{{ voice setup 

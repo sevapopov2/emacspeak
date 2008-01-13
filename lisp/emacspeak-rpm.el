@@ -1,5 +1,5 @@
 ;;; emacspeak-rpm.el --- speech-enable RPM
-;;; $Id: emacspeak-rpm.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-rpm.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable RPM
 ;;; Keywords: Emacspeak, rpm, Red Hat Package Manager
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -106,7 +106,7 @@
 ;;}}}
 
 ;;; emacspeak-rpm.el --- search utilities
-;;; $Id: emacspeak-rpm.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-rpm.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to make Web searching convenient
 ;;; Keywords: Emacspeak, WWW interaction
@@ -115,7 +115,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -153,7 +153,6 @@
 (require 'emacspeak-speak)
 (require 'thingatpt)
 (require 'emacspeak-personality)
-(require 'emacspeak-fix-interactive)
 (require 'emacspeak-sounds)
 (require 'browse-url)
 

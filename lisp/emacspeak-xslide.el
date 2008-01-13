@@ -1,14 +1,14 @@
-;;; emacspeak-xslide.el --- Speech enable  XSL authoring 
-;;; $Id: emacspeak-xslide.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; emacspeak-xslide.el --- Speech enable  XSL authoring
+;;; $Id: emacspeak-xslide.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
-;;; Description:   extension to speech enable xslide 
+;;; Description:   extension to speech enable xslide
 ;;; Keywords: Emacspeak, Audio Desktop
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -93,15 +93,13 @@
         (emacspeak-speak-messages nil))
     (emacspeak-kill-buffer-carefully "*Completions*")
     ad-do-it
-    (let ((completions-buffer (get-buffer " *Completions*")))
-      (if (> (point) prior)
-          (dtk-speak (buffer-substring prior (point )))
-        (when (and completions-buffer
-                   (window-live-p (get-buffer-window completions-buffer )))
-          (save-excursion
-            (set-buffer completions-buffer )
-            (emacspeak-prepare-completions-buffer)
-            (dtk-speak (buffer-string ))))))
+    (if (> (point) prior)
+        (tts-with-punctuations
+         'all
+         (if (> (length (emacspeak-get-minibuffer-contents)) 0)
+             (dtk-speak (emacspeak-get-minibuffer-contents))
+           (emacspeak-speak-line)))
+      (emacspeak-speak-completions-if-available))
     ad-return-value))
 (defadvice xsl-mode (after emacspeak pre act comp)
   "set up for voice locking."
@@ -114,13 +112,13 @@
   'no-op)
 
 ;;}}}
-;;{{{ voice locking 
+;;{{{ voice locking
 
 (defvar xsl-xsl-alternate-personality
   voice-animate
   "Personality used in xsl highlighting."
   :group 'emacspeak-xslide)
-(defcustom xsl-fo-alternate-personality voice-monotone 
+(defcustom xsl-fo-alternate-personality voice-monotone
   "Personality used in XSL highlighting."
   :group 'emacspeak-xslide)
 
@@ -128,7 +126,7 @@
   "Personality used in XSL highlighting."
   :group 'emacspeak-xslide)
 
-(defvar xsl-xsl-main-personality voice-bolden 
+(defvar xsl-xsl-main-personality voice-bolden
   "Personality used for highlighting in XSL.")
 
 ;;}}}

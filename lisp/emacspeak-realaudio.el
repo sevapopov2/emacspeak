@@ -1,5 +1,5 @@
 ;;; emacspeak-realaudio.el --- Play realaudio from Emacs
-;;; $Id: emacspeak-realaudio.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-realaudio.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Single click access to RealAudio from emacspeak
 ;;; Keywords: Emacspeak, RealAudio
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -64,12 +64,6 @@
   "Emacspeak Realaudio  customization."
   :group 'emacspeak)
 
-(defcustom emacspeak-realaudio-revert-to-auditory-icons t
-  "Set this to T if you want to switch back from using midi
-icons once a realaudio stream is done playing."
-  :group 'emacspeak-realaudio
-  :type 'boolean)
-
 (defcustom emacspeak-realaudio-player
   (cond
    ((eq window-system 'w32)
@@ -90,6 +84,8 @@ icons once a realaudio stream is done playing."
 
 (defvar emacspeak-realaudio-process nil
   "Process handle to running player")
+
+;;;###autoload
 (defvar emacspeak-realaudio-last-url nil
   "Records the last RealAudio resource we played")
 ;;;###autoload
@@ -200,11 +196,7 @@ urls have a .ram or .rm extension.")
 
 (defun emacspeak-realaudio-process-sentinel  (process state)
   "Cleanup after realaudio is done. "
-  (declare (special emacspeak-realaudio-revert-to-auditory-icons
-                    emacspeak-realaudio-reset-auditory-display))
-  (when  (and emacspeak-realaudio-revert-to-auditory-icons
-              (emacspeak-using-midi-p))
-    (emacspeak-set-auditory-icon-player 'emacspeak-serve-auditory-icon))
+  (declare (special emacspeak-realaudio-reset-auditory-display))
   (when emacspeak-realaudio-reset-auditory-display
     (emacspeak-aumix-reset)))
 
@@ -329,15 +321,14 @@ qmp3cut."))
 
 (defun emacspeak-realaudio-trplayer-command (char)
   "Execute TRPlayer command."
-  (interactive "cTRPlayer Command:")
+  (interactive
+   (list
+    (read-char"TRPlayer Command: ")))
   (declare (special emacspeak-realaudio-process))
   (cond
    ((char-equal char ?\;)
     (emacspeak-realaudio-select-realaudio-buffer))
    (t (emacspeak-realaudio-dispatch char ))))
-
-(emacspeak-fix-interactive-command-if-necessary
- 'emacspeak-realaudio-trplayer-command)
 
 (defcustom emacspeak-realaudio-reset-auditory-display t 
   "Set this to T if you want the audio settings reset after

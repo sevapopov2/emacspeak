@@ -1,5 +1,5 @@
 ;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -- maintain a diary and appointments
-;;; $Id: emacspeak-calendar.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-calendar.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extensions to speech enable the calendar.
 ;;; Keywords: Emacspeak, Calendar, Spoken Output
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -115,6 +115,17 @@
   (add-hook 'diary-display-hook 'fancy-diary-display))
 (add-hook 'calendar-mode-hook
           'gcal-emacs-calendar-setup)
+
+(loop for f in
+      '(fancy-diary-display simple-diary-display
+                            diary-list-entries)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act com)
+          "Silence messages."
+          (let ((emacspeak-speak-messages (not (interactive-p))))
+            ad-do-it))))
+
 (defadvice view-diary-entries (after emacspeak pre act)
   "Speak the diary entries."
   (when (interactive-p)
@@ -143,6 +154,10 @@
   '((calendar-date-string (calendar-current-date))  "Calendar")
   "Mode line format for calendar  with Emacspeak.")
 
+(defvar emacspeak-calendar-header-line-format
+  '((:eval (calendar-date-string (calendar-cursor-to-date t))))
+  "Header line used by Emacspeak in calendar.")
+
 (declaim (special calendar-mode-line-format))
 (setq calendar-mode-line-format
       emacspeak-calendar-mode-line-format)
@@ -150,10 +165,14 @@
 (defadvice calendar (after emacspeak pre act )
   "Announce yourself."
   (when (interactive-p)
-    (let ((emacspeak-lazy-message-time 0))
-      (emacspeak-auditory-icon 'open-object)
-      (setq calendar-mode-line-format emacspeak-calendar-mode-line-format)
-      (message "Welcome to the calendar"))))
+    (emacspeak-auditory-icon 'open-object)
+    (when emacspeak-use-header-line
+      (setq header-line-format
+            '((:eval (calendar-date-string (calendar-cursor-to-date t))))))
+    (setq calendar-mode-line-format
+          emacspeak-calendar-mode-line-format)
+    (tts-with-punctuations 'some
+                           (emacspeak-speak-mode-line))))
 
 (defadvice calendar-goto-date (after emacspeak pre act)
   "Speak the date. "
@@ -336,6 +355,12 @@
   (when (interactive-p)
     (emacspeak-speak-message-again)))
 
+(defadvice mark-diary-entries (around emacspeak pre act comp)
+  "Silence messages."
+  (let ((emacspeak-speak-messages nil))
+    ad-do-it
+    ad-return-value))
+
 ;;}}}
 ;;{{{  keymap
 (eval-when (load)
@@ -348,6 +373,7 @@
   (save-excursion
     (set-buffer calendar-buffer)
     (local-unset-key emacspeak-prefix)
+    (define-key calendar-mode-map "v" 'view-diary-entries)
     (define-key calendar-mode-map  "\C-e." 'emacspeak-calendar-speak-date)
     (define-key calendar-mode-map  "\C-ee"
       'calendar-end-of-week))
@@ -370,7 +396,7 @@
 
 (defun emacspeak-appt-speak-appointment (minutes-left new-time message )
   "Speak the appointment in addition to  displaying it visually."
-  (let ((emacspeak-speak-messages-should-pause-ongoing-speech nil))
+  (let ((emacspeak-speak-messages-pause nil))
     (emacspeak-auditory-icon 'alarm)
     (dtk-pause t)
     (message "You have an appointment in %s minutes. %s"
@@ -406,15 +432,6 @@
   (emacspeak-dtk-sync))
 
 ;;}}}
-
-                                        ; (defadvice appt-disp-window (before emacspeak activate compile)
-                                        ;   "Speak the appointment."
-                                        ;   (let ((emacspeak-speak-messages-should-pause-ongoing-speech nil))
-                                        ;     (dtk-pause t)
-                                        ;     (emacspeak-auditory-icon 'alarm)
-                                        ;     (message "You have an appointment in %s minutes, %s"
-                                        ;              (ad-get-arg 0)
-                                        ;              (ad-get-arg 2))))
 
 (defadvice appt-add (after emacspeak pre act )
   "Confirm that the alarm got set."

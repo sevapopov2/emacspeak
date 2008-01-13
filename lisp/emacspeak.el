@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;;  $Revision: 4642 $ |
 ;;; Location undetermined
 ;;;
 
@@ -49,20 +49,20 @@
 
 ;;}}}
 ;;{{{ Required modules
+
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'backquote)
-(require 'emacspeak-load-path)
 (require 'emacspeak-preamble)
-(require 'emacspeak-fix-interactive)
 (require 'emacspeak-sounds)
+
 ;;}}}
 ;;{{{ autoloads
 
 (load-library "emacspeak-loaddefs")
-(load-file
- (expand-file-name "emacspeak-cus-load.el"
-                   emacspeak-lisp-directory))
+(load-library "emacspeak-cus-load")
+(load-library "g-loaddefs")
+(load-library "g-client/g-cus-load")
 
 ;;}}}
 ;;{{{  Customize groups
@@ -105,11 +105,12 @@ the Emacspeak desktop." )
   :prefix "emacspeak-"
   :group 'applications
   :group 'accessibility)
-
+;;;###autoload
 (defcustom emacspeak-startup-hook nil
   "Hook to run after starting emacspeak."
   :type 'hook
   :group 'emacspeak)
+
 ;;;###autoload
 (defcustom emacspeak-media-player 'emacspeak-m-player
   "Default media player to use.
@@ -122,24 +123,29 @@ This is a Lisp function that takes a resource locator."
 
 (defun emacspeak-do-package-setup (package module)
   "Setup Emacspeak extension for a specific PACKAGE.
-This function  adds the appropriate form to
-`after-load-alist' to set up Emacspeak support for a given
-package.
-Argument MODULE specifies the emacspeak module that implements the speech-enabling extensions."
+This function adds the appropriate form to `after-load-alist' to
+set up Emacspeak support for a given package. Argument MODULE
+specifies the emacspeak module that implements the
+speech-enabling extensions."
   (eval-after-load package
     `(progn
        (require ',module)
-       (emacspeak-fix-commands-that-use-interactive))))
+       (emacspeak-fix-commands-loaded-from
+        (locate-library
+         ,(format "%s" module)))
+       (emacspeak-fix-commands-loaded-from
+        (locate-library
+         ,(format "%s" package))))))
 
 ;;}}}
 ;;{{{ Setup package extensions
+
 (emacspeak-do-package-setup "add-log" 'emacspeak-add-log)
 (emacspeak-do-package-setup "analog" 'emacspeak-analog)
 (emacspeak-do-package-setup "ansi-color" 'emacspeak-ansi-color)
 (emacspeak-do-package-setup "apt-sources" 'emacspeak-apt-sources)
 (emacspeak-do-package-setup "apt-utils" 'emacspeak-apt-utils)
 (emacspeak-do-package-setup "arc-mode" 'emacspeak-arc)
-(emacspeak-do-package-setup "atom-blogger" 'emacspeak-atom-blogger)
 (emacspeak-do-package-setup "babel" 'emacspeak-babel )
 (emacspeak-do-package-setup "bbdb" 'emacspeak-bbdb )
 (emacspeak-do-package-setup "bibtex" 'emacspeak-bibtex)
@@ -176,6 +182,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "eperiodic" 'emacspeak-eperiodic)
 (emacspeak-do-package-setup "erc" 'emacspeak-erc)
 (emacspeak-do-package-setup "eshell" 'emacspeak-eshell)
+(emacspeak-do-package-setup "ess" 'emacspeak-ess)
 (emacspeak-do-package-setup "enriched" 'emacspeak-enriched)
 (emacspeak-do-package-setup "facemenu" 'emacspeak-facemenu)
 (emacspeak-do-package-setup "find-dired" 'emacspeak-find-dired)
@@ -202,6 +209,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "kmacro" 'emacspeak-kmacro)
 (emacspeak-do-package-setup "make-mode" 'emacspeak-make-mode)
 (emacspeak-do-package-setup "man" 'emacspeak-man)
+(emacspeak-do-package-setup "moz" 'emacspeak-moz)
 (emacspeak-do-package-setup "message" 'emacspeak-message)
 (emacspeak-do-package-setup "meta-mode" 'emacspeak-metapost)
 (emacspeak-do-package-setup "mpg123" 'emacspeak-mpg123)
@@ -264,6 +272,7 @@ Argument MODULE specifies the emacspeak module that implements the speech-enabli
 (emacspeak-do-package-setup "widget" 'emacspeak-widget)
 (emacspeak-do-package-setup "windmove" 'emacspeak-windmove)
 (emacspeak-do-package-setup "winring" 'emacspeak-winring)
+
 ;;}}}
 ;;{{{  Submit bugs
 
@@ -342,14 +351,15 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
 (defun emacspeak-setup-programming-modes ()
   "Setup programming modes."
   (mapcar
-   (function (lambda (hook)
-               (add-hook hook
-                         'emacspeak-setup-programming-mode)))
+   #'(lambda (hook)
+       (add-hook hook
+                 'emacspeak-setup-programming-mode))
    (list 'c-mode-common-hook
          'prolog-mode-hook
          'lisp-mode-hook
          'emacs-lisp-mode-hook
          'lisp-interaction-mode-hook
+         'javascript-mode-hook
          'midge-mode-hook
          'meta-common-mode-hook
          'perl-mode-hook
@@ -374,20 +384,22 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
 ;;}}}
 ;;{{{ set up after-init-hook to fix interactive functions
 
-(add-hook 'after-init-hook
-          'emacspeak-fix-commands-that-use-interactive)
+(add-hook 'after-init-hook 'emacspeak-fix-commands-that-use-interactive)
+(add-hook 'after-init-hook 'emacspeak-keymap-refresh)
 
 ;;}}}
 ;;{{{ Emacspeak:
 
+;;;###autoload
 (defcustom emacspeak-play-emacspeak-startup-icon nil
   "If set to T, emacspeak plays its icon as it launches."
   :type 'boolean
   :group 'emacspeak)
+
 (defvar emacspeak-unibyte t
   "Set this to nil before starting  emacspeak
 if you are running in a multibyte enabled environment.")
-
+;;;###autoload
 (defun emacspeak()
   "Starts the Emacspeak speech subsystem.  Use emacs as you
 normally would, emacspeak will provide you spoken feedback
@@ -430,20 +442,11 @@ functions for details.   "
   (when emacspeak-unibyte
     (setq default-enable-multibyte-characters nil))
   (emacspeak-export-environment)
-  (require 'emacspeak-aumix)
-  (when (featurep 'ido)
-    (require 'emacspeak-ido))
-  (require 'custom)
-  (require 'emacspeak-widget)
-  (require 'emacspeak-sounds)
-  (dtk-initialize)
   (require 'emacspeak-personality)
+  (dtk-initialize)
   (require 'emacspeak-redefine)
-  (require 'emacspeak-fix-interactive)
-  (require 'emacspeak-keymap)
   (require 'emacspeak-advice)
   (require 'emacspeak-replace)
-  (require 'emacspeak-buff-menu)
   (when (and  emacspeak-play-emacspeak-startup-icon
               (file-exists-p "/usr/bin/mpg123"))
     (start-process "mp3" nil "mpg123"
@@ -452,9 +455,9 @@ functions for details.   "
   (emacspeak-sounds-define-theme-if-necessary emacspeak-sounds-default-theme)
   (when emacspeak-pronounce-load-pronunciations-on-startup
     (emacspeak-pronounce-load-dictionaries emacspeak-pronounce-dictionaries-file))
-  (run-hooks 'emacspeak-startup-hook)
   (emacspeak-setup-programming-modes)
-                                        ;(require 'emacspeak-wizards)
+  (run-hooks 'emacspeak-startup-hook)
+  (emacspeak-use-customized-blink-paren)
   (tts-with-punctuations 'some
                          (dtk-speak
                           (format "  Press %s to get an   overview of emacspeak  %s \

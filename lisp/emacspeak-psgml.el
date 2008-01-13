@@ -1,24 +1,24 @@
 ;;; emacspeak-sgml-mode.el --- Speech enable psgml package
-;;; $Id: emacspeak-psgml.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
-;;; $Author: tv.raman.tv $ 
+;;; $Id: emacspeak-psgml.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak extension for psgml
 ;;; Keywords:emacspeak, audio interface to emacs psgml
-;;{{{  LCD Archive entry: 
+;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ | 
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2007, T. V. Raman 
-;;; Copyright (c) 1995 by T. V. Raman  
-;;; All Rights Reserved. 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;; Copyright (c) 1995 by T. V. Raman
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -43,7 +43,7 @@
 ;;; Commentary:
 
 ;;; Speech-enable psgml --a powerful SGML support package.
-;;; psgml can be found at 
+;;; psgml can be found at
 
 ;;; Code:
 ;;}}}
@@ -51,7 +51,7 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
-;;{{{  helpers 
+;;{{{  helpers
 
 (defsubst emacspeak-psgml-summarize-element ()
   "Context-sensitive element summarizer."
@@ -62,7 +62,7 @@
    (t (emacspeak-speak-line))))
 
 ;;}}}
-;;{{{ advice interactive commands 
+;;{{{ advice interactive commands
 
 (defadvice sgml-close-angle (around emacspeak pre act comp)
   "Speak what we matched"
@@ -96,15 +96,13 @@ window")))
         (emacspeak-speak-messages nil))
     (emacspeak-kill-buffer-carefully "*Completions*")
     ad-do-it
-    (let ((completions-buffer (get-buffer " *Completions*")))
-      (if (> (point) prior)
-          (dtk-speak (buffer-substring prior (point )))
-        (when (and completions-buffer
-                   (window-live-p (get-buffer-window completions-buffer )))
-          (save-excursion
-            (set-buffer completions-buffer )
-            (emacspeak-prepare-completions-buffer)
-            (dtk-speak (buffer-string ))))))
+    (if (> (point) prior)
+        (tts-with-punctuations
+         'all
+         (if (> (length (emacspeak-get-minibuffer-contents)) 0)
+             (dtk-speak (emacspeak-get-minibuffer-contents))
+           (emacspeak-speak-line)))
+      (emacspeak-speak-completions-if-available))
     ad-return-value))
 
 (defadvice sgml-insert-end-tag (after emacspeak pre act
@@ -269,7 +267,7 @@ window")))
     (message "Showing all markup attributes.")))
 
 ;;}}}
-;;{{{  editting attributes 
+;;{{{  editting attributes
 
 (defadvice sgml-edit-attributes (after emacspeak pre act
                                        comp)
@@ -322,7 +320,7 @@ window")))
   (local-set-key "\C-e e" 'sgml-edit-attrib-field-end))
 
 ;;}}}
-;;{{{ define pronunciations 
+;;{{{ define pronunciations
 
 (emacspeak-pronounce-add-dictionary-entry 'sgml-mode"CDATA"
                                           "C DATA")
@@ -343,12 +341,12 @@ window")))
     (emacspeak-setup-programming-mode)
     (define-key sgml-mode-map "\C-c\C-b"
       'emacspeak-xml-browse-mode))))
-           
+
 ;;}}}
-;;{{{ psgml based voice locking 
+;;{{{ psgml based voice locking
 
 (defvar emacspeak-sgml-markup-voices
-  (list 
+  (list
    (cons 'start-tag       voice-bolden)
    (cons 'end-tag         voice-bolden)
    (cons 'comment         voice-monotone)
@@ -362,9 +360,9 @@ Element are of the form (MARKUP-TYPE . personality).
 Possible values for MARKUP-TYPE is:
 comment - comment declaration
 doctype - doctype declaration
-end-tag 
+end-tag
 ignored - ignored marked section
-ms-end  - marked section start, if not ignored 
+ms-end  - marked section start, if not ignored
 ms-start- marked section end, if not ignored
 pi      - processing instruction
 sgml    - SGML declaration
@@ -373,7 +371,7 @@ entity  - general entity reference
 shortref- short reference")
 
 ;;}}}
-;;{{{ additional interactive commands 
+;;{{{ additional interactive commands
 
 (defun emacspeak-psgml-speak-current-element ()
   "Speak contents of current element. "
@@ -383,12 +381,12 @@ shortref- short reference")
     (emacspeak-speak-region (mark) (point))))
 
 ;;}}}
-;;{{{ sgml browsing mode 
+;;{{{ sgml browsing mode
 
 ;;; convenience minor mode for browsing sgml and xml
 ;;; documents.
 
-(define-derived-mode emacspeak-xml-browse-mode xml-mode 
+(define-derived-mode emacspeak-xml-browse-mode xml-mode
   "Browsing XML documents. "
   "Mode for browsing XML documents.\n\n
 \\{emacspeak-xml-browse-mode}")
@@ -423,11 +421,11 @@ Leave this off in general while editting."
 
 ;;}}}
 (provide  'emacspeak-psgml)
-;;{{{  emacs local variables 
+;;{{{  emacs local variables
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}

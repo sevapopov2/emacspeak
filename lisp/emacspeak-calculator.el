@@ -1,5 +1,5 @@
 ;;; emacspeak-calculator.el --- Speech enable  desktop calculator
-;;; $Id: emacspeak-calculator.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-calculator.el 5329 2007-10-09 14:30:27Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:   extension to speech enable desktop calculator
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-10-09 07:30:27 -0700 (Tue, 09 Oct 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -59,6 +59,14 @@
 
 ;;}}}
 ;;{{{  advice interactive commands 
+(defadvice calculator (around emacspeak pre act comp)
+  "Fix while waiting for a bug-fix in Emacs."
+  (cond
+   ((interactive-p)
+    (let ((header-line-format nil))
+      ad-do-it))
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice calculator (after emacspeak pre act comp)
   "Speech enable calculator."

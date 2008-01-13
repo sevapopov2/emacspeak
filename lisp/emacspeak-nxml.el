@@ -1,5 +1,5 @@
 ;;; emacspeak-nxml.el --- Speech enable nxml mode
-;;; $Id: emacspeak-nxml.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-nxml.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, nxml streaming media 
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -148,12 +148,11 @@
         nxml-backward-element)
       do
       (eval
-       (`
-        (defadvice (, f) (after emacspeak pre act comp)
+       `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
             (emacspeak-auditory-icon 'large-movement)
-            (emacspeak-speak-line))))))
+            (emacspeak-speak-line)))))
 
 (loop for f in 
       '(nxml-balanced-close-start-tag-block
@@ -161,14 +160,13 @@
         nxml-balanced-close-start-tag-inline)
       do
       (eval
-       (`
-        (defadvice (, f) (after emacspeak pre act comp)
+       `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
             (emacspeak-auditory-icon 'close-object)
             (dtk-speak
              (format "Closed %s"
-                     (xmltok-start-tag-qname))))))))
+                     (xmltok-start-tag-qname)))))))
 ;;{{{ speech enable outliner 
 
 (loop for f in

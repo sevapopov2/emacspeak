@@ -1,5 +1,5 @@
 ;;; emacspeak-w3.el --- Speech enable W3 WWW browser -- includes ACSS Support
-;;; $Id: emacspeak-w3.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-w3.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak enhancements for W3
 ;;; Keywords: Emacspeak, W3, WWW
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;;  $Revision: 4671 $ |
 ;;; Location undetermined
 ;;;
 
@@ -54,6 +54,8 @@
 ;;; Code:
 (require 'emacspeak-preamble)
 (require 'emacspeak-webutils)
+(require 'emacspeak-we)
+(require 'emacspeak-xslt)
 
 ;;}}}
 ;;{{{  custom
@@ -113,8 +115,8 @@
 
 (defun emacspeak-w3-speak-mode-hook ()
   "Updated emacspeak hook for W3 mode."
-  (declare (special emacspeak-w3-post-process-hook
-                    imenu-create-index-function
+  (declare (special imenu-create-index-function
+                    emacspeak-web-post-process-hook
                     emacspeak-w3-create-imenu-index
                     emacspeak-w3-punctuation-mode))
   (set (make-local-variable 'voice-lock-mode) t)
@@ -123,12 +125,12 @@
   (when emacspeak-w3-punctuation-mode
     (setq dtk-punctuation-mode emacspeak-w3-punctuation-mode))
   (emacspeak-auditory-icon 'open-object)
-  (emacspeak-pronounce-refresh-pronunciations)
   (when (featurep 'w3-imenu)
     (setq imenu-create-index-function 'w3-imenu-create-index))
   (when emacspeak-w3-create-imenu-index
     (imenu--make-index-alist t))
-  (unless emacspeak-w3-post-process-hook
+  (emacspeak-pronounce-refresh-pronunciations)
+  (unless emacspeak-web-post-process-hook
     (emacspeak-speak-mode-line)))
 
 (add-hook 'w3-mode-hook 'emacspeak-w3-speak-mode-hook)
@@ -136,9 +138,17 @@
 (defun emacspeak-w3-load-hook ()
   "Setup Emacspeak keys in W3 mode."
   (declare (special w3-echo-link url-show-status
+                    emacspeak-w3-table-draw-border
+                    emacspeak-w3-table-silent-border
+                    w3-table-border-chars
+                    w3-reuse-buffers
                     w3-mode-map
                     emacspeak-pronounce-common-xml-namespace-uri-pronunciations
                     emacspeak-pronounce-load-pronunciations-on-startup))
+  (setq w3-reuse-buffers 'no)
+  (unless emacspeak-w3-table-draw-border
+    (setq w3-table-border-chars
+          emacspeak-w3-table-silent-border))
   (when (locate-library "w3-speak") (require 'w3-speak))
   (when (and (locate-library "w3-speak-table")
              (not (featurep 'w3-speak-table)))
@@ -164,13 +174,16 @@
           ("'" emacspeak-speak-rest-of-buffer)
           ("\"" emacspeak-speak-skim-buffer)
           ("/" emacspeak-webutils-google-similar-to-this-page)
-          ("\;" emacspeak-w3-speak-this-element)
-          ("A" emacspeak-w3-browse-atom-at-point)
+          (":" emacspeak-w3-speak-this-element)
+          ("\;" emacspeak-speak-face-interval-and-move)
+          ("A" emacspeak-webutils-atom-display)
+          ("F" emacspeak-webutils-fv)
+          ("X" emacspeak-xslt-view-xml)
           ("C" emacspeak-webutils-google-extract-from-cache)
           ("L" emacspeak-w3-lynx-url-under-point)
           ("N" emacspeak-speak-next-personality-chunk)
           ("P" emacspeak-speak-previous-personality-chunk)
-          ("R" emacspeak-w3-browse-rss-at-point)
+          ("R" emacspeak-webutils-rss-display)
           ("\C-f" w3-table-focus-on-this-cell)
           ("\M- " emacspeak-imenu-speak-this-section)
           ("\M-n" emacspeak-imenu-goto-next-index-position)
@@ -179,7 +192,7 @@
           ("\M-;" emacspeak-webutils-play-media-at-point)
           ("\M-s" emacspeak-w3-jump-to-submit)
           ("c" emacspeak-w3-curl-url-under-point)
-          ("e" emacspeak-w3-xsl-map)
+          ("e" emacspeak-we-xsl-map)
           ("g" emacspeak-webutils-google-on-this-site)
           ("hh" emacspeak-w3-show-http-headers)
           ("i" emacspeak-w3-next-parsed-item)
@@ -189,21 +202,28 @@
           ("p" emacspeak-w3-previous-doc-element)
           ("t" emacspeak-webutils-transcode-via-google)
           ("T"  emacspeak-webutils-jump-to-title-in-content)
-          ("y" emacspeak-w3-url-rewrite-and-follow)
+          ("y" emacspeak-we-url-rewrite-and-follow)
           ("z" emacspeak-w3-speak-next-block)
           ([C-Return] emacspeak-webutils-open-in-other-browser))
         do
-        (emacspeak-keymap-update w3-mode-map binding)))
+        (emacspeak-keymap-update w3-mode-map binding))
+  (w3-masquerade-stub 1 "Mozilla" "5.0"))
 
 (add-hook 'w3-load-hook 'emacspeak-w3-load-hook)
 
 ;;}}}
 ;;{{{ webutils variables
-(add-hook 'w3-mode-hook
-          (lambda ()
-            (setq emacspeak-webutils-document-title 'buffer-name)
-            (setq emacspeak-webutils-url-at-point 'w3-view-this-url)
-            (setq emacspeak-webutils-current-url 'url-view-url)))
+
+(defun emacspeak-w3-setup-webutils  ()
+    "Setup webutils variables for using W3."
+    (setq
+     emacspeak-webutils-document-title 'buffer-name
+     emacspeak-webutils-url-at-point #'(lambda nil (w3-view-this-url t))
+     emacspeak-webutils-current-url #'(lambda nil (url-view-url t))))
+
+(add-hook
+ 'w3-mode-hook
+ 'emacspeak-w3-setup-webutils)
 
 ;;}}}
 ;;{{{  dump using lynx
@@ -269,8 +289,7 @@ document is displayed in a separate buffer. "
 ;;; In the meantime, here is a toggle that allows you to
 ;;; turn borders on and off:
 
-(defvar emacspeak-w3-table-draw-border
-  nil
+(defvar emacspeak-w3-table-draw-border nil
   "Reflects whether we allow W3 to draw table borders. ")
 
 (defvar emacspeak-w3-table-silent-border (make-vector 16 32)
@@ -290,11 +309,28 @@ document is displayed in a separate buffer. "
            (if emacspeak-w3-table-draw-border "" "not")))
 
 ;;}}}
-;;{{{ Experimental --element navigation
+;;{{{ element navigation
 
 ;;;This should eventually be done via a DOM API
 
-(defsubst emacspeak-w3-html-stack () (get-text-property (point) 'html-stack))
+(defsubst emacspeak-w3-html-stack () (get-text-property (point)
+                                                        'html-stack))
+
+(defsubst emacspeak-w3-get-onclick ()
+  "Return onclick handler if any at point."
+  (cdr (assoc 'onclick (cdar (emacspeak-w3-html-stack)))))
+
+(defsubst emacspeak-w3-get-class ()
+  "Return class if any at point."
+  (cdr (assoc 'class (cdar (emacspeak-w3-html-stack)))))
+
+(defsubst emacspeak-w3-get-onchange ()
+  "Return onchange handler if any at point."
+  (cdr (assoc 'onchange (cdar (emacspeak-w3-html-stack)))))
+
+(defsubst emacspeak-w3-get-style ()
+  "Return style if any at point."
+  (cdr (assoc 'style (cdar (emacspeak-w3-html-stack)))))
 
 (defsubst emacspeak-w3-html-stack-top-element (&optional stack)
   (or stack (setq stack (emacspeak-w3-html-stack)))
@@ -400,6 +436,7 @@ implemented. ")))
       (setq end (point))
       (emacspeak-speak-region start end )
       (emacspeak-auditory-icon 'select-object))))
+
 ;;}}}
 ;;{{{ experimental --unravel javascript urls
 (defvar emacspeak-w3-javascript-cleanup-buffer " *javascript-cleanup*"
@@ -461,81 +498,6 @@ element. "
 ;;}}}
 ;;{{{ url rewrite
 
-(defvar emacspeak-w3-url-rewrite-rule nil
-  "URL rewrite rule to use in current buffer.")
-
-(make-variable-buffer-local 'emacspeak-w3-url-rewrite-rule)
-
-(defun emacspeak-w3-url-rewrite-and-follow (&optional prompt)
-  "Apply a url rewrite rule as specified in the current buffer
-before following link under point.  If no rewrite rule is
-defined, first prompt for one.  Rewrite rules are of the
-form `(from to)' where from and to are strings.  Typically,
-the rewrite rule is automatically set up by Emacspeak tools
-like websearch where a rewrite rule is known.  Rewrite rules
-are useful in jumping directly to the printer friendly
-version of an article for example.
-Optional interactive prefix arg  prompts for a rewrite rule
-even if one is already defined."
-  (interactive "P")
-  (declare (special emacspeak-w3-url-rewrite-rule))
-  (unless (eq major-mode 'w3-mode)
-    (error "This command is only useful in W3 buffers."))
-  (let ((url (w3-view-this-url t))
-        (redirect nil))
-    (unless url
-      (error "Not on a link."))
-    (when (or prompt
-              (null emacspeak-w3-url-rewrite-rule))
-      (setq emacspeak-w3-url-rewrite-rule
-            (read-minibuffer  "Specify rewrite rule: " "(")))
-    (setq redirect
-          (string-replace-match (first emacspeak-w3-url-rewrite-rule)
-                                url
-                                (second
-                                 emacspeak-w3-url-rewrite-rule))
-          url)
-    (emacspeak-auditory-icon 'select-object)
-    (browse-url
-     (or redirect url))
-    (when (interactive-p)
-      (emacspeak-speak-mode-line)
-      (emacspeak-auditory-icon 'open-object))))
-
-;;}}}
-;;{{{ url expand and execute
-
-(defvar emacspeak-w3-url-executor nil
-  "URL expand/execute function  to use in current buffer.")
-
-(make-variable-buffer-local 'emacspeak-w3-url-executor)
-
-(defun emacspeak-w3-url-expand-and-execute ()
-  "Applies buffer-specific URL expander/executor function."
-  (interactive)
-  (declare (special emacspeak-w3-url-executor))
-  (unless (eq major-mode 'w3-mode)
-    (error "This command is only useful in W3 buffers."))
-  (let ((url (w3-view-this-url t)))
-    (unless url
-      (error "Not on a link."))
-    (cond
-     ((and (boundp 'emacspeak-w3-url-executor)
-           (fboundp emacspeak-w3-url-executor))
-      (funcall emacspeak-w3-url-executor url))
-     (t
-      (setq emacspeak-w3-url-executor
-            (intern
-             (completing-read
-              "Executor function: "
-              obarray 'fboundp t
-              "emacspeak-" nil )))
-      (if (and (boundp 'emacspeak-w3-url-executor)
-               (fboundp emacspeak-w3-url-executor))
-          (funcall emacspeak-w3-url-executor url)
-        (error "Invalid executor %s"
-               emacspeak-w3-url-executor))))))
-
 ;;}}}
 ;;{{{ jump to submit button
 
@@ -559,1062 +521,20 @@ even if one is already defined."
     (message "Could not find submit button.")))
 
 ;;}}}
-;;{{{ applying XSL transforms before displaying
+;;{{{ enable post processor functionality
 
-(define-prefix-command 'emacspeak-w3-xsl-map )
-
-(defcustom emacspeak-w3-xsl-p nil
-  "T means we apply XSL transformation before displaying
-HTML."
-  :type 'boolean
-  :group 'emacspeak-w3)
-
-;;{{{ helper macros:
-
-(defmacro emacspeak-w3-without-xsl (&rest body)
-  "Execute body with XSL turned off."
-  (`
-   (progn
-     (declare (special emacspeak-w3-xsl-p))
-     (when emacspeak-w3-xsl-p
-       (setq emacspeak-w3-xsl-p nil)
-       (add-hook 'emacspeak-w3-post-process-hook
-                 #'(lambda ()
-                     (declare (special emacspeak-w3-xsl-p))
-                     (setq emacspeak-w3-xsl-p t))))
-     (,@ body))))
-
-(defmacro emacspeak-w3-with-xsl (&rest body)
-  "Execute body with XSL turned on."
-  (`
-   (progn
-     (declare (special emacspeak-w3-xsl-p))
-     (unless emacspeak-w3-xsl-p
-       (setq emacspeak-w3-xsl-p t)
-       (add-hook 'emacspeak-w3-post-process-hook
-                 #'(lambda ()
-                     (declare (special emacspeak-w3-xsl-p))
-                     (setq emacspeak-w3-xsl-p nil))))
-     (,@ body))))
-
-;;}}}
-
-(defcustom emacspeak-w3-xsl-transform nil
-  "Specifies transform to use before displaying a page.
-Nil means no transform is used. "
-  :type  '(choice
-           (file :tag "XSL")
-           (const :tag "none" nil))
-  :group 'emacspeak-w3)
-(defcustom emacspeak-w3-cleanup-bogus-quotes t
-  "Clean up bogus Unicode chars for magic quotes."
-  :type 'boolean
-  :group 'emacspeak-w3)
-
-(defadvice  w3-parse-buffer (before emacspeak pre act comp)
-  "Apply requested XSL transform if any before displaying the
-HTML."
-  (when emacspeak-w3-cleanup-bogus-quotes
-    (goto-char (point-min))
-    (while (search-forward "&\#147\;" nil t)
-      (replace-match "\""))
-    (goto-char (point-min))
-    (while (search-forward "&\#148\;" nil t)
-      (replace-match "\""))
-    (goto-char (point-min))
-    (while (search-forward "&\#180\;" nil t)
-      (replace-match "\'")))
-  (when (and emacspeak-w3-xsl-p emacspeak-w3-xsl-transform)
-    (emacspeak-xslt-region
-     emacspeak-w3-xsl-transform
-     (point-min)
-     (point-max))))
-
-(declaim (special emacspeak-xslt-directory))
-;;;###autoload
-(defun emacspeak-w3-xslt-apply (xsl)
-  "Apply specified transformation to current page."
-  (interactive
-   (list
-    (expand-file-name
-     (read-file-name "XSL Transformation: "
-                     emacspeak-xslt-directory))))
-  (declare (special major-mode
-                    emacspeak-xslt-directory))
-  (unless (eq major-mode 'w3-mode)
-    (error "Not in a W3 buffer."))
-  (let ((url (url-view-url t)))
-    (emacspeak-w3-browse-url-with-style xsl url)))
-
-;;;###autoload
-(defun emacspeak-w3-xslt-select (xsl)
-  "Select XSL transformation applied to WWW pages before they are displayed ."
-  (interactive
-   (list
-    (expand-file-name
-     (read-file-name "XSL Transformation: "
-                     emacspeak-xslt-directory))))
-  (declare (special emacspeak-w3-xsl-transform))
-  (setq emacspeak-w3-xsl-transform xsl)
-  (message "Will apply %s before displaying HTML pages."
-           (file-name-sans-extension
-            (file-name-nondirectory
-             xsl)))
-  (emacspeak-auditory-icon 'select-object))
-;;;###autoload
-(defun emacspeak-w3-xsl-toggle ()
-  "Toggle  application of XSL transformations.
-This uses XSLT Processor xsltproc available as part of the
-libxslt package."
-  (interactive)
-  (declare (special emacspeak-w3-xsl-p))
-  (setq emacspeak-w3-xsl-p
-        (not emacspeak-w3-xsl-p))
-  (emacspeak-auditory-icon
-   (if emacspeak-w3-xsl-p 'on 'off))
-  (message "Turned %s XSL"
-           (if emacspeak-w3-xsl-p 'on 'off)))
-;;;###autoload
-(defun emacspeak-w3-count-matches (prompt-url locator)
-  "Count matches for locator  in HTML."
-  (interactive
-   (list
-    (if (eq major-mode 'w3-mode)
-        (url-view-url 'no-show)
-      (read-from-minibuffer "URL: "))
-    (read-from-minibuffer "XPath locator: ")))
-  (read
-   (emacspeak-xslt-url
-    (expand-file-name "count-matches.xsl"
-                      emacspeak-xslt-directory)
-    prompt-url
-    (list
-     (cons "locator"
-           (format "'%s'"
-                   locator ))))))
-;;;###autoload
-(defun emacspeak-w3-count-nested-tables (prompt-url)
-  "Count nested tables in HTML."
-  (interactive
-   (list
-    (if (eq major-mode 'w3-mode)
-        (url-view-url 'no-show)
-      (read-from-minibuffer "URL: "))))
-  (emacspeak-w3-count-matches
-   prompt-url
-   "'//table//table'" ))
-
-;;;###autoload
-(defun emacspeak-w3-count-tables (prompt-url)
-  "Count  tables in HTML."
-  (interactive
-   (list
-    (if (eq major-mode 'w3-mode)
-        (url-view-url 'no-show)
-      (read-from-minibuffer "URL: "))))
-  (emacspeak-w3-count-matches
-   prompt-url
-   "//table"))
-
-(defcustom emacspeak-w3-xsl-keep-result ""
-  "Set to a non-empty string  if you want the buffer containing the transformed HTML
-source to be preserved.
-Value of this variable if non-empty will be used as a name for the
-source buffer."
-  :type 'string
-  :group 'emacspeak-w3)
-
-(make-variable-buffer-local 'emacspeak-w3-xsl-keep-result)
-;;;###autoload
-(defun emacspeak-w3-set-xsl-keep-result (value)
-  "Set value of `emacspeak-w3-xsl-keep-result'."
-  (interactive  "sEnter name of result buffer: ")
-  (declare (special emacspeak-w3-xsl-keep-result))
-  (setq emacspeak-w3-xsl-keep-result value))
-;;;###autoload
-(defun emacspeak-w3-xslt-filter (path   &optional prompt-url speak-result complement)
-  "Extract elements matching specified XPath path locator
-from HTML.  Extracts specified elements from current WWW
-page and displays it in a separate buffer.  Optional arg url
-specifies the page to extract table from.
-Optional arg COMPLEMENT inverts the filter.  "
-  (interactive
-   (list
-    (read-from-minibuffer "XPath: ")
-    current-prefix-arg))
-  (declare (special emacspeak-w3-post-process-hook
-                    emacspeak-w3-xsl-keep-result
-                    emacspeak-xslt-program
-                    emacspeak-w3-xsl-filter
-                    emacspeak-w3-xsl-junk))
-  (unless (or prompt-url
-              (eq major-mode 'w3-mode))
-    (error "Not in a W3 buffer."))
-  (let* ((base-url (when (eq major-mode 'w3-mode)
-                     (url-view-url t)))
-         (source-url
-          (cond
-           ((and (interactive-p) prompt-url)
-            (read-from-minibuffer "URL: "
-                                  "http://www."))
-           (t  (or prompt-url
-                   base-url))))
-         (src-buffer nil)
-         (emacspeak-w3-xsl-p nil)
-         (keep-result emacspeak-w3-xsl-keep-result))
-    (setq src-buffer
-          (emacspeak-xslt-url
-           (if complement
-               emacspeak-w3-xsl-junk
-             emacspeak-w3-xsl-filter)
-           source-url
-           (list
-            (cons "path"
-                  (format "\"'%s'\""
-                          (shell-quote-argument path)))
-            (cons "locator"
-                  (format "'%s'"
-                          path))
-            (cons "base"
-                  (format "\"'%s'\""
-                          (or source-url
-                              prompt-url))))))
-    (save-excursion
-      (set-buffer src-buffer)
-      (setq emacspeak-w3-xsl-keep-result keep-result)
-      (when  (or (interactive-p)
-                 speak-result)
-        (add-hook 'emacspeak-w3-post-process-hook
-                  'emacspeak-speak-buffer))
-      (browse-url-of-buffer)
-      (cond
-       ((> (length emacspeak-w3-xsl-keep-result) 0)
-        (save-excursion
-          (set-buffer src-buffer)
-          (rename-buffer  emacspeak-w3-xsl-keep-result  'unique)))
-       (t (kill-buffer src-buffer))))))
-
-(defun emacspeak-w3-xslt-junk (path   &optional prompt-url speak)
-  "Junk elements matching specified locator."
-  (interactive
-   (list
-    (read-from-minibuffer "XPath: ")
-    current-prefix-arg))
-  (emacspeak-w3-xslt-filter path prompt-url speak 'complement))
-
-(defcustom emacspeak-w3-media-stream-suffixes
-  (list
-   ".ram"
-   ".rm"
-   ".ra"
-   ".pls"
-   ".asf"
-   ".asx"
-   ".mp3"
-   ".m3u"
-   ".wma"
-   ".wmv"
-   ".avi"
-   ".mpg")
-  "Suffixes to look for in detecting URLs that point to media
-streams."
-  :type  '(repeat
-           (string :tag "Extension Suffix"))
-  :group 'emacspeak-w3)
-;;;###autoload
-(defun emacspeak-w3-extract-media-streams ( &optional prompt-url speak)
-  "Extract links to media streams.
-operate on current web page when in a W3 buffer; otherwise prompt for url.
-`prompt-url' is the URL to process. Prompts for URL when called
-interactively. Optional arg `speak' specifies if the result should be
-spoken automatically."
-  (interactive
-   (list current-prefix-arg))
-  (unless (and
-           (or (null prompt-url) (stringp prompt-url))
-           (eq major-mode 'w3-mode))
-    (setq prompt-url
-          (read-from-minibuffer "URL:")))
-  (declare (special emacspeak-w3-media-stream-suffixes))
-  (let ((filter "//a[%s]")
-        (predicate
-         (mapconcat
-          #'(lambda (suffix)
-              (format "contains(@href,\"%s\")"
-                      suffix))
-          emacspeak-w3-media-stream-suffixes
-          " or ")))
-    (emacspeak-w3-xslt-filter
-     (format filter predicate )
-     prompt-url
-     (or (interactive-p)
-         speak))))
-
-;;;###autoload
-(defun emacspeak-w3-extract-print-streams ( &optional prompt-url speak)
-  "Extract links to printable  streams.
-operate on current web page when in a W3 buffer; otherwise prompt for url.
-`prompt-url' is the URL to process. Prompts for URL when called
-interactively. Optional arg `speak' specifies if the result should be
-spoken automatically."
-  (interactive
-   (list current-prefix-arg))
-  (unless (and
-           (or (null prompt-url) (stringp prompt-url))
-           (eq major-mode 'w3-mode))
-    (setq prompt-url
-          (read-from-minibuffer "URL:")))
-  (let ((filter "//a[contains(@href,\"print\")]"))
-    (emacspeak-w3-xslt-filter
-     filter
-     prompt-url
-     (or (interactive-p)
-         speak))))
-
-(defun emacspeak-w3-extract-media-streams-under-point ()
-  "In W3 mode buffers, extract media streams from url under point."
-  (interactive)
-  (cond
-   ((and (eq major-mode 'w3-mode)
-         (w3-view-this-url 'no-show))
-    (emacspeak-w3-extract-media-streams (w3-view-this-url 'no-show)
-                                        'speak))
-   (t (error "Not on a link in a W3 buffer."))))
-
-(defun emacspeak-w3-extract-matching-urls (pattern  &optional prompt-url speak)
-  "Extracts links whose URL matches pattern."
-  (interactive
-   (list
-    (read-from-minibuffer "URL Pattern: ")
-    current-prefix-arg))
-  (let ((filter
-         (format
-          "//a[contains(@href,\"%s\")]"
-          pattern)))
-    (emacspeak-w3-xslt-filter
-     filter
-     prompt-url
-     (or (interactive-p)
-         speak))))
-
-;;;###autoload
-(defun emacspeak-w3-extract-nested-table (table-index   &optional prompt-url speak)
-  "Extract nested table specified by `table-index'. Default is to
-operate on current web page when in a W3 buffer; otherwise
-`prompt-url' is the URL to process. Prompts for URL when called
-interactively. Optional arg `speak' specifies if the result should be
-spoken automatically."
-
-  (interactive
-   (list
-    (read-from-minibuffer
-     "Table index: ")
-    current-prefix-arg))
-  (emacspeak-w3-xslt-filter
-   (format "(//table//table)[%s]" table-index)
-   prompt-url
-   speak))
-
-(defsubst  emacspeak-w3-get-table-list (&optional bound)
-  "Collect a list of numbers less than bound
- by prompting repeatedly in the
-minibuffer.
-Empty value finishes the list."
-  (let ((result nil)
-        (i nil)
-        (done nil))
-    (while (not done)
-      (setq i
-            (read-from-minibuffer
-             (format "Index%s"
-                     (if bound
-                         (format " less than  %s" bound)
-                       ":"))))
-      (if (> (length i) 0)
-          (push i result)
-        (setq done t)))
-    result))
-
-(defsubst  emacspeak-w3-get-table-match-list ()
-  "Collect a list of matches by prompting repeatedly in the
-minibuffer.
-Empty value finishes the list."
-  (let ((result nil)
-        (i nil)
-        (done nil))
-    (while (not done)
-      (setq i
-            (read-from-minibuffer "Match: "))
-      (if (> (length i) 0)
-          (push i result)
-        (setq done t)))
-    result))
-
-;;;###autoload
-(defun emacspeak-w3-extract-nested-table-list (tables   &optional prompt-url speak)
-  "Extract specified list of tables from a WWW page."
-  (interactive
-   (list
-    (emacspeak-w3-get-table-list)
-    current-prefix-arg))
-  (let ((filter nil))
-    (setq filter
-          (mapconcat
-           #'(lambda  (i)
-               (format "((//table//table)[%s])" i))
-           tables
-           " | "))
-    (emacspeak-w3-xslt-filter
-     filter
-     prompt-url
-     (or (interactive-p) speak))))
-;;;###autoload
-(defun emacspeak-w3-extract-table-by-position (position   &optional prompt-url speak)
-  "Extract table at specified position.
- Optional arg url specifies the page to extract content from.
-Interactive prefix arg causes url to be read from the minibuffer."
-  (interactive
-   (list
-    (read-from-minibuffer
-     "Table position: ")
-    current-prefix-arg))
-  (emacspeak-w3-xslt-filter
-   (format "/descendant::table[%s]"
-           position)
-   prompt-url
-   (or (interactive-p)
-       speak)))
-
-;;;###autoload
-(defun emacspeak-w3-extract-tables-by-position-list (positions   &optional prompt-url speak)
-  "Extract specified list of nested tables from a WWW page.
-Tables are specified by their position in the list
-nested of tables found in the page."
-  (interactive
-   (list
-    (emacspeak-w3-get-table-list)
-    current-prefix-arg))
-  (let ((filter nil))
-    (setq filter
-          (mapconcat
-           #'(lambda  (i)
-               (format "(/descendant::table[%s])" i))
-           positions
-           " | "))
-    (emacspeak-w3-xslt-filter
-     filter
-     prompt-url
-     (or (interactive-p) speak))))
-
-;;;###autoload
-(defun emacspeak-w3-extract-table-by-match (match   &optional prompt-url speak)
-  "Extract table containing  specified match.
- Optional arg url specifies the page to extract content from.
-Interactive prefix arg causes url to be read from the minibuffer."
-  (interactive
-   (list
-    (read-from-minibuffer
-     "Tables matching: ")
-    current-prefix-arg))
-  (emacspeak-w3-xslt-filter
-   (format "(/descendant::table[contains(., \"%s\")])[last()]"
-           match)
-   prompt-url
-   (or (interactive-p)
-       speak)))
-
-;;;###autoload
-(defun emacspeak-w3-extract-tables-by-match-list (match-list   &optional prompt-url speak)
-  "Extract specified  tables from a WWW page.
-Tables are specified by containing  match pattern
- found in the match list."
-  (interactive
-   (list
-    (emacspeak-w3-get-table-match-list)
-    current-prefix-arg))
-  (let ((filter nil))
-    (setq filter
-          (mapconcat
-           #'(lambda  (i)
-               (format "((/descendant::table[contains(.,\"%s\")])[last()])" i))
-           match-list
-           " | "))
-    (emacspeak-w3-xslt-filter
-     filter
-     prompt-url
-     (or (interactive-p) speak))))
-
-(defvar emacspeak-w3-buffer-css-class-cache nil
-  "Caches class attribute values for current buffer.")
-
-(make-variable-buffer-local 'emacspeak-w3-buffer-css-class-cache)
-
-(defun emacspeak-w3-css-class-cache ()
-  "Build CSS class cache for buffer if needed."
-  (unless (eq major-mode 'w3-mode)
-    (error "Not in W3 buffer."))
-  (or emacspeak-w3-buffer-css-class-cache
-      (let ((values nil)
-            (buffer
-             (emacspeak-xslt-url
-              (expand-file-name "class-values.xsl"
-                                emacspeak-xslt-directory)
-              (url-view-url 'no-show)
-              nil
-              'no-comment)))
-        (setq values
-              (save-excursion
-                (set-buffer buffer)
-                (shell-command-on-region (point-min) (point-max)
-                                         "sort  -u"
-                                         (current-buffer))
-                (split-string (buffer-string))))
-        (setq emacspeak-w3-buffer-css-class-cache
-              (mapcar
-               #'(lambda (v)
-                   (cons v v ))
-               values)))))
-
-(make-variable-buffer-local 'emacspeak-w3-buffer-id-cache)
-
-(defun emacspeak-w3-id-cache ()
-  "Build CSS class cache for buffer if needed."
-  (declare (special emacspeak-w3-buffer-id-cache))
-  (unless (eq major-mode 'w3-mode)
-    (error "Not in W3 buffer."))
-  (or emacspeak-w3-buffer-id-cache
-      (let ((values nil)
-            (buffer
-             (emacspeak-xslt-url
-              (expand-file-name "class-values.xsl"
-                                emacspeak-xslt-directory)
-              (url-view-url 'no-show)
-              nil
-              'no-comment)))
-        (setq values
-              (save-excursion
-                (set-buffer buffer)
-                (shell-command-on-region (point-min) (point-max)
-                                         "sort  -u"
-                                         (current-buffer))
-                (split-string (buffer-string))))
-        (setq emacspeak-w3-buffer-id-cache
-              (mapcar
-               #'(lambda (v)
-                   (cons v v ))
-               values)))))
-
-;;;###autoload
-(defun emacspeak-w3-extract-by-class (class   &optional prompt-url speak)
-  "Extract elements having specified class attribute from HTML. Extracts
-specified elements from current WWW page and displays it in a separate
-buffer. Optional arg url specifies the page to extract content from.
-Interactive use provides list of class values as completion."
-  (interactive
-   (list
-    (completing-read "Class: "
-                     (emacspeak-w3-css-class-cache))
-    current-prefix-arg))
-  (emacspeak-w3-xslt-filter
-   (format "//*[@class=\"%s\"]"
-           class)
-   prompt-url
-   (or (interactive-p)
-       speak)))
-
-(defsubst  emacspeak-w3-get-id-list ()
-  "Collect a list of ids by prompting repeatedly in the
-minibuffer.
-Empty value finishes the list."
-  (let ((ids (emacspeak-w3-id-cache))
-        (result nil)
-        (c nil)
-        (done nil))
-    (while (not done)
-      (setq c
-            (completing-read "Id: "
-                             ids
-                             nil 'must-match))
-      (if (> (length c) 0)
-          (push c result)
-        (setq done t)))
-    result))
-
-(defsubst  emacspeak-w3-css-get-class-list ()
-  "Collect a list of classes by prompting repeatedly in the
-minibuffer.
-Empty value finishes the list."
-  (let ((classes (emacspeak-w3-css-class-cache))
-        (result nil)
-        (c nil)
-        (done nil))
-    (while (not done)
-      (setq c
-            (completing-read "Class: "
-                             classes
-                             nil 'must-match))
-      (if (> (length c) 0)
-          (push c result)
-        (setq done t)))
-    result))
-;;;###autoload
-(defun emacspeak-w3-extract-by-class-list(classes   &optional prompt-url speak)
-  "Extract elements having class specified in list `classes' from HTML.
-Extracts specified elements from current WWW page and displays it in a
-separate buffer. Optional arg url specifies the page to extract
-content from. Interactive use provides list of class values as
-completion. "
-  (interactive
-   (list
-    (emacspeak-w3-css-get-class-list)
-    current-prefix-arg))
-  (let ((filter nil))
-    (setq filter
-          (mapconcat
-           #'(lambda  (c)
-               (format "(@class=\"%s\")" c))
-           classes
-           " or "))
-    (emacspeak-w3-xslt-filter
-     (format "//*[%s]" filter)
-     prompt-url
-     (or (interactive-p) speak))))
-(defvar emacspeak-w3-buffer-id-cache nil
-  "Caches id attribute values for current buffer.")
-
-(make-variable-buffer-local 'emacspeak-w3-buffer-id-cache)
-
-;;;###autoload
-(defun emacspeak-w3-extract-by-id (id   &optional prompt-url speak)
-  "Extract elements having specified id attribute from HTML. Extracts
-specified elements from current WWW page and displays it in a separate
-buffer. Optional arg url specifies the page to extract content from.
-Interactive use provides list of id values as completion."
-  (interactive
-   (list
-    (completing-read "Id: "
-                     (emacspeak-w3-id-cache))
-    current-prefix-arg))
-  (emacspeak-w3-xslt-filter
-   (format "//*[@id=\"%s\"]"
-           id)
-   prompt-url
-   (or (interactive-p)
-       speak)))
-
-;;;###autoload
-(defun emacspeak-w3-extract-by-id-list(ids   &optional prompt-url speak)
-  "Extract elements having id specified in list `ids' from HTML.
-Extracts specified elements from current WWW page and displays it in a
-separate buffer. Optional arg url specifies the page to extract
-content from. Interactive use provids list of id values as
-completion. "
-  (interactive
-   (list
-    (emacspeak-w3-css-get-id-list)
-    current-prefix-arg))
-  (let ((filter nil))
-    (setq filter
-          (mapconcat
-           #'(lambda  (c)
-               (format "(@id=\"%s\")" c))
-           ids
-           " or "))
-    (emacspeak-w3-xslt-filter
-     (format "//*[%s]" filter)
-     prompt-url
-     (or (interactive-p) speak))))
-
-(defun emacspeak-w3-junk-by-class-list(classes   &optional prompt-url speak)
-  "Junk elements having class specified in list `classes' from HTML.
-Extracts specified elements from current WWW page and displays it in a
-separate buffer. Optional arg url specifies the page to extract
-content from. Interactive use provides list of class values as
-completion. "
-  (interactive
-   (list
-    (emacspeak-w3-css-get-class-list)
-    current-prefix-arg))
-  (let ((filter nil))
-    (setq filter
-          (mapconcat
-           #'(lambda  (c)
-               (format "(@class=\"%s\")" c))
-           classes
-           " or "))
-    (emacspeak-w3-xslt-junk
-     (format "//*[%s]" filter)
-     prompt-url
-     (or (interactive-p) speak))))
-
-(defvar emacspeak-w3-xsl-filter
-  (expand-file-name "xpath-filter.xsl"
-                    emacspeak-xslt-directory)
-  "XSL transform to extract  elements matching a specified
-XPath locator.")
-(defvar emacspeak-w3-xsl-junk
-  (expand-file-name "xpath-junk.xsl"
-                    emacspeak-xslt-directory)
-  "XSL transform to junk  elements matching a specified
-XPath locator.")
-
-;;; Extracting node specified by id
-(defvar emacspeak-w3-extract-node-by-id-xsl
-  (expand-file-name "extract-node-by-id.xsl"
-                    emacspeak-xslt-directory)
-  "XSL transform to extract a node.")
-;;;###autoload
-(defun emacspeak-w3-extract-node-by-id (url node-id   )
-  "Extract specified node from URI."
-  (interactive
-   (list
-    (read-from-minibuffer "URL: ")
-    (read-from-minibuffer "Node Id: ")))
-  (declare (special emacspeak-xslt-program
-                    emacspeak-w3-extract-node-by-id-xsl))
-  (let ((result
-         (emacspeak-xslt-url
-          emacspeak-w3-extract-node-by-id-xsl
-          url
-          (list
-           (cons "node-id"
-                 (format "\"'%s'\"" node-id))
-           (cons "base"
-                 (format "\"'%s'\"" url))))))
-    (save-excursion
-      (set-buffer  result)
-      (browse-url-of-buffer))
-    (kill-buffer result)))
-
-;;}}}
-;;{{{ Browse XML files:
-
-(defun emacspeak-w3-browse-xml(location &optional prompt-style)
-  "Browse XML+CSS using W3.
-With interactive prefix arg, also prompt for an  XSL stylesheet.
-XML files can be rendered by an XML browser that is CSS aware.
-Emacs/W3 is not quite a complete XML+CSS browser, but it  does a
-good enough job for many things, especially the XML files from
-bookshare.org.
-Setting W3 up at present to display any and all XML files at
-present would be a bug, since W3 is an HTML browser --not a true
-XML browser.
-This command opens a specified XML file under the covers and has
-W3 render it using CSS as available. The result on bookshare.org
-XML files is quite usable:
-
-0) You get Aural CSS support.
-
-1) You get a navigable buffer using imenu if you have w3-imenu
-loaded. "
-  (interactive
-   (list
-    (read-file-name "XML File: ")
-    current-prefix-arg))
-  (declare (special emacspeak-xslt-options))
-  (let ((buffer  (get-buffer-create " *xml work * "))
-        (emacspeak-xslt-options ""))
-    (save-excursion
-      (set-buffer buffer)
-      (kill-all-local-variables)
-      (erase-buffer)
-      (insert-file-contents location)
-      (when prompt-style
-        (let ((xslt (read-file-name "XSL: " emacspeak-xslt-directory)))
-          (emacspeak-xslt-region xslt (point-min)
-                                 (point-max))))
-      (browse-url-of-buffer)
-      (kill-buffer buffer)
-      (emacspeak-auditory-icon 'open-object))))
-
-;;}}}
-;;{{{  xsl keymap
-
-(declaim (special emacspeak-w3-xsl-map))
-
-(loop for binding in
-      '(
-        ("C" emacspeak-w3-extract-by-class-list)
-        ("M" emacspeak-w3-extract-tables-by-match-list)
-        ("P" emacspeak-w3-extract-print-streams)
-        ("R" emacspeak-w3-extract-media-streams-under-point)
-        ("T" emacspeak-w3-extract-tables-by-position-list)
-        ("X" emacspeak-w3-extract-nested-table-list)
-        ("\C-c" emacspeak-w3-junk-by-class-list)
-        ("\C-f" emacspeak-w3-count-matches)
-        ("\C-p" emacspeak-w3-xpath-junk-and-follow)
-        ("\C-t" emacspeak-w3-count-tables)
-        ("\C-x" emacspeak-w3-count-nested-tables)
-        ("a" emacspeak-w3-xslt-apply)
-        ("c" emacspeak-w3-extract-by-class)
-        ("e" emacspeak-w3-url-expand-and-execute)
-        ("f" emacspeak-w3-xslt-filter)
-        ("i" emacspeak-w3-extract-by-id)
-        ("I" emacspeak-w3-extract-by-id-list)
-        ("j" emacspeak-w3-xslt-junk)
-        ("k" emacspeak-w3-set-xsl-keep-result)
-        ("m" emacspeak-w3-extract-table-by-match)
-        ("o" emacspeak-w3-xsl-toggle)
-        ("p" emacspeak-w3-xpath-filter-and-follow)
-        ("r" emacspeak-w3-extract-media-streams)
-        ("S" emacspeak-w3-style-filter)
-        ("s" emacspeak-w3-xslt-select)
-        ("t" emacspeak-w3-extract-table-by-position)
-        ("u" emacspeak-w3-extract-matching-urls)
-        ("x" emacspeak-w3-extract-nested-table)
-        ("y" emacspeak-w3-class-filter-and-follow)
-        )
-      do
-      (emacspeak-keymap-update emacspeak-w3-xsl-map binding))
-
-;;}}}
-;;{{{ class filter
-
-(defvar emacspeak-w3-class-filter nil
-  "Buffer local variable specifying a class filter for following
-urls.")
-
-(make-variable-buffer-local 'emacspeak-w3-class-filter)
-;;;###autoload
-(defun emacspeak-w3-class-filter-and-follow (&optional prompt-class)
-  "Follow url and point, and filter the result by specified class.
-Class can be set locally for a buffer, and overridden with an
-interactive prefix arg. If there is a known rewrite url rule, that is
-used as well."
-  (interactive "P")
-  (declare (special emacspeak-w3-class-filter
-                    emacspeak-w3-url-rewrite-rule))
-  (unless (eq major-mode 'w3-mode)
-    (error "This command is only useful in W3 buffers."))
-  (let ((url (w3-view-this-url t))
-        (redirect nil))
-    (unless url
-      (error "Not on a link."))
-    (when emacspeak-w3-url-rewrite-rule
-      (setq redirect
-            (string-replace-match (first emacspeak-w3-url-rewrite-rule)
-                                  url
-                                  (second emacspeak-w3-url-rewrite-rule))))
-    (when (or prompt-class
-              (null emacspeak-w3-class-filter))
-      (setq emacspeak-w3-class-filter
-            (read-from-minibuffer  "Specify class: ")))
-    (emacspeak-w3-extract-by-class
-     emacspeak-w3-class-filter
-     (or redirect url)
-     'speak)
-    (emacspeak-auditory-icon 'open-object)))
-
-;;}}}
-;;{{{ style filter
-(defun emacspeak-w3-style-filter (style   &optional prompt-url speak )
-  "Extract elements matching specified style
-from HTML.  Extracts specified elements from current WWW
-page and displays it in a separate buffer.  Optional arg url
-specifies the page to extract contents  from."
-  (interactive
-   (list
-    (read-from-minibuffer "Style: ")
-    current-prefix-arg))
-  (emacspeak-w3-xslt-filter
-   (format "//*[contains(@style,  \"%s\")]" style)
-   prompt-url speak))
-    
-;;}}}
-;;{{{ xpath  filter
-
-(defvar emacspeak-w3-xpath-filter nil
-  "Buffer local variable specifying a XPath filter for following
-urls.")
-
-(make-variable-buffer-local 'emacspeak-w3-xpath-filter)
-(defcustom emacspeak-w3-most-recent-xpath-filter
-  "//p|ol|ul|dl|h1|h2|h3|h4|h5|h6|blockquote|div"
-  "Caches most recently used xpath filter.
-Can be customized to set up initial default."
-  :type 'string
-  :group 'emacspeak-w3)
-;;;###autoload
-(defun emacspeak-w3-xpath-filter-and-follow (&optional prompt)
-  "Follow url and point, and filter the result by specified xpath.
-XPath can be set locally for a buffer, and overridden with an
-interactive prefix arg. If there is a known rewrite url rule, that is
-used as well."
-  (interactive "P")
-  (declare (special emacspeak-w3-xpath-filter
-                    emacspeak-w3-most-recent-xpath-filter
-                    emacspeak-w3-url-rewrite-rule))
-  (unless (eq major-mode 'w3-mode)
-    (error "This command is only useful in W3 buffers."))
-  (let ((url (w3-view-this-url t))
-        (redirect nil))
-    (unless url
-      (error "Not on a link."))
-    (when emacspeak-w3-url-rewrite-rule
-      (setq redirect
-            (string-replace-match (first emacspeak-w3-url-rewrite-rule)
-                                  url
-                                  (second
-                                   emacspeak-w3-url-rewrite-rule))))
-    (when (or prompt
-              (null emacspeak-w3-xpath-filter))
-      (setq emacspeak-w3-xpath-filter
-            (read-from-minibuffer  "Specify XPath: "
-                                   emacspeak-w3-most-recent-xpath-filter))
-      (setq emacspeak-w3-most-recent-xpath-filter
-            emacspeak-w3-xpath-filter))
-    (emacspeak-w3-xslt-filter emacspeak-w3-xpath-filter
-                              (or redirect url)
-                              'speak)
-    (emacspeak-auditory-icon 'open-object)))
-
-(defvar emacspeak-w3-xpath-junk nil
-  "Records XPath pattern used to junk elements.")
-
-(make-variable-buffer-local 'emacspeak-w3-xpath-junk)
-
-(defvar emacspeak-w3-most-recent-xpath-junk
-  nil
-  "Caches last XPath used to junk elements.")
-
-(defun emacspeak-w3-xpath-junk-and-follow (&optional prompt)
-  "Follow url and point, and filter the result by junking
-elements specified xpath.
-XPath can be set locally for a buffer, and overridden with an
-interactive prefix arg. If there is a known rewrite url rule, that is
-used as well."
-  (interactive "P")
-  (declare (special emacspeak-w3-xpath-junk
-                    emacspeak-w3-most-recent-xpath-junk
-                    emacspeak-w3-url-rewrite-rule))
-  (unless (eq major-mode 'w3-mode)
-    (error "This command is only useful in W3 buffers."))
-  (let ((url (w3-view-this-url t))
-        (redirect nil))
-    (unless url
-      (error "Not on a link."))
-    (when emacspeak-w3-url-rewrite-rule
-      (setq redirect
-            (string-replace-match (first emacspeak-w3-url-rewrite-rule)
-                                  url
-                                  (second
-                                   emacspeak-w3-url-rewrite-rule))))
-    (when (or prompt
-              (null emacspeak-w3-xpath-junk))
-      (setq emacspeak-w3-xpath-junk
-            (read-from-minibuffer  "Specify XPath: "
-                                   emacspeak-w3-most-recent-xpath-junk))
-      (setq emacspeak-w3-most-recent-xpath-junk
-            emacspeak-w3-xpath-junk))
-    (emacspeak-w3-xslt-filter emacspeak-w3-xpath-junk
-                              (or redirect url)
-                              'speak
-                              'complement)
-    (emacspeak-auditory-icon 'open-object)))
-
-;;}}}
-;;{{{  browse url using specified style
-
-;;;###autoload
-(defun emacspeak-w3-browse-url-with-style (style url)
-  "Browse URL with specified XSL style."
-  (interactive
-   (list
-    (expand-file-name
-     (read-file-name "XSL Transformation: "
-                     emacspeak-xslt-directory))
-    (read-string "URL: " (browse-url-url-at-point))))
-  (declare (special emacspeak-w3-post-process-hook
-                    emacspeak-w3-xsl-p
-                    emacspeak-w3-xsl-transform))
-  (let ((emacspeak-w3-xsl-p t)
-        (emacspeak-w3-xsl-transform style)
-        (src-buffer
-         (emacspeak-xslt-url
-          style
-          url
-          (list
-           (cons "base"
-                 (format "\"'%s'\""
-                         url))))))
-    (add-hook 'emacspeak-w3-post-process-hook
-              #'(lambda nil
-                  (emacspeak-speak-mode-line)
-                  (emacspeak-auditory-icon 'open-object)))
-    (save-excursion
-      (set-buffer src-buffer)
-      (browse-url-of-buffer))
-    (kill-buffer src-buffer)))
-
-(defcustom emacspeak-w3-charent-alist
-  '(("&lt;" . "<")
-    ("&gt;" . ">")
-    ("&quot;" . "\"")
-    ("&apos;" . "'")
-    ("&amp;" . "&"))
-  "Entities to unescape when treating badly escaped XML."
-  :type '(repeat  :tag "Char Entity"
-                  (cons :tag "Entry"
-                        (string :tag "CharEnt")
-                        (string :tag "Replacement")))
-  :group 'emacspeak-w3)
-
-(defsubst emacspeak-w3-unescape-charent ()
-  "Clean up bad XML usage."
-  (declare (special emacspeak-w3-charent-alist))
-  (loop for entry in emacspeak-w3-charent-alist
-        do
-        (let ((entity (car  entry))
-              (replacement (cdr entry )))
-          (goto-char (point-min))
-          (while (search-forward entity nil t)
-            (replace-match replacement )))))
-
-;;;###autoload
-(defun emacspeak-w3-browse-xml-url-with-style (style url &optional unescape-charent)
-  "Browse XML URL with specified XSL style."
-  (interactive
-   (list
-    (expand-file-name
-     (read-file-name "XSL Transformation: "
-                     emacspeak-xslt-directory))
-    (read-string "URL: " (browse-url-url-at-point))))
-  (declare (special emacspeak-w3-post-process-hook))
-  (let ((src-buffer
-         (emacspeak-xslt-xml-url
-          style
-          url
-          (list
-           (cons "base"
-                 (format "\"'%s'\""
-                         url))))))
-    (add-hook 'emacspeak-w3-post-process-hook
-              #'(lambda nil
-                  (emacspeak-speak-mode-line)
-                  (emacspeak-auditory-icon 'open-object)))
-    (save-excursion
-      (set-buffer src-buffer)
-      (when unescape-charent
-        (emacspeak-w3-unescape-charent))
-      (emacspeak-w3-without-xsl
-       (browse-url-of-buffer)))
-    (kill-buffer src-buffer)))
+(defadvice w3-notify-when-ready (after emacspeak pre act comp)
+  "Call w3 post-processor hook if set."
+  (emacspeak-webutils-run-post-process-hook))
 
 ;;}}}
 ;;{{{ advice focus on cell
 (defadvice w3-table-focus-on-this-cell (around emacspeak pre act comp)
   "Clone any url rewrite rules."
-  (let ((rule emacspeak-w3-url-rewrite-rule))
+  (let ((rule emacspeak-we-url-rewrite-rule))
     ad-do-it
     (when rule
-      (setq emacspeak-w3-url-rewrite-rule rule))))
-
-;;}}}
-;;{{{ previewing buffers and regions
-
-;;;###autoload
-
-;;;###autoload
+      (setq emacspeak-we-url-rewrite-rule rule))))
 
 ;;}}}
 ;;{{{ fix bug in W3 under emacs 21
@@ -1624,20 +544,6 @@ used as well."
     (condition-case nil
         ad-do-it
       (error (message "caught an error")))))
-
-;;}}}
-;;{{{ enable post processor functionality
-
-(defvar emacspeak-w3-post-process-hook nil
-  "Set locally to a  site specific post processor.
-Note that this hook gets reset after it is used by W3 --and this is intentional.")
-
-(defadvice w3-notify-when-ready (after emacspeak pre act comp)
-  "Call w3 post-processor hook if set."
-  (when     emacspeak-w3-post-process-hook
-    (unwind-protect
-        (run-hooks  'emacspeak-w3-post-process-hook)
-      (setq emacspeak-w3-post-process-hook nil))))
 
 ;;}}}
 ;;{{{ silence url history save
@@ -1694,29 +600,6 @@ Note that this hook gets reset after it is used by W3 --and this is intentional.
 ;;{{{ pull RSS feed
 
 ;;;###autoload
-(defun emacspeak-w3-browse-rss-at-point ()
-  "Browses RSS url under point."
-  (interactive)
-  (unless (eq major-mode 'w3-mode)
-    (error "Not in a W3 buffer."))
-  (let ((url (w3-view-this-url  'no-show)))
-    (cond
-     (url
-      (emacspeak-auditory-icon 'select-object)
-      (emacspeak-rss-display url 'speak))
-     (t (error "No URL under point.")))))
-;;;###autoload
-(defun emacspeak-w3-browse-atom-at-point ()
-  "Browses Atom url under point."
-  (interactive)
-  (unless (eq major-mode 'w3-mode)
-    (error "Not in a W3 buffer."))
-  (let ((url (w3-view-this-url  'no-show)))
-    (cond
-     (url
-      (emacspeak-auditory-icon 'select-object)
-      (emacspeak-atom-display url 'speak))
-     (t (error "No URL under point.")))))
 
 ;;}}}
 ;;{{{ backward compatibility
@@ -1795,17 +678,17 @@ If a rewrite rule is defined in the current buffer, we change
   this command to behave as if it were called with an
   interactive prefix."
   (when (and (interactive-p)
-             emacspeak-w3-url-rewrite-rule)
+             emacspeak-we-url-rewrite-rule)
     (ad-set-arg 0 t)
     (let ((url (w3-view-this-url t))
           (redirect nil))
       (unless url
         (error "Not on a link."))
       (setq redirect
-            (string-replace-match (first emacspeak-w3-url-rewrite-rule)
-                                  url
-                                  (second
-                                   emacspeak-w3-url-rewrite-rule)))
+            (replace-regexp-in-string
+             (first emacspeak-we-url-rewrite-rule)
+             (second emacspeak-we-url-rewrite-rule)
+             url))
       (push redirect minibuffer-history))))
 
 ;;}}}
@@ -1818,7 +701,7 @@ If a rewrite rule is defined in the current buffer, we change
 
 (defcustom emacspeak-w3-tidy-options
   (list "--show-warnings" "no" "--show-errors" "0" "--force-output" "yes"
-        "-asxml" "-quiet" "-clean" "-bare" "-omit"
+        "-asxml" "-quiet"  "-bare" "-omit"
         "--drop-proprietary-attributes" "yes" "--hide-comments"
         "yes")
   "Options to pass to tidy program"
@@ -1850,6 +733,42 @@ If a rewrite rule is defined in the current buffer, we change
              emacspeak-w3-tidy-options))))
 
 (add-hook 'w3-parse-hooks 'emacspeak-w3-tidy)
+
+;;}}}
+;;{{{ advice to call xslt
+(defadvice  w3-parse-buffer (before emacspeak pre act comp)
+  "Apply requested XSL transform if any before displaying the
+HTML."
+  (when emacspeak-we-cleanup-bogus-quotes
+    (goto-char (point-min))
+    (while (search-forward "&\#147\;" nil t)
+      (replace-match "\""))
+    (goto-char (point-min))
+    (while (search-forward "&\#148\;" nil t)
+      (replace-match "\""))
+    (goto-char (point-min))
+    (while (search-forward "&\#180\;" nil t)
+      (replace-match "\'")))
+  (unless
+      (or emacspeak-we-xsl-p
+          (string-match "temp"
+                        (buffer-name)))
+    (emacspeak-we-build-id-cache)
+    (emacspeak-we-build-class-cache))
+  (when (and emacspeak-we-xsl-p
+             emacspeak-we-xsl-transform
+             (not  (string-match "temp" (buffer-name))))
+    (emacspeak-xslt-region
+     emacspeak-we-xsl-transform
+     (point-min)
+     (point-max)
+     emacspeak-we-xsl-params)
+    (emacspeak-we-build-id-cache)
+    (emacspeak-we-build-class-cache)
+    (when emacspeak-we-xsl-keep-result
+      (clone-buffer
+       (format "xslt-%s"
+               (buffer-name))))))
 
 ;;}}}
 ;;{{{ fix css bug:

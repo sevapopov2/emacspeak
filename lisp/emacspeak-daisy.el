@@ -1,5 +1,5 @@
 ;;; emacspeak-daisy.el --- daisy Front-end for emacspeak desktop
-;;; $Id: emacspeak-daisy.el 4105 2006-08-23 05:00:40Z tv.raman.tv $
+;;; $Id: emacspeak-daisy.el 5274 2007-09-07 23:16:08Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for DAISY Talking Books
 ;;; Keywords: Emacspeak, daisy Digital Talking Books
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-22 22:00:40 -0700 (Tue, 22 Aug 2006) $ |
-;;;  $Revision: 4105 $ |
+;;; $Date: 2007-09-07 16:16:08 -0700 (Fri, 07 Sep 2007) $ |
+;;;  $Revision: 4541 $ |
 ;;; Location undetermined
 ;;;
 
@@ -51,6 +51,7 @@
 
 (require 'emacspeak-preamble)
 (require 'xml-parse)
+
 ;;}}}
 ;;{{{  Customization variables
 (defgroup emacspeak-daisy nil
@@ -58,9 +59,9 @@
   :group 'emacspeak)
 
 ;;}}}
-;;{{{ Book structure 
+;;{{{ Book structure
 
-;;; Book structure 
+;;; Book structure
 
 (defstruct  emacspeak-daisy-book
   base
@@ -101,7 +102,7 @@
                     (emacspeak-daisy-book-base book)))
 
 ;;}}}
-;;{{{ find element by id 
+;;{{{ find element by id
 (defun xml-find-tag-by-id (tree id)
   "Walk tree and return node matching id."
   (let ((children (xml-tag-children tree))
@@ -117,9 +118,9 @@
         (unless (stringp current)
           (setq found (xml-find-tag-by-id current id))))
       found))))
-        
+
 ;;}}}
-;;{{{ return matching children 
+;;{{{ return matching children
 (defun xml-children-by-name  (tag name)
   "Return list of children  matching NAME, of an xml-parse'd XML TAG."
   (let ((children (xml-tag-children tag))
@@ -131,7 +132,7 @@
     result))
 
 ;;}}}
-;;{{{  play audio clip 
+;;{{{  play audio clip
 
 (defvar emacspeak-daisy-mpg123-player "mpg123"
   "MPG123 executable for playing mp3 files.")
@@ -155,7 +156,7 @@ Clip is the result of parsing element <audio .../> as defined by Daisy 3."
     (setq first (emacspeak-daisy-time-string-to-frame begin))
     (setq last (emacspeak-daisy-time-string-to-frame end))
     (setf (emacspeak-daisy-book-audio-process emacspeak-daisy-this-book)
-          (start-process "mpg123"  nil 
+          (start-process "mpg123"  nil
                          emacspeak-daisy-mpg123-player
                          "-k"
                          (format "%s"  (1- first))
@@ -176,7 +177,9 @@ Clip is the result of parsing SMIL element <text .../> as used by Daisy 3."
          (fragment (second split))
          (path (emacspeak-daisy-resolve-uri relative
                                             emacspeak-daisy-this-book)))
-    (emacspeak-w3-extract-node-by-id path fragment)))
+    (emacspeak-we-extract-by-id
+     fragment
+     (concat "file:" path))))
 
 ;;;###autoload
 (defun emacspeak-daisy-play-page-range (start end )
@@ -222,7 +225,7 @@ Clip is the result of parsing SMIL element <text .../> as used by Daisy 3."
   (emacspeak-auditory-icon 'close-object))
 
 ;;}}}
-;;{{{ play smil content 
+;;{{{ play smil content
 
 (defun emacspeak-daisy-book-add-content (book src)
   "Parse SMIL content in src and store it as book contents.
@@ -239,7 +242,7 @@ Contents are indexed by src."
        (gethash src (emacspeak-daisy-book-content book))
        (read-xml))
       (kill-buffer smil))))
-    
+
 (defun emacspeak-daisy-fetch-content (book src)
   "Return content particle from book,
 after fetching it  if necessary."
@@ -267,8 +270,7 @@ the clip."
 (defun emacspeak-daisy-play-content (content)
   "Play SMIL content specified by content.
 Return buffer that holds the result of playing the content."
-  (declare (special emacspeak-daisy-base-uri
-                    emacspeak-daisy-this-book))
+  (declare (special emacspeak-daisy-this-book))
   (unless (eq major-mode 'emacspeak-daisy-mode)
     (error "Not in a digital audio book."))
   (unless
@@ -288,7 +290,7 @@ Return buffer that holds the result of playing the content."
     (emacspeak-daisy-play-smil clip)))
 
 ;;}}}
-;;{{{  table of handlers 
+;;{{{  table of handlers
 
 (defvar emacspeak-daisy-handler-table (make-hash-table )
   "Table that maps elements to handlers.")
@@ -306,10 +308,10 @@ Return buffer that holds the result of playing the content."
   (setf (gethash (intern element) emacspeak-daisy-handler-table) handler))
 
 ;;}}}
-;;{{{ Install handlers 
+;;{{{ Install handlers
 
 ;;; elements
-(defvar emacspeak-daisy-xml-elements 
+(defvar emacspeak-daisy-xml-elements
   (list
    "ncx"
    "head"
@@ -318,7 +320,7 @@ Return buffer that holds the result of playing the content."
    "text"
    "audio"
    "content"
-   "navStruct" ;;; old ncx 
+   "navStruct" ;;; old ncx
    "navObject" ;;; old ncx
    "navLabel"
    "navLisp"
@@ -335,7 +337,7 @@ Return buffer that holds the result of playing the content."
                                      "emacspeak-daisy-%s-handler" e))))
 
 ;;}}}
-;;{{{ Define handlers 
+;;{{{ Define handlers
 
 (defsubst emacspeak-daisy-apply-handler (element)
   "Lookup and apply installed handler."
@@ -356,7 +358,7 @@ Return buffer that holds the result of playing the content."
   "Handle element <text>...</text>."
   (mapc #'insert (xml-tag-children element))
   (insert "\n"))
-   
+
 (defun emacspeak-daisy-head-handler (element)
   "Handle head element."
   (declare (special emacspeak-daisy-this-book))
@@ -383,7 +385,7 @@ Return buffer that holds the result of playing the content."
     (when audio
       (put-text-property start (point)
                          'audio audio))
-    
+
     (put-text-property start (point)
                        'content content)))
 (defun emacspeak-daisy-navLabel-handler (element)
@@ -409,7 +411,6 @@ Return buffer that holds the result of playing the content."
                          'content content))
     (mapc #'emacspeak-daisy-apply-handler nav-points)))
 
-    
 (defun emacspeak-daisy-docTitle-handler (element)
   "Handle <doctitle>...</doctitle>"
   (let ((text (xml-tag-child  element "text"))
@@ -418,26 +419,26 @@ Return buffer that holds the result of playing the content."
     (emacspeak-daisy-text-handler   text)
     (put-text-property start (point)
                        'audio audio)))
-                             
-;;; Ignore navList for now 
+
+;;; Ignore navList for now
 (emacspeak-daisy-set-handler "navList" 'ignore)
 ;;}}}
 ;;{{{  emacspeak-daisy mode
 
 (declaim (special emacspeak-daisy-mode-map))
 
-(define-derived-mode emacspeak-daisy-mode text-mode 
+(define-derived-mode emacspeak-daisy-mode text-mode
   "Digital Talking Book\n"
   "A DAISY front-end for the Emacspeak desktop.
 
 Pre-requisites:
 
 0) mpg123 for playing mp3 files
-1) libxml and libxslt packages 
+1) libxml and libxslt packages
 2) xml-parse.el for parsing XML in Emacs Lisp.
 
 The Emacspeak DAISY front-end is launched by command
-emacspeak-daisy-open-book  bound to \\[emacspeak-daisy-open-book].  
+emacspeak-daisy-open-book  bound to \\[emacspeak-daisy-open-book].
 
 This command switches to a special buffer that has DAISY
 commands bounds to single keystrokes-- see the ke-binding
@@ -445,7 +446,7 @@ list at the end of this description.  Use Emacs online help
 facility to look up help on these commands.
 
 emacspeak-daisy-mode provides the necessary functionality to
-navigate and listen to Daisy talking books. 
+navigate and listen to Daisy talking books.
 
 Here is a list of all emacspeak DAISY commands along with their key-bindings:
 
@@ -496,20 +497,9 @@ navigation file for a book. Include all extensions except `.ncx'
 
 (defsubst emacspeak-daisy-read-file-name()
   "Read file name."
-;;; we do this based on signature of read-file-name
-  (let ((read-file-name-takes-predicate ;;; emacs 21.4
-         (= 7 (length
-               (car (append
-                     (symbol-function 'read-file-name) nil))))))
-    (if read-file-name-takes-predicate       
-        (read-file-name "Book Navigation File: "
-                        emacspeak-daisy-books-directory
-                        nil t  nil 
-                        #'(lambda (f)
-                            (string-match "\\.ncx$" f)))
-      (read-file-name "Book Navigation File: "
-                      emacspeak-daisy-books-directory
-                      nil t  nil))))
+  (read-file-name "Book Navigation File: "
+                  emacspeak-daisy-books-directory
+                  nil t  nil))
 
 ;;;###autoload
 (defun emacspeak-daisy-open-book (filename)
@@ -551,7 +541,7 @@ navigation buffer that can be used to browse and read the book."
     (switch-to-buffer buffer)
     (cd (emacspeak-daisy-book-base emacspeak-daisy-this-book))
     (emacspeak-speak-load-directory-settings)
-    (when (emacspeak-daisy-get-bookmarks 
+    (when (emacspeak-daisy-get-bookmarks
            (emacspeak-daisy-book-name emacspeak-daisy-this-book))
       (emacspeak-daisy-add-bookmarks-to-buffer
        (emacspeak-daisy-get-bookmarks
@@ -682,7 +672,7 @@ No-op if content under point is not currently displayed."
       (and bookmark (goto-char bookmark))
       (emacspeak-speak-mode-line))
      (content
-      (emacspeak-daisy-configure-w3-to-record-viewer
+      (emacspeak-daisy-configure-web-to-record-viewer
        (current-buffer) title outline-regexp
        start end bookmark)
       (emacspeak-auditory-icon 'open-object)
@@ -742,29 +732,28 @@ No-op if content under point is not currently displayed."
 ;;}}}
 ;;{{{ Configure w3 post processor hook to record viewer buffer:
 
-(defun emacspeak-daisy-configure-w3-to-record-viewer (nav-center title outline 
-                                                                 start  end bookmark)
+(defun emacspeak-daisy-configure-web-to-record-viewer (nav-center title outline
+                                                                  start  end bookmark)
   "Attaches an automatically generated post processor function
-that asks W3 to record the viewer in the navigation center when done.
+that asks the browser  to record the viewer in the navigation center when done.
 Also puts the displayed buffer in outline-minor-mode and gives it
                                                       the right title."
   (declare (special emacspeak-w3-post-process-hook))
   (setq emacspeak-w3-post-process-hook
-        (`
-         (lambda  nil
+        `(lambda  nil
            (let ((buffer (current-buffer)))
              (outline-minor-mode 1)
-             (setq outline-regexp (, outline))
+             (setq outline-regexp ,outline)
              (rename-buffer title 'uniquely)
              (save-excursion
-               (set-buffer (, nav-center))
-               (put-text-property (, start) (, end)
+               (set-buffer ,nav-center)
+               (put-text-property ,start ,end
                                   'viewer  buffer))
              (cond
               (bookmark
                (goto-char bookmark)
                (emacspeak-speak-line))
-              (t (emacspeak-speak-mode-line))))))))
+              (t (emacspeak-speak-mode-line)))))))
 
 ;;}}}
 

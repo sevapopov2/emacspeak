@@ -1,23 +1,23 @@
 ;;; emacspeak-keymap.el --- Setup all keymaps and keybindings provided by Emacspeak
-;;; $Id: emacspeak-keymap.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
-;;; $Author: tv.raman.tv $ 
+;;; $Id: emacspeak-keymap.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description:  Module for setting up emacspeak keybindings
 ;;; Keywords: Emacspeak
-;;{{{  LCD Archive entry: 
+;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ | 
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
+;;;  $Revision: 4544 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
-;;; All Rights Reserved. 
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -40,7 +40,7 @@
 
 ;;;Commentary:
 
-;;; This module defines the emacspeak keybindings. 
+;;; This module defines the emacspeak keybindings.
 
 ;;; Code:
 
@@ -51,11 +51,11 @@
 (declaim  (optimize  (safety 0) (speed 3)))
 
 ;;}}}
-;;{{{  variables: 
+;;{{{  variables:
 
 (defvar emacspeak-prefix "\C-e"
   "Default prefix key used for emacspeak. ")
-;;;###autoload 
+;;;###autoload
 (defvar emacspeak-keymap nil
   "Primary keymap used by emacspeak. ")
 
@@ -89,8 +89,8 @@
 (defcustom emacspeak-personal-keys nil
   "*Specifies personal key bindings for the audio desktop.
 Bindings specified here are available on prefix key C-e x
-for example, if you bind 
-`s' to command emacspeak-emergency-tts-restart 
+for example, if you bind
+`s' to command emacspeak-emergency-tts-restart
 then that command will be available on key C-e x s
 
 The value of this variable is an association list. The car
@@ -137,8 +137,8 @@ You can turn the right `windows menu' keys on your Linux PC keyboard into a `sup
 on Linux by having it emit the sequence `C-x@s'.
 
 Bindings specified here are available on prefix key `super'
-for example, if you bind 
-`s' to command emacspeak-emergency-tts-restart 
+for example, if you bind
+`s' to command emacspeak-emergency-tts-restart
 then that command will be available on key `super  s'
 
 The value of this variable is an association list. The car
@@ -186,8 +186,8 @@ on Linux by having it emit the sequence `C-x@a'.
 
 Bindings specified here are available on prefix key `alt'
 (not to be confused with alt==meta)
-for example, if you bind 
-`s' to command emacspeak-emergency-tts-restart 
+for example, if you bind
+`s' to command emacspeak-emergency-tts-restart
 then that command will be available on key `ALT  s'
 
 The value of this variable is an association list. The car
@@ -235,7 +235,7 @@ You can turn the `windows' keys on your Linux PC keyboard into a `hyper' key
 on Linux by having it emit the sequence `C-x@h'.
 
 Bindings specified here are available on prefix key  `hyper'
-for example, if you bind 
+for example, if you bind
 `b' to command `bbdb '
 then that command will be available on key `hyper b'.
 
@@ -267,7 +267,7 @@ field in the customization buffer.  You can use the notation
                 'emacspeak-hyper-keymap)
 
 ;;}}}
-;;{{{ helper: emacspeak-keymap-update 
+;;{{{ helper: emacspeak-keymap-update
 
 (defsubst emacspeak-keymap-update (keymap binding)
   "Update keymap with specified binding."
@@ -278,7 +278,7 @@ field in the customization buffer.  You can use the notation
 
 ;;; help map additions:
 
-(loop for binding in 
+(loop for binding in
       '(
         ( " " customize-group)
         ( "B" customize-browse)
@@ -305,12 +305,13 @@ field in the customization buffer.  You can use the notation
       '(
         (  "\C-a" emacspeak-toggle-auditory-icons )
         ( "\M-f" emacspeak-frame-label-or-switch-to-labelled-frame )
-        (" " dtk-resume)
+        (" " emacspeak-speak-header-line)
         ("!" emacspeak-speak-run-shell-command)
         ("'" emacspeak-speak-sexp)
         ("#" emacspeak-gridtext)
         ("%" emacspeak-speak-current-percentage)
-        ("(" emacspeak-aumix)
+        ("&" emacspeak-wizards-show-eval-result)
+        ("(" emacspeak-audio-setup)
         (")" emacspeak-sounds-select-theme)
         ("," emacspeak-speak-browse-buffer )
         ("." emacspeak-speak-current-field)
@@ -397,20 +398,21 @@ field in the customization buffer.  You can use the notation
         ("s" dtk-stop)
         ("t" emacspeak-speak-time )
         ("u" emacspeak-url-template-fetch)
-        ("v" emacspeak-view-register)
+        ("v" view-register)
         ("w" emacspeak-speak-word)
         ("{" emacspeak-speak-paragraph)
         ("|" emacspeak-speak-line-set-column-filter)
         ([(control left)] emacspeak-select-this-buffer-previous-display)
         ([(control right)] emacspeak-select-this-buffer-next-display)
-        ([aleft] emacspeak-speak-this-buffer-previous-display)
+        ([left] emacspeak-speak-this-buffer-previous-display)
         ([down] emacspeak-read-next-line)
+        ([right] emacspeak-speak-this-buffer-next-display)
+        ([up]  emacspeak-read-previous-line)
         ([f1] emacspeak-learn-emacs-mode)
         ([f11] emacspeak-wizards-shell-toggle)
         ([insert] emacspeak-emergency-tts-restart)
         ([delete] emacspeak-ssh-tts-restart)
-        ([right] emacspeak-speak-this-buffer-next-display)
-        ([up]  emacspeak-read-previous-line)
+        ([(deletechar)] emacspeak-ssh-tts-restart)
         )
       do
       (emacspeak-keymap-update emacspeak-keymap binding))
@@ -430,6 +432,7 @@ field in the customization buffer.  You can use the notation
         ("\M-\C-b" tts-show-debug-buffer)
         ("a" dtk-add-cleanup-pattern)
         ("b" dtk-toggle-debug)
+        ("," dtk-toggle-punctuation-mode)
         ("c" dtk-toggle-capitalization)
         ("d" dtk-select-server)
         ("f" dtk-set-character-scale)
@@ -453,40 +456,23 @@ field in the customization buffer.  You can use the notation
 (dotimes (i 10) (define-key emacspeak-dtk-submap   (format "%s" i )   'dtk-set-predefined-speech-rate ))
 
 ;;; Put these in the global map:
-(global-set-key '[(control left)] 'emacspeak-previous-frame-or-buffer)
-(global-set-key '[(control right)] 'emacspeak-next-frame-or-buffer)
-(global-set-key '[pause] 'dtk-stop)
-(global-set-key '[(control down)] 'emacspeak-mark-forward-mark)
-(global-set-key '[(control up)] 'emacspeak-mark-backward-mark)
-(global-set-key '[shift up] 'emacspeak-skip-blank-lines-backward)
-(global-set-key '[shift down] 'emacspeak-skip-blank-lines-forward)
-(global-set-key '[27 up]  'emacspeak-owindow-previous-line)
-(global-set-key  '[27 down]  'emacspeak-owindow-next-line)
-(global-set-key  '[27 prior]  'emacspeak-owindow-scroll-down)
-(global-set-key  '[27 next]  'emacspeak-owindow-scroll-up)
-(global-set-key  '[27 select]  'emacspeak-owindow-speak-line)
+(global-set-key [(shift left)] 'previous-buffer)
+(global-set-key [(shift right)] 'next-buffer)
+(global-set-key [(control left)] 'emacspeak-previous-frame-or-buffer)
+(global-set-key [(control right)] 'emacspeak-next-frame-or-buffer)
+(global-set-key [pause] 'dtk-stop)
+(global-set-key [(control down)] 'emacspeak-mark-forward-mark)
+(global-set-key [(control up)] 'emacspeak-mark-backward-mark)
+(global-set-key [(shift up)] 'emacspeak-skip-blank-lines-backward)
+(global-set-key [(shift down)] 'emacspeak-skip-blank-lines-forward)
+(global-set-key [27 up]  'emacspeak-owindow-previous-line)
+(global-set-key  [27 down]  'emacspeak-owindow-next-line)
+(global-set-key  [27 prior]  'emacspeak-owindow-scroll-down)
+(global-set-key  [27 next]  'emacspeak-owindow-scroll-up)
+(global-set-key  [27 select]  'emacspeak-owindow-speak-line)
 (global-set-key '[left] 'emacspeak-backward-char)
 (global-set-key '[right] 'emacspeak-forward-char)
-
-;;}}}
-;;{{{ Hacking minibuffer maps:
-
-(declaim (special  minibuffer-local-must-match-map
-                   minibuffer-local-map
-                   minibuffer-local-completion-map
-                   minibuffer-local-ns-map))
-(or (string-match  "Xemacs" emacs-version)
-    (mapcar
-     (function (lambda (map)
-                 (and map 
-                      (define-key map 
-                        "\C-o"
-                        'emacspeak-switch-to-completions-window))))
-     (list minibuffer-local-must-match-map
-           minibuffer-local-map
-           minibuffer-local-completion-map
-           minibuffer-local-ns-map)))
-
+(define-key esc-map "\M-:" 'emacspeak-wizards-show-eval-result)
 ;;}}}
 ;;{{{ Interactively switching the emacspeak-prefix
 ;;;###autoload
@@ -510,7 +496,7 @@ relief."
 
 ;;}}}
 ;;{{{  removing emacspeak-self-insert-command in non-edit modes.
-;;;###autoload 
+;;;###autoload
 (defun emacspeak-keymap-remove-emacspeak-edit-commands
   (keymap)
   "We define keys that invoke editting commands to be undefined"
@@ -519,6 +505,11 @@ relief."
                            keymap)
         do
         (define-key keymap k 'undefined )))
+
+(defun emacspeak-keymap-refresh ()
+  "Load emacspeak-keymap module."
+  (load-library "emacspeak-keymap"))
+
 ;;}}}
 (provide 'emacspeak-keymap)
 
@@ -527,6 +518,6 @@ relief."
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}

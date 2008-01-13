@@ -1,6 +1,6 @@
 ;;; emacspeak-bbdb.el --- Speech enable BBDB -- a powerful address manager
 
-;;; $Id: emacspeak-bbdb.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-bbdb.el 5266 2007-09-07 13:14:47Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; DescriptionEmacspeak extensions for bbdb 
 ;;; Keywords:emacspeak, audio interface to emacs bbdb 
@@ -9,7 +9,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@crl.dec.com 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-07 06:14:47 -0700 (Fri, 07 Sep 2007) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -150,22 +150,21 @@
   (cond
    ((interactive-p)
     (let ((prior (point))
+	  (completion-ignore-case t)
           (completions nil )
           (window (selected-window))
           (buffer (current-buffer)))
       ad-do-it
-      (if (and (setq completions (get-buffer "*Completions*"))
-               (window-live-p (get-buffer-window completions)))
-          (progn
-            (emacspeak-switch-to-completions-window)
-            (setq completion-reference-buffer buffer)
-            (delete-other-windows)
-            (unless (get-text-property (point) 'mouse-face)
-              (goto-char (next-single-property-change (point)
-                                                      'mouse-face )))
-            (dtk-speak (emacspeak-get-current-completion-from-completions)))
-        (let ((dtk-stop-immediately nil ))
-          (dtk-speak (buffer-substring prior (point )))))))
+      (cond
+       ((and (setq completions (get-buffer "*Completions*"))
+	     (window-live-p (get-buffer-window completions)))
+	(switch-to-completions)
+	(setq completion-reference-buffer buffer)
+	(unless (get-text-property (point) 'mouse-face)
+	  (goto-char (next-single-property-change (point)
+						  'mouse-face )))
+	(dtk-speak (emacspeak-get-current-completion)))
+       (t (dtk-speak (buffer-substring prior (point )))))))
    (t ad-do-it ))
   ad-return-value )
 

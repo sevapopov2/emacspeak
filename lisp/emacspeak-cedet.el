@@ -1,15 +1,15 @@
 ;;; emacspeak-cedet.el --- Speech enable CEDET
-;;; $Id: emacspeak-cedet.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
-;;; $Author: tv.raman.tv $ 
+;;; $Id: emacspeak-cedet.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description: Auditory interface to CEDET
 ;;; Keywords: Emacspeak, Speak, Spoken Output, CEDET
-;;{{{  LCD Archive entry: 
+;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ | 
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
@@ -17,7 +17,7 @@
 ;;{{{  Copyright:
 
 ;;; Copyright (c) 1995 -- 2007, T. V. Raman
-;;; All Rights Reserved. 
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -53,37 +53,28 @@
 ;;{{{ advice semantic completion
 
 (loop for f in
-      '(semantic-complete-complete-tab
-        semantic-complete-complete-space)
+      '(semantic-complete-complete-tab semantic-complete-complete-space)
       do
-      (eval 
-       `(defadvice ,f (around emacspeak pre
-                              act comp)
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
           "Provide auditory feedback."
           (let ((prior (point ))
                 (dtk-stop-immediately t))
             (emacspeak-kill-buffer-carefully "*Completions*")
             ad-do-it
-            (let ((completions-buffer (get-buffer "*Completions*")))
-              (if (> (point) prior)
-                  (tts-with-punctuations 'all
-                                         (dtk-speak (buffer-substring prior (point ))))
-                (when (and completions-buffer
-                           (window-live-p (get-buffer-window completions-buffer )))
-                  (save-excursion
-                    (set-buffer completions-buffer )
-                    (emacspeak-prepare-completions-buffer)
-                    (tts-with-punctuations 'all
-                                           (dtk-speak (buffer-string )))))))
+            (if (> (point) prior)
+                (tts-with-punctuations 'all
+                                       (emacspeak-speak-rest-of-buffer))
+              (emacspeak-speak-completions-if-available))
             ad-return-value))))
 
 ;;}}}
 (provide 'emacspeak-cedet )
-;;{{{ end of file 
+;;{{{ end of file
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}
