@@ -1,5 +1,5 @@
 ;;; emacspeak-outline.el --- Speech enable Outline --   Browsing  Structured Documents
-;;; $Id: emacspeak-outline.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-outline.el 5236 2007-08-31 17:22:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak extensions for outline-mode
 ;;; Keywords: emacspeak, audio interface to emacs Outlines
@@ -291,6 +291,15 @@ except that the outline section is optionally spoken"
    (outline-5 voice-lighten-medium)
    (outline-6 voice-lighten)
    ))
+
+;;}}}
+;;{{{ silence errors to help org-mode:
+
+(defadvice outline-up-heading (around emacspeak pre act comp)
+  "Silence error messages."
+  (ems-with-errors-silenced
+   ad-do-it
+   ad-return-value))
 
 ;;}}}
 (provide  'emacspeak-outline)

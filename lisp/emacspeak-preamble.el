@@ -1,5 +1,5 @@
 ;;; emacspeak-preamble.el --- standard  include for Emacspeak modules
-;;; $Id: emacspeak-preamble.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-preamble.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Standard include for various Emacspeak modules
 ;;; Keywords: emacspeak, standard include
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -57,15 +57,16 @@
 ;;{{{ Utilities:
 (defsubst emacspeak-url-encode (str)
   "URL encode string."
-  (mapconcat '(lambda (c)
-                (cond ((= c 32) "+")
-                      ((or (and (>= c ?a) (<= c ?z))
-                           (and (>= c ?A) (<= c ?Z))
-                           (and (>= c ?0) (<= c ?9)))
-                       (char-to-string c))
-                      (t (upcase (format "%%%02x" c)))))
-             str
-             ""))
+  (mapconcat
+   #'(lambda (c)
+       (cond ((= c 32) "+")
+             ((or (and (>= c ?a) (<= c ?z))
+                  (and (>= c ?A) (<= c ?Z))
+                  (and (>= c ?0) (<= c ?9)))
+              (char-to-string c))
+             (t (upcase (format "%%%02x" c)))))
+   str
+   ""))
 ;;}}}
 (provide  'emacspeak-preamble)
 ;;{{{  emacs local variables 

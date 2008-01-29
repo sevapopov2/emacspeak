@@ -1,4 +1,4 @@
-# $Id: Makefile 4533 2007-05-04 01:19:32Z tv.raman.tv $
+# $Id: Makefile 5384 2007-11-23 16:34:17Z tv.raman.tv $
 # $Author: tv.raman.tv $
 # Description:  Makefile for Emacspeak
 # Keywords: Emacspeak,  TTS,Makefile
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2007-05-03 18:19:32 -0700 (Thu, 03 May 2007) $ |
-#  $Revision: 4533 $ |
+# $Date: 2007-06-23 10:16:54 -0700 (Sat, 23 Jun 2007) $ |
+#  $Revision: 4659 $ |
 # Location undetermined
 #
 
@@ -67,7 +67,6 @@
 # Setting up synthesizer server:
 # Emacspeak comes with two servers written in TCL:
 # 1) dtk-exp for the Dectalk Express
-# 2) dtk-mv for the MultiVoice and older Dectalk 3 synthesizers
 # emacspeak uses the shell environment variable DTK_PROGRAM to determine
 # which server to use, and the shell environment variable DTK_PORT
 # to determine the port where the Dectalk is connected.
@@ -151,16 +150,21 @@ FORMS =etc/forms/*.el
 REALAUDIO=realaudio
 SHOUTCAST=shoutcast
 ECI=servers/linux-outloud
-ESPEAK=servers/linux-espeak
+PYLIB=servers/python
+ESPEAK=servers/linux-espeak/tclespeak.cpp \
+servers/linux-espeak/Makefile\
+servers/linux-espeak/makefile.tcl83\
+
 DTKTTS=servers/software-dtk/tcldtk.c \
 servers/software-dtk/DTK \
 servers/software-dtk/Makefile
-
+JS=js/*.js  js/jsl.conf js/Makefile
 OUTLOUD=${ECI}/eci.ini \
 ${ECI}/*.h \
 ${ECI}/*.cpp \
+${ECI}/*.so \
 ${ECI}/VIAVOICE ${ECI}/ALSA ${ECI}/asoundrc \
-${ECI}/Makefile
+${ECI}/Makefile ${ECI}/makefile.tcl83
 
 NEWS = etc/NEWS*  etc/COPYRIGHT \
 etc/remote.txt etc/FAQ etc/HELP etc/applications.html   etc/tips.html
@@ -168,16 +172,12 @@ SOUNDS=sounds/default-8k sounds/emacspeak.mp3
 
 TCL_PROGRAMS = servers/.servers \
 servers/dtk-exp  servers/ssh-dtk-exp\
-servers/dtk-mv \
 servers/dtk-soft \
 servers/espeak \
 servers/outloud  servers/ssh-outloud \
-servers/dsp-outloud \
 servers/tts-lib.tcl \
-servers/remote-tcl \
 servers/speech-server
 ELISP = lisp/*.el \
-lisp/atom-blogger \
 lisp/g-client \
 lisp/xml-forms/*.xml \
 lisp/Makefile
@@ -190,16 +190,17 @@ etc/emacspeak.xpm etc/emacspeak.jpg
 
 INFO = info/Makefile info/*.texi info/add-css.pl
 XSL=xsl
-DISTFILES =${ELISP}  ${TEMPLATES}     $(TCL_PROGRAMS) ${XSL} \
-${SAWFISH} ${OUTLOUD} ${DTKTTS} \
+DISTFILES =${ELISP} ${JS} ${TEMPLATES}     $(TCL_PROGRAMS) ${XSL} \
+${SAWFISH} ${OUTLOUD} ${DTKTTS} ${ESPEAK} \
+${PYLIB} \
 ${INFO} ${UGUIDE} ${IGUIDE} ${NEWS} ${MISC} Makefile
 
 # }}}
 # {{{  User level targets emacspeak info print
 
 emacspeak:
-	test -f  lisp/emacspeak-loaddefs.el || make config
-	cd lisp; $(MAKE)  SRC=$(SRC)
+	test -f  lisp/emacspeak-loaddefs.el || ${MAKE} config
+	cd lisp; $(MAKE)
 	touch   $(ID)
 	chmod 644 $(ID)
 	@echo "Now check installation of  the speech server. "
@@ -248,7 +249,7 @@ dist: $(DISTFILES)
 # {{{ User level target--  config
 
 config:
-	cd etc; $(MAKE) config  SRC=$(SRC)
+	cd etc; $(MAKE) config  #SRC=$(SRC)
 	cd lisp; $(MAKE) config
 	@echo "Configured emacspeak in directory $(SRC). Now type make emacspeak"
 
@@ -262,7 +263,6 @@ install:
 	touch $(libdir)/.nosearch
 	  $(INSTALL) -d $(libdir)/lisp
 	$(INSTALL) -d $(libdir)/lisp/xml-forms
-	$(INSTALL) -d $(libdir)/lisp/atom-blogger
 	$(INSTALL) -d $(libdir)/lisp/g-client
 	$(INSTALL) -d $(libdir)/etc
 	$(INSTALL) -d $(libdir)/sawfish
@@ -272,7 +272,6 @@ install:
 	$(INSTALL) -m 0644  ${ID} $(libdir)
 	  $(INSTALL) -m 0644  lisp/*.el lisp/*.elc  $(libdir)/lisp
 	$(INSTALL) -m 0644  lisp/xml-forms/*.xml   $(libdir)/lisp/xml-forms
-	$(INSTALL) -m 0644  lisp/atom-blogger/*.el    $(libdir)/lisp/atom-blogger
 	$(INSTALL) -m 0644  lisp/g-client/*.el    $(libdir)/lisp/g-client
 	$(INSTALL) -m 0644  lisp/g-client/*.xsl    $(libdir)/lisp/g-client
 	$(INSTALL) -m 0644  sawfish/*.jl sawfish/sawfishrc   $(libdir)/sawfish
@@ -280,9 +279,13 @@ install:
 	$(INSTALL) -m 0644  ${UGUIDE}   $(libdir)/user-guide
 	$(INSTALL) -m 0644  ${IGUIDE}   $(libdir)/install-guide
 	$(INSTALL) -d $(libdir)/sounds
+	$(INSTALL) -d $(libdir)/js
+	$(INSTALL)  -m 644 ${JS}  $(libdir)/js
 	$(INSTALL) -d $(libdir)/servers
+	$(INSTALL) -d $(libdir)/servers/python
 	$(INSTALL) -d $(libdir)/servers/linux-outloud
 	$(INSTALL)  -m 755 ${OUTLOUD}  $(libdir)/servers/linux-outloud
+	cp -r  ${PYLIB}  $(libdir)/servers/python
 	$(INSTALL) -d $(libdir)/servers/linux-espeak
 	$(INSTALL)  -m 755 ${ESPEAK}  $(libdir)/servers/linux-espeak
 	$(INSTALL) -d $(libdir)/servers/software-dtk

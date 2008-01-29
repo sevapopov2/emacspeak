@@ -1,13 +1,13 @@
 ;;; voice-setup.el --- Setup voices for voice-lock
-;;; $Id: voice-setup.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: voice-setup.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Voice lock mode for Emacspeak
 ;;{{{  LCD Archive entry:
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ |
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
+;;;  $Revision: 4672 $ |
 ;;; Location undetermined
 ;;;
 
@@ -96,8 +96,6 @@
 (require 'multispeech-voices)
 (require 'espeak-voices)
 (require 'dectalk-voices)
-(require 'string)
-
 ;;}}}
 ;;{{{ customization group
 
@@ -176,13 +174,12 @@
           doc
           (format "\nThis personality uses  %s whose  effect can be changed globally by customizing %s-settings."
                   voice  voice))))
-    (`
-     (progn
-       (unless (boundp '(, personality))
+    `(progn
+       (unless (boundp ',personality)
 ;;; New Personality
-         (defcustom  (, personality)
-           (, voice)
-           (, documentation)
+         (defcustom  ,personality
+           ,voice
+           ,documentation
            :type (voice-setup-custom-menu)
            :group 'voice-fonts
            :set '(lambda (sym val)
@@ -191,25 +188,26 @@
                                 (symbolp observing))
                        (remprop observing sym))
                      (set-default sym val)))
-           (,@ args)))
+           ,@args))
 ;;; other actions performed at define time
-       (voice-setup-set-voice-for-face (, face) '(, personality))
+       (voice-setup-set-voice-for-face ,face ',personality)
 ;;;record  personality as an
 ;;;observer of  voice and vice versa
-       (when (symbolp '(, personality))
-         (put  '(, personality) 'observing '(, voice)))
-       (when (symbolp '(, voice))
-         (put  '(, voice) '(, personality) t))))))
+       (when (symbolp ',personality)
+         (put  ',personality 'observing ',voice))
+       (when (symbolp ',voice)
+         (put  ',voice ',personality t)))))
+
 (defsubst voice-setup-name-personality (face-name)
   "Compute personality name to use."
   (let ((name nil))
     (setq name
           (or
-           (string-replace-match "face$" face-name "personality")
+           (replace-regexp-in-string "face$" "personality" face-name)
            face-name))
     (setq name
           (or
-           (string-replace-match "font" name "voice")
+           (replace-regexp-in-string "font" "voice" name)
            name))
     (when (string-equal name face-name)
       (setq name (format "%s-voice" name)))
@@ -276,53 +274,52 @@ VOICE-NAME are  changed."
 that speaks `all' punctuations.  Once
 defined, the newly declared personality can be customized by calling
 command \\[customize-variable] on <personality>-settings.. "
-  (`
-   (progn
-     (defvar  (, personality)
-       (voice-setup-personality-from-style (, settings))
+  `(progn
+     (defvar  ,personality
+       (voice-setup-personality-from-style ,settings)
        (concat
-        (, doc)
-        (, (format "Customize this overlay via %s-settings."
-                 personality ))))
-     (defcustom (, (intern (format "%s-settings"  personality)))
-       (, settings)
-       (, doc)
+        ,doc
+        ,(format "Customize this overlay via %s-settings."
+                 personality )))
+     (defcustom ,(intern (format "%s-settings"  personality))
+       ,settings
+       ,doc
        :type  '(list
                 (choice :tag "Family"
                         (const :tag "Unspecified" nil)
                         (const  :tag "Paul" paul)
-(const :tag "Harry" harry)
-(const :tag "Betty" betty))
-(choice :tag "Average Pitch"
-        (const :tag "Unspecified" nil)
-        (integer :tag "Number"))
-(choice :tag "Pitch Range"
-        (const :tag "Unspecified" nil)
-        (integer :tag "Number"))
-(choice :tag "Stress"
-        (const :tag "Unspecified" nil)
-        (integer :tag "Number"))
-(choice :tag "Richness"
-        (const :tag "Unspecified" nil)
-        (integer :tag "Number"))
-(choice :tag "Punctuation Mode "
-        (const :tag "Unspecified" nil)
-        (const :tag "All punctuations" all)
-        (const :tag "Some punctuations" some)
-        (const :tag "No punctuations" none)))
-:group 'voice-fonts
-:set
-'(lambda  (sym val)
-(let ((voice-name (voice-setup-personality-from-style val)))
-  (setq (, personality) voice-name)
-;;; update all observers                ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
-  (voice-setup-update-personalities '(, personality))
-  (set-default sym val)))))))
+                        (const :tag "Harry" harry)
+                        (const :tag "Betty" betty))
+                (choice :tag "Average Pitch"
+                        (const :tag "Unspecified" nil)
+                        (integer :tag "Number"))
+                (choice :tag "Pitch Range"
+                        (const :tag "Unspecified" nil)
+                        (integer :tag "Number"))
+                (choice :tag "Stress"
+                        (const :tag "Unspecified" nil)
+                        (integer :tag "Number"))
+                (choice :tag "Richness"
+                        (const :tag "Unspecified" nil)
+                        (integer :tag "Number"))
+                (choice :tag "Punctuation Mode "
+                        (const :tag "Unspecified" nil)
+                        (const :tag "All punctuations" all)
+                        (const :tag "Some punctuations" some)
+                        (const :tag "No punctuations" none)))
+       :group 'voice-fonts
+       :set
+       '(lambda  (sym val)
+          (let ((voice-name (voice-setup-personality-from-style val)))
+            (setq ,personality voice-name)
+;;; update all observers                ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
+            (voice-setup-update-personalities ',personality)
+            (set-default sym val))))))
 
-;;}}}                                   ; ;
-;;{{{ voices defined using ACSS         ; ;
+;;}}}                                   ; ; ;
+;;{{{ voices defined using ACSS         ; ; ;
 
-;;; these voices are device independent ; ;
+;;; these voices are device independent ; ; ;
 
 (defvoice  voice-punctuations-all (list nil nil nil nil  nil 'all)
   "Turns current voice into one that  speaks all

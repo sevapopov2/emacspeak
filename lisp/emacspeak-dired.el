@@ -1,5 +1,5 @@
 ;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
-;;; $Id: emacspeak-dired.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-dired.el 5260 2007-09-07 03:55:14Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enable dired
 ;;; Keywords: Emacspeak, Dired, Spoken Output
@@ -8,14 +8,14 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-06 20:55:14 -0700 (Thu, 06 Sep 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -46,14 +46,14 @@
 ;;; Voicification is used to indicate directories, marked files etc.
 
 ;;}}}
-;;{{{  required packages 
+;;{{{  required packages
 
 ;;; Code:
 (require 'emacspeak-preamble)
 (require 'desktop)
 (require 'dired)
 ;;}}}
-;;{{{ Define personalities 
+;;{{{ Define personalities
 (voice-setup-add-map
  '(
    (dired-header voice-smoothen)
@@ -69,7 +69,7 @@
 ;;{{{  configure dired
 
 (declaim (special dired-listing-switches ))
-;;; ensure we have -al in the listing switches 
+;;; ensure we have -al in the listing switches
 (if (and  dired-listing-switches
           (not (string-match "^-al" dired-listing-switches)))
     (setq dired-listing-switches
@@ -87,10 +87,7 @@ pronunciations only once.")
                     emacspeak-pronounce-pronunciation-table emacspeak-pronounce-dictionaries-loaded))
   (unless emacspeak-dired-pronunciations-defined
     (setq emacspeak-dired-pronunciations-defined t)
-    (emacspeak-pronounce-add-dictionary-entry 'dired-mode "Dired"
-                                              " DirEd  ")
-    (emacspeak-pronounce-add-dictionary-entry 'dired-mode "dired"
-                                              " DirEd  "))
+    (emacspeak-pronounce-add-dictionary-entry 'dired-mode "Dired" " DirEd  "))
   (when (or (not (boundp 'emacspeak-pronounce-pronunciation-table))
             (not emacspeak-pronounce-pronunciation-table))
     (emacspeak-pronounce-toggle-use-of-dictionaries)))
@@ -443,8 +440,6 @@ options passed to command `file'."
   (interactive (list (dired-get-filename t) current-prefix-arg))
   (declare (special emacspeak-dired-file-cmd-options))
   (with-temp-buffer
-    (make-local-variable 'emacspeak-speak-messages)
-    (setq emacspeak-speak-messages t)
     (if deref-symlinks
         (call-process "file" nil t t  "-l"
                       emacspeak-dired-file-cmd-options  file)
@@ -453,7 +448,8 @@ options passed to command `file'."
     (when (bolp)
       (backward-delete-char 1))
     (emacspeak-auditory-icon 'select-object)
-    (message (buffer-string))))
+    (let ((emacspeak-speak-messages t))
+      (message (buffer-string)))))
 
 (defun emacspeak-dired-speak-header-line()
   "Speak the header line of the dired buffer. "
@@ -475,7 +471,7 @@ On a directory line, run du -s on the directory to speak its size."
      ((and filename
            (file-directory-p filename))
       (emacspeak-auditory-icon 'progress)
-      (shell-command (format "du -s \'%s\'" filename )))
+      (emacspeak-shell-command (format "du -s \'%s\'" filename )))
      (filename
       (setq size (nth 7 (file-attributes filename )))
                                         ; check for ange-ftp

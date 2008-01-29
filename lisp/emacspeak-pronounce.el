@@ -1,5 +1,5 @@
 ;;; emacspeak-pronounce.el --- Implements Emacspeak pronunciation dictionaries
-;;; $Id: emacspeak-pronounce.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-pronounce.el 5261 2007-09-07 10:25:25Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak pronunciation dictionaries
 ;;; Keywords:emacspeak, audio interface to emacs customized pronunciation
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-07 03:25:25 -0700 (Fri, 07 Sep 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -108,15 +108,18 @@ This adds pronunciation pair
 STRING.PRONUNCIATION to the   dictionary.
 Argument KEY specifies a dictionary key e.g. directory, mode etc."
   (declare (special emacspeak-pronounce-dictionaries ))
-  (let ((dict  (emacspeak-pronounce-get-dictionary key)))
+  (let* ((dict  (emacspeak-pronounce-get-dictionary key))
+	 (entry (and dict (assoc string dict))))
     (cond
-     (dict
-      (setf dict
-            (cons (cons string pronunciation) dict))
+     ((and dict entry)
+      (setcdr entry pronunciation))
+     (dict 
+      (setf dict (cons (cons string pronunciation) dict))
       (emacspeak-pronounce-set-dictionary key dict ))
-     (t (emacspeak-pronounce-set-dictionary key
-                                            (list (cons string
-                                                        pronunciation)))))))
+     (t
+      (emacspeak-pronounce-set-dictionary key
+					  (list (cons string pronunciation)))))))
+
 (defun emacspeak-pronounce-remove-buffer-local-dictionary-entry (string)
   "Remove pronunciation entry."
   (when (and (boundp 'emacspeak-pronounce-pronunciation-table)
@@ -650,15 +653,14 @@ pronunciation dictionary for the specified key."
 
 (defun emacspeak-pronounce-edit-generate-callback (field-name)
   "Generate a callback for use in the pronunciation editor widget."
-  (`
-   (lambda (widget &rest ignore)
+  `(lambda (widget &rest ignore)
      (declare (special emacspeak-pronounce-dictionaries))
      (let ((value (widget-value widget)))
        (setf
         (gethash 
-         (quote (, field-name))
+         (quote ,field-name)
          emacspeak-pronounce-dictionaries)
-        value)))))
+        value))))
 
 ;;;###autoload
 (defun emacspeak-pronounce-edit-pronunciations (key)

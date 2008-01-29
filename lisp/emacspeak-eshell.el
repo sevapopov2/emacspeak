@@ -1,5 +1,5 @@
 ;;; emacspeak-eshell.el --- Speech-enable EShell - Emacs Shell
-;;; $Id: emacspeak-eshell.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-eshell.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:   Speech-enable EShell
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -54,7 +54,7 @@
 ;;}}}
 ;;{{{  setup various EShell hooks
 
-;;; Play an auditory icon as you display the prompt 
+;;; Play an auditory icon as you display the prompt
 (defun emacspeak-eshell-prompt-function ()
   "Play auditory icon for prompt."
   (declare (special eshell-last-command-status))
@@ -66,9 +66,9 @@
 (add-hook 'eshell-after-prompt-hook
           'emacspeak-eshell-prompt-function)
 
-;;; Speak command output 
+;;; Speak command output
 (add-hook 'eshell-post-command-hook
-          (function 
+          (function
            (lambda nil
              (declare (special eshell-last-input-end
                                eshell-last-output-end
@@ -85,33 +85,12 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'help)))
 
-(defadvice pcomplete (around emacspeak pre act)
-  "Say what you completed."
-  (cond
-   ((interactive-p)
-    (emacspeak-kill-buffer-carefully "*Completions*")
-    (let ((prior (point ))
-          (emacspeak-speak-messages nil)m)
-      ad-do-it
-      (when (> (point) prior)
-        (tts-with-punctuations 'all
-                               (dtk-speak
-                                (buffer-substring prior
-                                                  (point)))))
-      (let ((completions-buffer (get-buffer "*Completions*")))
-        (when (and completions-buffer
-                   (window-live-p (get-buffer-window completions-buffer )))
-          (emacspeak-auditory-icon 'help)
-          (switch-to-buffer completions-buffer)))))
-   (t ad-do-it))
-  ad-return-value)
-
 (defadvice pcomplete-show-completions (around emacspeak pre act comp)
   (let ((emacspeak-speak-messages nil))
     ad-do-it))
 
 ;;}}}
-;;{{{  Advice top-level EShell 
+;;{{{  Advice top-level EShell
 
 (defadvice eshell (after emacspeak pre act )
   "Announce switching to shell mode.
@@ -123,9 +102,9 @@ Provide an auditory icon if possible."
     (emacspeak-speak-line)))
 
 ;;}}}
-;;{{{ advice em-hist 
+;;{{{ advice em-hist
 
-(loop for f in 
+(loop for f in
       '(eshell-next-input eshell-previous-input
                           eshell-next-matching-input
                           eshell-previous-matching-input
@@ -133,15 +112,14 @@ Provide an auditory icon if possible."
                           eshell-previous-matching-input-from-input)
       do
       (eval
-       (`
-        (defadvice (, f) (after  emacspeak pre act comp)
+       `(defadvice ,f (after  emacspeak pre act comp)
           "Speak selected command."
           (when (interactive-p)
             (emacspeak-auditory-icon 'select-object)
             (save-excursion
               (beginning-of-line)
               (eshell-skip-prompt)
-              (emacspeak-speak-line 1)))))))
+              (emacspeak-speak-line 1))))))
 
 ;;}}}
 ;;{{{  advice em-ls
@@ -159,7 +137,7 @@ personalities."
   :group 'emacspeak-eshell)
 
 ;;}}}
-;;{{{ voices 
+;;{{{ voices
 
 (voice-setup-add-map
  '(
@@ -191,34 +169,32 @@ personalities."
 
 ;;}}}
 ;;{{{ Advice em-prompt
-(loop for f in 
+(loop for f in
       '(eshell-next-prompt eshell-previous-prompt
                            eshell-forward-matching-input  eshell-backward-matching-input)
       do
       (eval
-       (`
-        (defadvice (, f) (after  emacspeak pre act comp)
+       `(defadvice ,f (after  emacspeak pre act comp)
           "Speak selected command."
           (when (interactive-p)
             (let ((emacspeak-speak-messages nil))
               (emacspeak-auditory-icon 'select-object)
-              (emacspeak-speak-line 1)))))))
+              (emacspeak-speak-line 1))))))
 
 ;;}}}
 ;;{{{  advice esh-arg
 
-(loop for f in 
+(loop for f in
       '(eshell-insert-buffer-name
         eshell-insert-process
-        eshell-insert-envvar) 
+        eshell-insert-envvar)
       do
-      (eval 
-       (`
-        (defadvice (, f) (after emacspeak pre act comp)
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
           "Speak output."
           (when (interactive-p)
             (emacspeak-auditory-icon 'select-object)
-            (emacspeak-speak-line))))))
+            (emacspeak-speak-line)))))
 
 (defadvice eshell-insert-process (after emacspeak pre
                                         act comp)
@@ -236,8 +212,7 @@ personalities."
      ((= (point) (point-max))
       (message "Sending EOF to comint process"))
      (t (dtk-tone 500 30 'force)
-        (and emacspeak-delete-char-speak-deleted-char
-             (emacspeak-speak-char t))))
+        (emacspeak-speak-char t)))
     ad-do-it)
    (t ad-do-it))
   ad-return-value)

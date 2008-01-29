@@ -1,5 +1,5 @@
 ;;; emacspeak-message.el --- Speech enable Message -- Used to compose news postings and replies
-;;; $Id: emacspeak-message.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-message.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Emacspeak extensions for posting
 ;;; Keywords:emacspeak, audio interface to emacs posting messages
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -66,16 +66,16 @@
 
 (voice-setup-add-map
  '(
-   (message-cited-text-face voice-bolden) ;; pre-emacs22
-   (message-header-cc-face voice-bolden)  ;; pre-emacs22
-   (message-header-name-face voice-animate)       ;; pre-emacs22
-   (message-header-newsgroups-face voice-bolden)  ;; pre-emacs22
-   (message-header-other-face voice-bolden)       ;; pre-emacs22
-   (message-header-subject-face voice-bolden)     ;; pre-emacs22
-   (message-header-to-face voice-bolden)          ;; pre-emacs22
-   (message-header-xheader-face voice-bolden)     ;; pre-emacs22
-   (message-mml-face voice-brighten)              ;; pre-emacs22
-   (message-separator-face voice-bolden-extra)    ;; pre-emacs22
+   (message-cited-text-face voice-bolden)        ;; pre-emacs22
+   (message-header-cc-face voice-bolden)         ;; pre-emacs22
+   (message-header-name-face voice-animate)      ;; pre-emacs22
+   (message-header-newsgroups-face voice-bolden) ;; pre-emacs22
+   (message-header-other-face voice-bolden)      ;; pre-emacs22
+   (message-header-subject-face voice-bolden)    ;; pre-emacs22
+   (message-header-to-face voice-bolden)         ;; pre-emacs22
+   (message-header-xheader-face voice-bolden)    ;; pre-emacs22
+   (message-mml-face voice-brighten)             ;; pre-emacs22
+   (message-separator-face voice-bolden-extra)   ;; pre-emacs22
 
    (message-cited-text voice-bolden)
    (message-header-cc voice-bolden)

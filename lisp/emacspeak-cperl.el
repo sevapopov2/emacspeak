@@ -1,5 +1,5 @@
 ;;; emacspeak-cperl.el --- Speech enable CPerl Mode 
-;;; $Id: emacspeak-cperl.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-cperl.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Emacspeak extensions for CPerl mode
 ;;; Keywords: emacspeak, audio interface to emacs CPerl
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -69,14 +69,13 @@
 (loop for e in emacspeak-cperl-electric-insertion-commands-to-advice
       do
       (eval
-       (`
-        (defadvice (, e) (after emacspeak pre act comp)
+       `(defadvice ,e (after emacspeak pre act comp)
           "Speak what you inserted.
 Cue electric insertion with a tone."
           (when (interactive-p)
             (let ((emacspeak-speak-messages nil))
               (emacspeak-speak-this-char last-input-char)
-              (dtk-tone 800 50 t)))))))
+              (dtk-tone 800 50 t))))))
 
 (defadvice cperl-electric-backspace (around emacspeak pre act)
   "Speak character you're deleting."

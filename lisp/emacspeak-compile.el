@@ -7,7 +7,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -80,12 +80,11 @@
         )
       do
       (eval
-       (`
-        (defadvice (, f) (after  emacspeak pre act )
+       `(defadvice ,f (after  emacspeak pre act )
           "Speak the line containing the error. "
           (when (interactive-p)
             (dtk-stop)
-            (emacspeak-compilation-speak-error))))))
+            (emacspeak-compilation-speak-error)))))
 
 (loop for f in 
       '(
@@ -95,12 +94,12 @@
         previous-error-no-select)
       do
       (eval
-       (`
-        (defadvice (, f) (after emacspeak pre act comp)
+       `(defadvice ,f (after emacspeak pre act comp)
           "Provide spoken feedback."
           (when (interactive-p)
             (emacspeak-auditory-icon 'select-object)
-            (emacspeak-speak-line))))))
+            (emacspeak-speak-line)))))
+
 ;;}}}
 ;;{{{ advise process filter and sentinels
 

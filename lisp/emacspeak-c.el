@@ -1,23 +1,23 @@
-;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java 
-;;; $Id: emacspeak-c.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
-;;; $Author: tv.raman.tv $ 
+;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java
+;;; $Id: emacspeak-c.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak extensions for C and C++ mode
-;;; Keywords: emacspeak, audio interface to emacs C, C++
-;;{{{  LCD Archive entry: 
+;;; Keywords:emacspeak, audio interface to emacs C, C++
+;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
-;;;  $Revision: 4532 $ | 
+;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;;  $Revision: 4637 $ |
 ;;; Location undetermined
 ;;;
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
-;;; All Rights Reserved. 
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -41,7 +41,7 @@
 ;;; Commentary:
 
 ;;; Make some of C and C++ mode more emacspeak friendly
-;;; Works with both boring c-mode 
+;;; Works with both boring c-mode
 ;;; and the excellent cc-mode
 
 ;;}}}
@@ -88,7 +88,7 @@
 	  "Speak the line when a statement is completed."
 	  (when (interactive-p)
 	    (cond 
-	     ((= last-input-char ?,) (dtk-speak " comma "))
+	     ((= last-input-char ?,) (emacspeak-speak-this-char last-input-char))
 	     (t (emacspeak-speak-line )))))))
 
 (loop for f in
@@ -117,7 +117,7 @@
     (dtk-tone 500 30)))
 
 ;;}}}
-;;{{{  Moving across logical chunks 
+;;{{{  Moving across logical chunks
 
 (loop for f in
       '(c-up-conditional
@@ -135,14 +135,11 @@
 	    (emacspeak-auditory-icon 'large-movement)
 	    (emacspeak-speak-line )))))
 
-(defadvice mark-c-function (after emacspeak pre act )
+(defadvice c-mark-function (after emacspeak pre act )
   "Provide spoken and auditory feedback."
   (when (interactive-p)
-    (let ((dtk-stop-immediately nil))
-      (emacspeak-auditory-icon 'mark-object)
-      (dtk-speak "Marked function containing %s lines "
-                 (count-lines (point) (mark)))
-      (emacspeak-speak-line ))))
+    (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-speak-line)))
 
 ;;}}}
 ;;{{{  extensions  provided by c++ mode
@@ -152,7 +149,7 @@
   (when (interactive-p)
     (dtk-speak "colon colon")))
 
-;;}}} 
+;;}}}
 ;;{{{  Some more navigation functions I define:
 
 (defun c-previous-statement (count)
@@ -165,16 +162,14 @@
     (cond
      ((or (assq 'c semantics )
           (assq 'comment-intro semantics ))
-      (while 
+      (while
           (and (or (assq 'c semantics )
                    (assq 'comment-intro semantics ))
                (not (eobp ))
                (= 0 (forward-line -1)))
         (setq semantics (c-guess-basic-syntax )))
       (skip-syntax-backward " ")
-      (dtk-speak "Skipping comment")
-      (and (sit-for 2)
-           (emacspeak-speak-line )))
+      (emacspeak-speak-line ))
      (t (setq count (or count 1))
         (c-beginning-of-statement   count )
         (and (save-match-data (looking-at "{"))
@@ -197,16 +192,14 @@ this level")
     (cond
      ((or (assq 'c semantics )
           (assq 'comment-intro semantics ))
-      (while 
+      (while
           (and (or (assq 'c semantics )
                    (assq 'comment-intro semantics ))
                (not (eobp ))
                (= 0 (forward-line 1)))
         (setq semantics (c-guess-basic-syntax )))
       (skip-syntax-forward " ")
-      (dtk-speak "Skipping  comment")
-      (and (sit-for 2)
-           (emacspeak-speak-line )))
+      (emacspeak-speak-line ))
      (t (setq count (or count 1))
         (c-end-of-statement(1+  count ))
         (c-beginning-of-statement  1 )
@@ -221,10 +214,10 @@ level")
           (emacspeak-speak-line))))))
 
 ;;}}}
-;;{{{  C semantics 
+;;{{{  C semantics
 
-(defvar emacspeak-c-syntactic-table 
-  (list 
+(defvar emacspeak-c-syntactic-table
+  (list
    '(string                 . "  inside multi-line string")
    '( c                      . "  inside a multi-line C
 style block comment")
@@ -236,7 +229,7 @@ style block comment")
    '( class-close            . "  brace that closes a class definition")
    '( inline-open            . "  brace that opens an in-class inline method")
    '( inline-close           . "  brace that closes an in-class inline method")
-   '( func-decl-cont         . "  the region between a 
+   '( func-decl-cont         . "  the region between a
 function definition's argument list and the function opening brace")
    '( knr-argdecl-intro      . "  first line of a K&R C argument declaration")
    '( knr-argdecl            . "  subsequent lines in a K&R
@@ -300,19 +293,19 @@ and their meanings. ")
                             (c-guess-basic-syntax )))
          (description ""))
     (setq description
-          (mapconcat 
-           (function (lambda (sem) 
+          (mapconcat
+           (function (lambda (sem)
                        (cdr (assq  sem emacspeak-c-syntactic-table ))))
-           semantics 
+           semantics
            " "))
-    (condition-case nil 
+    (condition-case nil
         (cond
          ((or (memq 'block-close semantics )
               (memq 'defun-close semantics )
               (memq 'class-close semantics )
               (memq 'inline-close semantics )
               (memq 'brace-list-close semantics ))
-          ;; append the line 
+          ;; append the line
           (setq description
                 (concat description
                         ;; that begins this block
@@ -354,7 +347,7 @@ and their meanings. ")
 
 (declaim (special c-mode-map
                   c-mode-base-map))
-(add-hook 'c-mode-common-hook 
+(add-hook 'c-mode-common-hook
           (function (lambda ()
                       (declare (special c-mode-map
                                         c-mode-base-map))
@@ -375,7 +368,7 @@ and their meanings. ")
                           (dtk-toggle-allcaps-beep)))))
 
 ;;}}}
-;;{{{ personalities 
+;;{{{ personalities
 
 (voice-setup-add-map
  '(
@@ -384,11 +377,11 @@ and their meanings. ")
 
 ;;}}}
 (provide  'emacspeak-c)
-;;{{{  emacs local variables 
+;;{{{  emacs local variables
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}

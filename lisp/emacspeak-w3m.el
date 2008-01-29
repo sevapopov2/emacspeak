@@ -1,5 +1,5 @@
 ;;; emacspeak-w3m.el --- speech-enables w3m-el
-;;;$Id: emacspeak-w3m.el 4472 2007-04-26 13:19:08Z tv.raman.tv $
+;;;$Id: emacspeak-w3m.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;{{{ Copyright
 
 ;;; This file is not part of Emacs, but the same terms and
@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;}}}
 
@@ -35,16 +35,14 @@
 ;;{{{  required modules
 
 (require 'emacspeak-preamble)
-(require 'emacspeak-w3)
-(require 'emacspeak-rss)
+(require 'emacspeak-webutils)
+(require 'emacspeak-we)
 (require 'easymenu)
 (require 'emacspeak-m-player)
-(require 'emacspeak-webutils)
 (require 'custom)
 (eval-when-compile
   (condition-case nil
       (require 'w3m)
-    (require 'url)
     (error nil)))
 (eval-when (load)
   (require 'w3m-util)
@@ -61,19 +59,23 @@
 
 (defcustom emacspeak-w3m-speak-titles-on-switch nil
   "Speak the document title when switching between w3m buffers.
-If non-nil, switching between w3m buffers will speak the title 
+If non-nil, switching between w3m buffers will speak the title
 instead of the modeline."
-  :type 'boolean 
+  :type 'boolean
   :group 'emacspeak-w3m)
 
 ;;}}}
-;;{{{ keybindings 
+;;{{{ keybindings
+
 (declaim (special w3m-mode-map
                   emacspeak-prefix))
 (define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command)
-(define-key w3m-mode-map "x" 'emacspeak-w3m-xsl-map)
+
+(add-hook 'w3m-display-hook 'emacspeak-webutils-run-post-process-hook)
+
+(define-key w3m-mode-map "x" 'emacspeak-we-xsl-map)
 (define-key w3m-mode-map [M-tab] 'w3m-previous-anchor)
-(define-key w3m-mode-map [backtab] 'w3m-previous-anchor)
+(define-key w3m-mode-map [(shift tab)] 'w3m-previous-anchor)
 (define-key w3m-mode-map [tab] 'w3m-next-anchor)
 (define-key w3m-mode-map [down] 'next-line)
 (define-key w3m-mode-map [up] 'previous-line)
@@ -86,7 +88,6 @@ instead of the modeline."
 (define-key w3m-mode-map "\C-c\C-g" 'emacspeak-webutils-google-on-this-site)
 (define-key w3m-mode-map "\C-c\C-x" 'emacspeak-webutils-google-extract-from-cache)
 (define-key w3m-mode-map "\C-c\C-l" 'emacspeak-webutils-google-similar-to-this-page)
-(define-key w3m-mode-map "\C-c\C-r" 'emacspeak-w3m-browse-rss-at-point)
 (define-key w3m-mode-map (kbd "<C-return>") 'emacspeak-webutils-open-in-other-browser)
 
 ;;}}}
@@ -174,23 +175,23 @@ instead of the modeline."
      (t (emacspeak-w3m-speak-cursor-anchor)))))
 
 ;;}}}
-;;{{{  forms 
+;;{{{  forms
 
 (defun emacspeak-w3m-speak-form-input (form name type width maxlength
                                             value)
   "Speak form input"
-  (declare (special emacspeak-w3m-form-personality))
+  (declare (special emacspeak-w3m-form-voice))
   (dtk-speak
    (format "%s input %s  %s"
            type
            name
            (emacspeak-w3m-personalize-string
             (or (emacspeak-w3m-form-get form name) value)
-            emacspeak-w3m-form-personality))))
+            emacspeak-w3m-form-voice))))
 
 (defun emacspeak-w3m-speak-form-input-checkbox (form name value)
   "Speak checkbox"
-  (declare (special emacspeak-w3m-form-personality))
+  (declare (special emacspeak-w3m-form-voice))
   (dtk-speak
    (format "checkbox %s is %s"
            name
@@ -198,36 +199,36 @@ instead of the modeline."
             (if (emacspeak-w3m-form-get form name)
                 "on"
               "off")
-            emacspeak-w3m-form-personality))))
+            emacspeak-w3m-form-voice))))
 
 (defun emacspeak-w3m-speak-form-input-password (form name)
   "Speech-enable password form element."
-  (declare (special emacspeak-w3m-form-personality))
+  (declare (special emacspeak-w3m-form-voice))
   (dtk-speak
    (format "password input %s  %s"
            name
            (emacspeak-w3m-personalize-string
             (emacspeak-w3m-anchor-text)
-            emacspeak-w3m-form-personality))))
+            emacspeak-w3m-form-voice))))
 
-(defun emacspeak-w3m-speak-form-submit (form &optional name value)
+(defun emacspeak-w3m-speak-form-submit (form &optional name value new-session download)
   "Speak submit button."
-  (declare (special emacspeak-w3m-form-button-personality))
+  (declare (special emacspeak-w3m-form-button-voice))
   (dtk-speak
    (if (equal value "")
        "submit button"
      (format "button %s"
              (emacspeak-w3m-personalize-string
               value
-              emacspeak-w3m-form-button-personality)))))
+              emacspeak-w3m-form-button-voice)))))
 
 (defun emacspeak-w3m-speak-form-input-radio (form name value)
   "speech enable radio buttons."
-  (declare (special emacspeak-w3m-form-personality))
+  (declare (special emacspeak-w3m-form-voice))
   (and dtk-stop-immediately (dtk-stop))
   (let* ((active (equal value (emacspeak-w3m-form-get form name)))
          (personality (if active
-                          emacspeak-w3m-form-personality))
+                          emacspeak-w3m-form-voice))
          (dtk-stop-immediately nil))
     (emacspeak-auditory-icon (if active 'on 'off))
     (dtk-speak
@@ -243,122 +244,102 @@ instead of the modeline."
 
 (defun emacspeak-w3m-speak-form-input-select (form name)
   "speech enable select control."
-  (declare (special emacspeak-w3m-form-personality))
+  (declare (special emacspeak-w3m-form-voice))
   (dtk-speak
    (format "select %s  %s"
            name
            (emacspeak-w3m-personalize-string
             (emacspeak-w3m-anchor-text)
-            emacspeak-w3m-form-personality))))
+            emacspeak-w3m-form-voice))))
 
 (defun emacspeak-w3m-speak-form-input-textarea (form &optional hseq)
   "speech enable text area."
-  (declare (special emacspeak-w3m-form-personality))
+  (declare (special emacspeak-w3m-form-voice))
   (dtk-speak
    (format "text area %s  %s"
            (or (get-text-property (point) 'w3m-form-name) "")
            (emacspeak-w3m-personalize-string
             (emacspeak-w3m-anchor-text)
-            emacspeak-w3m-form-personality))))
+            emacspeak-w3m-form-voice))))
 
 (defun emacspeak-w3m-speak-form-reset (form)
   "Reset button."
-  (declare (special emacspeak-w3m-form-button-personality))
+  (declare (special emacspeak-w3m-form-button-voice))
   (dtk-speak
    (format "button %s"
            (emacspeak-w3m-personalize-string
             "reset"
-            emacspeak-w3m-form-button-personality))))
+            emacspeak-w3m-form-button-voice))))
 
 ;;}}}
 ;;{{{  advice interactive commands.
+;;{{{  commenting out for now:
 
-(defadvice w3m-goto-url (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it))
-   (t ad-do-it))
-  ad-return-value)
+;; (defadvice w3m-goto-url (around emacspeak pre act)
+;;   "Speech-enable W3M."
+;;   (cond
+;;    ((interactive-p)
+;;     (emacspeak-auditory-icon 'select-object)
+;;     (let ((emacspeak-speak-messages nil))
+;;       ad-do-it))
+;;    (t ad-do-it))ad-return-value)
 
-(defadvice w3m-redisplay-this-page (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it))
-   (t ad-do-it))
-  ad-return-value)
+;; (defadvice w3m-redisplay-this-page (around emacspeak pre act)
+;;   "Speech-enable W3M."
+;;   (cond
+;;    ((interactive-p)
+;;     (emacspeak-auditory-icon 'select-object)
+;;     (let ((emacspeak-speak-messages nil))
+;;       ad-do-it))
+;;    (t ad-do-it))ad-return-value)
 
-(defadvice w3m-reload-this-page (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it))
-   (t ad-do-it))
-  ad-return-value)
+;; (defadvice w3m-reload-this-page (around emacspeak pre act)
+;;   "Speech-enable W3M."
+;;   (cond
+;;    ((interactive-p)
+;;     (emacspeak-auditory-icon 'select-object)
+;;     (let ((emacspeak-speak-messages nil))
+;;       ad-do-it))
+;;    (t ad-do-it))ad-return-value)
 
-(defadvice w3m-print-current-url (after emacspeak pre act comp)
-  "Produce auditory icon."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)))
-
-(defadvice w3m-print-this-url (after emacspeak pre act comp)
-  "Produce auditory icon."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)))
-
-(defadvice w3m-edit-current-url (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-mode-line)))
-
-(defadvice w3m-edit-this-url (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-mode-line)))
+;;}}}
+(loop for f in
+      '(w3m-print-current-url  w3m-print-this-url
+                               w3m-search
+                               w3m-edit-current-url w3m-edit-this-url)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Produce auditory icon."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'select-object)))))
 
 (defadvice w3m-submit-form (after emacspeak pre act comp)
   "Produce auditory icon."
   (when (interactive-p)
     (emacspeak-auditory-icon 'button)))
 
-(defadvice w3m-search (after emacspeak pre act comp)
-  "Produce auditory icon."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)))
-
-(defadvice w3m-next-buffer (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (declare (special w3m-current-title))    
-    (emacspeak-auditory-icon 'select-object)
-    (if emacspeak-w3m-speak-titles-on-switch 
-        (dtk-speak w3m-current-title)
-      (emacspeak-speak-mode-line))))
-
-(defadvice w3m-previous-buffer (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (declare (special w3m-current-title))
-    (emacspeak-auditory-icon 'select-object)
-    (if emacspeak-w3m-speak-titles-on-switch 
-        (dtk-speak w3m-current-title)
-      (emacspeak-speak-mode-line))))
+(loop for f in
+      '(w3m-previous-buffer w3m-next-buffer
+                            w3m-view-next-page w3m-view-previous-page
+                            w3m-view-parent-page w3m-gohome)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (declare (special w3m-current-title))
+            (emacspeak-auditory-icon 'select-object)
+            (if emacspeak-w3m-speak-titles-on-switch
+                (dtk-speak w3m-current-title)
+              (emacspeak-speak-mode-line))))))
 
 (defadvice w3m-delete-buffer (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (declare (special w3m-current-title))
     (emacspeak-auditory-icon 'close-object)
-    (if emacspeak-w3m-speak-titles-on-switch 
+    (if emacspeak-w3m-speak-titles-on-switch
         (dtk-speak w3m-current-title)
       (emacspeak-speak-mode-line))))
 
@@ -367,7 +348,7 @@ instead of the modeline."
   (when (interactive-p)
     (declare (special w3m-current-title))
     (emacspeak-auditory-icon 'close-object)
-    (if emacspeak-w3m-speak-titles-on-switch 
+    (if emacspeak-w3m-speak-titles-on-switch
         (dtk-speak w3m-current-title)
       (emacspeak-speak-mode-line))))
 
@@ -390,70 +371,22 @@ instead of the modeline."
   (when (interactive-p)
     (emacspeak-auditory-icon 'save-object)))
 
-(defadvice w3m-next-anchor (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-w3m-speak-this-anchor)))
-   (t ad-do-it))
-  ad-return-value)
-
-(defadvice w3m-previous-anchor (around emacspeak pre act)
-  "Speech-enable link navigation."
-  (cond
-   ((interactive-p)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-w3m-speak-this-anchor)))
-   (t ad-do-it))
-  ad-return-value)
-
-(defadvice w3m-next-image (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-w3m-speak-this-anchor)))
-   (t ad-do-it))
-  ad-return-value)
-
-(defadvice w3m-previous-image (around emacspeak pre act)
-  "Speech-enable link navigation."
-  (cond
-   ((interactive-p)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-w3m-speak-this-anchor)))
-   (t ad-do-it))
-  ad-return-value)
-
-(defadvice w3m-next-form (around emacspeak pre act comp)
-  "Speech-enable form navigation."
-  (cond
-   ((interactive-p)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-w3m-speak-this-anchor)))
-   (t ad-do-it))
-  ad-return-value)
-
-(defadvice w3m-previous-form (around emacspeak pre act comp)
-  "Speech enable form navigation."
-  (cond
-   ((interactive-p)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-w3m-speak-this-anchor)))
-   (t ad-do-it)))
+(loop for f in
+      '(w3m-next-anchor w3m-previous-anchor
+                        w3m-next-image w3m-previous-image
+                        w3m-next-form w3m-previous-form)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act)
+          "Speech-enable W3M."
+          (cond
+           ((interactive-p)
+            (let ((emacspeak-speak-messages nil))
+              ad-do-it
+              (emacspeak-auditory-icon 'large-movement)
+              (emacspeak-w3m-speak-this-anchor)))
+           (t ad-do-it))
+          ad-return-value)))
 
 (defadvice w3m-view-this-url (around emacspeak pre act comp)
   "Speech-enable W3M."
@@ -494,42 +427,6 @@ instead of the modeline."
       ad-do-it))
    (t ad-do-it))ad-return-value)
 
-(defadvice w3m-view-next-page (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it))
-   (t ad-do-it))ad-return-value)
-
-(defadvice w3m-view-previous-page (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it))
-   (t ad-do-it))ad-return-value)
-
-(defadvice w3m-view-parent-page (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it))
-   (t ad-do-it))ad-return-value)
-
-(defadvice w3m-gohome (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it))
-   (t ad-do-it))ad-return-value)
-
 (defadvice w3m-bookmark-view (around emacspeak pre act)
   "Speech-enable W3M."
   (cond
@@ -539,72 +436,30 @@ instead of the modeline."
       ad-do-it))
    (t ad-do-it))ad-return-value)
 
-(defadvice w3m-weather (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it))
-   (t ad-do-it))ad-return-value)
-
-(defadvice w3m-scroll-up-or-next-url (around emacspeak pre act comp)
-  "Speech-enable scrolling."
-  (cond
-   ((interactive-p)
-    (let ((opoint (save-excursion
-                    (beginning-of-line)
-                    (point))))
-      ;; hide opoint from advised function
-      (let (opoint) ad-do-it)
-      (emacspeak-auditory-icon 'scroll)
-      (emacspeak-speak-region opoint
-                              (save-excursion (end-of-line)
-                                              (point)))))
-   (t ad-do-it))
-  ad-return-value)
-
-(defadvice w3m-scroll-down-or-previous-url (around emacspeak pre act
-                                                   comp)
-  "Speech-enable scrolling."
-  (cond
-   ((interactive-p)
-    (let ((opoint (save-excursion
-                    (end-of-line)
-                    (point))))
-      ;; hide opoint from advised function
-      (let (opoint) ad-do-it)
-      (emacspeak-auditory-icon 'scroll)
-      (emacspeak-speak-region opoint
-                              (save-excursion (beginning-of-line)
-                                              (point)))))
-   (t ad-do-it))
-  ad-return-value)
-
-(defadvice w3m-scroll-left (after emacspeak pre act comp)
-  "Produce auditory icon."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'left)))
-
-(defadvice w3m-scroll-right (after emacspeak pre act comp)
-  "Produce auditory icon."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'right)))
-
-(defadvice w3m-shift-left (after emacspeak pre act comp)
-  "Produce auditory icon."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'left)))
-
-(defadvice w3m-shift-right (after emacspeak pre act comp)
-  "Produce auditory icon."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'right)))
-
-(defadvice w3m-horizontal-recenter (after emacspeak pre act comp)
-  "Produce auditory icon."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)))
+(loop for f in
+      '(w3m-scroll-up-or-next-url
+        w3m-scroll-down-or-previous-url w3m-scroll-left
+        w3m-shift-left w3m-shift-right
+        w3m-horizontal-recenter w3m-horizontal-scroll
+        w3m-scroll-right
+        )
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
+          "Speech-enable scrolling."
+          (cond
+           ((interactive-p)
+            (let ((opoint (save-excursion
+                            (beginning-of-line)
+                            (point))))
+              ;; hide opoint from advised function
+              (let (opoint) ad-do-it)
+              (emacspeak-auditory-icon 'scroll)
+              (emacspeak-speak-region opoint
+                                      (save-excursion (end-of-line)
+                                                      (point)))))
+           (t ad-do-it))
+          ad-return-value)))
 
 (defadvice w3m (around emacspeak pre act)
   "Speech-enable W3M."
@@ -678,24 +533,13 @@ instead of the modeline."
     (dtk-speak "Viewing history")))
 
 ;;}}}
-;;{{{ displaying pages
-
-(add-hook 'w3m-display-hook
-          (lambda (url)
-            (declare (special w3m-current-title))
-            (emacspeak-auditory-icon 'open-object)
-            (when (stringp w3m-current-title)
-              (dtk-speak w3m-current-title)))
-          t)
-
-;;}}}
 ;;{{{ webutils variables
 
 (add-hook 'w3m-fontify-after-hook
-          (lambda ()
-            (setq emacspeak-webutils-document-title 'w3m-current-title)
-            (setq emacspeak-webutils-url-at-point 'emacspeak-w3m-url-at-point)
-            (setq emacspeak-webutils-current-url 'emacspeak-w3m-current-url)))
+          #'(lambda ()
+              (setq emacspeak-webutils-document-title 'w3m-current-title)
+              (setq emacspeak-webutils-url-at-point 'emacspeak-w3m-url-at-point)
+              (setq emacspeak-webutils-current-url 'emacspeak-w3m-current-url)))
 
 ;;}}}
 ;;{{{ buffer select mode
@@ -795,75 +639,14 @@ instead of the modeline."
 ;;}}}
 ;;{{{ TVR: applying XSL
 
-(defvar emacspeak-w3m-xsl-once nil
-  "XSL transformation for once applying.")
-
-(defun emacspeak-w3m-xslt-apply (xsl)
-  "Apply specified transformation to current page."
-  (interactive
-   (list
-    (expand-file-name
-     (read-file-name "XSL Transformation: "
-                     emacspeak-xslt-directory))))
-  (declare (special major-mode
-                    emacspeak-w3-xsl-p
-                    emacspeak-w3-xsl-transform
-                    emacspeak-xslt-directory))
-  (unless (eq major-mode 'w3m-mode)
-    (error "Not in a W3m buffer."))
-  (setq emacspeak-w3m-xsl-once xsl)
-  (w3m-redisplay-this-page))
-
-(defun emacspeak-w3m-xslt-perform (xsl-name &optional persistent)
-  "Perform XSL transformation by name on the current page
-or make it persistent if the second argument is not nil."
-  (let ((xsl (expand-file-name (concat xsl-name ".xsl")
-                               emacspeak-xslt-directory)))
-    (when persistent
-      (emacspeak-w3-xslt-select xsl))
-    (when (or emacspeak-w3-xsl-p
-              (not persistent))
-      (emacspeak-w3m-xslt-apply xsl))))
-
-(defun emacspeak-w3m-xsl-add-submit-button (&optional persistent)
-  "Add regular submit button if needed.
-With prefix arg makes this transformation persistent."
-  (interactive "P")
-  (emacspeak-w3m-xslt-perform "add-submit-button" persistent))
-
-(defun emacspeak-w3m-xsl-google-hits (&optional persistent)
-  "Extracts Google hits from the current page.
-With prefix argument makes this transformation persistent."
-  (interactive "P")
-  (emacspeak-w3m-xslt-perform "google-hits" persistent))
-
-(defun emacspeak-w3m-xsl-linearize-tables (&optional persistent)
-  "Linearizes tables on the current page.
-With prefix argument makes this transformation persistent."
-  (interactive "P")
-  (emacspeak-w3m-xslt-perform "linearize-tables" persistent))
-
-(defun emacspeak-w3m-xsl-sort-tables (&optional persistent)
-  "Sorts tables on the current page.
-With prefix argument makes this transformation persistent."
-  (interactive "P")
-  (emacspeak-w3m-xslt-perform "sort-tables" persistent))
-
 (defadvice  w3m-create-text-page (before emacspeak pre act comp)
   "Apply requested transform if any before displaying the HTML. "
-  (if emacspeak-w3m-xsl-once
-      (let ((emacspeak-w3-xsl-p t)
-            (emacspeak-w3-xsl-transform emacspeak-w3m-xsl-once))
-        (emacspeak-xslt-region
-         emacspeak-w3-xsl-transform
-         (point-min)
-         (point-max)))
-    (when (and emacspeak-w3-xsl-p emacspeak-w3-xsl-transform)
-      (emacspeak-xslt-region
-       emacspeak-w3-xsl-transform
-       (point-min)
-       (point-max))))
-  (setq emacspeak-w3m-xsl-once nil))
+  (when (and emacspeak-we-xsl-p emacspeak-we-xsl-transform)
+    (emacspeak-xslt-region
+     emacspeak-we-xsl-transform
+     (point-min)
+     (point-max)
+     emacspeak-we-xsl-params)))
 
 ;; Helper function for xslt functionality
 ;;;###autoload
@@ -873,75 +656,14 @@ With prefix argument makes this transformation persistent."
   (let ((filename
          (format "/tmp/%s.html"
                  (make-temp-name "w3m"))))
-    (write-region (point-min) 
+    (write-region (point-min)
                   (point-max)
                   filename)
     (w3m-find-file filename)
     (delete-file filename)))
 
-;;;###autoload
-(defun emacspeak-w3m-browse-xml-url-with-style (style url &optional unescape-charent)
-  "Browse XML URL with specified XSL style in w3m."
-  (interactive
-   (list
-    (expand-file-name
-     (read-file-name "XSL Transformation: "
-                     emacspeak-xslt-directory))
-    (read-string "URL: " (browse-url-url-at-point))))
-  (let ((src-buffer
-         (emacspeak-xslt-xml-url
-          style
-          url
-          (list
-           (cons "base"
-                 (format "\"'%s'\""
-                         url))))))
-    (save-excursion
-      (set-buffer src-buffer)
-      (when unescape-charent
-        (emacspeak-w3-unescape-charent))
-      (emacspeak-w3m-preview-this-buffer))
-    (kill-buffer src-buffer)))
-
-;;;###autoload
-(defun emacspeak-w3m-browse-url-with-style (style url)
-  "Browse URL with specified XSL style. in w3m."
-  (interactive
-   (list
-    (expand-file-name
-     (read-file-name "XSL Transformation: "
-                     emacspeak-xslt-directory))
-    (read-string "URL: " (browse-url-url-at-point))))
-  (setq emacspeak-w3m-xsl-once style)
-  (w3m-goto-url-new-session url))
-
-(defun emacspeak-w3m-browse-rss-at-point ()
-  "Browses RSS url under point from w3m."
-  (interactive)
-  (unless (eq major-mode 'w3m-mode)
-    (error "Not in a W3m buffer."))
-  (let ((url (emacspeak-w3m-url-at-point)))
-    (cond
-     (url
-      (emacspeak-auditory-icon 'select-object)
-      (emacspeak-w3m-browse-xml-url-with-style
-       (expand-file-name "rss.xsl" emacspeak-xslt-directory)
-       url t))
-     (t (error "No URL under point.")))))
-
 ;;}}}
 ;;{{{  xsl keymap
-
-(define-prefix-command 'emacspeak-w3m-xsl-map)
-
-(declaim (special emacspeak-w3m-xsl-map))
-(define-key emacspeak-w3m-xsl-map "a" 'emacspeak-w3m-xslt-apply)
-(define-key emacspeak-w3m-xsl-map "s" 'emacspeak-w3-xslt-select)
-(define-key emacspeak-w3m-xsl-map "o" 'emacspeak-w3-xsl-toggle)
-(define-key emacspeak-w3m-xsl-map "b" 'emacspeak-w3m-xsl-add-submit-button)
-(define-key emacspeak-w3m-xsl-map "h" 'emacspeak-w3m-xsl-google-hits)
-(define-key emacspeak-w3m-xsl-map "l" 'emacspeak-w3m-xsl-linearize-tables)
-(define-key emacspeak-w3m-xsl-map "t" 'emacspeak-w3m-xsl-sort-tables)
 
 (add-hook 'w3m-mode-setup-functions
           '(lambda ()
@@ -949,48 +671,48 @@ With prefix argument makes this transformation persistent."
                "XSLT menu"
                '("XSLT transforming"
                  ["Enable default transforming on the fly"
-                  emacspeak-w3-xsl-toggle
-                  :included (not emacspeak-w3-xsl-p)]
+                  emacspeak-we-xsl-toggle
+                  :included (not emacspeak-we-xsl-p)]
                  ["Disable default transforming on the fly"
-                  emacspeak-w3-xsl-toggle
-                  :included emacspeak-w3-xsl-p]
+                  emacspeak-we-xsl-toggle
+                  :included emacspeak-we-xsl-p]
                  ["Add regular submit button"
                   emacspeak-w3m-xsl-add-submit-button t]
                  ["Show only search hits"
-                  emacspeak-w3m-xsl-google-hits t]
+                  emacspeak-wizards-google-hits t]
                  ["Linearize tables"
-                  emacspeak-w3m-xsl-linearize-tables t]
+                  emacspeak-we-xsl-linearize-tables t]
                  ["Sort tables"
-                  emacspeak-w3m-xsl-sort-tables t]
+                  emacspeak-we-xsl-sort-tables t]
                  ["Select default transformation"
-                  emacspeak-w3-xslt-select t]
+                  emacspeak-we-xslt-select t]
                  ["Apply specified transformation"
-                  emacspeak-w3m-xslt-apply t]
+                  emacspeak-we-xslt-apply t]
                  )))
           t)
 
 ;;}}}
-;;{{{ tvr: mapping font faces to personalities 
+;;{{{ tvr: mapping font faces to personalities
 
 (voice-setup-add-map
  '(
-   (w3m-italic-face voice-animate)
-   (w3m-insert-face voice-bolden)
-   (w3m-strike-through-face voice-smoothen-extra)
-   (w3m-history-current-url-face voice-lighten)
-   (w3m-current-anchor-face voice-bolden-extra)
-   (w3m-arrived-anchor-face voice-lighten-extra)
-   (w3m-anchor-face voice-bolden)
-   (w3m-bold-face voice-bolden-medium)
-   (w3m-underline-face voice-brighten-extra)
-   (w3m-header-line-location-title-face voice-bolden)
-   (w3m-header-line-location-content-face voice-animate)
-   (w3m-form-button-face voice-smoothen)
-   (w3m-form-button-pressed-face voice-animate)
-   (w3m-tab-unselected-face voice-monotone)
-   (w3m-tab-selected-face voice-animate-extra)
-   (w3m-form-face voice-brighten)
-   (w3m-image-face voice-brighten)
+   (w3m-italic voice-animate)
+   (w3m-insert voice-bolden)
+   (w3m-strike-through voice-smoothen-extra)
+   (w3m-history-current-url voice-bolden)
+   (w3m-current-anchor voice-bolden-extra)
+   (w3m-arrived-anchor voice-lighten-extra)
+   (w3m-anchor voice-lighten)
+   (w3m-bold voice-bolden-medium)
+   (w3m-underline voice-brighten-extra)
+   (w3m-header-line-location-title voice-bolden)
+   (w3m-header-line-location-content voice-animate)
+   (w3m-form-button voice-smoothen)
+   (w3m-form-button-pressed voice-animate)
+   (w3m-tab-unselected voice-monotone)
+   (w3m-tab-selected voice-animate-extra)
+   (w3m-form voice-brighten)
+   (w3m-image voice-brighten)
    ))
 
 (defadvice w3m-mode (after emacspeak pre act comp)
@@ -1001,15 +723,14 @@ With prefix argument makes this transformation persistent."
   (define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command))
 
 ;;}}}
-
 (provide 'emacspeak-w3m)
-;;{{{ end of file 
+;;{{{ end of file
 
 ;;; emacspeak-w3m.el ends here
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end: 
+;;; end:
 
 ;;}}}

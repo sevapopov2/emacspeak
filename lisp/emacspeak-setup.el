@@ -1,5 +1,5 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: emacspeak-setup.el 5377 2007-11-23 01:17:25Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
@@ -7,7 +7,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-11-22 17:17:25 -0800 (Thu, 22 Nov 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -74,6 +74,11 @@ emacspeak is compiled or started.")
   (expand-file-name  "sounds/" emacspeak-directory)
   "Directory containing auditory icons for Emacspeak.")
 ;;;###autoload
+(defvar emacspeak-xslt-directory
+  (expand-file-name "xsl/" emacspeak-directory)
+  "Directory holding XSL transformations.")
+
+;;;###autoload
 (defvar emacspeak-etc-directory
   (expand-file-name  "etc/" emacspeak-directory)
   "Directory containing miscellaneous files  for
@@ -99,31 +104,32 @@ pronunciation dictionaries are stored. ")
 
 ;;;###autoload
 (defconst emacspeak-version
-  (format
-   "26.0 %s"
-   (cond
-    ((file-exists-p emacspeak-readme-file)
-     (let ((buffer (find-file-noselect emacspeak-readme-file))
-           (revision nil))
-       (save-excursion
-         (set-buffer buffer)
-         (goto-char (point-min))
-         (setq revision
-               (format "Revision %s"
-                       (or
-                        (nth 2 (split-string
-                                (buffer-substring-no-properties
-                                 (line-beginning-position)
-                                 (line-end-position))))
-                        "unknown"))))
-       (kill-buffer buffer)
-       revision))
-    (t "")))
+  (eval-when-compile
+    (format
+     "26.0 %s"
+     (cond
+      ((file-exists-p emacspeak-readme-file)
+       (let ((buffer (find-file-noselect emacspeak-readme-file))
+             (revision nil))
+         (save-excursion
+           (set-buffer buffer)
+           (goto-char (point-min))
+           (setq revision
+                 (format "Revision %s"
+                         (or
+                          (nth 2 (split-string
+                                  (buffer-substring-no-properties
+                                   (line-beginning-position)
+                                   (line-end-position))))
+                          "unknown"))))
+         (kill-buffer buffer)
+         revision))
+      (t ""))))
   "Version number for Emacspeak.")
 
 ;;;###autoload
 (defconst emacspeak-codename
-  "LeadDog"
+  "FastDog"
   "Code name of present release.")
 
 ;;}}}
@@ -155,22 +161,15 @@ pronunciation dictionaries are stored. ")
 ;;}}}
 ;;{{{ Hooks
 
-(unless (featurep 'emacspeak)
-  (setq load-path
-        (cons emacspeak-lisp-directory load-path ))
-  (setq load-path
-        (cons
-         (expand-file-name "g-client" emacspeak-lisp-directory )
-         load-path ))
-  (setq load-path
-        (cons
-         (expand-file-name "atom-blogger" emacspeak-lisp-directory )
-         load-path )))
+(add-to-list 'load-path emacspeak-lisp-directory )
+(add-to-list 'load-path (expand-file-name "g-client" emacspeak-lisp-directory ))
 
 (load-library "emacspeak")
+
 (defvar dtk-startup-hook nil)
 (defun emacspeak-tts-startup-hook ()
   "Default hook function run after TTS is started."
+  (tts-configure-synthesis-setup)
   (dtk-set-rate tts-default-speech-rate t)
   (dtk-interp-sync))
 
@@ -178,7 +177,16 @@ pronunciation dictionaries are stored. ")
           'emacspeak-tts-startup-hook)
 
 (defvar emacspeak-startup-hook nil)
-
+(defun emacspeak-setup-header-line ()
+  "Set up Emacspeak to show a default header line."
+  (declare (special emacspeak-use-header-line
+                    default-header-line-format
+                    emacspeak-default-header-line-format))
+  (when emacspeak-use-header-line
+    (setq default-header-line-format
+          emacspeak-default-header-line-format)))
+(add-hook 'emacspeak-startup-hook 'emacspeak-setup-header-line)
+          
 ;;; Use (add-hook 'emacspeak-startup-hook ...)
 ;;; to add your personal settings.
 

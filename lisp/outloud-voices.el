@@ -1,5 +1,5 @@
 ;;; outloud-voices.el --- Define various device independent voices in terms of OutLoud tags
-;;; $Id: outloud-voices.el 4532 2007-05-04 01:13:44Z tv.raman.tv $
+;;; $Id: outloud-voices.el 5251 2007-09-03 19:52:21Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Module to set up Eloquent voices and personalities
 ;;; Keywords: Voice, Personality, IBM ViaVoice Outloud
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;; $Date: 2007-09-03 12:52:21 -0700 (Mon, 03 Sep 2007) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -172,16 +172,16 @@ and TABLE gives the values along that dimension."
                     (second setting)
                     (third setting)))))
    '(
-     (0 18 78)
-     (1 25 69 )
-     (2 40 65)
-     (3 51 58)
-     (4 58 54  )
+     (0 44 52)
+     (1 50 58 )
+     (2 56 56)
+     (3 58 54)
+     (4 62 52  )
      (5 65 50)
-     (6 74 40)
-     (7 83 30 )
-     (8 87 26)
-     (9 92 21)))
+     (6 69 48)
+     (7 73 46 )
+     (8 77 44)
+     (9 82 40)))
   (outloud-css-set-code-table 'paul 'average-pitch table ))
 
 ;;}}}
