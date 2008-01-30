@@ -257,33 +257,22 @@ Provide auditory icon when finished."
       (emacspeak-speak-mode-line))))
 (defun emacspeak-dired-initialize ()
   "Set up emacspeak dired."
-  (emacspeak-dired-label-fields)
-  (emacspeak-auditory-icon 'open-object )
-  (emacspeak-speak-mode-line))
-
-(defadvice dired (after emacspeak pre act comp)
-  "Hook is not reliable."
-  (emacspeak-dired-initialize))
+  (voice-lock-mode 1)
+  (emacspeak-dired-label-fields))
 
 (loop for f in
-      '(dired-find-file
+      '(dired
+        dired-find-file
 	dired-find-file-other-window
 	dired-display-file
 	dired-view-file)
       do
       (eval
-       `(defadvice ,f  (around  emacspeak pre act)
-	  "Produce an auditory icon."
-	  (cond
-	   ((interactive-p)
-	    (let ((directory-p (file-directory-p (dired-get-filename t t ))))
-	      ad-do-it
-	      (when directory-p
-		(voice-lock-mode 1)
-		(emacspeak-dired-label-fields))
-	      (emacspeak-auditory-icon 'open-object )))
-	   (t ad-do-it))
-	  ad-return-value)))
+       `(defadvice ,f  (after  emacspeak pre act comp)
+          "Produce an auditory feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'open-object )
+            (emacspeak-speak-mode-line)))))
 
 (defadvice dired-tree-up (after emacspeak pre act)
   "Speak the filename."
