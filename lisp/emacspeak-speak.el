@@ -730,7 +730,7 @@ decorative ascii."
      "sEnterregular expression to match lines that are decorative ASCII: ")
 
 (defcustom emacspeak-unspeakable-rule
-  "^[^0-9a-zA-Z]+$"
+  "^\\W+$"
   "*Pattern to match lines of special chars.
 This is a regular expression that matches lines containing only
 non-alphanumeric characters.  emacspeak will generate a tone
