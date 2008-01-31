@@ -180,18 +180,18 @@ instead of the modeline."
 (defun emacspeak-w3m-speak-form-input (form name type width maxlength
                                             value)
   "Speak form input"
-  (declare (special emacspeak-w3m-form-voice))
+  (declare (special emacspeak-w3m-form-personality))
   (dtk-speak
    (format "%s input %s  %s"
            type
            name
            (emacspeak-w3m-personalize-string
             (or (emacspeak-w3m-form-get form name) value)
-            emacspeak-w3m-form-voice))))
+            emacspeak-w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-input-checkbox (form name value)
   "Speak checkbox"
-  (declare (special emacspeak-w3m-form-voice))
+  (declare (special emacspeak-w3m-form-personality))
   (dtk-speak
    (format "checkbox %s is %s"
            name
@@ -199,36 +199,36 @@ instead of the modeline."
             (if (emacspeak-w3m-form-get form name)
                 "on"
               "off")
-            emacspeak-w3m-form-voice))))
+            emacspeak-w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-input-password (form name)
   "Speech-enable password form element."
-  (declare (special emacspeak-w3m-form-voice))
+  (declare (special emacspeak-w3m-form-personality))
   (dtk-speak
    (format "password input %s  %s"
            name
            (emacspeak-w3m-personalize-string
             (emacspeak-w3m-anchor-text)
-            emacspeak-w3m-form-voice))))
+            emacspeak-w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-submit (form &optional name value new-session download)
   "Speak submit button."
-  (declare (special emacspeak-w3m-form-button-voice))
+  (declare (special emacspeak-w3m-form-button-personality))
   (dtk-speak
    (if (equal value "")
        "submit button"
      (format "button %s"
              (emacspeak-w3m-personalize-string
               value
-              emacspeak-w3m-form-button-voice)))))
+              emacspeak-w3m-form-button-personality)))))
 
 (defun emacspeak-w3m-speak-form-input-radio (form name value)
   "speech enable radio buttons."
-  (declare (special emacspeak-w3m-form-voice))
+  (declare (special emacspeak-w3m-form-personality))
   (and dtk-stop-immediately (dtk-stop))
   (let* ((active (equal value (emacspeak-w3m-form-get form name)))
          (personality (if active
-                          emacspeak-w3m-form-voice))
+                          emacspeak-w3m-form-personality))
          (dtk-stop-immediately nil))
     (emacspeak-auditory-icon (if active 'on 'off))
     (dtk-speak
@@ -244,69 +244,58 @@ instead of the modeline."
 
 (defun emacspeak-w3m-speak-form-input-select (form name)
   "speech enable select control."
-  (declare (special emacspeak-w3m-form-voice))
+  (declare (special emacspeak-w3m-form-personality))
   (dtk-speak
    (format "select %s  %s"
            name
            (emacspeak-w3m-personalize-string
             (emacspeak-w3m-anchor-text)
-            emacspeak-w3m-form-voice))))
+            emacspeak-w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-input-textarea (form &optional hseq)
   "speech enable text area."
-  (declare (special emacspeak-w3m-form-voice))
+  (declare (special emacspeak-w3m-form-personality))
   (dtk-speak
    (format "text area %s  %s"
            (or (get-text-property (point) 'w3m-form-name) "")
            (emacspeak-w3m-personalize-string
             (emacspeak-w3m-anchor-text)
-            emacspeak-w3m-form-voice))))
+            emacspeak-w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-reset (form)
   "Reset button."
-  (declare (special emacspeak-w3m-form-button-voice))
+  (declare (special emacspeak-w3m-form-button-personality))
   (dtk-speak
    (format "button %s"
            (emacspeak-w3m-personalize-string
             "reset"
-            emacspeak-w3m-form-button-voice))))
+            emacspeak-w3m-form-button-personality))))
 
 ;;}}}
 ;;{{{  advice interactive commands.
-;;{{{  commenting out for now:
 
-;; (defadvice w3m-goto-url (around emacspeak pre act)
-;;   "Speech-enable W3M."
-;;   (cond
-;;    ((interactive-p)
-;;     (emacspeak-auditory-icon 'select-object)
-;;     (let ((emacspeak-speak-messages nil))
-;;       ad-do-it))
-;;    (t ad-do-it))ad-return-value)
-
-;; (defadvice w3m-redisplay-this-page (around emacspeak pre act)
-;;   "Speech-enable W3M."
-;;   (cond
-;;    ((interactive-p)
-;;     (emacspeak-auditory-icon 'select-object)
-;;     (let ((emacspeak-speak-messages nil))
-;;       ad-do-it))
-;;    (t ad-do-it))ad-return-value)
-
-;; (defadvice w3m-reload-this-page (around emacspeak pre act)
-;;   "Speech-enable W3M."
-;;   (cond
-;;    ((interactive-p)
-;;     (emacspeak-auditory-icon 'select-object)
-;;     (let ((emacspeak-speak-messages nil))
-;;       ad-do-it))
-;;    (t ad-do-it))ad-return-value)
-
-;;}}}
 (loop for f in
-      '(w3m-print-current-url  w3m-print-this-url
-                               w3m-search
-                               w3m-edit-current-url w3m-edit-this-url)
+      '(w3m-goto-url
+        w3m-redisplay-this-page
+        w3m-reload-this-page
+        w3m-bookmark-view
+        w3m-weather)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
+          "Speech-enable W3M."
+          (cond
+           ((interactive-p)
+            (emacspeak-auditory-icon 'select-object)
+            (let ((emacspeak-speak-messages nil))
+              ad-do-it))
+           (t ad-do-it))
+          ad-return-value)))
+
+(loop for f in
+      '(w3m-print-current-url
+        w3m-print-this-url
+        w3m-search)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -314,15 +303,28 @@ instead of the modeline."
           (when (interactive-p)
             (emacspeak-auditory-icon 'select-object)))))
 
+(loop for f in
+      '(w3m-edit-current-url w3m-edit-this-url)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Produce auditory icon."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'select-object)
+            (emacspeak-speak-mode-line)))))
+
 (defadvice w3m-submit-form (after emacspeak pre act comp)
   "Produce auditory icon."
   (when (interactive-p)
     (emacspeak-auditory-icon 'button)))
 
 (loop for f in
-      '(w3m-previous-buffer w3m-next-buffer
-                            w3m-view-next-page w3m-view-previous-page
-                            w3m-view-parent-page w3m-gohome)
+      '(w3m-previous-buffer
+        w3m-next-buffer
+        w3m-view-next-page
+        w3m-view-previous-page
+        w3m-view-parent-page
+        w3m-gohome)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -334,23 +336,19 @@ instead of the modeline."
                 (dtk-speak w3m-current-title)
               (emacspeak-speak-mode-line))))))
 
-(defadvice w3m-delete-buffer (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (declare (special w3m-current-title))
-    (emacspeak-auditory-icon 'close-object)
-    (if emacspeak-w3m-speak-titles-on-switch
-        (dtk-speak w3m-current-title)
-      (emacspeak-speak-mode-line))))
-
-(defadvice w3m-delete-other-buffers (after emacspeak pre act comp)
-  "Produce auditory icon."
-  (when (interactive-p)
-    (declare (special w3m-current-title))
-    (emacspeak-auditory-icon 'close-object)
-    (if emacspeak-w3m-speak-titles-on-switch
-        (dtk-speak w3m-current-title)
-      (emacspeak-speak-mode-line))))
+(loop for f in
+      '(w3m-delete-buffer
+        w3m-delete-other-buffers)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (declare (special w3m-current-title))
+            (emacspeak-auditory-icon 'close-object)
+            (if emacspeak-w3m-speak-titles-on-switch
+                (dtk-speak w3m-current-title)
+              (emacspeak-speak-mode-line))))))
 
 (defadvice w3m-bookmark-kill-entry (around emacspeak pre act comp)
   "Resets the punctuation mode to the one before the delete"
@@ -419,15 +417,6 @@ instead of the modeline."
    (t ad-do-it))ad-return-value)
 
 (defadvice w3m-antenna (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it))
-   (t ad-do-it))ad-return-value)
-
-(defadvice w3m-bookmark-view (around emacspeak pre act)
   "Speech-enable W3M."
   (cond
    ((interactive-p)
@@ -531,6 +520,17 @@ instead of the modeline."
   "Speech enable w3m"
   (when (interactive-p)
     (dtk-speak "Viewing history")))
+
+;;}}}
+;;{{{ page display notification
+
+(add-hook 'w3m-display-hook
+          (lambda (url)
+            (declare (special w3m-current-title))
+            (emacspeak-auditory-icon 'open-object)
+            (when (stringp w3m-current-title)
+              (dtk-speak w3m-current-title)))
+          t)
 
 ;;}}}
 ;;{{{ webutils variables
