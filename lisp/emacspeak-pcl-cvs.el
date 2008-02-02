@@ -56,17 +56,24 @@
 
 (voice-setup-add-map
  '(
+   (cvs-filename voice-bolden)
+   (cvs-handled voice-monotone-medium)
+   (cvs-header voice-bolden)
+   (cvs-marked voice-brighten-medium)
+   (cvs-msg voice-monotone-medium)
+   (cvs-need-action voice-brighten)
+   (cvs-unknown voice-monotone)
+   ))
+
+(voice-setup-add-map
+ '(
    (cvs-filename-face voice-bolden)
-
    (cvs-handled-face voice-monotone-medium)
-
    (cvs-header-face voice-bolden)
-
    (cvs-marked-face voice-brighten-medium)
-
    (cvs-msg-face voice-monotone-medium)
-
    (cvs-need-action-face voice-brighten)
+   (cvs-unknown-face voice-monotone)
    ))
 
 ;;}}}
