@@ -70,6 +70,7 @@
 (require 'advice)
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
+(require 'stack-f)
 (require 'voice-setup)
 (require 'dtk-speak)
 (require 'emacspeak-speak)
@@ -2147,11 +2148,16 @@ Also produce an auditory icon if possible."
 ;;; temporarily disable message and signal advice during searches.
 ;;; Produce auditory icon
 
+(defvar emacspeak-state-stack (stack-create)
+  "Stack area to save temporarily some important data.")
+
 (defsubst emacspeak-isearch-setup()
   "Setup emacspeak environment for isearch."
   (declare (special emacspeak-speak-messages
                     emacspeak-speak-cue-errors))
   (emacspeak-auditory-icon 'open-object)
+  (stack-push emacspeak-state-stack emacspeak-speak-messages)
+  (stack-push emacspeak-state-stack emacspeak-speak-cue-errors)
   (setq emacspeak-speak-messages nil
         emacspeak-speak-cue-errors nil))
 
@@ -2160,8 +2166,8 @@ Also produce an auditory icon if possible."
   (declare (special emacspeak-speak-messages
                     emacspeak-speak-cue-errors))
   (emacspeak-auditory-icon 'close-object)
-  (setq emacspeak-speak-messages t
-        emacspeak-speak-cue-errors t))
+  (setq emacspeak-speak-cue-errors (stack-pop emacspeak-state-stack)
+        emacspeak-speak-messages (stack-pop emacspeak-state-stack)))
 
 (add-hook 'isearch-mode-hook 'emacspeak-isearch-setup)
 (add-hook 'isearch-mode-end-hook 'emacspeak-isearch-teardown)
