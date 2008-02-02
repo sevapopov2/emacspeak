@@ -1584,14 +1584,15 @@ Interactive prefix arg speaks buffer info."
                      emacspeak-which-function-mode global-mode-string
                      column-number-mode line-number-mode
                      emacspeak-mail-alert mode-line-format ))
+  (dtk-stop)
+  (emacspeak-dtk-sync)
+  (when   emacspeak-mail-alert (emacspeak-mail-alert-user))
   (cond
    ((and header-line-format (not (interactive-p)))
     (emacspeak-speak-header-line))
    (buffer-info (emacspeak-speak-buffer-info))
    (t
-    (dtk-stop)
     (force-mode-line-update)
-    (emacspeak-dtk-sync)
     (let ((dtk-stop-immediately nil )
           (deactivate-mark nil)
           (global-info (format-mode-line global-mode-string))
@@ -1606,7 +1607,6 @@ Interactive prefix arg speaks buffer info."
                   (fboundp 'which-function)
                   (which-function))
         (emacspeak-speak-which-function))
-      (when   emacspeak-mail-alert (emacspeak-mail-alert-user))
       (cond
        ((stringp mode-line-format) (dtk-speak mode-line-format ))
        (t                               ;process modeline
