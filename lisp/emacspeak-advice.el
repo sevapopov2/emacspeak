@@ -657,6 +657,26 @@ Produce an auditory icon if possible."
         (dtk-say "n" )))
     ad-return-value ))
 
+(defadvice yes-or-no-p (around emacspeak pre act )
+  "Produce an auditory icon on result."
+  (let ((deactivate-mark nil))
+    ad-do-it
+    (if ad-return-value
+        (emacspeak-auditory-icon 'yes-answer )
+      (emacspeak-auditory-icon  'no-answer )))
+  ad-return-value )
+
+(loop for f in
+      '(map-y-or-n-p hack-local-variables-confirm)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act)
+          "Provide speech feedback unconditionally."
+          (declare (special emacspeak-speak-messages))
+          (let ((emacspeak-speak-messages t))
+            ad-do-it)
+          ad-return-value)))
+
 ;;}}}
 ;;{{{  advice various input functions to speak:
 
@@ -2749,8 +2769,18 @@ Variable mark-even-if-inactive is set true ."
 (defadvice push-button (after emacspeak pre act comp)
   "Produce auditory icon."
   (when (interactive-p)
-    (emacspeak-auditory-icon 'push-button)
+    (emacspeak-auditory-icon 'button)
     (emacspeak-speak-line)))
+
+(loop for f in
+      '(forward-button backward-button)
+      do
+      (eval
+       `(defadvice ,f (after  emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-text-range 'button)))))
 
 ;;}}}
 ;;{{{ silence whitespace cleanup:

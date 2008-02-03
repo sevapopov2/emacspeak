@@ -223,6 +223,11 @@
     (emacspeak-auditory-icon 'fill-object )
     (message "newline and reformat")))
 
+(defadvice message-elide-region (after emacspeak pre act)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'delete-object)))
+
 (defadvice message-send (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)

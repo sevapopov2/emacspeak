@@ -143,16 +143,23 @@ and then cue the next selected buffer."
   (when (interactive-p )
     (dtk-stop)
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (with-current-buffer (window-buffer)
+      (emacspeak-speak-mode-line))))
 
-(defadvice Info-next-reference (after emacspeak pre act)
-  "Speak the line. "
-  (when (interactive-p)
-    (emacspeak-speak-line)))
+(loop for f in
+      '(Info-next-reference Info-prev-reference)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act)
+          "Play an auditory icon and speak the line. "
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-line)))))
 
-(defadvice Info-prev-reference (after emacspeak pre act)
-  "Speak the line. "
+(defadvice Info-search (after emacspeak pre act)
+  "Play an auditory icon and speak the line."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 
 ;;}}}
