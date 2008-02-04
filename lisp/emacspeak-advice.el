@@ -615,7 +615,8 @@ before the message is spoken."
           (message (and (not (eq 'error (ad-get-arg 0)))
                         (get (ad-get-arg 0) 'error-message))))
       (when  message
-        (dtk-speak message)))))
+        (tts-with-punctuations 'all
+                               (dtk-speak message))))))
 
 ;;}}}
 ;;;###autoload
@@ -627,7 +628,7 @@ before the message is spoken."
   "Speak the error message.
 Also produces an auditory icon if possible."
   (when emacspeak-speak-cue-errors
-    (let ((dtk-stop-immediately nil ))
+    (let ((dtk-stop-immediately t ))
       (emacspeak-auditory-icon 'warn-user)
       (tts-with-punctuations 'all
                              (dtk-speak
