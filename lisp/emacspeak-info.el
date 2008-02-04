@@ -181,15 +181,15 @@ and then cue the next selected buffer."
           (emacspeak-speak-line))))))
 
 ;;}}}
-;;{{{  Emacs 21
-;;; There is a bug in Emacs 21 that causes info-extract-pointer to be
-;;; called erroneously.
+;;{{{ Inhibit spurious speech feedback
 
-(defadvice Info-extract-pointer  (around emacspeak pre act comp)
+(defadvice Info-check-pointer  (around emacspeak pre act comp)
   "Silence emacspeak during call."
   (let ((emacspeak-speak-messages nil)
+        (emacspeak-speak-cue-errors nil)
         (emacspeak-use-auditory-icons nil))
     ad-do-it))
+
 ;;}}}
 ;;{{{ keymaps
 (declaim (special Info-mode-map))
