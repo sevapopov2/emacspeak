@@ -1589,7 +1589,10 @@ Interactive prefix arg speaks buffer info."
   (when   emacspeak-mail-alert (emacspeak-mail-alert-user))
   (cond
    ((and header-line-format (not (interactive-p)))
-    (emacspeak-speak-header-line))
+    (cond
+     ((eq major-mode 'Info-mode)
+      (emacspeak-info-speak-header))
+     (t (emacspeak-speak-header-line))))
    (buffer-info (emacspeak-speak-buffer-info))
    (t
     (force-mode-line-update)
