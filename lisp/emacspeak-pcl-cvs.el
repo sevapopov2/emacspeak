@@ -103,7 +103,7 @@
 (defadvice cvs-mode-find-file (around emacspeak pre act comp)
   "Provide an auditory icon."
   (if (and (interactive-p)
-	   (not (file-directory-p (cvs-fileinfo->full-path
+	   (not (file-directory-p (cvs-fileinfo->full-name
 				   (cvs-mode-marked nil nil :one t)))))
       (progn ad-do-it
 	     (emacspeak-auditory-icon 'open-object))
