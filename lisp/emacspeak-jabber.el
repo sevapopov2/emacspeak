@@ -158,15 +158,15 @@
 ;;}}}
 ;;{{{ roster buffer:
 
-(defadvice jabber-go-to-next-jid (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (dtk-speak (buffer-substring
-                (previous-single-property-change
-                 (1+ (point)) 'jabber-jid)
-                (next-single-property-change
-                 (point) 'jabber-jid)))))
+(loop for f in
+      '(jabber-go-to-next-jid jabber-go-to-previous-jid)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-text-range 'jabber-jid)))))
 
 ;;}}}
 ;;{{{ alerts
