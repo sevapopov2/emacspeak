@@ -609,6 +609,14 @@ instead of the modeline."
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
+(defadvice w3m-e21-switch-to-buffer  (after emacspeak pre act)
+  "Speak the modeline.
+Indicate change of selection with
+  an auditory icon if possible."
+  (when (interactive-p )
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
+
 ;;}}}
 ;;{{{ input select mode
 
