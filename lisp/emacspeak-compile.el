@@ -84,7 +84,8 @@
           "Speak the line containing the error. "
           (when (interactive-p)
             (dtk-stop)
-            (emacspeak-compilation-speak-error)))))
+            (with-current-buffer (window-buffer)
+              (emacspeak-compilation-speak-error))))))
 
 (loop for f in 
       '(
@@ -109,8 +110,8 @@
     (emacspeak-auditory-icon 'select-object)
     (message "Launched compilation")))
 
-(defadvice  compilation-sentinel (after emacspeak pre act )
-  "Provide auditory feedback"
+(defadvice compilation-sentinel (after emacspeak pre act )
+  "Provide auditory feedback."
   (emacspeak-auditory-icon 'task-done)
   (message "process %s %s"
            (process-name  (ad-get-arg 0))
