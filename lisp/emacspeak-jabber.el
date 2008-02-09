@@ -146,11 +146,13 @@
     (emacspeak-auditory-icon 'close-object)))
 (loop for f in
       '(jabber-chat-with
-        jabber-chat-with-jid-at-point)
+        jabber-chat-with-jid-at-point
+        jabber-switch-to-roster-buffer
+        jabber-vcard-edit)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
-          "Silence keepalive messages."
+          "Provide auditory feedback."
           (when (interactive-p)
             (emacspeak-auditory-icon 'open-object)
             (emacspeak-speak-mode-line)))))
