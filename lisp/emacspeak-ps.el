@@ -1,12 +1,12 @@
 ;;; emacspeak-ps.el --- Speech enable Ps Mode
-;;; Author: Igor B. Poretsky <master@goga.energo.ru>
+;;; Author: Igor B. Poretsky <poretsky@mlbox.ru>
 ;;; Description: Emacspeak extensions for ps-mode
 ;;; Keywords: emacspeak, audio interface to emacs ps mode
 ;;{{{  LCD Archive entry: 
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 2005, Igor B. Poretsky <master@goga.energo.ru>
+;;;Copyright (C) 2005, Igor B. Poretsky <poretsky@mlbox.ru>
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.

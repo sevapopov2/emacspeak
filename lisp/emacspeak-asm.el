@@ -1,12 +1,12 @@
 ;;; emacspeak-asm.el --- Speech enable Asm Mode
-;;; Author: Igor B. Poretsky <master@goga.energo.ru>
+;;; Author: Igor B. Poretsky <poretsky@mlbox.ru>
 ;;; Description: Emacspeak extensions for asm-mode
 ;;; Keywords: emacspeak, audio interface to emacs asm mode
 ;;{{{  LCD Archive entry: 
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 2005, Igor B. Poretsky <master@goga.energo.ru>
+;;;Copyright (C) 2005, Igor B. Poretsky <poretsky@mlbox.ru>
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
