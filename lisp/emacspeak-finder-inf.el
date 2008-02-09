@@ -149,6 +149,9 @@
     ("emacspeak-dictionary.el"
         "speech-enable dictionaries "
         (emacspeak  audio desktop))
+    ("emacspeak-diff.el"
+        "Speech enable  diff"
+        (emacspeak  audio desktop))
     ("emacspeak-dired.el"
         "Speech enable Dired Mode -- A powerful File Manager"
         (emacspeak  dired  spoken output))

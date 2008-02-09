@@ -121,6 +121,7 @@ emacspeak-debian-bug.elc \
 emacspeak-dictation.elc \
 emacspeak-dictionary.elc \
 emacspeak-desktop.elc \
+emacspeak-diff.elc \
 emacspeak-dired.elc \
 emacspeak-dismal.elc \
 emacspeak-dmacro.elc \
@@ -334,6 +335,7 @@ emacspeak-debian-bug.elc: emacspeak-debian-bug.el dtk-speak.elc voice-setup.elc
 emacspeak-desktop.elc: emacspeak-desktop.el dtk-speak.elc voice-setup.elc
 emacspeak-dictation.elc: emacspeak-dictation.el dtk-speak.elc voice-setup.elc
 emacspeak-dictionary.elc: emacspeak-dictionary.el dtk-speak.elc voice-setup.elc
+emacspeak-diff.elc: emacspeak-diff.el dtk-speak.elc voice-setup.elc
 emacspeak-dired.elc: emacspeak-dired.el dtk-speak.elc voice-setup.elc
 emacspeak-dismal.elc: emacspeak-dismal.el dtk-speak.elc voice-setup.elc
 emacspeak-dmacro.elc: emacspeak-dmacro.el dtk-speak.elc voice-setup.elc
