@@ -452,6 +452,7 @@ options passed to command `file'."
   "Speak the size of the current file.
 On a directory line, run du -s on the directory to speak its size."
   (interactive)
+  (dtk-stop)
   (let ((filename (dired-get-filename nil t))
         (size 0)
 	(emacspeak-speak-messages t)
