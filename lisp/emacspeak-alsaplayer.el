@@ -55,17 +55,17 @@
 ;;}}}
 ;;{{{ define a derived mode for alsaplayer interaction
 
-(defvar emacspeak-alsaplayer-process nil
-  "Process handle to alsaplayer." )
-
 ;;;###autoload
 (define-prefix-command 'emacspeak-alsaplayer-prefix-command
   'emacspeak-alsaplayer-mode-map)
 (defun emacspeak-alsaplayer-header-line ()
   "Return information suitable for header line."
-  (substring
-   (shell-command-to-string "alsaplayer --status | grep title:")
-   0 -1))
+  (let* ((coding-system-for-read emacspeak-alsaplayer-coding-system)
+         (title (shell-command-to-string
+                 "alsaplayer --status 2>/dev/null | grep title:"))
+         (title (and (> (length title) 7)
+                     (substring title 7 -1))))
+    (or title emacspeak-default-header-line-format)))
 
 (define-derived-mode emacspeak-alsaplayer-mode fundamental-mode 
   "Alsaplayer Interaction"
@@ -133,12 +133,6 @@ It is used for tags decoding."
   :type 'directory
   :group 'emacspeak-alsaplayer)
 
-(defcustom emacspeak-alsaplayer-supported-files
-  "\\.\\([Mm][Pp][23]\\|[Oo][Gg][Gg]\\|[Ww][Aa][Vv]\\)$"
-  "Regexp matching supported file names."
-  :type 'regexp
-  :group 'emacspeak-alsaplayer)
-
 (defvar emacspeak-alsaplayer-buffer "*alsaplayer*"
   "Buffer for alsaplayer interaction.")
 
@@ -148,53 +142,36 @@ It is used for tags decoding."
 user is placed in a buffer associated with the newly created
 Alsaplayer session."
   (interactive)
-  (declare (special emacspeak-alsaplayer-program
-                    emacspeak-alsaplayer-process
-                    emacspeak-alsaplayer-buffer
+  (declare (special emacspeak-alsaplayer-program emacspeak-alsaplayer-buffer
 		    emacspeak-alsaplayer-height))
-  (if (and emacspeak-alsaplayer-process
-           (eq 'run (process-status
-                     emacspeak-alsaplayer-process)))
-      (when (y-or-n-p "Stop currently playing music? ")
-        (emacspeak-alsaplayer-quit)
-        (setq emacspeak-alsaplayer-process nil))
-    (setq emacspeak-alsaplayer-process nil))
-  (let ((deactivate-mark nil)
-        (process-connection-type t)
+  (let ((buffer (get-buffer-create emacspeak-alsaplayer-buffer))
         (coding-system-for-read emacspeak-alsaplayer-coding-system)
-        (options (nconc (list "-r" "-i" "daemon")
-                        (when emacspeak-alsaplayer-output
-                          (list "-o" emacspeak-alsaplayer-output))
-                        (when emacspeak-alsaplayer-sound-device
-                          (list "-d" emacspeak-alsaplayer-sound-device))))
-        (buffer (get-buffer-create emacspeak-alsaplayer-buffer)))
+        (deactivate-mark nil))
     (save-current-buffer
       (set-buffer buffer)
-      (setq buffer-undo-list t)
-      (emacspeak-alsaplayer-mode)
-      (unless emacspeak-alsaplayer-process
-        (setq emacspeak-alsaplayer-process
-              (apply 'start-process
-                     "alsaplayer"
-                     (current-buffer)
-                     emacspeak-alsaplayer-program
-                     options))
-        (accept-process-output emacspeak-alsaplayer-process)
-        (erase-buffer)
-        (call-process emacspeak-alsaplayer-program
-                      nil t t
-                      "--status")
-        (goto-char (point-min))
-        (when (search-forward "path: " nil t)
-          (encode-coding-region (point) (line-end-position)
-                                emacspeak-alsaplayer-coding-system)
-          (decode-coding-region (point) (line-end-position)
-                                (car default-process-coding-system)))))
-    (pop-to-buffer buffer 'other-window)
-    (set-window-text-height nil emacspeak-alsaplayer-height)
-    (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
-      (emacspeak-auditory-icon 'open-object)
-      (emacspeak-speak-mode-line))))
+      (cond
+       ((and (get-buffer-process buffer)
+             (eq 'run (process-status (get-buffer-process buffer))))
+        (pop-to-buffer buffer 'other-window)
+	(set-window-text-height nil emacspeak-alsaplayer-height))
+       (t
+        (setq buffer-undo-list t)
+        (shell-command
+         (format "%s -r -i daemon %s%s&"
+                 emacspeak-alsaplayer-program
+                 (if emacspeak-alsaplayer-output
+                     (format "-o %s " emacspeak-alsaplayer-output)
+                   "")
+                 (if emacspeak-alsaplayer-sound-device
+                     (format "-d %s " emacspeak-alsaplayer-sound-device)
+                   ""))
+         (current-buffer))
+        (pop-to-buffer buffer 'other-window)
+	(set-window-text-height nil emacspeak-alsaplayer-height)
+        (emacspeak-alsaplayer-mode)))
+      (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
+        (emacspeak-auditory-icon 'open-object)
+        (emacspeak-speak-mode-line)))))
 
 ;;}}}
 ;;{{{  Invoke commands:
@@ -211,26 +188,24 @@ Optional second arg watch-pattern specifies line of output to
           (coding-system-for-read emacspeak-alsaplayer-coding-system))
       (set-buffer (get-buffer-create emacspeak-alsaplayer-buffer))
       (erase-buffer)
-      (apply 'call-process
-             emacspeak-alsaplayer-program
-             nil t t
-             (if (listp command)
-                 command
-               (list command)))
-      (unless no-refresh
-        (call-process
-         emacspeak-alsaplayer-program
-         nil t t
-         "--status"))
+      (shell-command
+       (format "%s %s %s"
+               emacspeak-alsaplayer-program
+               command
+               (if no-refresh
+                   ""
+                 "; alsaplayer --status"))
+       (current-buffer)))
       (goto-char (point-min))
       (when (search-forward "path: " nil t)
         (encode-coding-region (point) (line-end-position)
                               emacspeak-alsaplayer-coding-system)
         (decode-coding-region (point) (line-end-position)
-                              (car default-process-coding-system)))
-      (when watch-pattern
-        (goto-char (point-min))
-        (re-search-forward watch-pattern  nil t)))))
+                              (car default-process-coding-system))))
+  (when (and watch-pattern
+             (eq (current-buffer) (get-buffer emacspeak-alsaplayer-buffer)))
+    (goto-char (point-min))
+    (re-search-forward watch-pattern  nil t)))
 
 (defun emacspeak-alsaplayer-add-to-queue (resource)
   "Add specified resource to queue."
@@ -245,21 +220,18 @@ Optional second arg watch-pattern specifies line of output to
                            default-directory
                          emacspeak-alsaplayer-media-directory))))))
   (emacspeak-alsaplayer-send-command
-   (nconc (list "--enqueue")
-          (if (file-directory-p resource)
-              (directory-files
-               (expand-file-name resource)
-               'full
-               emacspeak-alsaplayer-supported-files)
-            (expand-file-name resource)))
+   (format "--enqueue %s"
+           (shell-quote-wildcard-pattern
+            (if (file-directory-p resource)
+                (format "%s/*" resource)
+              resource)))
    "playlist_length:")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'select-object)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
-;;;###autoload
 (defun emacspeak-alsaplayer-find-and-add-to-queue (pattern)
   "Find  specified resource and add to queue."
   (interactive
@@ -269,9 +241,10 @@ Optional second arg watch-pattern specifies line of output to
    (format "find . -iname '%s' -print0 | xargs -0 alsaplayer -e "
            pattern))
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-replace-queue (resource)
   "Replace currently playing music."
@@ -279,27 +252,20 @@ Optional second arg watch-pattern specifies line of output to
    (list
     (let ((completion-ignore-case t)
           (read-file-name-completion-ignore-case t))
-      (read-file-name "New Media Resource: "
-                      (if 
-                          (string-match (format "^%s"
-                                                emacspeak-alsaplayer-media-directory)
-                                        (expand-file-name default-directory))
-                          default-directory
-                        emacspeak-alsaplayer-media-directory)))))
+      (expand-file-name
+       (read-file-name "New media resource: "
+                       emacspeak-alsaplayer-media-directory)))))
   (emacspeak-alsaplayer-send-command
-   (nconc (list "--replace")
-          (if (file-directory-p resource)
-              (directory-files
-               (expand-file-name resource)
-               'full
-               emacspeak-alsaplayer-supported-files)
-            (expand-file-name resource)))
+   (format "--replace %s"
+           (if (file-directory-p resource)
+               (format "%s/*" resource)
+             resource))
    "playlist_length:")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'select-object)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-status ()
   "Show alsaplayer status"
@@ -321,10 +287,10 @@ Optional second arg watch-pattern specifies line of output to
   (emacspeak-alsaplayer-send-command "--pause"
                                      "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'button)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-next ()
   "Next  alsaplayer"
@@ -332,10 +298,10 @@ Optional second arg watch-pattern specifies line of output to
   (emacspeak-alsaplayer-send-command "--next"
                                      "\\(title\\|path\\):")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'select-object)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-previous ()
   "Previous  alsaplayer"
@@ -343,10 +309,10 @@ Optional second arg watch-pattern specifies line of output to
   (emacspeak-alsaplayer-send-command "--prev"
                                      "\\(title\\|path\\):")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'select-object)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-start ()
   "Start  alsaplayer"
@@ -354,10 +320,10 @@ Optional second arg watch-pattern specifies line of output to
   (emacspeak-alsaplayer-send-command "--start"
                                      "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'open-object)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-stop ()
   "Stop  alsaplayer"
@@ -365,70 +331,70 @@ Optional second arg watch-pattern specifies line of output to
   (emacspeak-alsaplayer-send-command "--stop"
                                      "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'close-object)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-relative (offset)
   "Relative seek  alsaplayer"
   (interactive "sOffset")
   (emacspeak-alsaplayer-send-command
-   (list "--relative" offset)
+   (format  "--relative %s" offset)
    "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'large-movement)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-speed (setting)
   "Set speed in alsaplayer."
   (interactive "sSpeed")
   (emacspeak-alsaplayer-send-command
-   (list "--speed" setting)
+   (format "--speed %s" setting)
    "speed:")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'select-object)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-volume (setting)
   "Set volume."
   (interactive "sVolume")
   (emacspeak-alsaplayer-send-command
-   (list "--volume" setting)
+   (format "--volume %s" setting)
    "volume:")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'select-object)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-seek (offset)
   "Absolute seek  alsaplayer"
   (interactive "sPosition")
   (emacspeak-alsaplayer-send-command
-   (list "--seek" offset)
+   (format "--seek %s" offset)
    "position:")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'large-movement)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-jump (track)
   "Jump to specified track."
   (interactive "sTrack Number:")
   (emacspeak-alsaplayer-send-command
-   (list "--jump" track)
+   (format "--jump %s" track)
    "\\(title\\|path\\):")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'large-movement)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-clear ()
   "Clear or resume alsaplayer"
@@ -436,19 +402,20 @@ Optional second arg watch-pattern specifies line of output to
   (emacspeak-alsaplayer-send-command "--clear"
                                      "playlist_length:")
   (when (and emacspeak-alsaplayer-auditory-feedback
-             (interactive-p))
+             (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
     (emacspeak-auditory-icon 'delete-object)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-quit ()
   "Quit  alsaplayer"
   (interactive)
   (emacspeak-alsaplayer-send-command "--quit" nil t)
   (when (eq major-mode 'emacspeak-alsaplayer-mode)
-    (kill-buffer (current-buffer))
-    (delete-window))
-  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
+    (condition-case nil
+        (kill-buffer-and-window)
+      (error nil)))
+  (when (interactive-p)
     (emacspeak-speak-mode-line)
     (emacspeak-auditory-icon 'close-object)))
 
@@ -459,70 +426,61 @@ Optional second arg watch-pattern specifies line of output to
   "Skip forward by  seconds."
   (interactive "p")
   (emacspeak-alsaplayer-send-command
-   (list "--relative"
-	 (format "%i" (or seconds emacspeak-alsaplayer-rewind-step)))
+   (format "--relative %i" (or seconds emacspeak-alsaplayer-rewind-step))
    "position:")
-  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-backward-step (seconds)
   "Skip backward by seconds."
   (interactive "p")
   (emacspeak-alsaplayer-send-command
-   (list "--relative"
-	 (format "-%i" (or seconds emacspeak-alsaplayer-rewind-step)))
+   (format "--relative -%i" (or seconds emacspeak-alsaplayer-rewind-step))
    "position:")
-  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-forward-minute ( minutes)
   "Skip forward by  minutes."
   (interactive "p")
   (emacspeak-alsaplayer-send-command
-   (list "--relative"
-	 (format "%i" (* 60 (or minutes 1))))
+   (format "--relative %i" (* 60 (or minutes 1)))
    "position:")
-  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-backward-minute ( minutes)
   "Skip backwards by  minutes."
   (interactive "p")
   (emacspeak-alsaplayer-send-command
-   (list
-    "--relative"
-    (format "-%i" (* 60 (or minutes 1))))
+   (format "--relative -%i" (* 60 (or minutes 1)))
    "position:")
-  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-forward-ten-minutes ( minutes)
   "Skip forward by  chunks of ten minutes."
   (interactive "p")
   (emacspeak-alsaplayer-send-command
-   (list
-    "--relative"
-    (format "%i" (* 600 (or minutes 1))))
+   (format "--relative %i" (* 600 (or minutes 1)))
    "position:")
-  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
+    (emacspeak-speak-line)))
 
 (defun emacspeak-alsaplayer-backward-ten-minutes ( minutes)
   "Skip backwards by  chunks of minutes."
   (interactive "p")
   (emacspeak-alsaplayer-send-command
-   (list
-    "--relative"
-    (format "-%i" (* 600 (or minutes 1))))
+   (format "--relative -%i" (* 600 (or minutes 1)))
    "position:")
-  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (emacspeak-speak-line))))
+  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p)
+             (eq major-mode 'emacspeak-alsaplayer-mode))
+    (emacspeak-speak-line)))
 
 ;;}}}
 ;;{{{  saving positions, marking and clipping:
@@ -533,18 +491,16 @@ Optional second arg watch-pattern specifies line of output to
 (defsubst emacspeak-alsaplayer-get-position ()
   "Return currently displayed position."
   (declare (special emacspeak-alsaplayer-buffer))
-  (emacspeak-alsaplayer-status)
-  (save-excursion
-    (let ((deactivate-mark nil))
-      (set-buffer emacspeak-alsaplayer-buffer)
-      (goto-char (point-min))
-      (when (search-forward "position:" nil t)
-        (second
-         (split-string
-          (buffer-substring-no-properties
-           (line-beginning-position)
-           (line-end-position))
-          ": "))))))
+  (save-current-buffer
+    (set-buffer emacspeak-alsaplayer-buffer)
+    (goto-char (point-min))
+    (when (search-forward "position:" nil t)
+      (second
+       (split-string
+        (buffer-substring-no-properties
+         (line-beginning-position)
+         (line-end-position))
+        ": ")))))
 
 (defun emacspeak-alsaplayer-mark-position   ()
   "Mark currently played position."
@@ -554,47 +510,42 @@ Optional second arg watch-pattern specifies line of output to
         (emacspeak-alsaplayer-get-position))
   (when (and (interactive-p)
              emacspeak-alsaplayer-mark)
+    (emacspeak-auditory-icon 'mark-object)
     (message "mark set at %s"
-             emacspeak-alsaplayer-mark)
-    (when emacspeak-alsaplayer-auditory-feedback
-      (emacspeak-auditory-icon 'mark-object))))
+             emacspeak-alsaplayer-mark)))
 
 (defun emacspeak-alsaplayer-where ()
   "Speak current position and copy it to kill ring."
   (interactive)
   (let ((where (emacspeak-alsaplayer-get-position))
-        (emacspeak-speak-messages emacspeak-alsaplayer-auditory-feedback))
+        (emacspeak-speak-messages t))
     (when where
       (kill-new where)
-      (when emacspeak-alsaplayer-auditory-feedback
-        (emacspeak-auditory-icon 'yank-object))
+      (emacspeak-auditory-icon 'yank-object)
       (message "%s" where))))
 
 (defsubst emacspeak-alsaplayer-get-path ()
   "Return currently displayed path."
   (declare (special emacspeak-alsaplayer-buffer))
-  (emacspeak-alsaplayer-status)
-  (save-excursion
-    (let ((deactivate-mark nil))
-      (set-buffer emacspeak-alsaplayer-buffer)
-      (goto-char (point-min))
-      (when (search-forward "path:" nil t)
-        (second
-         (split-string
-          (buffer-substring-no-properties
-           (line-beginning-position)
-           (line-end-position))
-          ": "))))))
+  (save-current-buffer
+    (set-buffer emacspeak-alsaplayer-buffer)
+    (goto-char (point-min))
+    (when (search-forward "path:" nil t)
+      (second
+       (split-string
+        (buffer-substring-no-properties
+         (line-beginning-position)
+         (line-end-position))
+        ": ")))))
 
 (defun emacspeak-alsaplayer-info ()
   "Speak current path and copy it to kill ring."
   (interactive)
   (let ((path (emacspeak-alsaplayer-get-path))
-        (emacspeak-speak-messages emacspeak-alsaplayer-auditory-feedback))
+        (emacspeak-speak-messages t))
     (when path
       (kill-new path)
-      (when emacspeak-alsaplayer-auditory-feedback
-        (emacspeak-auditory-icon 'yank-object))
+      (emacspeak-auditory-icon 'yank-object)
       (message "%s" path))))
 
 (defvar emacspeak-alsaplayer-mp3split-program "mp3splt"
@@ -623,6 +574,14 @@ Optional second arg watch-pattern specifies line of output to
                    (% end 60))))
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
     (emacspeak-auditory-icon 'delete-object)))
+
+(defun emacspeak-alsaplayer-toggle-auditory-feedback ()
+  "Toggle emacspeak alsaplayer auditory feedback on or off."
+  (interactive)
+  (setq emacspeak-alsaplayer-auditory-feedback
+        (not emacspeak-alsaplayer-auditory-feedback))
+  (emacspeak-auditory-icon (if emacspeak-alsaplayer-auditory-feedback
+                               'on 'off)))
 
 ;;}}}
 ;;{{{ bind keys
@@ -664,6 +623,7 @@ Optional second arg watch-pattern specifies line of output to
          emacspeak-alsaplayer-start)
         ("S"
          emacspeak-alsaplayer-stop)
+        ("t" emacspeak-alsaplayer-toggle-auditory-feedback)
         ("/" emacspeak-alsaplayer-speed)
         ("?"
          emacspeak-alsaplayer-status)
