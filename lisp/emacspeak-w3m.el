@@ -788,8 +788,7 @@ Indicate change of selection with
 
 (defadvice w3m-mode (after emacspeak pre act comp)
   "Set punctuation mode and refresh punctuations."
-  (declare (special dtk-punctuation-mode))
-  (setq dtk-punctuation-mode 'some)
+  (dtk-set-punctuations 'some)
   (emacspeak-pronounce-refresh-pronunciations)
   (define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command))
 

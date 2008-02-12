@@ -135,7 +135,7 @@
        ((buffer-live-p (get-buffer "*Fancy Diary Entries*"))
         (save-excursion
           (set-buffer "*Fancy Diary Entries*")
-          (tts-with-punctuations "some"
+          (tts-with-punctuations 'some
                                  (emacspeak-speak-buffer))))
        (t (dtk-speak "No diary entries."))))))
 

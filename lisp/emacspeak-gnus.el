@@ -136,11 +136,11 @@ reading news."
 
 (defsubst emacspeak-gnus-speak-article-body ()
   (declare (special emacspeak-gnus-large-article
-                    voice-lock-mode dtk-punctuation-mode))
+                    voice-lock-mode))
   (save-excursion
     (set-buffer  "*Article*")
     (goto-char (point-min))
-    (setq dtk-punctuation-mode 'some)
+    (dtk-set-punctuations 'some)
     (voice-lock-mode 1)
     (emacspeak-dtk-sync)
     (cond

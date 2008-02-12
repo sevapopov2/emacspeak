@@ -123,7 +123,7 @@
   (modify-syntax-entry 10 " ")
   (modify-syntax-entry 160 " ")
   (when emacspeak-w3-punctuation-mode
-    (setq dtk-punctuation-mode emacspeak-w3-punctuation-mode))
+    (dtk-set-punctuations emacspeak-w3-punctuation-mode))
   (emacspeak-auditory-icon 'open-object)
   (when (featurep 'w3-imenu)
     (setq imenu-create-index-function 'w3-imenu-create-index))
