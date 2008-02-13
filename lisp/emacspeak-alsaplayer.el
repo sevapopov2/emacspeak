@@ -60,6 +60,7 @@
   'emacspeak-alsaplayer-mode-map)
 (defun emacspeak-alsaplayer-header-line ()
   "Return information suitable for header line."
+  (declare (special emacspeak-alsaplayer-coding-system))
   (let* ((coding-system-for-read emacspeak-alsaplayer-coding-system)
          (title (shell-command-to-string
                  "alsaplayer --status 2>/dev/null | grep title:"))
