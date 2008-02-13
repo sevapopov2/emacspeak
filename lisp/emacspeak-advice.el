@@ -1557,7 +1557,8 @@ Then indicate current buffer by speaking  the modeline."
   "Produce an auditory icon to indicate closing of an object.
 Then indicate current buffer by speaking  the modeline."
   (when (interactive-p )
-    (emacspeak-auditory-icon 'close-object)))
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice other-window (after emacspeak pre act )
   "Speak modeline.
@@ -1754,16 +1755,21 @@ Indicate change of selection with
       (error ""))
     ad-return-value))
 
-(defadvice exchange-point-and-mark (after emacspeak pre act)
-  "Speak the line.
+(loop for f in
+      '(exchange-point-and-mark
+        Footnote-add-footnote)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act)
+          "Speak the line.
 Indicate large movement with an auditory icon if possible.
 Auditory highlight indicates position of point."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement )
-    (ems-set-personality-temporarily
-     (point) (1+ (point))
-     voice-animate
-     (emacspeak-speak-line))))
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'large-movement )
+            (ems-set-personality-temporarily
+             (point) (1+ (point))
+             voice-animate
+             (emacspeak-speak-line))))))
 
 (defadvice newline (before emacspeak pre act)
   "Speak the previous line if line echo is on.
