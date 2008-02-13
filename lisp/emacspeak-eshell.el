@@ -211,8 +211,10 @@ personalities."
     (cond
      ((= (point) (point-max))
       (message "Sending EOF to comint process"))
-     (t (dtk-tone 500 30 'force)
-        (emacspeak-speak-char t)))
+     (t
+      (when dtk-stop-immediately (dtk-stop))
+      (dtk-tone 500 30 'force)
+      (emacspeak-speak-char t)))
     ad-do-it)
    (t ad-do-it))
   ad-return-value)
@@ -221,6 +223,7 @@ personalities."
   "Speak character you're deleting."
   (cond
    ((interactive-p )
+    (when dtk-stop-immediately (dtk-stop))
     (dtk-tone 500 30 'force)
     (emacspeak-speak-this-char (preceding-char ))
     ad-do-it)
