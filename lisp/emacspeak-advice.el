@@ -671,7 +671,9 @@ Produce an auditory icon if possible."
   ad-return-value )
 
 (loop for f in
-      '(map-y-or-n-p hack-local-variables-confirm)
+      '(map-y-or-n-p
+        ask-user-about-supersession-threat
+        hack-local-variables-confirm)
       do
       (eval
        `(defadvice ,f (around emacspeak pre act)
