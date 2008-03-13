@@ -472,9 +472,7 @@ and TABLE gives the values along that dimension."
   (set-process-coding-system dtk-speaker-process 'cyrillic-koi8 'cyrillic-koi8)
   (setq-default dtk-speak-nonprinting-chars nil)
   (unless russian-spelling-data-loaded-p
-    (let ((coding-system-for-read 'raw-text))
-      (load-library "russian-spelling"))
-    (let ((coding-system-for-read 'cyrillic-koi8))
+    (let ((coding-system-for-read 'utf-8))
       (load-library "russian-spelling"))
     (setq russian-spelling-data-loaded-p t)))
 

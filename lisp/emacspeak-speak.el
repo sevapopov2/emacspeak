@@ -1041,9 +1041,13 @@ spelt instead of being spoken."
   "Return the phonetic string for this CHAR or its upper case equivalent.
 char is assumed to be one of a--z."
   (declare (special emacspeak-char-to-phonetic-table))
-  (let ((char-string   (char-to-string char )))
+  (let ((char-string (char-to-string
+                      (if (equal (char-charset char) 'cyrillic-iso8859-5)
+                          (make-char 'mule-unicode-0100-24ff 40
+                                     (car (cdr (split-char char))))
+                        char))))
     (or   (cdr
-           (assoc char-string emacspeak-char-to-phonetic-table ))
+           (assoc-string char-string emacspeak-char-to-phonetic-table ))
           " ")))
 
 ;;}}}
