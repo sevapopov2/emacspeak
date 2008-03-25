@@ -309,12 +309,10 @@ Use an auditory icon if possible."
 
 (defadvice db-delete-char (around emacspeak pre act comp)
   "Speak character you're deleting."
-  (declare (special emacspeak-delete-char-speak-deleted-char))
   (cond
    ((interactive-p )
     (dtk-tone 500 30 'force)
-    (and emacspeak-delete-char-speak-deleted-char
-         (emacspeak-speak-char t))
+    (emacspeak-speak-char t)
     ad-do-it)
    (t ad-do-it))
   ad-return-value)
