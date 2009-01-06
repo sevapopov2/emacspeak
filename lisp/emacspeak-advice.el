@@ -694,8 +694,9 @@ Produce an auditory icon if possible."
       (tts-with-punctuations 'all
                              (dtk-speak prompt)))
     ad-do-it
-    (tts-with-punctuations 'all
-                           (dtk-speak (format "%s" ad-return-value)))
+    (when prompt
+      (tts-with-punctuations 'all
+                             (dtk-speak (format "%s" ad-return-value))))
     ad-return-value))
 (defadvice read-passwd (before emacspeak pre act comp)
   "Speak the prompt."
