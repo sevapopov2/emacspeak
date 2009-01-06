@@ -56,6 +56,9 @@
     ("emacspeak-arc.el"
         "Speech enable archive-mode -- a  Emacs interface to zip and friends"
         (emacspeak  speak  spoken output  archive))
+    ("emacspeak-asm.el"
+        "Emacspeak extensions for asm-mode"
+        (emacspeak  audio interface to emacs asm mode))
     ("emacspeak-auctex.el"
         "Speech enable AucTeX -- a powerful TeX/LaTeX authoring environment"
         (emacspeak  audio interface to emacs auctex))
@@ -125,12 +128,18 @@
     ("emacspeak-custom.el"
         "Speech enable interactive Emacs customization "
         (emacspeak  speak  spoken output  custom))
+    ("emacspeak-cyclebuffer.el"
+        "Speech-enable cyclebuffer.el"
+        nil)
     ("emacspeak-daisy.el"
         "daisy Front-end for emacspeak desktop"
         (emacspeak  daisy digital talking books))
     ("emacspeak-damlite.el"
         "Speech-enable damlite"
         (emacspeak  damlite ))
+    ("emacspeak-debian-bug.el"
+        "Speech enable Debian bug reports"
+        (emacspeak  debian bug tracking system))
     ("emacspeak-desktop.el"
         "Speech-enable desktop"
         (emacspeak   audio desktop  desktop))
@@ -139,6 +148,9 @@
         (emacspeak  speak  spoken output  dictation))
     ("emacspeak-dictionary.el"
         "speech-enable dictionaries "
+        (emacspeak  audio desktop))
+    ("emacspeak-diff.el"
+        "Speech enable  diff"
         (emacspeak  audio desktop))
     ("emacspeak-dired.el"
         "Speech enable Dired Mode -- A powerful File Manager"
@@ -152,6 +164,9 @@
     ("emacspeak-ecb.el"
         "speech-enable Emacs Class Browser"
         (emacspeak  ecb))
+    ("emacspeak-edb.el"
+        "Speech interface for the EDB package"
+        (emacspeak  database speech interface))
     ("emacspeak-ediary.el"
         "Speech-enable ediary"
         (emacspeak  diary))
@@ -223,7 +238,7 @@
         (emacspeak  audio desktop))
     ("emacspeak-gnuplot.el"
         "speech-enable gnuplot mode"
-        (emacspeak  www interaction))
+        (emacspeak  mathematics  gnuplot interaction))
     ("emacspeak-gnus.el"
         "Speech enable GNUS -- Fluent spoken access to usenet"
         (emacspeak  gnus  advice  spoken output  news))
@@ -236,6 +251,9 @@
     ("emacspeak-gud.el"
         "Speech enable Emacs' debugger interface --covers GDB, JDB, and PerlDB"
         (emacspeak  audio interface to emacs debuggers))
+    ("emacspeak-hexl.el"
+        "Emacspeak extension to speech-enable hexl mode"
+        (emacspeak  hexl mode  binary files editing ))
     ("emacspeak-hide.el"
         "Provides user commands for hiding and exposing blocks of text"
         (emacspeak  speak  spoken output  hide))
@@ -304,7 +322,7 @@
         (emacspeak   audio desktop firefox))
     ("emacspeak-mpg123.el"
         "Speech enable MP3 Player"
-        (emacspeak  www interaction))
+        (emacspeak  streaming media  mpg123 interaction))
     ("emacspeak-mspools.el"
         "Speech enable MSpools -- Monitor multiple mail drops"
         (emacspeak  speak  spoken output  mspools))
@@ -322,7 +340,7 @@
         (emacspeak  newsticker ))
     ("emacspeak-nxml.el"
         "Speech enable nxml mode"
-        (emacspeak  nxml streaming media ))
+        (emacspeak  nxml ))
     ("emacspeak-ocr.el"
         "ocr Front-end for emacspeak desktop"
         (emacspeak  ocr))
@@ -344,15 +362,21 @@
     ("emacspeak-php-mode.el"
         "Speech-Enable php-mode "
         (emacspeak  php))
+    ("emacspeak-planner.el"
+        "speech-enable Planner -- a powerful organizer in Emacs"
+        (emacspeak  organizer  day planner  daily schedule))
     ("emacspeak-preamble.el"
         "standard  include for Emacspeak modules"
-        (emacspeak  audio interface to emacs auctex))
+        (emacspeak  audio interface to emacs))
     ("emacspeak-pronounce.el"
         "Implements Emacspeak pronunciation dictionaries"
         (emacspeak  audio interface to emacs customized pronunciation))
     ("emacspeak-psgml.el"
         "Speech enable psgml package"
         (emacspeak  audio interface to emacs psgml))
+    ("emacspeak-ps.el"
+        "Emacspeak extensions for ps-mode"
+        (emacspeak  audio interface to emacs ps mode))
     ("emacspeak-python.el"
         "Speech enable Python development environment"
         (emacspeak  speak  spoken output  python))
@@ -379,7 +403,7 @@
         (emacspeak  audio interface to emacs mail))
     ("emacspeak-rpm-spec.el"
         "Speech enable rpm spec editor"
-        (emacspeak  rpm-spec streaming media ))
+        (emacspeak  rpm-spec))
     ("emacspeak-rpm.el"
         "speech-enable RPM"
         (emacspeak  rpm  red hat package manager))
@@ -484,7 +508,7 @@
         (emacspeak  w3m))
     ("emacspeak-wdired.el"
         "Speech-enable wdired"
-        (emacspeak  multimedia))
+        (emacspeak  directory editing))
     ("emacspeak-we.el"
         "Transform Web Pages Using XSLT"
         (emacspeak   audio desktop web  xslt))
@@ -499,10 +523,16 @@
         (emacspeak   audio desktop webspace))
     ("emacspeak-webutils.el"
         "Common Web Utilities For Emacspeak"
-        (emacspeak  web))
+        (emacspeak  web ))
+    ("emacspeak-wget.el"
+        "Speech-enable Wget"
+        (emacspeak  wget  www  ftp  download manager))
     ("emacspeak-widget.el"
         "Speech enable Emacs' native GUI widget library"
         (emacspeak  audio interface to emacs customized widgets))
+    ("emacspeak-wiki.el"
+        "Speech enable emacs-wiki package"
+        (emacspeak  emacs wiki  html publishing))
     ("emacspeak-windmove.el"
         "speech-enable windmove "
         (emacspeak  windmove))

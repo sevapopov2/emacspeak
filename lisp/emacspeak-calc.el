@@ -73,9 +73,9 @@
           (dtk-quiet t)
           (emacspeak-use-auditory-icons nil))
       ad-do-it)
+    (emacspeak-auditory-icon 'task-done)
     (tts-with-punctuations 'all
-                           (emacspeak-read-previous-line))
-    (emacspeak-auditory-icon 'task-done))
+                           (emacspeak-read-previous-line)))
    (t ad-do-it))
   ad-return-value )
 
@@ -83,15 +83,15 @@
   "Speak previous line of output."
   (let ((emacspeak-speak-messages nil))
     ad-do-it
+    (emacspeak-auditory-icon 'select-object)
     (tts-with-punctuations 'all
-                           (emacspeak-read-previous-line))
-    (emacspeak-auditory-icon 'select-object))
+                           (emacspeak-read-previous-line)))
   ad-return-value)
 
 (defadvice  calc-trail-here (after emacspeak pre act comp)
   "Speak previous line of output."
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'select-object))
+  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-speak-line))
 
 ;;}}}
 (provide 'emacspeak-calc)

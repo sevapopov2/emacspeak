@@ -106,6 +106,13 @@
            (string :tag "option"))
   :group 'emacspeak-m-player)
 
+(defcustom emacspeak-m-player-coding-system nil
+  "Media player output coding system.
+It is used for tags decoding."
+  :type '(coding-system :size 0)
+  :group 'emacspeak-m-player)
+
+
 ;;;###autoload
 (defun emacspeak-multimedia  ()
   "Start or control Emacspeak multimedia player."
@@ -210,6 +217,8 @@ The player is placed in a buffer in emacspeak-m-player-mode."
                   "m-player" emacspeak-m-player-program
                   nil
                   options)))
+    (set-process-coding-system emacspeak-m-player-process
+                               emacspeak-m-player-coding-system)
     (save-excursion
       (set-buffer (process-buffer emacspeak-m-player-process))
       (emacspeak-m-player-mode)

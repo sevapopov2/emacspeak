@@ -46,7 +46,7 @@
 ;;}}}
 ;;{{{ Required Modules
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
 (eval-when (compile)
@@ -55,7 +55,7 @@
 ;;}}}
 ;;{{{  Define locations
 
-(defvar emacspeak-unibyte t
+(defvar emacspeak-unibyte nil
   "Emacspeak will force emacs to unibyte unless this
 variable is set to nil.
 To use emacspeak with emacs running in multibyte mode, this
@@ -106,7 +106,7 @@ pronunciation dictionaries are stored. ")
 (defconst emacspeak-version
   (eval-when-compile
     (format
-     "26.0 %s"
+     "27.0 %s"
      (cond
       ((file-exists-p emacspeak-readme-file)
        (let ((buffer (find-file-noselect emacspeak-readme-file))

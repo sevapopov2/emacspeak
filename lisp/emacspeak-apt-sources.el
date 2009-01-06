@@ -15,8 +15,8 @@
 ;;{{{  Copyright:
 
 ;;; Initial version: Author: Igor B. Poretsky
-;;; <master@goga.energo.ru>
-;;; Updated and maintained by $Author: tv.raman.tv $
+;;; <poretsky@mlbox.ru>
+;;; Updated and maintained by $Author: master $
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -60,7 +60,7 @@
 (defadvice apt-sources-mode (after emacspeak pre act comp)
   "Setup Emacspeak extensions"
   (voice-lock-mode 1)
-  (dtk-set-punctuations "all"))
+  (dtk-set-punctuations 'all))
 
 (defadvice apt-sources-previous-source-line (after emacspeak pre act comp)
   "Provide auditory feedback."
