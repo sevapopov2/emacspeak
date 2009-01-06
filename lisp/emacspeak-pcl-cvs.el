@@ -148,6 +148,11 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'yank-object)))
 
+(defadvice cvs-mode-remove-handled (after emacspeak pre act comp)
+  "Provide auditory icon if possible. "
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'delete-object)))
+
 (defadvice cvs-status-trees (after emacspeak pre act comp)
   "Provide auditory icon if possible. "
   (when (interactive-p)

@@ -193,6 +193,28 @@ reading news."
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
+(defadvice gnus-group-edit-group-parameters (after emacspeak pre act)
+  "Provide auditory contextual feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
+
+(defadvice gnus-edit-form-done (after emacspeak pre act)
+  "Provide auditory contextual feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
+
+(defadvice gnus-group-delete-group (after emacspeak pre act)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'delete-object)))
+
+(defadvice gnus-group-kill-group (after emacspeak pre act)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'delete-object)))
+
 ;;}}}
 ;;{{{  starting up:
 
