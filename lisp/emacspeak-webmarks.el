@@ -1,5 +1,5 @@
 ;;; emacspeak-webmarks.el --- Web Bookmarks Via Google
-;;; $Id: emacspeak-webmarks.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-webmarks.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  WebMarks are Web Bookmarks stored at Google
 ;;; Keywords: Emacspeak,  Audio Desktop Web, Bookmarks
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-06-11 07:16:00 -0700 (Wed, 11 Jun 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -153,7 +153,7 @@ Use form bookmark-add.html, and use the resulting zx param as key"))
            query)))
 
 ;;;###autoload
-(defun emacspeak-webmarks-add (url title notes)
+(defun emacspeak-webmarks-add (url title labels notes)
   "Add WebMark."
   (interactive
    (list
@@ -171,15 +171,17 @@ Use form bookmark-add.html, and use the resulting zx param as key"))
                             (buffer-substring
                              (line-beginning-position)
                              (line-end-position))))
+    (read-from-minibuffer "Labels: ")
     (read-from-minibuffer "Notes: ")))
   (declare (special emacspeak-webmarks-key))
   (unless emacspeak-webmarks-key
     (error "WebMarks key not set."))
-  (let ((base-url (format "%s&title=%s&bkmk=%s&annotation=%s"
+  (let ((base-url (format "%s&title=%s&bkmk=%s&annotation=%s&labels=%s"
                           (emacspeak-webmarks-url emacspeak-webmarks-add-url-template)
                           (emacspeak-url-encode title)
                           (emacspeak-url-encode url)
-                          (emacspeak-url-encode notes))))
+                          (emacspeak-url-encode notes)
+                          (emacspeak-url-encode labels))))
     (emacspeak-webutils-with-xsl-environment
      (expand-file-name "xpath-filter.xsl" emacspeak-xslt-directory)
      (emacspeak-xslt-params-from-xpath

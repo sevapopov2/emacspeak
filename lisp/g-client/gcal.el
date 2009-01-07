@@ -1,5 +1,5 @@
 ;;; gcal.el --- Google Calendar
-;;;$Id: gcal.el,v 1.30 2006/09/28 17:47:44 raman Exp $
+;;;$Id: gcal.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: raman $
 ;;; Description:  Google Calendar
 ;;; Keywords: Google   Atom API
@@ -520,7 +520,7 @@ file."
       (message "Event added as %s" (g-http-header "Location"
                                                   headers))
       (when gcal-autoinsert-into-emacs-calendar
-        (make-diary-entry
+        (diary-make-entry
          (gcal-event-as-diary-entry event))
         (save-excursion
           (set-buffer (find-file-noselect diary-file))

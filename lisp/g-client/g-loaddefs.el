@@ -1,9 +1,69 @@
 ;;;Auto generated
 
+;;;### (autoloads (g-auth-lifetime) "g-auth" "g-auth.el" (18706 8727))
+;;; Generated autoloads from g-auth.el
+
+(defvar g-auth-lifetime "4 hours" "\
+Auth lifetime.")
+
+(custom-autoload 'g-auth-lifetime "g-auth" nil)
+
+;;;***
+
+;;;### (autoloads (gblogger-sign-in gblogger-sign-out gblogger-add-label
+;;;;;;  gblogger-delete-entry gblogger-new-entry gblogger-edit-entry
+;;;;;;  gblogger-atom-display gblogger-blog) "gblogger" "gblogger.el"
+;;;;;;  (18706 8727))
+;;; Generated autoloads from gblogger.el
+
+(autoload 'gblogger-blog "gblogger" "\
+Retrieve and display feed of feeds after authenticating.
+
+\(fn)" t nil)
+
+(autoload 'gblogger-atom-display "gblogger" "\
+Retrieve and display specified feed after authenticating.
+
+\(fn FEED-URL)" t nil)
+
+(autoload 'gblogger-edit-entry "gblogger" "\
+Retrieve entry and prepare it for editting.
+The retrieved entry is placed in a buffer ready for editing.
+`url' is the URL of the entry.
+
+\(fn URL)" t nil)
+
+(autoload 'gblogger-new-entry "gblogger" "\
+Create a new Blog post.
+
+\(fn URL)" t nil)
+
+(autoload 'gblogger-delete-entry "gblogger" "\
+Delete item at specified edit URL.
+
+\(fn EDIT-URL)" t nil)
+
+(autoload 'gblogger-add-label "gblogger" "\
+Adds labels to gblogger entry being editted.
+
+\(fn LABEL)" t nil)
+
+(autoload 'gblogger-sign-out "gblogger" "\
+Resets client so you can start with a different userid.
+
+\(fn)" t nil)
+
+(autoload 'gblogger-sign-in "gblogger" "\
+Resets client so you can start with a different userid.
+
+\(fn)" t nil)
+
+;;;***
+
 ;;;### (autoloads (gcal-sign-in gcal-sign-out gcal-emacs-calendar-setup
 ;;;;;;  gcal-show-event gcal-view gcal-calendar-agenda-days gcal-delete-event
 ;;;;;;  gcal-quickadd-event gcal-add-event gcal-user-email gcal-default-user-email)
-;;;;;;  "gcal" "gcal.el" (18401 57420))
+;;;;;;  "gcal" "gcal.el" (18706 8727))
 ;;; Generated autoloads from gcal.el
 
 (defvar gcal-default-user-email nil "\
@@ -66,12 +126,124 @@ Sign in, useful when changing to a different user profile.
 
 ;;;***
 
+;;;### (autoloads (gcontacts-create gcontacts-initialize) "gcontacts"
+;;;;;;  "gcontacts.el" (18732 14139))
+;;; Generated autoloads from gcontacts.el
+
+(autoload 'gcontacts-initialize "gcontacts" "\
+Initialize GContacts process handle.
+
+\(fn USERNAME)" t nil)
+
+(autoload 'gcontacts-create "gcontacts" "\
+Create a new contact as specified.
+
+\(fn NAME EMAIL MOBILE)" t nil)
+
+;;;***
+
+;;;### (autoloads (gdocs-sign-in gdocs-sign-out gdocs-view-item gdocs-delete-item
+;;;;;;  gdocs-add-collaborator gdocs-doclist) "gdocs" "gdocs.el"
+;;;;;;  (18733 34370))
+;;; Generated autoloads from gdocs.el
+
+(autoload 'gdocs-doclist "gdocs" "\
+Retrieve and display feed of feeds after authenticating.
+Interactive prefix arg prompts for a query string.
+
+\(fn &optional QUERY)" t nil)
+
+(autoload 'gdocs-add-collaborator "gdocs" "\
+Add collaborator to ACL at acl-url.
+You can find the acl-url through the DocList.
+
+\(fn EMAIL ACL-URL)" t nil)
+
+(autoload 'gdocs-delete-item "gdocs" "\
+Delete specified item.
+
+\(fn URL)" t nil)
+
+(autoload 'gdocs-view-item "gdocs" "\
+View specified item.
+
+\(fn URL)" t nil)
+
+(autoload 'gdocs-sign-out "gdocs" "\
+Resets client so you can start with a different userid.
+
+\(fn)" t nil)
+
+(autoload 'gdocs-sign-in "gdocs" "\
+Resets client so you can start with a different userid.
+
+\(fn)" t nil)
+
+;;;***
+
+;;;### (autoloads (gfeeds-view gfeeds-titles gfeeds-freshness) "gfeeds"
+;;;;;;  "gfeeds.el" (18706 8727))
+;;; Generated autoloads from gfeeds.el
+
+(defsubst gfeeds-feed (feed-url) "\
+Return feed structure." (declare (special gfeeds-feeds-url gfeeds-referer)) (let ((result nil)) (g-using-scratch (call-process g-curl-program nil t nil "-s" "-e" gfeeds-referer (format gfeeds-feeds-url (g-url-encode feed-url))) (goto-char (point-min)) (setq result (json-read)) (when (= 200 (g-json-get (quote responseStatus) result)) (g-json-get (quote feed) (g-json-get (quote responseData) result))))))
+
+(defsubst gfeeds-lookup (url) "\
+Lookup feed for a given Web page." (declare (special gfeeds-lookup-url gfeeds-referer)) (let ((result nil)) (g-using-scratch (call-process g-curl-program nil t nil "-s" "-e" gfeeds-referer (format gfeeds-lookup-url (g-url-encode url))) (goto-char (point-min)) (setq result (json-read)) (when (= 200 (g-json-get (quote responseStatus) result)) (g-json-get (quote url) (g-json-get (quote responseData) result))))))
+
+(defsubst gfeeds-find (query) "\
+Find feeds matching a query." (declare (special gfeeds-find-url gfeeds-referer)) (let ((result nil)) (g-using-scratch (call-process g-curl-program nil t nil "-s" "-e" gfeeds-referer (format gfeeds-find-url (g-url-encode query))) (goto-char (point-min)) (setq result (json-read)) (when (= 200 (g-json-get (quote responseStatus) result)) (g-json-get (quote entries) (g-json-get (quote responseData) result))))))
+
+(defvar gfeeds-freshness "4 hours" "\
+Freshness used to decide if we return titles.")
+
+(custom-autoload 'gfeeds-freshness "gfeeds" nil)
+
+(autoload 'gfeeds-titles "gfeeds" "\
+Return list of titles from feed at feed-url.
+
+\(fn FEED-URL)" nil nil)
+
+(autoload 'gfeeds-view "gfeeds" "\
+Display Feed in a browser.
+Interactive prefix arg causes the feed url to be looked up given a Web site.
+
+\(fn URL &optional LOOKUP)" t nil)
+
+;;;***
+
+;;;### (autoloads (gfinance-sign-in gfinance-sign-out gfinance-display-feed
+;;;;;;  gfinance-portfolios) "gfinance" "gfinance.el" (18706 8727))
+;;; Generated autoloads from gfinance.el
+
+(autoload 'gfinance-portfolios "gfinance" "\
+Retrieve and display feed of feeds after authenticating.
+
+\(fn)" t nil)
+
+(autoload 'gfinance-display-feed "gfinance" "\
+Retrieve and display feedat feed-url  after authenticating.
+
+\(fn FEED-URL)" t nil)
+
+(autoload 'gfinance-sign-out "gfinance" "\
+Resets client so you can start with a different userid.
+
+\(fn)" t nil)
+
+(autoload 'gfinance-sign-in "gfinance" "\
+Resets client so you can start with a different userid.
+
+\(fn)" t nil)
+
+;;;***
+
 ;;;### (autoloads (gphoto-edit-entry gphoto-sign-in gphoto-sign-out
 ;;;;;;  gphoto-comment-or-tag gphoto-directory-add-photos gphoto-photo-add
 ;;;;;;  gphoto-album-create gphoto-user-tagsearch gphoto-user-search
 ;;;;;;  gphoto-recent gphoto-community-search gphoto-download gphoto-view
 ;;;;;;  gphoto-tags gphoto-albums gphoto-feeds) "gphoto" "gphoto.el"
-;;;;;;  (18085 20971))
+;;;;;;  (18706 8851))
 ;;; Generated autoloads from gphoto.el
 
 (autoload 'gphoto-feeds "gphoto" "\
@@ -158,11 +330,12 @@ The retrieved entry is placed in a buffer ready for editing.
 
 ;;;***
 
-;;;### (autoloads (greader-sign-in greader-sign-out greader-search
-;;;;;;  greader-find-feeds greader-star greader-add-label greader-untag-feed
-;;;;;;  greader-tag-feed greader-title-feed greader-unsubscribe-feed
-;;;;;;  greader-subscribe-feed greader-opml greader-feed-list greader-preferences
-;;;;;;  greader-reading-list) "greader" "greader.el" (18380 44935))
+;;;### (autoloads (greader-re-authenticate greader-sign-in greader-sign-out
+;;;;;;  greader-search greader-find-feeds greader-star greader-add-label
+;;;;;;  greader-untag-feed greader-tag-feed greader-title-feed greader-unsubscribe-feed
+;;;;;;  greader-subscribe-feed greader-opml greader-feed-list greader-subscriptions
+;;;;;;  greader-preferences greader-reading-list) "greader" "greader.el"
+;;;;;;  (18706 8851))
 ;;; Generated autoloads from greader.el
 
 (autoload 'greader-reading-list "greader" "\
@@ -179,12 +352,15 @@ user.
 
 \(fn)" t nil)
 
+(autoload 'greader-subscriptions "greader" "\
+Return list of subscribed feeds.
+
+\(fn)" nil nil)
+
 (autoload 'greader-feed-list "greader" "\
 Retrieve list of subscribed feeds.
-Feeds are sorted by timestamp of newly arrived articles.
-Optional interactive prefix arg `sort' turns on sorting.
 
-\(fn &optional SORT)" t nil)
+\(fn)" t nil)
 
 (autoload 'greader-opml "greader" "\
 Retrieve OPML representation of our subscription list.
@@ -246,10 +422,15 @@ Resets client so you can start with a different userid.
 
 \(fn)" t nil)
 
+(autoload 'greader-re-authenticate "greader" "\
+Reauthenticate current user.
+
+\(fn)" t nil)
+
 ;;;***
 
 ;;;### (autoloads (gsheet-sign-in gsheet-sign-out gsheet-sheets gsheet-fetch)
-;;;;;;  "gsheet" "gsheet.el" (18055 59219))
+;;;;;;  "gsheet" "gsheet.el" (18706 8727))
 ;;; Generated autoloads from gsheet.el
 
 (autoload 'gsheet-fetch "gsheet" "\
@@ -275,7 +456,7 @@ Resets client so you can start with a different userid.
 ;;;***
 
 ;;;### (autoloads (gskeleton-sign-in gskeleton-sign-out) "gskeleton"
-;;;;;;  "gskeleton.el" (18055 59219))
+;;;;;;  "gskeleton.el" (18706 8727))
 ;;; Generated autoloads from gskeleton.el
 
 (autoload 'gskeleton-sign-out "gskeleton" "\
@@ -293,7 +474,7 @@ Resets client so you can start with a different userid.
 ;;;### (autoloads (gtube-video-featured gtube-video-by-user gtube-video-popular
 ;;;;;;  gtube-video-playlist gtube-video-by-category-and-tag gtube-video-by-tag
 ;;;;;;  gtube-video-details gtube-user-friends gtube-user-favorites
-;;;;;;  gtube-user-profile) "gtube" "gtube.el" (18268 37311))
+;;;;;;  gtube-user-profile) "gtube" "gtube.el" (18706 8727))
 ;;; Generated autoloads from gtube.el
 
 (autoload 'gtube-user-profile "gtube" "\
@@ -357,58 +538,37 @@ Retrieved featured video list.
 
 ;;;***
 
-;;;### (autoloads nil nil ("g-app.el" "g-auth.el" "g-autogen.el"
-;;;;;;  "g-cus-load.el" "g-load-path.el" "g-utils.el" "g.el" "gnotebook.el"
-;;;;;;  "indent-files.el" "json.el") (18476 58202 70252))
+;;;### (autoloads (gweb-google-at-point) "gweb" "gweb.el" (18706
+;;;;;;  8727))
+;;; Generated autoloads from gweb.el
+
+(autoload 'gweb-google-at-point "gweb" "\
+Google for term at point, and display top result succinctly.
+Attach URL at point so we can follow it later --- subsequent invocations of this command simply follow that URL.
+Optional interactive prefix arg refresh forces this cached URL to be refreshed.
+
+\(fn SEARCH-TERM &optional REFRESH)" t nil)
 
 ;;;***
 
-;;;### (autoloads (gblogger-sign-in gblogger-sign-out gblogger-add-label
-;;;;;;  gblogger-delete-entry gblogger-new-entry gblogger-edit-entry
-;;;;;;  gblogger-atom-display gblogger-blog) "gblogger" "gblogger.el"
-;;;;;;  (18281 10019))
-;;; Generated autoloads from gblogger.el
+;;;### (autoloads nil nil ("g-autogen.el" "g-cus-load.el" "g-load-path.el"
+;;;;;;  "g-utils.el" "g.el" "gnotebook.el" "indent-files.el" "json.el")
+;;;;;;  (18733 37519 889159))
 
-(autoload 'gblogger-blog "gblogger" "\
-Retrieve and display feed of feeds after authenticating.
+;;;***
+
+;;;### (autoloads (g-app-view g-app-publish) "g-app" "g-app.el" (18708
+;;;;;;  48414))
+;;; Generated autoloads from g-app.el
 
-\(fn)" t nil)
-
-(autoload 'gblogger-atom-display "gblogger" "\
-Retrieve and display specified feed after authenticating.
-
-\(fn FEED-URL)" t nil)
-
-(autoload 'gblogger-edit-entry "gblogger" "\
-Retrieve entry and prepare it for editting.
-The retrieved entry is placed in a buffer ready for editing.
-`url' is the URL of the entry.
-
-\(fn URL)" t nil)
-
-(autoload 'gblogger-new-entry "gblogger" "\
-Create a new Blog post.
-
-\(fn URL)" t nil)
-
-(autoload 'gblogger-delete-entry "gblogger" "\
-Delete item at specified edit URL.
-
-\(fn EDIT-URL)" t nil)
-
-(autoload 'gblogger-add-label "gblogger" "\
-Adds labels to gblogger entry being editted.
-
-\(fn LABEL)" t nil)
-
-(autoload 'gblogger-sign-out "gblogger" "\
-Resets client so you can start with a different userid.
+(autoload 'g-app-publish "g-app" "\
+Publish current entry.
 
 \(fn)" t nil)
 
-(autoload 'gblogger-sign-in "gblogger" "\
-Resets client so you can start with a different userid.
+(autoload 'g-app-view "g-app" "\
+View feed using auth credentials in auth-handle.
 
-\(fn)" t nil)
+\(fn AUTH-HANDLE FEED-URL)" t nil)
 
 ;;;***

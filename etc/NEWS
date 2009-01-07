@@ -1,47 +1,41 @@
 Emacspeak News --History Of User-Visible Changes
-$Id: NEWS 5575 2008-05-16 01:28:11Z tv.raman.tv $
+$Id: NEWS 6054 2008-11-13 01:36:59Z tv.raman.tv $
 Author: T. V. Raman <raman@users.sf.net>
 
-* Emacspeak 28.0 Additions And Changes:
+* Emacspeak 29.0 Additions And Changes:
 
-Emacspeak 28.0 provides the following user level enhancements:
-** emacspeak-webspace:
+Emacspeak 29.0 provides the following user level enhancements:
 
-Module to automatically retrieve and speak useful information
-from the Web at appropriate points in user interaction, e.g.,
-when context-switching.
+** Speech-enables proced:
 
-** amixer.el
+Module emacspeak-proced speech-enables emacs 23's new Task
+manager proced.
+This replaces view-process-mode which no longer works in emacs
+23.
 
-Emacs binding to amixer, updated to work with ALSA 1.0.15 and
-newer audio hardware.
+** Integrates Unicode Support
 
-** URL Tempaltes:
+Thanks to Lukas' work, Emacspeak now works with the unicode
+support in Emacs 22 and Emacs 23.
 
-Updated url templates.
+** emacspeak-webspace
 
-** emacspeak-webutils:
+Module Webspace provides a suite of  efficient Web content access
+tools.
 
-Additional Web utilties.
+** G-Client:
 
-** emacspeak-wizards:
+G-Client now includes support for many more Google Web APIs,
+including WebSearch and BlogSearch.
 
-Updated collection of wizards.
+** Initial Support For Google Docs:
 
-** Unicode:
+There is now preliminary support for uploading and viewing
+document lists from Google Docs in G-Client.
 
-Minor improvements for working better with multibyte  charsets.
-
-** GMail Wizards:
-
-Search wizards for GMail
-
-** G-Client Updates:
-
-G-Client has  been updated to work better with Calendar.
 
 
 
 Local variables:
- mode: org
+mode: org
 end:

@@ -1,5 +1,5 @@
 ;;; emacspeak-redefine.el --- Redefines some key Emacs builtins to speak
-;;; $Id: emacspeak-redefine.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-redefine.el 6001 2008-10-17 01:21:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak's redefinition of some key functions.
 ;;; Emacspeak does most of its work by advising other functions to speak.
@@ -10,7 +10,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-06-21 19:19:09 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -104,7 +104,7 @@ speech flush as you type."
         (emacspeak-speak-word)))
      (emacspeak-character-echo
       (when dtk-stop-immediately-while-typing (dtk-stop))
-      (emacspeak-speak-this-char last-command-event ))))
+      (emacspeak-speak-this-char (preceding-char) ))))
   (and auto-fill-function
        (= (char-syntax  last-command-event) 32)
        (>= (current-column) fill-column)
@@ -143,7 +143,7 @@ speech flush as you type."
 
 (defun emacspeak-rebind(old-fn new-fn &optional keymap)
   "Rebinds new-fn to all those keys that normally invoke old-fn"
-  (let ((keys (where-is-internal old-fn keymap)))
+  (let ((keys (where-is-internal old-fn  keymap)))
     (mapcar
      (if keymap
          #'(lambda (key)
@@ -151,6 +151,7 @@ speech flush as you type."
        #'(lambda (key)
            (global-set-key key new-fn )))
      keys )))
+
 
 (defvar emacspeak-functions-that-bypass-function-cell
   (list 'backward-char 'forward-char 'self-insert-command )

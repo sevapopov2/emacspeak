@@ -1,5 +1,5 @@
 ;;; emacspeak-emms.el --- Speech-enable EMMS Multimedia UI
-;;; $Id: emacspeak-emms.el 5228 2007-08-28 00:54:54Z tv.raman.tv $
+;;; $Id: emacspeak-emms.el 5830 2008-08-25 03:10:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable EMMS
 ;;; Keywords: Emacspeak, Multimedia
@@ -62,7 +62,7 @@
   "Speak current track."
   (interactive)
   (message
-   (cdr (assoc 'name (emms-playlist-current-track)))))
+   (cdr (assq 'name (emms-playlist-current-track)))))
 
 (loop for f in
       '(emms-next emms-next-noerror emms-previous)

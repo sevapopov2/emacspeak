@@ -1,5 +1,5 @@
 ;;; gblogger.el ---  new Atom Blogger API client
-;;; $Id:$
+;;; $Id: gblogger.el 5993 2008-10-11 01:21:57Z tv.raman.tv $
 ;;; $Author:$
 ;;; Description:  ATOM Blogger API
 ;;; Keywords: g-client, Blogger Atom API
@@ -222,7 +222,8 @@ The retrieved entry is placed in a buffer ready for editing.
       (g-app-mode)
       (setq g-app-this-url url
             g-app-auth-handle gblogger-auth-handle
-            g-app-publish-action 'g-app-post-entry)      (goto-char (point-max))
+            g-app-publish-action 'g-app-post-entry)
+      (goto-char (point-max))
       (insert
        (format gblogger-new-entry-template
                gblogger-generator-name gblogger-generator-name
@@ -242,13 +243,7 @@ The retrieved entry is placed in a buffer ready for editing.
   (g-app-delete-entry gblogger-auth-handle edit-url))
 
 ;;;### autoload
-(defun gblogger-delete-entry (url)
-  "Delete specified entry."
-  (interactive
-   (list
-    (read-from-minibuffer "Entry URL:")))
-  (declare (special gblogger-auth-handle))
-  (g-app-delete-entry gblogger-auth-handle url))
+
 ;;;###autoload
 (defun gblogger-add-label (label)
   "Adds labels to gblogger entry being editted."

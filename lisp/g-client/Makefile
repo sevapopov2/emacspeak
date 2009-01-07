@@ -41,15 +41,21 @@ EMACS = emacs
 BATCH = -batch -q -no-site-file  -eval '(setq vc-handled-backends nil)'
 DEPS= -l ./g-load-path.el -l ./g-loaddefs.el
 COMPILE =  -f batch-byte-compile
-OBJECTS= g-auth.elc \
+OBJECTS= json.elc \
+g-auth.elc \
 g-app.elc \
 g-utils.elc \
 g.elc \
 gblogger.elc \
 gcal.elc \
+gcontacts.elc \
+gdocs.elc \
+gfinance.elc \
+gfeeds.elc \
 gnotebook.elc \
 greader.elc \
 gphoto.elc \
+gweb.elc \
 gtube.elc \
 gsheet.elc
 
@@ -82,9 +88,14 @@ g-utils.elc: g-utils.el
 g-auth.elc: g-auth.el g-utils.elc
 g-app.elc: g-auth.elc g-utils.elc g-app.el
 g.elc: g.el  g-auth.elc
+gfeeds.elc: g-utils.elc gfeeds.el
+gfinance.elc: gfinance.el g-app.elc
 greader.elc: greader.el g-app.elc
 gsheet.elc: gsheet.el g-app.elc
+gweb.elc: gweb.el g-utils.elc
 gcal.elc: gcal.el g-app.elc
+gcontacts.elc: gcontacts.el
+gdocs.elc: gdocs.el g-app.elc
 gnotebook.elc: gnotebook.el g-app.elc
 gblogger.elc: gblogger.el g-app.elc
 
@@ -93,7 +104,7 @@ gblogger.elc: gblogger.el g-app.elc
 
 dist:g-client.tar.bz2
 
-g-client.tar.bz2: ${SOURCES}
+g-client.tar.bz2: 
 	rm -f $@
 	tar  cfj $@ -X .excludes -C ..  g-client
 

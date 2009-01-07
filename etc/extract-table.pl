@@ -1,36 +1,36 @@
 #!/usr/bin/perl -w
-#$Id: extract-table.pl 4047 2006-08-11 19:11:17Z tv.raman.tv $
+#$Id: extract-table.pl 5842 2008-08-25 18:54:14Z tv.raman.tv $
 # Accepts a URI and table spec
-#returns a csv file
+#returns csv output on STDOUT 
 use strict;
 use FileHandle;
 use LWP::UserAgent;
 use HTML::TableExtract;
 use IO::File;
+use File::Temp qw(tempfile);
 use Getopt::Long;
 use vars qw (%options);
-my ($url, $file, $task, $depth, $count, $cols);
+my ($url, $file, $depth, $count, $cols);
 
-my %options = (task => \$task,
-           url => \$url,
-file => \$file,
-           depth => \$depth,
-count => \$count,
-headers => \$cols);
+my %options = (
+    url => \$url,
+    file => \$file,
+    depth => \$depth,
+    count => \$count,
+    headers => \$cols);
 GetOptions (\%options,
             'file=s',
             'url=s',
-            'task=s',
             'depth=i',
             'count=i',
             'headers=s');
-$task ||= "extract-table";
-my $input;
+
+my ($input, $inputname);
 if (defined ($file)) {
   $input = $file;
 } else {
-  $input="/tmp/$options{task}.html";
-  RetrieveURLToFile($url, $input);
+    ($input, $inputname) = tempfile(suffix=>'.html');
+  RetrieveURLToFile($url, $inputname);
 }
 
 my $te;
@@ -41,8 +41,9 @@ if ( defined ($cols)) {
  $te = new HTML::TableExtract( depth => $depth, count=>$count); 
 }
 $te->parse_file($input);
-my $output = new FileHandle (">  /tmp/$task.csv");
+
 my ($ts,$row);
+my $output =\*STDOUT;
 foreach $ts ($te->table_states) {
           foreach $row ($ts->rows) {
              $output->print ( join(',', @$row), "\n");
@@ -52,7 +53,7 @@ foreach $ts ($te->table_states) {
 $output->close();
 
 if (defined ($url)) {
-  unlink ($input);
+  unlink ($inputname);
 }
 # {{{  retrieve URL to file
 
@@ -64,9 +65,8 @@ sub RetrieveURLToFile {
   # Pass request to the user agent and get a response back
   my $res = $ua->request($req, $filename);
   if ($res->is_success()) {
-    warn"table: Retrieved $url to $filename\n";
   } elsif ($res->is_error()) {
-    exit ("Retrieval for $url failed\n");
+      die ("Retrieval failed  for $url");
   }
 }
 

@@ -1,5 +1,5 @@
 ;;; emacspeak-sgml-mode.el --- Speech enable SGML mode
-;;; $Id: emacspeak-sgml-mode.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-sgml-mode.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Emacspeak extension for sgml mode
 ;;; Keywords:emacspeak, audio interface to emacs sgml 

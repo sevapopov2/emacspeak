@@ -1,11 +1,13 @@
-@c $Id: preamble.texi 4047 2006-08-11 19:11:17Z tv.raman.tv $
+@c $Id: preamble.texi 5710 2008-08-02 18:02:56Z tv.raman.tv $
 
 @node Top
 @top Emacspeak
 
 
-This manual documents Emacspeak, a speech interface to Emacs.  The
-manual is divided into the following chapters.
+This manual documents Emacspeak, a speech interface to Emacs.  
+@ifinfo 
+The manual is divided into the following chapters. 
+@end ifinfo
 
 @menu
 * Copying: Copyright.

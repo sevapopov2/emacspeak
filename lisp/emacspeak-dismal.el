@@ -1,5 +1,5 @@
 ;;; emacspeak-dismal.el --- Speech enable Dismal -- An Emacs Spreadsheet program
-;;; $Id: emacspeak-dismal.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-dismal.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: spread sheet extension
 ;;; Keywords:emacspeak, audio interface to emacs spread sheets
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -346,8 +346,8 @@ Checked by emacspeak specific dis-mode-hooks entry.")
                      dismal-saved-variables)))))
 
 (declaim (special dismal-map))
-(eval-when (load)
-  (emacspeak-keymap-remove-emacspeak-edit-commands dismal-map))
+(eval-when (load))
+
 ;;; this assumes emacspeak-prefix is C-e
 ;;; and function-key-prefix is M-[
 (add-hook 'dis-mode-hooks

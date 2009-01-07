@@ -1,9 +1,9 @@
-<!--$Id: mlb-alerts.xsl 5222 2007-08-26 01:28:19Z tv.raman.tv $-->
+<!--$Id: mlb-alerts.xsl 6018 2008-11-04 19:52:11Z tv.raman.tv $-->
 <!--Description: MLB Alerts.-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0">
   
-  <xsl:output encoding="iso8859-15"
+  <xsl:output encoding="UTF-8"
   method="html"  indent="yes"/>
   <xsl:template match="/">
     <html>

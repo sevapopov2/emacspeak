@@ -1,8 +1,9 @@
 #!/usr/bin/perl -w
-#$Id: ocr-client.pl 5562 2008-04-16 21:36:54Z tv.raman.tv $
+#$Id: ocr-client.pl 5844 2008-08-25 19:22:23Z tv.raman.tv $
 #Description: Invoke ocrxtr client. Pipe result to stdout
 #Usage: ocr-client.pl image-file [hostname]
 use strict;
+use File::Temp qw(tempfile);
 use File::Basename;
 
 #my $OCR = 'ocrxtr';
@@ -11,8 +12,8 @@ my $image =shift;
 die "No image specified" unless defined ($image);
 my $host =shift;
 my ($name,$path,$suffix) = fileparse($image,"\.tiff");
-my $input = "/tmp/$$-$name.tiff";
-my $output = "/tmp/ocr-output-$$.txt";
+my ($in, $input)  = tempfile(suffix=>'.tiff');
+my ($out, $output) = tempfile(suffix=>'.txt');
 $host ='localhost' unless defined ($host);
 if ( $host =~ m/localhost/) {
   #qx($OCR -out_text_name $output $image 2>/dev/null);

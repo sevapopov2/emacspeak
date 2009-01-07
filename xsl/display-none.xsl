@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--$Id: display-none.xsl 5222 2007-08-26 01:28:19Z tv.raman.tv $-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--$Id: display-none.xsl 6018 2008-11-04 19:52:11Z tv.raman.tv $-->
 
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>
@@ -10,7 +10,7 @@ trim elements that have style=display: none
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0">
   
-  <xsl:output encoding="iso8859-15"
+  <xsl:output encoding="UTF-8"
   method="html"  indent="yes"/>
   <xsl:template match="//div[@style='display: none;']">
     <!-- trimmed invisible content-->

@@ -11,7 +11,7 @@ Description: default transformation applied by Bubbles.
   
   
   <xsl:output method="html" indent="yes"
-  encoding="iso8859-15"/>
+  encoding="UTF-8"/>
   <xsl:include href="object.xsl"/>
   <xsl:include href="identity.xsl"/>
   <xsl:template match="/">
@@ -20,7 +20,13 @@ Description: default transformation applied by Bubbles.
   <!-- {nuke these elements. --> 
   
   <xsl:template match="script|meta|link"/>
-  
+  <xsl:template match="iframe">
+  <a>
+<xsl:attribute name="href">
+<xsl:value-of select="@src"/>
+</xsl:attribute>
+Embedded IFrame</a>
+</xsl:template>
   <!-- } -->
 </xsl:stylesheet>
 

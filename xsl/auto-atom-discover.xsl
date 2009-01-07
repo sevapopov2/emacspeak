@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!--$Id: auto-atom-discover.xsl 5222 2007-08-26 01:28:19Z tv.raman.tv $-->
+<!--$Id: auto-atom-discover.xsl 6018 2008-11-04 19:52:11Z tv.raman.tv $-->
 
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>
@@ -11,7 +11,7 @@ Description: Display all atom links
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0">
   
-  <xsl:output method="xml" indent="yes" encoding="iso8859-1"/>
+  <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
   <xsl:template name="generate-atom">
     <xsl:if test="count(//link[@type='application/atom+xml'])">
       <xsl:apply-templates select="//link[@type='application/atom+xml']" mode="atom"/>

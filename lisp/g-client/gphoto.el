@@ -1,5 +1,5 @@
 ;;; g-photo.el ---  Google  Picasa Client
-;;;$Id: gphoto.el,v 1.30 2006/09/28 17:47:44 raman Exp $
+;;;$Id: gphoto.el 6031 2008-11-05 22:47:47Z tv.raman.tv $
 ;;; $Author: raman $
 ;;; Description:   Client  For Accessing Picasa (Photo Albums)
 ;;; Keywords: Google   Atom API
@@ -326,7 +326,7 @@
           '(title summary location keywords)
           do
           (eval
-           `(setf (,(intern (format "gphoto-album-%s" slot))
+           `(setf ,(intern (format "gphoto-album-%s" slot))
                    album)
                   (read-from-minibuffer (format "%s: " slot)))))
     (setf (gphoto-album-access album)
@@ -339,7 +339,7 @@
                                 gphoto-album-default-commenting-enabled
                                 nil nil nil
                                 gphoto-album-default-commenting-enabled))
-    album))
+    album)
 
 (defun gphoto-album-as-xml (album)
   "Return Atom entry for  album structure."
@@ -368,7 +368,7 @@
                     g-curl-atom-header))
   (g-using-scratch
    (insert (gphoto-album-as-xml album))
-   (let ((cl (format "-H Content-length:%s" (g-buffer-bytes)))
+   (let ((cl (format "-H 'Content-Length: %s'" (g-buffer-bytes)))
          (status nil))
      (shell-command-on-region
       (point-min) (point-max)
@@ -461,11 +461,7 @@
   (let ((location (format
                    "%s/%s/album/%s"
                    gphoto-base-url
-                   (g-url-encode (g-auth-email gphoto-auth-handle))
-                   album-name))
-        (headers nil)
-        (body nil)
-        (response nil))
+                   (g-url-encode (g-auth-email gphoto-auth-handle)) album-name)))
     (gphoto-async-post-photo photo location)))
 
 ;;;###autoload
@@ -524,7 +520,7 @@
                     g-curl-atom-header))
   (g-using-scratch
    (insert update)
-   (let ((cl (format "-H Content-length:%s" (g-buffer-bytes)))
+   (let ((cl (format "-H 'Content-Length: %s'" (g-buffer-bytes)))
          (status nil))
      (shell-command-on-region
       (point-min) (point-max)
@@ -607,7 +603,6 @@
    (list
     (read-from-minibuffer "Entry URL:")))
   (declare (special gphoto-auth-handle))
-
   (g-app-delete-entry gphoto-auth-handle url))
 
 ;;}}}

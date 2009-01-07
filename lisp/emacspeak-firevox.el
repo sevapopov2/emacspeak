@@ -1,5 +1,5 @@
 ;;; emacspeak-firevox.el.el --- FireVox Piglet
-;;; $Id: emacspeak-firevox.el 5445 2008-01-07 04:55:31Z tv.raman.tv $
+;;; $Id: emacspeak-firevox.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Play Firevox game from Emacs in Firefox
 ;;; Keywords: Emacspeak,  Audio Desktop Firefox, Piglets 
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-01-06 20:55:31 -0800 (Sun, 06 Jan 2008) $ |
+;;; $Date: 2008-05-30 21:37:49 -0700 (Fri, 30 May 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -86,29 +86,29 @@
   "Read next item on page."
   (interactive)
   (emacspeak-moz-eval-expression
-   "CLC_SR_ReadContent(1)\n"))
+   "CLC_SR_StopSpeaking();CLC_SR_ReadContent(1)\n"))
 
 ;;;###autoload
 (defun emacspeak-firevox-read-previous ()
   "Read next item on page."
   (interactive)
   (emacspeak-moz-eval-expression
-   "CLC_SR_ReadContent(-1)\n"))
+   "CLC_SR_StopSpeaking();CLC_SR_ReadContent(-1)\n"))
 
              
           
-           ;;; think mute
+           
 (defun emacspeak-firevox-read-current ()
 "Read current node."
 (emacspeak-moz-eval-expression
- "CLC_SR_ReadCurrentAtomicObject()\n"))
+ "CLC_SR_StopSpeaking();CLC_SR_ReadCurrentAtomicObject()\n"))
 
 ;;;###autoload
 (defun emacspeak-firevox-read-parent ()
           "Read parent node."
           (interactive)
           (emacspeak-moz-eval-expression
-           "CLC_SR_SayParentTextContent()\n"))
+           "CLC_SR_StopSpeaking();CLC_SR_SayParentTextContent()\n"))
 
 ;;;###autoload
 (defun emacspeak-firevox-websearch (query)

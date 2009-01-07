@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-#$Id: last-log.pl 4047 2006-08-11 19:11:17Z tv.raman.tv $
+#$Id: last-log.pl 5697 2008-07-20 17:21:38Z tv.raman.tv $
 #Description: Print out hostname wher ewe logged in from:
 use strict;
 #see /usr/include/utmp.h

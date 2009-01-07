@@ -12,10 +12,10 @@ calls speaker.cmd(arg)
 
 """
 
-__id__ = "$Id: HTTPSpeaker.py 5432 2008-01-04 00:02:21Z tv.raman.tv $"
+__id__ = "$Id: HTTPSpeaker.py 5584 2008-05-20 00:49:13Z tv.raman.tv $"
 __author__ = "$Author: tv.raman.tv $"
-__version__ = "$Revision: 5432 $"
-__date__ = "$Date: 2008-01-03 16:02:21 -0800 (Thu, 03 Jan 2008) $"
+__version__ = "$Revision: 5584 $"
+__date__ = "$Date: 2008-05-19 17:49:13 -0700 (Mon, 19 May 2008) $"
 __copyright__ = "Copyright (c) 2005 T. V. Raman"
 __license__ = "LGPL"
 
@@ -60,11 +60,8 @@ class SpeakHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         """Produce speech."""
-        cmd = None
-        arg = None
-        pass
-
-        
+        #cmd = None
+        #arg = None
         if hasattr(self.server.speaker, cmd):
             method = getattr(self.server.speaker, cmd)
             if arg is None:

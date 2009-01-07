@@ -14,8 +14,7 @@ View an RSS feed as clean HTML
                 xmlns:str="http://exslt.org/strings"
                 version="1.0">
   <xsl:param name="base"/>
-  <xsl:variable name="amphetadesk">http://127.0.0.1:8888/my_channels.html</xsl:variable>
-  <xsl:output encoding="utf-8" method="xml" indent="yes"/>
+  <xsl:output encoding="UTF-8" method="xml" indent="yes"/>
   <!-- {rss 1.0 -->
   <xsl:template match="img">
     <xsl:if test="@alt">
@@ -30,19 +29,15 @@ View an RSS feed as clean HTML
         </title>
       </head>
       <body>
-        <ul>
+        <ol>
           <xsl:apply-templates select="rss:item|nsrss:item"/>
-        </ul>
+        </ol>
         <p>
           <xsl:apply-templates select="rss:description| nsrss:description"/>
           <xsl:element name="a">
             <xsl:attribute name="href"> <xsl:value-of select="$base"/> </xsl:attribute>
             RSS 
           </xsl:element>
-          <form action="{$amphetadesk}" method="POST">
-            <input type="hidden" name="add_url" value="{$base}"/>
-            <input type="submit" name="submit" value="Add to AmphetaDesk" />
-          </form>
         </p>
       </body>
     </html>
@@ -75,9 +70,9 @@ View an RSS feed as clean HTML
         </title>
       </head>
       <body>
-        <ul>
+        <ol>
           <xsl:apply-templates select="item"/>
-        </ul>
+        </ol>
         <p>
           <xsl:apply-templates select="description"/>
           <xsl:element name="a">
@@ -86,10 +81,6 @@ View an RSS feed as clean HTML
             </xsl:attribute>
             RSS 
           </xsl:element>
-          <form action="{$amphetadesk}" method="POST">
-            <input type="hidden" name="add_url" value="{$base}"/>
-            <input type="submit" name="submit" value="Add to AmphetaDesk" />
-          </form>
         </p>
       </body>
     </html>
@@ -125,8 +116,8 @@ View an RSS feed as clean HTML
         </xsl:when>
         <xsl:otherwise>Boom</xsl:otherwise>
       </xsl:choose>
-      Enclosure: Type <xsl:value-of select="@type"/>
-      Length: <xsl:value-of select="@length"/>
+      Enclosure: <!--Type <xsl:value-of select="@type"/>-->
+       <xsl:value-of select="@length"/>
     </xsl:element>
   </xsl:template>
   <xsl:template match="title|description">

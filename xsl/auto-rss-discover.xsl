@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!--$Id: auto-rss-discover.xsl 5222 2007-08-26 01:28:19Z tv.raman.tv $-->
+<!--$Id: auto-rss-discover.xsl 6018 2008-11-04 19:52:11Z tv.raman.tv $-->
 
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>
@@ -11,7 +11,7 @@ Description: Display all RSS links
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0">
   
-  <xsl:output method="xml" indent="yes" encoding="iso8859-1"/>
+  <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
   <xsl:template name="generate-rss">
     <xsl:if test="count(//link[@type='application/rss+xml'])">
       <xsl:apply-templates select="//link[@type='application/rss+xml']" mode="rss"/>
@@ -19,7 +19,6 @@ Description: Display all RSS links
   </xsl:template>
   
   <xsl:template match="h:link|link" mode="rss">
-    <xsl:variable name="amphetadesk">http://127.0.0.1:8888/my_channels.html</xsl:variable>
     <xsl:if test="@type='application/rss+xml'">
       <p>
         <a>
@@ -28,10 +27,6 @@ Description: Display all RSS links
           </xsl:attribute>
           <xsl:value-of select="@title"/>
         </a>
-        <form action="{$amphetadesk}" method="POST">
-          <input type="hidden" name="add_url" value="{@href}"/>
-          <input type="submit" name="submit" value="Add to AmphetaDesk" />
-        </form>
       </p>
     </xsl:if>
   </xsl:template>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--$Id: object.xsl 5222 2007-08-26 01:28:19Z tv.raman.tv $-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--$Id: object.xsl 6018 2008-11-04 19:52:11Z tv.raman.tv $-->
 
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>
@@ -10,8 +10,25 @@ Transform HTML Object element into an anchor usable in W3.
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0">
   
-  <xsl:output encoding="iso8859-15"
+  <xsl:output encoding="UTF-8"
   method="html"  indent="yes"/>
+<xsl:template match="td/@title">
+<xsl:text> </xsl:text>
+ <xsl:value-of select="."/> 
+<xsl:text> </xsl:text>
+</xsl:template>
+<xsl:template match="button">
+  <input>
+      <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates select="node()"/>
+  </input>
+</xsl:template>
+<xsl:template match="a/div">
+  <span>
+      <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates select="node()"/>
+</span>
+</xsl:template>
   <xsl:template match="object">
     <xsl:for-each select="param[@name='src' or @name='SRC']">
       <a>

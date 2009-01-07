@@ -1,5 +1,5 @@
 #!/usr/bin/tcl
-#$Id: ssh-dtk-exp 5436 2008-01-05 20:24:47Z tv.raman.tv $
+#$Id: ssh-dtk-exp 5701 2008-07-20 17:51:31Z tv.raman.tv $
 #Description: Launch a TTS server on a remote host.
 #Copyright (C) 1995 -- 2007, T. V. Raman 
 # {{{  documentation
@@ -36,7 +36,12 @@ if {$port == ""} {set  port 22}
 set user_host [split $host "@"]
 set user [lindex $user_host 0]
 set host [lindex $user_host 1]
-if {$user == ""} {set  user env($USER)}
+if {$host == ""} {
+    set host $user
+    set user [exec whoami]
+}
+    
+
 set tcl /usr/bin/tcl 
 regsub {/ssh-}  $argv0 {/} tts
 puts stderr "Running <ssh $host -l $user -p $port   $tcl $tts>"

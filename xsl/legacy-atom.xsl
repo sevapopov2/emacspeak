@@ -15,7 +15,7 @@ only support the current Atom namespace.
                 xmlns:xhtml="http://www.w3.org/1999/xhtml"
                 xmlns:gr="http://www.google.com/schemas/reader/atom/"
                 version="1.0">
-  <xsl:output encoding="iso8859-15" method="html" indent="yes"/>
+  <xsl:output encoding="UTF-8" method="html" indent="yes"/>
   
   <xsl:template match="atom:feed|w3a:feed">
     <html>
@@ -28,6 +28,9 @@ only support the current Atom namespace.
         <h1><xsl:value-of select="atom:title|w3a:title"
         disable-output-escaping="yes"/>
         </h1>
+<p>
+<xsl:apply-templates select="atom:subtitle"/>
+</p>
         
         <xsl:if test="(count(atom:entry) > 1)
                       or (count(w3a:entry) > 1)">

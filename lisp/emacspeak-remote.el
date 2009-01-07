@@ -1,5 +1,5 @@
 ;;; emacspeak-remote.el --- Enables running remote Emacspeak sessions
-;;; $Id: emacspeak-remote.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-remote.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Auditory interface to remote speech server
 ;;; Keywords: Emacspeak, Speak, Spoken Output, remote server
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-07-25 16:05:19 -0700 (Fri, 25 Jul 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -84,29 +84,28 @@ a local  Emacspeak terminal buffer.")
 (add-hook 'emacspeak-remote-hooks 'emacspeak-remote-default-hook)
 ;;}}}
 ;;{{{ Helper for guessing host where we came from:
+;;; see etc/last-log.pl
 
-;;; To get this to work,
-;;; put the following into your .login (csh)
-;;; or translate it to bash syntax and place it in your
-;;; .profile:
-
-                                        ;/bin/rm -f  ~/.emacspeak/.current-remote-hostname
-                                        ;set remote=`who am i`
-                                        ;if ( $;remote == 6 ) then
-                                        ;eval   set remote=$remote[6]
-                                        ;echo -n  "$remote" > ~/.emacspeak/.current-remote-hostname
-                                        ;endif
 
 ;;;Remote hostname guessing
 ;;;
 (declaim (special emacspeak-resource-directory))
 
 (defvar emacspeak-remote-hostname
-  (concat emacspeak-resource-directory
-          "/"
-          ".current-remote-hostname")
+  (expand-file-name  ".current-remote-hostname"
+          emacspeak-resource-directory)
   "Filename containing the name of the host we connected from")
 
+
+
+;;;###autoload
+(defun emacspeak-remote-edit-current-remote-hostname  ()
+  "Interactively set up where we came from.
+Value is persisted for use with ssh servers."
+  (interactive)
+  (declare (special emacspeak-remote-hostname))
+  (when (file-exists-p   emacspeak-remote-hostname )
+    (find-file emacspeak-remote-hostname)))
 (defun emacspeak-remote-get-current-remote-hostname  ()
   "Return the name of the remote hostname from where we connected if known"
   (declare (special emacspeak-remote-hostname))

@@ -1,4 +1,4 @@
-<!--$Id: common.xsl 5222 2007-08-26 01:28:19Z tv.raman.tv $-->
+<!--$Id: common.xsl 6018 2008-11-04 19:52:11Z tv.raman.tv $-->
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>
 Copyright: (C) T. V. Raman, 2001 - 2002,   All Rights Reserved.
@@ -9,8 +9,8 @@ Description: common rules
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   
   <xsl:output method="html" indent="yes"
-  encoding="iso8859-15"/>
-  <xsl:template match="//script|//meta|//iframe"/>
+  encoding="UTF-8"/>
+  <xsl:template match="//script|//meta"/>
   <xsl:template match="head">
     <head>
       <xsl:apply-templates select="title"/>

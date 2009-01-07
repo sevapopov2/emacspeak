@@ -2,17 +2,21 @@
 ;;
 ;;; Code:
 
+(put 'gfeeds 'custom-loads '(gfeeds))
 (put 'gnotebook 'custom-loads '(gnotebook))
+(put 'gfinance 'custom-loads '(gfinance))
 (put 'gphoto 'custom-loads '(gphoto))
+(put 'gdocs 'custom-loads '(gdocs))
 (put 'greader 'custom-loads '(greader))
 (put 'applications 'custom-loads '(g))
 (put 'g-auth 'custom-loads '(g-auth))
+(put 'gcontacts 'custom-loads '(gcontacts))
 (put 'gskeleton 'custom-loads '(gskeleton))
 (put 'gcal 'custom-loads '(gcal))
 (put 'gsheet 'custom-loads '(gsheet))
 (put 'gtube 'custom-loads '(gtube))
 (put 'gblogger 'custom-loads '(gblogger))
-(put 'g 'custom-loads '(g-utils g-auth gblogger gcal gnotebook gphoto greader gsheet gskeleton gtube))
+(put 'g 'custom-loads '(g-utils g-auth gblogger gcal gcontacts gdocs gfeeds gfinance gnotebook gphoto greader gsheet gskeleton gtube gweb))
 ;; These are for handling :version.  We need to have a minimum of
 ;; information so `customize-changed-options' could do its job.
 
@@ -37,12 +41,12 @@
 
 (defvar custom-versions-load-alist nil
  "For internal use by custom.")
-
+
 (provide 'g-cus-load)
-
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
+;; coding: utf-8
 ;; End:
 ;;; g-cus-load.el ends here
