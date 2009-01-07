@@ -2901,9 +2901,8 @@ Variable mark-even-if-inactive is set true ."
   (when (interactive-p)
     (emacspeak-auditory-icon
      (if current-input-method 'on 'off))
-    (dtk-speak
-     (format "Current input method is %s"
-             (or current-input-method "none")))))
+    (message "Current input method is %s"
+             (or current-input-method "none"))))
 
 ;;}}}
 (provide 'emacspeak-advice)
