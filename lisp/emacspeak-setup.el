@@ -1,5 +1,5 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el 5377 2007-11-23 01:17:25Z tv.raman.tv $
+;;; $Id: emacspeak-setup.el 5576 2008-05-16 01:28:56Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
@@ -7,7 +7,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-11-22 17:17:25 -0800 (Thu, 22 Nov 2007) $ |
+;;; $Date: 2008-05-15 18:28:56 -0700 (Thu, 15 May 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -55,12 +55,6 @@
 ;;}}}
 ;;{{{  Define locations
 
-(defvar emacspeak-unibyte nil
-  "Emacspeak will force emacs to unibyte unless this
-variable is set to nil.
-To use emacspeak with emacs running in multibyte mode, this
-variable should be set to nil *before*
-emacspeak is compiled or started.")
 ;;;###autoload
 (defvar emacspeak-directory
   (expand-file-name "../" (file-name-directory load-file-name))
@@ -106,7 +100,7 @@ pronunciation dictionaries are stored. ")
 (defconst emacspeak-version
   (eval-when-compile
     (format
-     "27.0 %s"
+     "28.0 %s"
      (cond
       ((file-exists-p emacspeak-readme-file)
        (let ((buffer (find-file-noselect emacspeak-readme-file))
@@ -129,7 +123,7 @@ pronunciation dictionaries are stored. ")
 
 ;;;###autoload
 (defconst emacspeak-codename
-  "FastDog"
+  "PuppyDog"
   "Code name of present release.")
 
 ;;}}}

@@ -1,5 +1,5 @@
 ;;; emacspeak-w3.el --- Speech enable W3 WWW browser -- includes ACSS Support
-;;; $Id: emacspeak-w3.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-w3.el 5565 2008-04-25 01:53:50Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak enhancements for W3
 ;;; Keywords: Emacspeak, W3, WWW
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-04-24 18:53:50 -0700 (Thu, 24 Apr 2008) $ |
 ;;;  $Revision: 4671 $ |
 ;;; Location undetermined
 ;;;
@@ -175,12 +175,16 @@
           ("\"" emacspeak-speak-skim-buffer)
           ("/" emacspeak-webutils-google-similar-to-this-page)
           (":" emacspeak-w3-speak-this-element)
+          ("J" w3-table-move-to-next-table-row)
+          ("K" w3-table-move-to-previous-table-row)
+          ("L" w3-table-move-to-next-table-column)
+          ("H" w3-table-move-to-previous-table-column)
           ("\;" emacspeak-speak-face-interval-and-move)
           ("A" emacspeak-webutils-atom-display)
           ("F" emacspeak-webutils-fv)
           ("X" emacspeak-xslt-view-xml)
           ("C" emacspeak-webutils-google-extract-from-cache)
-          ("L" emacspeak-w3-lynx-url-under-point)
+          ("\M-l" emacspeak-w3-lynx-url-under-point)
           ("N" emacspeak-speak-next-personality-chunk)
           ("P" emacspeak-speak-previous-personality-chunk)
           ("R" emacspeak-webutils-rss-display)

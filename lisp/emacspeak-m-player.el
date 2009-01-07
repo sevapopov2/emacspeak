@@ -1,5 +1,5 @@
 ;;; emacspeak-m-player.el --- Control mplayer from Emacs
-;;; $Id: emacspeak-m-player.el 5370 2007-11-21 16:14:32Z tv.raman.tv $
+;;; $Id: emacspeak-m-player.el 5465 2008-02-14 02:02:58Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, m-player streaming media 
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-11-21 08:14:32 -0800 (Wed, 21 Nov 2007) $ |
+;;; $Date: 2008-02-13 18:02:58 -0800 (Wed, 13 Feb 2008) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -136,7 +136,6 @@ It is used for tags decoding."
     (pop-to-buffer
      (process-buffer emacspeak-m-player-process))
     (set-window-text-height nil emacspeak-m-player-height)
-    (set-window-dedicated-p (selected-window) t)
     (emacspeak-speak-mode-line))
    (t
     (save-window-excursion
@@ -227,7 +226,7 @@ The player is placed in a buffer in emacspeak-m-player-mode."
     (unless noselect
       (pop-to-buffer (process-buffer emacspeak-m-player-process))
       (set-window-text-height nil emacspeak-m-player-height)
-      (set-window-dedicated-p (selected-window) t))))
+      )))
 
 ;;}}}
 ;;{{{ commands 
@@ -397,13 +396,19 @@ A string of the form `<number> 1' sets volume as an absolute."
   (emacspeak-m-player-dispatch
    (format "volume %s"
            offset)))
+
+;;;###autoload
+(defun emacspeak-m-player-get-length ()
+  "Display length of track in seconds."
+  (interactive)
+  (emacspeak-m-player-dispatch "get_time_length"))
    
 
 (defun emacspeak-m-player-display-position ()
   "Display current position in track and its length."
   (interactive)
   (emacspeak-m-player-dispatch
-   "get_percent_pos\nget_time_length\n"))
+   "get_time_pos\nget_percent_pos\nget_time_length\n"))
 
 (defun emacspeak-m-player-load-file(f)
   "Load specified file."
@@ -527,7 +532,8 @@ The Mplayer equalizer provides 10 bands, G0 -- G9, see the
         ("O" emacspeak-m-player-reset-options)
         ("f" emacspeak-m-player-add-filter)
         ("b" bury-buffer)
-        ("l" emacspeak-m-player-load-file)
+	("l" emacspeak-m-player-get-length)
+        ("L" emacspeak-m-player-load-file)
         ("L" emacspeak-m-player-load-playlist)
         ("?" emacspeak-m-player-display-position)
         ("t" emacspeak-m-player-play-tree-step)
@@ -562,6 +568,32 @@ The Mplayer equalizer provides 10 bands, G0 -- G9, see the
         )
       do
       (emacspeak-keymap-update  emacspeak-m-player-mode-map k))
+
+;;}}}
+;;{{{ YouTube Player
+
+(defcustom emacspeak-m-player-youtube-dl
+  "/usr/local/bin/youtube-dl"
+  "YouTube download tool"
+  :type 'string
+  :group 'emacspeak-m-player)
+
+  
+;;;###autoload
+
+(defun emacspeak-m-player-youtube-player (url)
+  "Use youtube-dl and mplayer to stream YouTube content."
+  (interactive
+   (list
+    (emacspeak-webutils-read-this-url)))
+  (declare (special emacspeak-m-player-youtube-dl))
+  (unless (file-executable-p emacspeak-m-player-youtube-dl)
+    (error "Please install youtube-dl first."))
+  (emacspeak-m-player
+   (shell-command-to-string
+    (format "%s -g %s"
+	    emacspeak-m-player-youtube-dl url))
+   nil t))
 
 ;;}}}
 (provide 'emacspeak-m-player)

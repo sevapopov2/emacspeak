@@ -1,5 +1,5 @@
 ;;; emacspeak-org.el --- Speech-enable org
-;;; $Id: emacspeak-org.el 5309 2007-09-25 16:31:24Z tv.raman.tv $
+;;; $Id: emacspeak-org.el 5543 2008-03-23 01:58:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for ORG
 ;;; Keywords: Emacspeak, org
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-09-25 09:31:24 -0700 (Tue, 25 Sep 2007) $ |
+;;; $Date: 2008-03-22 18:58:40 -0700 (Sat, 22 Mar 2008) $ |
 ;;;  $Revision: 4347 $ |
 ;;; Location undetermined
 ;;;
@@ -282,15 +282,6 @@
     (emacspeak-speak-line)))
                                   
 ;;}}}
-;;{{{ misc file commands:
-
-(defadvice org-end-of-line (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (dtk-stop)
-    (emacspeak-auditory-icon 'select-object)))
-
-;;}}}
 ;;{{{ tables:
 
 ;;}}}
@@ -393,15 +384,19 @@
 (defun emacspeak-org-mode-setup ()
   "Placed on org-mode-hook to do Emacspeak setup."
   (declare (special org-mode-map))
-  (unless emacspeak-audio-indentation
-    (emacspeak-toggle-audio-indentation))
-  (define-key org-mode-map
-    emacspeak-prefix'emacspeak-prefix-command)
-  (define-key org-mode-map
-    (concat emacspeak-prefix "e")
-    'org-end-of-line))
+  (unless emacspeak-audio-indentation (emacspeak-toggle-audio-indentation))
+  (when (fboundp 'org-end-of-line)
+    (define-key org-mode-map emacspeak-prefix  'emacspeak-prefix-command)))
 
 (add-hook 'org-mode-hook 'emacspeak-org-mode-setup)
+
+;;; advice end-of-line here to call org specific action 
+(defadvice end-of-line (after emacspeak-org pre act comp)
+  "Call org specific actions in org mode."
+  (when (and (interactive-p)
+	     (eq major-mode 'org-mode)
+	     (fboundp 'org-end-of-line))
+    (org-end-of-line)))
 
 (defadvice org-toggle-checkbox (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -411,6 +406,11 @@
 
 ;;}}}
 ;;{{{ fix misc commands:
+(defadvice org-end-of-line (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (dtk-stop)
+    (emacspeak-auditory-icon 'select-object)))
 
 (loop for f in
       '(

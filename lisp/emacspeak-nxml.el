@@ -1,5 +1,5 @@
 ;;; emacspeak-nxml.el --- Speech enable nxml mode
-;;; $Id: emacspeak-nxml.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
+;;; $Id: emacspeak-nxml.el 5561 2008-04-16 01:29:37Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak extension to speech enable nxml mode
 ;;; Keywords: Emacspeak, nxml
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
+;;; $Date: 2008-04-15 18:29:37 -0700 (Tue, 15 Apr 2008) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -95,7 +95,47 @@
    (nxml-ref-face voice-animate-medium)
    (nxml-tag-delimiter-face voice-smoothen)
    (nxml-tag-slash-face voice-smoothen-medium)
-   (rng-error-face voice-bolden-and-animate)))
+   (rng-error-face voice-bolden-and-animate)
+
+   ;; the following are for emacs 23
+
+   (nxml-attribute-colon voice-monotone)
+   (nxml-attribute-local-name voice-animate)
+   (nxml-attribute-prefix voice-monotone-medium)
+   (nxml-attribute-value-delimiter voice-smoothen)
+   (nxml-attribute-value voice-lighten)
+   (nxml-cdata-section-CDATA voice-animate-extra)
+   (nxml-cdata-section-content  voice-monotone )
+   (nxml-cdata-section-delimiter voice-monotone-medium)
+   (nxml-char-ref-delimiter voice-smoothen)
+   (nxml-char-ref-number voice-animate-medium)
+   (nxml-comment-content voice-monotone)
+   (nxml-comment-delimiter  voice-smoothen-medium)
+   (nxml-delimited-data voice-animate-medium)
+   (nxml-delimiter voice-bolden-medium)
+   (nxml-element-colon voice-monotone)
+   (nxml-element-local-name voice-bolden)
+   (nxml-element-prefix voice-monotone-medium)
+   (nxml-entity-ref-delimiter voice-smoothen)
+   (nxml-entity-ref-name voice-lighten-medium)
+   (nxml-hash voice-monotone)
+   (nxml-markup-declaration-delimiter voice-smoothen)
+   (nxml-name voice-animate-extra)
+   (nxml-namespace-attribute-colon voice-monotone)
+   (nxml-namespace-attribute-prefix voice-animate)
+   (nxml-namespace-attribute-value-delimiter voice-smoothen)
+   (nxml-namespace-attribute-value voice-lighten)
+   (nxml-namespace-attribute-xmlns voice-smoothen-extra)
+   (nxml-processing-instruction-content voice-animate)
+   (nxml-processing-instruction-delimiter voice-lighten-extra)
+   (nxml-processing-instruction-target voice-animate-extra)
+   (nxml-prolog-keyword voice-animate-extra)
+   (nxml-prolog-literal-content voice-monotone-medium)
+   (nxml-prolog-literal-delimiter voice-monotone)
+   (nxml-ref voice-animate-medium)
+   (nxml-tag-delimiter voice-smoothen)
+   (nxml-tag-slash voice-smoothen-medium)
+   (rng-error voice-bolden-and-animate)))
 
 ;;}}}
 ;;{{{ pronunciations 

@@ -1,5 +1,5 @@
 ;;; dtk-speak.el --- Provides Emacs Lisp interface to speech server
-;;;$Id: dtk-speak.el 5348 2007-11-01 17:32:59Z tv.raman.tv $
+;;;$Id: dtk-speak.el 5528 2008-03-15 02:06:50Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacs interface to TTS
 ;;; Keywords: Dectalk Emacs Elisp
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-11-01 10:32:59 -0700 (Thu, 01 Nov 2007) $ |
+;;; $Date: 2008-03-14 19:06:50 -0700 (Fri, 14 Mar 2008) $ |
 ;;;  $Revision: 4670 $ |
 ;;; Location undetermined
 ;;;
@@ -1627,6 +1627,7 @@ Default is to use pipes.")
                      (eq 'stop (process-status dtk-speaker-process ))))
         (delete-process dtk-speaker-process ))
       (setq dtk-speaker-process new-process)
+	  (set-process-coding-system dtk-speaker-process 'utf-8 'utf-8)
       (tts-configure-synthesis-setup dtk-program)
       (run-hooks 'dtk-startup-hook ))
      (t
@@ -1741,6 +1742,7 @@ only speak upto the first ctrl-m."
           (inherit-strip-octals tts-strip-octals)
           (complement-separator(dtk-complement-chunk-separator-syntax ))
           (speech-rate dtk-speech-rate)
+		  (inherit-enable-multibyte-characters enable-multibyte-characters)
           (dtk-scratch-buffer (get-buffer-create " *dtk-scratch-buffer* "))
           (start 1)
           (end nil )
@@ -1765,6 +1767,7 @@ only speak upto the first ctrl-m."
                 tts-strip-octals inherit-strip-octals
                 voice-lock-mode voice-lock)
           (set-syntax-table syntax-table )
+		  (set-buffer-multibyte inherit-enable-multibyte-characters)
           (insert  text)
           (delete-invisible-text)
           (when pronunciation-table

@@ -1,5 +1,5 @@
 ;;; emacspeak-speak.el --- Implements Emacspeak's core speech services
-;;; $Id: emacspeak-speak.el 5276 2007-09-10 13:39:13Z tv.raman.tv $
+;;; $Id: emacspeak-speak.el 5562 2008-04-16 21:36:54Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Contains the functions for speaking various chunks of text
 ;;; Keywords: Emacspeak,  Spoken Output
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-09-10 06:39:13 -0700 (Mon, 10 Sep 2007) $ |
+;;; $Date: 2008-04-16 14:36:54 -0700 (Wed, 16 Apr 2008) $ |
 ;;;  $Revision: 4552 $ |
 ;;; Location undetermined
 ;;;
@@ -1574,9 +1574,12 @@ semantic to do the work."
   "Speak buffer information."
   (let ((emacspeak-speak-messages t)
 	(deactivate-mark nil))
-    (message "Buffer has %s lines and %s characters "
-	     (count-lines (point-min) (point-max))
-	     (- (point-max) (point-min)))))
+    (message "Buffer has %s lines and %s characters %s "
+             (count-lines (point-min) (point-max))
+             (- (point-max) (point-min))
+             (if (= 1 (point-min))
+                 ""
+               "with narrowing in effect. "))))
 
 (defun emacspeak-speak-mode-line (&optional buffer-info)
   "Speak the mode-line.
@@ -2501,12 +2504,9 @@ message area.  You can use command
 ;;;###autoload
 (defun emacspeak-speak-message-again (&optional from-message-cache)
   "Speak the last message from Emacs once again.
-Optional interactive prefix arg
-`from-message-cache' speaks message cached from the most
-recent call to function `message'.
 The message is also placed in the kill ring for convenient yanking
 if `emacspeak-speak-message-again-should-copy-to-kill-ring' is set."
-  (interactive "P")
+  (interactive)
   (declare (special emacspeak-last-message
                     emacspeak-speak-message-again-should-copy-to-kill-ring))
   (cond
@@ -3006,7 +3006,8 @@ Also display match context in minibuffer."
                         (buffer-substring blinkpos (1+ blinkpos)))))))
           (message "Matches %s"
                    (substring-no-properties
-                    open-paren-line-string))))))))
+                    open-paren-line-string))
+		  (sit-for blink-matching-delay)))))))
 
 (defun  emacspeak-use-customized-blink-paren ()
   "A customized blink-paren to speak  matching opening paren.

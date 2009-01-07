@@ -1,5 +1,5 @@
 ;;; emacspeak-websearch.el --- search utilities
-;;; $Id: emacspeak-websearch.el 5292 2007-09-16 23:38:33Z tv.raman.tv $
+;;; $Id: emacspeak-websearch.el 5549 2008-03-25 22:21:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to make Web searching convenient
 ;;; Keywords: Emacspeak, WWW interaction
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-09-16 16:38:33 -0700 (Sun, 16 Sep 2007) $ |
+;;; $Date: 2008-03-25 15:21:19 -0700 (Tue, 25 Mar 2008) $ |
 ;;;  $Revision: 4625 $ |
 ;;; Location undetermined
 ;;;
@@ -606,7 +606,10 @@ Retrieves company news, research, profile, insider trades,  or upgrades/downgrad
 
 (defun emacspeak-websearch-view-csv-data (process state )
   "Process csv data and put it in emacspeak table mode. "
-  (emacspeak-table-view-csv-buffer (process-buffer process)))
+  (message "state: %s" state)
+  (when (string-match "^finished" state)
+    (emacspeak-auditory-icon 'select-object)
+  (emacspeak-table-view-csv-buffer (process-buffer process))))
 
 ;;;###autoload
 (defun emacspeak-websearch-yahoo-historical-chart (ticker
@@ -620,8 +623,7 @@ Optional second arg as-html processes the results as HTML rather than data."
   (declare (special emacspeak-websearch-curl-program
                     emacspeak-websearch-yahoo-charts-uri
                     emacspeak-websearch-yahoo-csv-charts-uri))
-  (let (
-        (start-month
+  (let ((start-month
          (read-from-minibuffer "Start Month: "
                                (format-time-string "%m")))
         (start-date
@@ -658,7 +660,7 @@ Optional second arg as-html processes the results as HTML rather than data."
             (results (format "*%s*" ticker))
             (process nil))
         (setq process
-              (start-process   "lynx"
+              (start-process   "curl"
                                results
                                emacspeak-websearch-curl-program
                                "--silent" "--location"

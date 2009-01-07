@@ -92,9 +92,6 @@
     ("emacspeak-buff-menu.el"
         "Speech enable Buffer Menu Mode -- used to manage buffers"
         (emacspeak  speak  spoken output  buff-menu))
-    ("emacspeak-buff-sel.el"
-        "Speech enable buf-sel -- an alternative technique for switching buffers"
-        (emacspeak  audio interface to emacs interactive buffer selection))
     ("emacspeak-c.el"
         "Speech enable CC-mode and friends -- supports C, C++, Java"
         (emacspeak  audio interface to emacs c  c++))
@@ -221,6 +218,9 @@
     ("emacspeak-finder.el"
         "Generate a database of keywords and descriptions for all Emacspeak  packages"
         (emacspeak  finder))
+    ("emacspeak-firevox.el"
+        "FireVox Piglet"
+        (emacspeak   audio desktop firefox  piglets ))
     ("emacspeak-fix-interactive.el"
         "Tools to make  Emacs' builtin prompts   speak"
         (emacspeak  advice  automatic advice  interactive))
@@ -281,9 +281,15 @@
     ("emacspeak-jabber.el"
         "Speech-Enable jabber"
         (emacspeak  jabber))
+    ("emacspeak-jawbreaker.el"
+        "Talk to Firefox/JawBreaker  via MozRepl"
+        (emacspeak   audio desktop firefox  piglets ))
     ("emacspeak-jde.el"
         "Speech enable JDE -- An integrated Java Development Environment"
         (emacspeak  speak  spoken output  java))
+    ("emacspeak-js2.el"
+        "Speech-enable JS2"
+        (emacspeak   audio desktop js2))
     ("emacspeak-keymap.el"
         "Setup all keymaps and keybindings provided by Emacspeak"
         (emacspeak))
@@ -329,9 +335,6 @@
     ("emacspeak-muse.el"
         "Speech-enable Muse"
         (emacspeak   audio desktop muse))
-    ("emacspeak-nero.el"
-        "Speech-Enable nero (interface to lynx)"
-        (emacspeak  nero))
     ("emacspeak-net-utils.el"
         "Speech enable net-utils"
         (emacspeak  network utilities ))
@@ -365,6 +368,9 @@
     ("emacspeak-planner.el"
         "speech-enable Planner -- a powerful organizer in Emacs"
         (emacspeak  organizer  day planner  daily schedule))
+    ("emacspeak-piglets.el"
+        "Result of large pigs connecting over a socket"
+        (emacspeak   audio desktop firefox  piglets ))
     ("emacspeak-preamble.el"
         "standard  include for Emacspeak modules"
         (emacspeak  audio interface to emacs))
@@ -520,7 +526,7 @@
         (emacspeak  www interaction))
     ("emacspeak-webspace.el"
         "Webspaces In Emacspeak"
-        (emacspeak   audio desktop webspace))
+        (emacspeak  audio desktop webspace))
     ("emacspeak-webutils.el"
         "Common Web Utilities For Emacspeak"
         (emacspeak  web ))
