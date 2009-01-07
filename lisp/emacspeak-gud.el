@@ -1,8 +1,8 @@
 ;;; emacspeak-gud.el --- Speech enable Emacs' debugger interface --covers GDB, JDB, and PerlDB
 ;;; $Id: emacspeak-gud.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
-;;; DescriptionEmacspeak extensions for gud interaction
-;;; Keywords:emacspeak, audio interface to emacs debuggers
+;;; Description: Emacspeak extensions for gud interaction
+;;; Keywords: emacspeak, audio interface to emacs debuggers
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:

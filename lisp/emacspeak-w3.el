@@ -123,7 +123,7 @@
   (modify-syntax-entry 10 " ")
   (modify-syntax-entry 160 " ")
   (when emacspeak-w3-punctuation-mode
-    (setq dtk-punctuation-mode emacspeak-w3-punctuation-mode))
+    (dtk-set-punctuations emacspeak-w3-punctuation-mode))
   (emacspeak-auditory-icon 'open-object)
   (when (featurep 'w3-imenu)
     (setq imenu-create-index-function 'w3-imenu-create-index))
@@ -356,8 +356,8 @@ document is displayed in a separate buffer. "
                                               'html-stack ))
       (setq current (emacspeak-w3-html-stack)))
     (setq end (point))
-    (emacspeak-speak-region start end)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-region start end)))
 
 (defun emacspeak-w3-next-doc-element (&optional count)
   "Move forward  to the next document element.
@@ -423,8 +423,8 @@ implemented. ")))
                                               (current-buffer)
                                               (point-max)))
       (setq end (point))
-      (emacspeak-speak-region start end )
-      (emacspeak-auditory-icon 'select-object))))
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-speak-region start end ))))
 
 (defun emacspeak-w3-speak-next-element ()
   "Speak next document element."
@@ -500,9 +500,6 @@ element. "
   (require 'emacspeak-realaudio))
 
 ;;}}}
-;;{{{ url rewrite
-
-;;}}}
 ;;{{{ jump to submit button
 
 (defun emacspeak-w3-jump-to-submit ()
@@ -519,8 +516,8 @@ element. "
       (when
           (eq (aref (widget-get (widget-at (point)) :w3-form-data) 0)
               'submit)
-        (w3-speak-summarize-form-field)
         (emacspeak-auditory-icon 'large-movement)
+        (w3-speak-summarize-form-field)
         (setq found t)))
     (message "Could not find submit button.")))
 

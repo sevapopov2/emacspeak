@@ -2,7 +2,7 @@
 ;;; $Id: emacspeak-wdired.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable WDIRED
-;;; Keywords: Emacspeak, Multimedia
+;;; Keywords: Emacspeak, directory editing
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:

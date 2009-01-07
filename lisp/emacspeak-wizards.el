@@ -470,7 +470,8 @@ previous window configuration."
 (defun emacspeak-speak-hostname ()
   "Speak host name."
   (interactive)
-  (message (system-name)))
+  (let ((emacspeak-speak-messages t))
+    (message (system-name))))
 
 (defcustom emacspeak-speak-show-active-network-interfaces-command
   "echo `/sbin/ifconfig | grep -v '^lo' | grep '^[a-z]' | awk '{print $1}'`"
@@ -541,8 +542,8 @@ With prefix arg, opens the phone book for editting."
   (cond
    (edit
     (find-file emacspeak-speak-telephone-directory)
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'open-object))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line))
    ((file-exists-p emacspeak-speak-telephone-directory)
     (emacspeak-shell-command
      (format "%s %s %s"
@@ -748,8 +749,8 @@ See /etc/sudoers for how to set up sudo."
 
 (defun emacspeak-cvs-done-alert (process state)
   "Alert user of cvs status."
-  (message "Done getting CVS snapshot.")
-  (emacspeak-auditory-icon 'task-done))
+  (emacspeak-auditory-icon 'task-done)
+  (message "Done getting CVS snapshot."))
 
 ;;;###autoload
 (defun emacspeak-cvs-get-anonymous  ()
@@ -1235,8 +1236,8 @@ With optional PREFIX argument, label current frame."
     (call-interactively 'set-frame-name))
    (t (call-interactively 'select-frame-by-name)))
   (when (interactive-p)
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
 
 ;;;###autoload
 (defun emacspeak-next-frame-or-buffer (&optional frame)
@@ -1311,7 +1312,7 @@ the display to speak."
       (save-window-excursion
         (emacspeak-speak-region
          (window-point win)
-         (window-end win))))))
+         (window-end win t))))))
 ;;;###autoload
 (defun emacspeak-speak-this-buffer-previous-display ()
   "Speak this buffer as displayed in a `previous' window.
@@ -1361,8 +1362,8 @@ the display to select."
           (nth (% window (length window-list ))
                window-list))
     (select-frame (window-frame win))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 ;;;###autoload
 (defun emacspeak-select-this-buffer-previous-display ()
   "Select this buffer as displayed in a `previous' window.
@@ -2403,12 +2404,12 @@ directory to where find is to be launched."
   (cond
    ((eq browse-url-browser-function 'browse-url-w3)
     (setq browse-url-browser-function 'w3m-browse-url)
-    (message "Browse  URL will now use W3M")
-    (emacspeak-auditory-icon 'select-object))
+    (emacspeak-auditory-icon 'select-object)
+    (message "Browse  URL will now use W3M"))
    ((eq browse-url-browser-function 'w3m-browse-url)
     (setq browse-url-browser-function 'browse-url-w3)
-    (message "Browse  URL will now use W3")
-    (emacspeak-auditory-icon 'select-object))
+    (emacspeak-auditory-icon 'select-object)
+    (message "Browse  URL will now use W3"))
    (t (setq browse-url-browser-function 'w3-fetch)
       (message "Restoring sanity by switching to W3."))))
 
@@ -2493,8 +2494,8 @@ prompts for and sets value of the file local pattern."
          (boundp 'emacspeak-occur-pattern)
          emacspeak-occur-pattern)
     (occur emacspeak-occur-pattern)
-    (message "Displayed header lines in other window.")
-    (emacspeak-auditory-icon 'open-object))
+    (emacspeak-auditory-icon 'open-object)
+    (message "Displayed header lines in other window."))
    (t
     (let ((pattern  (read-from-minibuffer "Regular expression: ")))
       (setq emacspeak-occur-pattern pattern)
@@ -2509,8 +2510,8 @@ Obsoleted by `previous-buffer' in Emacs 22"
   (interactive)
   (switch-to-buffer (other-buffer
                      (current-buffer) 'visible-ok))
-  (emacspeak-speak-mode-line )
-  (emacspeak-auditory-icon 'select-object ))
+  (emacspeak-auditory-icon 'select-object )
+  (emacspeak-speak-mode-line ))
 ;;;###autoload
 (defun emacspeak-kill-buffer-quietly   ()
   "Kill current buffer without asking for confirmation."
@@ -2685,8 +2686,8 @@ Use with caution."
   (interactive)
   (declare (special last-input-char))
   (emacspeak-wizards-vc-viewer (format "%c" last-input-char))
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'open-object))
+  (emacspeak-auditory-icon 'open-object)
+  (emacspeak-speak-line))
 
 (declaim (special emacspeak-wizards-vc-viewer-mode-map))
 
@@ -2835,8 +2836,8 @@ Interactive  arguments specify filename pattern and search pattern."
     (when (interactive-p)
       (switch-to-buffer output)
       (goto-char (point-min))
-      (emacspeak-speak-mode-line)
-      (emacspeak-auditory-icon 'open-object))))
+      (emacspeak-auditory-icon 'open-object)
+      (emacspeak-speak-mode-line))))
 
 ;;}}}
 ;;{{{ voice sample
