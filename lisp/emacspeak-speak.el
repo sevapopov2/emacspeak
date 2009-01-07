@@ -96,7 +96,8 @@
        command
        output)
       (emacspeak-auditory-icon 'open-object)
-      (dtk-speak (buffer-string)))))
+      (dtk-speak (buffer-string)))
+    (kill-buffer output)))
 
 ;;}}}
 ;;{{{ Completion helper:
