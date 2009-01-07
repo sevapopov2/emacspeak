@@ -710,7 +710,7 @@ Produce an auditory icon if possible."
     ad-do-it
     (when prompt
       (tts-with-punctuations 'all
-                             (dtk-speak (format "%s" ad-return-value))))
+                             (dtk-speak (key-description ad-return-value))))
     ad-return-value))
 (defadvice read-passwd (before emacspeak pre act comp)
   "Speak the prompt."
