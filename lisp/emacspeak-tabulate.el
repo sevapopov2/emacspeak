@@ -1,5 +1,5 @@
 ;;; emacspeak-tabulate.el --- Interpret tabulated information as a table
-;;; $Id: emacspeak-tabulate.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-tabulate.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description:  Utility to help emacspeak identify tabulated information
 ;;; Keywords: Emacspeak, Tabulated Data,  Visual layout gives structure

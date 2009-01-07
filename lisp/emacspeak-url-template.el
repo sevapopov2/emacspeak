@@ -1,5 +1,5 @@
 ;;; emacspeak-url-template.el --- Create library of URI templates
-;;; $Id: emacspeak-url-template.el 5572 2008-05-14 21:11:15Z tv.raman.tv $
+;;; $Id: emacspeak-url-template.el 6067 2008-11-17 22:24:37Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:   Implement library of URI templates
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-05-14 14:11:15 -0700 (Wed, 14 May 2008) $ |
+;;; $Date: 2008-08-14 11:23:31 -0700 (Thu, 14 Aug 2008) $ |
 ;;;  $Revision: 4626 $ |
 ;;; Location undetermined
 ;;;
@@ -57,6 +57,7 @@
 
 (require 'emacspeak-preamble)
 (require 'emacspeak-webutils)
+(require 'gweb)
 (require 'emacspeak-we)
 (require 'emacspeak-xslt)
 (eval-when-compile
@@ -253,7 +254,10 @@ dont-url-encode if true then url arguments are not url-encoded "
  "http://wwwapps.ups.com/WebTracking/processInputRequest?HTMLVersion=5.0&sort_by=status&tracknums_displayed=5&TypeOfInquiryNumber=T&loc=en_US&InquiryNumber1=%s&InquiryNumber2=&InquiryNumber3=&InquiryNumber4=&InquiryNumber5=&track.x=0&track.y=0&AgreeToTermsAndConditions=yes"
  (list "Tracking Number: ")
  nil
- "Display package tracking information from UPS.")
+ "Display package tracking information from UPS."
+ #'(lambda (url)
+(emacspeak-we-extract-table-by-match "Package Progress"
+                                     url 'speak)))
 
 ;;}}}
 ;;{{{ amazon
@@ -381,6 +385,16 @@ dont-url-encode if true then url arguments are not url-encoded "
 ;;{{{ bbc
 
 (emacspeak-url-template-define
+ "Radio4 Program"
+ "rtsp://rmv8.bbc.net.uk/radio4/%s_%s.ra"
+ (list
+  "Time: HHMM"
+  "Weekday: ")
+ nil
+ "Play BBC  Radio4 show for a given day/time."
+ 'emacspeak-m-player)
+
+(emacspeak-url-template-define
  "BBC 7 Schedule"
  "http://www.bbc.co.uk/bbc7/listings/index.shtml?%s"
  (list
@@ -455,7 +469,7 @@ content."
                     content
                     ".rpm"))
       (kill-new uri)
-      (funcall emacspeak-media-player  uri 'play-list 'noselect)
+      (funcall emacspeak-media-player  uri 'play-list)
       (message "Playing content under point.")))))
 
 (emacspeak-url-template-define
@@ -541,7 +555,7 @@ content."
  "Display financial market summary."
  #'(lambda (url)
      (emacspeak-we-extract-by-id
-      "sfe-mktsumm" url 'speak)))
+      "mktsumm" url 'speak)))
  
 
 ;;}}}
@@ -608,7 +622,7 @@ content."
   "Set up content filter in displayed page."
      (declare (special emacspeak-we-xpath-filter))
      (setq emacspeak-we-xpath-filter
-	   "//p|ol|ul|dl|h1|h2|h3|h4|h5|h6|blockquote|div"))
+	   "//p"))
 
 ;;}}}
 ;;{{{ webmaster tools
@@ -626,7 +640,7 @@ content."
  "Google TimeLine View"
  "http://www.google.com/views?q=%s+view:timeline&num=25"
  (list
-  'emacspeak-webutils-google-autocomplete)
+  'gweb-google-autocomplete)
  #'(lambda nil
      (re-search-forward " Timeline View" nil t)
      (forward-line 1)
@@ -636,7 +650,7 @@ content."
  "Google Info View"
  "http://www.google.com/views?q=%s+view:info&sa=N&ct=infoview"
  (list
-  'emacspeak-webutils-google-autocomplete)
+  'gweb-google-autocomplete)
  #'(lambda nil
      (re-search-forward "Info View" nil t)
      (forward-line 1)
@@ -669,23 +683,25 @@ content."
 
 
 (defcustom emacspeak-url-template-gmail-search-url
-  "https://mail.google.com/mail/"
+  "https://mail.google.com/mail/h/"
   "URL eng-point for GMail searches.
 For  corporate email using GMail, change /a/google.com/ to /a/<your.domain>/"   
   :type '(choice
           (const :tag "GMail"  "https://mail.google.com/mail/")
-          (const :tag "Corporate"  "https://mail.google.com/a/google.com/"))
+          (const :tag "Corporate"  "https://mail.google.com/a/google.com/h/"))
   :group 'emacspeak-url-template)
-
 
 (emacspeak-url-template-define
  "GMail Search"
  (concat emacspeak-url-template-gmail-search-url
-         "h/?s=q&q=%s&nvp_site_mail=Search+Mail&f=1&ui=html")
+         "?ui=html&s=q&q=%s&nvp_site_mail=Search+Mail&f=1")
  (list "GMail Search:")
  #'(lambda ()
-     (declare (special emacspeak-we-class-filter))
-     (setq emacspeak-we-class-filter "msg"))
+     (declare (special emacspeak-we-class-filter
+                       emacspeak-we-url-rewrite-rule))
+     (setq emacspeak-we-url-rewrite-rule '("$" "&ui=html"))
+     (setq emacspeak-we-class-filter "msg")
+     )
  "Search GMail. 
 Make sure to sign in before invoking this template."
  #'(lambda (url)
@@ -749,6 +765,14 @@ http://www.google.com/calendar/a/<my-corp>/m?output=xhtml"
 
 ;;}}}
 ;;{{{ google code search
+
+(emacspeak-url-template-define
+ "Google API Search"
+ "http://www.google.com/cse?cx=001456098540849067467%%3A6whlsytkdqg&cof=FORID%%3A0&q=%s&sa=Search"
+ (list "Google API Search: ")
+ nil
+ "Search Google APIDocs")
+
 (emacspeak-url-template-define
  "Code Search From Google"
  "http://www.google.com/codesearch?q=%s"
@@ -814,7 +838,7 @@ http://www.google.com/calendar/a/<my-corp>/m?output=xhtml"
 (emacspeak-url-template-define
  "Google Reader"
  "http://www.google.com/reader/public/atom/feed/%s?n=100"
- (list "Feed:")
+ (list 'emacspeak-webutils-read-this-url )
  nil
  "Google Reader"
  'emacspeak-webutils-atom-display)
@@ -834,7 +858,7 @@ http://www.google.com/calendar/a/<my-corp>/m?output=xhtml"
 ;;; pull google finance search results via the transcoder
 
 (emacspeak-url-template-define
- "Finance Google Search"
+ "Mobile Finance Google Search"
  "http://finance.google.com/finance?q=%s"
  (list "Finance Search: ")
  #'(lambda nil
@@ -845,6 +869,51 @@ http://www.google.com/calendar/a/<my-corp>/m?output=xhtml"
       (format emacspeak-webutils-google-transcoder-url
               (emacspeak-url-encode
                url)))))
+
+(emacspeak-url-template-define
+ "Finance Google Search"
+ "http://finance.google.com/finance?q=%s"
+ (list "Finance Search: ")
+ nil
+ "Display content from Google Finance."
+ )
+
+(defun emacspeak-finance-google-up-or-down (value)
+  "Return up/down by value."
+  (let ((minus-p (string-match "-" value)))
+    (cond
+     (minus-p
+      (format " down  %s"
+              (substring value (1+ minus-p ))))
+     (t (format " up  %s " value)))))
+  
+(defvar emacspeak-google-finance-row-filter
+  '(0 (emacspeak-finance-google-up-or-down 3)" to " 2  " for  a market cap of " 4 
+      "Traded today between " 8 " and " 7 " on a  volume of " 5)
+  "Template used as a row formatter for Finance Portfolios.")
+
+(emacspeak-url-template-define
+ "Finance Google Portfolio"
+"http://finance.google.com/finance/portfolio?action=view&pid=1&pview=sview&output=csv"
+ nil nil
+ "Download and display portfolio from Google Finance."
+ #'(lambda (url)
+     (declare (special emacspeak-google-finance-row-filter
+                       emacspeak-table-speak-row-filter))
+     (let ((buffer (url-retrieve-synchronously url)))
+       (save-excursion
+         (set-buffer buffer)
+         (goto-char (point-min))
+         (search-forward "\n\n")
+         (delete-region (point-min) (point))
+         (emacspeak-table-view-csv-buffer buffer)
+         (kill-buffer buffer)
+         (when (get-buffer "Portfolio From Google Finance")
+           (kill-buffer "Portfolio From Google Finance"))
+         (rename-buffer "Portfolio From Google Finance")
+         (setq emacspeak-table-speak-row-filter
+               emacspeak-google-finance-row-filter)
+         (emacspeak-table-next-row)))))
 
 (emacspeak-url-template-define
  "Finance Google news"
@@ -870,7 +939,19 @@ http://www.google.com/calendar/a/<my-corp>/m?output=xhtml"
       (emacspeak-url-encode
        (format-time-string "%m/%d/%y"))))
  nil
- "Public transit directions from Google.")
+ "Public transit directions from Google."
+ #'(lambda (url)
+(emacspeak-we-extract-by-class "directions"
+                            url 'speak)))
+
+(emacspeak-url-template-define
+ "Walking Directions From Google"
+ "http://maps.google.com/maps?f=d&output=html&hl=en&q=%s&dirmode=walking&ie=UTF8&dirflg=w"
+ (list "Route: ")
+ nil
+ "Display walking directions using Google."
+ #'(lambda (url)
+     (emacspeak-we-extract-by-class "dir" url 'speak)))
 
 (emacspeak-url-template-define
  "EmapSpeak Via Google"
@@ -941,8 +1022,16 @@ Here are some examples:
 
 ;;}}}
 ;;{{{ googl blogsearch
+
 (emacspeak-url-template-define
  "BlogSearch Google"
+ "http://blogsearch.google.com/blogsearch_feeds?hl=en&q=%s&ie=utf-8&num=25&output=atom"
+ (list "Google Blog Search: ")
+ nil
+ "Google Blog Search"
+ 'emacspeak-webutils-atom-display)
+(emacspeak-url-template-define
+ "Recent BlogSearch Google"
  "http://blogsearch.google.com/blogsearch_feeds?hl=en&q=%s&ie=utf-8&num=25&scoring=d&output=atom"
  (list "Google Blog Search: ")
  nil
@@ -952,7 +1041,7 @@ Here are some examples:
 ;;}}}
 ;;{{{ google translation service
 
-black(emacspeak-url-template-define
+(emacspeak-url-template-define
       "Multilingual dictionary via Google."
       "http://translate.google.com/translate_dict?q=%s&sa=N&hl=en&langpair=%s"
       (list
@@ -1027,14 +1116,14 @@ from English to German.")
 (emacspeak-url-template-define
  "Google Hits"
  "http://www.google.com/search?q=%s&num=%s"
- (list 'emacspeak-webutils-google-autocomplete
+ (list 'gweb-google-autocomplete
        #'(lambda nil
 	   (declare (special  emacspeak-websearch-google-number-of-results))
 	   emacspeak-websearch-google-number-of-results))
  nil
  "Only show Google hits."
  #'(lambda (url)
-     (emacspeak-we-extract-by-class "g"
+     (emacspeak-we-extract-by-id "res"
                                     url 'speak)))
 
 ;;}}}
@@ -1100,18 +1189,12 @@ from English to German.")
 
 (emacspeak-url-template-define
  "Google Recent News Search"
- "http://news.google.com/news?hl=en&ned=tus&q=%s&scoring=d"
+ "http://news.google.com/news?hl=en&ned=tus&q=%s&scoring=d&output=atom"
  (list "Search news for: ")
- #'(lambda nil
-     (or
-      (search-forward "Sorted by" (point-max) 'no-error)
-      (search-forward "Top Stories" (point-max) 'no-error))
-     (forward-line 4)
-     (emacspeak-speak-line))
+ nil
  "Search Google news."
  #'(lambda (url)
-     (emacspeak-webutils-without-xsl
-      (browse-url url))))
+     (emacspeak-webutils-atom-display url )))
 
 (emacspeak-url-template-define
  "Google Mobile Search"
@@ -1536,6 +1619,18 @@ name of the list.")
       url
       'speak)))
 
+(emacspeak-url-template-define
+ "Money Content "
+ "http://money.cnn.com/"
+ nil
+ nil
+ "CNN Content"
+ #'(lambda (url)
+     (emacspeak-we-extract-by-id
+      "content"
+      url
+      'speak)))
+
 ;;}}}
 ;;{{{ pbs --pulpit
 (emacspeak-url-template-define
@@ -1549,7 +1644,7 @@ name of the list.")
  "Read pulpit from PBS. Published on the Thursday of the week."
  #'(lambda (url)
      (emacspeak-we-xslt-filter
-      "//p|ul|ol|dl|h1|h2|h3|h4|h5|h6|blockquote" url 'speak)))
+      "//p" url 'speak)))
 
 ;;}}}
 ;;{{{  NPR programs
@@ -2296,3 +2391,4 @@ launch the realmedia player after fetching the resource.\n\n"
 ;;; end:
 
 ;;}}}
+

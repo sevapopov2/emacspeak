@@ -7,7 +7,6 @@
 (put 'dtk 'custom-loads '(dtk-speak))
 (put 'emacspeak-gnus 'custom-loads '(emacspeak-gnus))
 (put 'emacspeak-tnt 'custom-loads '(emacspeak-tnt))
-(put 'amixer 'custom-loads '(amixer))
 (put 'emacspeak-forms 'custom-loads '(emacspeak-forms))
 (put 'emacspeak-rss 'custom-loads '(emacspeak-webutils))
 (put 'speedbar 'custom-loads '(emacspeak-speedbar))
@@ -31,7 +30,7 @@
 (put 'w3m 'custom-loads '(emacspeak-w3m))
 (put 'emacspeak-webspace 'custom-loads '(emacspeak-webspace))
 (put 'emacspeak-pronounce 'custom-loads '(emacspeak-pronounce))
-(put 'emacspeak 'custom-loads '(emacspeak-add-log emacspeak-alsaplayer emacspeak-keymap emacspeak-webutils emacspeak-aumix emacspeak-daisy emacspeak-dismal emacspeak-ediff emacspeak-wizards emacspeak-erc emacspeak-eshell emacspeak-eterm emacspeak-eudc emacspeak-flyspell emacspeak-forms emacspeak-gnus emacspeak-ido emacspeak-ispell emacspeak-m-player emacspeak emacspeak-message emacspeak-midge emacspeak-moz emacspeak-nxml emacspeak-ocr emacspeak-pronounce emacspeak-realaudio emacspeak-replace emacspeak-sounds emacspeak-speak emacspeak-speedbar emacspeak-table-ui emacspeak-view-process emacspeak-vm emacspeak-w3 emacspeak-w3m emacspeak-we emacspeak-webmarks emacspeak-websearch emacspeak-widget emacspeak-xml-shell emacspeak-xslt dtk-speak voice-setup))
+(put 'emacspeak 'custom-loads '(dtk-unicode emacspeak-add-log emacspeak-alsaplayer emacspeak-keymap emacspeak-webutils emacspeak-aumix emacspeak-daisy emacspeak-dismal emacspeak-ediff emacspeak-wizards emacspeak-erc emacspeak-eshell emacspeak-eterm emacspeak-eudc emacspeak-flyspell emacspeak-forms emacspeak-gnus emacspeak-ido emacspeak-ispell emacspeak-m-player emacspeak emacspeak-message emacspeak-midge emacspeak-moz emacspeak-nxml emacspeak-ocr emacspeak-pronounce emacspeak-realaudio emacspeak-replace emacspeak-sounds emacspeak-speak emacspeak-speedbar emacspeak-table-ui emacspeak-view-process emacspeak-vm emacspeak-w3 emacspeak-w3m emacspeak-we emacspeak-webmarks emacspeak-websearch emacspeak-widget emacspeak-xml-shell emacspeak-xslt dtk-speak voice-setup))
 (put 'emacspeak-xml-shell 'custom-loads '(emacspeak-xml-shell))
 (put 'emacspeak-calendar 'custom-loads '(emacspeak-calendar))
 (put 'emacspeak-amphetadesk 'custom-loads '(emacspeak-amphetadesk))
@@ -44,6 +43,7 @@
 (put 'emacspeak-wizards 'custom-loads '(emacspeak-wizards))
 (put 'emacspeak-speedbar 'custom-loads '(emacspeak-speedbar))
 (put 'accessibility 'custom-loads '(emacspeak))
+(put 'dtk-unicode 'custom-loads '(dtk-unicode))
 (put 'emacspeak-dired 'custom-loads '(emacspeak-dired))
 (put 'emacspeak-xslide 'custom-loads '(emacspeak-xslide))
 (put 'emacspeak-daisy 'custom-loads '(emacspeak-daisy))
@@ -102,12 +102,12 @@
 
 (defvar custom-versions-load-alist nil
  "For internal use by custom.")
-
+
 (provide 'cus-load)
-
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
+;; coding: utf-8
 ;; End:
 ;;; cus-load.el ends here

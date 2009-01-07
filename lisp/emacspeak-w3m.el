@@ -1,5 +1,5 @@
 ;;; emacspeak-w3m.el --- speech-enables w3m-el
-;;;$Id: emacspeak-w3m.el 5528 2008-03-15 02:06:50Z tv.raman.tv $
+;;;$Id: emacspeak-w3m.el 5825 2008-08-24 23:33:27Z tv.raman.tv $
 ;;{{{ Copyright
 
 ;;; This file is not part of Emacs, but the same terms and
@@ -669,8 +669,9 @@ instead of the modeline."
   "Preview this buffer in w3m."
   (interactive)
   (let ((filename
-         (format "/tmp/%s.html"
-                 (make-temp-name "w3m"))))
+         (make-temp-file
+	  (format "%s.html"
+                 (make-temp-name "w3m")))))
     (write-region (point-min)
                   (point-max)
                   filename)

@@ -1,5 +1,5 @@
 ;;; g-utils.el --- Google Client Utilities
-;;;$Id: g-utils.el,v 1.14 2006/10/13 01:38:19 raman Exp $
+;;;$Id: g-utils.el 6046 2008-11-07 19:55:48Z tv.raman.tv $
 ;;; $Author: raman $
 ;;; Description:  Google Client utilities
 ;;; Keywords: Google   Atom API, Google Services
@@ -69,7 +69,7 @@
 (defvar g-scratch-buffer" *g scratch*"
   "Scratch buffer we do authentication work.")
 
-(defcustom g-curl-program "curl"
+(defcustom g-curl-program "/usr/bin/curl"
   "Name of CURL executable."
   :type 'string
   :group 'g)
@@ -117,7 +117,7 @@ Receives buffer containing HTML as its argument."
   :group 'g)
 
 (defcustom g-cookie-jar
-  (expand-file-name "~/.g-cookie-jar")
+  (make-temp-file ".g-cookie-jar")
   "Cookie jar used for Google services.
 Customize this to live on your local disk."
   :type 'file
@@ -193,11 +193,13 @@ Customize this to live on your local disk."
 (defsubst g-xsl-transform-region (start end xsl)
   "Replace region by result of transforming via XSL."
   (declare (special g-xslt-program))
-  (shell-command-on-region
+  (call-process-region
    start end
-   (format "%s %s - %s"
-           g-xslt-program xsl (g-xslt-debug))
-   'replace))
+   g-xslt-program
+   t t nil 
+            xsl
+            "-"
+            (g-xslt-debug)))
 
 ;;}}}
 ;;{{{ html unescape
@@ -237,8 +239,26 @@ Customize this to live on your local disk."
 ;;{{{ json conveniences:
 
 (defsubst g-json-get (key object)
-  "Return object.key from json object or nil if not found."
-  (cdr (assoc key object)))
+  "Return object.key from json object or nil if not found.
+Key must be a symbol.
+For using string keys, use g-json-lookup."
+  (cdr (assq key object)))
+
+;;; Make sure to call json-read
+;;; with json-key-type bound to 'string before using this:
+
+(defsubst g-json-lookup (key object)
+  "Return object.key from json object or nil if not found.
+Key  is a string of of the form a.b.c"
+  (let ((name  (split-string key "\\." 'omit-null))
+        (v object))
+    (while (and name
+                (setq v (cdr (assoc (car name) v))))
+      (setq name (cdr name)))
+    (cond
+     ((null name) v)
+     (t nil))))
+
 
 (defalias 'g-json-aref 'aref)
 
@@ -260,8 +280,12 @@ Customize this to live on your local disk."
 
 (defsubst g-get-result (command)
   "Run command and return its output."
+  (declare (special shell-file-name shell-command-switch))
   (g-using-scratch
-   (shell-command command (current-buffer) 'replace)
+   (call-process shell-file-name nil t
+                      nil shell-command-switch 
+                      command)
+   (set-buffer-multibyte nil) ;return raw binary string
    (buffer-string)))
 
 (defsubst g-json-get-result(command)
@@ -276,7 +300,9 @@ Typically, content is pulled using Curl , converted to HTML using style  and
   previewed via `g-html-handler'."
   (declare (special g-xslt-program g-html-handler))
   (g-using-scratch
-   (shell-command command (current-buffer))
+   (call-process shell-file-name nil t
+                      nil shell-command-switch 
+                      command)
    (when style
      (g-xsl-transform-region (point-min) (point-max) style))
    (funcall g-html-handler (current-buffer))))
@@ -291,6 +317,17 @@ XML string is transformed via style
    (when style
      (g-xsl-transform-region (point-min) (point-max) style))
    (funcall g-html-handler (current-buffer))))
+
+(defsubst g-display-xml-buffer (buffer style)
+  "Display XML buffer  using specified style.
+XML  is transformed via style
+  and previewed via `g-html-handler'."
+  (declare (special g-xslt-program g-html-handler))
+  (save-excursion
+    (set-buffer buffer)
+    (when style
+      (g-xsl-transform-region (point-min) (point-max) style))
+    (funcall g-html-handler (current-buffer))))
 
 ;;}}}
 ;;{{{  HTTP Headers:

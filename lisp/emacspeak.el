@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el 5562 2008-04-16 21:36:54Z tv.raman.tv $
+;;; $Id: emacspeak.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-04-16 14:36:54 -0700 (Wed, 16 Apr 2008) $ |
+;;; $Date: 2008-07-06 16:33:47 -0700 (Sun, 06 Jul 2008) $ |
 ;;;  $Revision: 4642 $ |
 ;;; Location undetermined
 ;;;
@@ -77,9 +77,8 @@
                    "http://emacspeak.sf.net/publications"
                    :help-echo "Read papers describing Emacspeak
 design and implementation.")
-  :link '(url-link :tag "Mail"
-                   "http://www.cs.vassar.edu/~priestdo/emacspeak/"
-                   :help-echo "Browse Emacspeak mail archive at Vassar.")
+  :link '(url-link :tag "Emacs Tour" "http://www.gnu.org/s/emacs/tour/"
+                   :help-echo "A guided Tour Of Emacs")
   :link '(url-link :tag "Search"
                    "http://www.cs.vassar.edu/cgi-bin/emacspeak-search"
                    :help-echo "Search Emacspeak mail archive at Vassar.")
@@ -165,6 +164,7 @@ speech-enabling extensions."
 (emacspeak-do-package-setup "cmuscheme" 'emacspeak-cmuscheme)
 (emacspeak-do-package-setup "compile" 'emacspeak-compile)
 (emacspeak-do-package-setup "cperl-mode" 'emacspeak-cperl)
+(emacspeak-do-package-setup "proced" 'emacspeak-proced)
 (emacspeak-do-package-setup "ecb" 'emacspeak-ecb)
 (emacspeak-do-package-setup "cus-edit" 'emacspeak-custom)
 (emacspeak-do-package-setup "damlite" 'emacspeak-damlite)
@@ -354,6 +354,7 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
        (add-hook hook
                  'emacspeak-setup-programming-mode))
    (list 'c-mode-common-hook
+         'conf-unix-mode-hook
          'prolog-mode-hook
          'lisp-mode-hook
          'emacs-lisp-mode-hook

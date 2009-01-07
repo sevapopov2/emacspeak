@@ -1,5 +1,5 @@
 ;;; emacspeak-realaudio.el --- Play realaudio from Emacs
-;;; $Id: emacspeak-realaudio.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-realaudio.el 5962 2008-10-02 13:25:04Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Single click access to RealAudio from emacspeak
 ;;; Keywords: Emacspeak, RealAudio
@@ -118,7 +118,7 @@ specifies the actual location of the realaudio stream
 (make-variable-buffer-local 'emacspeak-realaudio-end-time-mark)
 
 ;;;###autoload
-(defun emacspeak-realaudio-play (resource &optional play-list noselect)
+(defun emacspeak-realaudio-play (resource &optional play-list)
   "Play a realaudio stream.  Uses files from your Realaudio
 shortcuts directory for completion.  See documentation for
 user configurable variable emacspeak-realaudio-shortcuts-directory. "
@@ -140,7 +140,6 @@ user configurable variable emacspeak-realaudio-shortcuts-directory. "
                               emacspeak-realaudio-last-url)))
       (pop kill-ring)
       file)
-    current-prefix-arg
     current-prefix-arg))
   (declare (special emacspeak-realaudio-player emacspeak-realaudio-this-resource
                     emacspeak-realaudio-buffer 

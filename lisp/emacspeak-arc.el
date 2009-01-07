@@ -1,5 +1,5 @@
 ;;; emacspeak-arc.el --- Speech enable archive-mode -- a  Emacs interface to zip and friends
-;;; $Id: emacspeak-arc.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-arc.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to archive mode
 ;;; Keywords: Emacspeak, Speak, Spoken Output, archive
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -215,7 +215,6 @@ first initializing it if necessary."
 (defun emacspeak-arc-setup-keys ()
   "Setup emacspeak keys for arc mode"
   (declare (special archive-mode-map))
-  (emacspeak-keymap-remove-emacspeak-edit-commands archive-mode-map)
   (define-key archive-mode-map "." 'emacspeak-arc-speak-file-name)
   (define-key archive-mode-map "c" 'emacspeak-arc-speak-file-modification-time)
   (define-key archive-mode-map "z" 'emacspeak-arc-speak-file-size)

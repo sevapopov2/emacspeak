@@ -1,5 +1,5 @@
 ;;; dtk-speak.el --- Provides Emacs Lisp interface to speech server
-;;;$Id: dtk-speak.el 5528 2008-03-15 02:06:50Z tv.raman.tv $
+;;;$Id: dtk-speak.el 5960 2008-10-01 14:01:38Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacs interface to TTS
 ;;; Keywords: Dectalk Emacs Elisp
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-03-14 19:06:50 -0700 (Fri, 14 Mar 2008) $ |
+;;; $Date: 2008-07-06 10:18:30 -0700 (Sun, 06 Jul 2008) $ |
 ;;;  $Revision: 4670 $ |
 ;;; Location undetermined
 ;;;
@@ -56,10 +56,12 @@
 (require 'backquote)
 (require 'custom)
 (require 'dtk-interp)
+(require 'dtk-unicode)
 (require 'dectalk-voices)
 (require 'outloud-voices)
 (require 'multispeech-voices)
 (require 'espeak-voices)
+(require 'flite-voices)
 
 ;;}}}
 ;;{{{  user customizations:
@@ -157,7 +159,7 @@ Do not set this variable by hand, use command
   "Non-nil means produce a beep to indicate  capitalization.
 Do not set this variable by hand, use command dtk-toggle-capitalization
 bound to \\[dtk-toggle-capitalization].")
-(make-variable-buffer-local 'dtk-captialize)
+(make-variable-buffer-local 'dtk-capitalize)
 
 (defvar dtk-allcaps-beep nil
   "Option to indicate capitalization.
@@ -1085,6 +1087,8 @@ You should not modify this variable;
 Use command  `dtk-set-punctuations' bound to
 \\[dtk-set-punctuations].  .")
 
+
+(make-variable-buffer-local 'dtk-punctuation-mode)
 ;;; forward declaration
 (defvar emacspeak-servers-directory
   (expand-file-name
@@ -1517,9 +1521,10 @@ available TTS servers.")
 (defsubst dtk-char-to-speech (char)
   "Translate CHAR to speech string."
   (declare (special dtk-character-to-speech-table))
-  (if (> char 127 )
-      (format "octal %o"  char )
-    (aref dtk-character-to-speech-table char )))
+  (if  (eq (char-charset char) 'ascii)
+	  (aref dtk-character-to-speech-table char )
+	(or (dtk-unicode-short-name-for-char char)
+		 (format "octal %o"  char ))))
 
 ;;}}}
 ;;{{{  interactively selecting the server:
@@ -1545,6 +1550,8 @@ This is setup on a per engine basis.")
     (espeak-configure-tts))
    ((string-match "dtk-" tts-name)      ;all dectalks
     (dectalk-configure-tts))
+   ((string-match "eflite" tts-name)
+	(flite-configure-tts))
    (t (dectalk-configure-tts)           ; will become
                                         ; generic-configure)))
       ))
@@ -1770,6 +1777,7 @@ only speak upto the first ctrl-m."
           (when pronunciation-table
             (tts-apply-pronunciations
              pronunciation-table))
+		  (dtk-unicode-replace-chars mode)
           (dtk-handle-repeating-patterns mode)
           (dtk-quote mode))
         (goto-char (point-min))

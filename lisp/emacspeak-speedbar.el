@@ -1,5 +1,5 @@
 ;;; emacspeak-speedbar.el --- Speech enable speedbar -- Tool for context-sensitive navigation
-;;; $Id: emacspeak-speedbar.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-speedbar.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to speedbar
 ;;; Keywords: Emacspeak, Speedbar
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -240,8 +240,7 @@ An automatically updating speedbar consumes resources.")
 ;;{{{  hooks
 (declaim (special speedbar-key-map))
 (eval-when (load)
-  
-  (emacspeak-keymap-remove-emacspeak-edit-commands speedbar-key-map))
+  )
 (defun emacspeak-speedbar-enter-hook ()
   "Actions taken when we enter the Speedbar"
   (declare (special speedbar-key-map

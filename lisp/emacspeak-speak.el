@@ -1,5 +1,5 @@
 ;;; emacspeak-speak.el --- Implements Emacspeak's core speech services
-;;; $Id: emacspeak-speak.el 5562 2008-04-16 21:36:54Z tv.raman.tv $
+;;; $Id: emacspeak-speak.el 5997 2008-10-14 01:06:32Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Contains the functions for speaking various chunks of text
 ;;; Keywords: Emacspeak,  Spoken Output
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-04-16 14:36:54 -0700 (Wed, 16 Apr 2008) $ |
+;;; $Date: 2008-08-18 16:25:05 -0700 (Mon, 18 Aug 2008) $ |
 ;;;  $Revision: 4552 $ |
 ;;; Location undetermined
 ;;;
@@ -963,7 +963,8 @@ spelt instead of being spoken."
 
 (defsubst emacspeak-is-alpha-p (c)
   "Check if argument C is an alphabetic character."
-  (= 119 (char-syntax c)))
+  (and (= ?w (char-syntax c))
+	   (dtk-unicode-char-untouched-p c)))
 
 ;;{{{  phonemic table
 
@@ -1040,6 +1041,7 @@ char is assumed to be one of a--z."
   (let ((char-string   (char-to-string char )))
     (or   (cdr
            (assoc char-string emacspeak-char-to-phonetic-table ))
+		  (dtk-unicode-full-name-for-char char)
           " ")))
 
 ;;}}}
@@ -1054,9 +1056,7 @@ Pronounces character phonetically unless  called with a PREFIX arg."
        ((and (not prefix)
              (emacspeak-is-alpha-p char))
         (dtk-speak (emacspeak-get-phonetic-string char )))
-       ((emacspeak-is-alpha-p char) (dtk-letter (char-to-string char )))
-       (t (dtk-dispatch
-           (dtk-char-to-speech char )))))))
+	   (t (emacspeak-speak-this-char char))))))
 
 (defun emacspeak-speak-this-char (char)
   "Speak this CHAR."
@@ -2479,12 +2479,12 @@ message area.  You can use command
   "Speak the last message from Emacs once again.
 The message is also placed in the kill ring for convenient yanking
 if `emacspeak-speak-message-again-should-copy-to-kill-ring' is set."
-  (interactive)
+  (interactive "P")
   (declare (special emacspeak-last-message
                     emacspeak-speak-message-again-should-copy-to-kill-ring))
   (cond
    (from-message-cache
-    (dtk-speak   emacspeak-last-message )
+    (dtk-speak   emacspeak-last-message)
     (when (and (interactive-p)
                emacspeak-speak-message-again-should-copy-to-kill-ring)
       (kill-new emacspeak-last-message)))

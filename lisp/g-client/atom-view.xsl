@@ -7,6 +7,7 @@ View an Atom feed as clean HTML
 -->
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:gd='http://schemas.google.com/g/2005'
     xmlns:atom="http://www.w3.org/2005/Atom"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:openSearch="http://a9.com/-/spec/opensearchrss/1.0/"
@@ -25,6 +26,8 @@ View an Atom feed as clean HTML
         <h1><xsl:value-of select="atom:title"
         disable-output-escaping="yes"/>
         </h1>
+        <p><xsl:apply-templates select="atom:subtitle"/>
+        </p>
         
         <xsl:if test="count(atom:entry) > 1 ">
           <h2>Table Of Contents</h2>
@@ -71,6 +74,7 @@ View an Atom feed as clean HTML
         <xsl:for-each select="atom:link">
           <td><xsl:apply-templates select="."/></td>
         </xsl:for-each>
+        <xsl:apply-templates  select="gd:feedLink" mode="acl"/>
       </tr>
     </TABLE>
     <div>
@@ -82,6 +86,17 @@ View an Atom feed as clean HTML
       </xsl:if>
       <xsl:value-of select="atom:published"/>
     </div>
+  </xsl:template>
+  <xsl:template match="gd:feedLink" mode="acl">
+    <xsl:if test="@rel='http://schemas.google.com/acl/2007#accessControlList'">
+      <td>
+        <a>
+          <xsl:attribute name="href">
+            <xsl:value-of select="@href"/>
+          </xsl:attribute>
+      [ACL]</a></td>
+      
+    </xsl:if>
   </xsl:template>
   <xsl:template match="atom:entry" mode="toc">
     <li>

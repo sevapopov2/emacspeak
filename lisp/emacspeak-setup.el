@@ -1,5 +1,5 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el 5576 2008-05-16 01:28:56Z tv.raman.tv $
+;;; $Id: emacspeak-setup.el 6074 2008-11-26 18:11:24Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
@@ -7,7 +7,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-05-15 18:28:56 -0700 (Thu, 15 May 2008) $ |
+;;; $Date: 2008-06-06 19:00:23 -0700 (Fri, 06 Jun 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -123,7 +123,7 @@ pronunciation dictionaries are stored. ")
 
 ;;;###autoload
 (defconst emacspeak-codename
-  "PuppyDog"
+  "AbleDog"
   "Code name of present release.")
 
 ;;}}}
@@ -179,7 +179,14 @@ pronunciation dictionaries are stored. ")
   (when emacspeak-use-header-line
     (setq default-header-line-format
           emacspeak-default-header-line-format)))
+(defun emacspeak-tvr-startup-hook ()
+  "Emacspeak startup hook that I use."
+  (load-library "emacspeak-alsaplayer")
+  (load-library "emacspeak-webmarks")
+  (load-library "emacspeak-webspace"))
+
 (add-hook 'emacspeak-startup-hook 'emacspeak-setup-header-line)
+(add-hook 'emacspeak-startup-hook 'emacspeak-tvr-startup-hook)
           
 ;;; Use (add-hook 'emacspeak-startup-hook ...)
 ;;; to add your personal settings.

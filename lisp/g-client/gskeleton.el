@@ -1,5 +1,5 @@
 ;;; g-skeleton.el --- Skeleton Google  Client
-;;;$Id: gcal.el,v 1.30 2006/09/28 17:47:44 raman Exp $
+;;;$Id: gskeleton.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: raman $
 ;;; Description:  Skeleton that all clients start from.
 ;;; Keywords: Google   Atom API

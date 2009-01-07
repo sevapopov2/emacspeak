@@ -1,5 +1,5 @@
 ;;; emacspeak-etable.el --- Speech enable table.el
-;;; $Id: emacspeak-etable.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-etable.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; DescriptionEmacspeak extensions for table.el
 ;;; Keywords:emacspeak, audio interface to emacs Tables
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-06-21 14:58:40 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -58,7 +58,7 @@
   (declare (special table-cell-map))
   (when  table-cell-map
     (loop for k in
-          (where-is-internal 'emacspeak-self-insert-command table-cell-map)
+          (where-is-internal 'emacspeak-self-insert-command (list table-cell-map))
           do
           (define-key table-cell-map k '*table--cell-self-insert-command ))
     (loop for k in

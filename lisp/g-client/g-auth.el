@@ -1,5 +1,5 @@
 ;;; g-auth.el --- Google Authentication Module
-;;;$Id: g-auth.el,v 1.6 2006/10/23 16:51:50 raman Exp $
+;;;$Id: g-auth.el 5911 2008-09-12 13:35:07Z tv.raman.tv $
 ;;; $Author: raman $
 ;;; Description:  Google Authentication Module
 ;;; Keywords: Google   Auth
@@ -83,10 +83,18 @@
           (string :tag "username@gmail.com" ""))
   :group 'g)
 
-(defcustom g-auth-lifetime '(0 1800 0)
-  "Lifetime of authentication token as a list suitable for
-`current-time'."
-  :type 'sexp
+(defvar g-auth-lifetime-internal nil
+  "Internal cached value of g-auth-lifetime as a time value.")
+
+;;;###autoload
+(defcustom g-auth-lifetime "4 hours"
+  "Auth lifetime."
+  :type  'string
+  :set  #'(lambda (sym val)
+           (declare (special g-auth-lifetime-internal))
+           (setq g-auth-lifetime-internal
+                 (seconds-to-time(timer-duration val)))
+           (set-default sym val))
   :group 'g-auth)
 
 ;;}}}
@@ -119,7 +127,7 @@
   session-id                            ;gsession-id
   cookie-alist
   service
-  (lifetime  g-auth-lifetime)
+  (lifetime  g-auth-lifetime-internal)
   timestamp
   post-auth-action)
 
@@ -141,13 +149,10 @@
 
 (defsubst g-auth-expired-p (auth-handle)
   "Check if  token for specified service has expired."
-  (cond
-   ((and (null (g-auth-token auth-handle))
-         (null (g-auth-cookie-alist auth-handle)))t)
-   ((time-less-p (g-auth-lifetime auth-handle)
-                 (time-since (g-auth-timestamp auth-handle)))
-    t)
-   (t nil)))
+  (or (null (g-auth-token auth-handle))
+       (null (g-auth-cookie-alist auth-handle))
+   (time-less-p (g-auth-lifetime auth-handle)
+                (time-since (g-auth-timestamp auth-handle)))))
 
 ;;}}}
 ;;{{{ G Authenticate
@@ -175,6 +180,7 @@ Populate auth-handle with the returned cookies and token."
     (save-excursion
       (set-buffer buff)
       (erase-buffer)
+      (setq buffer-undo-list t)
       (insert
        (format "Email=%s&Passwd=%s&source=g-emacs&accountType=hosted_or_google"
                (g-url-encode email)

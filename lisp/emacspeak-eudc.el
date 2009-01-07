@@ -1,5 +1,5 @@
 ;;; emacspeak-eudc.el --- Speech enable  directory client 
-;;; $Id: emacspeak-eudc.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-eudc.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:   extension to speech enable universal directory client 
 ;;; Keywords: Emacspeak, Audio Desktop

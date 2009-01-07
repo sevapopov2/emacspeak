@@ -1,5 +1,5 @@
 ;;; emacspeak-piglets.el.el --- Result of large pigs connecting over a socket
-;;; $Id: emacspeak-piglets.el 5568 2008-05-09 14:14:23Z tv.raman.tv $
+;;; $Id: emacspeak-piglets.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Result of connecting Emacs and Firefox
 ;;; Keywords: Emacspeak,  Audio Desktop Firefox, Piglets 
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-05-09 07:14:23 -0700 (Fri, 09 May 2008) $ |
+;;; $Date: 2008-07-02 16:44:27 -0700 (Wed, 02 Jul 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -112,6 +112,7 @@ Keystrokes are sent to a connected Firefox."
   (list 'emacspeak-self-insert-command
         'completion-separator-self-insert-autofilling
         'completion-separator-self-insert-command
+'self-insert-command
         'delete-char
         'backward-delete-char
         'backward-delete-char-untabify
@@ -124,7 +125,7 @@ Keystrokes are sent to a connected Firefox."
                     emacspeak-piglets-mode-map))
   (loop for edit-command in emacspeak-piglets-edit-commands
         do
-        (let ((edit-keys (where-is-internal edit-command emacspeak-piglets-mode-map)))
+        (let ((edit-keys (where-is-internal edit-command  emacspeak-piglets-mode-map)))
           (loop for key in edit-keys 
                 do
                     (define-key emacspeak-piglets-mode-map  key 'emacspeak-piglets-key)))))
@@ -134,7 +135,7 @@ Keystrokes are sent to a connected Firefox."
   (interactive)
   (comint-send-string
    (inferior-moz-process) 
-   (format "repl.adom.keyPress(repl.adom.target(),'TAB')\n" )))
+   (format "CLC_SR_StopSpeaking();repl.adom.keyPress(repl.adom.root(),'TAB')\n" )))
 
 
 ;;;###autoload
@@ -149,7 +150,7 @@ Keystrokes are sent to a connected Firefox."
   "Send keypress to Firefox."
   (interactive "%c")
   (comint-send-string (inferior-moz-process) 
-   (format "repl.adom.keyPress(repl.adom.target(),'%c', false, false, %s)\n"
+   (format "CLC_SR_StopSpeaking();repl.adom.keyPress(repl.adom.target(),'%c', false, false, %s)\n"
            c
            (if (and (<= 65 c)
                     (<= c 90))

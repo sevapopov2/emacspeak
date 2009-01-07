@@ -1,5 +1,5 @@
 ;;; emacspeak-php-mode.el --- Speech-Enable php-mode 
-;;; $Id: emacspeak-php-mode.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-php-mode.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: speech-enable php-mode
 ;;; Keywords: Emacspeak, php

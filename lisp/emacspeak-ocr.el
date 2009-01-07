@@ -1,5 +1,5 @@
 ;;; emacspeak-ocr.el --- ocr Front-end for emacspeak desktop
-;;; $Id: emacspeak-ocr.el 5562 2008-04-16 21:36:54Z tv.raman.tv $
+;;; $Id: emacspeak-ocr.el 5996 2008-10-13 22:54:05Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for OCR
 ;;; Keywords: Emacspeak, ocr
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-04-16 14:36:54 -0700 (Wed, 16 Apr 2008) $ |
+;;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4448 $ |
 ;;; Location undetermined
 ;;;
@@ -76,7 +76,7 @@ OCR engine for optical character recognition."
   :group 'emacspeak-ocr)
 
 (defcustom emacspeak-ocr-scan-image-options 
-  nil
+  "--resolution 300 --mode lineart --format=tiff"
   "Command line options to pass to image acquisition program."
   :type 'string 
   :group 'emacspeak-ocr)
@@ -88,7 +88,7 @@ OCR engine for optical character recognition."
           (string :tag "Command"))
   :group 'emacspeak-ocr)
 
-(defcustom emacspeak-ocr-image-extension ".pnm"
+(defcustom emacspeak-ocr-image-extension ".tif"
   "Filename extension used for acquired image."
   :type 'string
   :group 'emacspeak-ocr)
@@ -287,9 +287,7 @@ See \\{emacspeak-ocr-mode-map}.
           emacspeak-ocr-last-page-number 0
           emacspeak-ocr-page-positions
           (make-vector 25 nil))
-    (emacspeak-ocr-update-mode-line)
-    (emacspeak-keymap-remove-emacspeak-edit-commands
-     emacspeak-ocr-mode-map)))
+    (emacspeak-ocr-update-mode-line)))
 
 (define-key emacspeak-ocr-mode-map "?" 'describe-mode)
 (define-key emacspeak-ocr-mode-map "c" 'emacspeak-ocr-customize)
@@ -299,6 +297,7 @@ See \\{emacspeak-ocr-mode-map}.
 (define-key emacspeak-ocr-mode-map "i" 'emacspeak-ocr-scan-image)
 (define-key emacspeak-ocr-mode-map "j" 'emacspeak-ocr-scan-photo)
 (define-key emacspeak-ocr-mode-map "o" 'emacspeak-ocr-recognize-image)
+(define-key emacspeak-ocr-mode-map "f" 'emacspeak-ocr-flipflop-and-recognize-image)
 (define-key emacspeak-ocr-mode-map "n" 'emacspeak-ocr-name-document)
 (define-key emacspeak-ocr-mode-map "d" 'emacspeak-ocr-open-working-directory)
 (define-key emacspeak-ocr-mode-map "[" 'emacspeak-ocr-backward-page)
@@ -541,6 +540,55 @@ Prompts for image file if file corresponding to the expected
     (insert
      (format "\n%c\nPage %s\n" 12
              emacspeak-ocr-last-page-number))
+    (setq emacspeak-ocr-process
+          (apply 'start-process 
+                 "ocr"
+                 (current-buffer)
+                 emacspeak-ocr-engine
+                 image-name
+                 emacspeak-ocr-engine-options))
+    (set-process-sentinel emacspeak-ocr-process
+                          'emacspeak-ocr-process-sentinel)
+    (message "Launched OCR engine.")))
+
+
+(defvar emacspeak-ocr-image-flipflop
+  (executable-find "mogrify")
+  "Executable used to transform images.")
+
+(defun emacspeak-ocr-flipflop-and-recognize-image ()
+  "Run OCR engine on current image after flip-flopping it.
+Useful if you've scanned a page upside down and are using an engine that does not automatically flip the image for you.
+You need the imagemagik family of tools --- we use mogrify to transform the image.
+Prompts for image file if file corresponding to the expected
+`current page' is not found."
+  (interactive)
+  (declare (special emacspeak-ocr-engine
+                    emacspeak-ocr-image-flipflop
+                    emacspeak-ocr-engine-options
+                    emacspeak-ocr-process
+                    emacspeak-ocr-last-page-number
+                    emacspeak-ocr-page-positions
+                    emacspeak-ocr-image-extension))
+  (let ((inhibit-read-only t)
+        (image-name
+         (if (file-exists-p (emacspeak-ocr-get-image-name emacspeak-ocr-image-extension))
+             (emacspeak-ocr-get-image-name emacspeak-ocr-image-extension)
+           (expand-file-name 
+            (read-file-name "Image file to recognize: ")))))
+    (goto-char (point-max))
+    (emacspeak-auditory-icon 'select-object)
+    (setq emacspeak-ocr-last-page-number
+          (1+ emacspeak-ocr-last-page-number))
+    (aset emacspeak-ocr-page-positions
+          emacspeak-ocr-last-page-number
+          (+ 3 (point)))
+    (insert
+     (format "\n%c\nPage %s\n" 12
+             emacspeak-ocr-last-page-number))
+    (shell-command
+     (format "%s -flip -flop %s"
+             emacspeak-ocr-image-flipflop image-name))
     (setq emacspeak-ocr-process
           (apply 'start-process 
                  "ocr"

@@ -1,5 +1,5 @@
 ;;; emacspeak-webutils.el --- Common Web Utilities For Emacspeak
-;;; $Id: emacspeak-webutils.el 5562 2008-04-16 21:36:54Z tv.raman.tv $
+;;; $Id: emacspeak-webutils.el 6038 2008-11-06 18:48:14Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak Webutils
 ;;; Keywords: Emacspeak, web
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-04-16 14:36:54 -0700 (Wed, 16 Apr 2008) $ |
+;;; $Date: 2008-08-14 11:23:31 -0700 (Thu, 14 Aug 2008) $ |
 ;;;  $Revision: 4634 $ |
 ;;; Location undetermined
 ;;;
@@ -54,6 +54,7 @@
 (require 'backquote)
 (require 'emacspeak-preamble)
 (require 'url)
+(require 'gfeeds)
 (require 'browse-url)
 ;;}}}
 ;;{{{ keymap: web-prefix
@@ -124,8 +125,9 @@ Note that the Web browser should reset this hook after using it.")
             #'(lambda nil
                 (declare (special emacspeak-we-xpath-filter))
      (setq emacspeak-we-xpath-filter
-	   "//p|ol|ul|dl|h1|h2|h3|h4|h5|h6|blockquote|div")
-                (emacspeak-speak-buffer))))
+	   "//p")
+                (emacspeak-speak-buffer))
+            'at-end))
 
 (defsubst emacspeak-webutils-browser-check ()
   "Check to see if functions are called from a browser buffer"
@@ -183,70 +185,8 @@ ARGS specifies additional arguments to SPEAKER if any."
                      ((search-forward ,locator nil t)
                       (recenter 0)
                       (apply(quote ,speaker) ,args))
-                     (t (message "Your search appears to have failed.")))))))))
-
-;;}}}
-;;{{{ google suggest helper:
-
-;;; Get search completions from Google
-;;; Inspired by code found on Emacs Wiki:
-;;; http://www.emacswiki.org/cgi-bin/wiki/emacs-w3m#WThreeM
-;;; Changed to using csv=true thanks to Ami Fishman
-;;; As a result, this version is  more efficient
-(defvar emacspeak-webutils-google-suggest-command
-  "curl -s\
- 'http://www.google.com/complete/search?csv=true&qu=%s' \
- | head -2 | tail -1 \
-| sed -e 's/\"//g'"
-  "Command that gets suggestions from Google.")
-
-(defvar emacspeak-webutils-google-suggest-json
-  "curl -s\
- 'http://www.google.com/complete/search?json=true&qu=%s' "
-  "URL  that gets suggestions from Google as JSON.")
-
-(defsubst emacspeak-webutils-google-suggest (input)
-  "Get completion list from Google Suggest."
-  (declare (special emacspeak-webutils-google-suggest-json))
-  (let ((buffer (get-buffer-create "*Google AutoComplete*")))
-    (save-current-buffer
-      (set-buffer buffer)
-      (setq buffer-undo-list t)
-      (erase-buffer)
-      (shell-command
-       (format emacspeak-webutils-google-suggest-json
-               (emacspeak-url-encode input))
-       buffer)
-      (goto-char (point-min))
-      ;; A JSON array is a vector.
-      ;; read it, filter the comma separators found as symbols.
-      (delq'\,
-       (append                          ; vector->list
-        (aref (read (current-buffer)) 2)
-        nil)))))
-
-
-(defun emacspeak-webutils-google-suggest-completer (string predicate mode)
-  "Generate completions using Google Suggest. "
-  (save-current-buffer 
-    (set-buffer 
-     (let ((window (minibuffer-selected-window))) 
-       (if (window-live-p window) 
-           (window-buffer window) 
-         (current-buffer)))) 
-    (complete-with-action mode 
-                          (emacspeak-webutils-google-suggest string) 
-                          string predicate)))
-
-(defsubst emacspeak-webutils-google-autocomplete (&optional prompt)
-  "Read user input using Google Suggest for auto-completion."
-  (let ((minibuffer-completing-file-name t) ;; so we can type
-        ;; spaces
-        (completion-ignore-case t))
-    (emacspeak-url-encode
-    (completing-read
-     (or prompt "Google: ")
-                     'emacspeak-webutils-google-suggest-completer))))
+                     (t (message "Your search appears to have failed."))))))
+               'at-end)))
 
 ;;}}}
 ;;{{{ helper macros:
@@ -262,33 +202,30 @@ ARGS specifies additional arguments to SPEAKER if any."
        (add-hook 'emacspeak-web-post-process-hook
                  #'(lambda ()
                      (declare (special emacspeak-we-xsl-p))
-                     (setq emacspeak-we-xsl-p t))))
+                     (setq emacspeak-we-xsl-p t))
+                 'append))
      ,@body))
 
 (defmacro emacspeak-webutils-with-xsl-environment (style params options  &rest body)
   "Execute body with XSL turned on
 and xsl environment specified by style, params and options."
-  `(let ((save-flag ,emacspeak-we-xsl-p)
-         (save-options ,emacspeak-xslt-options)
-         (save-style ,emacspeak-we-xsl-transform)
-         (save-params ,emacspeak-we-xsl-params))
-     (setq emacspeak-we-xsl-p t
-           emacspeak-xslt-options ,options
-           emacspeak-we-xsl-transform ,style
-           emacspeak-we-xsl-params ,params)
+  `(progn
      (add-hook
       'emacspeak-web-post-process-hook
       (eval
        `(function
          (lambda ()
-           (declare (special emacspeak-we-xsl-p
-                             emacspeak-we-xsl-transform
-                             emacspeak-xslt-options
-                             emacspeak-we-xsl-params))
-           (setq emacspeak-we-xsl-p ,save-flag
-                 emacspeak-xslt-options ,save-options
-                 emacspeak-we-xsl-transform ,save-style
-                 emacspeak-we-xsl-params ,save-params)))))
+           (declare (special emacspeak-we-xsl-p emacspeak-we-xsl-transform
+                             emacspeak-xslt-options emacspeak-we-xsl-params))
+           (setq emacspeak-we-xsl-p ,emacspeak-we-xsl-p
+                 emacspeak-xslt-options ,emacspeak-xslt-options
+                 emacspeak-we-xsl-transform ,emacspeak-we-xsl-transform
+                 emacspeak-we-xsl-params ,emacspeak-we-xsl-params))))
+      'append)
+     (setq emacspeak-we-xsl-p t
+           emacspeak-xslt-options ,options
+           emacspeak-we-xsl-transform ,style
+           emacspeak-we-xsl-params ,params)
      ,@body))
 
 ;;}}}
@@ -378,6 +315,13 @@ With a prefix argument, extracts url under point."
       (let* ((args (substring url (length prefix)))
              (arg-alist (url-parse-args (subst-char-in-string ?& ?\; args))))
         (url-unhex-string (cdr (assoc "u" arg-alist)))))))
+;;;###autoload 
+(defsubst emacspeak-webutils-transcode-this-url-via-google (url)
+  "Transcode specified url via Google."
+  (declare (special emacspeak-webutils-google-transcoder-url))
+  (browse-url
+     (format emacspeak-webutils-google-transcoder-url
+             (emacspeak-url-encode url))))
 
 ;;;###autoload
 (defun emacspeak-webutils-transcode-via-google (&optional untranscode)
@@ -390,10 +334,7 @@ With a prefix argument, extracts url under point."
   (let ((url-mime-encoding-string "gzip"))
     (cond
      ((null untranscode)
-      (browse-url
-       (format emacspeak-webutils-google-transcoder-url
-               (emacspeak-url-encode
-                (funcall emacspeak-webutils-url-at-point)))))
+      (emacspeak-webutils-transcode-this-url-via-google (funcall emacspeak-webutils-url-at-point)))
      (t
       (let ((plain-url (emacspeak-webutils-transcoded-to-plain-url (funcall emacspeak-webutils-url-at-point))))
         (when plain-url
@@ -409,9 +350,8 @@ With a prefix argument, extracts url under point."
   ;; removing the above line makes the untranscode work
   (cond
    ((null untranscode)
-    (browse-url
-     (format emacspeak-webutils-google-transcoder-url
-             (emacspeak-url-encode (funcall emacspeak-webutils-current-url)))))
+    (emacspeak-webutils-transcode-this-url-via-google
+     (funcall emacspeak-webutils-current-url)))
    (t
     (let ((plain-url (emacspeak-webutils-transcoded-to-plain-url (funcall emacspeak-webutils-current-url))))
       (when plain-url
@@ -443,11 +383,9 @@ instances."
 (defun emacspeak-webutils-play-media-at-point ()
   "Play media url under point "
   (interactive )
-  (declare (special emacspeak-media-player))
   (let ((url (funcall emacspeak-webutils-url-at-point)))
     (message "Playing media  URL under point")
-    (funcall emacspeak-media-player  url
-	     nil 'noselect)))
+    (funcall emacspeak-media-player  url)))
 
 ;;;###autoload
 (defun emacspeak-webutils-view-feed-via-google-reader ()
@@ -479,6 +417,8 @@ instances."
 (defun emacspeak-webutils-feed-display(feed-url style &optional speak)
   "Fetch feed via Emacs and display using xsltproc."
   (let ((buffer (url-retrieve-synchronously feed-url))
+	(coding-system-for-read 'utf-8)
+	(coding-system-for-write 'utf-8)
         (emacspeak-xslt-options nil))
     (when speak (emacspeak-webutils-autospeak))
     (cond
@@ -491,7 +431,7 @@ instances."
          (goto-char (point-min))
          (search-forward "\n\n")
          (delete-region (point-min) (point))
-		 (decode-coding-region (point-min) (point-max) 'utf-8)
+	 (decode-coding-region (point-min) (point-max) 'utf-8)
          (emacspeak-xslt-region style
                                 (point-min) (point-max))
          (browse-url-of-buffer)))))))
@@ -517,12 +457,11 @@ instances."
 
 ;;;###autoload
 (defun emacspeak-webutils-fv (feed-url )
-  "Display RSS or ATOM feed."
+  "Display RSS or ATOM feed URL."
   (interactive (list (emacspeak-webutils-read-this-url)))
   (emacspeak-auditory-icon 'select-object)
   (emacspeak-webutils-autospeak)
-  (emacspeak-webutils-feed-display feed-url
-                                   (emacspeak-xslt-get "fv.xsl")))
+  (gfeeds-view  feed-url))
 
 ;;}}}
 ;;{{{ RSS:

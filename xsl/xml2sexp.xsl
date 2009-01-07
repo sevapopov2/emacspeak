@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--$Id: xml2sexp.xsl 5222 2007-08-26 01:28:19Z tv.raman.tv $-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--$Id: xml2sexp.xsl 6018 2008-11-04 19:52:11Z tv.raman.tv $-->
 <!--
 Author: T. V. Raman
 Copyright:GPL

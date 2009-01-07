@@ -1,5 +1,5 @@
 ;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -- maintain a diary and appointments
-;;; $Id: emacspeak-calendar.el 5560 2008-04-15 13:25:36Z tv.raman.tv $
+;;; $Id: emacspeak-calendar.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extensions to speech enable the calendar.
 ;;; Keywords: Emacspeak, Calendar, Spoken Output
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-04-15 06:25:36 -0700 (Tue, 15 Apr 2008) $ |
+;;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -363,9 +363,7 @@
 
 ;;}}}
 ;;{{{  keymap
-(eval-when (load)
-  (emacspeak-keymap-remove-emacspeak-edit-commands
-   calendar-mode-map))
+(eval-when (load))
 
 (defun emacspeak-calendar-setup()
   "Set up appropriate bindings for calendar"

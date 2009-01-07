@@ -1,5 +1,5 @@
 ;;; emacspeak-daisy.el --- daisy Front-end for emacspeak desktop
-;;; $Id: emacspeak-daisy.el 5471 2008-02-24 20:36:21Z tv.raman.tv $
+;;; $Id: emacspeak-daisy.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for DAISY Talking Books
 ;;; Keywords: Emacspeak, daisy Digital Talking Books
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-02-24 12:36:21 -0800 (Sun, 24 Feb 2008) $ |
+;;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4541 $ |
 ;;; Location undetermined
 ;;;
@@ -451,9 +451,7 @@ navigate and listen to Daisy talking books.
 Here is a list of all emacspeak DAISY commands along with their key-bindings:
 
 \\{emacspeak-daisy-mode-map}"
-  (progn
-    (emacspeak-keymap-remove-emacspeak-edit-commands
-     emacspeak-daisy-mode-map)))
+  (progn))
 
 (define-key emacspeak-daisy-mode-map "?" 'describe-mode)
 (define-key emacspeak-daisy-mode-map "m" 'emacspeak-daisy-mark-position-in-content-under-point)

@@ -1,5 +1,5 @@
 ;;; emacspeak-moz.el.el --- Talk to Firefox via MozRepl
-;;; $Id: emacspeak-moz.el 5447 2008-01-07 15:55:42Z tv.raman.tv $
+;;; $Id: emacspeak-moz.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Control Firefox from Emacs
 ;;; Keywords: Emacspeak,  Audio Desktop Firefox
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-01-07 07:55:42 -0800 (Mon, 07 Jan 2008) $ |
+;;; $Date: 2008-07-11 15:05:06 -0700 (Fri, 11 Jul 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -355,9 +355,9 @@ title)\n"
   (comint-send-string
    (inferior-moz-process)
    (format
-    "%s.load('file://localhost%s');
-%s.emacspeak = new Emacspeak('%s');
-%s.emacspeak.init()"
+    "%s.load('file://localhost%s') \;
+%s.emacspeak = new Emacspeak('%s')\;
+%s.emacspeak.init()\;"
     moz-repl-name (expand-file-name "emacspeak.js" emacspeak-moz-js-directory)
     moz-repl-name emacspeak-directory
     moz-repl-name)))

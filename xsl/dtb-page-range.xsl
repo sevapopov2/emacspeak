@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--$Id: dtb-page-range.xsl 5222 2007-08-26 01:28:19Z tv.raman.tv $
+<?xml version="1.0" encoding="UTF-8"?>
+<!--$Id: dtb-page-range.xsl 6018 2008-11-04 19:52:11Z tv.raman.tv $
 
 
 Description: Extract nodes in a specified page range from a
@@ -27,7 +27,7 @@ and the final intersection is computed using set:intersection.
   <xsl:param name="end" select="1"/>
   <xsl:param name="base" />
   <xsl:param name="css">revstd.css</xsl:param>
-  <xsl:output method="html" indent="yes" encoding="iso8859-15"/>
+  <xsl:output method="html" indent="yes" encoding="UTF-8"/>
   <xsl:key name="pageKey" match="pagenum" use="number(text())"/>
   <xsl:template match="/">
     <html>

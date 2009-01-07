@@ -1,5 +1,5 @@
 ;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
-;;; $Id: emacspeak-dired.el 5260 2007-09-07 03:55:14Z tv.raman.tv $
+;;; $Id: emacspeak-dired.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enable dired
 ;;; Keywords: Emacspeak, Dired, Spoken Output
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-09-06 20:55:14 -0700 (Thu, 06 Sep 2007) $ |
+;;; $Date: 2008-07-19 16:09:43 -0700 (Sat, 19 Jul 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -341,13 +341,13 @@ options passed to command `file'."
 On a directory line, run du -s on the directory to speak its size."
   (interactive)
   (let ((filename (dired-get-filename nil t))
-        (size 0)
-        (dtk-stop-immediately nil))
+        (size 0))
     (cond
      ((and filename
            (file-directory-p filename))
       (emacspeak-auditory-icon 'progress)
-      (emacspeak-shell-command (format "du -s \'%s\'" filename )))
+      (emacspeak-shell-command (format "du -s \'%s\'"
+				       (shell-quote-argument filename ))))
      (filename
       (setq size (nth 7 (file-attributes filename )))
                                         ; check for ange-ftp
@@ -411,8 +411,7 @@ On a directory line, run du -s on the directory to speak its size."
 
 ;;}}}
 ;;{{{  keys
-(eval-when (load)
-  (emacspeak-keymap-remove-emacspeak-edit-commands dired-mode-map))
+(eval-when (load))
 
 (defun emacspeak-dired-setup-keys ()
   "Add emacspeak keys to dired."

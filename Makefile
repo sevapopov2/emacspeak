@@ -1,4 +1,4 @@
-# $Id: Makefile 5453 2008-01-28 01:13:27Z tv.raman.tv $
+# $Id: Makefile 6065 2008-11-15 00:15:02Z tv.raman.tv $
 # $Author: tv.raman.tv $
 # Description:  Makefile for Emacspeak
 # Keywords: Emacspeak,  TTS,Makefile
@@ -149,7 +149,6 @@ TABLE_SAMPLES=etc/tables/*.tab etc/tables/*.dat etc/tables/*.html
 FORMS =etc/forms/*.el
 REALAUDIO=realaudio
 SHOUTCAST=shoutcast
-HTTPD=servers/httpd
 ECI=servers/linux-outloud
 PYLIB=servers/python
 PYFILES=servers/python/*.py
@@ -161,7 +160,6 @@ DTKTTS=servers/software-dtk/tcldtk.c \
 servers/software-dtk/DTK \
 servers/software-dtk/Makefile
 JS=js/*.js  js/jsl.conf js/Makefile
-TCLHTTPD=${HTTPD}/tts.tcl
 OUTLOUD=${ECI}/eci.ini \
 ${ECI}/*.h \
 ${ECI}/*.cpp \
@@ -266,6 +264,7 @@ install:
 	  $(INSTALL) -d $(libdir)/lisp
 	$(INSTALL) -d $(libdir)/lisp/xml-forms
 	$(INSTALL) -d $(libdir)/lisp/g-client
+	$(INSTALL) -d $(libdir)/lisp/g-client/python
 	$(INSTALL) -d $(libdir)/etc
 	$(INSTALL) -d $(libdir)/sawfish
 	$(INSTALL) -d $(libdir)/xsl
@@ -276,6 +275,7 @@ install:
 	$(INSTALL) -m 0644  lisp/xml-forms/*.xml   $(libdir)/lisp/xml-forms
 	$(INSTALL) -m 0644  lisp/g-client/*.el    $(libdir)/lisp/g-client
 	$(INSTALL) -m 0644  lisp/g-client/*.xsl    $(libdir)/lisp/g-client
+	$(INSTALL) -m 0644  lisp/g-client/python/*.py    $(libdir)/lisp/g-client/python
 	$(INSTALL) -m 0644  sawfish/*.jl sawfish/sawfishrc   $(libdir)/sawfish
 	$(INSTALL) -m 0644  xsl/*.xsl    $(libdir)/xsl
 	$(INSTALL) -m 0644  ${UGUIDE}   $(libdir)/user-guide
@@ -285,8 +285,6 @@ install:
 	$(INSTALL)  -m 644 ${JS}  $(libdir)/js
 	$(INSTALL) -d $(libdir)/servers
 	$(INSTALL) -d $(libdir)/servers/python
-	$(INSTALL) -d $(libdir)/servers/httpd
-	$(INSTALL)  -m 644 ${TCLHTTPD}  $(libdir)/servers/tts.tcl
 	$(INSTALL) -d $(libdir)/servers/linux-outloud
 	$(INSTALL)  -m 755 ${OUTLOUD}  $(libdir)/servers/linux-outloud
 	cp   ${PYFILES}  $(libdir)/servers/python

@@ -1,5 +1,5 @@
 ;;; amixer.el --- Control AMixer from Emacs
-;;;$Id: amixer.el 5573 2008-05-15 02:17:15Z tv.raman.tv $
+;;;$Id: amixer.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;;Emacs front-end to AMixer
 ;;{{{  Copyright:
 
@@ -39,12 +39,6 @@
 
 ;;}}}
 ;;{{{ Customizations:
-(defcustom amixer-pcm-volume 'max
-  "PCM Playback volume. "
-  :type '(choice
-          (integer :tag "Volume ")
-          (const :tag "Maximum" max))
-  :group 'amixer)
 
 ;;}}}
 ;;{{{ Definitions
@@ -155,11 +149,6 @@
       (mapc #'amixer-populate-settings controls)
       (setq amixer-db controls))))
 
-(defun amixer-load-db ()
-  "Load amixer DB, after building it first if needed."
-  (unless amixer-db
-    (amixer-build-db)))
-
 ;;}}}
 ;;{{{ Amixer:
 
@@ -192,11 +181,14 @@
                   
 
 ;;;###autoload
-(defun amixer ()
-  "Interactively manipulate ALSA settings."
-  (interactive)
+(defun amixer (&optional refresh)
+  "Interactively manipulate ALSA settings.
+Interactive prefix arg refreshes cache."
+  (interactive "P")
   (declare (special amixer-db))
-  (or amixer-db (amixer-load-db))
+  (when (or refresh
+            (null amixer-db))
+    (amixer-build-db))
   (let ((control
          (cdr
           (assoc
@@ -210,7 +202,8 @@
     (cond
      ((null control)
       (shell-command "alsactl restore")
-      (message "Reset sound to default"))
+      (message "Resetting  sound to default")
+      (amixer-build-db))
      (t
       (when (string=
              "ENUMERATED"

@@ -1,5 +1,5 @@
 ;;; emacspeak-sudoku.el --- Play SuDoku 
-;;; $Id: emacspeak-sudoku.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-sudoku.el 5961 2008-10-01 14:09:41Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Playing SuDoku ;;; Keywords: Emacspeak, sudoku
 ;;{{{  LCD Archive entry: 
@@ -353,7 +353,7 @@ See
   http://emacspeak.blogspot.com/2006/02/playing-sudoku-using-auditory-feedback.html
   for details."
   (when (interactive-p)
-    (dtk-set-punctuations "some")
+    (dtk-set-punctuations 'some)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-sudoku-speak-current-cell-value)))
 

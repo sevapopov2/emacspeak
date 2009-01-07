@@ -12,7 +12,7 @@ View an Atom feed as clean HTML
     xmlns:openSearch="http://a9.com/-/spec/opensearchrss/1.0/"
     xmlns:gr="http://www.google.com/schemas/reader/atom/"
     version="1.0">
-  <xsl:output encoding="iso8859-15" method="html" indent="yes"/>
+  <xsl:output encoding="UTF-8" method="html" indent="yes"/>
   
   <xsl:template match="atom:feed">
     <html>
@@ -25,6 +25,9 @@ View an Atom feed as clean HTML
 	<h1><xsl:value-of select="atom:title"
 	disable-output-escaping="yes"/>
 	</h1>
+<p>
+<xsl:apply-templates select="atom:subtitle"/>
+</p>
 	
 	<xsl:if test="count(atom:entry) > 1 ">
 	  <h2>Table Of Contents</h2>

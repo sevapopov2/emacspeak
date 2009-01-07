@@ -1,5 +1,5 @@
 ;;; emacspeak-gnus.el --- Speech enable GNUS -- Fluent spoken access to usenet
-;;; $Id: emacspeak-gnus.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-gnus.el 5940 2008-09-27 02:10:15Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension to speech enable Gnus
 ;;; Keywords: Emacspeak, Gnus, Advice, Spoken Output, News
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -77,12 +77,10 @@
   (declare (special gnus-summary-mode-map
                     gnus-group-mode-map
                     gnus-article-mode-map))
-  (when (boundp 'gnus-summary-mode-map)
-    (emacspeak-keymap-remove-emacspeak-edit-commands gnus-summary-mode-map))
+  (when (boundp 'gnus-summary-mode-map))
   (when (boundp 'gnus-article-mode-map)
-    (emacspeak-keymap-remove-emacspeak-edit-commands gnus-article-mode-map))
-  (when (boundp 'gnus-group-mode-map)
-    (emacspeak-keymap-remove-emacspeak-edit-commands gnus-group-mode-map))
+    )
+  (when (boundp 'gnus-group-mode-map))
   (define-key gnus-summary-mode-map "\C-t" 'gnus-summary-toggle-header)
   (define-key gnus-summary-mode-map "T" 'gnus-summary-hide-all-headers )
   (define-key gnus-summary-mode-map "t"
@@ -157,13 +155,16 @@ reading news."
     (emacspeak-dtk-sync)
     (cond
      ((< (count-lines (point-min) (point-max))
-         emacspeak-gnus-large-article)
+	 emacspeak-gnus-large-article)
       (emacspeak-speak-buffer  ))
      (t (emacspeak-auditory-icon 'large-movement )
-        (let ((start (point)))
-          (move-to-window-line -1)
-          (end-of-line)
-          (emacspeak-speak-region start (point)))))))
+	(let ((start (point))
+	      (window (get-buffer-window (current-buffer))))
+	  (with-selected-window window
+	    (save-excursion
+	      (move-to-window-line -1)
+	      (end-of-line)
+	      (emacspeak-speak-region start (point)))))))))
 
 ;;}}}
 ;;{{{ Advise top-level gnus command
@@ -650,8 +651,11 @@ indicating the article is being opened."
       (emacspeak-dtk-sync)
       (let ((start  (point ))
             (window (get-buffer-window (current-buffer ))))
-        (forward-line (window-height window))
-        (emacspeak-speak-region start (point ))))))
+        (with-selected-window window
+	  (save-excursion
+	   (move-to-window-line -1)
+	   (end-of-line)
+	   (emacspeak-speak-region start (point ))))))))
 
 (defadvice gnus-summary-kill-same-subject (after emacspeak pre act)
   "Speak the line.
@@ -728,8 +732,11 @@ instead you hear only the first screenful.")
     (set-buffer  "*Article*")
     (let ((start  (point ))
           (window (get-buffer-window (current-buffer ))))
-      (forward-line (window-height window))
-      (emacspeak-speak-region start (point )))))
+      (with-selected-window window
+	(save-excursion
+	  (move-to-window-line -1)
+	  (end-of-line)
+	  (emacspeak-speak-region start (point )))))))
 
 (defadvice gnus-summary-prev-page (after emacspeak pre act)
   "Speak the previous  pageful "
@@ -739,8 +746,11 @@ instead you hear only the first screenful.")
     (set-buffer  "*Article*")
     (let ((start  (point ))
           (window (get-buffer-window (current-buffer ))))
-      (forward-line (-  (window-height window)))
-      (emacspeak-speak-region start (point )))))
+      (with-selected-window window
+	(save-excursion
+	  (move-to-window-line -1)
+	  (end-of-line)
+	  (emacspeak-speak-region start (point )))))))
 
 (defadvice gnus-summary-beginning-of-article (after emacspeak pre act)
   "Speak the first line. "(save-excursion

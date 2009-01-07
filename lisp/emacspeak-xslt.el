@@ -1,5 +1,5 @@
 ;;; emacspeak-xslt.el --- Implements Emacspeak  xslt transform engine
-;;; $Id: emacspeak-xslt.el 5527 2008-03-12 01:41:19Z tv.raman.tv $
+;;; $Id: emacspeak-xslt.el 6034 2008-11-06 14:44:14Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  xslt transformation routines
 ;;; Keywords: Emacspeak,  Audio Desktop XSLT
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-03-11 18:41:19 -0700 (Tue, 11 Mar 2008) $ |
+;;; $Date: 2008-08-12 10:48:54 -0700 (Tue, 12 Aug 2008) $ |
 ;;;  $Revision: 4562 $ |
 ;;; Location undetermined
 ;;;
@@ -70,6 +70,7 @@
    (cons "base"
          (format "\"'%s'\""
                  base))))
+
 ;;;###autoload
 (defsubst emacspeak-xslt-get (style)
   "Return fully qualified stylesheet path."
@@ -109,6 +110,8 @@ This is useful when handling bad HTML."
 
 ;;}}}
 ;;{{{ Functions:
+(defvar emacspeak-xslt-last-command nil
+  "Cache last xsltproc command we exectued.")
 
 ;;;###autoload
 (defun emacspeak-xslt-region (xsl start end &optional params no-comment)
@@ -116,6 +119,7 @@ This is useful when handling bad HTML."
 the result.  This uses XSLT processor xsltproc available as
 part of the libxslt package."
   (declare (special emacspeak-xslt-program emacspeak-xslt-options
+                    emacspeak-xslt-last-command
                     emacspeak-xslt-keep-errors modification-flag ))
   (let ((command nil)
         (parameters (when params
@@ -127,7 +131,8 @@ part of the libxslt package."
                        params
                        " ")))
 		(coding-system-for-write 'utf-8)
-		(coding-system-for-read 'utf-8))
+		(coding-system-for-read 'utf-8)
+		(buffer-file-coding-system 'utf-8))
     (setq command
           (format
            "%s %s  %s  %s - %s"
@@ -138,6 +143,8 @@ part of the libxslt package."
            (if emacspeak-xslt-keep-errors
                ""
              " 2>/dev/null ")))
+    (setq emacspeak-xslt-last-command
+          command)
     (shell-command-on-region start end
                              command
                              (current-buffer)
@@ -152,18 +159,23 @@ part of the libxslt package."
        (format "<!--\n %s \n-->\n"
                command)))
     (setq modification-flag nil)
+    (set-buffer-multibyte t)
     (current-buffer)))
 
 ;;;###autoload
 (defsubst emacspeak-xslt-run (xsl start end)
   "Run xslt on region, and return output filtered by sort -u"
   (declare (special emacspeak-xslt-program emacspeak-xslt-options))
-  (shell-command-on-region
-   start end
-   (format "%s %s %s - 2>/dev/null | sort -u"
-           emacspeak-xslt-program emacspeak-xslt-options xsl)
-   (current-buffer) 'replace)
-  (current-buffer))
+  (let ((coding-system-for-read 'utf-8)
+	(coding-system-for-write 'utf-8)
+	(buffer-file-coding-system 'utf-8))
+    (shell-command-on-region
+     start end
+     (format "%s %s %s - 2>/dev/null | sort -u"
+	     emacspeak-xslt-program emacspeak-xslt-options xsl)
+     (current-buffer) 'replace)
+    (set-buffer-multibyte t)
+    (current-buffer)))
 
 ;;; uses wget in a pipeline to avoid libxml2 bug:
 ;;;###autoload
@@ -186,7 +198,6 @@ part of the libxslt package."
                     emacspeak-xslt-keep-errors))
   (let ((result (get-buffer-create " *xslt result*"))
         (command nil)
-        
         (parameters (when params
                       (mapconcat
                        #'(lambda (pair)
@@ -218,15 +229,18 @@ part of the libxslt package."
       (kill-all-local-variables)
       (erase-buffer)
       (setq buffer-undo-list t)
-      (shell-command command (current-buffer)
-                     (when emacspeak-xslt-keep-errors
-                       "*xslt errors*"))
-      (when emacspeak-xslt-nuke-null-char
-        (goto-char (point-min))
-        (while (search-forward
-                ( format "%c" 0)
-                nil  t)
-          (replace-match " ")))
+      (let ((coding-system-for-write 'utf-8)
+	    (coding-system-for-read 'utf-8)
+	    (buffer-file-coding-system 'utf-8))
+	(shell-command command (current-buffer)
+		       (when emacspeak-xslt-keep-errors
+			 "*xslt errors*"))
+	(when emacspeak-xslt-nuke-null-char
+	  (goto-char (point-min))
+	  (while (search-forward
+		  ( format "%c" 0)
+		  nil  t)
+	    (replace-match " "))))
       (when (get-buffer  "*xslt errors*")
         (bury-buffer "*xslt errors*"))
       (goto-char (point-max))
@@ -235,6 +249,7 @@ part of the libxslt package."
          (format "<!--\n %s \n-->\n"
                  command)))
       (setq modification-flag nil)
+      (set-buffer-multibyte t)
       (goto-char (point-min))
       result)))
 
@@ -281,10 +296,13 @@ part of the libxslt package."
       (set-buffer result)
       (kill-all-local-variables)
       (erase-buffer)
-      (shell-command command
-                     (current-buffer)
-                     (when emacspeak-xslt-keep-errors
-                       "*xslt errors*"))
+      (let ((coding-system-for-write 'utf-8)
+	    (coding-system-for-read 'utf-8)
+	    (buffer-file-coding-system 'utf-8))
+	(shell-command command
+		       (current-buffer)
+		       (when emacspeak-xslt-keep-errors
+			 "*xslt errors*")))
       (when (get-buffer  "*xslt errors*")
         (bury-buffer "*xslt errors*"))
       (goto-char (point-max))
@@ -293,6 +311,7 @@ part of the libxslt package."
                command))
       (setq modification-flag nil)
       (goto-char (point-min))
+      (set-buffer-multibyte t)
       result)))
 
 ;;}}}

@@ -1,5 +1,5 @@
 ;;; emacspeak-man.el --- Speech enable Man mode -- Use this for UNIX Man pages
-;;; $Id: emacspeak-man.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-man.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; DescriptionEmacspeak extensions for man-mode
 ;;; Keywords:emacspeak, audio interface to emacs man 
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4546 $ | 
 ;;; Location undetermined
 ;;;
@@ -160,7 +160,7 @@ Also provide an auditory icon"
   "emacspeak-view" "Move current line to top of window"  t)
 (declaim (special Man-mode-map))
 (eval-when (load)
-  (emacspeak-keymap-remove-emacspeak-edit-commands Man-mode-map))
+  )
 (declaim (special  Man-mode-map))
 (define-key Man-mode-map ";"
   'emacspeak-speak-current-window)

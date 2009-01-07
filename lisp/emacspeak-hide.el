@@ -1,5 +1,5 @@
 ;;; emacspeak-hide.el --- Provides user commands for hiding and exposing blocks of text
-;;; $Id: emacspeak-hide.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-hide.el 6005 2008-10-21 08:18:04Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Hide and expose blocks of text
 ;;; Keywords: Emacspeak, Speak, Spoken Output, hide
@@ -260,7 +260,7 @@ Returns t if a block was found and hidden."
 
 ;;}}}
 ;;{{{  Hiding and exposing  all blocks in a buffer
-
+;;;###autoload
 (defun emacspeak-hide-all-blocks-in-buffer ()
   "Hide all blocks in current buffer."
   (declare (special emacspeak-speak-messages))

@@ -1,5 +1,5 @@
 ;;; acss-structure.el --- CSS -- Cascaded Speech Style structure
-;;; $Id: acss-structure.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: acss-structure.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: DTK Interface for Cascaded Speech Style Sheets
 ;;; Keywords:emacspeak, audio interface to emacs CSS

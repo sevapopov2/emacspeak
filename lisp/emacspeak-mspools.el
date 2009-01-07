@@ -1,5 +1,5 @@
 ;;; emacspeak-mspools.el --- Speech enable MSpools -- Monitor multiple mail drops
-;;; $Id: emacspeak-mspools.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-mspools.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to mail spool tracker
 ;;; Keywords: Emacspeak, Speak, Spoken Output, mspools
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -70,7 +70,7 @@
 (declaim (special mspools-mode-map))
 (eval-when (load)
   (require 'emacspeak-keymap)
-  (emacspeak-keymap-remove-emacspeak-edit-commands mspools-mode-map))
+  )
 
 ;;}}}
 (provide 'emacspeak-mspools)

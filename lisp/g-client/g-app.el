@@ -1,5 +1,5 @@
 ;;; g-app.el --- Google Client APP methods
-;;;$Id: g-app.el,v 1.14 2006/10/13 01:38:19 raman Exp $
+;;;$Id: g-app.el 6047 2008-11-07 22:11:42Z tv.raman.tv $
 ;;; $Author: raman $
 ;;; Description:  Google Client APP
 ;;; Keywords: Google   Atom API, Google Services
@@ -130,7 +130,8 @@ Returns HTTP response as (list headers body)."
                g-app-auth-handle)
     (error "Not in a correctly initialized Atom Entry."))
   (goto-char (point-min))
-  (let ((cl (format "-H Content-length:%s" (g-buffer-bytes))))
+  (let ((cl
+	 (format "-H Content-Length:%s" (g-buffer-bytes))))
     (shell-command-on-region
      (point-min) (point-max)
      (format
@@ -168,16 +169,7 @@ Returns HTTP response as (list headers body)."
            (g-curl-debug))))
 
 ;;; HTTP DELETE:
-
-(defun g-app-delete-entry (auth-handle url)
-  "Delete specified entry."
-  (shell-command
-   (format "%s %s %s -X DELETE %s %s"
-           g-curl-program g-curl-common-options
-           (g-authorization auth-handle)
-           url
-           (g-curl-debug))))
-
+;;;###autoload
 (defun g-app-publish ()
   "Publish current entry."
   (interactive)
@@ -213,7 +205,9 @@ action is the function to call when we're ready to submit the edit."
      (substitute-command-keys
       "Use \\[g-app-publish] when done editing. "))))
 
+;;;###autoload
 (defun g-app-view (auth-handle feed-url)
+  "View feed using auth credentials in auth-handle."
   (interactive)
   (declare (special g-atom-view-xsl
                     g-curl-program g-curl-common-options

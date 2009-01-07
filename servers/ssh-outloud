@@ -1,5 +1,5 @@
 #!/usr/bin/tcl
-#$Id: ssh-outloud 4532 2007-05-04 01:13:44Z tv.raman.tv $
+#$Id: ssh-outloud 5700 2008-07-20 17:46:53Z tv.raman.tv $
 #Description: Launch a TTS server on a remote host.
 #Copyright (C) 1995 -- 2007, T. V. Raman 
 # {{{  documentation
@@ -25,6 +25,8 @@ if [expr $argc == 0] {
 } else {
     set remote [lindex $argv 0]
 }
+set wd [file dirname $argv0]
+lappend auto_path $wd
 # split out port 
 set host_port [split $remote ":"]
 set host [lindex $host_port 0]
@@ -34,7 +36,12 @@ if {$port == ""} {set  port 22}
 set user_host [split $host "@"]
 set user [lindex $user_host 0]
 set host [lindex $user_host 1]
-if {$user == ""} {set  user env($USER)}
+if {$host == ""} {
+    set host $user
+    set user [exec whoami]
+}
+    
+
 set tcl /usr/bin/tcl 
 regsub {/ssh-}  $argv0 {/} tts
 puts stderr "Running <ssh $host -l $user -p $port   $tcl $tts>"

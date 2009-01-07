@@ -19,10 +19,10 @@ emacspeak modules:
 
 """
 
-__id__ = "$Id: speaker.py 5568 2008-05-09 14:14:23Z tv.raman.tv $"
+__id__ = "$Id: speaker.py 5585 2008-05-20 00:56:07Z tv.raman.tv $"
 __author__ = "$Author: tv.raman.tv $"
-__version__ = "$Revision: 5568 $"
-__date__ = "$Date: 2008-05-09 07:14:23 -0700 (Fri, 09 May 2008) $"
+__version__ = "$Revision: 5585 $"
+__date__ = "$Date: 2008-05-19 17:56:07 -0700 (Mon, 19 May 2008) $"
 __copyright__ = "Copyright (c) 2005 T. V. Raman"
 __license__ = "LGPL"
 __all__=['Speaker']
@@ -101,9 +101,10 @@ class Speaker:
     def settings(self): return self._settings
     
     def say(self, text="", acss=None):
-        """Speaks specified text. All queued text is spoken immediately."""
-        text = unicode(text, 'utf-8').encode('iso8859-1')
-        text = unicode(text, 'utf-8').encode('iso8859-1')
+        """Speaks specified text.
+All queued text is spoken immediately."""
+        #text = unicode(text, 'utf-8').encode('iso8859-1')
+        #text = unicode(text, 'utf-8').encode('iso8859-1')
         if acss is not None:
             code =self.getvoice(acss)
             self._w.write("q {%s %s %s}\nd\n" %(code[0], text, code[1]))

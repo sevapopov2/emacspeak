@@ -1,5 +1,5 @@
 ;;; emacspeak-message.el --- Speech enable Message -- Used to compose news postings and replies
-;;; $Id: emacspeak-message.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-message.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Emacspeak extensions for posting
 ;;; Keywords:emacspeak, audio interface to emacs posting messages

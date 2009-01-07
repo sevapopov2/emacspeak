@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--$Id: schema-documentation.xsl 5222 2007-08-26 01:28:19Z tv.raman.tv $-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--$Id: schema-documentation.xsl 6018 2008-11-04 19:52:11Z tv.raman.tv $-->
 <!--Description:
 
 Extract documentation  from an XML Schema   and display as HTML

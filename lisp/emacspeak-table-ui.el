@@ -1,5 +1,5 @@
 ;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
-;;; $Id: emacspeak-table-ui.el 5548 2008-03-25 22:16:09Z tv.raman.tv $
+;;; $Id: emacspeak-table-ui.el 5925 2008-09-17 22:06:31Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-03-25 15:16:09 -0700 (Tue, 25 Mar 2008) $ |
+;;; $Date: 2008-06-26 15:46:49 -0700 (Thu, 26 Jun 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -343,10 +343,7 @@ specifies the filter"
   "Speaks a table row after applying a specified row filter.
 Optional prefix arg prompts for a new filter."
   (interactive "P")
-  (declare (special emacspeak-table-speak-row-filter
-                    voice-animate
-                    voice-smoothen
-                    emacspeak-table))
+  (declare (special emacspeak-table-speak-row-filter emacspeak-table))
   (unless (and  emacspeak-table-speak-row-filter
                 (listp emacspeak-table-speak-row-filter)
                 (not prefix))
@@ -384,6 +381,26 @@ Optional prefix arg prompts for a new filter."
               (put-text-property 0 (length value)
                                  'face 'bold value)
               value)
+             ((and
+               (symbolp (first token))
+               (fboundp  (first token)))
+              (setq value
+                    (funcall
+                     (first token)
+                     (cond
+                      ((and (= 2 (length token))
+                            (numberp (second token)))
+                       (emacspeak-table-get-entry-with-headers
+                        (emacspeak-table-current-row emacspeak-table)
+                        (second token)))
+                      ((and (= 3 (length token))
+                            (numberp (second token))
+                            (numberp (third token)))
+                       (emacspeak-table-get-entry-with-headers
+                        (second token) (third token))))))
+              (put-text-property 0 (length value)
+                                 'face 'bold  value)
+              value)
              (t  (format "%s" token)))))
       emacspeak-table-speak-row-filter
       " "))))
@@ -419,6 +436,9 @@ Optional prefix arg prompts for a new filter."
           (emacspeak-table-get-entry-with-headers
            (first token)
            (second token)))
+         ((and (symbolp (first token))
+               (fboundp  (first token)))
+          (eval token))
          (t  (format "%s" token))))
     emacspeak-table-speak-column-filter
     " ")))
@@ -530,7 +550,7 @@ the documentation on the table browser."
   (let ((fields nil)
         (this-field nil)
         (start (line-beginning-position)))
-    (save-excursion
+    ;(save-excursion
       (goto-char start)
       (while (not (eolp))
         (ems-csv-forward-field)
@@ -543,7 +563,10 @@ the documentation on the table browser."
         (push this-field fields)
         (when (= (char-after) ?,)
           (forward-char 1))
-        (setq start (point))))
+        (setq start (point)))
+;)
+    (when (= (preceding-char) ?,)
+      (push "" fields))
     (nreverse fields)))
         
 ;;;###autoload
@@ -551,34 +574,8 @@ the documentation on the table browser."
   "Process a csv (comma separated values) file.
 The processed  data and presented using emacspeak table navigation. "
   (interactive "FFind CSV file: ")
-  (let ((scratch (get-buffer-create "*csv-scratch*"))
-        (table nil)
-        (elements nil)
-        (this-row nil)
-        (fields nil)
-        (buffer (get-buffer-create
-                 (format "*%s-table*"
-                         (file-name-nondirectory filename)))))
-    (save-excursion
-      (set-buffer scratch)
-      (fundamental-mode)
-      (setq buffer-undo-list t)
-      (erase-buffer)
-      (insert-file-contents filename)
-      (flush-lines "^ *$")
-      (goto-char (point-min))
-      (setq elements
-            (make-vector (count-lines (point-min) (point-max))
-                         nil))
-      (loop for i from 0 to (1- (length elements))
-            do
-            (setq fields (ems-csv-get-fields))
-            (aset elements i (apply 'vector fields))
-            (forward-line 1))
-      (setq table (emacspeak-table-make-table elements)))
-    (kill-buffer scratch)
-    (emacspeak-table-prepare-table-buffer table buffer filename )
-    (emacspeak-table-speak-current-element)))
+  (let  ((buffer (find-file-noselect filename)))
+    (emacspeak-table-view-csv-buffer buffer)))
 
 ;;;###autoload
 (defun emacspeak-table-view-csv-buffer (&optional buffer-name)
@@ -589,6 +586,8 @@ The processed  data and presented using emacspeak table navigation. "
       (setq buffer-name (current-buffer)))
   (let ((scratch (get-buffer-create "*csv-scratch*"))
         (table nil)
+        (elements nil)
+        (fields nil)
         (buffer (get-buffer-create
                  (format "*%s-table*" buffer-name))))
     (save-excursion
@@ -598,25 +597,17 @@ The processed  data and presented using emacspeak table navigation. "
       (insert-buffer buffer-name)
       (goto-char (point-min))
       (flush-lines "^ *$")
-      (insert "[\n")
-      (while (re-search-forward "^" nil t)
-        (replace-match "["))
-      (goto-char (point-min))
-      (while (re-search-forward "," nil t)
-        (replace-match " "))
-      (goto-char (point-min))
-      (forward-line 1)
-      (while (and (not (eobp))
-                  (re-search-forward "$" nil t))
-        (replace-match "]")
-        (forward-line 1))
-      (goto-char (point-min))
-      (when (search-forward "[]" nil t)
-        (replace-match ""))
-      (goto-char (point-max))
-      (insert "]\n")
-      (goto-char (point-min))
-      (setq table (emacspeak-table-make-table (read scratch))))
+    (goto-char (point-min))
+      (setq elements
+            (make-vector (count-lines (point-min) (point-max))
+                         nil))
+      (loop for i from 0 to (1- (length elements))
+            do
+            (setq fields (ems-csv-get-fields))
+            (aset elements i (apply 'vector fields))
+            (forward-line 1))
+      (setq table (emacspeak-table-make-table elements))  
+      )
     (kill-buffer scratch)
     (emacspeak-table-prepare-table-buffer table buffer)
     (emacspeak-auditory-icon 'open-object)))
@@ -736,6 +727,8 @@ browsing table elements"
 (defvar emacspeak-table-speak-element
   'emacspeak-table-speak-current-element
   "Function to call when automatically speaking table elements.")
+
+(make-variable-buffer-local 'emacspeak-table-speak-element)
 
 (defun emacspeak-table-next-row (&optional count)
   "Move to the next row if possible"

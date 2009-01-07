@@ -1,5 +1,5 @@
 ;;; emacspeak-tapestry.el --- Speak information about current layout of windows
-;;; $Id: emacspeak-tapestry.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
+;;; $Id: emacspeak-tapestry.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Emacspeak module to speak window tapestries
 ;;; Keywords:emacspeak, audio interface to emacs tapestry

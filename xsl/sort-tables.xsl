@@ -39,13 +39,22 @@ relevant tables bubble to the top.
   version="1.0"
   exclude-result-prefixes="set">
   <xsl:param name="base"/>
-  <xsl:output method="html" indent="yes" encoding="iso8859-15"/>
-  <xsl:include href="object.xsl"/>
+  <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
+  
   <xsl:include href="identity.xsl"/>
+  <xsl:include href="object.xsl"/>
   <xsl:include href="auto-rss-discover.xsl"/>
   <!--<xsl:include href="auto-atom-discover.xsl"/>-->
   <!-- { html body  -->
+<xsl:template match="iframe">
+  <a>
+<xsl:attribute name="href">
+<xsl:value-of select="@src"/>
+</xsl:attribute>
+Embedded IFrame</a>
+</xsl:template>
   <!-- handle images -->
+
   <xsl:template match="img">
     <xsl:if test="@alt">
       <xsl:value-of select="@alt"/>
