@@ -460,7 +460,7 @@ and TABLE gives the values along that dimension."
                     multispeech-default-speech-rate
 		    dtk-speaker-process
 		    emacspeak-unspeakable-rule
-		    emacspeak-speak-default-os-coding-system))
+                    multispeech-coding-system))
   (fset 'tts-list-voices'multispeech-list-voices)
   (fset 'tts-voice-defined-p 'multispeech-voice-defined-p)
   (fset 'tts-get-voice-command 'multispeech-get-voice-command)
@@ -468,8 +468,9 @@ and TABLE gives the values along that dimension."
   (setq tts-default-voice nil)
   (setq tts-default-speech-rate multispeech-default-speech-rate)
   (set-default 'tts-default-speech-rate multispeech-default-speech-rate)
-  (setq emacspeak-speak-default-os-coding-system 'cyrillic-koi8)
-  (set-process-coding-system dtk-speaker-process 'cyrillic-koi8 'cyrillic-koi8)
+  (if multispeech-coding-system
+      (set-process-coding-system dtk-speaker-process multispeech-coding-system multispeech-coding-system)
+    (set-process-coding-system dtk-speaker-process locale-coding-system locale-coding-system))
   (setq-default dtk-speak-nonprinting-chars nil)
   (unless russian-spelling-data-loaded-p
     (let ((coding-system-for-read 'utf-8))
