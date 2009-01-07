@@ -1,5 +1,5 @@
 ;;; emacspeak-pronounce.el --- Implements Emacspeak pronunciation dictionaries
-;;; $Id: emacspeak-pronounce.el 5261 2007-09-07 10:25:25Z tv.raman.tv $
+;;; $Id: emacspeak-pronounce.el 5469 2008-02-20 00:55:48Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak pronunciation dictionaries
 ;;; Keywords:emacspeak, audio interface to emacs customized pronunciation
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-09-07 03:25:25 -0700 (Fri, 07 Sep 2007) $ |
+;;; $Date: 2008-02-19 16:55:48 -0800 (Tue, 19 Feb 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -548,11 +548,11 @@ Activates pronunciation dictionaries if not already active."
     (":-I" .  " shrug ")
     (":->" . " sarcastic smile ")
     (">:->" . " devillish smile ")
-    (">;->" . " lews smile ")
+    (">;->" . " lewd smile ")
     (";-)" . " wink "))
   "Pronunciation dictionary used in all instant messenger and IRC chat
 modes.
-See http://oz.uc.edu/~solkode/smileys.html for a full list."
+See http://www.charm.net/~kmarsh/smiley.html. "
   :link '(url-link :tag "Smileys Dictionary "
                    "http://oz.uc.edu/~solkode/smileys.html")
   :type '(repeat

@@ -1,5 +1,5 @@
 #!/usr/bin/tcl
-#$Id: ssh-dtk-exp 4532 2007-05-04 01:13:44Z tv.raman.tv $
+#$Id: ssh-dtk-exp 5436 2008-01-05 20:24:47Z tv.raman.tv $
 #Description: Launch a TTS server on a remote host.
 #Copyright (C) 1995 -- 2007, T. V. Raman 
 # {{{  documentation
@@ -25,6 +25,8 @@ if [expr $argc == 0] {
 } else {
     set remote [lindex $argv 0]
 }
+set wd [file dirname $argv0]
+lappend auto_path $wd
 # split out port 
 set host_port [split $remote ":"]
 set host [lindex $host_port 0]

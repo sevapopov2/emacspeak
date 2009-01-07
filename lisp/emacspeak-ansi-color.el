@@ -1,5 +1,5 @@
 ;;; emacspeak-ansi-color.el --- Speech-enable ansi-color terminal
-;;; $Id: emacspeak-ansi-color.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-ansi-color.el 5403 2007-12-10 01:51:46Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak module for ansi-color
 ;;; Keywords: Emacspeak, ansi-color
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2007-12-09 17:51:46 -0800 (Sun, 09 Dec 2007) $ |
 ;;;  $Revision: 4502 $ |
 ;;; Location undetermined
 ;;;
@@ -101,9 +101,9 @@
          (voice (when (listp face)
                   (emacspeak-ansi-color-to-voice face))))
     (when voice
-      (ems-modify-buffer-safely
-       (put-text-property start end
-                          'personality voice)))))
+      (funcall emacspeak-personality-voiceify-faces
+	       start end
+	       voice nil))))
 
 ;;}}}
 ;;{{{ advice interactive commands

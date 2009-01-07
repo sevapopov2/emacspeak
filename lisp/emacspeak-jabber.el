@@ -1,5 +1,5 @@
 ;;; emacspeak-jabber.el --- Speech-Enable jabber
-;;; $Id: emacspeak-jabber.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-jabber.el 5560 2008-04-15 13:25:36Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: speech-enable jabber
 ;;; Keywords: Emacspeak, jabber
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-04-15 06:25:36 -0700 (Tue, 15 Apr 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -132,6 +132,25 @@
   "Set to T if you want to hear presence alerts."
   :type  'boolean
   :group 'emacspeak-jabber)
+(defadvice jabber-send-default-presence (after emacspeak pre act
+                                               comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (message "Sent default presence.")))
+
+(defadvice jabber-send-away-presence (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (message "Set to be away.")))
+
+(defadvice jabber-send-xa-presence (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (message "Set extended  away.")))
+
 
 (defadvice jabber-presence-default-message (around emacspeak pre
                                                    act comp)
@@ -143,12 +162,12 @@
   ad-return-value)
 
 ;;;this is what I use as my jabber alert function:
-(defun emacspeak-jabber-message-default-message (from buffer
-                                                      text)
+(defun emacspeak-jabber-message-default-message (from buffer text)
   "Speak the message."
   (declare (special jabber-message-alert-same-buffer))
   (when (or jabber-message-alert-same-buffer
             (not (memq (selected-window) (get-buffer-window-list buffer))))
+    (emacspeak-auditory-icon 'progress)
     (if (jabber-muc-sender-p from)
         (format "Private message from %s in %s"
                 (jabber-jid-resource from)

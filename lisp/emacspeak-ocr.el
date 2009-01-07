@@ -1,5 +1,5 @@
 ;;; emacspeak-ocr.el --- ocr Front-end for emacspeak desktop
-;;; $Id: emacspeak-ocr.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-ocr.el 5562 2008-04-16 21:36:54Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for OCR
 ;;; Keywords: Emacspeak, ocr
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-04-16 14:36:54 -0700 (Wed, 16 Apr 2008) $ |
 ;;;  $Revision: 4448 $ |
 ;;; Location undetermined
 ;;;
@@ -76,19 +76,19 @@ OCR engine for optical character recognition."
   :group 'emacspeak-ocr)
 
 (defcustom emacspeak-ocr-scan-image-options 
-  "--format tiff --resolution 400"
+  nil
   "Command line options to pass to image acquisition program."
   :type 'string 
   :group 'emacspeak-ocr)
 
-(defcustom emacspeak-ocr-compress-image "tiffcp"
+(defcustom emacspeak-ocr-compress-image nil
   "Command used to compress the scanned tiff file."
   :type '(choice
           (const :tag "None" nil)
           (string :tag "Command"))
   :group 'emacspeak-ocr)
 
-(defcustom emacspeak-ocr-image-extension ".tiff"
+(defcustom emacspeak-ocr-image-extension ".pnm"
   "Filename extension used for acquired image."
   :type 'string
   :group 'emacspeak-ocr)

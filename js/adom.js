@@ -1,4 +1,4 @@
-//$Id: adom.js 5350 2007-11-13 17:55:32Z tv.raman.tv $
+//$Id: adom.js 5437 2008-01-06 02:16:13Z tv.raman.tv $
 // <Class ADom
 
 /*
@@ -7,13 +7,13 @@
  * Constructor takes  the   document to view as argument
  */
 
-function ADom (document) {
+ADom = function  (document) {
     this.document_ = document;
     document.adom = this;
     this.root_ = document.documentElement;
     this.current_ = document.documentElement;
     this.view_ = null;
-}
+};
 
 // >
 // < Navigators:
@@ -117,6 +117,10 @@ ADom.prototype.html = function (gen_base) {
         html += this.base();
     }
     html +='<' + this.current_.tagName;
+    if (this.current_.value !== undefined) {
+      html += ' value' + '=';
+      html += '\"' +this.current_.value + '\"\n';
+    }
     var map = this.current_.attributes;
     if (map  instanceof NamedNodeMap) {
         for (var i = 0; i < map.length; i++) {
@@ -189,7 +193,7 @@ ADom.prototype.current = function () {
 /*
  *  Implements iteration.
  */
-RingBuffer = function (list) {
+var RingBuffer = function (list) {
     this.list_ = list;
     this.index_ = -1;
     this.len_ = list.length;
@@ -226,7 +230,7 @@ RingBuffer.prototype.previous = function () {
 /*
  *  Implements RingBuffer.
  */
-XPathRingBuffer = function (nodes) {
+var XPathRingBuffer = function (nodes) {
     this.list_ = nodes;
     this.index_ = -1;
     this.len_ = nodes.snapshotLength;
@@ -277,10 +281,7 @@ ADom.prototype.filter = function (xpath) {
                                   null); // no previous results
     return this.view_ = new XPathRingBuffer(snap);
     } catch (err) {
-      repl.print("Error evaluating XPath '"
-                 +  xpath
-+"': "
-                 +err);
+      repl.print("Error evaluating XPath '" +  xpath +"': " +err);
       return null;
     }
 };
@@ -360,6 +361,26 @@ ADom.prototype.view = function () {
 
 // >
 // < Eventing:
+
+/*
+ * target: Return a suitable target for sending keypresses
+ * We need to know where the focus is,
+ * for now, we depend on Fire Vox  doing the work for us.
+ * Uses Fire Vox global CLC_SR_CurrentAtomicObject
+ * that gets set by Fire Vox whenever a focus event occurs.
+ * If that variable is 0 i.e. unset,
+ * we return document.body
+ * @Return: Node
+ */
+
+ADom.prototype.target = function () {
+  if (!CLC_SR_CurrentAtomicObject){
+      CLC_SR_CurrentAtomicObject =
+CLC_GetFirstAtomicObject(CLC_Window().document.body);
+      }
+  return CLC_SR_CurrentAtomicObject  || this.document_.body;
+};
+
 /**
  * Dispatches a left click event on the element that is the targetNode.
  * @param {Node} targetNode The target node of this operation.
@@ -383,8 +404,9 @@ ADom.prototype.keyPress = function(targetNode,
   var charCode = 0;
   if (theKey == "ENTER"){
     keyCode = 13;
-  }
-  else if (theKey.length == 1){
+  } else   if (theKey == "TAB"){
+    keyCode = 9;
+  } else if (theKey.length == 1){
     charCode = theKey.charCodeAt(0);
   }
   var evt = document.createEvent('KeyboardEvent');
@@ -410,6 +432,18 @@ target.dispatchEvent(evt);
 // < A11y Reflection:
 
 // >
+// <WebSearch:
+
+/*
+ * Perform a webSearch:
+ */
+ADom.prototype.webSearch = function(q) {
+  var ub = document.getElementById('urlbar');
+  ub.value = q;
+handleURLBarCommand();
+};
+
+// >
 // <repl hookup
 
 /*
@@ -429,7 +463,7 @@ repl.updateADom = function ()  {
 // >
 // <end of file
 
-"loaded adom.js";
+
 
 // local variables:
 // folded-file: t

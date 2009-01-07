@@ -1,5 +1,5 @@
 ;;; emacspeak-we.el --- Transform Web Pages Using XSLT
-;;; $Id: emacspeak-we.el 5375 2007-11-22 00:50:13Z tv.raman.tv $
+;;; $Id: emacspeak-we.el 5471 2008-02-24 20:36:21Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Edit/Transform Web Pages using XSLT
 ;;; Keywords: Emacspeak,  Audio Desktop Web, XSLT
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-11-21 16:50:13 -0800 (Wed, 21 Nov 2007) $ |
+;;; $Date: 2008-02-24 12:36:21 -0800 (Sun, 24 Feb 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -534,7 +534,6 @@ Tables are specified by containing  match pattern
       (skip-syntax-forward " ")
       (delete-region (point-min) (point))
       (setq values (split-string (buffer-string))))
-    (message "Values: %s" values)
     (add-hook
      'emacspeak-web-post-process-hook
      (eval
@@ -584,7 +583,6 @@ buffer. Interactive use provides list of class values as completion."
     (emacspeak-webutils-read-url)
     current-prefix-arg))
   (let ((filter (format "//*[contains(@class,\"%s\")]" class)))
-    (message "filter:%s" filter)
     (emacspeak-we-xslt-filter filter
                               url
                               (or (interactive-p)
@@ -656,7 +654,7 @@ values as completion. "
 specified elements from current WWW page and displays it in a separate
 buffer.
 Interactive use provides list of id values as completion."
-  (interactive
+ (interactive
    (list
     (let ((completion-ignore-case t))
       (completing-read "Id: "
@@ -664,7 +662,7 @@ Interactive use provides list of id values as completion."
     (emacspeak-webutils-read-url)
     current-prefix-arg))
   (emacspeak-we-xslt-filter
-   (format "//*[@id=\"%s\"]"
+   (format "id(\"%s\")"
            id)
    url
    (or (interactive-p) speak)))
@@ -890,6 +888,43 @@ used as well."
      'speak)))
 
 ;;}}}
+;;{{{ Property filter
+
+
+;;;###autoload
+(defun emacspeak-we-extract-by-property (url &optional speak)
+  "Interactively prompt for an HTML property, e.g. id or class,
+and provide a completion list of applicable  property values. Filter document by property that is specified."
+  (interactive
+   (list
+    (emacspeak-webutils-read-url)
+    current-prefix-arg))
+  (let* ((completion-ignore-case t)
+         (choices
+          (mapcar 'symbol-name (intersection
+                      '(id class style)
+                      (emacspeak-webutils-property-names-from-html-stack (emacspeak-w3-html-stack)))))
+         (property
+          (read
+     (completing-read "Property: "
+                      choices)))
+         (values (emacspeak-webutils-get-property-from-html-stack
+                  (emacspeak-w3-html-stack)
+                  property))
+         (v (completing-read "Having value: " values))
+         (filter
+          (if (eq property 'class)
+              (format "//*[contains(@%s, \"%s\")]"
+                      property v)
+            (format "//*[@%s=\"%s\"]"
+                    property v))))
+    (emacspeak-we-xslt-filter filter url
+                              (or (interactive-p) speak))))
+    
+  
+    
+
+;;}}}
 ;;{{{  xsl keymap
 
 (declaim (special emacspeak-we-xsl-map))
@@ -897,6 +932,7 @@ used as well."
 (loop for binding in
       '(
         ("C" emacspeak-we-extract-by-class-list)
+        ("w" emacspeak-we-extract-by-property)
         ("M" emacspeak-we-extract-tables-by-match-list)
         ("P" emacspeak-we-extract-print-streams)
         ("R" emacspeak-we-extract-media-streams-under-point)
@@ -914,7 +950,7 @@ used as well."
         ("i" emacspeak-we-extract-by-id)
         ("I" emacspeak-we-extract-by-id-list)
         ("j" emacspeak-we-xslt-junk)
-        ("k" emacspeak-we-set-xsl-keep-result)
+        ("k" emacspeak-we-toggle-xsl-keep-result)
         ("m" emacspeak-we-extract-table-by-match)
         ("o" emacspeak-we-xsl-toggle)
         ("p" emacspeak-we-xpath-filter-and-follow)

@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak.el 5562 2008-04-16 21:36:54Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-04-16 14:36:54 -0700 (Wed, 16 Apr 2008) $ |
 ;;;  $Revision: 4642 $ |
 ;;; Location undetermined
 ;;;
@@ -178,6 +178,7 @@ speech-enabling extensions."
 (emacspeak-do-package-setup "dunnet" 'emacspeak-entertain)
 (emacspeak-do-package-setup "ediary" 'emacspeak-ediary)
 (emacspeak-do-package-setup "ediff" 'emacspeak-ediff)
+(emacspeak-do-package-setup "ediff-mult" 'emacspeak-ediff)
 (emacspeak-do-package-setup "emms" 'emacspeak-emms)
 (emacspeak-do-package-setup "eperiodic" 'emacspeak-eperiodic)
 (emacspeak-do-package-setup "erc" 'emacspeak-erc)
@@ -206,6 +207,7 @@ speech-enabling extensions."
 (emacspeak-do-package-setup "iswitchb" 'emacspeak-iswitchb)
 (emacspeak-do-package-setup "jabber" 'emacspeak-jabber)
 (emacspeak-do-package-setup "jde" 'emacspeak-jde)
+(emacspeak-do-package-setup "js2" 'emacspeak-js2)
 (emacspeak-do-package-setup "kmacro" 'emacspeak-kmacro)
 (emacspeak-do-package-setup "make-mode" 'emacspeak-make-mode)
 (emacspeak-do-package-setup "man" 'emacspeak-man)
@@ -316,9 +318,7 @@ speech-enabling extensions."
 (defun emacspeak-export-environment ()
   "Export shell environment.
 This exports emacspeak's system variables to the environment
-so it can be passed to subprocesses.
-Additionally, we set EMACS_UNIBYTE to avoid problems under
-Emacs 20.3"
+so it can be passed to subprocesses."
   (declare (special emacspeak-directory
                     emacspeak-play-program
                     emacspeak-sounds-directory
@@ -327,8 +327,7 @@ Emacs 20.3"
     (setenv "EMACS_UNIBYTE" "1"))
   (setenv "EMACSPEAK_DIR" emacspeak-directory)
   (setenv "EMACSPEAK_SOUNDS_DIR" emacspeak-sounds-directory)
-  (setenv "EMACSPEAK_PLAY_PROGRAM" emacspeak-play-program)
-  )
+  (setenv "EMACSPEAK_PLAY_PROGRAM" emacspeak-play-program))
 
 ;;}}}
 ;;{{{ setup programming modes
@@ -360,6 +359,7 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
          'emacs-lisp-mode-hook
          'lisp-interaction-mode-hook
          'javascript-mode-hook
+         'js2-mode-hook
          'midge-mode-hook
          'meta-common-mode-hook
          'perl-mode-hook
@@ -396,9 +396,15 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
   :type 'boolean
   :group 'emacspeak)
 
-(defvar emacspeak-unibyte t
-  "Set this to nil before starting  emacspeak
-if you are running in a multibyte enabled environment.")
+;;;###autoload
+(defcustom emacspeak-unibyte nil
+  "Emacspeak will force emacs to unibyte unless this
+variable is set to nil.
+To use emacspeak with emacs running in multibyte mode, this
+variable should be set to nil *before*
+emacspeak is compiled or started."
+  :type 'boolean
+  :group 'emacspeak)
 ;;;###autoload
 (defun emacspeak()
   "Starts the Emacspeak speech subsystem.  Use emacs as you
@@ -438,7 +444,7 @@ functions for details.   "
                     emacspeak-sounds-directory))
 ;;; fixes transient mark mode in emacspeak
   (setq mark-even-if-inactive t)
-;;; force unibyte
+;;; propagate   unibyte
   (when emacspeak-unibyte
     (setq default-enable-multibyte-characters nil))
   (emacspeak-export-environment)

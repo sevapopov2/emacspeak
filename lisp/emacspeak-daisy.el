@@ -1,5 +1,5 @@
 ;;; emacspeak-daisy.el --- daisy Front-end for emacspeak desktop
-;;; $Id: emacspeak-daisy.el 5274 2007-09-07 23:16:08Z tv.raman.tv $
+;;; $Id: emacspeak-daisy.el 5471 2008-02-24 20:36:21Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for DAISY Talking Books
 ;;; Keywords: Emacspeak, daisy Digital Talking Books
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-09-07 16:16:08 -0700 (Fri, 07 Sep 2007) $ |
+;;; $Date: 2008-02-24 12:36:21 -0800 (Sun, 24 Feb 2008) $ |
 ;;;  $Revision: 4541 $ |
 ;;; Location undetermined
 ;;;
@@ -177,8 +177,8 @@ Clip is the result of parsing SMIL element <text .../> as used by Daisy 3."
          (fragment (second split))
          (path (emacspeak-daisy-resolve-uri relative
                                             emacspeak-daisy-this-book)))
-    (emacspeak-we-extract-by-id
-     fragment
+    (emacspeak-we-xslt-filter
+     (format "//*[@id=\"%s\"]" fragment)
      (concat "file:" path))))
 
 ;;;###autoload

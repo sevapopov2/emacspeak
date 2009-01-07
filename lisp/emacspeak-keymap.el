@@ -1,5 +1,5 @@
 ;;; emacspeak-keymap.el --- Setup all keymaps and keybindings provided by Emacspeak
-;;; $Id: emacspeak-keymap.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
+;;; $Id: emacspeak-keymap.el 5478 2008-03-01 01:18:37Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Module for setting up emacspeak keybindings
 ;;; Keywords: Emacspeak
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
+;;; $Date: 2008-02-29 17:18:37 -0800 (Fri, 29 Feb 2008) $ |
 ;;;  $Revision: 4544 $ |
 ;;; Location undetermined
 ;;;
@@ -265,7 +265,7 @@ field in the customization buffer.  You can use the notation
 
 (global-set-key "\C-x@h"
                 'emacspeak-hyper-keymap)
-
+(define-key emacspeak-hyper-keymap " " 'emacspeak-webspace)
 ;;}}}
 ;;{{{ helper: emacspeak-keymap-update
 

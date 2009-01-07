@@ -1,4 +1,4 @@
-# $Id: Makefile 5384 2007-11-23 16:34:17Z tv.raman.tv $
+# $Id: Makefile 5453 2008-01-28 01:13:27Z tv.raman.tv $
 # $Author: tv.raman.tv $
 # Description:  Makefile for Emacspeak
 # Keywords: Emacspeak,  TTS,Makefile
@@ -149,8 +149,10 @@ TABLE_SAMPLES=etc/tables/*.tab etc/tables/*.dat etc/tables/*.html
 FORMS =etc/forms/*.el
 REALAUDIO=realaudio
 SHOUTCAST=shoutcast
+HTTPD=servers/httpd
 ECI=servers/linux-outloud
 PYLIB=servers/python
+PYFILES=servers/python/*.py
 ESPEAK=servers/linux-espeak/tclespeak.cpp \
 servers/linux-espeak/Makefile\
 servers/linux-espeak/makefile.tcl83\
@@ -159,10 +161,10 @@ DTKTTS=servers/software-dtk/tcldtk.c \
 servers/software-dtk/DTK \
 servers/software-dtk/Makefile
 JS=js/*.js  js/jsl.conf js/Makefile
+TCLHTTPD=${HTTPD}/tts.tcl
 OUTLOUD=${ECI}/eci.ini \
 ${ECI}/*.h \
 ${ECI}/*.cpp \
-${ECI}/*.so \
 ${ECI}/VIAVOICE ${ECI}/ALSA ${ECI}/asoundrc \
 ${ECI}/Makefile ${ECI}/makefile.tcl83
 
@@ -283,9 +285,11 @@ install:
 	$(INSTALL)  -m 644 ${JS}  $(libdir)/js
 	$(INSTALL) -d $(libdir)/servers
 	$(INSTALL) -d $(libdir)/servers/python
+	$(INSTALL) -d $(libdir)/servers/httpd
+	$(INSTALL)  -m 644 ${TCLHTTPD}  $(libdir)/servers/tts.tcl
 	$(INSTALL) -d $(libdir)/servers/linux-outloud
 	$(INSTALL)  -m 755 ${OUTLOUD}  $(libdir)/servers/linux-outloud
-	cp -r  ${PYLIB}  $(libdir)/servers/python
+	cp   ${PYFILES}  $(libdir)/servers/python
 	$(INSTALL) -d $(libdir)/servers/linux-espeak
 	$(INSTALL)  -m 755 ${ESPEAK}  $(libdir)/servers/linux-espeak
 	$(INSTALL) -d $(libdir)/servers/software-dtk
