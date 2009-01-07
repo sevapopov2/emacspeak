@@ -1,5 +1,5 @@
 #!/usr/bin/tcl
-# $Id: dtk-exp 4929 2007-07-25 23:53:23Z tv.raman.tv $
+# $Id: dtk-exp 5528 2008-03-15 02:06:50Z tv.raman.tv $
 # Description:  Interfacing to a Dectalk via TCL.
 # Keywords: Emacspeak, Dectalk, TCL
 # {{{ LCD Entry:
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2007-07-25 16:53:23 -0700 (Wed, 25 Jul 2007) $ |
-#  $Revision: 4929 $ |
+# $Date: 2008-03-14 19:06:50 -0700 (Fri, 14 Mar 2008) $ |
+#  $Revision: 5528 $ |
 # Location undetermined
 #
 
@@ -57,9 +57,10 @@
 
 # }}}
 # {{{source common code
-
 set wd [file dirname $argv0]
+lappend auto_path $wd
 source $wd/tts-lib.tcl
+#source tts-lib.tcl
 # }}}
 # {{{ procedures
 
@@ -359,6 +360,12 @@ proc clean {element} {
 # {{{ initialize
 
 tts_setserial
+# Dectalk likes only ascii
+fconfigure $tts(write) -encoding ascii
+
+# Emacspeak sends utf-8
+fconfigure file0 -encoding utf-8
+
 tts_initialize
 set tts(speech_rate)  225
 set tts(say_rate) [round \

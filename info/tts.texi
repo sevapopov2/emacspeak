@@ -1,5 +1,5 @@
-@c $Id: tts.texi 4047 2006-08-11 19:11:17Z tv.raman.tv $
- @section Speech System Commands
+@c $Id: tts.texi 5429 2008-01-03 04:24:37Z tv.raman.tv $
+ 
 
 @cindex tts
 @cindex speech system

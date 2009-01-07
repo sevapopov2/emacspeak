@@ -1,5 +1,5 @@
 ;;; amixer.el --- Control AMixer from Emacs
-;;;$Id: amixer.el 5282 2007-09-13 16:18:46Z tv.raman.tv $
+;;;$Id: amixer.el 5573 2008-05-15 02:17:15Z tv.raman.tv $
 ;;;Emacs front-end to AMixer
 ;;{{{  Copyright:
 
@@ -36,6 +36,15 @@
 
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
+
+;;}}}
+;;{{{ Customizations:
+(defcustom amixer-pcm-volume 'max
+  "PCM Playback volume. "
+  :type '(choice
+          (integer :tag "Volume ")
+          (const :tag "Maximum" max))
+  :group 'amixer)
 
 ;;}}}
 ;;{{{ Definitions
@@ -112,6 +121,7 @@
         (slots nil))
     (save-excursion
       (set-buffer scratch)
+      (setq buffer-undo-list t)
       (erase-buffer)
       (shell-command "amixer controls | sed -e s/\\'//g"
                      (current-buffer))
@@ -123,6 +133,12 @@
                 (line-beginning-position)
                 (line-end-position))
                ","))
+;;; only need 3 fields:
+        (setq fields
+              (list 
+               (nth 0 fields)
+               (nth 1 fields)
+               (mapconcat #'identity (nthcdr 2 fields) " ")))
         (setq slots
               (loop for f in fields
                     collect
@@ -135,7 +151,7 @@
            :iface (second slots)
            :name (third slots)))
          controls)
-        (forward-line 1))               ; done collecting controls
+        (forward-line 1))              ; done collecting controls
       (mapc #'amixer-populate-settings controls)
       (setq amixer-db controls))))
 
@@ -207,8 +223,7 @@
               "Change %s from %s %s:"
               (amixer-control-name control)
               (amixer-control-setting-current
-               (amixer-control-setting
-                control))
+               (amixer-control-setting control))
               (or choices ""))))
       (setf
        (amixer-control-setting-current

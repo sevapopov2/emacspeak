@@ -19,10 +19,10 @@ emacspeak modules:
 
 """
 
-__id__ = "$Id: speaker.py 3535 2005-11-17 14:32:59Z raman $"
-__author__ = "$Author: raman $"
-__version__ = "$Revision: 3535 $"
-__date__ = "$Date: 2005-11-17 06:32:59 -0800 (Thu, 17 Nov 2005) $"
+__id__ = "$Id: speaker.py 5568 2008-05-09 14:14:23Z tv.raman.tv $"
+__author__ = "$Author: tv.raman.tv $"
+__version__ = "$Revision: 5568 $"
+__date__ = "$Date: 2008-05-09 07:14:23 -0700 (Fri, 09 May 2008) $"
 __copyright__ = "Copyright (c) 2005 T. V. Raman"
 __license__ = "LGPL"
 __all__=['Speaker']
@@ -102,6 +102,8 @@ class Speaker:
     
     def say(self, text="", acss=None):
         """Speaks specified text. All queued text is spoken immediately."""
+        text = unicode(text, 'utf-8').encode('iso8859-1')
+        text = unicode(text, 'utf-8').encode('iso8859-1')
         if acss is not None:
             code =self.getvoice(acss)
             self._w.write("q {%s %s %s}\nd\n" %(code[0], text, code[1]))
@@ -220,8 +222,8 @@ def _test():
     import acss
     s=Speaker()
     a=acss.ACSS()
-    s.punctuations('some')
-    s.queueText("This is an initial test.");
+    s.punctuations('all')
+    s.queueText("This is an initial test. test.");
     s.queueText("Next, we'll test audio formatted output.")
     for d in ['average-pitch', 'pitch-range',
               'richness', 'stress']:

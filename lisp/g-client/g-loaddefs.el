@@ -2,9 +2,14 @@
 
 ;;;### (autoloads (gcal-sign-in gcal-sign-out gcal-emacs-calendar-setup
 ;;;;;;  gcal-show-event gcal-view gcal-calendar-agenda-days gcal-delete-event
-;;;;;;  gcal-quickadd-event gcal-add-event gcal-user-email) "gcal"
-;;;;;;  "gcal.el" (18103 50388))
+;;;;;;  gcal-quickadd-event gcal-add-event gcal-user-email gcal-default-user-email)
+;;;;;;  "gcal" "gcal.el" (18401 57420))
 ;;; Generated autoloads from gcal.el
+
+(defvar gcal-default-user-email nil "\
+Default user id for Calendar.")
+
+(custom-autoload 'gcal-default-user-email "gcal" t)
 
 (defvar gcal-user-email nil "\
 Mail address that identifies calendar user.")
@@ -157,7 +162,7 @@ The retrieved entry is placed in a buffer ready for editing.
 ;;;;;;  greader-find-feeds greader-star greader-add-label greader-untag-feed
 ;;;;;;  greader-tag-feed greader-title-feed greader-unsubscribe-feed
 ;;;;;;  greader-subscribe-feed greader-opml greader-feed-list greader-preferences
-;;;;;;  greader-reading-list) "greader" "greader.el" (18145 19550))
+;;;;;;  greader-reading-list) "greader" "greader.el" (18380 44935))
 ;;; Generated autoloads from greader.el
 
 (autoload 'greader-reading-list "greader" "\
@@ -176,8 +181,8 @@ user.
 
 (autoload 'greader-feed-list "greader" "\
 Retrieve list of subscribed feeds.
-Optional interactive prefix arg `sort' sorts feeds based on newly
-arrived articles.
+Feeds are sorted by timestamp of newly arrived articles.
+Optional interactive prefix arg `sort' turns on sorting.
 
 \(fn &optional SORT)" t nil)
 
@@ -288,7 +293,7 @@ Resets client so you can start with a different userid.
 ;;;### (autoloads (gtube-video-featured gtube-video-by-user gtube-video-popular
 ;;;;;;  gtube-video-playlist gtube-video-by-category-and-tag gtube-video-by-tag
 ;;;;;;  gtube-video-details gtube-user-friends gtube-user-favorites
-;;;;;;  gtube-user-profile) "gtube" "gtube.el" (18072 8688))
+;;;;;;  gtube-user-profile) "gtube" "gtube.el" (18268 37311))
 ;;; Generated autoloads from gtube.el
 
 (autoload 'gtube-user-profile "gtube" "\
@@ -354,14 +359,14 @@ Retrieved featured video list.
 
 ;;;### (autoloads nil nil ("g-app.el" "g-auth.el" "g-autogen.el"
 ;;;;;;  "g-cus-load.el" "g-load-path.el" "g-utils.el" "g.el" "gnotebook.el"
-;;;;;;  "indent-files.el" "json.el") (18246 10792 93008))
+;;;;;;  "indent-files.el" "json.el") (18476 58202 70252))
 
 ;;;***
 
 ;;;### (autoloads (gblogger-sign-in gblogger-sign-out gblogger-add-label
 ;;;;;;  gblogger-delete-entry gblogger-new-entry gblogger-edit-entry
 ;;;;;;  gblogger-atom-display gblogger-blog) "gblogger" "gblogger.el"
-;;;;;;  (18095 62884))
+;;;;;;  (18281 10019))
 ;;; Generated autoloads from gblogger.el
 
 (autoload 'gblogger-blog "gblogger" "\

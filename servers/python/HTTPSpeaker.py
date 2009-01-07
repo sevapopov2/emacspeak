@@ -12,10 +12,10 @@ calls speaker.cmd(arg)
 
 """
 
-__id__ = "$Id: HTTPSpeaker.py 5366 2007-11-19 18:28:38Z tv.raman.tv $"
+__id__ = "$Id: HTTPSpeaker.py 5432 2008-01-04 00:02:21Z tv.raman.tv $"
 __author__ = "$Author: tv.raman.tv $"
-__version__ = "$Revision: 5366 $"
-__date__ = "$Date: 2007-11-19 10:28:38 -0800 (Mon, 19 Nov 2007) $"
+__version__ = "$Revision: 5432 $"
+__date__ = "$Date: 2008-01-03 16:02:21 -0800 (Thu, 03 Jan 2008) $"
 __copyright__ = "Copyright (c) 2005 T. V. Raman"
 __license__ = "LGPL"
 
@@ -30,12 +30,14 @@ class HTTPSpeaker (HTTPServer):
     """Speech server via HTTP."""
 
     def __init__(self, address, handler,
-                 engine='outloud'):
+                 engine='outloud',
+                 rate = 75):
         """Initialize HTTP listener."""
         HTTPServer.__init__(self, address, handler)
         self.speaker = Speaker(engine,
                                'localhost',
-                               {'punctuations' : 'some'})
+                               {'punctuations' : 'some',
+                                'rate' : rate})
 
 class SpeakHTTPRequestHandler(BaseHTTPRequestHandler):
 
@@ -79,7 +81,8 @@ class SpeakHTTPRequestHandler(BaseHTTPRequestHandler):
             contentLength = int(contentLength)
             inputBody = self.rfile.read(contentLength)
             if inputBody.startswith("speak:"):
-                self.server.speaker.speak( inputBody[6:])
+                text = inputBody[6:]
+                self.server.speaker.speak(text )
                 self.send_response(200, 'OK')
             elif inputBody == "stop":
                 self.server.speaker.stop()
@@ -101,9 +104,14 @@ def start():
         port = int(sys.argv[2])
     else:
         port = 8000
+    if sys.argv[3:]:
+        rate = int(sys.argv[3])
+    else:
+        rate = 75
+    server_address = ('', port)
     server_address = ('', port)
     httpd = HTTPSpeaker  (server_address,
-    SpeakHTTPRequestHandler, engine)
+    SpeakHTTPRequestHandler, engine, rate)
     httpd.serve_forever()
 
 

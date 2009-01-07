@@ -1,5 +1,5 @@
 ;;; emacspeak-webutils.el --- Common Web Utilities For Emacspeak
-;;; $Id: emacspeak-webutils.el 5362 2007-11-18 04:22:32Z tv.raman.tv $
+;;; $Id: emacspeak-webutils.el 5562 2008-04-16 21:36:54Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak Webutils
 ;;; Keywords: Emacspeak, web
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-11-17 20:22:32 -0800 (Sat, 17 Nov 2007) $ |
+;;; $Date: 2008-04-16 14:36:54 -0700 (Wed, 16 Apr 2008) $ |
 ;;;  $Revision: 4634 $ |
 ;;; Location undetermined
 ;;;
@@ -122,6 +122,9 @@ Note that the Web browser should reset this hook after using it.")
   "Setup post process hook to speak the Web page when rendered."
   (add-hook 'emacspeak-web-post-process-hook
             #'(lambda nil
+                (declare (special emacspeak-we-xpath-filter))
+     (setq emacspeak-we-xpath-filter
+	   "//p|ol|ul|dl|h1|h2|h3|h4|h5|h6|blockquote|div")
                 (emacspeak-speak-buffer))))
 
 (defsubst emacspeak-webutils-browser-check ()
@@ -222,6 +225,19 @@ ARGS specifies additional arguments to SPEAKER if any."
         (aref (read (current-buffer)) 2)
         nil)))))
 
+
+(defun emacspeak-webutils-google-suggest-completer (string predicate mode)
+  "Generate completions using Google Suggest. "
+  (save-current-buffer 
+    (set-buffer 
+     (let ((window (minibuffer-selected-window))) 
+       (if (window-live-p window) 
+           (window-buffer window) 
+         (current-buffer)))) 
+    (complete-with-action mode 
+                          (emacspeak-webutils-google-suggest string) 
+                          string predicate)))
+
 (defsubst emacspeak-webutils-google-autocomplete (&optional prompt)
   "Read user input using Google Suggest for auto-completion."
   (let ((minibuffer-completing-file-name t) ;; so we can type
@@ -230,7 +246,7 @@ ARGS specifies additional arguments to SPEAKER if any."
     (emacspeak-url-encode
     (completing-read
      (or prompt "Google: ")
-                     (dynamic-completion-table emacspeak-webutils-google-suggest)))))
+                     'emacspeak-webutils-google-suggest-completer))))
 
 ;;}}}
 ;;{{{ helper macros:
@@ -475,7 +491,7 @@ instances."
          (goto-char (point-min))
          (search-forward "\n\n")
          (delete-region (point-min) (point))
-                                        ;(decode-coding-region (point-min) (point-max) 'utf-8)
+		 (decode-coding-region (point-min) (point-max) 'utf-8)
          (emacspeak-xslt-region style
                                 (point-min) (point-max))
          (browse-url-of-buffer)))))))
@@ -621,6 +637,29 @@ unescape HTML tags."
 ;;}}}
 
 ;;}}}
+
+
+;;{{{ Properties from HTML stack:
+
+(defsubst emacspeak-webutils-property-names-from-html-stack (html-stack)
+  "Returns list of attributes from HTML stack."
+  (delete nil
+          (loop for e in html-stack
+                append
+                (mapcar 'car (rest e)))))
+
+(defun emacspeak-webutils-get-property-from-html-stack (html-stack prop)
+  "Extract and return list of prop values from HTML  stack.
+Stack is a list of the form ((element-name (attribute-alist)))."
+  (let ((props nil))
+    (loop for element in html-stack
+          do
+          (push (cdr (assoc prop (rest element)))
+                props))
+    (nreverse (delq nil props))))
+
+;;}}}
+
 (provide 'emacspeak-webutils)
 ;;{{{ end of file
 

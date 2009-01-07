@@ -1,5 +1,5 @@
 ;;; emacspeak-xslt.el --- Implements Emacspeak  xslt transform engine
-;;; $Id: emacspeak-xslt.el 5281 2007-09-13 04:05:53Z tv.raman.tv $
+;;; $Id: emacspeak-xslt.el 5527 2008-03-12 01:41:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  xslt transformation routines
 ;;; Keywords: Emacspeak,  Audio Desktop XSLT
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-09-12 21:05:53 -0700 (Wed, 12 Sep 2007) $ |
+;;; $Date: 2008-03-11 18:41:19 -0700 (Tue, 11 Mar 2008) $ |
 ;;;  $Revision: 4562 $ |
 ;;; Location undetermined
 ;;;
@@ -125,7 +125,9 @@ part of the libxslt package."
                                    (car pair)
                                    (cdr pair)))
                        params
-                       " "))))
+                       " ")))
+		(coding-system-for-write 'utf-8)
+		(coding-system-for-read 'utf-8))
     (setq command
           (format
            "%s %s  %s  %s - %s"

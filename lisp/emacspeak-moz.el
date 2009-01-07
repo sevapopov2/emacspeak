@@ -1,5 +1,5 @@
 ;;; emacspeak-moz.el.el --- Talk to Firefox via MozRepl
-;;; $Id: emacspeak-moz.el 5290 2007-09-16 21:52:56Z tv.raman.tv $
+;;; $Id: emacspeak-moz.el 5447 2008-01-07 15:55:42Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Control Firefox from Emacs
 ;;; Keywords: Emacspeak,  Audio Desktop Firefox
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-09-16 14:52:56 -0700 (Sun, 16 Sep 2007) $ |
+;;; $Date: 2008-01-07 07:55:42 -0800 (Mon, 07 Jan 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -100,6 +100,11 @@
 
 ;;}}}
 ;;{{{ Interactive commands:
+;;;###autoload 
+(defun emacspeak-moz-eval-expression (exp)
+  "Send expression to Moz."
+  (interactive "sJSEval: ")
+  (comint-send-string (inferior-moz-process) exp))
 
 ;;;###autoload
 (defun emacspeak-moz-eval-expression-and-go (exp)
@@ -160,7 +165,7 @@
                           (or
                            (browse-url-url-at-point)
                            "http://"))))
-  (emacspeak-moz-eval-expression-and-go
+  (emacspeak-moz-eval-expression
    (format "content.location.href='%s'\n"
            url)))
 
@@ -174,7 +179,7 @@
   (let ((url (funcall emacspeak-webutils-url-at-point)))
     (cond
      (url
-      (emacspeak-moz-eval-expression-and-go
+      (emacspeak-moz-eval-expression
        (format "content.location.href=\"%s\";\n"
                url))
       (message "Sent url at point to firefox."))
@@ -184,7 +189,7 @@
 (defun emacspeak-moz-browser-forward ()
   "Move forward in history."
   (interactive)
-  (emacspeak-moz-eval-expression-and-go
+  (emacspeak-moz-eval-expression
    "BrowserForward(); repl.updateADom()\n")
   (when (interactive-p)
     (emacspeak-moz-eval-expression-and-go
@@ -194,17 +199,17 @@
 (defun emacspeak-moz-browser-back ()
   "Move back in history."
   (interactive)
-  (emacspeak-moz-eval-expression-and-go
+  (emacspeak-moz-eval-expression
    "BrowserBack(); repl.updateADom(); ")
   (when (interactive-p)
-    (emacspeak-moz-eval-expression-and-go
+    (emacspeak-moz-eval-expression
      "repl.emacspeak.say(title)\n")))
 
 ;;;###autoload
 (defun emacspeak-moz-jump (index)
   "Jump to specified index in history."
   (interactive "nHistory Index: ")
-  (emacspeak-moz-eval-expression-and-go
+  (emacspeak-moz-eval-expression
    (format
     "getWebNavigation().gotoIndex(%d);repl.print(\"\\n\" +
 title)\n"
@@ -234,11 +239,8 @@ title)\n"
 (defun emacspeak-moz-refresh ()
   "Reload document."
   (interactive)
-  (emacspeak-moz-eval-expression-and-go
-   (format "BrowserReload();repl.updateADom();repl.print(\"\\n\"+title)\n"))
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
+  (emacspeak-moz-eval-expression
+   (format "BrowserReload();repl.updateADom();repl.print(\"\\n\"+title)\n")))
 
 ;;;###autoload
 (defun emacspeak-moz-visit-next-and-browse ()
@@ -363,6 +365,10 @@ title)\n"
 (add-hook 'inferior-moz-mode-hook
           'emacspeak-moz-init)
 
+(defadvice inferior-moz-start-process (after emacspeak pre act
+                                             comp)
+  "Init emacspeak ADom bits."
+  (emacspeak-moz-init))
 (add-hook 'javascript-mode-hook
           'emacspeak-setup-programming-mode)
 ;;}}}
