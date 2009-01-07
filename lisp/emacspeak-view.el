@@ -1,5 +1,5 @@
 ;;; emacspeak-view.el --- Speech enable View mode -- Efficient browsing of read-only content
-;;; $Id: emacspeak-view.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-view.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Emacspeak extensions for view
 ;;; Keywords: emacspeak, audio interface to emacs, view-mode
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-06-21 14:58:40 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -300,7 +300,7 @@ keybindings for view mode")
     (setq emacspeak-view-keys-optimized t)
     (loop for edit-command in emacspeak-view-edit-commands
           do
-          (let ((edit-keys (where-is-internal edit-command view-mode-map)))
+          (let ((edit-keys (where-is-internal edit-command (list view-mode-map))))
             (loop for key in edit-keys 
                   do
                   (let ((command (lookup-key emacspeak-keymap key)))

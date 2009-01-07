@@ -1,6 +1,6 @@
 ;;; emacspeak-bbdb.el --- Speech enable BBDB -- a powerful address manager
 
-;;; $Id: emacspeak-bbdb.el 5266 2007-09-07 13:14:47Z tv.raman.tv $
+;;; $Id: emacspeak-bbdb.el 5987 2008-10-09 21:31:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Emacspeak extensions for bbdb 
 ;;; Keywords: emacspeak, audio interface to emacs bbdb 
@@ -200,6 +200,14 @@
   "Provide spoken feedback"
   (when (interactive-p)
     (emacspeak-speak-other-window 1)))
+
+;;}}}
+;;{{{ silence messages 
+
+(defadvice bbdb-update-records (around emacspeak pre act comp)
+  "Silence messages."
+  (let ((emacspeak-speak-messages nil))
+ad-do-it))
 
 ;;}}}
 (provide  'emacspeak-bbdb)

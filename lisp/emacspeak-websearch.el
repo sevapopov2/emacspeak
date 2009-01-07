@@ -1,5 +1,5 @@
 ;;; emacspeak-websearch.el --- search utilities
-;;; $Id: emacspeak-websearch.el 5549 2008-03-25 22:21:19Z tv.raman.tv $
+;;; $Id: emacspeak-websearch.el 6026 2008-11-05 14:17:37Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to make Web searching convenient
 ;;; Keywords: Emacspeak, WWW interaction
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-03-25 15:21:19 -0700 (Tue, 25 Mar 2008) $ |
+;;; $Date: 2008-08-14 11:23:31 -0700 (Thu, 14 Aug 2008) $ |
 ;;;  $Revision: 4625 $ |
 ;;; Location undetermined
 ;;;
@@ -42,6 +42,7 @@
 
 (require 'emacspeak-preamble)
 (require 'emacspeak-webutils)
+(require 'gweb)
 (require  'emacspeak-we)
 (require 'calendar)
 
@@ -928,7 +929,7 @@ Optional second arg as-html processes the results as HTML rather than data."
   :group 'emacspeak-websearch)
 
 (defvar emacspeak-websearch-google-uri
-  "http://www.google.com/search?e=StructuredResults&q="
+  "http://www.google.com/search?q="
   "*URI for Google search")
 
 (defcustom emacspeak-websearch-google-options nil
@@ -944,18 +945,20 @@ Optional interactive prefix arg `lucky' is equivalent to hitting the
 I'm Feeling Lucky button on Google."
   (interactive
    (list
-    (emacspeak-webutils-google-autocomplete)
+    (gweb-google-autocomplete)
     current-prefix-arg))
   (declare (special emacspeak-websearch-google-uri
                     emacspeak-websearch-google-options
                     emacspeak-websearch-google-number-of-results))
   (if lucky
-      (emacspeak-speak-line)
+      (emacspeak-webutils-autospeak)
     (emacspeak-webutils-post-process
      "results"
      'emacspeak-speak-line))
-  (let ((emacspeak-w3-tidy-html nil))
-    (emacspeak-webutils-without-xsl
+  (let ((emacspeak-w3-tidy-html t))
+    (emacspeak-webutils-with-xsl-environment
+     (expand-file-name "default.xsl" emacspeak-xslt-directory)
+     nil emacspeak-xslt-options
      (browse-url
       (concat emacspeak-websearch-google-uri query
               (format "&num=%s%s"
@@ -976,7 +979,7 @@ I'm Feeling Lucky button on Google."
 ;;}}}
 
 (defvar emacspeak-websearch-accessible-google-url
-  "http://google.com/cse?cx=000183394137052953072%3Azc1orsc6mbq&e=StructuredResults&q="
+  "http://google.com/cse?cx=000183394137052953072%3Azc1orsc6mbq&q="
   "Google Accessible Search -- see http://labs.google.com/accessible")
 
 ;;;###autoload
@@ -984,7 +987,7 @@ I'm Feeling Lucky button on Google."
   "Google Accessible Search -- see http://labs.google.com/accessible"
   (interactive
    (list
-    (emacspeak-webutils-google-autocomplete "AGoogle: ")))
+    (gweb-google-autocomplete "AGoogle: ")))
   (declare (special emacspeak-websearch-accessible-google-url
                     emacspeak-websearch-google-uri))
   (let ((emacspeak-w3-tidy-html nil)
@@ -1002,7 +1005,7 @@ I'm Feeling Lucky button on Google."
   "Do a I'm Feeling Lucky Google search."
   (interactive
    (list
-    (emacspeak-webutils-google-autocomplete "Google Lucky Search: ")))
+    (gweb-google-autocomplete "Google Lucky Search: ")))
   (emacspeak-websearch-google query 'lucky))
 
 (emacspeak-websearch-set-searcher 'google-specialize
@@ -1022,7 +1025,7 @@ http://www.google.com/options/specialsearches.html "
     (emacspeak-websearch-read-query
      "Google for:")))
   (let ((emacspeak-websearch-google-uri
-         (format "http://www.google.com/%s?e=StructuredResults&q="
+         (format "http://www.google.com/%s?q="
                  specialize)))
     (emacspeak-websearch-google query )))
 
@@ -1038,7 +1041,7 @@ http://www.google.com/options/specialsearches.html "
     (emacspeak-websearch-google
      (concat
       (emacspeak-url-encode query )
-      (format " daterange:%s-%s"
+      (format "+daterange:%s-%s"
               (min from to)
               (max from to))))))
 
@@ -1055,7 +1058,7 @@ http://www.google.com/options/specialsearches.html "
 (emacspeak-websearch-set-key 6 'froogle)
 
 (defvar emacspeak-websearch-froogle-uri
-  "http://www.google.com/products?output=html&e=StructuredResults&q=%s"
+  "http://www.google.com/products?output=html&q=%s"
   "*URI for Froogle search")
 
 ;;;###autoload
@@ -1117,14 +1120,14 @@ Optional interactive  prefix arg local-flag prompts for local
 
 (defvar emacspeak-websearch-google-launch-uris
   (list
-   (cons "web" emacspeak-websearch-google-uri)
-   (cons "images"  emacspeak-websearch-google-images)
-   (cons "news" emacspeak-websearch-google-news-uri)
-   (cons "froogle" emacspeak-websearch-froogle-uri)
-   (cons "books" emacspeak-websearch-google-books-uri)
-   (cons "scholar" emacspeak-websearch-google-scholar-uri)
-   (cons "maps" emacspeak-websearch-google-html-maps-uri)
-   (cons "videos" emacspeak-websearch-google-videos-uri))
+   (cons 'web emacspeak-websearch-google-uri)
+   (cons 'images  emacspeak-websearch-google-images)
+   (cons 'news emacspeak-websearch-google-news-uri)
+   (cons 'froogle emacspeak-websearch-froogle-uri)
+   (cons 'books emacspeak-websearch-google-books-uri)
+   (cons 'scholar emacspeak-websearch-google-scholar-uri)
+   (cons 'maps emacspeak-websearch-google-html-maps-uri)
+   (cons 'videos emacspeak-websearch-google-videos-uri))
   "Association list of Google search URIs.")
 
 ;;;###autoload
@@ -1134,11 +1137,10 @@ Optional interactive  prefix arg local-flag prompts for local
    (list
     (completing-read "Engine: "
                      emacspeak-websearch-google-launch-uris)
-    (completing-read "Google For:"
-                     (dynamic-completion-table emacspeak-webutils-google-suggest))))
+    (gweb-google-autocomplete "Google for: ")))
   (declare (special emacspeak-websearch-read-query))
   (browse-url
-   (concat (cdr (assoc engine
+   (concat (cdr (assq engine
                        emacspeak-websearch-google-launch-uris))
            (emacspeak-url-encode query))))
 
@@ -1226,8 +1228,7 @@ Optional interactive  prefix arg local-flag prompts for local
   "Google mobile search."
   (interactive
    (list
-    (completing-read  "Google Mobile for: "
-                      (dynamic-completion-table emacspeak-webutils-google-suggest))))
+    (gweb-google-autocomplete "Google Mobile: ")))
   (declare (special emacspeak-websearch-google-mobile-uri))
   (browse-url
    (concat emacspeak-websearch-google-mobile-uri
@@ -1786,7 +1787,7 @@ Results"
 (emacspeak-websearch-set-searcher 'exchange-rate-convertor
                                   'emacspeak-websearch-exchange-rate-convertor)
 
-(emacspeak-websearch-set-key ?x 'exchange-rate-convertor)
+(emacspeak-websearch-set-key ?X 'exchange-rate-convertor)
 
 (defvar emacspeak-websearch-exchange-rate-form
   (expand-file-name "xml-forms/exchange-rate-convertor.xml"
@@ -1814,6 +1815,44 @@ Results"
     (emacspeak-we-extract-by-class
      "XEsmall"
      url 'speak)))
+
+;;}}}
+;;{{{ Yahoo Exchange rate convertor
+
+(emacspeak-websearch-set-searcher 'y-exchange-rate-convertor
+                                  'emacspeak-websearch-yahoo-exchange-rate-convertor)
+
+(emacspeak-websearch-set-key ?x 'y-exchange-rate-convertor)
+
+
+
+(defvar emacspeak-websearch-yahoo-exchange-rate-convertor-uri
+  "http://download.finance.yahoo.com/d/quotes.csv?s=%s=X&f=sl1d1t1ba&e=.csv"
+  "URI template  for currency conversion.")
+
+;;;###autoload
+(defun emacspeak-websearch-yahoo-exchange-rate-convertor (conversion-spec)
+  "Currency convertor."
+  (interactive
+   (list
+    (read-from-minibuffer
+     "Currency Convertor: FromTo:")))
+  (declare (special emacspeak-websearch-yahoo-exchange-rate-convertor-uri))
+  (let* ((url 
+          (format emacspeak-websearch-yahoo-exchange-rate-convertor-uri
+		  (upcase  conversion-spec)))
+	 (buffer (url-retrieve-synchronously url)))
+    (save-excursion
+      (set-buffer buffer)
+      (goto-char (point-min))
+      (search-forward "\n\n")
+      (delete-region (point-min) (point))
+      (emacspeak-table-view-csv-buffer buffer)
+      (kill-buffer buffer)
+      (when (get-buffer "Currency Rates")
+	(kill-buffer "Currency Rates"))
+      (rename-buffer "Currency Rates"))))
+    
 
 ;;}}}
 ;;{{{ my rss

@@ -1,5 +1,5 @@
 ;;; emacspeak-w3.el --- Speech enable W3 WWW browser -- includes ACSS Support
-;;; $Id: emacspeak-w3.el 5565 2008-04-25 01:53:50Z tv.raman.tv $
+;;; $Id: emacspeak-w3.el 5830 2008-08-25 03:10:44Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak enhancements for W3
 ;;; Keywords: Emacspeak, W3, WWW
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-04-24 18:53:50 -0700 (Thu, 24 Apr 2008) $ |
+;;; $Date: 2008-08-04 09:09:31 -0700 (Mon, 04 Aug 2008) $ |
 ;;;  $Revision: 4671 $ |
 ;;; Location undetermined
 ;;;
@@ -154,7 +154,6 @@
              (not (featurep 'w3-speak-table)))
     (load-library "w3-speak-table")
     (provide 'w3-speak-table))
-  (emacspeak-keymap-remove-emacspeak-edit-commands w3-mode-map)
   (when emacspeak-pronounce-load-pronunciations-on-startup
     (emacspeak-pronounce-augment-pronunciations 'w3-mode
                                                 emacspeak-pronounce-common-xml-namespace-uri-pronunciations)
@@ -322,19 +321,19 @@ document is displayed in a separate buffer. "
 
 (defsubst emacspeak-w3-get-onclick ()
   "Return onclick handler if any at point."
-  (cdr (assoc 'onclick (cdar (emacspeak-w3-html-stack)))))
+  (cdr (assq 'onclick (cdar (emacspeak-w3-html-stack)))))
 
 (defsubst emacspeak-w3-get-class ()
   "Return class if any at point."
-  (cdr (assoc 'class (cdar (emacspeak-w3-html-stack)))))
+  (cdr (assq 'class (cdar (emacspeak-w3-html-stack)))))
 
 (defsubst emacspeak-w3-get-onchange ()
   "Return onchange handler if any at point."
-  (cdr (assoc 'onchange (cdar (emacspeak-w3-html-stack)))))
+  (cdr (assq 'onchange (cdar (emacspeak-w3-html-stack)))))
 
 (defsubst emacspeak-w3-get-style ()
   "Return style if any at point."
-  (cdr (assoc 'style (cdar (emacspeak-w3-html-stack)))))
+  (cdr (assq 'style (cdar (emacspeak-w3-html-stack)))))
 
 (defsubst emacspeak-w3-html-stack-top-element (&optional stack)
   (or stack (setq stack (emacspeak-w3-html-stack)))
@@ -704,7 +703,8 @@ If a rewrite rule is defined in the current buffer, we change
   (list "--show-warnings" "no" "--show-errors" "0" "--force-output" "yes"
         "-asxml" "-quiet"  "-bare" "-omit"
         "--drop-proprietary-attributes" "yes" "--hide-comments"
-        "yes")
+        "yes"
+	"-utf8")
   "Options to pass to tidy program"
   :type '(repeat string)
   :group 'emacspeak-w3)
@@ -713,6 +713,17 @@ If a rewrite rule is defined in the current buffer, we change
   "Tidy HTML before rendering."
   :type 'boolean
   :group 'emacspeak-w3)
+(defun emacspeak-w3-cleanup-bogus-quotes ()
+  "hack to fix magic quotes."
+    (goto-char (point-min))
+    (while (search-forward "&\#147\;" nil t)
+      (replace-match "\""))
+    (goto-char (point-min))
+    (while (search-forward "&\#148\;" nil t)
+      (replace-match "\""))
+    (goto-char (point-min))
+    (while (search-forward "&\#180\;" nil t)
+      (replace-match "\'")))
 
 (defun emacspeak-w3-tidy (&optional buff)
   "Use html tidy to clean up the HTML in the current buffer."
@@ -725,6 +736,8 @@ If a rewrite rule is defined in the current buffer, we change
         (setq buff (current-buffer)))
       (setq buffer-undo-list t)
       (widen)
+      (when  emacspeak-we-cleanup-bogus-quotes
+    (emacspeak-w3-cleanup-bogus-quotes))
       (apply 'call-process-region
              (point-min) (point-max)
              emacspeak-w3-tidy-program
@@ -736,26 +749,29 @@ If a rewrite rule is defined in the current buffer, we change
 (add-hook 'w3-parse-hooks 'emacspeak-w3-tidy)
 
 ;;}}}
+;;{{{ utf-8 
+(defadvice  w3-slow-parse-buffer (around emacspeak pre act comp)
+  "Force buffer encoding to utf-8."
+  (let ((coding-system-for-read 'utf-8)
+        (coding-system-for-write 'utf-8))
+    ad-do-it
+    ad-return-value))
+
+;;}}}
 ;;{{{ advice to call xslt
 (defadvice  w3-parse-buffer (before emacspeak pre act comp)
   "Apply requested XSL transform if any before displaying the
 HTML."
-  (when emacspeak-we-cleanup-bogus-quotes
-    (goto-char (point-min))
-    (while (search-forward "&\#147\;" nil t)
-      (replace-match "\""))
-    (goto-char (point-min))
-    (while (search-forward "&\#148\;" nil t)
-      (replace-match "\""))
-    (goto-char (point-min))
-    (while (search-forward "&\#180\;" nil t)
-      (replace-match "\'")))
+ (when (and emacspeak-we-cleanup-bogus-quotes
+	    (not emacspeak-w3-tidy-html))
+    (emacspeak-w3-cleanup-bogus-quotes))
   (unless
       (or emacspeak-we-xsl-p
           (string-match "temp"
                         (buffer-name)))
     (emacspeak-we-build-id-cache)
-    (emacspeak-we-build-class-cache))
+    (emacspeak-we-build-class-cache)
+    (emacspeak-we-build-role-cache))
   (when (and emacspeak-we-xsl-p
              emacspeak-we-xsl-transform
              (not  (string-match "temp" (buffer-name))))

@@ -1,5 +1,5 @@
 ;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak intelligently
-;;; $Id: emacspeak-advice.el 5348 2007-11-01 17:32:59Z tv.raman.tv $
+;;; $Id: emacspeak-advice.el 6072 2008-11-26 05:04:51Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Core advice forms that make emacspeak work
 ;;; Keywords: Emacspeak, Speech, Advice, Spoken  output
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-11-01 10:32:59 -0700 (Thu, 01 Nov 2007) $ |
+;;; $Date: 2008-08-18 17:52:34 -0700 (Mon, 18 Aug 2008) $ |
 ;;;  $Revision: 4550 $ |
 ;;; Location undetermined
 ;;;
@@ -105,6 +105,20 @@
 (defadvice previous-line (after emacspeak pre act)
   "Speak line that you just moved to."
   (when (interactive-p) (emacspeak-speak-line  )))
+(loop for f in 
+      '(forward-button backward-button)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Speak the button."
+	  (when (interactive-p)
+	    (condition-case nil
+		(let* ((button (button-at (point)))
+		       (start (button-start button))
+		       (end (button-end button)))
+		  (dtk-speak (buffer-substring start end)))
+	      (error nil))
+	    (emacspeak-auditory-icon 'large-movement)))))
 
 (defadvice forward-word (after emacspeak pre act)
   "Speak the word you just moved to."
@@ -1051,32 +1065,27 @@ Produce an auditory icon if possible."
 
 (defadvice comint-output-filter (around emacspeak pre act)
   "Make comint speak its output."
-  (save-excursion
+  (let ((inhibit-read-only t)
+	(monitor emacspeak-comint-output-monitor)
+	(dtk-stop-immediately nil))
     (set-buffer (process-buffer (ad-get-arg 0)))
-    (let ((prior (point ))
-          (monitor emacspeak-comint-output-monitor)
-          (dtk-stop-immediately nil))
-      ad-do-it
-      (when (and (boundp 'comint-last-prompt-overlay)
-                 comint-last-prompt-overlay)
-        (add-text-properties
-         (overlay-start comint-last-prompt-overlay)
-         (overlay-end comint-last-prompt-overlay)
-         (list
-          'personality
-          'emacspeak-comint-prompt-personality
-          'rear-sticky nil)))
-      (when (and (or emacspeak-comint-autospeak emacspeak-speak-comint-output)
-                 (or
-                  monitor
-                  (eq (selected-window)
-                      (get-buffer-window (process-buffer (ad-get-arg 0))))))
-        (setq emacspeak-speak-comint-output nil)
-        (condition-case nil
-            (emacspeak-speak-region prior (point ))
-          (error (emacspeak-auditory-icon 'scroll)
-                 (dtk-stop ))))
-      ad-return-value)))
+    ad-do-it
+    (when (and (boundp 'comint-last-prompt-overlay)
+	       comint-last-prompt-overlay)
+      (add-text-properties
+       (overlay-start comint-last-prompt-overlay)
+       (overlay-end comint-last-prompt-overlay)
+       (list
+	'personality
+	'emacspeak-comint-prompt-personality
+	'rear-sticky nil)))
+    (when (and
+	   (or emacspeak-comint-autospeak emacspeak-speak-comint-output)
+	   (or monitor
+	       (eq (selected-window)
+		   (get-buffer-window (process-buffer (ad-get-arg 0))))))
+      (emacspeak-speak-region comint-last-output-start (point )))
+    ad-return-value))
 
 (defadvice comint-dynamic-list-completions(around emacspeak pre act comp)
   "Replacing mouse oriented completer with keyboard friendly equivalent"
@@ -1573,6 +1582,7 @@ Indicate change of selection with an auditory icon
   (when (interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-mode-line)))
+
 (defadvice delete-frame (after emacspeak pre act comp)
   "Provide auditory feedback about frame and buffer that becomes current."
   (when (interactive-p)
@@ -2116,6 +2126,13 @@ Produce an auditory icon if possible."
     (dtk-stop )
     (emacspeak-auditory-icon 'scroll)))
 
+(defadvice recenter-top-bottom (before emacspeak pre act)
+  "Provide auditory feedback"
+  (when (interactive-p)
+    (dtk-stop )
+    (dtk-speak (format "Recentered to %s" recenter-last-op))
+    (emacspeak-auditory-icon 'scroll)))
+
 ;;}}}
 ;;{{{  yanking and popping
 
@@ -2192,7 +2209,8 @@ Also produce an auditory icon if possible."
   (stack-push emacspeak-state-stack emacspeak-speak-messages)
   (stack-push emacspeak-state-stack emacspeak-speak-cue-errors)
   (setq emacspeak-speak-messages nil
-        emacspeak-speak-cue-errors nil))
+        emacspeak-speak-cue-errors nil)
+  (dtk-speak "I-Search: "))
 
 (defsubst emacspeak-isearch-teardown()
   "Teardown emacspeak environment for isearch."
@@ -2212,13 +2230,17 @@ Also produce an auditory icon if possible."
   (emacspeak-speak-string isearch-string voice-bolden)
   (when  (sit-for 0.5)
     (emacspeak-auditory-icon 'search-hit)
-    (ems-set-personality-temporarily
-     (point)
-     (if  isearch-forward
-         (- (point) (length isearch-string ))
-       (+ (point) (length isearch-string )))
-     voice-bolden
-     (emacspeak-speak-line))))
+    (save-excursion
+      (ems-set-personality-temporarily
+       (point)
+       (if  isearch-forward
+           (- (point) (length isearch-string ))
+         (+ (point) (length isearch-string )))
+       voice-bolden
+       (dtk-speak
+        (buffer-substring
+         (line-beginning-position)
+         (line-end-position)))))))
 
 (defadvice isearch-delete-char (after emacspeak pre act)
   "Speak the search hit.
@@ -2472,6 +2494,26 @@ Produce auditory icons if possible."
 (defvar emacspeak-minibuffer-enter-auditory-icon t
   "Produce auditory icon when entering the minibuffer.")
 
+;; (defun emacspeak-minibuffer-setup-hook ()
+;;   "Actions  taken when entering the minibuffer with emacspeak. "
+;;   (declare (special emacspeak-minibuffer-enter-auditory-icon
+;; 		    minibuffer-default))
+;;   (let ((default
+;;           (cond
+;;            ((and minibuffer-default (listp minibuffer-default))
+;;             (format "Default: %s " (first minibuffer-default)))
+;;            (minibuffer-default
+;;             (format "Default: %s" minibuffer-default))
+;;            (t ""))))
+;;     (when emacspeak-minibuffer-enter-auditory-icon
+;;       (emacspeak-auditory-icon 'open-object))
+;;     (tts-with-punctuations
+;;      'all
+;;      (dtk-speak 
+;;       (format "%s %s"
+;;               (buffer-string)
+;;               default)))))
+
 (defun emacspeak-minibuffer-setup-hook ()
   "Actions to take when entering the minibuffer with
 emacspeak running."
@@ -2479,8 +2521,10 @@ emacspeak running."
   (let ((inhibit-field-text-motion t))
     (when emacspeak-minibuffer-enter-auditory-icon
       (emacspeak-auditory-icon 'open-object))
-    (tts-with-punctuations 'all
-                           (emacspeak-speak-buffer))))
+    (unwind-protect
+        (tts-with-punctuations 'all
+                               (emacspeak-speak-buffer)))))
+
 
 (add-hook  'minibuffer-setup-hook 'emacspeak-minibuffer-setup-hook)
 
@@ -2542,14 +2586,12 @@ emacspeak running."
 ;;}}}
 ;;{{{ advice where-is and friends
 
-(defadvice describe-key-briefly (around emacspeak pre act comp)
+(defadvice describe-key-briefly (after emacspeak pre act comp)
   "Speak what you displayed"
-  (cond
-   ((interactive-p)
-    ad-do-it
+  (when (interactive-p)
     (dtk-speak ad-return-value))
-   (t ad-do-it))
   ad-return-value)
+  
 
 (defadvice where-is (around emacspeak pre act comp)
   "Provide spoken feedback"
@@ -2689,11 +2731,6 @@ Variable mark-even-if-inactive is set true ."
      (if transient-mark-mode 'on 'off))
     (message "Turned %s transient mark mode."
              (if transient-mark-mode "on" "off"))))
-
-;;}}}
-;;{{{ sync with tts engine on major mode change.
-
-(add-hook 'change-major-mode-hook 'emacspeak-dtk-sync)
 
 ;;}}}
 ;;{{{ provide auditory icon when window config changes
@@ -2840,6 +2877,33 @@ Variable mark-even-if-inactive is set true ."
     (save-excursion
       (set-buffer "*wclock*")
       (emacspeak-speak-buffer))))
+
+;;}}}
+;;{{{ browse-url
+(loop for f in
+      '(browse-url-of-buffer browse-url-of-region)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
+          "Automatically speak results of rendering."
+          (cond
+           ((interactive-p)
+            (emacspeak-webutils-autospeak)
+            ad-do-it)
+           (t ad-do-it))
+          ad-return-value)))
+
+;;}}}
+;;{{{ Cue input method changes
+
+(defadvice toggle-input-method (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon
+     (if current-input-method 'on 'off))
+    (dtk-speak
+     (format "Current input method is %s"
+             (or current-input-method "none")))))
 
 ;;}}}
 (provide 'emacspeak-advice)

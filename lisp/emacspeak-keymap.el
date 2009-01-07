@@ -1,5 +1,5 @@
 ;;; emacspeak-keymap.el --- Setup all keymaps and keybindings provided by Emacspeak
-;;; $Id: emacspeak-keymap.el 5478 2008-03-01 01:18:37Z tv.raman.tv $
+;;; $Id: emacspeak-keymap.el 6007 2008-10-26 07:34:57Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Module for setting up emacspeak keybindings
 ;;; Keywords: Emacspeak
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-02-29 17:18:37 -0800 (Fri, 29 Feb 2008) $ |
+;;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4544 $ |
 ;;; Location undetermined
 ;;;
@@ -282,7 +282,6 @@ field in the customization buffer.  You can use the notation
       '(
         ( " " customize-group)
         ( "B" customize-browse)
-        ( "E" emacspeak-websearch-emacspeak-archive)
         ( "G" customize-group)
         ( "M" emacspeak-speak-popup-messages)
         ( "V" customize-variable)
@@ -317,7 +316,7 @@ field in the customization buffer.  You can use the notation
         ("." emacspeak-speak-current-field)
         ("/" emacspeak-speak-this-buffer-other-window-display)
         (":" emacspeak-realaudio )
-        (";" emacspeak-multimedia)
+        ("\;" emacspeak-multimedia)
         ("\M-;" emacspeak-alsaplayer-launch)
         ("<" emacspeak-speak-previous-field)
         ("=" emacspeak-speak-current-column)
@@ -503,9 +502,10 @@ relief."
   "We define keys that invoke editting commands to be undefined"
   (loop for k in
         (where-is-internal 'emacspeak-self-insert-command
-                           keymap)
+                           (list keymap))
         do
-        (define-key keymap k 'undefined )))
+        (define-key keymap k 'undefined )
+	))
 
 (defun emacspeak-keymap-refresh ()
   "Load emacspeak-keymap module."

@@ -1,5 +1,5 @@
 ;;; emacspeak-vm.el --- Speech enable VM -- A powerful mail agent (and the one I use)
-;;; $Id: emacspeak-vm.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-vm.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enhance vm
 ;;; Keywords: Emacspeak, VM, Email, Spoken Output, Voice annotations
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-07-31 10:49:44 -0700 (Thu, 31 Jul 2008) $ |
 ;;;  $Revision: 4557 $ |
 ;;; Location undetermined
 ;;;
@@ -66,9 +66,9 @@ Note that some badly formed mime messages  cause trouble."
 
 (defun emacspeak-vm-mode-setup ()
   "Setup function placed on vm-mode-hook by Emacspeak."
-  (declare (special emacspeak-vm-voice-lock-messages
-                    dtk-allcaps-beep))
-  (dtk-set-punctuations 'some)
+  (declare (special  dtk-punctuation-mode emacspeak-vm-voice-lock-messages
+                     dtk-allcaps-beep))
+  (setq dtk-punctuation-mode 'all)
   (when dtk-allcaps-beep
     (dtk-toggle-allcaps-beep))
   (emacspeak-dtk-sync)
@@ -222,34 +222,31 @@ Note that some badly formed mime messages  cause trouble."
                     vm-virtual-folder-definition
                     vm-ml-message-new
                     vm-ml-message-number vm-ml-highest-message-number ))
-  (dtk-stop)
-  (emacspeak-dtk-sync)
-  (let ((dtk-stop-immediately nil ))
-    (when (buffer-modified-p )
-      (dtk-tone 700 70))
-    (cond
-     (vm-virtual-folder-definition
-      (dtk-speak
-       (format "Message %s of %s from virtual folder %s"
-               vm-ml-message-number vm-ml-highest-message-number
-               (car vm-virtual-folder-definition))))
-     (t (dtk-speak
-         (format "Message %s of %s,    %s %s %s  %s"
-                 vm-ml-message-number vm-ml-highest-message-number
-                 (if vm-ml-message-new "new" "")
-                 (if vm-ml-message-unread "unread" "")
-                 (if vm-ml-message-read "read" "")
-                 (mapconcat
-                  (function (lambda(item)
-                              (let ((var (car item))
-                                    (value (cadr item )))
-                                (cond
-                                 ((and (boundp var) (eval var ))
-                                  (if (symbolp value)
-                                      (eval value)
-                                    value))
-                                 (t "")))))
-                  (cdr vm-ml-message-attributes-alist)   " ")))))))
+  (when (buffer-modified-p )
+    (dtk-tone 700 70))
+  (cond
+   (vm-virtual-folder-definition
+    (dtk-speak
+     (format "Message %s of %s from virtual folder %s"
+	     vm-ml-message-number vm-ml-highest-message-number
+	     (car vm-virtual-folder-definition))))
+   (t (dtk-speak
+       (format "Message %s of %s,    %s %s %s  %s"
+	       vm-ml-message-number vm-ml-highest-message-number
+	       (if vm-ml-message-new "new" "")
+	       (if vm-ml-message-unread "unread" "")
+	       (if vm-ml-message-read "read" "")
+	       (mapconcat
+		(function (lambda(item)
+			    (let ((var (car item))
+				  (value (cadr item )))
+			      (cond
+			       ((and (boundp var) (eval var ))
+				(if (symbolp value)
+				    (eval value)
+				  value))
+			       (t "")))))
+		(cdr vm-ml-message-attributes-alist)   " "))))))
 
 ;;}}}
 ;;{{{  Moving between messages
@@ -297,8 +294,7 @@ Then speak the screenful. "
 (declaim (special vm-mode-map))
 (eval-when (load)
   (load-library "vm-vars")
-  (emacspeak-keymap-remove-emacspeak-edit-commands
-   vm-mode-map))
+  )
 
 (declaim (special vm-mode-map))
 (define-key vm-mode-map "\M-\C-m" 'widget-button-press)

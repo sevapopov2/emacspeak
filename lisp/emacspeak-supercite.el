@@ -1,5 +1,5 @@
 ;;; emacspeak-supercite.el --- Speech enable supercite
-;;; $Id: emacspeak-supercite.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-supercite.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension to speech enable supercite
 ;;; Keywords: Emacspeak, supercite, mail

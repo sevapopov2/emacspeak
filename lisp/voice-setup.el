@@ -1,5 +1,5 @@
 ;;; voice-setup.el --- Setup voices for voice-lock
-;;; $Id: voice-setup.el 5246 2007-09-01 22:30:13Z tv.raman.tv $
+;;; $Id: voice-setup.el 6060 2008-11-13 04:25:52Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Voice lock mode for Emacspeak
 ;;{{{  LCD Archive entry:
@@ -497,7 +497,7 @@ font-lock.  Voicification is effective only if font lock is on."
 
 ;; Install ourselves:
 (declaim (special text-property-default-nonsticky))
-(unless (assoc 'personality text-property-default-nonsticky)
+(unless (assq 'personality text-property-default-nonsticky)
   (push  (cons 'personality t) text-property-default-nonsticky))
 
 (unless (assq 'voice-lock-mode minor-mode-alist)
@@ -552,7 +552,8 @@ take effect."
          (gethash face voice-setup-buffer-face-voice-table)
          personality)
         (emacspeak-auditory-icon 'close-object)))
-    (normal-mode)))
+    (when (buffer-file-name)
+      (normal-mode))))
 
 ;;}}}
 (provide 'voice-setup)

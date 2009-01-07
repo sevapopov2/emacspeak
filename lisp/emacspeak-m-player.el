@@ -1,5 +1,5 @@
 ;;; emacspeak-m-player.el --- Control mplayer from Emacs
-;;; $Id: emacspeak-m-player.el 5465 2008-02-14 02:02:58Z tv.raman.tv $
+;;; $Id: emacspeak-m-player.el 6052 2008-11-11 01:56:55Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, m-player streaming media 
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu 
 ;;; A speech interface to Emacs |
-;;; $Date: 2008-02-13 18:02:58 -0800 (Wed, 13 Feb 2008) $ |
+;;; $Date: 2008-06-29 17:58:19 -0700 (Sun, 29 Jun 2008) $ |
 ;;;  $Revision: 4532 $ | 
 ;;; Location undetermined
 ;;;
@@ -61,7 +61,7 @@
 ;;{{{  Required modules
 
 (require 'emacspeak-preamble)
-(require 'desktop)
+(require 'emacspeak-webutils)
 (require 'dired)
 (require 'comint)
 
@@ -71,32 +71,34 @@
 (defvar emacspeak-m-player-process nil
   "Process handle to m-player." )
 
-(define-prefix-command 'emacspeak-m-player-prefix-command
-  'emacspeak-m-player-mode-map)
-
 (define-derived-mode emacspeak-m-player-mode comint-mode 
   "M-Player Interaction"
   "Major mode for m-player interaction. \n\n
 \\{emacspeak-m-player-mode-map}"
-  (setq emacspeak-m-player-process (get-buffer-process (current-buffer))))
+  (progn
+    (setq buffer-undo-list t)
+    (ansi-color-for-comint-mode-on)
+    (setq emacspeak-m-player-process (get-buffer-process (current-buffer)))))
 
 ;;}}}
 ;;{{{ emacspeak-m-player
+
 ;;;###autoload
 
 (defgroup emacspeak-m-player nil
   "Emacspeak media player settings."
   :group 'emacspeak)
-(defcustom emacspeak-m-player-height 1
-  "Height of MPlayer window."
-  :type 'number
-  :group 'emacspeak-m-player)
+
 (defcustom emacspeak-m-player-program "mplayer"
   "Media player program."
   :type 'string
+  :set  #'(lambda (sym val)
+	    (set-default sym
+			 (executable-find val)))
   :group 'emacspeak-m-player)
+
 (defvar emacspeak-m-player-default-options
-  (list "-slave"  "-nortc""-softvol" "100" )
+  (list "-slave"  "-nortc""-softvol" "-quiet" )
   "Default options for MPlayer.")
 
 (defcustom emacspeak-m-player-options 
@@ -121,27 +123,18 @@ It is used for tags decoding."
   (cond
    ((and emacspeak-m-player-process
          (eq 'run (process-status emacspeak-m-player-process)))
-    (call-interactively 'emacspeak-m-player-command)   )
+    (call-interactively 'emacspeak-m-player-command))
    (t  (call-interactively 'emacspeak-m-player))))
 
-(defun emacspeak-m-player-command (command-char)
+(defun emacspeak-m-player-command (key)
   "Invoke MPlayer commands."
-  (interactive
-   (list
-    (read-char "MPlayer Command: ")))
-  (declare (special emacspeak-m-player-process
-		    emacspeak-m-player-height))
+  (interactive (list (read-key-sequence "MPlayer Key: ")))
+  (declare (special emacspeak-m-player-process))
   (cond
-   ((=  command-char ?\;)
-    (pop-to-buffer
-     (process-buffer emacspeak-m-player-process))
-    (set-window-text-height nil emacspeak-m-player-height)
+   ((and (stringp key) (string= ";" key))
+    (pop-to-buffer (process-buffer emacspeak-m-player-process))
     (emacspeak-speak-mode-line))
-   (t
-    (save-window-excursion
-      (call-interactively
-       (lookup-key emacspeak-m-player-mode-map
-                   (format "%c" command-char)))))))
+   (t (call-interactively (lookup-key emacspeak-m-player-mode-map key)))))
 
 (defvar  emacspeak-m-player-playlist-pattern
   (concat
@@ -154,9 +147,23 @@ It is used for tags decoding."
   "Check if specified resource matches a playlist type."
   (declare (special emacspeak-m-player-playlist-pattern))
   (string-match emacspeak-m-player-playlist-pattern resource))
+;;;###autoload
+(defvar emacspeak-media-extensions
+  (concat
+   (regexp-opt
+    (list ".wma"
+          ".m4a"
+          ".flac"
+          ".ogg"
+          ".mp3"
+          ".MP3"
+          ".mp4")
+    'parens)
+   "$")
+  "Extensions that match media files.")
 
 ;;;###autoload
-(defun emacspeak-m-player (resource &optional play-list noselect)
+(defun emacspeak-m-player (resource &optional play-list)
   "Play specified resource using m-player.
 Optional prefix argument play-list interprets resource as a play-list.
 Resource is a media resource or playlist containing media resources.
@@ -167,20 +174,16 @@ The player is placed in a buffer in emacspeak-m-player-mode."
           (emacspeak-speak-messages nil)
           (read-file-name-completion-ignore-case t)
           (minibuffer-history emacspeak-realaudio-history))
-      (emacspeak-pronounce-define-local-pronunciation
-       emacspeak-realaudio-shortcuts-directory " shortcuts/ ")
       (read-file-name "MP3 Resource: "
-                      (if
-                          (string-match
-                           "mp3" (expand-file-name default-directory))
+                      (if (string-match "mp3" (expand-file-name default-directory))
                           default-directory
                         emacspeak-realaudio-shortcuts-directory)
                       (when (eq major-mode 'dired-mode)
                         (dired-get-filename))))
-    current-prefix-arg
-    'noselect))
-  (declare (special emacspeak-realaudio-history emacspeak-realaudio-shortcuts-directory
-		    emacspeak-m-player-height emacspeak-m-player-process
+    current-prefix-arg))
+  (declare (special emacspeak-realaudio-history
+                    emacspeak-media-extensions
+                    emacspeak-realaudio-shortcuts-directory emacspeak-m-player-process
                     emacspeak-m-player-program emacspeak-m-player-options))
   (unless (string-match "^[a-z]+:"  resource)
     (setq resource (expand-file-name resource)))
@@ -190,7 +193,8 @@ The player is placed in a buffer in emacspeak-m-player-mode."
              (y-or-n-p "Stop currently playing music? "))
     (emacspeak-m-player-quit)
     (setq emacspeak-m-player-process nil))
-  (let ((process-connection-type nil)
+  (let ((buffer "*M-Player*")
+	(process-connection-type nil)
         (playlist-p
          (or play-list
              (emacspeak-m-player-playlist-p resource)))
@@ -205,28 +209,17 @@ The player is placed in a buffer in emacspeak-m-player-mode."
              (directory-files
               (expand-file-name resource)
               'full
-              "\\(ogg$\\)\\|\\(mp3$\\)\\|\\(MP3$\\)")))
+              emacspeak-media-extensions)))
            (t
-            (nconc
-             options
-             (list resource)))))
-    (setq emacspeak-m-player-process
-          (get-buffer-process
-           (apply 'make-comint
-                  "m-player" emacspeak-m-player-program
-                  nil
-                  options)))
-    (set-process-coding-system emacspeak-m-player-process
-                               emacspeak-m-player-coding-system)
+            (nconc options (list resource)))))
     (save-excursion
-      (set-buffer (process-buffer emacspeak-m-player-process))
-      (emacspeak-m-player-mode)
-      (setq buffer-undo-list t)
-      (ansi-color-for-comint-mode-on))
-    (unless noselect
-      (pop-to-buffer (process-buffer emacspeak-m-player-process))
-      (set-window-text-height nil emacspeak-m-player-height)
-      )))
+      (setq emacspeak-m-player-process
+            (apply 'start-process "M PLayer" buffer
+                   emacspeak-m-player-program options))
+      (set-process-coding-system emacspeak-m-player-process
+                                 emacspeak-m-player-coding-system)
+      (set-buffer buffer)
+      (emacspeak-m-player-mode))))
 
 ;;}}}
 ;;{{{ commands 
@@ -246,10 +239,12 @@ The player is placed in a buffer in emacspeak-m-player-mode."
   (interactive "nFactor:")
   (emacspeak-m-player-dispatch
    (format "speed_mult %f" factor)))
+
 (defun emacspeak-m-player-slower ()
   "Slow down playback."
   (interactive)
   (emacspeak-m-player-scale-speed 0.9091))
+
 (defun emacspeak-m-player-faster ()
   "Speed up  playback."
   (interactive)
@@ -370,9 +365,9 @@ The player is placed in a buffer in emacspeak-m-player-mode."
   (interactive)
   (when (eq (process-status emacspeak-m-player-process) 'run)
     (let ((buffer (process-buffer emacspeak-m-player-process)))
-    (emacspeak-m-player-dispatch "quit")
-    (and (buffer-live-p buffer)
-         (kill-buffer buffer))))
+      (emacspeak-m-player-dispatch "quit")
+      (and (buffer-live-p buffer)
+	   (kill-buffer buffer))))
   (unless (eq (process-status emacspeak-m-player-process) 'exit)
     (delete-process  emacspeak-m-player-process))
   (emacspeak-speak-mode-line))
@@ -402,13 +397,15 @@ A string of the form `<number> 1' sets volume as an absolute."
   "Display length of track in seconds."
   (interactive)
   (emacspeak-m-player-dispatch "get_time_length"))
-   
+
 
 (defun emacspeak-m-player-display-position ()
   "Display current position in track and its length."
   (interactive)
   (emacspeak-m-player-dispatch
-   "get_time_pos\nget_percent_pos\nget_time_length\n"))
+   "get_time_pos\nget_percent_pos\nget_time_length\n")
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'select-object)))
 
 (defun emacspeak-m-player-load-file(f)
   "Load specified file."
@@ -518,23 +515,22 @@ The Mplayer equalizer provides 10 bands, G0 -- G9, see the
         emacspeak-m-player-default-options)
   (message "Reset options."))
 
-  
+
 ;;}}}
 ;;{{{ keys
+
 (declaim (special emacspeak-m-player-mode-map))
 (loop for k in 
       '(
         ("\C-m" emacspeak-m-player)
-        (":" emacspeak-m-player)
         ("e" emacspeak-m-player-add-equalizer)
-	("o" other-window)
-        ("O" emacspeak-m-player-customize-options)
+        ("o" emacspeak-m-player-customize-options)
         ("O" emacspeak-m-player-reset-options)
         ("f" emacspeak-m-player-add-filter)
         ("b" bury-buffer)
 	("l" emacspeak-m-player-get-length)
         ("L" emacspeak-m-player-load-file)
-        ("L" emacspeak-m-player-load-playlist)
+        ("\M-l" emacspeak-m-player-load-playlist)
         ("?" emacspeak-m-player-display-position)
         ("t" emacspeak-m-player-play-tree-step)
         ("p" emacspeak-m-player-previous-track)
@@ -578,7 +574,6 @@ The Mplayer equalizer provides 10 bands, G0 -- G9, see the
   :type 'string
   :group 'emacspeak-m-player)
 
-  
 ;;;###autoload
 
 (defun emacspeak-m-player-youtube-player (url)
@@ -590,10 +585,13 @@ The Mplayer equalizer provides 10 bands, G0 -- G9, see the
   (unless (file-executable-p emacspeak-m-player-youtube-dl)
     (error "Please install youtube-dl first."))
   (emacspeak-m-player
+   (substring
    (shell-command-to-string
-    (format "%s -g %s"
-	    emacspeak-m-player-youtube-dl url))
-   nil t))
+    (format "%s -g '%s'"
+	    emacspeak-m-player-youtube-dl
+             url))
+   0
+   -1)))
 
 ;;}}}
 (provide 'emacspeak-m-player)

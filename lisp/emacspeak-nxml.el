@@ -1,5 +1,5 @@
 ;;; emacspeak-nxml.el --- Speech enable nxml mode
-;;; $Id: emacspeak-nxml.el 5561 2008-04-16 01:29:37Z tv.raman.tv $
+;;; $Id: emacspeak-nxml.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak extension to speech enable nxml mode
 ;;; Keywords: Emacspeak, nxml

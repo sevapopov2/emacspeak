@@ -1,5 +1,5 @@
 ;;; emacspeak-ediff.el --- Speech enable Emacs interface to diff and merge
-;;; $Id: emacspeak-ediff.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;; $Id: emacspeak-ediff.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak extensions for ediff
 ;;; Keywords: emacspeak, audio interface to emacs, Comparing files
@@ -8,7 +8,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
 ;;;  $Revision: 4532 $ |
 ;;; Location undetermined
 ;;;
@@ -300,7 +300,6 @@
                       (declare (special ediff-mode-map
                                         voice-lock-mode))
                       (setq voice-lock-mode t)
-                      (emacspeak-keymap-remove-emacspeak-edit-commands ediff-mode-map)
                       (define-key ediff-mode-map "." 'emacspeak-ediff-speak-current-difference)
                       (emacspeak-ediff-voicify-differences))))
 

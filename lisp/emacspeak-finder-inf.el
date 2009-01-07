@@ -1,4 +1,4 @@
-;;;$Id: emacspeak-finder.el 5222 2007-08-26 01:28:19Z tv.raman.tv $
+;;;$Id: emacspeak-finder.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; emacspeak-finder-inf.el --- keyword-to-package mapping
 ;; Keywords: help
 ;;; Commentary:
@@ -26,6 +26,9 @@
     ("dtk-speak.el"
         "Provides Emacs Lisp interface to speech server"
         (dectalk emacs elisp))
+    ("dtk-unicode.el"
+        "Pronounce more characters correctly"
+        (tts  unicode))
     ("emacspeak-actions.el"
         "Emacspeak actions -- callbacks that can be associated with portions of a buffer"
         (emacspeak  audio interface to emacs actions))
@@ -374,6 +377,9 @@
     ("emacspeak-preamble.el"
         "standard  include for Emacspeak modules"
         (emacspeak  audio interface to emacs))
+    ("emacspeak-proced.el"
+        "Speech-enable PROCED Task Manager"
+        (emacspeak   audio desktop proced task manager))
     ("emacspeak-pronounce.el"
         "Implements Emacspeak pronunciation dictionaries"
         (emacspeak  audio interface to emacs customized pronunciation))

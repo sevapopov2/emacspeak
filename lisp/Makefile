@@ -1,4 +1,4 @@
-# $Id: Makefile 5562 2008-04-16 21:36:54Z tv.raman.tv $
+# $Id: Makefile 5734 2008-08-15 00:29:39Z tv.raman.tv $
 # $Author: tv.raman.tv $
 # Description:  Makefile for Emacspeak
 # Keywords: Emacspeak, Dectalk, Makefile
@@ -45,7 +45,11 @@ SRC=".."
 # How to run in batch mode
 BATCH = -batch -q -no-site-file   -eval '(setq vc-handled-backends nil\
 byte-compile-warnings t)'
-DEPS=-l $(SRC)/lisp/emacspeak-load-path.el -l $(SRC)/lisp/emacspeak-loaddefs.el -l $(SRC)/lisp/emacspeak-cus-load.el
+DEPS=-l $(SRC)/lisp/emacspeak-load-path.el \
+-l $(SRC)/lisp/emacspeak-loaddefs.el \
+-l $(SRC)/lisp/emacspeak-cus-load.el \
+ -l $(SRC)/lisp/g-client/g-load-path.el
+
 COMPILE =  -f batch-byte-compile
 # How to compile
 %.elc:  %.el
@@ -57,7 +61,7 @@ COMPILE =  -f batch-byte-compile
 DTK_OBJECTS = acss-structure.elc \
 dtk-speak.elc		dectalk-voices.elc\
 outloud-voices.elc multispeech-voices.elc \
-espeak-voices.elc dtk-interp.elc
+espeak-voices.elc dtk-interp.elc dtk-unicode.elc
 
 SPEAK_OBJECTS =   \
 	emacspeak-speak.elc  \
@@ -187,6 +191,7 @@ emacspeak-perl.elc \
 emacspeak-php-mode.elc \
 emacspeak-planner.elc \
 emacspeak-piglets.elc \
+emacspeak-proced.elc \
 emacspeak-psgml.elc \
 emacspeak-ps.elc \
 emacspeak-python.elc \
@@ -286,7 +291,8 @@ emacspeak-cus-load.el: force
 #Modules using functions from the dtk module should depend on dtk-speak
 
 dtk-interp.elc: dtk-interp.el
-dtk-speak.elc: dtk-speak.el  dtk-interp.elc
+dtk-unicode.elc: dtk-unicode.el
+dtk-speak.elc: dtk-speak.el  dtk-interp.elc dtk-unicode.elc
 acss-structure.elc: acss-structure.el
 dectalk-voices.elc: dectalk-voices.el voice-setup.elc
 outloud-voices.elc: outloud-voices.el voice-setup.elc
@@ -407,6 +413,7 @@ emacspeak-php-mode.elc: emacspeak-php-mode.el dtk-speak.elc voice-setup.elc
 emacspeak-planner.elc: emacspeak-planner.el dtk-speak.elc voice-setup.elc
 emacspeak-pronounce.elc: emacspeak-pronounce.el
 emacspeak-personality.elc: emacspeak-personality.el
+emacspeak-proced.elc: emacspeak-proced.el dtk-speak.elc voice-setup.elc
 emacspeak-psgml.elc: emacspeak-psgml.el dtk-speak.elc voice-setup.elc
 emacspeak-ps.elc: emacspeak-ps.el dtk-speak.elc voice-setup.elc
 emacspeak-python.elc: emacspeak-python.el dtk-speak.elc voice-setup.elc
