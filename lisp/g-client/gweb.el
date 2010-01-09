@@ -1,5 +1,5 @@
 ;;; gweb.el --- Google Search
-;;;$Id: gweb.el 6003 2008-10-17 14:17:17Z tv.raman.tv $
+;;;$Id: gweb.el 6100 2009-02-05 22:39:24Z tv.raman.tv $
 ;;; $Author: raman $
 ;;; Description:  AJAX Search -> Lisp
 ;;; Keywords: Google   AJAX API
@@ -91,7 +91,7 @@
 ;;; Get search completions from Google
 
 (defvar gweb-suggest-url
-  "http://www.google.com/complete/search?json=true&qu=%s"
+  "http://clients1.google.com/complete/search?json=t&nohtml=t&nolabels=t&q=%s"
   "URL  that gets suggestions from Google as JSON.")
 
 (defsubst gweb-suggest (input)

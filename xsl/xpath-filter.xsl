@@ -9,16 +9,15 @@ Param path is the same expression, but quoted so it can be
 shown in the output.
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:set="http://exslt.org/sets"
-  version="1.0"
-  exclude-result-prefixes="set">
+                xmlns:set="http://exslt.org/sets"
+                version="1.0"
+                exclude-result-prefixes="set">
   <xsl:param name="locator"/>
   <xsl:param name="path"/>
   <xsl:param name="base"/>
   <xsl:output method="html" indent="yes" encoding="UTF-8"/>
   <xsl:include href="object.xsl"/>
   <!-- { html   -->
-  <xsl:template match="//script|//meta|//iframe"/>
   <!--add base uri if available. -->
   <xsl:template match="head">
     <head>
@@ -32,25 +31,6 @@ shown in the output.
       </xsl:if>
     </head>
   </xsl:template>
-  <xsl:template match="body">
-    <body>
-      <xsl:apply-templates select="$locator" />
-      <h2>
-        Nodes Matching   <xsl:value-of select="$path"/>
-      </h2>
-      <p>
-        Found <xsl:value-of select="count($locator)"/>
-        matching elements in  
-        <xsl:element name="a">
-          <xsl:attribute name="href">
-            <xsl:value-of select="$base"/>
-          </xsl:attribute>
-          document 
-        </xsl:element>
-        .
-      </p>
-    </body>
-  </xsl:template>
   <xsl:template match="*|@*" mode="copy" >
     <xsl:variable name="i" select="$locator"/>
     <xsl:if test="not(set:intersection(ancestor::*, $i))">
@@ -58,18 +38,38 @@ shown in the output.
       <br/>
     </xsl:if>
   </xsl:template>
+  <xsl:template match="body">
+    <body>
+      <xsl:for-each select="$locator" >
+        <xsl:copy-of  select="."/>
+      </xsl:for-each>
+      <h2>
+        Summary:
+        <xsl:value-of select="count($locator)"/>  Nodes Matching   <xsl:value-of select="$path"/>
+        in <xsl:element name="a">
+        <xsl:attribute name="href">
+          <xsl:value-of select="$base"/>
+        </xsl:attribute>
+        document.
+      </xsl:element>
+      </h2> 
+    </body>
+  </xsl:template>
+  
+  
+  
   <xsl:include href="identity.xsl"/>
   <!-- nuke these -->
   
   <!-- } -->
 </xsl:stylesheet>
 <!--
-Local Variables:
-mode: xae
-sgml-indent-step: 2
-sgml-indent-data: t
-sgml-set-face: nil
-sgml-insert-missing-element-comment: nil
-folded-file: t
-End:
+    Local Variables:
+    mode: xae
+    sgml-indent-step: 2
+    sgml-indent-data: t
+    sgml-set-face: nil
+    sgml-insert-missing-element-comment: nil
+    folded-file: t
+    End:
 -->

@@ -1,4 +1,4 @@
-# $Id: Makefile 4678 2007-06-25 15:14:54Z tv.raman.tv $
+# $Id: Makefile 6081 2008-11-29 19:57:44Z tv.raman.tv $
 # $Author: tv.raman.tv $ 
 # Description:  Makefile for Emacspeak 
 # Keywords: Emacspeak, Dectalk, Makefile 
@@ -56,7 +56,7 @@ config:
 # {{{maintainer target 
 
 pub: tips.html applications.html
-	scp tips.html applications.html   raman@emacspeak.sourceforge.net:~/www-emacspeak/htdocs 
+	scp tips.html applications.html    raman,emacspeak@web.sourceforge.net:/home/groups/e/em/emacspeak/htdocs
 # }}}
 # {{{ end of file 
 

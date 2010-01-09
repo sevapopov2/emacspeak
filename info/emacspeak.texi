@@ -1,12 +1,15 @@
 \input texinfo
 @raggedright
-@c$Id: emacspeak.texi 5712 2008-08-02 18:07:12Z tv.raman.tv $
+@c$Id: emacspeak.texi 6111 2009-02-28 02:49:23Z tv.raman.tv $
 @setfilename./emacspeak.info 
 @settitle Emacspeak User's Manual --2nd Edition.
 @dircategory Accessibility
+@direntry
+* Emacspeak:(emacspeak).		Speech-enabled Audio Desktop.
+@end direntry
 @dircategory Emacs
 @direntry
- * Emacspeak:(emacspeak).		Speech-enabled Audio Desktop.
+* Emacspeak:(emacspeak).		Speech-enabled Audio Desktop.
 @end direntry
 
 @titlepage

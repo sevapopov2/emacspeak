@@ -1,5 +1,5 @@
 ;;; emacspeak-moz.el.el --- Talk to Firefox via MozRepl
-;;; $Id: emacspeak-moz.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-moz.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Control Firefox from Emacs
 ;;; Keywords: Emacspeak,  Audio Desktop Firefox
@@ -166,7 +166,7 @@
                            (browse-url-url-at-point)
                            "http://"))))
   (emacspeak-moz-eval-expression
-   (format "content.location.href='%s'\n"
+   (format "window.location.href='%s'\n"
            url)))
 
 ;;;###autoload
@@ -180,7 +180,7 @@
     (cond
      (url
       (emacspeak-moz-eval-expression
-       (format "content.location.href=\"%s\";\n"
+       (format "window.location.href=\"%s\";\n"
                url))
       (message "Sent url at point to firefox."))
      (t (error "No url under point.")))))
@@ -285,7 +285,6 @@ title)\n"
    (format
     "repl.adom.filter(\"%s\"); repl.adom.view()"
     xpath)))
-
 
 ;;;###autoload
 (defun emacspeak-moz-id-browse(id)

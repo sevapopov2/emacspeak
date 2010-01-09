@@ -1,5 +1,5 @@
 ;;; emacspeak-redefine.el --- Redefines some key Emacs builtins to speak
-;;; $Id: emacspeak-redefine.el 6001 2008-10-17 01:21:40Z tv.raman.tv $
+;;; $Id: emacspeak-redefine.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak's redefinition of some key functions.
 ;;; Emacspeak does most of its work by advising other functions to speak.
@@ -74,7 +74,7 @@
 
 ;;}}}
 ;;{{{  The new functions:
-
+;;;###autoload
 (defun emacspeak-self-insert-command (&optional arg)
   "Insert a character.
 Speaks the character if emacspeak-character-echo is true.
@@ -109,7 +109,7 @@ speech flush as you type."
        (= (char-syntax  last-command-event) 32)
        (>= (current-column) fill-column)
        (funcall auto-fill-function)))
-
+;;;###autoload
 (defun emacspeak-forward-char (&optional arg)
   "Forward-char redefined to speak char moved to. "
   (interactive "p")
@@ -151,7 +151,6 @@ speech flush as you type."
        #'(lambda (key)
            (global-set-key key new-fn )))
      keys )))
-
 
 (defvar emacspeak-functions-that-bypass-function-cell
   (list 'backward-char 'forward-char 'self-insert-command )

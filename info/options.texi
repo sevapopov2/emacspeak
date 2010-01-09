@@ -1,21 +1,23 @@
-@c $Id: options.texi 5115 2007-08-08 19:53:43Z tv.raman.tv $
+@c $Id: options.texi 6081 2008-11-29 19:57:44Z tv.raman.tv $
 @node Emacspeak Customizations
 @chapter Emacspeak Customizations 
 
 This chapter is generated automatically from the source-level documentation.
 Any errors or corrections should be made to the source-level
 documentation.
-This chapter documents a total of 639 user customizable
+This chapter documents a total of 640 user customizable
   options.
 
 @menu
 * cd-tool Options::             
 * dtk-speak Options::           
+* dtk-unicode Options::         
 * emacspeak-add-log Options::   
 * emacspeak-advice Options::    
 * emacspeak-alsaplayer Options::  
 * emacspeak-amphetadesk Options::  
 * emacspeak-aumix Options::     
+* emacspeak-bbdb Options::      
 * emacspeak-calendar Options::  
 * emacspeak-compile Options::   
 * emacspeak-custom Options::    
@@ -28,6 +30,7 @@ This chapter documents a total of 639 user customizable
 * emacspeak-erc Options::       
 * emacspeak-eshell Options::    
 * emacspeak-eterm Options::     
+* emacspeak-eudc Options::      
 * emacspeak-forms Options::     
 * emacspeak-gnus Options::      
 * emacspeak-hide Options::      
@@ -60,11 +63,12 @@ This chapter documents a total of 639 user customizable
 * emacspeak-table-ui Options::  
 * emacspeak-tnt Options::       
 * emacspeak-url-template Options::  
-* emacspeak-vm Options::        
 * emacspeak-w3 Options::        
 * emacspeak-w3m Options::       
 * emacspeak-we Options::        
+* emacspeak-webmarks Options::  
 * emacspeak-websearch Options::  
+* emacspeak-webspace Options::  
 * emacspeak-webutils Options::  
 * emacspeak-wizards Options::   
 * emacspeak-xml-shell Options::  
@@ -159,6 +163,25 @@ Allow tones to be turned off.
 @defvar {User Option} tts-strip-octals
 Set to T to strip all octal chars before speaking.
 Particularly useful for web browsing.
+@end defvar
+
+@node dtk-unicode Options
+@section dtk-unicode Options
+
+Commentary:
+
+This  Provides Unicode support to the speech layer.
+
+Automatically generated documentation
+for options defined in module  dtk-unicode.
+These options are customizable via Emacs' Custom interface.
+
+@defvar {User Option} dtk-unicode-character-replacement-alist
+Explicit replacements for some characters.
+@end defvar
+
+@defvar {User Option} dtk-unicode-name-transformation-rules-alist
+Alist of character name transformation rules.
 @end defvar
 
 @node emacspeak-add-log Options
@@ -283,6 +306,10 @@ These options are customizable via Emacs' Custom interface.
 Turn this on if you want spoken feedback and auditory icons from alsaplayer.
 @end defvar
 
+@defvar {User Option} emacspeak-alsaplayer-height
+Height of alsaplayer window.
+@end defvar
+
 @defvar {User Option} emacspeak-alsaplayer-media-directory
 Directory to look for media files.
 @end defvar
@@ -339,6 +366,33 @@ ALSA sound controller used to restore settings.
 
 @defvar {User Option} emacspeak-aumix-settings-file
 *Name of file containing personal aumix settings.
+@end defvar
+
+@node emacspeak-bbdb Options
+@section emacspeak-bbdb Options
+
+Automatically generated documentation
+for options defined in module  emacspeak-bbdb.
+These options are customizable via Emacs' Custom interface.
+
+@defvar {User Option} emacspeak-bbdb-company-voice
+Personality used for bbdb-company
+This personality uses  voice-brighten whose  effect can be changed globally by customizing voice-brighten-settings.
+@end defvar
+
+@defvar {User Option} emacspeak-bbdb-field-name-voice
+Personality used for bbdb-field-name
+This personality uses  voice-smoothen whose  effect can be changed globally by customizing voice-smoothen-settings.
+@end defvar
+
+@defvar {User Option} emacspeak-bbdb-field-value-voice
+Personality used for bbdb-field-value
+This personality uses  voice-animate whose  effect can be changed globally by customizing voice-animate-settings.
+@end defvar
+
+@defvar {User Option} emacspeak-bbdb-name-voice
+Personality used for bbdb-name
+This personality uses  voice-bolden whose  effect can be changed globally by customizing voice-bolden-settings.
 @end defvar
 
 @node emacspeak-calendar Options
@@ -600,15 +654,14 @@ Provide an auditory icon if possible."
                           eshell-previous-matching-input-from-input)
       do
       (eval
-       (`
-        (defadvice (, f) (after  emacspeak pre act comp)
+       `(defadvice ,f (after  emacspeak pre act comp)
           "Speak selected command."
           (when (interactive-p)
             (emacspeak-auditory-icon 'select-object)
             (save-excursion
               (beginning-of-line)
               (eshell-skip-prompt)
-              (emacspeak-speak-line 1)))))))
+              (emacspeak-speak-line 1))))))
 
 (defgroup emacspeak-eshell nil
   "EShell on the Emacspeak Audio Desktop."
@@ -655,13 +708,12 @@ personalities."
                            eshell-forward-matching-input  eshell-backward-matching-input)
       do
       (eval
-       (`
-        (defadvice (, f) (after  emacspeak pre act comp)
+       `(defadvice ,f (after  emacspeak pre act comp)
           "Speak selected command."
           (when (interactive-p)
             (let ((emacspeak-speak-messages nil))
               (emacspeak-auditory-icon 'select-object)
-              (emacspeak-speak-line 1)))))))
+              (emacspeak-speak-line 1))))))
 
 (loop for f in
       '(eshell-insert-buffer-name
@@ -669,12 +721,11 @@ personalities."
         eshell-insert-envvar)
       do
       (eval
-       (`
-        (defadvice (, f) (after emacspeak pre act comp)
+       `(defadvice ,f (after emacspeak pre act comp)
           "Speak output."
           (when (interactive-p)
             (emacspeak-auditory-icon 'select-object)
-            (emacspeak-speak-line))))))
+            (emacspeak-speak-line)))))
 
 (defadvice eshell-insert-process (after emacspeak pre
                                         act comp)
@@ -797,6 +848,23 @@ File where list of known remote hosts is cached
 
 @defvar {User Option} emacspeak-eterm-underline-personality
 Personality to indicate terminal underlining.
+@end defvar
+
+@node emacspeak-eudc Options
+@section emacspeak-eudc Options
+
+Commentary:
+EUDC --Emacs Universal Directory Client 
+provides a unified interface to directory servers
+e.g. ldap servers
+this module speech enables eudc 
+
+Automatically generated documentation
+for options defined in module  emacspeak-eudc.
+These options are customizable via Emacs' Custom interface.
+
+@defvar {User Option} emacspeak-eudc-attribute-value-personality
+Personality t use for voiceifying attribute values. 
 @end defvar
 
 @node emacspeak-forms Options
@@ -1123,6 +1191,10 @@ Automatically generated documentation
 for options defined in module  emacspeak-loaddefs.
 These options are customizable via Emacs' Custom interface.
 
+@defvar {User Option} emacspeak-atom-feeds
+Table of ATOM feeds.
+@end defvar
+
 @defvar {User Option} emacspeak-character-echo
 If t, then emacspeak echoes characters  as you type.
 You can
@@ -1146,6 +1218,15 @@ Default theme for auditory icons.
 
 @defvar {User Option} emacspeak-speak-embedded-url-pattern
 Pattern to recognize embedded URLs.
+@end defvar
+
+@defvar {User Option} emacspeak-use-header-line
+Use default header line defined  by Emacspeak for buffers that
+dont customize the header.
+@end defvar
+
+@defvar {User Option} emacspeak-webutils-charent-alist
+Entities to unescape when treating badly escaped XML.
 @end defvar
 
 @defvar {User Option} emacspeak-word-echo
@@ -1182,6 +1263,10 @@ Options passed to mplayer.
 
 @defvar {User Option} emacspeak-m-player-program
 Media player program.
+@end defvar
+
+@defvar {User Option} emacspeak-m-player-youtube-dl
+YouTube download tool
 @end defvar
 
 @node emacspeak-madplay Options
@@ -1513,7 +1598,7 @@ File that holds the persistent emacspeak pronunciation dictionaries.
 @defvar {User Option} emacspeak-pronounce-internet-smileys-pronunciations
 Pronunciation dictionary used in all instant messenger and IRC chat
 modes.
-See http://oz.uc.edu/~solkode/smileys.html for a full list.
+See http://www.charm.net/~kmarsh/smiley.html. 
 @end defvar
 
 @defvar {User Option} emacspeak-pronounce-load-pronunciations-on-startup
@@ -1944,6 +2029,36 @@ True means messages in this chat session will be spoken
 automatically.
 @end defvar
 
+@defvar {User Option} emacspeak-tnt-buddy-list-active-personality
+Personality used for tnt-buddy-list-active-face
+This personality uses  voice-animate whose  effect can be changed globally by customizing voice-animate-settings.
+@end defvar
+
+@defvar {User Option} emacspeak-tnt-buddy-list-away-personality
+Personality used for tnt-buddy-list-away-face
+This personality uses  voice-monotone whose  effect can be changed globally by customizing voice-monotone-settings.
+@end defvar
+
+@defvar {User Option} emacspeak-tnt-buddy-list-idle-personality
+Personality used for tnt-buddy-list-idle-face
+This personality uses  voice-smoothen-medium whose  effect can be changed globally by customizing voice-smoothen-medium-settings.
+@end defvar
+
+@defvar {User Option} emacspeak-tnt-buddy-list-inactive-personality
+Personality used for tnt-buddy-list-inactive-face
+This personality uses  voice-monotone-medium whose  effect can be changed globally by customizing voice-monotone-medium-settings.
+@end defvar
+
+@defvar {User Option} emacspeak-tnt-buddy-list-pounce-personality
+Personality used for tnt-buddy-list-pounce-face
+This personality uses  (quote ursula) whose  effect can be changed globally by customizing (quote ursula)-settings.
+@end defvar
+
+@defvar {User Option} emacspeak-tnt-my-name-personality
+Personality used for tnt-my-name-face
+This personality uses  voice-smoothen whose  effect can be changed globally by customizing voice-smoothen-settings.
+@end defvar
+
 @node emacspeak-url-template Options
 @section emacspeak-url-template Options
 
@@ -1964,6 +2079,11 @@ These options are customizable via Emacs' Custom interface.
 Bookshare user Id.
 @end defvar
 
+@defvar {User Option} emacspeak-url-template-gmail-search-url
+URL eng-point for GMail searches.
+For  corporate email using GMail, change /a/google.com/ to /a/<your.domain>/
+@end defvar
+
 @defvar {User Option} emacspeak-url-template-google-calendar-uri
 URI for accessing mobile version of Google Calendar.
 Google Apps users should set this to
@@ -1976,57 +2096,6 @@ OPML feed location to use for our Custom Search.
 
 @defvar {User Option} emacspeak-url-template-weather-city-state
 Default city/state for weather forecasts
-@end defvar
-
-@node emacspeak-vm Options
-@section emacspeak-vm Options
-
-Automatically generated documentation
-for options defined in module  emacspeak-vm.
-These options are customizable via Emacs' Custom interface.
-
-@defvar {User Option} emacspeak-vm-cal2text
-Executable that converts calendar invitations    on
-  standard input to plain text.
-@end defvar
-
-@defvar {User Option} emacspeak-vm-customize-mime-settings
-Non-nil will cause Emacspeak to configure VM mime
-settings to match what the author of Emacspeak uses.
-@end defvar
-
-@defvar {User Option} emacspeak-vm-doc2text
-Executable that converts MSWord documents on standard input to plain
-text using wvText.
-@end defvar
-
-@defvar {User Option} emacspeak-vm-headers-strip-octals
-Specify whether non-ascii chars should be stripped when
-  speaking email headers.
-@end defvar
-
-@defvar {User Option} emacspeak-vm-pdf2text
-Executable that converts PDF on standard input to plain
-text using pdftotext.
-@end defvar
-
-@defvar {User Option} emacspeak-vm-ppt2html
-Executable that converts MSPPT documents on standard input to HTML
- using xlhtml.
-@end defvar
-
-@defvar {User Option} emacspeak-vm-use-raman-settings
-Should VM  use the customizations used by the author of Emacspeak.
-@end defvar
-
-@defvar {User Option} emacspeak-vm-voice-lock-messages
-Set this to T if you want messages automatically voice locked.
-Note that some badly formed mime messages  cause trouble.
-@end defvar
-
-@defvar {User Option} emacspeak-vm-xls2html
-Executable that converts MSXL documents on standard input to HTML
- using xlhtml.
 @end defvar
 
 @node emacspeak-w3 Options
@@ -2131,6 +2200,29 @@ Specifies transform to use before displaying a page.
 Nil means no transform is used. 
 @end defvar
 
+@node emacspeak-webmarks Options
+@section emacspeak-webmarks Options
+
+Commentary:
+http://www.google.com/bookmarks provides a simple bookmark
+facility
+emacspeak-webmarks provides direct minibuffer-level access to
+these in the spirit of the Emacspeak Web Command Line.
+For now, the emacspeak-webmarks-key needs to be set by hand
+ after doing the following:
+0) sign in to google using xml-forms/glogin.xml
+1) search for a bookmark using xml-forms/bookmark-find.xml
+will work around this eventually.
+
+Automatically generated documentation
+for options defined in module  emacspeak-webmarks.
+These options are customizable via Emacs' Custom interface.
+
+@defvar {User Option} emacspeak-webmarks-key
+Magic cookie key to send for bookmark operations.
+This gets set the first time we sign in using a browser.
+@end defvar
+
 @node emacspeak-websearch Options
 @section emacspeak-websearch Options
 
@@ -2158,6 +2250,20 @@ Set this to the stock tickers you want to check by
 default.
 @end defvar
 
+@node emacspeak-webspace Options
+@section emacspeak-webspace Options
+
+Commentary:
+WEBSPACE == Smart Web Gadgets For The Emacspeak Desktop
+
+Automatically generated documentation
+for options defined in module  emacspeak-webspace.
+These options are customizable via Emacs' Custom interface.
+
+@defvar {User Option} emacspeak-webspace-feeds
+Collection of ATOM and RSS feeds.
+@end defvar
+
 @node emacspeak-webutils Options
 @section emacspeak-webutils Options
 
@@ -2170,10 +2276,6 @@ Automatically generated documentation
 for options defined in module  emacspeak-webutils.
 These options are customizable via Emacs' Custom interface.
 
-@defvar {User Option} emacspeak-atom-feeds
-Table of ATOM feeds.
-@end defvar
-
 @defvar {User Option} emacspeak-atom-view-xsl
 XSL stylesheet used for viewing Atom Feeds.
 @end defvar
@@ -2185,10 +2287,6 @@ Table of RSS feeds.
 @defvar {User Option} emacspeak-rss-unescape-html
 Fix malformed  XML that results from sites attempting to
 unescape HTML tags.
-@end defvar
-
-@defvar {User Option} emacspeak-webutils-charent-alist
-Entities to unescape when treating badly escaped XML.
 @end defvar
 
 @node emacspeak-wizards Options
@@ -2420,6 +2518,14 @@ If set to T, emacspeak plays its icon as it launches.
 Hook to run after starting emacspeak.
 @end defvar
 
+@defvar {User Option} emacspeak-unibyte
+Emacspeak will force emacs to unibyte unless this
+variable is set to nil.
+To use emacspeak with emacs running in multibyte mode, this
+variable should be set to nil *before*
+emacspeak is compiled or started.
+@end defvar
+
 @node voice-setup Options
 @section voice-setup Options
 
@@ -2598,26 +2704,6 @@ These options are customizable via Emacs' Custom interface.
 
 @defvar {User Option} emacspeak-Buffer-menu-buffer-voice
 Personality used for Buffer-menu-buffer
-This personality uses  voice-bolden whose  effect can be changed globally by customizing voice-bolden-settings.
-@end defvar
-
-@defvar {User Option} emacspeak-bbdb-company-voice
-Personality used for bbdb-company
-This personality uses  voice-brighten whose  effect can be changed globally by customizing voice-brighten-settings.
-@end defvar
-
-@defvar {User Option} emacspeak-bbdb-field-name-voice
-Personality used for bbdb-field-name
-This personality uses  voice-smoothen whose  effect can be changed globally by customizing voice-smoothen-settings.
-@end defvar
-
-@defvar {User Option} emacspeak-bbdb-field-value-voice
-Personality used for bbdb-field-value
-This personality uses  voice-animate whose  effect can be changed globally by customizing voice-animate-settings.
-@end defvar
-
-@defvar {User Option} emacspeak-bbdb-name-voice
-Personality used for bbdb-name
 This personality uses  voice-bolden whose  effect can be changed globally by customizing voice-bolden-settings.
 @end defvar
 
@@ -3934,36 +4020,6 @@ This personality uses  voice-monotone-medium whose  effect can be changed global
 @defvar {User Option} emacspeak-term-underline-voice
 Personality used for term-underline
 This personality uses  voice-brighten-medium whose  effect can be changed globally by customizing voice-brighten-medium-settings.
-@end defvar
-
-@defvar {User Option} emacspeak-tnt-buddy-list-active-personality
-Personality used for tnt-buddy-list-active-face
-This personality uses  voice-animate whose  effect can be changed globally by customizing voice-animate-settings.
-@end defvar
-
-@defvar {User Option} emacspeak-tnt-buddy-list-away-personality
-Personality used for tnt-buddy-list-away-face
-This personality uses  voice-monotone whose  effect can be changed globally by customizing voice-monotone-settings.
-@end defvar
-
-@defvar {User Option} emacspeak-tnt-buddy-list-idle-personality
-Personality used for tnt-buddy-list-idle-face
-This personality uses  voice-smoothen-medium whose  effect can be changed globally by customizing voice-smoothen-medium-settings.
-@end defvar
-
-@defvar {User Option} emacspeak-tnt-buddy-list-inactive-personality
-Personality used for tnt-buddy-list-inactive-face
-This personality uses  voice-monotone-medium whose  effect can be changed globally by customizing voice-monotone-medium-settings.
-@end defvar
-
-@defvar {User Option} emacspeak-tnt-buddy-list-pounce-personality
-Personality used for tnt-buddy-list-pounce-face
-This personality uses  (quote ursula) whose  effect can be changed globally by customizing (quote ursula)-settings.
-@end defvar
-
-@defvar {User Option} emacspeak-tnt-my-name-personality
-Personality used for tnt-my-name-face
-This personality uses  voice-smoothen whose  effect can be changed globally by customizing voice-smoothen-settings.
 @end defvar
 
 @defvar {User Option} emacspeak-underline-voice

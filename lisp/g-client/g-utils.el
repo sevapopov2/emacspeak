@@ -1,5 +1,5 @@
 ;;; g-utils.el --- Google Client Utilities
-;;;$Id: g-utils.el 6046 2008-11-07 19:55:48Z tv.raman.tv $
+;;;$Id: g-utils.el 6102 2009-02-05 23:14:04Z tv.raman.tv $
 ;;; $Author: raman $
 ;;; Description:  Google Client utilities
 ;;; Keywords: Google   Atom API, Google Services
@@ -88,7 +88,7 @@ For now, this is blogger specific."
   :group 'g)
 
 (defcustom g-curl-common-options
-  "--compressed --silent --location --location-trusted"
+  "--http1.0 --compressed --silent --location --location-trusted"
   "Common options to pass to all Curl invocations."
   :type 'string
   :group 'g)
@@ -332,7 +332,7 @@ XML  is transformed via style
 ;;}}}
 ;;{{{  HTTP Headers:
 (defvar g-curl-atom-header
-  "--header 'Content-Type: application/atom+xml'"
+  "--header 'Content-Type: application/atom+xml' --header 'GData-Version: 2'"
   "Content type header for application/atom+xml")
 
 (defvar g-curl-data-binary
@@ -344,7 +344,7 @@ XML  is transformed via style
   "Mime separator.")
 
 (defvar g-curl-image-options
-  "--data-binary @%s -H 'Content-Type: image/jpeg' -H 'Slug: %s'"
+  "--http1.0 --data-binary @%s -H 'Content-Type: image/jpeg' -H 'Slug: %s'"
   "Curl options for uploading images.")
 
 (defvar g-crlf-pair

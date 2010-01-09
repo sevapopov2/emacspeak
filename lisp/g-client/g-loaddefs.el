@@ -243,18 +243,19 @@ Resets client so you can start with a different userid.
 ;;;;;;  gphoto-album-create gphoto-user-tagsearch gphoto-user-search
 ;;;;;;  gphoto-recent gphoto-community-search gphoto-download gphoto-view
 ;;;;;;  gphoto-tags gphoto-albums gphoto-feeds) "gphoto" "gphoto.el"
-;;;;;;  (18706 8851))
+;;;;;;  (18827 28900))
 ;;; Generated autoloads from gphoto.el
 
 (autoload 'gphoto-feeds "gphoto" "\
 Retrieve and display feed of albums or tags after authenticating.
 
-\(fn KIND)" t nil)
+\(fn KIND USER)" t nil)
 
 (autoload 'gphoto-albums "gphoto" "\
 Display feed of albums.
+Interactive prefix arg prompts for userid whose albums we request.
 
-\(fn)" t nil)
+\(fn &optional PROMPT)" t nil)
 
 (autoload 'gphoto-tags "gphoto" "\
 View feed of tags.
@@ -282,7 +283,7 @@ Retrieve feed of recently uploaded photos or comments.
 \(fn USER KIND)" t nil)
 
 (autoload 'gphoto-user-search "gphoto" "\
-Retrieve feed o recently uploaded comments for  specified user.
+Retrieve feed of recently uploaded comments for  specified user.
 
 \(fn USER QUERY)" t nil)
 
@@ -538,8 +539,8 @@ Retrieved featured video list.
 
 ;;;***
 
-;;;### (autoloads (gweb-google-at-point) "gweb" "gweb.el" (18706
-;;;;;;  8727))
+;;;### (autoloads (gweb-google-at-point) "gweb" "gweb.el" (18827
+;;;;;;  27292))
 ;;; Generated autoloads from gweb.el
 
 (autoload 'gweb-google-at-point "gweb" "\
@@ -553,12 +554,12 @@ Optional interactive prefix arg refresh forces this cached URL to be refreshed.
 
 ;;;### (autoloads nil nil ("g-autogen.el" "g-cus-load.el" "g-load-path.el"
 ;;;;;;  "g-utils.el" "g.el" "gnotebook.el" "indent-files.el" "json.el")
-;;;;;;  (18733 37519 889159))
+;;;;;;  (18952 24054 220624))
 
 ;;;***
 
-;;;### (autoloads (g-app-view g-app-publish) "g-app" "g-app.el" (18708
-;;;;;;  48414))
+;;;### (autoloads (g-app-view g-app-publish) "g-app" "g-app.el" (18827
+;;;;;;  26992))
 ;;; Generated autoloads from g-app.el
 
 (autoload 'g-app-publish "g-app" "\

@@ -1,5 +1,5 @@
 ;;; emacspeak-widget.el --- Speech enable Emacs' native GUI widget library
-;;; $Id: emacspeak-widget.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-widget.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Emacspeak extensions to widgets
 ;;; Keywords:emacspeak, audio interface to emacs customized widgets
@@ -667,7 +667,7 @@ widget before summarizing."
               )
         do
         (define-key map  emacspeak-prefix 'emacspeak-prefix-command)
-        ;(define-key map  "\C-e\C-e" 'widget-end-of-line)
+                                        ;(define-key map  "\C-e\C-e" 'widget-end-of-line)
         (define-key map "\M-h" 'emacspeak-widget-help)
         (define-key map "\M-p" 'emacspeak-widget-summarize-parent)
         (define-key map "\M-\C-m"

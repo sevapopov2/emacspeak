@@ -1,5 +1,5 @@
 ;;; amixer.el --- Control AMixer from Emacs
-;;;$Id: amixer.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;;$Id: amixer.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;;Emacs front-end to AMixer
 ;;{{{  Copyright:
 
@@ -145,7 +145,7 @@
            :iface (second slots)
            :name (third slots)))
          controls)
-        (forward-line 1))              ; done collecting controls
+        (forward-line 1))               ; done collecting controls
       (mapc #'amixer-populate-settings controls)
       (setq amixer-db controls))))
 
