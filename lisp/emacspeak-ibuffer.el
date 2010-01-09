@@ -118,38 +118,38 @@
 (defadvice ibuffer-backward-line (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-ibuffer-summarize-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-ibuffer-summarize-line)))
 
 (defadvice ibuffer-forward-line (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-ibuffer-summarize-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-ibuffer-summarize-line)))
 
 (defadvice ibuffer-backward-filter-group (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-ibuffer-summarize-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-ibuffer-summarize-line)))
 
 (defadvice ibuffer-forward-filter-group (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-ibuffer-summarize-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-ibuffer-summarize-line)))
 
 (defadvice ibuffer-backwards-next-marked (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-ibuffer-summarize-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-ibuffer-summarize-line)))
 
 (defadvice ibuffer-forward-next-marked (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (emacspeak-ibuffer-summarize-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-ibuffer-summarize-line)))
 
 (defadvice ibuffer-visit-buffer (after emacspeak pre act comp)
   "Provide spoken status information."
@@ -188,8 +188,8 @@
                                          comp)
   "Provide spoken feedback."
   (when (interactive-p)
-    (message "Displayed differences in other window.")
-    (emacspeak-auditory-icon 'task-done)))
+    (emacspeak-auditory-icon 'task-done)
+    (message "Displayed differences in other window.")))
 
 (defadvice ibuffer-limit-disable (after emacspeak pre act
                                         comp)
@@ -218,8 +218,8 @@
 (defadvice ibuffer-do-save (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (message "Saving marked buffers.")
-    (emacspeak-auditory-icon 'save-object)))
+    (emacspeak-auditory-icon 'save-object)
+    (message "Saving marked buffers.")))
 
 (defadvice  ibuffer-occur-goto-occurence (after emacspeak
                                                 pre act
@@ -233,8 +233,8 @@
                                                    comp)
   "Speak line that becomes current."
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'task-done)))
+    (emacspeak-auditory-icon 'task-done)
+    (emacspeak-speak-line)))
 
 (defadvice ibuffer-mark-forward (after emacspeak pre act
                                        comp)

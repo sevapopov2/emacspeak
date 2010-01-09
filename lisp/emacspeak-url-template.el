@@ -2286,8 +2286,8 @@ Meerkat realy needs an xml-rpc method for getting this.")
       (fill-region (point-min)
                    (point-max)))
     (print-help-return-message))
-  (emacspeak-speak-help)
-  (emacspeak-auditory-icon 'help))
+  (emacspeak-auditory-icon 'help)
+  (emacspeak-speak-help))
 
 (defvar emacspeak-url-template-current-ut nil
   "Records name and args of URL template we're executing.")

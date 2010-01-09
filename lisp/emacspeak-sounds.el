@@ -177,6 +177,10 @@ If we add new icons we should declare them here. ")
                     emacspeak-sounds-directory)
   "Default theme for auditory icons. "
   :type '(directory :tag "Sound Theme Directory")
+  :set (lambda (symbol value)
+	 (custom-set-default symbol value)
+	 (emacspeak-sounds-select-theme value))
+  :initialize 'custom-initialize-default
   :group 'emacspeak-sounds)
 ;;;###autoload
 (defcustom emacspeak-play-program
@@ -311,7 +315,8 @@ Sound is produced only if `emacspeak-use-auditory-icons' is true.
 See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-auditory-icons ]."
   (declare (special  emacspeak-use-auditory-icons emacspeak-play-program))
   (and emacspeak-use-auditory-icons
-       (let ((process-connection-type nil))
+       (let ((process-connection-type nil)
+             (default-directory (file-name-as-directory (getenv "HOME"))))
          (condition-case err
              (start-process
               "play" nil emacspeak-play-program

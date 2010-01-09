@@ -784,10 +784,13 @@ Argument OUTPUT is the newly arrived output."
            (setq ,switch (not ,switch ))))
       (when (interactive-p)
         (emacspeak-auditory-icon (if ,switch 'on 'off))
-        (message "Turned %s %s  %s."
-                 (if ,switch "on" "off" )
-                 ',switch
-                 (if prefix "" " locally"))))))
+        (let ((state ,switch)
+              (dtk-quiet nil)
+              (emacspeak-speak-messages t))
+          (message "Turned %s %s  %s."
+                   (if state "on" "off" )
+                   ',switch
+                   (if prefix "" " locally")))))))
 
 ;;}}}
 ;;{{{  sending commands
