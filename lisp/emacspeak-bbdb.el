@@ -1,6 +1,6 @@
 ;;; emacspeak-bbdb.el --- Speech enable BBDB -- a powerful address manager
 
-;;; $Id: emacspeak-bbdb.el 5987 2008-10-09 21:31:44Z tv.raman.tv $
+;;; $Id: emacspeak-bbdb.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; DescriptionEmacspeak extensions for bbdb 
 ;;; Keywords:emacspeak, audio interface to emacs bbdb 
@@ -150,20 +150,20 @@
   (cond
    ((interactive-p)
     (let ((prior (point))
-	  (completion-ignore-case t)
+          (completion-ignore-case t)
           (completions nil )
           (window (selected-window))
           (buffer (current-buffer)))
       ad-do-it
       (cond
        ((and (setq completions (get-buffer "*Completions*"))
-	     (window-live-p (get-buffer-window completions)))
-	(switch-to-completions)
-	(setq completion-reference-buffer buffer)
-	(unless (get-text-property (point) 'mouse-face)
-	  (goto-char (next-single-property-change (point)
-						  'mouse-face )))
-	(dtk-speak (emacspeak-get-current-completion)))
+             (window-live-p (get-buffer-window completions)))
+        (switch-to-completions)
+        (setq completion-reference-buffer buffer)
+        (unless (get-text-property (point) 'mouse-face)
+          (goto-char (next-single-property-change (point)
+                                                  'mouse-face )))
+        (dtk-speak (emacspeak-get-current-completion)))
        (t (dtk-speak (buffer-substring prior (point )))))))
    (t ad-do-it ))
   ad-return-value )
@@ -192,7 +192,7 @@
 (defadvice bbdb-update-records (around emacspeak pre act comp)
   "Silence messages."
   (let ((emacspeak-speak-messages nil))
-ad-do-it))
+    ad-do-it))
 
 ;;}}}
 (provide  'emacspeak-bbdb)

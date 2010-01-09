@@ -1,5 +1,5 @@
 ;;; g-photo.el ---  Google  Picasa Client
-;;;$Id: gphoto.el 6031 2008-11-05 22:47:47Z tv.raman.tv $
+;;;$Id: gphoto.el 6101 2009-02-05 23:06:12Z tv.raman.tv $
 ;;; $Author: raman $
 ;;; Description:   Client  For Accessing Picasa (Photo Albums)
 ;;; Keywords: Google   Atom API
@@ -141,7 +141,7 @@
                    nil 'require-matchs))
 
 (defvar gphoto-album-or-tag-template-url
-  (format "%s/%%s?kind=%%s" gphoto-base-url)
+  (format "%s/%%s?kind=%%s&v=2" gphoto-base-url)
   "URL template for feed of albums or tags from Picasa.")
 
 (defsubst gphoto-album-or-tag-url (userid kind)
@@ -149,11 +149,12 @@
   (declare (special gphoto-album-or-tag-template-url))
   (format gphoto-album-or-tag-template-url userid kind))
 ;;;###autoload
-(defun gphoto-feeds (kind)
+(defun gphoto-feeds (kind user)
   "Retrieve and display feed of albums or tags after authenticating."
   (interactive
    (list
-    (gphoto-read-feed-kind "Album or Tag: " gphoto-album-or-tag)))
+    (gphoto-read-feed-kind "Album or Tag: " gphoto-album-or-tag)
+    (or user (g-auth-email gphoto-auth-handle))))
   (declare (special gphoto-auth-handle
                     g-atom-view-xsl
                     g-curl-program g-curl-common-options
@@ -166,16 +167,21 @@
     g-cookie-options
     (g-authorization gphoto-auth-handle)
     (gphoto-album-or-tag-url
-     (g-url-encode (g-auth-email gphoto-auth-handle))
+     (g-url-encode user)
      kind)
     (g-curl-debug))
    g-atom-view-xsl))
 
 ;;;###autoload
-(defun gphoto-albums()
-  "Display feed of albums."
-  (interactive)
-  (gphoto-feeds "album"))
+(defun gphoto-albums(&optional prompt)
+  "Display feed of albums.
+Interactive prefix arg prompts for userid whose albums we request."
+  (interactive "P")
+  (gphoto-feeds "album"
+                (if prompt
+                    (read-from-minibuffer "UserId:")
+                  (g-auth-email gphoto-auth-handle))))
+   
 
 ;;;###autoload
 (defun gphoto-tags()
@@ -234,7 +240,8 @@
   (declare (special gphoto-community-search-url-template))
   (gphoto-view
    (format
-    gphoto-community-search-url-template query)))
+    gphoto-community-search-url-template
+    (g-url-encode query))))
 
 (defvar gphoto-recent-url-template
   (format "%s/%%s?kind=%%s&max-results=25"
@@ -261,7 +268,7 @@
 
 ;;;###autoload
 (defun gphoto-user-search (user query)
-  "Retrieve feed o recently uploaded comments for  specified user."
+  "Retrieve feed of recently uploaded comments for  specified user."
   (interactive
    (list
     (read-from-minibuffer
@@ -271,7 +278,8 @@
   (declare (special gphoto-user-search-url-template))
   (gphoto-view
    (format
-    gphoto-user-search-url-template user query)))
+    gphoto-user-search-url-template user
+    (g-url-encode query))))
 
 (defvar gphoto-user-tagsearch-url-template
   (format "%s/%%s?kind=photo&tag=%%s"
@@ -288,7 +296,8 @@
   (declare (special gphoto-user-tagsearch-url-template))
   (gphoto-view
    (format
-    gphoto-user-tagsearch-url-template user tag)))
+    gphoto-user-tagsearch-url-template user
+    (g-url-encode tag))))
 
 ;;}}}
 ;;{{{ Adding an album:
@@ -326,9 +335,10 @@
           '(title summary location keywords)
           do
           (eval
-           `(setf ,(intern (format "gphoto-album-%s" slot))
-                   album)
-                  (read-from-minibuffer (format "%s: " slot)))))
+           `(setf
+             (,(intern (format "gphoto-album-%s" slot))
+              album)
+             (read-from-minibuffer (format "%s: " slot)))))
     (setf (gphoto-album-access album)
           (read-from-minibuffer "access:"
                                 gphoto-album-default-access
@@ -339,7 +349,7 @@
                                 gphoto-album-default-commenting-enabled
                                 nil nil nil
                                 gphoto-album-default-commenting-enabled))
-    album)
+    album))
 
 (defun gphoto-album-as-xml (album)
   "Return Atom entry for  album structure."
@@ -459,9 +469,10 @@
                     gphoto-base-url))
   (g-auth-ensure-token gphoto-auth-handle)
   (let ((location (format
-                   "%s/%s/album/%s"
+                   "%s/%s/album/%s?v=2"
                    gphoto-base-url
-                   (g-url-encode (g-auth-email gphoto-auth-handle)) album-name)))
+                   (g-url-encode (g-auth-email gphoto-auth-handle))
+                   album-name)))
     (gphoto-async-post-photo photo location)))
 
 ;;;###autoload

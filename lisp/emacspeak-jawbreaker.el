@@ -1,5 +1,5 @@
 ;;; emacspeak-jawbreaker.el --- Talk to Firefox/JawBreaker  via MozRepl
-;;; $Id: emacspeak-jawbreaker.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-jawbreaker.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Play JawBreaker game from Emacs in Firefox
 ;;; Keywords: Emacspeak,  Audio Desktop Firefox, Piglets 
@@ -53,7 +53,6 @@
 ;;; I run Firefox headless using the etc/firebox script
 ;;; And I have Fire Vox installed to provide the Firefox side of the spoken output.
 
-
 ;;; Code:
 
 ;;}}}
@@ -94,7 +93,7 @@ to the running game. ")
                     emacspeak-jawbreaker-buffer))
   (comint-send-string
    (inferior-moz-process)
-   (format "content.location.href='%s'\n"
+   (format "window.location.href='%s'\n"
            emacspeak-jawbreaker-url))
   (save-excursion
     (set-buffer (get-buffer-create emacspeak-jawbreaker-buffer))

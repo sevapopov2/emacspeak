@@ -1,5 +1,5 @@
 ;;; emacspeak-org.el --- Speech-enable org
-;;; $Id: emacspeak-org.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-org.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for ORG
 ;;; Keywords: Emacspeak, org
@@ -320,7 +320,7 @@
           ([(shift down)] org-shiftdown)
           ([(shift left)] org-shiftleft)
           ([(shift right)] org-shiftright)
-	  ([(meta shift return)] org-insert-todo-heading)
+          ([(meta shift return)] org-insert-todo-heading)
           ([(meta shift down)] org-shiftmetadown)
           ([(meta shift up)] org-shiftmetaup)
           ([(meta shift left)] org-shiftmetaleft)
@@ -391,8 +391,8 @@
 (defadvice end-of-line (after emacspeak-org pre act comp)
   "Call org specific actions in org mode."
   (when (and (interactive-p)
-	     (eq major-mode 'org-mode)
-	     (fboundp 'org-end-of-line))
+             (eq major-mode 'org-mode)
+             (fboundp 'org-end-of-line))
     (org-end-of-line)))
 
 (defadvice org-toggle-checkbox (after emacspeak pre act comp)

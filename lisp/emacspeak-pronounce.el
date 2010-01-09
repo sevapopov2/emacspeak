@@ -1,5 +1,5 @@
 ;;; emacspeak-pronounce.el --- Implements Emacspeak pronunciation dictionaries
-;;; $Id: emacspeak-pronounce.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-pronounce.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak pronunciation dictionaries
 ;;; Keywords:emacspeak, audio interface to emacs customized pronunciation
@@ -109,7 +109,7 @@ STRING.PRONUNCIATION to the   dictionary.
 Argument KEY specifies a dictionary key e.g. directory, mode etc."
   (declare (special emacspeak-pronounce-dictionaries ))
   (let* ((dict  (emacspeak-pronounce-get-dictionary key))
-	 (entry (and dict (assoc string dict))))
+         (entry (and dict (assoc string dict))))
     (cond
      ((and dict entry)
       (setcdr entry pronunciation))
@@ -118,7 +118,7 @@ Argument KEY specifies a dictionary key e.g. directory, mode etc."
       (emacspeak-pronounce-set-dictionary key dict ))
      (t
       (emacspeak-pronounce-set-dictionary key
-					  (list (cons string pronunciation)))))))
+                                          (list (cons string pronunciation)))))))
 
 (defun emacspeak-pronounce-remove-buffer-local-dictionary-entry (string)
   "Remove pronunciation entry."

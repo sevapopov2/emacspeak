@@ -1,5 +1,5 @@
 ;;; emacspeak-jabber.el --- Speech-Enable jabber
-;;; $Id: emacspeak-jabber.el 6070 2008-11-25 21:27:54Z tv.raman.tv $
+;;; $Id: emacspeak-jabber.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: speech-enable jabber
 ;;; Keywords: Emacspeak, jabber
@@ -152,7 +152,6 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (message "Set extended  away.")))
-
 
 (defadvice jabber-presence-default-message (around emacspeak pre
                                                    act comp)

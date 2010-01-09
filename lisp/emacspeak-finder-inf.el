@@ -41,6 +41,9 @@
     ("emacspeak-alsaplayer.el"
         "Control alsaplayer from Emacs"
         (emacspeak  alsaplayer))
+    ("emacspeak-amark.el"
+        "BookMarks For Audio Content"
+        (emacspeak  audio interface to emacs mp3))
     ("emacspeak-amphetadesk.el"
         "Emacspeak News Portal Interface"
         (emacspeak   audio desktop rss))
@@ -476,6 +479,9 @@
     ("emacspeak-todo-mode.el"
         "speech-enable todo-mode"
         (emacspeak  todo-mode ))
+    ("emacspeak-twit.el"
+        "Speech-enable Twitter"
+        (emacspeak   audio desktop twiter))
     ("emacspeak-url-template.el"
         "Create library of URI templates"
         (emacspeak  audio desktop))

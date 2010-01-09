@@ -1,5 +1,5 @@
-#$Id: Makefile 4388 2007-02-27 02:10:44Z tv.raman.tv $
-SF_HOME=raman@emacspeak.sf.net:~/www-emacspeak/htdocs
+#$Id: Makefile 6081 2008-11-29 19:57:44Z tv.raman.tv $
+SF_HOME= raman,emacspeak@web.sourceforge.net:/home/groups/e/em/emacspeak/htdocs
 HTML_FILES=$(shell find . -name '*.html' -print)
 TEXINDEX=texindex
 FILES=*.texi

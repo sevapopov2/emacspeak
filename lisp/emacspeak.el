@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak.el 6150 2009-05-06 17:38:17Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -263,6 +263,7 @@ speech-enabling extensions."
 (emacspeak-do-package-setup "texinfo" 'emacspeak-texinfo)
 (emacspeak-do-package-setup "tmm" 'emacspeak-facemenu)
 (emacspeak-do-package-setup "todo-mode" 'emacspeak-todo-mode)
+(emacspeak-do-package-setup "twit" 'emacspeak-twit)
 (emacspeak-do-package-setup "view" 'emacspeak-view)
 (emacspeak-do-package-setup "view-process-mode" 'emacspeak-view-process)
 (emacspeak-do-package-setup "vm" 'emacspeak-vm)

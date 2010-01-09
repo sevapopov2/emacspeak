@@ -1,5 +1,5 @@
 ;;; emacspeak-keymap.el --- Setup all keymaps and keybindings provided by Emacspeak
-;;; $Id: emacspeak-keymap.el 6007 2008-10-26 07:34:57Z tv.raman.tv $
+;;; $Id: emacspeak-keymap.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Module for setting up emacspeak keybindings
 ;;; Keywords: Emacspeak
@@ -504,7 +504,7 @@ relief."
                            (list keymap))
         do
         (define-key keymap k 'undefined )
-	))
+        ))
 
 (defun emacspeak-keymap-refresh ()
   "Load emacspeak-keymap module."
