@@ -300,13 +300,13 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
 ;;}}}
 ;;{{{  Play an icon
 
-(defcustom emacspeak-play-args ""
+(defcustom emacspeak-play-args nil
   "Set this to -i  if using the play program that ships on sunos/solaris.
 Note: on sparc20's there is a sunos bug that causes the machine to crash if
 you attempt to play sound when /dev/audio is busy.
 It's imperative that you use the -i flag to play on
 sparc20's."
-  :type 'string
+  :type '(repeat string)
   :group 'emacspeak-sounds)
 
 (defun emacspeak-play-auditory-icon (sound-name)
@@ -318,10 +318,10 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
        (let ((process-connection-type nil)
              (default-directory (file-name-as-directory (getenv "HOME"))))
          (condition-case err
-             (start-process
+             (apply 'start-process
               "play" nil emacspeak-play-program
-              "-N"
-              (emacspeak-get-sound-filename sound-name))
+              (append emacspeak-play-args
+                      (list (emacspeak-get-sound-filename sound-name))))
            (error
             (message (error-message-string err)))))))
 
