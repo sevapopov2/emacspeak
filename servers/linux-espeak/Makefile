@@ -1,35 +1,26 @@
-#$Id: Makefile 3963 2006-05-31 15:42:51Z raman $
-#
-# Jan 2007 Gilles Casse gcasse@oralux.org>
-# * eSpeak driver for emacspeak
-#
-DESTDIR=
-PREFIX=/usr
-LIBDIR=$(PREFIX)/lib
-INCDIR=$(PREFIX)/include
+#$Id: Makefile 6198 2009-08-25 15:19:03Z tv.raman.tv $
 
-CC=g++
 INSTALL = install
-libparentdir = ${PREFIX}/share/emacs/site-lisp
-libdir2 =$(libparentdir)/emacspeak/servers/linux-espeak
-CFLAGS= -O2 -I/usr/include/espeak -fPIC  -DPIC -pedantic -ansi -Wall
-LIBS= -ltcl -lespeak
+PREFIX = /usr
+LIBPARENTDIR = ${PREFIX}/share/emacs/site-lisp
+LIBDIR =$(LIBPARENTDIR)/emacspeak/servers/linux-espeak
+TCL_VERSION = 8.4
+TCL_INCLUDE= /usr/include/tcl$(TCL_VERSION)
+CXXFLAGS+= -g    -O2 -fPIC  -DPIC  -pedantic -ansi -Wall -Wno-long-long -I$(TCL_INCLUDE)
 
-TTS=libtclespeak.so
-all: libtclespeak.so
+LIBS= -ltcl$(TCL_VERSION) -lespeak
 
-tclespeak.lo: tclespeak.cpp
-	libtool --mode=compile $(CC) $(CFLAGS) -c $<
+TTS=tclespeak.so
 
-libtclespeak.so: tclespeak.lo 
-	libtool --mode=link $(CC) $(CFLAGS) -g -o $@ tclespeak.lo $(LIBS)  -shared
+all:   $(TTS)
+
+$(TTS): tclespeak.o
+	$(CXX) -shared -o $@ $< $(LIBS)
 
 clean:
-	rm -f *.so *.o *.lo libtclespeak.so
-	rm -rf .libs
+	rm -f *.so *.o
 
-install:  tclespeak.so
-	if test ! -d $(libdir2) ; then mkdir $(libdir2); fi ; \
-	chmod 755 $(libdir2); \
-	$(INSTALL) -m 0644 $(TTS) $(libdir2)
+install: $(TTS)
+	$(INSTALL) -d $(DESTDIR)$(LIBDIR)
+	$(INSTALL) $< $(DESTDIR)$(LIBDIR)
 

@@ -1,11 +1,11 @@
-#!/usr/bin/tcl
+#!/usr/bin/tclsh
 # Keywords: Emacspeak, Software Dectalk , TCL
 # {{{ LCD Entry: 
 
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-#$Id: dtk-soft 4669 2007-06-24 04:12:03Z tv.raman.tv $
+#$Id: dtk-soft 6203 2009-08-25 15:54:59Z tv.raman.tv $
 #Incorporating fixes  from  by Tim Cross for DTk 5.0
 # Date: 2004/05/01 01:16:25  |
 # Location undetermined
@@ -35,6 +35,7 @@
 # }}}
 # {{{source common code 
 
+package require Tclx
 set wd [file dirname $argv0]
 source $wd/tts-lib.tcl
 set tts(old_rate) 0

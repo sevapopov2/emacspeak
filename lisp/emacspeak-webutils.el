@@ -1,5 +1,5 @@
 ;;; emacspeak-webutils.el --- Common Web Utilities For Emacspeak
-;;; $Id: emacspeak-webutils.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-webutils.el 6316 2009-10-14 22:08:19Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak Webutils
 ;;; Keywords: Emacspeak, web
@@ -81,9 +81,11 @@ Note that the Web browser should reset this hook after using it.")
   "Use web post process hook."
   (declare (special emacspeak-web-post-process-hook))
   (when     emacspeak-web-post-process-hook
-    (unwind-protect
-        (run-hooks  'emacspeak-web-post-process-hook)
-      (setq emacspeak-web-post-process-hook nil))))
+    (condition-case nil
+         (run-hooks  'emacspeak-web-post-process-hook)
+      (error 
+      (setq emacspeak-web-post-process-hook nil)))
+    (setq emacspeak-web-post-process-hook nil)))
 
 ;;}}}
 ;;{{{ Helpers:
@@ -128,6 +130,24 @@ Note that the Web browser should reset this hook after using it.")
                       "//p")
                 (emacspeak-speak-buffer))
             'at-end))
+
+(defsubst emacspeak-webutils-cache-google-query(query)
+  "Setup post process hook to cache google query when rendered."
+  (declare (special emacspeak-google-query))
+  (let ((cache
+  (eval `(function
+          (lambda nil
+             (setq emacspeak-google-query ,query))))))
+  (add-hook 'emacspeak-web-post-process-hook cache 'at-end)))
+
+(defsubst emacspeak-webutils-cache-google-toolbelt(belt)
+  "Setup post process hook to cache google toolbelt when rendered."
+  (declare (special emacspeak-google-toolbelt))
+  (let ((cache
+         (eval `(function
+                 (lambda nil
+                   (setq emacspeak-google-toolbelt' ,belt))))))
+    (add-hook 'emacspeak-web-post-process-hook cache 'at-end)))
 
 (defsubst emacspeak-webutils-browser-check ()
   "Check to see if functions are called from a browser buffer"
@@ -226,7 +246,12 @@ and xsl environment specified by style, params and options."
            emacspeak-xslt-options ,options
            emacspeak-we-xsl-transform ,style
            emacspeak-we-xsl-params ,params)
-     ,@body))
+     (condition-case nil
+         (progn ,@body)
+       (error (setq emacspeak-we-xsl-p ,emacspeak-we-xsl-p
+                    emacspeak-xslt-options ,emacspeak-xslt-options
+                    emacspeak-we-xsl-transform ,emacspeak-we-xsl-transform
+                    emacspeak-we-xsl-params ,emacspeak-we-xsl-params)))))
 
 ;;}}}
 ;;{{{ variables

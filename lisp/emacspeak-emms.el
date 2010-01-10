@@ -1,5 +1,5 @@
 ;;; emacspeak-emms.el --- Speech-enable EMMS Multimedia UI
-;;; $Id: emacspeak-emms.el 5830 2008-08-25 03:10:44Z tv.raman.tv $
+;;; $Id: emacspeak-emms.el 6182 2009-07-01 13:38:30Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable EMMS
 ;;; Keywords: Emacspeak, Multimedia
@@ -144,6 +144,17 @@
     (emacspeak-speak-mode-line )))
       
 ;;}}}
+;;{{{ silence chatter from info
+
+(defadvice emms-info-really-initialize-track (around emacspeak
+                                                     pre act
+                                                     comp)
+  "Silence messages."
+  (let ((emacspeak-speak-messages nil))
+    ad-do-it))
+
+;;}}}
+
 (provide 'emacspeak-emms)
 ;;{{{ end of file
 

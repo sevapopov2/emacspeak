@@ -127,7 +127,7 @@ Sign in, useful when changing to a different user profile.
 ;;;***
 
 ;;;### (autoloads (gcontacts-create gcontacts-initialize) "gcontacts"
-;;;;;;  "gcontacts.el" (18732 14139))
+;;;;;;  "gcontacts.el" (19184 32877))
 ;;; Generated autoloads from gcontacts.el
 
 (autoload 'gcontacts-initialize "gcontacts" "\
@@ -238,12 +238,28 @@ Resets client so you can start with a different userid.
 
 ;;;***
 
+;;;### (autoloads (ghealth-sign-in ghealth-sign-out) "ghealth" "ghealth.el"
+;;;;;;  (19133 13120))
+;;; Generated autoloads from ghealth.el
+
+(autoload 'ghealth-sign-out "ghealth" "\
+Resets client so you can start with a different userid.
+
+\(fn)" t nil)
+
+(autoload 'ghealth-sign-in "ghealth" "\
+Resets client so you can start with a different userid.
+
+\(fn)" t nil)
+
+;;;***
+
 ;;;### (autoloads (gphoto-edit-entry gphoto-sign-in gphoto-sign-out
 ;;;;;;  gphoto-comment-or-tag gphoto-directory-add-photos gphoto-photo-add
 ;;;;;;  gphoto-album-create gphoto-user-tagsearch gphoto-user-search
 ;;;;;;  gphoto-recent gphoto-community-search gphoto-download gphoto-view
 ;;;;;;  gphoto-tags gphoto-albums gphoto-feeds) "gphoto" "gphoto.el"
-;;;;;;  (18827 28900))
+;;;;;;  (19096 18402))
 ;;; Generated autoloads from gphoto.el
 
 (autoload 'gphoto-feeds "gphoto" "\
@@ -457,7 +473,7 @@ Resets client so you can start with a different userid.
 ;;;***
 
 ;;;### (autoloads (gskeleton-sign-in gskeleton-sign-out) "gskeleton"
-;;;;;;  "gskeleton.el" (18706 8727))
+;;;;;;  "gskeleton.el" (19133 15361))
 ;;; Generated autoloads from gskeleton.el
 
 (autoload 'gskeleton-sign-out "gskeleton" "\
@@ -539,8 +555,8 @@ Retrieved featured video list.
 
 ;;;***
 
-;;;### (autoloads (gweb-google-at-point) "gweb" "gweb.el" (18827
-;;;;;;  27292))
+;;;### (autoloads (gweb-google-at-point) "gweb" "gweb.el" (19124
+;;;;;;  2693))
 ;;; Generated autoloads from gweb.el
 
 (autoload 'gweb-google-at-point "gweb" "\
@@ -553,8 +569,8 @@ Optional interactive prefix arg refresh forces this cached URL to be refreshed.
 ;;;***
 
 ;;;### (autoloads nil nil ("g-autogen.el" "g-cus-load.el" "g-load-path.el"
-;;;;;;  "g-utils.el" "g.el" "gnotebook.el" "indent-files.el" "json.el")
-;;;;;;  (18952 24054 220624))
+;;;;;;  "g-utils.el" "g.el" "gnotebook.el" "gwis.el" "indent-files.el"
+;;;;;;  "json.el") (19213 50114 645861))
 
 ;;;***
 

@@ -1,5 +1,5 @@
 /*
- * $Id: atcleci.cpp 4731 2007-07-03 14:41:27Z tv.raman.tv $
+ * $Id: atcleci.cpp 6212 2009-08-27 03:16:30Z tv.raman.tv $
  */
 // <copyright info
 
@@ -165,8 +165,6 @@ int             Pause(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
 int             Resume(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
 int             SetLanguage(ClientData, Tcl_Interp *, int,
                             Tcl_Obj * CONST[]);
-static int      setOutput(ClientData, Tcl_Interp *, int,
-                          Tcl_Obj * CONST[]);
 int             alsa_close();
 int             eciCallback(void *, int, long, void *);
 
@@ -472,7 +470,7 @@ int
 alsa_init()
 {
   int             err;
-  char           *device = "default";
+  const char           *device = "default";
   size_t          chunk_bytes = 0;
   if ((err =
        snd_pcm_open(&AHandle, device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
@@ -741,8 +739,6 @@ Atcleci_Init(Tcl_Interp * interp)
                        (ClientData) eciHandle, TclEciFree);
   Tcl_CreateObjCommand(interp, "resume", Resume,
                        (ClientData) eciHandle, TclEciFree);
-  Tcl_CreateObjCommand(interp, "setOutput", setOutput,
-                       (ClientData) eciHandle, TclEciFree);
   Tcl_CreateObjCommand(interp, "setLanguage", SetLanguage,
                        (ClientData) eciHandle, TclEciFree);
   // >
@@ -882,7 +878,7 @@ Say(ClientData eciHandle, Tcl_Interp * interp,
         rc = _eciAddText(eciHandle, dest);
         free(dest);
         if (!rc) {
-          Tcl_SetResult(interp, "Internal tts error", TCL_STATIC);
+          Tcl_SetResult(interp, const_cast<char*>("Internal tts error"), TCL_STATIC);
           return TCL_ERROR;
         }
       }
@@ -891,7 +887,7 @@ Say(ClientData eciHandle, Tcl_Interp * interp,
   if (Tcl_StringMatch(Tcl_GetStringFromObj(objv[0], NULL), "synth")) {
     rc = _eciSynthesize(eciHandle);
     if (!rc) {
-      Tcl_SetResult(interp, "Internal tts synth error", TCL_STATIC);
+      Tcl_SetResult(interp, const_cast<char*>("Internal tts synth error"), TCL_STATIC);
       return TCL_ERROR;
     }
   }
@@ -909,7 +905,7 @@ Synchronize(ClientData eciHandle,
 {
   int             rc = _eciSynchronize(eciHandle);
   if (!rc) {
-    Tcl_SetResult(interp, "Internal tts synth error", TCL_STATIC);
+    Tcl_SetResult(interp, const_cast<char*>("Internal tts synth error"), TCL_STATIC);
     return TCL_ERROR;
   }
   return TCL_OK;
@@ -924,7 +920,7 @@ Stop(ClientData eciHandle,
     usleep(10);
     return TCL_OK;
   }
-  Tcl_SetResult(interp, "Could not stop synthesis", TCL_STATIC);
+  Tcl_SetResult(interp, const_cast<char*>("Could not stop synthesis"), TCL_STATIC);
   return TCL_ERROR;
 }
 
@@ -948,7 +944,7 @@ Pause(ClientData eciHandle, Tcl_Interp * interp, int objc,
 {
   if (_eciPause(eciHandle, 1))
     return TCL_OK;
-  Tcl_SetResult(interp, "Could not pause synthesis", TCL_STATIC);
+  Tcl_SetResult(interp, const_cast<char*>("Could not pause synthesis"), TCL_STATIC);
   return TCL_ERROR;
 }
 
@@ -958,19 +954,8 @@ Resume(ClientData eciHandle, Tcl_Interp * interp, int objc,
 {
   if (_eciPause(eciHandle, 0))
     return TCL_OK;
-  Tcl_SetResult(interp, "Could not resume synthesis", TCL_STATIC);
+  Tcl_SetResult(interp, const_cast<char*>("Could not resume synthesis"), TCL_STATIC);
   return TCL_ERROR;
-}
-
-// >
-// <setOutput:NoOp
-
-int
-setOutput(ClientData eciHandle, Tcl_Interp * interp, int objc,
-          Tcl_Obj * CONST objv[])
-{
-  Tcl_AppendResult(interp, "setOuputput: No-Op under Alsa\n", TCL_STATIC);
-  return TCL_OK;
 }
 
 // >

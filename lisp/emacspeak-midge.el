@@ -1,5 +1,5 @@
 ;;; emacspeak-midge.el --- Speech-enable MIDI editor
-;;; $Id: emacspeak-midge.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-midge.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable MIDGE
 ;;; Keywords: Emacspeak, MIDI 
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2007, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2009, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -72,7 +72,7 @@
 (defadvice midge-close-bracket(after emacspeak pre act comp)
   "Speak closing delimiter we inserted"
   (when (interactive-p)
-    (emacspeak-speak-this-char last-input-char)))
+    (emacspeak-speak-this-char last-input-event)))
 
 (defadvice midge-head-block(after emacspeak pre act comp)
   "Announce insertion of head block"

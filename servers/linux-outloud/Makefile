@@ -1,42 +1,28 @@
-#$Id: Makefile 4464 2007-04-21 03:03:52Z tv.raman.tv $
-CC=g++
+#$Id: Makefile 6214 2009-08-28 15:08:21Z tv.raman.tv $
+
 INSTALL = install
 PREFIX = /usr
-libparentdir = ${PREFIX}/share/emacs/site-lisp
-libdir =$(libparentdir)/emacspeak/servers/linux-outloud
-CFLAGS=   -g    -O2 -fPIC  -DPIC -pedantic -ansi -Wall 
-LIBS= -ltcl -ldl
+LIBPARENTDIR = ${PREFIX}/share/emacs/site-lisp
+LIBDIR =$(LIBPARENTDIR)/emacspeak/servers/linux-outloud
 
-TTS=tcleci.so eci.ini VIAVOICE
-ATTS=atcleci.so atcleci.cpp  ALSA asoundrc
-MISC=alsaparams.c
-all: tcleci.so  atcleci.so
+TCL_VERSION=8.4
+TCL_INCLUDE=/usr/include/tcl$(TCL_VERSION)
+CFLAGS+= -g    -O2 -fPIC  -DPIC  -pedantic -ansi -Wall  -Wno-long-long -I$(TCL_INCLUDE)
+CXXFLAGS+= $(CFLAGS)
+LIBS= -ltcl$(TCL_VERSION) -lasound -ldl    
 
-tcleci.lo: tcleci.cpp
-	libtool --mode=compile $(CC) $(CFLAGS) -c $<
+all:   atcleci.so
 
-langswitch.lo: langswitch.cpp
-	libtool --mode=compile $(CC) $(CFLAGS) -c $<
-
-tcleci.so: tcleci.lo langswitch.lo
-	libtool --mode=link $(CC) $(CFLAGS) -g -o $@ $^ $(LIBS) -shared
-
-atcleci.lo: atcleci.cpp
-	libtool --mode=compile $(CC) $(CFLAGS) -c $<
-
-atcleci.so: atcleci.lo langswitch.lo
-	libtool --mode=link $(CC) $(CFLAGS) -g -o $@ $^ -lasound $(LIBS)  -shared
-
-alsaparams.o: alsaparams.c
-	libtool --mode=compile $(CC) $(CFLAGS) -c $<
+atcleci.so: langswitch.o atcleci.o
+	$(CXX) -shared -o $@ langswitch.o atcleci.o $(LIBS)
 
 alsaparams: alsaparams.o
-	libtool --mode=link $(CC) $(CFLAGS) -g -o $@ $<  -lasound 
-clean:
-	rm -f *.so *.o *.lo \
-atcleci.so atcleci.o atcleci.lo
+	$(CC) -o $@ alsaparams.o -lasound
 
-install:  tcleci.so atcleci.so
-	if test ! -d $(libdir) ; then mkdir $(libdir); fi ; \
-	chmod 755 $(libdir); \
-	$(INSTALL) -m 0644 $(TTS) $(ATTS) $(libdir)
+clean:
+	rm -f *.so *.o 
+
+install: atcleci.so
+	$(INSTALL) -d $(DESTDIR)$(LIBDIR)
+	$(INSTALL) $< $(DESTDIR)$(LIBDIR)
+

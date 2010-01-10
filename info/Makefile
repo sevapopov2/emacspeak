@@ -1,4 +1,4 @@
-#$Id: Makefile 6081 2008-11-29 19:57:44Z tv.raman.tv $
+#$Id: Makefile 6217 2009-08-28 21:13:56Z tv.raman.tv $
 SF_HOME= raman,emacspeak@web.sourceforge.net:/home/groups/e/em/emacspeak/htdocs
 HTML_FILES=$(shell find . -name '*.html' -print)
 TEXINDEX=texindex
@@ -30,7 +30,7 @@ install: emacspeak.info
 	if test  -x /sbin/install-info ; then \
 		install-info emacspeak.info /etc/info-dir; \
 	fi
-	$(INSTALL)  -m 644 *.info* $(infodir)
+	$(INSTALL)  -m 644 *.info* $(DESTDIR)$(infodir)
 
 uninstall:
 	if test  -e /sbin/install-info ; then \

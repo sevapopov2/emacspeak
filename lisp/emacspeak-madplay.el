@@ -1,5 +1,5 @@
 ;;; emacspeak-madplay.el --- Control madplay from Emacs
-;;; $Id: emacspeak-madplay.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-madplay.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Controlling madplay from emacs 
 ;;; Keywords: Emacspeak, madplay
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2007, T. V. Raman
+;;; Copyright (c) 1995 -- 2009, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -99,8 +99,8 @@
   "Call appropriate madplay command."
   (interactive)
   (declare (special emacspeak-madplay-buffer-name))
-  (emacspeak-madplay-madplay-command last-input-char)
-  (when (char-equal last-input-char ?q)
+  (emacspeak-madplay-madplay-command last-input-event)
+  (when (char-equal last-input-event ?q)
     (emacspeak-aumix-reset)
     (emacspeak-auditory-icon 'close-object)
     (when (equal emacspeak-madplay-buffer-name (buffer-name))

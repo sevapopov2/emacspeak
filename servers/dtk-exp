@@ -1,5 +1,5 @@
-#!/usr/bin/tcl
-# $Id: dtk-exp 5528 2008-03-15 02:06:50Z tv.raman.tv $
+#!/usr/bin/tclsh
+# $Id: dtk-exp 6244 2009-09-15 23:06:01Z tv.raman.tv $
 # Description:  Interfacing to a Dectalk via TCL.
 # Keywords: Emacspeak, Dectalk, TCL
 # {{{ LCD Entry:
@@ -7,8 +7,8 @@
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2008-03-14 19:06:50 -0700 (Fri, 14 Mar 2008) $ |
-#  $Revision: 5528 $ |
+# $Date: 2009-09-15 16:06:01 -0700 (Tue, 15 Sep 2009) $ |
+#  $Revision: 6244 $ |
 # Location undetermined
 #
 
@@ -57,6 +57,7 @@
 
 # }}}
 # {{{source common code
+package require Tclx
 set wd [file dirname $argv0]
 lappend auto_path $wd
 source $wd/tts-lib.tcl
@@ -274,7 +275,7 @@ proc speech_task {} {
             }
             a {
                 set sound [lindex $event 1]
-                catch "exec $tts(play) $sound > /dev/null &" errCode
+                catch "exec $tts(play) $sound  1>&- 2>&- & " errcode
             }
         }
         if {$tts(talking?) == 0} {break;}
@@ -364,13 +365,13 @@ tts_setserial
 fconfigure $tts(write) -encoding ascii
 
 # Emacspeak sends utf-8
-fconfigure file0 -encoding utf-8
+fconfigure stdin -encoding utf-8
 
 tts_initialize
 set tts(speech_rate)  225
 set tts(say_rate) [round \
                        [expr $tts(speech_rate) * $tts(char_factor)]]
-set tts(input) file0
+set tts(input) stdin
 if {[info exists server_p]} {
     set tts(input) sock0
 }

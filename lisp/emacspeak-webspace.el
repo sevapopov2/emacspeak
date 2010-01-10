@@ -1,5 +1,5 @@
 ;;; emacspeak-webspace.el --- Webspaces In Emacspeak
-;;; $Id: emacspeak-webspace.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-webspace.el 6400 2009-11-24 23:33:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: WebSpace provides smart updates from the Web.
 ;;; Keywords: Emacspeak, Audio Desktop webspace
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{ Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -338,10 +338,12 @@ Updated headlines found in emacspeak-webspace-headlines."
   (when (and emacspeak-webspace-weather-url-template
              emacspeak-url-template-weather-city-state)
     (with-local-quit
+      (format "%s at %s"
       (first
        (gfeeds-titles
         (format emacspeak-webspace-weather-url-template
-                emacspeak-url-template-weather-city-state))))))
+                emacspeak-url-template-weather-city-state)))
+      emacspeak-url-template-weather-city-state))))
 
 (defvar emacspeak-webspace-current-weather nil
   "Holds cached value of current weather conditions.")

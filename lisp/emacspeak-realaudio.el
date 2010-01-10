@@ -1,5 +1,5 @@
 ;;; emacspeak-realaudio.el --- Play realaudio from Emacs
-;;; $Id: emacspeak-realaudio.el 5962 2008-10-02 13:25:04Z tv.raman.tv $
+;;; $Id: emacspeak-realaudio.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Single click access to RealAudio from emacspeak
 ;;; Keywords: Emacspeak, RealAudio
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2007, T. V. Raman
+;;; Copyright (c) 1995 -- 2009, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -469,7 +469,7 @@ commands via single keystrokes."
 (defun emacspeak-realaudio-trplayer-call-command ()
   "Call appropriate TRPlayer command."
   (interactive)
-  (emacspeak-realaudio-trplayer-command last-input-char))
+  (emacspeak-realaudio-trplayer-command last-input-event))
 
 (defun emacspeak-realaudio-select-realaudio-buffer ()
   "Switch to realaudio buffer."

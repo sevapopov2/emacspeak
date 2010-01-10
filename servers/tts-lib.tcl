@@ -1,11 +1,11 @@
-#$Id: tts-lib.tcl 4669 2007-06-24 04:12:03Z tv.raman.tv $
+#$Id: tts-lib.tcl 6267 2009-10-01 15:30:36Z tv.raman.tv $
 # {{{ LCD Entry: 
 #x
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2007-06-23 21:12:03 -0700 (Sat, 23 Jun 2007) $ |
-#  $Revision: 4669 $ | 
+# $Date: 2009-10-01 08:30:36 -0700 (Thu, 01 Oct 2009) $ |
+#  $Revision: 6267 $ | 
 # Location undetermined
 #
 
@@ -183,7 +183,7 @@ proc queue_restore {} {
 #play a sound over the server
 proc p {sound} {
     global tts
-    catch "exec $tts(play) $sound >/dev/null  &" errCode
+    catch "exec $tts(play) -N $sound 1>&- 2>&- & " errcode
     speech_task
 }
 
@@ -339,11 +339,7 @@ proc tts_initialize {} {
     if {[info exists env(EMACSPEAK_PLAY_PROGRAM)] } {
         set tts(play)  $env(EMACSPEAK_PLAY_PROGRAM)
     } else {
-        if [file exists /usr/bin/aplay] {
         set tts(play) "/usr/bin/aplay"
-        } else {
-            set tts(play) "play"
-        }
     }
     
     #optional debuggin output

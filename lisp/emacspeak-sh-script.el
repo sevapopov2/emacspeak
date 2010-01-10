@@ -1,5 +1,5 @@
 ;;; emacspeak-sh-script.el --- Speech enable  sh-script mode
-;;; $Id: emacspeak-sh-script.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-sh-script.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:   extension to speech enable sh-script 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2007, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2009, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -82,7 +82,7 @@
     (let ((start (point)))
       ad-do-it
       (if (= (point) (1+ start))
-          (emacspeak-speak-this-char last-input-char)
+          (emacspeak-speak-this-char last-input-event)
         (message "Started a shell here  document."))))
    (t ad-do-it))
   ad-return-value)
