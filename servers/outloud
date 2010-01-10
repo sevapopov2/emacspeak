@@ -1,12 +1,12 @@
-#!/usr/bin/tcl
+#!/usr/bin/tclsh
 # Keywords: Emacspeak, ViaVoice Outloud , TCL
 # {{{ LCD Entry: 
 
 # LCD Archive Entry:
 # emacspeak| T. V. Raman |raman@cs.cornell.edu
 # A speech interface to Emacs |
-# $Date: 2008-07-30 07:24:26 -0700 (Wed, 30 Jul 2008) $ |
-#  $Revision: 5707 $ | 
+# $Date: 2009-08-28 18:04:41 -0700 (Fri, 28 Aug 2009) $ |
+#  $Revision: 6220 $ | 
 # Location undetermined
 #
 
@@ -34,6 +34,7 @@
 # }}}
 # {{{source common code 
 
+package require Tclx
 set wd [file dirname $argv0]
 lappend auto_path $wd
 #source tts-lib.tcl
@@ -74,14 +75,12 @@ proc tts_set_character_scale {factor} {
 
 proc tts_say {text} {
     global    tts
-    global langsynth
     service 
     set r $tts(speech_rate)
     set prefix "`v1 `vs$r "
     regsub -all {\[\*\]} $text { `p1 } text 
     synth " $prefix $text"
     service
-    closeDSP
     return ""
 }
 
@@ -89,7 +88,6 @@ proc tts_say {text} {
 
 proc l {text} {
     global tts
-    global langsynth
     set r $tts(speech_rate)
     set prefix "`v1 `vs$r "
     if {[regexp  {[A-Z]} $text]} {
@@ -98,7 +96,6 @@ proc l {text} {
     set tts(not_stopped) 1
     synth "$prefix  `ts2 $text `ts0"
     service
-    closeDSP
     return ""
 }
 
@@ -174,10 +171,9 @@ proc tts_allcaps_beep {flag} {
 
 proc tts_reset {} {
     global tts 
-    global langsynth
-    #synth  -reset
     queue_clear
     synth "Resetting engine to factory defaults."
+    service
 }
 
 proc r {rate} {
@@ -186,13 +182,6 @@ proc r {rate} {
     incr tts(q_tail)
     return ""
 }
-
-proc useStereoOutput {} {
-    global tts
-    setOutput buffer
-}
-
-
 
 # Language switching
 #
@@ -210,12 +199,9 @@ proc useStereoOutput {} {
 # langsynth(top): max available index.
 # For example, if there are three available languages: 
 # langsynth(top)=2
-
-set langsynth(current) 0
-
 # langlabel: what will be announced
 # e.g. langlabel(0)="Finnish"
-# This variable is set by tcldtk
+# This variable is set by tcldtk? doesn't work
 
 #set langlabel(0) "American"
 
@@ -396,7 +382,6 @@ proc speech_task {} {
     }
     set tts(talking?) 0
     service
-    if {$tts(talking?) == 0} {closeDSP} 
     return ""
 }
 
@@ -423,14 +408,16 @@ proc clean {element} {
         regsub -all  {[.,!?;:+=/'\"@$%&_*()]} $element  \
             { `00 \0 `p10 }   element
     } else {
-        regsub -all  {[*%&()\"]} $element  {}   element
-        regsub -all {([0-9a-zA-Z])([@!;/:()=\#,.\"])+([0-9a-zA-Z])} $element \
+        regsub -all  {[*&()\"]} $element  {}   element
+        regsub -all { \-([0-9]+\.[0-9]+)} $element \
+            {minus `p3 \1 } element
+        regsub -all {([a-zA-Z])([@!;/:()=\#,.\"])+([0-9a-zA-Z])} $element \
             {\1 `p5 \3} element
         regsub -all {``} $element { `ar } element
         regsub -all {''} $element { `p3 } element
         regsub -all {' }  $element { `p1  } element
         regsub -all --  {--} $element { `p10  } element
-        regsub -all -- {-}  $element { `p1   } element 
+        regsub -all -- {-}  $element {dash    } element 
     }
     regsub -all {\240} $element " " element
     if {$tts(capitalize) } {
@@ -472,13 +459,13 @@ proc clean {element} {
 signal ignore {sigint}
 
 # Set input encoding to utf-8
-fconfigure file0 -encoding utf-8
+fconfigure stdin -encoding utf-8
 
 #initialize outloud 
 tts_initialize
 set tts(speech_rate)  75
 beep_initialize
-set tts(input) file0
+set tts(input) stdin
 if {[info exists server_p]} {
     set tts(input) sock0
 }
@@ -489,23 +476,11 @@ if {![info exists env(ECIINI)] || ![file exists $env(ECIINI)] } {
     set env(ECIINI) $tclTTS/eci.ini
 }
 #conditionally use alsa if available
-if {[file exists /usr/include/alsa/asoundlib.h]
-    && [file exists  $tclTTS/atcleci.so]} {
-    load $tclTTS/atcleci.so
-    proc closeDSP {} {
-        #stubbed out 
-    }
-    set tts(play) /usr/bin/aplay
-    synth {`v1 Via Voice using Alsa.}
-} else {
-    load $tclTTS/tcleci.so
-    set tts(stereo) 1
-    useStereoOutput
-    proc alsaState {} {
-        #stubbed out 
-    }
-    synth {`v1 Via Voice.}
-}
+
+load $tclTTS/atcleci.so
+set tts(play) /usr/bin/aplay
+synth {`v1 Via Voice using Alsa.}
+
 
 service
 alsaState

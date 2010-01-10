@@ -1,5 +1,5 @@
 ;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
-;;; $Id: emacspeak-dired.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-dired.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enable dired
 ;;; Keywords: Emacspeak, Dired, Spoken Output
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;

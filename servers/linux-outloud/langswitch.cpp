@@ -1,15 +1,15 @@
-//<Changelog:
+// <Changelog:
 // * Language switching, 
 // March 2007: 
 // Initial public release, Gilles Casse <gcasse@oralux.org>
 //
-//>
-//<includes
+// >
+// <includes
 #include <stdlib.h>
 #include <string.h>
 #include "langswitch.h"
-//>
-//<decls and function prototypes
+// >
+// <decls and function prototypes
 
 struct langInfo {
   enum ECILanguageDialect lang;
@@ -58,8 +58,8 @@ static struct langInfo TheLanguages[]={
   {eciStandardThaiTIS,NULL,NULL,NULL,NULL}, 
 };
 
-//>
-//<initLanguage
+// >
+// <initLanguage
 
 enum ECILanguageDialect 
 initLanguage (Tcl_Interp * interp, enum ECILanguageDialect* aLanguages, int nLanguages)
@@ -69,11 +69,11 @@ initLanguage (Tcl_Interp * interp, enum ECILanguageDialect* aLanguages, int nLan
   int j = 0;
   enum ECILanguageDialect aCurrentLanguage, aEnglishLanguage, aFirstLanguage;
   aCurrentLanguage = aEnglishLanguage = aFirstLanguage = NODEFINEDCODESET;
-  char* aDefaultLang = (char*)getenv("LANGUAGE");
+  const char* aDefaultLang = getenv("LANGUAGE");
 
   if (aDefaultLang == NULL)
     {
-      aDefaultLang = (char*)getenv("LANG");
+      aDefaultLang = getenv("LANG");
       if (aDefaultLang == NULL)
 	{
 	  aDefaultLang = "en";
@@ -90,7 +90,7 @@ initLanguage (Tcl_Interp * interp, enum ECILanguageDialect* aLanguages, int nLan
     {
       char buffer_i[3];
       snprintf(buffer_i, 3, "%d", i); 
-      Tcl_SetVar2(interp, "langalias", (char*)(TheLanguages[i].code), buffer_i, 0);
+      Tcl_SetVar2(interp, "langalias", const_cast<char*>(TheLanguages[i].code), buffer_i, 0);
     }
 
   int aCurrentLangIndex=0;
@@ -136,7 +136,7 @@ initLanguage (Tcl_Interp * interp, enum ECILanguageDialect* aLanguages, int nLan
 	      aFirstLangIndex = aLang; 
 	    }
 	}
-      Tcl_SetVar2(interp, "langlabel", buffer_j, (char*)(TheLanguages[aLang].label), 0);
+      Tcl_SetVar2(interp, "langlabel", buffer_j, const_cast<char*>(TheLanguages[aLang].label), 0);
       Tcl_SetVar2(interp, "langsynth", "top", buffer_j, 0);
     }
 
@@ -163,13 +163,13 @@ initLanguage (Tcl_Interp * interp, enum ECILanguageDialect* aLanguages, int nLan
 
   return aCurrentLanguage;
 }
-//>
-//<getAnnotation
+// >
+// <getAnnotation
 
 const char* getAnnotation (Tcl_Interp *interp, int* theIndex) 
 {
   const char* code = NULL;
-  char* aInfo = Tcl_GetVar2(interp, "langsynth", "current", 0);
+  const char* aInfo = Tcl_GetVar2(interp, "langsynth", "current", 0);
 
   if (aInfo)
     {
@@ -182,8 +182,8 @@ const char* getAnnotation (Tcl_Interp *interp, int* theIndex)
   return code;
 }
 
-//>
-//<convertFromUTF8
+// >
+// <convertFromUTF8
 
 char* 
 convertFromUTF8 (Tcl_Interp * interp, const char* src)
@@ -218,10 +218,9 @@ convertFromUTF8 (Tcl_Interp * interp, const char* src)
 }
 
 
-//>
-
-//<end of file
+// >
+// <end of file
 //local variables:
 //folded-file: t
 //end:
-//>
+// >

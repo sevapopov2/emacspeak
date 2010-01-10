@@ -3,6 +3,7 @@
 ;;; Code:
 
 (put 'gfeeds 'custom-loads '(gfeeds))
+(put 'ghealth 'custom-loads '(ghealth))
 (put 'gnotebook 'custom-loads '(gnotebook))
 (put 'gfinance 'custom-loads '(gfinance))
 (put 'gphoto 'custom-loads '(gphoto))
@@ -16,7 +17,8 @@
 (put 'gsheet 'custom-loads '(gsheet))
 (put 'gtube 'custom-loads '(gtube))
 (put 'gblogger 'custom-loads '(gblogger))
-(put 'g 'custom-loads '(g-utils g-auth gblogger gcal gcontacts gdocs gfeeds gfinance gnotebook gphoto greader gsheet gskeleton gtube gweb))
+(put 'gwis 'custom-loads '(gwis))
+(put 'g 'custom-loads '(g-utils g-auth gblogger gcal gcontacts gdocs gfeeds gfinance ghealth gnotebook gphoto greader gsheet gskeleton gtube gweb))
 ;; These are for handling :version.  We need to have a minimum of
 ;; information so `customize-changed-options' could do its job.
 

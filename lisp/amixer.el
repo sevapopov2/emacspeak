@@ -1,9 +1,9 @@
 ;;; amixer.el --- Control AMixer from Emacs
-;;;$Id: amixer.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;;$Id: amixer.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;;Emacs front-end to AMixer
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2007, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2009, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.

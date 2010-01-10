@@ -1,5 +1,5 @@
 ;;; emacspeak-moz.el.el --- Talk to Firefox via MozRepl
-;;; $Id: emacspeak-moz.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-moz.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Control Firefox from Emacs
 ;;; Keywords: Emacspeak,  Audio Desktop Firefox
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -133,7 +133,9 @@
   "Send expression to Moz, get output, and browse it in Emacs."
   (interactive "sJSEval: ")
   (declare (special moz-repl-name emacspeak-moz-output-buffer))
-  (let ((comint-preoutput-filter-functions
+  (let ((coding-system-for-read 'utf-8-unix)
+        (coding-system-for-write 'utf-8-unix)
+        (comint-preoutput-filter-functions
          (list 'emacspeak-moz-accumulate-output)))
     (save-excursion
       (set-buffer (get-buffer-create emacspeak-moz-output-buffer))
@@ -142,14 +144,20 @@
       (comint-send-string (inferior-moz-process) exp)
       (while (accept-process-output (inferior-moz-process) 0.5)
         (goto-char (point-max)))
+      (set-buffer emacspeak-moz-output-buffer)
       (goto-char (point-min))
       (flush-lines
        (format "^%s> *$" moz-repl-name))
+      (goto-char (point-min))
+      (delete-char 1)
+      (goto-char (point-max))
+      (backward-delete-char 3)
       (when (or   (eq browse-url-browser-function 'w3-fetch)
                   (eq browse-url-browser-function 'browse-url-w3)
                   (eq browse-url-browser-function 'w3m-browse-url))
         (emacspeak-webutils-autospeak))
-      (browse-url-of-buffer ))))
+      (browse-url-of-buffer emacspeak-moz-output-buffer ))))
+
 ;;;###autoload
 (defun emacspeak-moz-close-tab-or-browser ()
   "Close tab, or browser when one tab left."
@@ -166,7 +174,7 @@
                            (browse-url-url-at-point)
                            "http://"))))
   (emacspeak-moz-eval-expression
-   (format "window.location.href='%s'\n"
+   (format "content.location.href='%s'\n"
            url)))
 
 ;;;###autoload
@@ -180,7 +188,7 @@
     (cond
      (url
       (emacspeak-moz-eval-expression
-       (format "window.location.href=\"%s\";\n"
+       (format "content.location.href=\"%s\";\n"
                url))
       (message "Sent url at point to firefox."))
      (t (error "No url under point.")))))
@@ -364,10 +372,7 @@ title)\n"
 (add-hook 'inferior-moz-mode-hook
           'emacspeak-moz-init)
 
-(defadvice inferior-moz-start-process (after emacspeak pre act
-                                             comp)
-  "Init emacspeak ADom bits."
-  (emacspeak-moz-init))
+
 (add-hook 'javascript-mode-hook
           'emacspeak-setup-programming-mode)
 ;;}}}

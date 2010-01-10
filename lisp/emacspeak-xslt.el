@@ -1,5 +1,5 @@
 ;;; emacspeak-xslt.el --- Implements Emacspeak  xslt transform engine
-;;; $Id: emacspeak-xslt.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-xslt.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  xslt transformation routines
 ;;; Keywords: Emacspeak,  Audio Desktop XSLT
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -316,6 +316,28 @@ part of the libxslt package."
 
 ;;}}}
 ;;{{{ interactive commands:
+
+;;;###autoload
+(defun emacspeak-xslt-view-file(style file)
+  "Transform `file' using `style' and preview via browse-url."
+  (interactive "FStyle:\nFFile:")
+  (with-temp-buffer
+    (let ((coding-system-for-read 'utf-8)
+          (coding-system-for-write 'utf-8)
+          (buffer-file-coding-system 'utf-8))
+      (insert-file file)
+      (shell-command-on-region
+       (point-min) (point-max)
+       (format "%s --param base %s  %s - %s "
+               emacspeak-xslt-program
+                 (format "\"'file://%s'\""
+                         (expand-file-name file))
+               (expand-file-name style)
+               (expand-file-name file))
+       (current-buffer) 'replace)
+      (set-buffer-multibyte t)
+      (browse-url-of-buffer))))
+
 ;;;###autoload
 (defun emacspeak-xslt-view (style url)
   "Browse URL with specified XSL style."
@@ -377,6 +399,7 @@ part of the libxslt package."
       (emacspeak-webutils-without-xsl
        (browse-url-of-buffer)))
     (kill-buffer src-buffer)))
+
 
 ;;}}}
 (provide 'emacspeak-xslt)

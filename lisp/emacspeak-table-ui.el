@@ -1,5 +1,5 @@
 ;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
-;;; $Id: emacspeak-table-ui.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-table-ui.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak table handling module
 ;;; Keywords:emacspeak, audio interface to emacs tables are structured
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1995 by T. V. Raman
 ;;; All Rights Reserved.
 ;;;
@@ -343,7 +343,9 @@ specifies the filter"
   "Speaks a table row after applying a specified row filter.
 Optional prefix arg prompts for a new filter."
   (interactive "P")
-  (declare (special emacspeak-table-speak-row-filter emacspeak-table))
+  (declare (special emacspeak-table-speak-row-filter
+  emacspeak-table))
+  (and emacspeak-table-speak-row-filter(push emacspeak-table-speak-row-filter minibuffer-default))
   (unless (and  emacspeak-table-speak-row-filter
                 (listp emacspeak-table-speak-row-filter)
                 (not prefix))

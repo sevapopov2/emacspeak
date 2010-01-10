@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -56,7 +56,6 @@
 ;;{{{ Map->Voice Mappings:
 (voice-setup-add-map
  '(
-   
    (twit-message-face voice-lighten)
    (twit-author-face voice-brighten)
    (twit-info-face voice-smoothen)
@@ -66,6 +65,27 @@
    (twit-error-face voice-lighten-extra)
    (twit-fail-whale-face voice-lighten-extra)
    ))
+;;}}}
+;;{{{ Advice interactive commands: twit.el Version 3 
+
+(loop for command in
+      '(twit-next-tweet twit-previous-tweet)
+      do
+      (eval
+       `(defadvice ,command (after emacspeak pre act comp)
+          "Provide spoken feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'select-object)
+            (emacspeak-speak-line)))))
+
+;;}}}
+;;{{{ turn on voice lock:
+;;; no minor mode hook for now alas:
+
+(defadvice twit-write-recent-tweets (after emacspeak pre act comp)
+  "Turn on voice lock."
+  (voice-lock-mode 1))
+
 ;;}}}
 (provide 'emacspeak-twit)
 ;;{{{ end of file

@@ -1,5 +1,5 @@
 ;;; emacspeak-sounds.el --- Defines Emacspeak auditory icons
-;;; $Id: emacspeak-sounds.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-sounds.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Module for adding sound cues to emacspeak
 ;;; Keywords:emacspeak, audio interface to emacs, auditory icons
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -315,6 +315,7 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
          (condition-case err
              (start-process
               "play" nil emacspeak-play-program
+              "-N"
               (emacspeak-get-sound-filename sound-name))
            (error
             (message (error-message-string err)))))))
@@ -322,7 +323,7 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
 ;;}}}
 ;;{{{  setup play function
 
-(defcustom emacspeak-auditory-icon-function 'emacspeak-serve-auditory-icon
+(defcustom emacspeak-auditory-icon-function 'emacspeak-play-auditory-icon
   "*Function that plays auditory icons."
   :group 'emacspeak-sounds
   :type '(choice

@@ -1,5 +1,5 @@
 ;;; emacspeak-amphetadesk.el --- Emacspeak News Portal Interface
-;;; $Id: emacspeak-amphetadesk.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-amphetadesk.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  RSS Wizard for the emacspeak desktop
 ;;; Keywords: Emacspeak,  Audio Desktop RSS
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman 
+;;;Copyright (C) 1995 -- 2009, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;

@@ -1,5 +1,5 @@
 ;;; emacspeak-speak.el --- Implements Emacspeak's core speech services
-;;; $Id: emacspeak-speak.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-speak.el 6344 2009-10-22 15:45:13Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Contains the functions for speaking various chunks of text
 ;;; Keywords: Emacspeak,  Spoken Output
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -1053,16 +1053,25 @@ Pronounces character phonetically unless  called with a PREFIX arg."
   (let ((char  (following-char )))
     (when char
       (cond
+       ((> char 128) (emacspeak-speak-char-name char))
        ((and (not prefix)
              (emacspeak-is-alpha-p char))
         (dtk-speak (emacspeak-get-phonetic-string char )))
        (t (emacspeak-speak-this-char char))))))
 
+;;;###autoload
+(defun emacspeak-speak-char-name (char)
+  "tell me what this is"
+  (interactive)
+  (dtk-speak (car (rassq char (ucs-names)))))
+
 (defun emacspeak-speak-this-char (char)
   "Speak this CHAR."
   (when char
     (cond
-     ((emacspeak-is-alpha-p char) (dtk-letter (char-to-string char )))
+     ((emacspeak-is-alpha-p char) (dtk-letter (char-to-string
+                                               char )))
+     ((> char 128) (emacspeak-speak-char-name char))
      (t (dtk-dispatch
          (dtk-char-to-speech char ))))))
 
@@ -2308,12 +2317,10 @@ Speech is scaled by the value of dtk-speak-skim-scale"
 (defun emacspeak-completion-pick-completion ()
   "Pick completion and return safely where we came from."
   (interactive)
-  (declare (special completion-reference-buffer
-                    completion-base-size))
-  (let ((completion-ignore-case t)
-        (base-size completion-base-size))
+  (declare (special completion-reference-buffer))
+  (let ((completion-ignore-case t))
     (choose-completion-string (emacspeak-get-current-completion)
-                              completion-reference-buffer base-size))
+                              completion-reference-buffer))
   (emacspeak-auditory-icon 'select-object)
   (cond
    ((not (or
@@ -3099,13 +3106,13 @@ Argument O specifies overlay."
 typed. If no such group exists, then we try to search for that
 char, or dont move. "
   (interactive)
-  (declare (special last-input-char))
+  (declare (special last-input-event))
   (let ((pattern
          (format
           "[ \t\n]%s%c"
           (or (emacspeak-get-minibuffer-contents) "")
-          last-input-char))
-        (input (format "%c" last-input-char))
+          last-input-event))
+        (input (format "%c" last-input-event))
         (case-fold-search t))
     (when (or (re-search-forward pattern nil t)
               (re-search-backward pattern nil t)
@@ -3200,8 +3207,8 @@ Speak text between point and the char we hit."
 (defun emacspeak-speak-and-skip-extent-upto-this-char ()
   "Speak extent delimited by point and last character typed."
   (interactive)
-  (declare (special last-input-char))
-  (emacspeak-speak-and-skip-extent-upto-char last-input-char))
+  (declare (special last-input-event))
+  (emacspeak-speak-and-skip-extent-upto-char last-input-event))
 
 ;;}}}
 ;;{{{  speak message at time

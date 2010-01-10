@@ -1,5 +1,5 @@
 ;;; emacspeak-we.el --- Transform Web Pages Using XSLT
-;;; $Id: emacspeak-we.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-we.el 6363 2009-11-03 16:57:25Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Edit/Transform Web Pages using XSLT
 ;;; Keywords: Emacspeak,  Audio Desktop Web, XSLT
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -163,7 +163,7 @@ Nil means no transform is used. "
 
 ;;; Note that emacspeak-we-xsl-transform, emacspeak-we-xsl-params
 ;;; and emacspeak-we-xsl-p
-;;; need to be set at top-lvle since the page-rendering code is
+;;; need to be set at top-level since the page-rendering code is
 ;;; called asynchronously.
 
 ;;;###autoload
@@ -611,6 +611,22 @@ buffer. Interactive use provides list of class values as completion."
                               url
                               (or (interactive-p)
                                   speak))))
+;;;###autoload
+(defun emacspeak-we-junk-by-class (class    url &optional speak)
+  "Extract elements not having specified class attribute from HTML. Extracts
+specified elements from current WWW page and displays it in a separate
+buffer. Interactive use provides list of class values as completion."
+  (interactive
+   (list
+    (completing-read "Class: "
+                     emacspeak-we-buffer-class-cache)
+    (emacspeak-webutils-read-this-url)
+    current-prefix-arg))
+  (let ((filter (format "//*[contains(@class,\"%s\")]" class)))
+    (emacspeak-we-xslt-junk filter
+                              url
+                              (or (interactive-p)
+                                  speak))))
 
 (defsubst  emacspeak-we-get-id-list ()
   "Collect a list of ids by prompting repeatedly in the
@@ -668,6 +684,29 @@ values as completion. "
           classes
           " or ")))
     (emacspeak-we-xslt-filter
+     (format "//*[%s]" filter)
+     url
+     (or (interactive-p) speak))))
+;;;###autoload
+(defun emacspeak-we-junk-by-class-list(classes   url &optional
+                                                    speak)
+  "Extract elements not having class specified in list `classes' from HTML.
+Extracts specified elements from current WWW page and displays it
+in a separate buffer.  Interactive use provides list of class
+values as completion. "
+  (interactive
+   (list
+    (let ((completion-ignore-case t))
+      (emacspeak-we-css-get-class-list))
+    (emacspeak-webutils-read-this-url)
+    current-prefix-arg))
+  (let ((filter
+         (mapconcat
+          #'(lambda  (c)
+              (format "(@class=\"%s\")" c))
+          classes
+          " or ")))
+    (emacspeak-we-xslt-junk
      (format "//*[%s]" filter)
      url
      (or (interactive-p) speak))))
@@ -881,6 +920,60 @@ used as well."
                               (or redirect url)
                               'speak)))
 
+
+
+(defvar emacspeak-we-class-filter-history 
+  nil
+  "History list recording Class filters we've used.")
+
+(put 'emacspeak-we-class-filter-history 'history-length 10)
+
+(defvar emacspeak-we-class-filter nil
+  "Buffer local variable specifying a Class filter for following
+urls.")
+
+(make-variable-buffer-local 'emacspeak-we-class-filter)
+(defcustom emacspeak-we-recent-class-filter
+  nil
+  "Caches most recently used class filter.
+Can be customized to set up initial default."
+  :type 'string
+  :group 'emacspeak-we)
+;;;###autoload
+(defun emacspeak-we-class-filter-and-follow-link (&optional prompt)
+  "Follow url and point, and filter the result by specified class.
+Class can be set locally for a buffer, and overridden with an
+interactive prefix arg. If there is a known rewrite url rule, that is
+used as well."
+  (interactive "P")
+  (declare (special emacspeak-we-class-filter
+                    emacspeak-we-recent-class-filter emacspeak-we-class-filter-history
+                    emacspeak-we-url-rewrite-rule))
+  (emacspeak-webutils-browser-check)
+  (let ((url (funcall emacspeak-webutils-url-at-point))
+        (redirect nil))
+    (unless url (error "Not on a link."))
+    (when emacspeak-we-url-rewrite-rule
+      (setq redirect
+            (replace-regexp-in-string
+             (first emacspeak-we-url-rewrite-rule)
+             (second emacspeak-we-url-rewrite-rule)
+             url)))
+    (when (or prompt (null emacspeak-we-class-filter))
+      (setq emacspeak-we-class-filter
+            (read-from-minibuffer
+             "Specify Class: "
+             nil nil nil
+             'emacspeak-we-class-filter-history
+             emacspeak-we-recent-class-filter))
+      (pushnew emacspeak-we-class-filter emacspeak-we-class-filter-history)
+      (setq emacspeak-we-recent-class-filter
+            emacspeak-we-class-filter))
+    (emacspeak-we-xslt-filter
+     (format "//*[@class=\"%s\"]"emacspeak-we-class-filter)
+                              (or redirect url)
+                              'speak)))
+
 (defvar emacspeak-we-xpath-junk nil
   "Records XPath pattern used to junk elements.")
 
@@ -968,6 +1061,7 @@ and provide a completion list of applicable  property values. Filter document by
 (loop for binding in
       '(
         ("C" emacspeak-we-extract-by-class-list)
+        ("D" emacspeak-we-junk-by-class-list)
         ("w" emacspeak-we-extract-by-property)
         ("M" emacspeak-we-extract-tables-by-match-list)
         ("P" emacspeak-we-extract-print-streams)
@@ -981,6 +1075,7 @@ and provide a completion list of applicable  property values. Filter document by
         ("\C-x" emacspeak-we-count-nested-tables)
         ("a" emacspeak-we-xslt-apply)
         ("c" emacspeak-we-extract-by-class)
+        ("d" emacspeak-we-junk-by-class)
         ("e" emacspeak-we-url-expand-and-execute)
         ("f" emacspeak-we-xslt-filter)
         ("i" emacspeak-we-extract-by-id)
@@ -989,7 +1084,8 @@ and provide a completion list of applicable  property values. Filter document by
         ("k" emacspeak-we-toggle-xsl-keep-result)
         ("m" emacspeak-we-extract-table-by-match)
         ("o" emacspeak-we-xsl-toggle)
-        ("p" emacspeak-we-xpath-filter-and-follow)
+("p" emacspeak-we-xpath-filter-and-follow)
+        ("v" emacspeak-we-class-filter-and-follow-link)
         ("r" emacspeak-we-extract-media-streams)
         ("S" emacspeak-we-style-filter)
         ("s" emacspeak-we-xslt-select)

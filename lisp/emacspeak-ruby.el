@@ -1,5 +1,5 @@
 ;;; emacspeak-ruby.el --- Speech enable Ruby Mode 
-;;; $Id: emacspeak-ruby.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-ruby.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; DescriptionEmacspeak extensions for Ruby mode
 ;;; Keywords:emacspeak, audio interface to emacs Ruby
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman 
+;;;Copyright (C) 1995 -- 2009, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -102,7 +102,7 @@
 Cue electric insertion with a tone."
   (when (interactive-p)
     (let ((emacspeak-speak-messages nil))
-      (emacspeak-speak-this-char last-input-char)
+      (emacspeak-speak-this-char last-input-event)
       (dtk-tone 800 50 t))))
 
 ;;}}}

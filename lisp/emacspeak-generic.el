@@ -1,5 +1,5 @@
 ;;; emacspeak-generic.el --- Speech enable  generic modes
-;;; $Id: emacspeak-generic.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-generic.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:   extension to speech enable generic
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2007, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2009, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.

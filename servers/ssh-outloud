@@ -1,5 +1,5 @@
-#!/usr/bin/tcl
-#$Id: ssh-outloud 5700 2008-07-20 17:46:53Z tv.raman.tv $
+#!/usr/bin/tclsh
+#$Id: ssh-outloud 6193 2009-08-21 16:03:08Z tv.raman.tv $
 #Description: Launch a TTS server on a remote host.
 #Copyright (C) 1995 -- 2007, T. V. Raman 
 # {{{  documentation
@@ -42,7 +42,7 @@ if {$host == ""} {
 }
     
 
-set tcl /usr/bin/tcl 
+set tcl "/usr/bin/tcl sh"
 regsub {/ssh-}  $argv0 {/} tts
 puts stderr "Running <ssh $host -l $user -p $port   $tcl $tts>"
 exec     ssh -o StrictHostKeyChecking=no $host \

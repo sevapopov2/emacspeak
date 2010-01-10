@@ -1,5 +1,5 @@
 ;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak intelligently
-;;; $Id: emacspeak-advice.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-advice.el 6390 2009-11-10 17:02:32Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Core advice forms that make emacspeak work
 ;;; Keywords: Emacspeak, Speech, Advice, Spoken  output
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1995, 1996,  1997 by T. V. Raman
 ;;; All Rights Reserved.
 ;;;
@@ -371,6 +371,11 @@ the words that were capitalized."
    (t ad-do-it))
   ad-return-value)
 
+
+(defadvice ucs-insert (after emacspeak pre act comp)
+  "Speak char we inserted."
+  (emacspeak-speak-char-name (ad-get-arg 0)))
+
 (defadvice delete-char (around emacspeak pre act)
   "Speak character you're deleting."
   (cond
@@ -464,14 +469,6 @@ the words that were capitalized."
 
 ;;}}}
 ;;{{{  advice insertion commands to speak.
-
-;; (defadvice completion-separator-self-insert-autofilling
-;;   (around fix-bug pre act comp)
-;;   "This fixes a bug in completion under Emacs 19.34."
-;;   (condition-case nil
-;;       ad-do-it
-;;     (error (set-syntax-table cmpl-saved-syntax)
-;;            (emacspeak-self-insert-command last-input-char ))))
 
 (defadvice completion-separator-self-insert-autofilling (after emacspeak pre act)
   "Speak what was completed."
@@ -719,7 +716,8 @@ Produce an auditory icon if possible."
           ad-return-value)))
 
 (loop for f in
-      '(lisp-complete-symbol complete-symbol)
+      '(lisp-complete-symbol complete-symbol
+                             widget-complete)
       do
       (eval
        `(defadvice ,f (around emacspeak pre act)
@@ -1015,8 +1013,9 @@ Produce an auditory icon if possible."
   "Make comint speak its output."
   (let ((inhibit-read-only t)
         (monitor emacspeak-comint-output-monitor)
+		(buffer (process-buffer (ad-get-arg 0)))
         (dtk-stop-immediately nil))
-    (set-buffer (process-buffer (ad-get-arg 0)))
+    (set-buffer buffer)
     ad-do-it
     (when (and (boundp 'comint-last-prompt-overlay)
                comint-last-prompt-overlay)
@@ -1028,10 +1027,9 @@ Produce an auditory icon if possible."
         'emacspeak-comint-prompt-personality
         'rear-sticky nil)))
     (when (and
+           comint-last-output-start
            (or emacspeak-comint-autospeak emacspeak-speak-comint-output)
-           (or monitor
-               (eq (selected-window)
-                   (get-buffer-window (process-buffer (ad-get-arg 0))))))
+           (or monitor (eq (window-buffer) buffer)))
       (emacspeak-speak-region comint-last-output-start (point )))
     ad-return-value))
 
@@ -1350,7 +1348,7 @@ Produce an auditory icon if possible."
 (defadvice describe-mode (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
-    (message "Displayed mode help in other window")
+    (message "Displayed mode help in help window")
     (emacspeak-auditory-icon 'help)))
 (loop for f in
       '(describe-bindings
@@ -1360,7 +1358,7 @@ Produce an auditory icon if possible."
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
-            (message "Displayed key bindings  in other window")
+            (message "Displayed key bindings  in help window")
             (emacspeak-auditory-icon 'help)))))
 
 (defadvice indent-for-tab-command (after emacspeak pre act comp)

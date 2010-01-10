@@ -1,5 +1,5 @@
 ;;; emacspeak-alsaplayer.el --- Control alsaplayer from Emacs
-;;; $Id: emacspeak-alsaplayer.el 6141 2009-04-03 00:26:48Z tv.raman.tv $
+;;; $Id: emacspeak-alsaplayer.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Controlling alsaplayer from emacs 
 ;;; Keywords: Emacspeak, alsaplayer
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2007, T. V. Raman
+;;; Copyright (c) 1995 -- 2009, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -354,13 +354,14 @@ Optional second arg watch-pattern specifies line of output to
 (defun emacspeak-alsaplayer-quit ()
   "Quit  alsaplayer"
   (interactive)
+  (let ((kill-buffer-query-functions nil))
   (emacspeak-alsaplayer-send-command "--quit")
   (delete-window)
   (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
     (when (eq major-mode 'emacspeak-alsaplayer-mode)
       (kill-buffer (current-buffer)))
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-speak-mode-line))))
 
 ;;;###autoload
 (defun emacspeak-alsaplayer-cd (directory)
@@ -496,20 +497,6 @@ Optional second arg watch-pattern specifies line of output to
       (kill-new where)
       (emacspeak-auditory-icon 'yank-object)
       (message "%s" where))))
-
-(defsubst emacspeak-alsaplayer-get-path ()
-  "Return currently displayed path."
-  (declare (special emacspeak-alsaplayer-buffer))
-  (save-current-buffer
-    (set-buffer emacspeak-alsaplayer-buffer)
-    (goto-char (point-min))
-    (when (search-forward "path:" nil t)
-      (second
-       (split-string
-        (buffer-substring-no-properties
-         (line-beginning-position)
-         (line-end-position))
-        ": ")))))
 
 (defun emacspeak-alsaplayer-info ()
   "Speak current path and copy it to kill ring."

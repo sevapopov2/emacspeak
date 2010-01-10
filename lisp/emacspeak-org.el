@@ -1,5 +1,5 @@
 ;;; emacspeak-org.el --- Speech-enable org
-;;; $Id: emacspeak-org.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-org.el 6179 2009-06-29 14:14:16Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for ORG
 ;;; Keywords: Emacspeak, org
@@ -358,7 +358,7 @@
   (when (and emacspeak-character-echo
              (interactive-p ))
     (when dtk-stop-immediately-while-typing (dtk-stop))
-    (emacspeak-speak-this-char last-input-char )))
+    (emacspeak-speak-this-char last-input-event )))
 
 (defadvice org-delete-char (around emacspeak pre act)
   "Speak character you're deleting."

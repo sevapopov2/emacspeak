@@ -1,5 +1,5 @@
 ;;; emacspeak-tcl.el --- Speech enable TCL development environment
-;;; $Id: emacspeak-tcl.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-tcl.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; DescriptionEmacspeak extensions for tcl-mode
 ;;; Keywords:emacspeak, audio interface to emacs tcl
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman 
+;;;Copyright (C) 1995 -- 2009, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -123,17 +123,17 @@ is a Tcl expression, and the last argument is Tcl commands.")
 (defadvice tcl-electric-hash (after emacspeak pre act comp )
   "Speak what you inserted."
   (when (interactive-p)
-    (emacspeak-speak-this-char last-input-char)))
+    (emacspeak-speak-this-char last-input-event)))
 
 (defadvice tcl-electric-char (after emacspeak pre act comp )
   "Speak what you inserted."
   (when (interactive-p)
-    (emacspeak-speak-this-char last-input-char)))
+    (emacspeak-speak-this-char last-input-event)))
 
 (defadvice tcl-electric-brace (after emacspeak pre act comp )
   "Speak what you inserted."
   (when (interactive-p)
-    (emacspeak-speak-this-char last-input-char)))
+    (emacspeak-speak-this-char last-input-event)))
 
 ;;}}}
 ;;{{{  Actions in the tcl mode buffer:

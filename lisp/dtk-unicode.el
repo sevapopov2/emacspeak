@@ -6,7 +6,7 @@
 ;;; Using patch from Lukas.
 ;;
 ;; Author: Lukas Loehrer <loehrerl |at| gmx.net>
-;; Version: $Id: dtk-unicode.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;; Version: $Id: dtk-unicode.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;; Keywords:  TTS, Unicode
 
 ;;}}}
@@ -22,7 +22,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -71,7 +71,9 @@
 (defcustom dtk-unicode-character-replacement-alist
   '(
     (? . "-")                       ; START OF GUARDED AREA
-    (?° . " degrees ")                  ; degree sign 
+    (?° . " degrees ")                  ; degree sign
+    (?℃ . "Degree C") ; celsius
+    (?℉ . "Degree F ") ; Fahrenheit
     (?“ . "\"")                         ;LEFT DOUBLE QUOTATION MARK
     (?” . "\"")                         ; RIGHT DOUBLE QUOTATION MARK
     (?⋆ . "*")                          ; STAR OPERATOR
@@ -102,6 +104,7 @@
 (defcustom dtk-unicode-name-transformation-rules-alist
   '(
     ("^greek\\( small\\| capital\\)? letter \\(.*\\)$" .  (lambda (s) (match-string 2 s)))
+    ("^latin\\( small\\| capital\\)? letter \\(.*\\)$" .  (lambda (s) (match-string 2 s)))
     ("\\(.*\\) sign$" . (lambda (s) (match-string 1 s)))
     )
   "Alist of character name transformation rules."
@@ -114,9 +117,10 @@
 ;;}}}
 ;;{{{ Variables
 
-(defvar dtk-unicode-untouched-charsets
+(defcustom dtk-unicode-untouched-charsets
   '(ascii latin-iso8859-1)
-  "*Characters of these charsets are completely ignored by dtk-unicode-replace-chars.")
+  "*Characters of these charsets are completely ignored by dtk-unicode-replace-chars."
+  :type '(repeat symbol))
 
 (defvar dtk-unicode-handlers
   '(dtk-unicode-user-table-handler dtk-unicode-full-table-handler)
@@ -202,6 +206,8 @@ charsets returned by operations such as `find-charset-region'."
           (puthash char ad-return-value dtk-unicode-cache))
       (setq ad-return-value result))))
 
+
+
 (defsubst dtk-unicode-char-properties (char)
   "Return unicode properties for CHAR.
 
@@ -216,15 +222,23 @@ Converts char to unicode if necessary (for emacs 22)."
 (defsubst dtk-unicode-char-property (char prop-name)
   "Get character property by name."
   (second (assoc prop-name (dtk-unicode-char-properties char))))
+;;; Let's use the cache  built in ucs-names --- more efficient.
+;; (defun dtk-unicode-name-for-char (char)
+;;   "Return unicode name for character CHAR.
 
-(defun dtk-unicode-name-for-char (char)
+;; nil if CHAR is not in Unicode."
+;;   (let ((name (dtk-unicode-char-property char "Name")))
+;;     (when (and (stringp name) (string-equal name "<control>"))
+;;       (setq name (dtk-unicode-char-property char "Old name")))
+;;     (and (stringp name) (downcase name))))
+
+(defsubst dtk-unicode-name-for-char (char)
   "Return unicode name for character CHAR.
-
 nil if CHAR is not in Unicode."
-  (let ((name (dtk-unicode-char-property char "Name")))
-    (when (and (stringp name) (string-equal name "<control>"))
-      (setq name (dtk-unicode-char-property char "Old name")))
-    (and (stringp name) (downcase name))))
+  (downcase
+   (or  (car (rassq char (ucs-names)))
+        "")))
+    
 
 (defsubst dtk-unicode-char-punctuation-p (char)
   "Use unicode properties to determine whether CHAR is a ppunctuation character."
