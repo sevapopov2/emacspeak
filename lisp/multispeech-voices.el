@@ -475,7 +475,12 @@ and TABLE gives the values along that dimension."
   (unless russian-spelling-data-loaded-p
     (let ((coding-system-for-read 'utf-8))
       (load-library "russian-spelling"))
-    (setq russian-spelling-data-loaded-p t)))
+    (setq russian-spelling-data-loaded-p t))
+  (dtk-unicode-update-untouched-charsets
+   '(ascii
+     latin-iso8859-1
+     mule-unicode-0100-24ff
+     cyrillic-iso8859-5)))
 
 ;;}}}
 (provide 'multispeech-voices)
