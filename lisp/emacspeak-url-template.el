@@ -1,5 +1,5 @@
 ;;; emacspeak-url-template.el --- Create library of URI templates
-;;; $Id: emacspeak-url-template.el 6067 2008-11-17 22:24:37Z tv.raman.tv $
+;;; $Id: emacspeak-url-template.el 6147 2009-04-29 14:07:17Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:   Implement library of URI templates
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -67,12 +67,12 @@
 
 (defstruct (emacspeak-url-template
             (:constructor emacspeak-url-template-constructor))
-  name                           ;Human-readable name
-  template                       ;template URL string
-  generators                     ; list of param generator
-  post-action                    ;action to perform after opening
-  documentation                  ;resource  documentation
-  fetcher                        ; custom fetcher
+  name                                ;Human-readable name
+  template                            ;template URL string
+  generators                          ; list of param generator
+  post-action                         ;action to perform after opening
+  documentation                       ;resource  documentation
+  fetcher                             ; custom fetcher
   dont-url-encode)
 
 ;;}}}
@@ -211,6 +211,17 @@ dont-url-encode if true then url arguments are not url-encoded "
 
 ;;}}}
 ;;{{{  template resources
+;;{{{ twitter:
+
+(emacspeak-url-template-define
+ "Twitter Search"
+ "http://search.twitter.com/search.atom?q=%s"
+ (list "Twitter Search: ")
+ nil
+ "Twitter search and display results feed."
+ 'emacspeak-webutils-atom-display)
+
+;;}}}
 ;;{{{  powerset
 
 (emacspeak-url-template-define
@@ -219,7 +230,6 @@ dont-url-encode if true then url arguments are not url-encoded "
  (list "PowerSet: ")
  nil
  "Perform powerset query.")
-
 
 ;;}}}
 ;;{{{ Mozilla MDC
@@ -256,8 +266,8 @@ dont-url-encode if true then url arguments are not url-encoded "
  nil
  "Display package tracking information from UPS."
  #'(lambda (url)
-(emacspeak-we-extract-table-by-match "Package Progress"
-                                     url 'speak)))
+     (emacspeak-we-extract-table-by-match "Package Progress"
+                                          url 'speak)))
 
 ;;}}}
 ;;{{{ amazon
@@ -383,6 +393,32 @@ dont-url-encode if true then url arguments are not url-encoded "
 
 ;;}}}
 ;;{{{ bbc
+(emacspeak-url-template-define
+ "Mobile BBC"
+ "http://www.bbc.co.uk/mobile/radio/listen/"
+ nil
+ nil
+ "BBC Mobile Streams.")
+
+(emacspeak-url-template-define
+ "BBC  7 Radio Bridge"
+ "rtsp://rmv8.bbc.net.uk:554/bbc7coyopa/bbc7_-_%s_%s.ra"
+ (list
+  "Weekeday: "
+  "Time: ")
+ nil
+ "Play BBC  Radio7 show for a given day/time."
+ 'emacspeak-m-player)
+
+(emacspeak-url-template-define
+ "Radio4 radioBridge"
+ "rtsp://rmv8.bbc.net.uk:554/radio4fmcoyopa/radio_4_fm_-_%s_%s.ra"
+ (list
+  "Weekeday: "
+  "Time: ")
+ nil
+ "Play BBC  Radio4 show for a given day/time."
+ 'emacspeak-m-player)
 
 (emacspeak-url-template-define
  "Radio4 Program"
@@ -546,7 +582,25 @@ content."
  "Search answers.com")
 
 ;;}}}
+;;{{{ product search: Google (used to be  froogle)
+
+(emacspeak-url-template-define
+ "Google Product Search"
+ "http://www.google.com/products?q=%s&output=html"
+ (list "Product: ")
+ #'(lambda ()
+     (search-forward "Please" nil t)
+     (forward-line 2)
+     (emacspeak-speak-line))
+ "Perform Google Product Search"
+ #'(lambda (url)
+     (emacspeak-we-xslt-filter
+      "id(\"res0\")/.."
+      url )))
+
+;;}}}
 ;;{{{ market summary from google finance
+
 (emacspeak-url-template-define
  "Market summary from Google"
  "http://finance.google.com/finance"
@@ -554,8 +608,9 @@ content."
  nil
  "Display financial market summary."
  #'(lambda (url)
-     (emacspeak-we-extract-by-id
-      "mktsumm" url 'speak)))
+     (emacspeak-we-extract-by-id-list
+      (list "mktsumm" "sfe-mktsumm" )
+      url 'speak)))
  
 
 ;;}}}
@@ -620,9 +675,9 @@ content."
 
 (defun emacspeak-url-template-setup-content-filter ()
   "Set up content filter in displayed page."
-     (declare (special emacspeak-we-xpath-filter))
-     (setq emacspeak-we-xpath-filter
-	   "//p"))
+  (declare (special emacspeak-we-xpath-filter))
+  (setq emacspeak-we-xpath-filter
+        emacspeak-we-recent-xpath-filter))
 
 ;;}}}
 ;;{{{ webmaster tools
@@ -681,14 +736,13 @@ content."
 ;;}}}
 ;;{{{ GMail HTML
 
-
 (defcustom emacspeak-url-template-gmail-search-url
   "https://mail.google.com/mail/h/"
   "URL eng-point for GMail searches.
 For  corporate email using GMail, change /a/google.com/ to /a/<your.domain>/"   
   :type '(choice
-          (const :tag "GMail"  "https://mail.google.com/mail/")
-          (const :tag "Corporate"  "https://mail.google.com/a/google.com/h/"))
+          (string :tag "GMail"  "https://mail.google.com/mail/")
+          (string :tag "Corporate"  "https://mail.google.com/a/google.com/h/"))
   :group 'emacspeak-url-template)
 
 (emacspeak-url-template-define
@@ -803,7 +857,18 @@ http://www.google.com/calendar/a/<my-corp>/m?output=xhtml"
 ;;{{{ YouTube:
 (emacspeak-url-template-define
  "YouTube Results"
- "http://gdata.youtube.com/feeds/api/videos?orderby=updated&vq=%s"
+ "http://gdata.youtube.com/feeds/api/videos?vq=%s"
+ (list "YouTube:")
+ #'(lambda ()
+     (declare (special emacspeak-we-url-executor))
+     (setq emacspeak-we-url-executor
+           'emacspeak-m-player-youtube-player))
+ "YouTube Search Via Feeds"
+ 'emacspeak-webutils-atom-display)
+
+(emacspeak-url-template-define
+ "Recent YouTube Results"
+ "http://gdata.youtube.com/feeds/api/videos?vq=%s&orderby=updated"
  (list "YouTube:")
  #'(lambda ()
      (declare (special emacspeak-we-url-executor))
@@ -894,7 +959,7 @@ http://www.google.com/calendar/a/<my-corp>/m?output=xhtml"
 
 (emacspeak-url-template-define
  "Finance Google Portfolio"
-"http://finance.google.com/finance/portfolio?action=view&pid=1&pview=sview&output=csv"
+ "http://finance.google.com/finance/portfolio?action=view&pid=1&pview=sview&output=csv"
  nil nil
  "Download and display portfolio from Google Finance."
  #'(lambda (url)
@@ -941,8 +1006,8 @@ http://www.google.com/calendar/a/<my-corp>/m?output=xhtml"
  nil
  "Public transit directions from Google."
  #'(lambda (url)
-(emacspeak-we-extract-by-class "directions"
-                            url 'speak)))
+     (emacspeak-we-extract-by-class "directions"
+                                    url 'speak)))
 
 (emacspeak-url-template-define
  "Walking Directions From Google"
@@ -1042,13 +1107,13 @@ Here are some examples:
 ;;{{{ google translation service
 
 (emacspeak-url-template-define
-      "Multilingual dictionary via Google."
-      "http://translate.google.com/translate_dict?q=%s&sa=N&hl=en&langpair=%s"
-      (list
-       "Word: "
-       "Translate from|To:")
-      nil
-      "Translate word using Google.
+ "Multilingual dictionary via Google."
+ "http://translate.google.com/translate_dict?q=%s&sa=N&hl=en&langpair=%s"
+ (list
+  "Word: "
+  "Translate from|To:")
+ nil
+ "Translate word using Google.
 Source and target languages
 are specified as two-letter language codes, e.g. en|de translates
 from English to German")
@@ -1118,13 +1183,13 @@ from English to German.")
  "http://www.google.com/search?q=%s&num=%s"
  (list 'gweb-google-autocomplete
        #'(lambda nil
-	   (declare (special  emacspeak-websearch-google-number-of-results))
-	   emacspeak-websearch-google-number-of-results))
+           (declare (special  emacspeak-websearch-google-number-of-results))
+           emacspeak-websearch-google-number-of-results))
  nil
  "Only show Google hits."
  #'(lambda (url)
      (emacspeak-we-extract-by-id "res"
-                                    url 'speak)))
+                                 url 'speak)))
 
 ;;}}}
 ;;{{{ NY Times
@@ -1221,7 +1286,7 @@ from English to German.")
  "Transcode site via Google.")
 
 (emacspeak-url-template-define
- "Google Atom News"
+ "Google topical  News"
  "http://news.google.com/news?ned=us&topic=%s&output=atom"
  (list "Topic Code: ")
  nil
@@ -1623,7 +1688,7 @@ name of the list.")
  "Money Content "
  "http://money.cnn.com/"
  nil
- nil
+ 'emacspeak-url-template-setup-content-filter
  "CNN Content"
  #'(lambda (url)
      (emacspeak-we-extract-by-id
@@ -1995,6 +2060,21 @@ plays entire program."
  nil
  "Display baseball scores."
  )
+
+;;}}}
+;;{{{ Listening to Air Traffic control
+
+(emacspeak-url-template-define
+ "Air Traffic Control"
+ "http://www.liveatc.net/search?icao=%s"
+ (list "Airport Code: ")
+ nil
+ "Find live streams for Air Traffic Control."
+ #'(lambda (url)
+     (emacspeak-we-extract-by-class
+      "col1wrap"
+ url
+ 'speak)))
 
 ;;}}}
 ;;{{{ flights from travelocity

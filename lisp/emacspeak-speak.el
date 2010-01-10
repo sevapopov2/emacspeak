@@ -1,5 +1,5 @@
 ;;; emacspeak-speak.el --- Implements Emacspeak's core speech services
-;;; $Id: emacspeak-speak.el 5997 2008-10-14 01:06:32Z tv.raman.tv $
+;;; $Id: emacspeak-speak.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Contains the functions for speaking various chunks of text
 ;;; Keywords: Emacspeak,  Spoken Output
@@ -686,8 +686,8 @@ the sense of the filter. "
     (message "Unset column filter")
     (setq emacspeak-speak-line-column-filter nil))))
 
-;;}}}                                   ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
-;;{{{  Speak units of text              ; ;
+;;}}}                                   ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
+;;{{{  Speak units of text              ; ; ;
 
 (defsubst emacspeak-speak-region (start end )
   "Speak region.
@@ -1049,7 +1049,7 @@ char is assumed to be one of a--z."
                         char))))
     (or   (cdr
            (assoc char-string emacspeak-char-to-phonetic-table ))
-		  (dtk-unicode-full-name-for-char char)
+          (dtk-unicode-full-name-for-char char)
           " ")))
 
 ;;}}}
@@ -1064,7 +1064,7 @@ Pronounces character phonetically unless  called with a PREFIX arg."
        ((and (not prefix)
              (emacspeak-is-alpha-p char))
         (dtk-speak (emacspeak-get-phonetic-string char )))
-	   (t (emacspeak-speak-this-char char))))))
+       (t (emacspeak-speak-this-char char))))))
 
 (defun emacspeak-speak-this-char (char)
   "Speak this CHAR."
@@ -2334,17 +2334,17 @@ Speech is scaled by the value of dtk-speak-skim-scale"
   "Pick completion and return safely where we came from."
   (interactive)
   (declare (special completion-reference-buffer
-		    completion-base-size))
+                    completion-base-size))
   (let ((completion-ignore-case t)
-		(base-size completion-base-size))
-  (choose-completion-string (emacspeak-get-current-completion)
-							  completion-reference-buffer base-size))
+        (base-size completion-base-size))
+    (choose-completion-string (emacspeak-get-current-completion)
+                              completion-reference-buffer base-size))
   (emacspeak-auditory-icon 'select-object)
   (cond
    ((not (or
-	  (window-minibuffer-p)
-	  (one-window-p)
-	  (window-dedicated-p (selected-window))))
+          (window-minibuffer-p)
+          (one-window-p)
+          (window-dedicated-p (selected-window))))
     (delete-window)
     (bury-buffer "*Completions*")
     (other-window 1))
@@ -3007,7 +3007,7 @@ Also display match context in minibuffer."
           (message "Matches %s"
                    (substring-no-properties
                     open-paren-line-string))
-		  (sit-for blink-matching-delay)))))))
+          (sit-for blink-matching-delay)))))))
 
 (defun  emacspeak-use-customized-blink-paren ()
   "A customized blink-paren to speak  matching opening paren.

@@ -1,5 +1,5 @@
 ;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak intelligently
-;;; $Id: emacspeak-advice.el 6072 2008-11-26 05:04:51Z tv.raman.tv $
+;;; $Id: emacspeak-advice.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Core advice forms that make emacspeak work
 ;;; Keywords: Emacspeak, Speech, Advice, Spoken  output
@@ -110,15 +110,15 @@
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
-	  "Speak the button."
-	  (when (interactive-p)
-	    (condition-case nil
-		(let* ((button (button-at (point)))
-		       (start (button-start button))
-		       (end (button-end button)))
-		  (dtk-speak (buffer-substring start end)))
-	      (error nil))
-	    (emacspeak-auditory-icon 'large-movement)))))
+          "Speak the button."
+          (when (interactive-p)
+            (condition-case nil
+                (let* ((button (button-at (point)))
+                       (start (button-start button))
+                       (end (button-end button)))
+                  (dtk-speak (buffer-substring start end)))
+              (error nil))
+            (emacspeak-auditory-icon 'large-movement)))))
 
 (defadvice forward-word (after emacspeak pre act)
   "Speak the word you just moved to."
@@ -519,9 +519,9 @@ the words that were capitalized."
 (defadvice read-event (before emacspeak pre act comp)
   "Speak the prompt."
   (when (ad-get-arg 0)
-  (tts-with-punctuations 'all
-                         (dtk-speak
-                          (ad-get-arg 0)))))
+    (tts-with-punctuations 'all
+                           (dtk-speak
+                            (ad-get-arg 0)))))
 
 (defadvice previous-history-element (after emacspeak pre act)
   "Speak the history element just inserted."
@@ -715,6 +715,7 @@ Produce an auditory icon if possible."
 (defadvice read-passwd (before emacspeak pre act comp)
   "Speak the prompt."
   (emacspeak-auditory-icon 'open-object)
+  (dtk-stop)
   (dtk-speak (ad-get-arg 0)))
 
 (defadvice read-char (before emacspeak pre act comp)
@@ -729,8 +730,8 @@ Produce an auditory icon if possible."
   "Speak the prompt"
   (when (ad-get-arg 0)
     (tts-with-punctuations 'all
-			   (dtk-speak
-			    (ad-get-arg 0)))))
+                           (dtk-speak
+                            (ad-get-arg 0)))))
 
 ;;}}}
 ;;{{{  advice completion functions to speak:
@@ -2502,7 +2503,7 @@ Produce auditory icons if possible."
 ;; (defun emacspeak-minibuffer-setup-hook ()
 ;;   "Actions  taken when entering the minibuffer with emacspeak. "
 ;;   (declare (special emacspeak-minibuffer-enter-auditory-icon
-;; 		    minibuffer-default))
+;;                  minibuffer-default))
 ;;   (let ((default
 ;;           (cond
 ;;            ((and minibuffer-default (listp minibuffer-default))
@@ -2529,7 +2530,6 @@ emacspeak running."
     (unwind-protect
         (tts-with-punctuations 'all
                                (emacspeak-speak-buffer)))))
-
 
 (add-hook  'minibuffer-setup-hook 'emacspeak-minibuffer-setup-hook)
 

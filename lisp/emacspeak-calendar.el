@@ -1,5 +1,5 @@
 ;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -- maintain a diary and appointments
-;;; $Id: emacspeak-calendar.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-calendar.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extensions to speech enable the calendar.
 ;;; Keywords: Emacspeak, Calendar, Spoken Output
@@ -112,7 +112,7 @@
 (declaim (special diary-display-hook))
 (when (boundp 'diary-display-hook)
   (unless (memq 'fancy-diary-display diary-display-hook)
-  (add-hook 'diary-display-hook 'fancy-diary-display)))
+    (add-hook 'diary-display-hook 'fancy-diary-display)))
 (add-hook 'calendar-mode-hook
           'gcal-emacs-calendar-setup)
 

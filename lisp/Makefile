@@ -1,4 +1,4 @@
-# $Id: Makefile 5734 2008-08-15 00:29:39Z tv.raman.tv $
+# $Id: Makefile 6150 2009-05-06 17:38:17Z tv.raman.tv $
 # $Author: tv.raman.tv $
 # Description:  Makefile for Emacspeak
 # Keywords: Emacspeak, Dectalk, Makefile
@@ -88,6 +88,7 @@ AUX_OBJECTS =  cd-tool.elc \
 amixer.elc \
 emacspeak-add-log.elc \
 emacspeak-alsaplayer.elc \
+emacspeak-amark.elc \
 emacspeak-amphetadesk.elc \
 emacspeak-analog.elc \
 emacspeak-ansi-color.elc \
@@ -225,6 +226,7 @@ emacspeak-tetris.elc \
 emacspeak-texinfo.elc \
 emacspeak-tnt.elc \
 emacspeak-todo-mode.elc \
+emacspeak-twit.elc \
 emacspeak-url-template.elc \
 emacspeak-view-process.elc \
 emacspeak-view.elc \
@@ -300,6 +302,7 @@ multispeech-voices.elc: multispeech-voices.el voice-setup.elc
 espeak-voices.elc: espeak-voices.el voice-setup.elc
 voice-setup.elc: voice-setup.el acss-structure.elc
 emacspeak-alsaplayer.elc: emacspeak-alsaplayer.el
+emacspeak-amark.elc: emacspeak-amark.el
 emacspeak-amphetadesk.elc: emacspeak-amphetadesk.el
 cd-tool.elc: cd-tool.el
 amixer.elc: amixer.el
@@ -454,6 +457,7 @@ emacspeak-tetris.elc: emacspeak-tetris.el dtk-speak.elc voice-setup.elc
 emacspeak-texinfo.elc: emacspeak-texinfo.el dtk-speak.elc voice-setup.elc
 emacspeak-tnt.elc: emacspeak-tnt.el dtk-speak.elc voice-setup.elc
 emacspeak-todo-mode.elc: emacspeak-todo-mode.el dtk-speak.elc voice-setup.elc
+emacspeak-twit-mode.elc: emacspeak-twit-mode.el dtk-speak.elc voice-setup.elc
 emacspeak-url-template.elc: emacspeak-url-template.el emacspeak-webutils.elc emacspeak-we.elc
 emacspeak-view-process.elc: emacspeak-view-process.el dtk-speak.elc voice-setup.elc
 emacspeak-view.elc: emacspeak-view.el dtk-speak.elc voice-setup.elc

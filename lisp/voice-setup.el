@@ -1,5 +1,5 @@
 ;;; voice-setup.el --- Setup voices for voice-lock
-;;; $Id: voice-setup.el 6060 2008-11-13 04:25:52Z tv.raman.tv $
+;;; $Id: voice-setup.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Voice lock mode for Emacspeak
 ;;{{{  LCD Archive entry:
@@ -312,14 +312,14 @@ command \\[customize-variable] on <personality>-settings.. "
        '(lambda  (sym val)
           (let ((voice-name (voice-setup-personality-from-style val)))
             (setq ,personality voice-name)
-;;; update all observers                ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
+;;; update all observers                ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
             (voice-setup-update-personalities ',personality)
             (set-default sym val))))))
 
-;;}}}                                   ; ; ;
-;;{{{ voices defined using ACSS         ; ; ;
+;;}}}                                   ; ; ; ;
+;;{{{ voices defined using ACSS         ; ; ; ;
 
-;;; these voices are device independent ; ; ;
+;;; these voices are device independent ; ; ; ;
 
 (defvoice  voice-punctuations-all (list nil nil nil nil  nil 'all)
   "Turns current voice into one that  speaks all

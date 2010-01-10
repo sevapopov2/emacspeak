@@ -1,5 +1,5 @@
 ;;; emacspeak-alsaplayer.el --- Control alsaplayer from Emacs
-;;; $Id: emacspeak-alsaplayer.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-alsaplayer.el 6141 2009-04-03 00:26:48Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Controlling alsaplayer from emacs 
 ;;; Keywords: Emacspeak, alsaplayer
@@ -52,6 +52,8 @@
 ;;{{{  Required modules
 
 (require 'emacspeak-preamble)
+(require 'emacspeak-amark)
+
 ;;}}}
 ;;{{{ define a derived mode for alsaplayer interaction
 
@@ -154,7 +156,7 @@ Alsaplayer session."
        ((and (get-buffer-process buffer)
              (eq 'run (process-status (get-buffer-process buffer))))
         (pop-to-buffer buffer 'other-window)
-	(set-window-text-height nil emacspeak-alsaplayer-height))
+        (set-window-text-height nil emacspeak-alsaplayer-height))
        (t
         (setq buffer-undo-list t)
         (shell-command
@@ -168,10 +170,11 @@ Alsaplayer session."
                    ""))
          (current-buffer))
         (pop-to-buffer buffer 'other-window)
-	(set-window-text-height nil emacspeak-alsaplayer-height)
+        (set-window-text-height nil emacspeak-alsaplayer-height)
         (emacspeak-alsaplayer-mode)))
       (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
         (emacspeak-auditory-icon 'open-object)
+        (emacspeak-amark-load)
         (emacspeak-speak-mode-line)))))
 
 ;;}}}
@@ -215,11 +218,12 @@ Optional second arg watch-pattern specifies line of output to
     (let ((completion-ignore-case t)
           (read-file-name-completion-ignore-case t))
       (expand-file-name
-       (read-file-name "Media Resource: "
-                       (if 
-                           (string-match "mp3" (expand-file-name default-directory))
-                           default-directory
-                         emacspeak-alsaplayer-media-directory))))))
+       (read-file-name
+          "Media Resource: "
+          (if 
+              (string-match "\\(audio\\)\\|\\(mp3\\)" (expand-file-name default-directory))
+              default-directory
+            emacspeak-alsaplayer-media-directory))))))
   (emacspeak-alsaplayer-send-command
    (format "--enqueue %s"
            (shell-quote-wildcard-pattern
@@ -432,6 +436,7 @@ Optional second arg watch-pattern specifies line of output to
     (emacspeak-pronounce-add-buffer-local-dictionary-entry
      (expand-file-name directory)
      ""))
+  (emacspeak-amark-load)
   (emacspeak-auditory-icon 'item))
 ;;}}}
 ;;{{{ additional temporal navigation 
@@ -497,18 +502,15 @@ Optional second arg watch-pattern specifies line of output to
     (emacspeak-speak-line)))
 
 ;;}}}
-;;{{{  saving positions, marking and clipping:
+;;{{{ Helper Accessors:
 
-(defvar emacspeak-alsaplayer-mark nil
-  "Saved mark position.")
-
-(defsubst emacspeak-alsaplayer-get-position ()
-  "Return currently displayed position."
+(defsubst emacspeak-alsaplayer-get-field (field)
+  "Return specified field value."
   (declare (special emacspeak-alsaplayer-buffer))
   (save-current-buffer
     (set-buffer emacspeak-alsaplayer-buffer)
     (goto-char (point-min))
-    (when (search-forward "position:" nil t)
+    (when (search-forward field  nil t)
       (second
        (split-string
         (buffer-substring-no-properties
@@ -516,10 +518,30 @@ Optional second arg watch-pattern specifies line of output to
          (line-end-position))
         ": ")))))
 
+(defsubst emacspeak-alsaplayer-get-position ()
+  "Return currently displayed position."
+  (emacspeak-alsaplayer-get-field "position:"))
+
+(defsubst emacspeak-alsaplayer-get-playlist-length ()
+  "Return playlist length."
+  (emacspeak-alsaplayer-get-field "playlist_length:"))
+
+(defsubst emacspeak-alsaplayer-get-path ()
+  "Return currently displayed path."
+  (emacspeak-alsaplayer-get-field "path:"))
+
+;;}}}
+;;{{{  saving positions, marking and clipping:
+
+(defvar emacspeak-alsaplayer-mark nil
+  "Saved mark position.")
+(make-variable-buffer-local 'emacspeak-alsaplayer-mark)
+
 (defun emacspeak-alsaplayer-mark-position   ()
   "Mark currently played position."
   (interactive)
   (declare (special emacspeak-alsaplayer-mark))e
+  (emacspeak-alsaplayer-status)
   (setq emacspeak-alsaplayer-mark
         (emacspeak-alsaplayer-get-position))
   (when (and (interactive-p)
@@ -598,6 +620,36 @@ Optional second arg watch-pattern specifies line of output to
                                'on 'off)))
 
 ;;}}}
+;;{{{ AMarks:
+;;;###autoload
+(defun emacspeak-alsaplayer-amark-add (name &optional prompt-position)
+  "Set AMark `name' at current position in current audio stream.
+Interactive prefix arg prompts for position.
+As the default, use current position."
+  (interactive "sAMark Name:\nP")
+  (declare  (special emacspeak-alsaplayer-mark))
+  (emacspeak-alsaplayer-status)
+  (emacspeak-amark-add
+   (emacspeak-alsaplayer-get-path)
+   name
+   (cond
+    (prompt-position (read-number "Position: "))
+    (t (emacspeak-alsaplayer-get-position))))
+  (message "Added Amark %s" name))
+;;;###autoload
+(defun emacspeak-alsaplayer-amark-jump ()
+  "Jump to specified AMark."
+  (interactive)
+  (let ((amark (call-interactively 'emacspeak-amark-find))
+        (length 0))
+    (emacspeak-alsaplayer-add-to-queue
+     (emacspeak-amark-path amark))
+    (emacspeak-alsaplayer-status)
+    (setq length (emacspeak-alsaplayer-get-playlist-length))
+    (emacspeak-alsaplayer-jump  length)
+    (emacspeak-alsaplayer-seek (emacspeak-amark-position amark))))
+
+;;}}}
 ;;{{{ bind keys
 
 (declaim (special emacspeak-alsaplayer-mode-map))
@@ -605,6 +657,10 @@ Optional second arg watch-pattern specifies line of output to
 (loop for k in
       '(
         ("m" emacspeak-alsaplayer-mark-position)
+        ("M" emacspeak-alsaplayer-amark-add)
+        ("J" emacspeak-alsaplayer-amark-jump)
+        ("\M-s" emacspeak-amark-save)
+        ("\M-l" emacspeak-amark-load)
         ("w" emacspeak-alsaplayer-where)
         ("x" emacspeak-alsaplayer-clip)
         ("." emacspeak-alsaplayer-forward-step)
@@ -631,7 +687,7 @@ Optional second arg watch-pattern specifies line of output to
         ("p"
          emacspeak-alsaplayer-previous)
         ("q" emacspeak-alsaplayer-quit)
-	("o" other-window)
+        ("o" other-window)
         ("r" emacspeak-alsaplayer-relative)
         ("s"
          emacspeak-alsaplayer-start)

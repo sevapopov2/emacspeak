@@ -1,5 +1,5 @@
 ;;; emacspeak-w3.el --- Speech enable W3 WWW browser -- includes ACSS Support
-;;; $Id: emacspeak-w3.el 5830 2008-08-25 03:10:44Z tv.raman.tv $
+;;; $Id: emacspeak-w3.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak enhancements for W3
 ;;; Keywords: Emacspeak, W3, WWW
@@ -186,6 +186,8 @@
           ("\M-l" emacspeak-w3-lynx-url-under-point)
           ("N" emacspeak-speak-next-personality-chunk)
           ("P" emacspeak-speak-previous-personality-chunk)
+          ("o" emacspeak-wizards-next-bullet)
+          ("O" emacspeak-wizards-previous-bullet)
           ("R" emacspeak-webutils-rss-display)
           ("\C-f" w3-table-focus-on-this-cell)
           ("\M- " emacspeak-imenu-speak-this-section)
@@ -704,7 +706,7 @@ If a rewrite rule is defined in the current buffer, we change
         "-asxml" "-quiet"  "-bare" "-omit"
         "--drop-proprietary-attributes" "yes" "--hide-comments"
         "yes"
-	"-utf8")
+        "-utf8")
   "Options to pass to tidy program"
   :type '(repeat string)
   :group 'emacspeak-w3)
@@ -715,15 +717,15 @@ If a rewrite rule is defined in the current buffer, we change
   :group 'emacspeak-w3)
 (defun emacspeak-w3-cleanup-bogus-quotes ()
   "hack to fix magic quotes."
-    (goto-char (point-min))
-    (while (search-forward "&\#147\;" nil t)
-      (replace-match "\""))
-    (goto-char (point-min))
-    (while (search-forward "&\#148\;" nil t)
-      (replace-match "\""))
-    (goto-char (point-min))
-    (while (search-forward "&\#180\;" nil t)
-      (replace-match "\'")))
+  (goto-char (point-min))
+  (while (search-forward "&\#147\;" nil t)
+    (replace-match "\""))
+  (goto-char (point-min))
+  (while (search-forward "&\#148\;" nil t)
+    (replace-match "\""))
+  (goto-char (point-min))
+  (while (search-forward "&\#180\;" nil t)
+    (replace-match "\'")))
 
 (defun emacspeak-w3-tidy (&optional buff)
   "Use html tidy to clean up the HTML in the current buffer."
@@ -737,7 +739,7 @@ If a rewrite rule is defined in the current buffer, we change
       (setq buffer-undo-list t)
       (widen)
       (when  emacspeak-we-cleanup-bogus-quotes
-    (emacspeak-w3-cleanup-bogus-quotes))
+        (emacspeak-w3-cleanup-bogus-quotes))
       (apply 'call-process-region
              (point-min) (point-max)
              emacspeak-w3-tidy-program
@@ -762,8 +764,8 @@ If a rewrite rule is defined in the current buffer, we change
 (defadvice  w3-parse-buffer (before emacspeak pre act comp)
   "Apply requested XSL transform if any before displaying the
 HTML."
- (when (and emacspeak-we-cleanup-bogus-quotes
-	    (not emacspeak-w3-tidy-html))
+  (when (and emacspeak-we-cleanup-bogus-quotes
+             (not emacspeak-w3-tidy-html))
     (emacspeak-w3-cleanup-bogus-quotes))
   (unless
       (or emacspeak-we-xsl-p

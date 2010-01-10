@@ -1,5 +1,5 @@
 ;;; emacspeak-ocr.el --- ocr Front-end for emacspeak desktop
-;;; $Id: emacspeak-ocr.el 5996 2008-10-13 22:54:05Z tv.raman.tv $
+;;; $Id: emacspeak-ocr.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for OCR
 ;;; Keywords: Emacspeak, ocr
@@ -550,7 +550,6 @@ Prompts for image file if file corresponding to the expected
     (set-process-sentinel emacspeak-ocr-process
                           'emacspeak-ocr-process-sentinel)
     (message "Launched OCR engine.")))
-
 
 (defvar emacspeak-ocr-image-flipflop
   (executable-find "mogrify")

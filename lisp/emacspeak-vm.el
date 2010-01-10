@@ -1,5 +1,5 @@
 ;;; emacspeak-vm.el --- Speech enable VM -- A powerful mail agent (and the one I use)
-;;; $Id: emacspeak-vm.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-vm.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enhance vm
 ;;; Keywords: Emacspeak, VM, Email, Spoken Output, Voice annotations
@@ -228,25 +228,25 @@ Note that some badly formed mime messages  cause trouble."
    (vm-virtual-folder-definition
     (dtk-speak
      (format "Message %s of %s from virtual folder %s"
-	     vm-ml-message-number vm-ml-highest-message-number
-	     (car vm-virtual-folder-definition))))
+             vm-ml-message-number vm-ml-highest-message-number
+             (car vm-virtual-folder-definition))))
    (t (dtk-speak
        (format "Message %s of %s,    %s %s %s  %s"
-	       vm-ml-message-number vm-ml-highest-message-number
-	       (if vm-ml-message-new "new" "")
-	       (if vm-ml-message-unread "unread" "")
-	       (if vm-ml-message-read "read" "")
-	       (mapconcat
-		(function (lambda(item)
-			    (let ((var (car item))
-				  (value (cadr item )))
-			      (cond
-			       ((and (boundp var) (eval var ))
-				(if (symbolp value)
-				    (eval value)
-				  value))
-			       (t "")))))
-		(cdr vm-ml-message-attributes-alist)   " "))))))
+               vm-ml-message-number vm-ml-highest-message-number
+               (if vm-ml-message-new "new" "")
+               (if vm-ml-message-unread "unread" "")
+               (if vm-ml-message-read "read" "")
+               (mapconcat
+                (function (lambda(item)
+                            (let ((var (car item))
+                                  (value (cadr item )))
+                              (cond
+                               ((and (boundp var) (eval var ))
+                                (if (symbolp value)
+                                    (eval value)
+                                  value))
+                               (t "")))))
+                (cdr vm-ml-message-attributes-alist)   " "))))))
 
 ;;}}}
 ;;{{{  Moving between messages

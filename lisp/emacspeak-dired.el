@@ -1,5 +1,5 @@
 ;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
-;;; $Id: emacspeak-dired.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-dired.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enable dired
 ;;; Keywords: Emacspeak, Dired, Spoken Output
@@ -461,7 +461,7 @@ On a directory line, run du -s on the directory to speak its size."
            (file-directory-p filename))
       (emacspeak-auditory-icon 'progress)
       (emacspeak-shell-command (format "du -s \'%s\'"
-				       (shell-quote-argument filename ))))
+                                       (shell-quote-argument filename ))))
      (filename
       (setq size (nth 7 (file-attributes filename )))
                                         ; check for ange-ftp
