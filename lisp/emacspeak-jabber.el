@@ -1,5 +1,5 @@
 ;;; emacspeak-jabber.el --- Speech-Enable jabber
-;;; $Id: emacspeak-jabber.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-jabber.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: speech-enable jabber
 ;;; Keywords: Emacspeak, jabber
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2007, T. V. Raman
+;;; Copyright (c) 1995 -- 2009, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -111,6 +111,7 @@
 
 (loop for f in
       '(jabber-keepalive-do
+        jabber-process-roster
         jabber-keepalive-got-response)
       do
       (eval

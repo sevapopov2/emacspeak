@@ -1,5 +1,5 @@
 ;;; emacspeak-websearch.el --- search utilities
-;;; $Id: emacspeak-websearch.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
+;;; $Id: emacspeak-websearch.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to make Web searching convenient
 ;;; Keywords: Emacspeak, WWW interaction
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, T. V. Raman
+;;;Copyright (C) 1995 -- 2009, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -42,6 +42,7 @@
 
 (require 'emacspeak-preamble)
 (require 'emacspeak-webutils)
+(require 'emacspeak-google)
 (require 'gweb)
 (require  'emacspeak-we)
 (require 'calendar)
@@ -938,6 +939,12 @@ Optional second arg as-html processes the results as HTML rather than data."
           (const :tag "None" nil)
           (string :tag "Options"))
   :group 'emacspeak-websearch)
+
+(defadvice gweb-google-autocomplete (after emacspeak pre act comp)
+  "Cache the query."
+  (declare (special emacspeak-google-query))
+  (setq emacspeak-google-query ad-return-value))
+
 ;;;###autoload
 (defun emacspeak-websearch-google (query &optional lucky)
   "Perform a Google search.
@@ -948,13 +955,18 @@ I'm Feeling Lucky button on Google."
     (gweb-google-autocomplete)
     current-prefix-arg))
   (declare (special emacspeak-websearch-google-uri
+                    emacspeak-google-query emacspeak-google-toolbelt
                     emacspeak-websearch-google-options
                     emacspeak-websearch-google-number-of-results))
+  (let ((toolbelt (emacspeak-google-toolbelt)))
+  (emacspeak-webutils-cache-google-query query)
+  (emacspeak-webutils-cache-google-toolbelt toolbelt)
   (if lucky
       (emacspeak-webutils-autospeak)
     (emacspeak-webutils-post-process
      "results"
-     'emacspeak-speak-line))
+     'emacspeak-speak-line)
+    )
   (let ((emacspeak-w3-tidy-html t))
     (emacspeak-webutils-with-xsl-environment
      (expand-file-name "default.xsl" emacspeak-xslt-directory)
@@ -968,7 +980,7 @@ I'm Feeling Lucky button on Google."
                 (concat
                  "&btnI="
                  (emacspeak-url-encode
-                  "I'm Feeling Lucky"))))))))
+                  "I'm Feeling Lucky")))))))))
 
 ;;{{{ IMFA
 
@@ -1039,8 +1051,8 @@ http://www.google.com/options/specialsearches.html "
         (to (read (calendar-astro-date-string (or (car calendar-mark-ring)
                                                   (error "No mark set in this buffer"))))))
     (emacspeak-websearch-google
-     (concat
-      (emacspeak-url-encode query )
+      (concat
+       (emacspeak-url-encode query )
       (format "+daterange:%s-%s"
               (min from to)
               (max from to))))))

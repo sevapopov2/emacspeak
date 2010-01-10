@@ -1,4 +1,4 @@
-# $Id: Makefile 6150 2009-05-06 17:38:17Z tv.raman.tv $
+# $Id: Makefile 6288 2009-10-08 15:29:07Z tv.raman.tv $
 # $Author: tv.raman.tv $
 # Description:  Makefile for Emacspeak
 # Keywords: Emacspeak, Dectalk, Makefile
@@ -129,6 +129,7 @@ emacspeak-diff.elc \
 emacspeak-dired.elc \
 emacspeak-dismal.elc \
 emacspeak-dmacro.elc \
+emacspeak-ebook.elc \
 emacspeak-ecb.elc \
 emacspeak-ediary.elc \
 emacspeak-ediff.elc \
@@ -154,6 +155,7 @@ emacspeak-generic.elc \
 emacspeak-gnuplot.elc \
 emacspeak-gnus.elc\
 emacspeak-gomoku.elc \
+emacspeak-google.elc \
 emacspeak-gridtext.elc \
 emacspeak-gud.elc \
 emacspeak-hexl.elc \
@@ -251,7 +253,7 @@ emacspeak-xslt.elc \
 emacspeak-xslt-process.elc   \
 emacspeak-zinf.elc
 
-ADDON_OBJECTS= tapestry.elc   stack-f.elc  xml-parse.elc
+ADDON_OBJECTS= tapestry.elc   stack-f.elc  xml-parse.elc toy-braille.elc
 
 OBJECTS = $(DTK_OBJECTS) $(SPEAK_OBJECTS) $(CORE_OBJECTS)  \
 	$(AUX_OBJECTS) $(ADDON_OBJECTS)
@@ -338,6 +340,7 @@ emacspeak-custom.elc: emacspeak-custom.el dtk-speak.elc voice-setup.elc
 emacspeak-cyclebuffer.elc: emacspeak-cyclebuffer.el dtk-speak.elc
 emacspeak-edb.elc: emacspeak-edb.el dtk-speak.elc voice-setup.elc
 emacspeak-daisy.elc: emacspeak-daisy.el dtk-speak.elc voice-setup.elc
+emacspeak-ebook.elc: emacspeak-ebook.el dtk-speak.elc voice-setup.elc
 emacspeak-damlite.elc: emacspeak-damlite.el dtk-speak.elc voice-setup.elc
 emacspeak-debian-bug.elc: emacspeak-debian-bug.el dtk-speak.elc voice-setup.elc
 emacspeak-desktop.elc: emacspeak-desktop.el dtk-speak.elc voice-setup.elc
@@ -372,6 +375,7 @@ emacspeak-forms.elc: emacspeak-forms.el dtk-speak.elc voice-setup.elc
 emacspeak-generic.elc: emacspeak-generic.el dtk-speak.elc voice-setup.elc
 emacspeak-gnuplot.elc: emacspeak-gnuplot.el dtk-speak.elc voice-setup.elc
 emacspeak-gnus.elc: emacspeak-gnus.el dtk-speak.elc voice-setup.elc
+emacspeak-google.elc: emacspeak-google.el dtk-speak.elc
 emacspeak-gomoku.elc: emacspeak-gomoku.el dtk-speak.elc voice-setup.elc
 emacspeak-gridtext.elc: emacspeak-gridtext.el dtk-speak.elc voice-setup.elc
 emacspeak-gud.elc: emacspeak-gud.el dtk-speak.elc voice-setup.elc

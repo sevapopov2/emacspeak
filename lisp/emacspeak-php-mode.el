@@ -1,5 +1,5 @@
 ;;; emacspeak-php-mode.el --- Speech-Enable php-mode 
-;;; $Id: emacspeak-php-mode.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-php-mode.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: speech-enable php-mode
 ;;; Keywords: Emacspeak, php
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2007, T. V. Raman
+;;; Copyright (c) 1995 -- 2009, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.

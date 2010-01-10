@@ -1,4 +1,4 @@
-;;;$Id: emacspeak-finder.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;;$Id: emacspeak-finder.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; emacspeak-finder-inf.el --- keyword-to-package mapping
 ;; Keywords: help
 ;;; Commentary:
@@ -164,6 +164,9 @@
     ("emacspeak-dmacro.el"
         "Speech enable DMacro -- Dynamic  Macros "
         (emacspeak  audio interface to emacs dmacro))
+    ("emacspeak-ebook.el"
+        "epubs Front-end for emacspeak desktop"
+        (emacspeak  epubs digital talking books))
     ("emacspeak-ecb.el"
         "speech-enable Emacs Class Browser"
         (emacspeak  ecb))
@@ -251,6 +254,9 @@
     ("emacspeak-gomoku.el"
         "Speech enable the game of Gomoku"
         (emacspeak  speak  spoken output  gomoku))
+    ("emacspeak-google.el"
+        "Google Search Tools"
+        (emacspeak   audio desktop google))
     ("emacspeak-gridtext.el"
         "Overlay Grids To filter columnar text"
         (emacspeak  gridtext))
@@ -599,6 +605,9 @@
     ("tapestry.el"
         nil
         nil)
+    ("toy-braille.el"
+        nil
+        (emacs  unicode  ucs  toy  braille))
     ("voice-setup.el"
         "Setup voices for voice-lock"
         nil)
