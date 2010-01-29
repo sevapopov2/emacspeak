@@ -1,5 +1,5 @@
 ;;; emacspeak-url-template.el --- Create library of URI templates
-;;; $Id: emacspeak-url-template.el 6350 2009-10-27 20:43:46Z tv.raman.tv $
+;;; $Id: emacspeak-url-template.el 6147 2009-04-29 14:07:17Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:   Implement library of URI templates
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2009, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2007, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -82,24 +82,22 @@
   "Instantiate URL identified by URL template."
   (declare (special emacspeak-url-template-current-ut))
   (setq emacspeak-url-template-current-ut nil)
-  (let ((url 
-         (apply 'format
-                ( emacspeak-url-template-template ut)
-                (mapcar
-                 #'(lambda (g)
-                     (let ((input nil))
-                       (setq input
-                             (cond
-                              ((stringp g)
-                               (if (emacspeak-url-template-dont-url-encode ut)
-                                   (read-from-minibuffer g)
-                                 (emacspeak-url-encode (read-from-minibuffer g))))
-                              (t (funcall g))))
-                       input))
-                 (emacspeak-url-template-generators ut)))))
-    (setq emacspeak-url-template-current-ut
-          (list (emacspeak-url-template-name ut)))
-    url))
+  (apply 'format
+         ( emacspeak-url-template-template ut)
+         (mapcar
+          #'(lambda (g)
+              (let ((input nil))
+                (setq input
+                      (cond
+                       ((stringp g)
+                        (if (emacspeak-url-template-dont-url-encode ut)
+                            (read-from-minibuffer g)
+                          (emacspeak-url-encode (read-from-minibuffer g))))
+                       (t (funcall g))))
+                (setq emacspeak-url-template-current-ut
+                      (list (emacspeak-url-template-name ut) input))
+                input))
+          (emacspeak-url-template-generators ut))))
 
 (defun emacspeak-url-template-collect-date (prompt time-format-string)
   "Smart date collector.
@@ -584,16 +582,6 @@ content."
  "Search answers.com")
 
 ;;}}}
-;;{{{ html5irc 
-
-(emacspeak-url-template-define
- "html5IRC"
- "http://krijnhoetmer.nl/irc-logs/whatwg/%s"
- (list 'emacspeak-url-template-date-YearMonthDate)
- nil
- "Show HTML5 IRC log.")
-
-;;}}}
 ;;{{{ product search: Google (used to be  froogle)
 
 (emacspeak-url-template-define
@@ -623,7 +611,7 @@ content."
      (emacspeak-we-extract-by-id-list
       (list "mktsumm" "sfe-mktsumm" )
       url 'speak)))
-
+ 
 
 ;;}}}
 ;;{{{ google CSE and Google Reader:
@@ -963,7 +951,7 @@ http://www.google.com/calendar/a/<my-corp>/m?output=xhtml"
       (format " down  %s"
               (substring value (1+ minus-p ))))
      (t (format " up  %s " value)))))
-
+  
 (defvar emacspeak-google-finance-row-filter
   '(0 (emacspeak-finance-google-up-or-down 3)" to " 2  " for  a market cap of " 4 
       "Traded today between " 8 " and " 7 " on a  volume of " 5)
@@ -1190,30 +1178,6 @@ from English to German.")
  (list "Term: ")
  nil
  "Google Glossary lookup.")
-
-(emacspeak-url-template-define
- "GCaffeine Search"
- "http://www2.sandbox.google.com/search?hl=en&q=%s&btnG=Google+Search"
- (list 'gweb-google-autocomplete
-       #'(lambda nil
-           (declare (special  emacspeak-websearch-google-number-of-results))
-           emacspeak-websearch-google-number-of-results))
- #'(lambda nil
-     (search-forward "Search Results" nil)
-     (emacspeak-speak-rest-of-buffer))
- "Google Sandbox Results")
-
-(emacspeak-url-template-define
- "1Box Google"
- "http://www.google.com/search?q=%s"
- (list 'gweb-google-autocomplete)
- nil
- "Show 1box result from Google."
- #'(lambda (url)
-     (emacspeak-we-extract-by-class-list
-      (list "rbt" "e")
-      url 'speak)))
-
 (emacspeak-url-template-define
  "Google Hits"
  "http://www.google.com/search?q=%s&num=%s"
@@ -1283,7 +1247,7 @@ from English to German.")
 (emacspeak-url-template-define
  "Google News Search"
  "http://news.google.com/news?hl=en&ned=tus&q=%s&btnG=Google+Search&output=atom"
- (list 'gweb-news-autocomplete)
+ (list "Search news for: ")
  'emacspeak-url-template-setup-content-filter
  "Search Google news."
  'emacspeak-webutils-atom-display)
@@ -1632,7 +1596,7 @@ name of the list.")
  nil
  "Filter down to CNN  content area."
  #'(lambda (url)
-     (emacspeak-we-extract-by-id "cnn_maincntnr" url 'speak)))
+     (emacspeak-we-extract-by-id "cnnContentContainer" url 'speak)))
 
 ;;{{{ cnnfn content
 (emacspeak-url-template-define
@@ -2109,8 +2073,8 @@ plays entire program."
  #'(lambda (url)
      (emacspeak-we-extract-by-class
       "col1wrap"
-      url
-      'speak)))
+ url
+ 'speak)))
 
 ;;}}}
 ;;{{{ flights from travelocity
@@ -2241,7 +2205,7 @@ Meerkat realy needs an xml-rpc method for getting this.")
 ;;{{{ weather underground
 ;;;###autoload
 (defcustom emacspeak-url-template-weather-city-state
-  "95123"
+  "CA/San_Jose"
   "Default city/state for weather forecasts"
   :type 'string
   :group 'emacspeak-url-template)
@@ -2262,8 +2226,7 @@ Meerkat realy needs an xml-rpc method for getting this.")
 (emacspeak-url-template-define
  "Weather forecast from Weather Underground"
  "http://mobile.wunderground.com/cgi-bin/findweather/getForecast?query=%s"
- (list
-  #'(lambda () (read-from-minibuffer "Zip: " emacspeak-url-template-weather-city-state)))
+ (list "Zip: ")
  'emacspeak-speak-buffer
  "Weather forecast from weather underground mobile."
  )

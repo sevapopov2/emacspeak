@@ -1,5 +1,5 @@
 ;;; emacspeak-keymap.el --- Setup all keymaps and keybindings provided by Emacspeak
-;;; $Id: emacspeak-keymap.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
+;;; $Id: emacspeak-keymap.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Module for setting up emacspeak keybindings
 ;;; Keywords: Emacspeak
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2009, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -253,15 +253,15 @@ field in the customization buffer.  You can use the notation
                         (string :tag "Key")
                         (symbol :tag "Command")))
   :set '(lambda (sym val)
-          (mapc
-           (lambda (binding)
-             (let ((key (car binding))
-                   (command (cdr binding )))
-               (when (string-match "\\[.+]" key)
-                 (setq key (car (read-from-string key))))
-               (define-key emacspeak-hyper-keymap key command)))
-           val)
-          (set-default sym val)))
+  (mapc
+   (lambda (binding)
+     (let ((key (car binding))
+           (command (cdr binding )))
+       (when (string-match "\\[.+]" key)
+         (setq key (car (read-from-string key))))
+       (define-key emacspeak-hyper-keymap key command)))
+   val)
+  (set-default sym val)))
 
 (global-set-key "\C-x@h"
                 'emacspeak-hyper-keymap)
@@ -384,7 +384,6 @@ field in the customization buffer.  You can use the notation
         ("b" emacspeak-speak-buffer)
         ("c" emacspeak-speak-char)
         ("f" emacspeak-speak-buffer-filename )
-        ("g" emacspeak-ebook-command)
         ("h" emacspeak-speak-help)
         ("i" emacspeak-tabulate-region)
         ("j" emacspeak-hide-or-expose-block)

@@ -1,5 +1,5 @@
 ;;; emacspeak-m-player.el --- Control mplayer from Emacs
-;;; $Id: emacspeak-m-player.el 6348 2009-10-27 01:03:07Z tv.raman.tv $
+;;; $Id: emacspeak-m-player.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Controlling mplayer from emacs 
 ;;; Keywords: Emacspeak, m-player streaming media 
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2009, T. V. Raman
+;;; Copyright (c) 1995 -- 2007, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -67,17 +67,6 @@
 
 ;;}}}
 ;;{{{ define a derived mode for m-player interaction 
-(defvar emacspeak-media-shortcuts-directory 
-  (expand-file-name "realaudio/" emacspeak-directory)
-  "*Directory where we keep media shortcuts.
-I typically keep .ram --Media metafiles-- in this
-directory.
-Media metafiles typically contain a single line that
-specifies the actual location of the media stream
---typically the .ra file.")
-
-(defvar emacspeak-media-history nil
-  "History list holding resources we played recently")
 
 (defvar emacspeak-m-player-process nil
   "Process handle to m-player." )
@@ -111,31 +100,13 @@ specifies the actual location of the media stream
 (defvar emacspeak-m-player-default-options
   (list "-slave"  "-nortc""-softvol" "-quiet" )
   "Default options for MPlayer.")
+
 (defcustom emacspeak-m-player-options 
   (copy-sequence emacspeak-m-player-default-options)
   "Options passed to mplayer."
   :type  '(repeat
            (string :tag "option"))
   :group 'emacspeak-m-player)
-;;;###autoload
-(defcustom emacspeak-media-location-bindings  nil
-  "*Map specific key sequences to launching MPlayer accelerators 
-on a specific director."
-  :group 'emacspeak-m-player
-  :type '(repeat :tag "Emacspeak Media Locations"
-                 (cons  :tag "KeyBinding"
-                        (string :tag "Key")
-                        (directory :tag "Directory")))
-  :set '(lambda (sym val)
-          (mapc
-           (lambda (binding)
-             (let ((key (car binding))
-                   (directory (cdr binding )))
-               (when (string-match "\\[.+]" key)
-                 (setq key (car (read-from-string key))))
-               (emacspeak-m-player-bind-accelerator directory key)))
-           val)
-          (set-default sym val)))
 
 (defcustom emacspeak-m-player-coding-system nil
   "Media player output coding system.
@@ -181,9 +152,7 @@ It is used for tags decoding."
   (concat
    (regexp-opt
     (list ".wma"
-          ".wmv"
           ".m4a"
-          ".m4b"
           ".flac"
           ".ogg"
           ".mp3"
@@ -192,32 +161,6 @@ It is used for tags decoding."
     'parens)
    "$")
   "Extensions that match media files.")
-
-;;;###autoload
-(defun emacspeak-m-player-bind-accelerator (directory key)
-  "Binds key to invoke m-player  on specified directory."
-  (interactive
-   (list
-    (read-directory-name"Media Directory: ")
-    (read-key-sequence "Key: ")))
-  (interactive)
-  (eval
-   `(global-set-key key
-                    #'(lambda nil
-                        (interactive)
-                        (emacspeak-m-player-accelerator
-                         ,directory)))))
-
-
-;;;###autoload
-(defun emacspeak-m-player-accelerator (directory)
-  "Launch MPlayer on specified directory and switch to it."
-  (let ((emacspeak-media-shortcuts-directory (expand-file-name directory)))
-    (call-interactively 'emacspeak-multimedia)
-    (switch-to-buffer (process-buffer
-                       emacspeak-m-player-process))
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-mode-line)))
 
 ;;;###autoload
 (defun emacspeak-m-player (resource &optional play-list)
@@ -230,20 +173,20 @@ The player is placed in a buffer in emacspeak-m-player-mode."
     (let ((completion-ignore-case t)
           (emacspeak-speak-messages nil)
           (read-file-name-completion-ignore-case t)
-          (minibuffer-history emacspeak-media-history))
+          (minibuffer-history emacspeak-realaudio-history))
       (read-file-name
        "MP3 Resource: "
        (if
            (string-match "\\(mp3\\)\\|\\(audio\\)"
                          (expand-file-name default-directory))
            default-directory
-         emacspeak-media-shortcuts-directory)
+         emacspeak-realaudio-shortcuts-directory)
        (when (eq major-mode 'dired-mode)
          (dired-get-filename))))
     current-prefix-arg))
-  (declare (special emacspeak-media-history
+  (declare (special emacspeak-realaudio-history
                     emacspeak-media-extensions
-                    emacspeak-media-shortcuts-directory emacspeak-m-player-process
+                    emacspeak-realaudio-shortcuts-directory emacspeak-m-player-process
                     emacspeak-m-player-program emacspeak-m-player-options))
   (unless (string-match "^[a-z]+:"  resource)
     (setq resource (expand-file-name resource)))
@@ -423,7 +366,6 @@ The player is placed in a buffer in emacspeak-m-player-mode."
 (defun emacspeak-m-player-quit ()
   "Quit media player."
   (interactive)
-  (let ((kill-buffer-query-functions nil))
   (when (eq (process-status emacspeak-m-player-process) 'run)
     (let ((buffer (process-buffer emacspeak-m-player-process)))
       (emacspeak-m-player-dispatch "quit")
@@ -431,8 +373,7 @@ The player is placed in a buffer in emacspeak-m-player-mode."
            (kill-buffer buffer))))
   (unless (eq (process-status emacspeak-m-player-process) 'exit)
     (delete-process  emacspeak-m-player-process))
-  (emacspeak-speak-mode-line)))
-
+  (emacspeak-speak-mode-line))
 ;;;###autoload
 (defun emacspeak-m-player-volume-up ()
   "Increase volume."
@@ -458,8 +399,8 @@ A string of the form `<number> 1' sets volume as an absolute."
 (defun emacspeak-m-player-get-length ()
   "Display length of track in seconds."
   (interactive)
-  (emacspeak-m-player-dispatch "get_time_length")
-  (accept-process-output))
+  (emacspeak-m-player-dispatch "get_time_length"))
+
 (defun emacspeak-m-player-display-position ()
   "Display current position in track and its length."
   (interactive)

@@ -1,5 +1,5 @@
 ;;; emacspeak-etable.el --- Speech enable table.el
-;;; $Id: emacspeak-etable.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
+;;; $Id: emacspeak-etable.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; DescriptionEmacspeak extensions for table.el
 ;;; Keywords:emacspeak, audio interface to emacs Tables
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2009, T. V. Raman 
+;;;Copyright (C) 1995 -- 2007, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -97,7 +97,7 @@
   "Provide spoken output."
   (when  (interactive-p)
     (cond
-     ((and (= 32 last-input-event)
+     ((and (= 32 last-input-char)
            emacspeak-word-echo)
       (save-excursion
         (let ((orig (point)))
@@ -106,7 +106,7 @@
           (emacspeak-speak-region orig (point)))))
      (emacspeak-character-echo
       (when dtk-stop-immediately-while-typing (dtk-stop))
-      (emacspeak-speak-this-char last-input-event )))))
+      (emacspeak-speak-this-char last-input-char )))))
 
 (defadvice *table--cell-quoted-insert  (after emacspeak pre act )
   "Speak the character that was inserted."

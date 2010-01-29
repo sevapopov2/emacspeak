@@ -1,5 +1,5 @@
 ;;; emacspeak-sounds.el --- Defines Emacspeak auditory icons
-;;; $Id: emacspeak-sounds.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
+;;; $Id: emacspeak-sounds.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Module for adding sound cues to emacspeak
 ;;; Keywords:emacspeak, audio interface to emacs, auditory icons
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2009, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -300,13 +300,13 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
 ;;}}}
 ;;{{{  Play an icon
 
-(defcustom emacspeak-play-args nil
+(defcustom emacspeak-play-args ""
   "Set this to -i  if using the play program that ships on sunos/solaris.
 Note: on sparc20's there is a sunos bug that causes the machine to crash if
 you attempt to play sound when /dev/audio is busy.
 It's imperative that you use the -i flag to play on
 sparc20's."
-  :type '(repeat string)
+  :type 'string
   :group 'emacspeak-sounds)
 
 (defun emacspeak-play-auditory-icon (sound-name)
@@ -318,17 +318,16 @@ See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-audit
        (let ((process-connection-type nil)
              (default-directory (file-name-as-directory (getenv "HOME"))))
          (condition-case err
-             (apply 'start-process
+             (start-process
               "play" nil emacspeak-play-program
-              (append emacspeak-play-args
-                      (list (emacspeak-get-sound-filename sound-name))))
+              (emacspeak-get-sound-filename sound-name))
            (error
             (message (error-message-string err)))))))
 
 ;;}}}
 ;;{{{  setup play function
 
-(defcustom emacspeak-auditory-icon-function 'emacspeak-play-auditory-icon
+(defcustom emacspeak-auditory-icon-function 'emacspeak-serve-auditory-icon
   "*Function that plays auditory icons."
   :group 'emacspeak-sounds
   :type '(choice

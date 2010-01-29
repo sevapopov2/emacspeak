@@ -1,5 +1,5 @@
 ;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java
-;;; $Id: emacspeak-c.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
+;;; $Id: emacspeak-c.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak extensions for C and C++ mode
 ;;; Keywords:emacspeak, audio interface to emacs C, C++
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2009, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -80,33 +80,35 @@
 
 ;;{{{  Electric chars speak
 
-(defadvice c-electric-semi&comma (after emacspeak pre act comp)
-  "Speak the line when a statement is completed."
-  (declare (special last-input-event))
-  (when (interactive-p)
-    (cond 
-     ((= last-input-event ?,) (emacspeak-speak-this-char last-input-event))
-     (t (emacspeak-speak-line )))))
-
 (loop for f in
-      '(c-electric-star
-        c-electric-slash
-        c-electric-lt-gt
-        electric-c-terminator
-        c-electric-colon
-        c-electric-paren
-        c-electric-pound
-        c-electric-brace
-        electric-c-semi
-        electric-c-sharp-sign
-        electric-c-brace)
+      '(c-electric-semi&comma c-electric-colon)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
-          "Speak what you typed"
-          (declare (special last-input-event))
-          (when (interactive-p)
-            (emacspeak-speak-this-char last-input-event)))))
+	  "Speak the line when a statement is completed."
+	  (when (interactive-p)
+	    (cond 
+	     ((= last-input-char ?,) (emacspeak-speak-this-char last-input-char))
+	     (t (emacspeak-speak-line )))))))
+
+(loop for f in
+      '(c-electric-star
+	c-electric-slash
+	c-electric-lt-gt
+	electric-c-terminator
+	c-electric-paren
+	c-electric-pound
+	c-electric-brace
+	electric-c-semi
+	electric-c-sharp-sign
+	electric-c-brace)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Speak what you typed"
+	  (declare (special last-input-char))
+	  (when (interactive-p)
+	    (emacspeak-speak-this-char last-input-char)))))
 
 (defadvice c-electric-delete (before emacspeak pre act )
   "Speak char before deleting it."

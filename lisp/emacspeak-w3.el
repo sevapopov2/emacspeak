@@ -1,5 +1,5 @@
 ;;; emacspeak-w3.el --- Speech enable W3 WWW browser -- includes ACSS Support
-;;; $Id: emacspeak-w3.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
+;;; $Id: emacspeak-w3.el 6133 2009-03-17 02:36:43Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak enhancements for W3
 ;;; Keywords: Emacspeak, W3, WWW
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2009, T. V. Raman
+;;;Copyright (C) 1995 -- 2007, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -55,7 +55,6 @@
 (require 'emacspeak-preamble)
 (require 'emacspeak-webutils)
 (require 'emacspeak-we)
-(require 'emacspeak-google)
 (require 'emacspeak-xslt)
 
 ;;}}}
@@ -170,7 +169,7 @@
     (require 'w3-imenu))
   (loop for binding in
         '(
-          ( "\C-t" emacspeak-google-command)
+          ( "\C-t" emacspeak-w3-toggle-table-borders)
           ("'" emacspeak-speak-rest-of-buffer)
           ("\"" emacspeak-speak-skim-buffer)
           ("/" emacspeak-webutils-google-similar-to-this-page)

@@ -1,4 +1,4 @@
-;;;$Id: emacspeak-finder.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
+;;;$Id: emacspeak-finder.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; emacspeak-finder-inf.el --- keyword-to-package mapping
 ;; Keywords: help
 ;;; Commentary:
@@ -164,9 +164,6 @@
     ("emacspeak-dmacro.el"
         "Speech enable DMacro -- Dynamic  Macros "
         (emacspeak  audio interface to emacs dmacro))
-    ("emacspeak-ebook.el"
-        "epubs Front-end for emacspeak desktop"
-        (emacspeak  epubs digital talking books))
     ("emacspeak-ecb.el"
         "speech-enable Emacs Class Browser"
         (emacspeak  ecb))
@@ -254,9 +251,6 @@
     ("emacspeak-gomoku.el"
         "Speech enable the game of Gomoku"
         (emacspeak  speak  spoken output  gomoku))
-    ("emacspeak-google.el"
-        "Google Search Tools"
-        (emacspeak   audio desktop google))
     ("emacspeak-gridtext.el"
         "Overlay Grids To filter columnar text"
         (emacspeak  gridtext))
@@ -605,76 +599,16 @@
     ("tapestry.el"
         nil
         nil)
-    ("toy-braille.el"
-        nil
-        (emacs  unicode  ucs  toy  braille))
     ("voice-setup.el"
         "Setup voices for voice-lock"
         nil)
     ("xml-parse.el"
         "code to efficiently read/write XML data with Elisp"
         (convenience languages lisp xml parse data))
-    ("g-app.el"
-        "Google Client APP methods"
-        (google   atom api  google services))
-    ("g-auth.el"
-        "Google Authentication Module"
-        (google   auth))
-    ("g-autogen.el"
-        "Generate autoloads for G"
-        (google services))
-    ("g-cus-load.el"
-        "automatically extracted custom dependencies"
-        nil)
-    ("g-load-path.el"
-        "Setup Emacs load-path for compiling grep"
-        (g-client  google services  for emacs))
-    ("g-loaddefs.el"
-        nil
-        nil)
-    ("g-utils.el"
-        "Google Client Utilities"
-        (google   atom api  google services))
-    ("g.el"
-        "Google Client"
-        (emacs g-client  google   atom api  google services))
-    ("gblogger.el"
-        "new Atom Blogger API client"
-        (g-client  blogger atom api))
-    ("gcal.el"
-        "Google Calendar"
-        (google   atom api))
-    ("gnotebook.el"
-        "Google Notebook"
-        (google   services))
-    ("gphoto.el"
-        "Google  Picasa Client"
-        (google   atom api))
-    ("greader.el"
-        "Google Reader"
-        (google   atom api))
-    ("gsheet.el"
-        "Google Spreadsheets"
-        (spreadsheets  gdata  google   atom api))
-    ("gskeleton.el"
-        "Skeleton Google  Client"
-        (google   atom api))
-    ("gtube.el"
-        "YouTube Google  Client"
-        (google    api))
-    ("indent-files.el"
-        nil
-        nil)
-    ("json.el"
-        "JavaScript Object Notation parser / generator"
-        (convenience))
 ))
 
+(loop for l  in (reverse emacspeak-finder-package-info) do
+ (push l finder-package-info))
 (provide 'emacspeak-finder-inf)
 
-;;; Local Variables:
-;;; version-control: never
-;;; no-byte-compile: t
-;;; no-update-autoloads: t
-;;; End:
 ;;; emacspeak-finder-inf.el ends here
