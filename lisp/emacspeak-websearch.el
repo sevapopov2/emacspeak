@@ -119,8 +119,8 @@
     (pop-to-buffer "*Help*")
     (help-mode)
     (goto-char (point-min))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'help)))
+    (emacspeak-auditory-icon 'help)
+    (emacspeak-speak-line)))
 
 (emacspeak-websearch-set-searcher  'help
                                    'emacspeak-websearch-help)

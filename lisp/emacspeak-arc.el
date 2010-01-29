@@ -51,12 +51,7 @@
 
 (defun emacspeak-archive-speak-line ()
   "Speak line in archive mode intelligently"
-  (end-of-line)
-  (cond
-   ((null (char-after (1+ (point))))
-    (emacspeak-speak-line))
-   (t (skip-syntax-backward "^ ")  
-      (emacspeak-speak-line 1))))
+  (emacspeak-speak-line 1))
 
 ;;}}}
 ;;{{{ fix interactive commands that need fixing 
@@ -70,14 +65,32 @@
     (emacspeak-auditory-icon 'mark-object)
     (emacspeak-archive-speak-line)))
 
+(defadvice archive-next-line (before emacspeak pre act com)
+  "Produce auditory icon  if we cant move."
+  (when (and (interactive-p)
+             (save-excursion
+               (end-of-line)
+               (eobp)))
+    (emacspeak-auditory-icon 'warn-user)))
+
+(defadvice archive-previous-line (before emacspeak pre act com)
+  "Produce auditory icon  if we cant move."
+  (when (and (interactive-p)
+             (save-excursion
+               (beginning-of-line)
+               (bobp)))
+    (emacspeak-auditory-icon 'warn-user)))
+
 (defadvice archive-next-line (after emacspeak pre act comp)
   "Provide spoken feedback"
   (when (interactive-p )
+    (emacspeak-auditory-icon 'select-object)
     (emacspeak-archive-speak-line)))
 
 (defadvice archive-previous-line (after emacspeak pre act comp)
   "Provide spoken feedback"
   (when (interactive-p )
+    (emacspeak-auditory-icon 'select-object)
     (emacspeak-archive-speak-line)))
 
 (defadvice archive-flag-deleted (after emacspeak pre act comp)
@@ -89,12 +102,12 @@
 (defadvice archive-unflag (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'yank-object)
+    (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-archive-speak-line)))
 (defadvice archive-unflag-backwards (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-auditory-icon 'yank-object)
+    (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-archive-speak-line)))
 
 (defadvice archive-extract (after emacspeak pre act comp)
@@ -153,13 +166,16 @@ first initializing it if necessary."
 (defun emacspeak-arc-speak-file-name ()
   "Speak the name of the file on current line"
   (interactive)
+  (declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
-  (let ((entry (archive-get-descr 'no-error)))
+  (let ((entry (archive-get-descr 'no-error))
+	(emacspeak-speak-messages t))
     (cond
      ((null entry)
       (message "No file on this line"))
      (t
+      (emacspeak-auditory-icon 'select-object)
       (message "File: %s"
                (nth  (emacspeak-arc-get-field-index "File")
                      (split-string (thing-at-point 'line))))))))
@@ -167,27 +183,33 @@ first initializing it if necessary."
 (defun emacspeak-arc-speak-file-size ()
   "Speak the size of the file on current line"
   (interactive)
+  (declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
-  (let ((entry (archive-get-descr 'no-error)))
+  (let ((entry (archive-get-descr 'no-error))
+	(emacspeak-speak-messages t))
     (cond
      ((null entry)
       (message "No file on this line"))
      (t
-      (message "Size: %s"
+      (emacspeak-auditory-icon 'select-object)
+      (message "File size %s"
                (nth  (emacspeak-arc-get-field-index "Length")
                      (split-string (thing-at-point 'line))))))))
 
 (defun emacspeak-arc-speak-file-modification-time ()
   "Speak modification time of the file on current line"
   (interactive)
+  (declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
-  (let ((entry (archive-get-descr 'no-error)))
+  (let ((entry (archive-get-descr 'no-error))
+	(emacspeak-speak-messages t))
     (cond
      ((null entry)
       (message "No file on this line"))
      (t
+      (emacspeak-auditory-icon 'select-object)
       (let* ((fields (split-string (thing-at-point 'line)))
              (date (nth  (emacspeak-arc-get-field-index "Date")
                          fields))
@@ -199,14 +221,17 @@ first initializing it if necessary."
 (defun emacspeak-arc-speak-file-permissions()
   "Speak permissions of file current entry "
   (interactive)
+  (declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
   (let ((entry (archive-get-descr 'no-error))
-        (mode nil))
+        (mode nil)
+	(emacspeak-speak-messages t))
     (cond
      ((null entry)
       (message "No file on this line"))
      (t
+      (emacspeak-auditory-icon 'select-object)
       (setq mode
             (archive-int-to-mode
              (aref entry 3)))
