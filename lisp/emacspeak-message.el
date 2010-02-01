@@ -243,6 +243,13 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)))
 
+(defadvice message-read-from-minibuffer (before emacspeak pre act comp)
+  "Speak prompt."
+  (let ((deactivate-mark nil))
+    (tts-with-punctuations 'all
+                           (dtk-speak (format "%s %s" (ad-get-arg 0)
+                                              (or (ad-get-arg 1) ""))))))
+
 ;;}}}
 ;;{{{ Pronunciation settings
 
