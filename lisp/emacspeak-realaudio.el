@@ -128,6 +128,7 @@ user configurable variable emacspeak-realaudio-shortcuts-directory. "
           (ido-mode nil)
           (emacspeak-speak-messages nil)
           (minibuffer-history emacspeak-realaudio-history)
+          (insert-default-directory nil)
           (file nil))
       (emacspeak-pronounce-define-local-pronunciation
        emacspeak-realaudio-shortcuts-directory " shortcuts/ ")
@@ -137,9 +138,12 @@ user configurable variable emacspeak-realaudio-shortcuts-directory. "
                             emacspeak-realaudio-shortcuts-directory
                             (if (eq major-mode 'dired-mode)
                                 (dired-get-filename)
-                              emacspeak-realaudio-last-url)))
+                              emacspeak-realaudio-last-url)
+                            t nil
+                            '(lambda (name)
+                               (string-match "^[^.]" name))))
       (pop kill-ring)
-      file)
+      (expand-file-name file emacspeak-realaudio-shortcuts-directory))
     current-prefix-arg))
   (declare (special emacspeak-realaudio-player emacspeak-realaudio-this-resource
                     emacspeak-realaudio-buffer 
@@ -393,11 +397,15 @@ commands via single keystrokes."
   (interactive
    (list
     (let ((completion-ignore-case t)
+          (insert-default-directory nil)
           (minibuffer-history emacspeak-realaudio-history))
       (expand-file-name
        (read-file-name "RealAudio resource: "
                        emacspeak-realaudio-shortcuts-directory
-                       emacspeak-realaudio-last-url)))    
+                       emacspeak-realaudio-last-url t nil
+                       '(lambda (name)
+                          (string-match "^[^.]" name)))
+       emacspeak-realaudio-shortcuts-directory))
     current-prefix-arg))
   (let ((components (emacspeak-realaudio-parse-ramfile
                      ramfile))
