@@ -621,13 +621,13 @@
         "Google Authentication Module"
         (google   auth))
     ("g-autogen.el"
-        "Generate autoloads for G"
+        "Generate autoloads for Google Client"
         (google services))
     ("g-cus-load.el"
-        "automatically extracted custom dependencies"
+        "automatically extracted custom dependencies for Google Client"
         nil)
     ("g-load-path.el"
-        "Setup Emacs load-path for compiling grep"
+        "Setup Emacs load-path for compiling Google Client"
         (g-client  google services  for emacs))
     ("g-loaddefs.el"
         nil
