@@ -80,10 +80,14 @@
 (defsubst emacspeak-xslt-read ()
   "Read XSLT transformation name from minibuffer."
   (declare (special emacspeak-xslt-directory))
-  (expand-file-name
-   (read-file-name "XSL Transformation: "
-                   emacspeak-xslt-directory
-                   emacspeak-we-xsl-transform)))
+  (let ((insert-default-directory nil))
+    (expand-file-name
+     (read-file-name "XSL Transformation: "
+                     emacspeak-xslt-directory
+                     emacspeak-we-xsl-transform t nil
+                     '(lambda (name)
+                        (string-match "\\.xsl$" name)))
+     emacspeak-xslt-directory)))
 
 (defcustom emacspeak-xslt-program "xsltproc"
   "Name of XSLT transformation engine."
@@ -343,9 +347,13 @@ part of the libxslt package."
   "Browse URL with specified XSL style."
   (interactive
    (list
-    (expand-file-name
-     (read-file-name "XSL Transformation: "
-                     emacspeak-xslt-directory))
+    (let ((insert-default-directory nil))
+      (expand-file-name
+       (read-file-name "XSL Transformation: "
+                       emacspeak-xslt-directory nil t nil
+                       '(lambda (name)
+                          (string-match "\\.xsl$" name)))
+       emacspeak-xslt-directory))
     (read-string "URL: " (browse-url-url-at-point))))
   (declare (special emacspeak-xslt-options))
   (emacspeak-webutils-with-xsl-environment
