@@ -11,7 +11,7 @@ infodir =/usr/share/info#normally supplied by caller
 INSTALL = install
 EMACS=emacs
 
-all: emacspeak.info 
+all: emacspeak.info html introducing-emacspeak.html
 
 info: *.texi
 	$(MAKEINFO) emacspeak.texi
@@ -37,10 +37,13 @@ uninstall:
 		install-info --delete $(infodir)/*.info /etc/info-dir; \
 	fi
 	rm -f $(infodir)/*.info*
+
 emacspeak.info: emacspeak.texi 
 
+html: emacspeak.texi
+	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
+
 introducing-emacspeak.info: introducing-emacspeak.texi
-	makeinfo $<
 
 emacspeak.dvi:		emacspeak.texi
 	$(TEX) emacspeak.texi
@@ -75,14 +78,16 @@ htm: emacspeak.texi
 		tidy -q -mic -asxml  $$f 2>&1 > /dev/null  || echo tidy; \
 		done
 
-
 introducing-emacspeak.html: introducing-emacspeak.texi
-	makeinfo --no-split --html  introducing-emacspeak.texi
-	perl add-css.pl introducing-emacspeak.html
+	$(TEXI2HTML) --split chapter --top-file index.html $<
+
 
 pub:  html/index.html introducing-emacspeak.html
 	rsync introducing-emacspeak.html ${SF_HOME}/info/
 	rsync -avz  html ${SF_HOME}/info/
+
+%.info: %.texi
+	$(MAKEINFO) $<
 
 %.pdf: %.ps
 	ps2pdf    $<
@@ -91,7 +96,8 @@ pub:  html/index.html introducing-emacspeak.html
 	@dvips -q   -Pwww  $< 2>&1  > /dev/null 
 
 clean: 
-
+	rm -f *.info* *.html *.ps *.dvi *.pdf *.txt
+	rm -rf html introducing-emacspeak
 
 spell:
 	@mv .spell.words .spell.tex
