@@ -148,6 +148,7 @@ emacspeak-filtertext.elc \
 emacspeak-find-dired.elc \
 emacspeak-find-func.elc \
 emacspeak-finder.elc \
+emacspeak-firevox.elc \
 emacspeak-flyspell.elc \
 emacspeak-folding.elc \
 emacspeak-forms.elc \
@@ -368,6 +369,7 @@ emacspeak-filtertext.elc: emacspeak-filtertext.el dtk-speak.elc voice-setup.elc
 emacspeak-find-dired.elc: emacspeak-find-dired.el dtk-speak.elc voice-setup.elc
 emacspeak-find-func.elc: emacspeak-find-func.el dtk-speak.elc voice-setup.elc
 emacspeak-finder.elc: emacspeak-finder.el
+emacspeak-firevox.elc: emacspeak-firevox.el
 emacspeak-fix-interactive.elc: emacspeak-fix-interactive.el dtk-speak.elc voice-setup.elc
 emacspeak-flyspell.elc: emacspeak-flyspell.el dtk-speak.elc voice-setup.elc
 emacspeak-folding.elc: emacspeak-folding.el dtk-speak.elc voice-setup.elc
