@@ -1,0 +1,969 @@
+This list contains only those changes that were made against original
+releases. Be careful: Emacspeak-27 and newer requires Emacs-22.
+
+2010-01-11  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/dtk-unicode.el, lisp/emacspeak-speak.el:
+	Don't use ucs-names if it is not bound.
+
+2010-01-10  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/multispeech-voices.el, lisp/russian-spelling.el:
+	Load Russian spelling data in a more consistent way.
+
+	* lisp/emacspeak-sounds.el:
+	Don't pass hardcoded arguments for auditory icon player. All these
+	should be customizable.
+
+	* lisp/emacspeak-speak.el, lisp/multispeech-voices.el:
+	Unicode treating fixes.
+
+	Merged upstream changes.
+
+	Import upstream release 31
+
+	Merged upstream changes.
+
+2010-01-09  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	Import upstream release 30
+
+	* lisp/emacspeak-advice.el:
+	Revert to the previous version of comint-output-filter advice. I like
+	it's behaviour better. It seems to be more robust and less irritating.
+
+2009-01-07  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-advice.el:
+	Fixed speech feedback on "read-key-sequence" as suggested by Dmitry
+	Paduchikh.
+
+	* lisp/emacspeak-setup.el, lisp/multispeech-voices.el:
+	Multispeech interaction charset has been made customizable.
+
+	* lisp/emacspeak-advice.el:
+	Use message in toggle-input-method auditory feedback to make it
+	possible switch speaking on or off as in other toggling functions.
+
+	* lisp/emacspeak-speak.el:
+	Treat character as alphabetical relying just on syntax
+	information. Unicode has no deal here.
+
+	Merged upstream changes.
+
+	Import upstream release 29
+
+	* lisp/emacspeak-speak.el:
+	Kill Emacspeak shell command output buffer just after use to prevent
+	error when current directory for this buffer has vanished.
+
+	Merged upstream changes.
+
+	Import upstream release 28
+
+2009-01-06  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-advice.el:
+	Get rid of speech feedback interference when using quail input
+	methods. Great thanks to Dmitry Paduchikh.
+
+	* lisp/emacspeak-gnus.el, lisp/emacspeak-pcl-cvs.el:
+	A bit more speech enabled functions.
+
+2008-03-25  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-edb.el: Don't reference nonexistent variable.
+
+2008-03-13  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-speak.el, lisp/multispeech-voices.el, lisp/russian-spelling.el:
+	Fixed charset issue for Russian spelling.
+
+2008-02-18  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-advice.el:
+	Speak supersession question about changing file on disk.
+
+2008-02-14  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-alsaplayer.el:
+	Get rid of annoying compilation warning.
+
+2008-02-13  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-advice.el, lisp/emacspeak-eshell.el, lisp/emacspeak-etable.el, lisp/emacspeak-org.el:
+	Stop speech when interactively deleting chars.
+
+	* lisp/emacspeak-advice.el:
+	Auditory feedback on footnote adding. Speak buffer header after
+	quitting a window.
+
+2008-02-12  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-muse.el:
+	Advanced and complete (more or less) auditory feedback and buffer
+	content voicification.
+
+	* lisp/emacspeak-personality.el:
+	Auditory feedback on interactive switching font lock mode.
+
+	* lisp/emacspeak-apt-sources.el, lisp/emacspeak-apt-utils.el, lisp/emacspeak-bmk-mgr.el, lisp/emacspeak-calendar.el, lisp/emacspeak-gnus.el, lisp/emacspeak-sudoku.el, lisp/emacspeak-vm.el, lisp/emacspeak-w3.el, lisp/emacspeak-w3m.el:
+	Set punctuation mode in a correct manner.
+
+2008-02-10  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-personality.el:
+	Some algorithmic restructurization to avoid recursion overflow when
+	voicifying complex buffers.
+
+	* README: Note about modification.
+
+	* lisp/emacspeak-setup.el: Corrected version number.
+
+	* lisp/emacspeak-dired.el:
+	Stop current speech immediately when file size speaking is requested.
+
+	* lisp/emacspeak-alsaplayer.el:
+	Architectural rework. Now it is closer to the upstream
+	version. Correct speaking header even if there is no title yet and
+	take in account coding system. Key binding to toggle auditory feedback
+	on or off.
+
+2008-02-09  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-apt-sources.el, lisp/emacspeak-apt-utils.el, lisp/emacspeak-asm.el, lisp/emacspeak-debian-bug.el, lisp/emacspeak-hexl.el, lisp/emacspeak-planner.el, lisp/emacspeak-ps.el, lisp/emacspeak-wget.el, lisp/emacspeak-wiki.el, lisp/multispeech-voices.el:
+	My e-mail update.
+
+	* lisp/Makefile, lisp/emacspeak-diff.el, lisp/emacspeak-finder-inf.el, lisp/emacspeak.el:
+	Auditory feedback on diff process.
+
+	* lisp/emacspeak-compile.el:
+	Fixed speech feedback when jumping to compilation errors.
+
+	* lisp/emacspeak-w3m.el:
+	W3m has it's own function for switching buffer. Provide speech
+	feedback for it.
+
+	* lisp/emacspeak-jabber.el:
+	Convenient auditory feedback on vcard edit and entering roster buffer.
+
+2008-02-07  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-w3m.el:
+	Restored XSL transformation functionality that was almost totally
+	broken in upstream release.
+
+	* lisp/emacspeak-pcl-cvs.el: Don't use obsolete function name.
+
+	* lisp/emacspeak-jabber.el:
+	A bit more auditory feedback in roster buffer.
+
+2008-02-05  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-speak.el:
+	Speak Info buffer header in a special manner when switching to it.
+
+2008-02-04  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-advice.el:
+	Stop speech immediately when error occurs. Make error messages always
+	to be spoken with punctuations.
+
+	* lisp/emacspeak-info.el:
+	Effectively get rid of spurious speech feedback making actual errors
+	to be spoken anyway.
+
+2008-02-03  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/dtk-speak.el:
+	Unconditionally speak new state of Emacspeak switches when toggling.
+
+	* lisp/emacspeak-advice.el:
+	Simply speak error notifications instead of emitting spare messages
+	that are spoken conditionally anyway.
+
+	* lisp/emacspeak-advice.el, lisp/emacspeak-info.el, lisp/emacspeak-message.el:
+	A bit more advanced auditory feedback in some minor aspects.
+
+2008-02-02  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-pcl-cvs.el, lisp/emacspeak-w3m.el:
+	Use both naming scheme in voice mapping.
+
+	* lisp/emacspeak-advice.el:
+	Correctly save and restore automatic speaking messages on incremental
+	search functions.
+
+	* lisp/emacspeak-speak.el:
+	Mail alert when speaking buffer header on switching or opening new
+	buffer.
+
+2008-02-01  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-speak.el:
+	Restored more general pattern for unspeakable rule.
+
+	* lisp/emacspeak-w3m.el:
+	Restored convenient auditory feedback in general. It appeared broken
+	somehow.
+
+2008-01-31  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-w3m.el: Restored correct faces to voices mapping.
+
+2008-01-30  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-dired.el:
+	Simplified main entry points advising and mode initialization to
+	achieve more adequate behaviour.
+
+	* lisp/emacspeak-speak.el:
+	Removed spare sound when reading header line.
+
+2008-01-29  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-setup.el:
+	Require "cl" not only when compiling. It is necessary for loading
+	Emacspeak in some circumstances.
+
+	New upstream release.
+
+2008-01-13  Igor B. Poretsky  <poretsky@mlbox.ru>
+
+	Import upstream release 27
+
+2007-10-31  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-advice.el:
+	Auditory feedback on killing and yanking rectangle.
+
+2007-09-29  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-dired.el:
+	Always speak relative file names when navigating dired buffers. Do it
+	for the find results as well as for real directories.
+
+2007-09-09  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/Makefile, lisp/emacspeak-debian-bug.el, lisp/emacspeak-finder-inf.el, lisp/emacspeak.el:
+	Speech enabled Debian bug reports.
+
+	* lisp/emacspeak-advice.el:
+	Speech feedback on tabify and untabify functions.
+
+2007-08-30  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-apt-utils.el:
+	Convenient speech feedback on navigation. More compact and regular
+	representation of advising code.
+
+2007-08-05  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-alsaplayer.el:
+	Added customizable option to specify rewind step and use it instead of
+	10 seconds as in the original version. Fixed rewinds by minute and by
+	10 minutes that were occasionally broken previously.
+
+2007-05-29  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-alsaplayer.el:
+	Update status when getting information about currently playing
+	track. Auditory feedback on track navigation is made
+	conditional. Auditory icon on track splitting.
+
+2007-05-28  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-alsaplayer.el:
+	Make auditory icons to prepend speech output.
+
+	* lisp/emacspeak-alsaplayer.el:
+	Don't speak current position twice in status updating command.
+
+	* lisp/emacspeak-alsaplayer.el:
+	Corrected Alsaplayer command for replacing resource that was
+	occasionally messed up.
+
+	* lisp/emacspeak-alsaplayer.el:
+	Use the track title tag if available for auditory feedback when
+	jumping from track to track. The track path is used as a last resort
+	in the case of title tag absence.
+
+	* lisp/emacspeak-alsaplayer.el:
+	More file extensions to recognize as supportable.
+
+	* lisp/emacspeak-alsaplayer.el:
+	Alsaplayer buffer should be killed regardless of auditory feedback
+	state.
+
+2007-05-27  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-alsaplayer.el:
+	When launching Alsaplayer, check if it is already running and do what
+	is necessary for the situation.
+
+	* lisp/emacspeak-alsaplayer.el: Removed spare key definition.
+
+2007-05-26  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-alsaplayer.el:
+	A hack to prevent "emacspeak-alsaplayer-coding-system" from dealing
+	with path names. This option is to specify tag decoding.
+
+	* lisp/emacspeak-alsaplayer.el:
+	Fixed up module functionality that was totally broken due to improper
+	merging of upstream changes.
+
+2007-05-11  Igor B. Poretsky  <master@goga.energo.ru>
+
+	Merged upstream changes.
+
+	Import upstream release 26
+
+	* lisp/emacspeak-finder-inf.el, lisp/emacspeak-gnuplot.el, lisp/emacspeak-mpg123.el, lisp/emacspeak-wdired.el:
+	More appropriate keywords.
+
+2007-05-10  Igor B. Poretsky  <master@goga.energo.ru>
+
+	Merged upstream changes.
+
+2007-05-04  Igor B. Poretsky  <master@goga.energo.ru>
+
+	Import upstream release 25
+
+2007-02-08  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-jabber.el:
+	Auditory feedback when going to the next jid in the roster buffer by
+	tab.
+
+	* lisp/emacspeak-jabber.el, lisp/emacspeak-speak.el, lisp/emacspeak-wizards.el:
+	If a function is to speak some information, it must do it
+	unconditionally.
+
+2006-09-03  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-sounds.el:
+	Force home directory as a default directory when playing sound to make
+	it possible even when current default directory doesn't exist. (This
+	patch was somehow lost in version 24.)
+
+2006-08-27  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-gnus.el:
+	Removed some key rebindings since I think they are confusing a bit.
+
+	* lisp/emacspeak-advice.el:
+	More intelligent speech feedback in the inferior shell.
+
+2006-07-01  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-jabber.el:
+	Auditory feedback on customization entering.
+
+2006-06-29  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-custom.el:
+	Fixed face names in voices mapping to make the voicification actually
+	functional.
+
+2006-06-28  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-gnus.el:
+	Auditory feedback for "gnus-summary-mark-region-as-read".
+
+	* lisp/emacspeak-apt-utils.el, lisp/emacspeak-dictionary.el, lisp/emacspeak-muse.el, lisp/emacspeak-w3m.el, lisp/emacspeak-wiki.el:
+	Changed voicification to the new style.
+
+	* lisp/emacspeak-jabber.el:
+	Removed old style voicification in favour of the new one. Some voices
+	have been changed to make them more distinct with Multispeech server.
+
+	* lisp/voice-setup.el: Typo fix in comment.
+
+	* lisp/emacspeak-keymap.el:
+	Keyboard shortcut for "emacspeak-alsaplayer-launch" as it used to be
+	in patched version.
+
+	* lisp/emacspeak-gnus.el:
+	Removed redefining of navigation keys [up] and [down] in the group
+	buffer, their usual behaviour seems more comfortable. Removed current
+	line speaking when deleting articles, it seems irrelevant to the
+	function. Speak current line when entering group as in previous
+	patched versions. Auditory feedback for a few functions yet kindly
+	provided by Serge Fleitin.
+
+	* lisp/emacspeak-w3m.el: Removed duplicated definition.
+
+	* lisp/emacspeak-url-template.el:
+	Added third argument for "indent-region" call, because Emacs treats it
+	as mandatory.
+
+	* lisp/emacspeak-ses.el:
+	Use "forward-line" instead of "next-line" and "previous-line" as
+	documentation advises, so that Emacs now doesn't complain about
+	missing argument when compiling.
+
+	* lisp/emacspeak-advice.el:
+	Bug fix: moved parentheses onto the proper place.
+
+2006-05-11  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/Russian-spelling.el, lisp/multispeech-voices.el, lisp/russian-spelling.el:
+	Russian spelling module name lowercased according to the upstream
+	version.
+
+	* lisp/emacspeak-gnus.el:
+	Don't set "gnus-visible-headers" and "gnus-ignored-headers" explicitly
+	by Emacspeak. These variables should be customized.
+
+2006-05-10  Igor B. Poretsky  <master@goga.energo.ru>
+
+	Merging upstream changes into the main trunk.
+	Upstream release 24.0
+
+2006-01-30  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-edb.el:
+	Signal beginning of field when deleting char backward.
+
+2006-01-29  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-edb.el: Yet more advices.
+
+2006-01-28  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-edb.el:
+	Various auditory feedback enhancements. added some missed
+	advices. Function "emacspeak-speak-current-field" in the database edit
+	mode now speaks database fields. Movement functions now speak fields
+	when moving from one to another (rather than lines). Compact
+	representation of advice groups.
+
+	* lisp/emacspeak-advice.el:
+	Minor text placement corrections. Just for better look.
+
+	* lisp/emacspeak-speak.el, lisp/emacspeak-wizards.el:
+	Explicitly recalculate window display end position when it is
+	requested.
+
+2006-01-16  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-jabber.el:
+	Added voicification for the rare time info in chat buffer.
+
+	* lisp/voice-setup.el: Typo fix in doc-string.
+
+2006-01-09  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-c.el:
+	Compact representation of groups of similar advices. Auditory feedback
+	on colon has been made the same as on semicolon. It seems more
+	convenient since colon in C usually affects string indentation.
+
+2006-01-08  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-replace.el:
+	Just stylistic: more simple and natural look of definitions.
+
+	* lisp/emacspeak-dired.el:
+	Auditory feedback enhancements: more functions are supported.
+
+2005-12-31  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-advice.el:
+	More correct and informative auditory icons on overwrite mode
+	switching.
+
+2005-12-25  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-arc.el, lisp/emacspeak-tar.el:
+	Correct speaking of non-trivial entry names.
+
+	* lisp/emacspeak-pcl-cvs.el:
+	Auditory feedback on some interactive functions yet.
+
+	* lisp/emacspeak-advice.el: Auditory feedback on "kill-this-buffer".
+
+2005-12-20  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-gnus.el, lisp/emacspeak-message.el:
+	Speaking internet smileys in messages.
+
+2005-12-16  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-keymap.el:
+	Added keyboard shortcut for jabber roster buffer popup.
+
+	* lisp/emacspeak-jabber.el:
+	Auditory icons on jabber connect and disconnect commands. Some
+	voicification. Minor typo fix.
+
+2005-12-15  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-erc.el: Typo fixes in doc-strings.
+
+2005-12-14  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-erc.el: Erc notices have been made audible.
+
+2005-12-12  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-alsaplayer.el:
+	Added option for customizing sound device.
+
+2005-12-11  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-keymap.el:
+	Defined key sequence for Alsaplayer launching.
+
+	* lisp/emacspeak-alsaplayer.el:
+	Added coding system and output driver customization options.
+
+	* lisp/emacspeak-m-player.el: Added coding system customization option.
+
+	* lisp/emacspeak-speak.el:
+	Made information function "emacspeak-speak-buffer-info" speak
+	unconditionally.
+
+2005-12-10  Igor B. Poretsky  <master@goga.energo.ru>
+
+	Merged changes for upstream release 23.
+
+2005-12-09  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak.el: Allowed html outline feature.
+
+	* lisp/emacspeak-c.el, lisp/emacspeak-cperl.el, lisp/emacspeak-make-mode.el, lisp/emacspeak-psgml.el, lisp/emacspeak-python.el, lisp/emacspeak-texinfo.el:
+	Removed redundant hook settings.
+
+	* lisp/emacspeak.el:
+	The texinfo mode is treated as a programming mode and so corresponding
+	hook settings are made for it.
+
+	* lisp/emacspeak-advice.el: Removed spare advice.
+
+	* lisp/emacspeak-advice.el, lisp/emacspeak-analog.el, lisp/emacspeak-buff-menu.el, lisp/emacspeak-ediff.el, lisp/emacspeak-kotl.el, lisp/emacspeak-metapost.el, lisp/emacspeak-python.el, lisp/emacspeak-rmail.el, lisp/emacspeak-tcl.el, lisp/emacspeak-w3m.el:
+	More appropriate auditory icons in some cases.
+
+	* lisp/emacspeak-sql.el: Just decorative fix of text placing.
+
+	* lisp/emacspeak-eshell.el: Removed double-generated auditory icon.
+
+	* lisp/emacspeak-cperl.el: Fixed file name in the head comment.
+
+	* lisp/emacspeak-calendar.el:
+	Auditory icons should be produced only for interactive calls.
+
+	* lisp/emacspeak-analog.el, lisp/emacspeak-aumix.el, lisp/emacspeak-babel.el, lisp/emacspeak-bookmark.el, lisp/emacspeak-browse-kill-ring.el, lisp/emacspeak-buff-menu.el, lisp/emacspeak-calc.el, lisp/emacspeak-calendar.el, lisp/emacspeak-cperl.el, lisp/emacspeak-daisy.el, lisp/emacspeak-ecb.el, lisp/emacspeak-ediary.el, lisp/emacspeak-ediff.el, lisp/emacspeak-entertain.el, lisp/emacspeak-eperiodic.el, lisp/emacspeak-eshell.el, lisp/emacspeak-flyspell.el, lisp/emacspeak-gnus.el, lisp/emacspeak-ibuffer.el, lisp/emacspeak-ispell.el, lisp/emacspeak-jde.el, lisp/emacspeak-make-mode.el, lisp/emacspeak-nero.el, lisp/emacspeak-ocr.el, lisp/emacspeak-php-mode.el, lisp/emacspeak-pronounce.el, lisp/emacspeak-python.el, lisp/emacspeak-re-builder.el, lisp/emacspeak-reftex.el, lisp/emacspeak-rpm.el, lisp/emacspeak-sawfish.el, lisp/emacspeak-speak.el, lisp/emacspeak-speedbar.el, lisp/emacspeak-supercite.el, lisp/emacspeak-table-ui.el, lisp/emacspeak-tnt.el, lisp/emacspeak-url-template.el, lisp/emacspeak-view.el, lisp/emacspeak-vm.el, lisp/emacspeak-w3.el, lisp/emacspeak-w3m.el, lisp/emacspeak-websearch.el, lisp/emacspeak-wizards.el, lisp/emacspeak-xslt-process.el:
+	When auditory feedback consists from both speech output and auditory
+	icon, the auditory icons should be produced prior to speech in most
+	cases.
+
+2005-12-08  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-advice.el, lisp/emacspeak-cperl.el, lisp/emacspeak-metapost.el, lisp/emacspeak-ps.el, lisp/emacspeak-python.el:
+	Auditory icon on commenting region.
+
+2005-12-07  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-pcl-cvs.el: Don't lie about file after adding.
+
+	* lisp/Makefile, lisp/emacspeak-asm.el, lisp/emacspeak-finder-inf.el, lisp/emacspeak-muse.el, lisp/emacspeak-ps.el, lisp/emacspeak.el:
+	Implemented speech support for Muse package suggested by Serge
+	Fleitin. Speech enable asm and ps modes.
+
+	* lisp/emacspeak-advice.el: Auditory icon on tab.
+
+	* lisp/emacspeak-auctex.el:
+	When an auditory icon is produced along with speech output, it seems
+	better to produce auditory icon just before speech (not after).
+
+2005-12-06  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-advice.el, lisp/emacspeak-compile.el:
+	When an auditory icon is produced along with speech output, it seems
+	better to produce auditory icon just before speech (not after).
+
+	* lisp/emacspeak-bbdb.el, lisp/emacspeak-c.el, lisp/emacspeak-cperl.el, lisp/emacspeak-dmacro.el, lisp/emacspeak-ediff.el, lisp/emacspeak-folding.el, lisp/emacspeak-forms.el, lisp/emacspeak-gud.el, lisp/emacspeak-man.el, lisp/emacspeak-outline.el, lisp/emacspeak-perl.el, lisp/emacspeak-preamble.el, lisp/emacspeak-view.el:
+	Typo fixes in comments.
+
+2005-10-03  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/Makefile, lisp/emacspeak-finder-inf.el, lisp/emacspeak-planner.el, lisp/emacspeak.el:
+	Implemented support for Planner.
+
+	* lisp/emacspeak-auctex.el: Typo fix in comment.
+
+2005-10-01  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-wiki.el:
+	Correct speech feedback when tabbing on a page with no links.
+
+	* lisp/emacspeak-finder-inf.el: Filled description for emacspeak-w3m.
+
+2005-09-30  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-w3m.el: More strict namespace following.
+
+	* lisp/Makefile, lisp/emacspeak-finder-inf.el, lisp/emacspeak-wiki.el, lisp/emacspeak.el:
+	Implemented speech feedback for emacs-wiki.
+
+2005-09-27  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/Russian-spelling.el:
+	Natural "yo" instead of octal code to get rid of charset dependency.
+
+2005-09-08  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/Makefile:
+	Added dependence for emacspeak-w3m on emacspeak-w3 as it uses it's
+	functions.
+
+	* lisp/emacspeak-w3m.el:
+	XSLT transformation mechanism has been made functional and slightly
+	advanced.
+
+2005-08-25  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* sawfish/sawfishrc, sawfish/tools.jl, sawfish/tts.jl:
+	Slightly differed application launching mechanism. Commands and
+	shortcuts for launching Gnopernicus and X-terminal and for speech
+	feedback control. Speech feedback on mouse movement events. Fixed
+	"tts-say-window" so that it works appropriately on the root
+	window. Fixed speech feedback on the focus change events to not
+	interfere with Gnopernicus.
+
+	* lisp/emacspeak-advice.el: Auditory icons on some mail commands.
+
+2005-08-16  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-finder-inf.el, lisp/emacspeak-nxml.el, lisp/emacspeak-tcl.el:
+	Some typo fixes in comments.
+
+2005-07-02  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-speak.el: More accurate selection text by property.
+
+	* lisp/emacspeak-dictionary.el:
+	Auditory feedback on finding words by reference.
+
+2005-06-23  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-sounds.el:
+	Call sound playing process from user's home directory explicitly for
+	independence of current buffer directory existence. It makes sense
+	when Emacspeak plays auditory icons by itself, not via speech server.
+
+	* lisp/emacspeak-dictionary.el:
+	Made buttons to have auditory feedback similar to their hotkeys
+	counterparts.
+
+	* lisp/emacspeak-rpm.el:
+	Auditory feedback enhancements: marking and unmarking function now
+	produce respective auditory icons and read the next line instead of
+	quite redundant message; auditory icons on some other functions;
+	auditory feedback on asynchronous operations. Some typo fixes.
+
+	* lisp/emacspeak-pcl-cvs.el: Minor cosmetic changes.
+
+2005-06-04  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-gnus.el, lisp/emacspeak-pcl-cvs.el, lisp/emacspeak-w3m.el:
+	Speak mode line of merged window on exit and don't lie.
+
+	* lisp/emacspeak-advice.el:
+	Speaking messages in transient mark mode should not disturb visual
+	look.
+
+	* lisp/emacspeak-gnus.el:
+	Auditory feedback on ticking articles and group customization entry.
+
+	* lisp/emacspeak-dired.el, lisp/emacspeak-tar.el:
+	Added special command to speak ownerships.
+
+	* lisp/emacspeak-tar.el: Take in account debview mode.
+
+2005-06-01  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-arc.el, lisp/emacspeak-tar.el:
+	The informational functions made speaking unconditionally, just like
+	their brothers in the dired mode. Buffer bounds signalization when
+	moving up and down. More appropriate auditory icon on the unflagging
+	functions.
+
+	* lisp/emacspeak-sounds.el:
+	Sound theme customization made to take effect immediately.
+
+	* lisp/emacspeak-advice.el:
+	Some important questions made to be spoken unconditionally.
+
+2005-05-14  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-speak.el: Modeline speaking fix.
+
+2005-05-05  Igor B. Poretsky  <master@goga.energo.ru>
+
+	Import upstream release 22.0
+
+	* lisp/emacspeak-gnus.el: Auditory feedback on draft specific commands.
+
+2005-04-03  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-advice.el:
+	More appropriate auditory icon for centering functions.
+
+2005-04-02  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-w3m.el: Old Emacs-w3m versions compatibility fix.
+
+2005-03-30  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-hexl.el: New file.
+
+	* lisp/Makefile, lisp/emacspeak-finder-inf.el, lisp/emacspeak-hexl.el, lisp/emacspeak.el:
+	Speech enabled hexl mode.
+
+	* lisp/emacspeak-dired.el, lisp/emacspeak-speak.el:
+	Make the informative functions speaking despite of
+	emacspeak-speak-messages.
+
+2005-03-28  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-w3m.el: Speaking text area fix.
+
+2005-03-25  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* sawfish/sawfishrc, sawfish/tts.jl:
+	Some fixes to make the stuff actually working and Multispeech
+	compliant.
+
+	* lisp/Makefile, lisp/emacspeak-cyclebuffer.el, lisp/emacspeak-edb.el, lisp/emacspeak-finder-inf.el, lisp/emacspeak.el:
+	Implemented speech support for cyclebuffer and Edb package. Kindly
+	suggested by Sergei V. Fleytin <fleytin@mail.ru>.
+
+	* lisp/emacspeak-cyclebuffer.el, lisp/emacspeak-edb.el: New file.
+
+2005-03-01  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-w3m.el:
+	More auditory feedback. Speech enabled W3m buffer selection.
+
+	* lisp/emacspeak-w3m.el: More auditory feedback. Minor cleanups.
+
+	* lisp/emacspeak-w3m.el, lisp/emacspeak-wget.el:
+	Advising of "w3m-wget" moved to emacspeak-w3m.el.
+
+2005-02-27  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-w3m.el:
+	Auditory feedback enhancements. It seems useful to know when the page
+	we are visiting has actually been displayed on the screen.
+
+	* lisp/emacspeak-wget.el: Auditory feedback on "w3m-wget".
+
+2005-02-20  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/Makefile, lisp/emacspeak-finder-inf.el, lisp/emacspeak-wget.el, lisp/emacspeak.el:
+	Incorporated speech-enabled Wget interface.
+
+	* lisp/emacspeak-wget.el: New file.
+
+	* servers/multispeech-notes:
+	Typo fixes. Suggested by Serge Fleytin <fleytin@mail.ru>.
+
+	* lisp/emacspeak-w3m.el: Auditory icon on process killing.
+
+	* lisp/emacspeak-message.el:
+	More appropriate auditory feedback on sending message without killing
+	it's buffer. Auditory feedback on "message-newline-and-reformat".
+
+	* lisp/emacspeak-gnus.el: Auditory feedback on resending messages.
+
+	* lisp/emacspeak-bbdb.el: More appropriate auditory icon.
+
+2005-01-24  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak.el: Inserted emacspeak-rpm setup that was missed.
+
+	* lisp/emacspeak-rpm-spec.el:
+	Removed some spare keywords. Fixed comment.
+
+	* lisp/emacspeak-finder-inf.el: Removed some spare keywords.
+
+	* lisp/multispeech-voices.el: Corrected author's e-mail address.
+
+	* lisp/Makefile, lisp/emacspeak-apt-sources.el, lisp/emacspeak-apt-utils.el, lisp/emacspeak-finder-inf.el, lisp/emacspeak.el:
+	Added some Debian specific stuff.
+
+	* lisp/emacspeak-apt-sources.el, lisp/emacspeak-apt-utils.el: New file.
+
+2005-01-22  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-dictionary.el: Mapping font faces to personalities.
+
+2005-01-16  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-gnus.el, lisp/emacspeak-bbdb.el:
+	Some more audible feedback: "bbdb/gnus-show-sender", "bbdb" and
+	"gnus".
+
+2005-01-06  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-gnus.el:
+	Modified "emacspeak-gnus-speak-article-body" so that it actually reads
+	body of article (without headers). Those functions that move pointer
+	in "Summary" and "Group" buffers now inform user that there are no mo
+	articles or groups where it is appropriate. Auditory icons on
+	displaying new article and toggling headers display mode. Auditory
+	icons on saving articles and attachments.
+
+	* lisp/emacspeak-advice.el:
+	Auditory feedback on "indent-region" and "vc-update-change-log".
+
+2005-01-05  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-message.el, lisp/emacspeak-gnus.el:
+	Auditory feedback on mail sending.
+
+2004-12-29  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-pcl-cvs.el, lisp/emacspeak-w3m.el:
+	More auditory feedback.
+
+	* lisp/emacspeak-find-dired.el, lisp/emacspeak-pcl-cvs.el:
+	Auditory feedback for background operations.
+
+	* lisp/emacspeak-w3m.el: Get rid of spare requirements.
+
+2004-12-24  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-w3m.el:
+	Some adaptation to new versions of Emacs-w3m. Speech enabled
+	checkboxes in forms.
+
+	* lisp/emacspeak-gnus.el:
+	Auditory feedback on marking and unmarking articles as
+	processable. Doc-string in advising
+	"gnus-summary-clear-mark-forward". Minor typo fixes.
+
+	* lisp/emacspeak-erc.el: Just typo in group name.
+
+	* lisp/emacspeak-bbdb.el: Auditory feedback on "bbdb-save-db".
+
+2004-11-28  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak.el: Added missed requirement of emacspeak-personality.
+
+	Import original version 21.0
+
+	* lisp/emacspeak-dired.el:
+	Fixed emacspeak-dired-show-file-type to honour
+	emacspeak-speak-messages state. Fixed emacspeak-dired-speak-file-size
+	and emacspeak-dired-speak-file-permissions to work properly in
+	ange-ftp buffer.
+
+2004-11-25  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-speak.el:
+	Using explicit set of chars instead of relying on syntax table which
+	fails in some circumstances.
+
+	* lisp/emacspeak-speak.el, lisp/multispeech-voices.el:
+	More general default setting for "emacspeak-unspeakable-rule".
+
+	* etc/emacspeak.sh.def:
+	It wos not a good idea to start Emacs with the "-q" switch, bicause it
+	prevents saving of customizations.
+
+2004-10-15  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/multispeech-voices.el: No forcing multibyte.
+
+	* lisp/emacspeak.el: Removed spare declaration.
+
+	* lisp/emacspeak-w3m.el:
+	Moved requirement of emacspeak-w3 to the top level to avoid warnings
+	when loading.
+
+	* lisp/emacspeak-setup.el: No unibyte by default.
+
+2004-10-14  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-w3m.el: Satisfied requirements.
+
+2004-10-13  Igor B. Poretsky  <master@goga.energo.ru>
+
+	Import original version 20.0
+
+	* lisp/emacspeak-speak.el: satisfied requirements.
+
+2004-10-12  Igor B. Poretsky  <master@goga.energo.ru>
+
+	Import original version 19.0
+
+	* lisp/dtk-speak.el, lisp/emacspeak-loaddefs.el, servers/software-dtk/DTK:
+	Just typos in comments.
+
+	* servers/.servers, servers/multispeech-notes:
+	Added info for Multispeech server.
+
+	* lisp/dtk-speak.el, lisp/dtk-voices.el, lisp/multispeech-voices.el, lisp/outloud-voices.el:
+	Take in account that not all speech servers now need TCL interpreter.
+
+	* lisp/emacspeak-setup.el:
+	Merged previous version. No need to speak version at startup. Must
+	speak native startup message instead.
+
+	* lisp/emacspeak.el: Play startup icon by default.
+
+	* lisp/emacspeak-speak.el, lisp/emacspeak-advice.el:
+	Variable deactivate-mark have been made local for a set of Emacspeak
+	functions to avoid interferring with the transient mark mode. Just to
+	not disturb visual appearance.
+
+2004-10-10  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-setup.el: Say version when loaded.
+
+	* lisp/emacspeak-advice.el:
+	Saving and restoring emacspeak-speak-messages in isearch mode.
+
+	* lisp/emacspeak-personality.el:
+	Some fix to get rid of conflict with leim.
+
+	* lisp/multispeech-voices.el:
+	Empty string for voice family code. Some cleanups.
+
+	* lisp/multispeech-voices.el:
+	Prevented repeat loading of Russian spelling data.
+
+2004-10-09  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/Russian-spelling.el, lisp/dtk-speak.el, lisp/dtk-voices.el, lisp/emacspeak-finder-inf.el, lisp/emacspeak-setup.el, lisp/multispeech-voices.el, lisp/outloud-voices.el, lisp/voice-setup.el, etc/emacspeak.sh.def, lisp/Makefile:
+	Incorporated support for multilingual speech server (Multispeech).
+
+	* lisp/emacspeak-gnus.el:
+	Some cosmetic fixes to ease merging in future.
+
+	Import original version 18.0
+
+2004-10-07  Igor B. Poretsky  <master@goga.energo.ru>
+
+	* lisp/emacspeak-w3m.el:
+	Returned more informative version of anchor voicifying function.
+
+	* lisp/emacspeak-w3m.el:
+	Replaced obsolete function name in favour of the new Emacs-w3m
+	versions.
+
+	* lisp/emacspeak-w3.el: Replaced reference to a non-existing function.
+
+	Import original version 17.0
+
+	* lisp/emacspeak-gnus.el:
+	Just to make Gnus more comfortable especially with BBDB. These
+	modifications are mostly suggested by Dmitry Paduchikh.
+
+	* lisp/emacspeak-advice.el: Some fixes for transient mark mode.
+
+	Import original version 16.0
