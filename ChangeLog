@@ -1,6 +1,45 @@
 This list contains only those changes that were made against original
 releases. Be careful: Emacspeak-27 and newer requires Emacs-22.
 
+2010-02-03  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-perl.el: Take in account some function name
+	  variations when advising.
+
+2010-02-02  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/: Makefile, g-client/Makefile: Byte compilation of missed
+	  modules.
+
+	* lisp/g-client/: g-autogen.el, g-load-path.el: Corrected package
+	  description.
+
+	* lisp/: emacspeak-cus-load.el, emacspeak-finder-inf.el,
+	  g-client/g-cus-load.el, g-client/g-loaddefs.el: Removed
+	  automatically generated files.
+
+	* lisp/: emacspeak-forms.el, emacspeak-realaudio.el,
+	  emacspeak-speak.el, emacspeak-websearch.el, emacspeak-wizards.el,
+	  emacspeak-xslt.el: Don't show full path to the system resources.
+	  Suggest only valid files for choosing.
+
+	* lisp/emacspeak-sounds.el: More consistent mechanism for sound
+	  theme switching and customizing. Now only valid values are
+	  suggested. Use bare theme name instead of full directory path
+	  that seems a bit confusing.
+
+	* lisp/emacspeak-message.el: Fixed speaking prompt in some cases,
+	  for instance, when resending messages from the Gnus summary
+	  buffer.
+
+2010-01-30  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* servers/speech-server: Use tclsh interpreter instead of tcl.
+
+	* lisp/: emacspeak-finder-inf.el, emacspeak-finder.el,
+	  emacspeak-load-path.el: Removed references to the obsolete
+	  atom-blogger.
+
 2010-01-11  Igor B. Poretsky  <poretsky@mlbox.ru>
 
 	* lisp/dtk-unicode.el, lisp/emacspeak-speak.el:
