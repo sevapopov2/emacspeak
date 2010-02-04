@@ -1,0 +1,16 @@
+emacspeak-outloud for DEBIAN
+----------------------------
+
+This speech server makes use of IBM ViaVoice Outloud software speech
+synthesizer. See file VIAVOICE in this directory for details. It
+does not automatically become a default speech server for Emacspeak
+during package installation. To make it a default speech server, use
+command
+
+emacspeakconfig
+
+that is provided by the emacspeak package, or better make
+
+dpkg-reconfigure emacspeak
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 04 Feb 2010 20:52:04 +0300
