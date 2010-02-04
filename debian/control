@@ -9,9 +9,9 @@ Homepage: http://emacspeak.sf.net
 
 Package: emacspeak
 Architecture: all
-Depends: perl, python, emacsen-common, make, emacs22, adduser, ${misc:Depends}
+Depends: perl, emacsen-common, make, emacs22, adduser, ${misc:Depends}
 Conflicts: emacspeak-dt, emacspeak-ss
-Recommends: multispeech, tclx8.4, tcl8.4
+Recommends: multispeech, python, tclx8.4, tcl8.4
 Suggests: emacspeak-espeak, emacspeak-outloud, eflite, psgml, xsltproc, espeak, w3m-el
 Description: speech output interface to Emacs
  Emacspeak is a speech output system that will allow someone who
