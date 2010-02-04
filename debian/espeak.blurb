@@ -1,4 +1,4 @@
 blurb: eSpeak
 program: espeak
-tcl: tcl
+tcl:
 device: espeak

@@ -1,4 +1,4 @@
 blurb: ViaVoice Outloud
 program: outloud
-tcl: tcl
+tcl:
 device: ViaVoice Outloud
