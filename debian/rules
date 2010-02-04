@@ -31,7 +31,6 @@ build-stamp: configure-stamp
 	$(MAKE) -C servers/linux-espeak
 	$(MAKE) -C servers/linux-outloud
 
-
 	touch build-stamp
 
 
@@ -53,26 +52,15 @@ install: build
 	dh_testroot
 	dh_clean -k 
 
-	dh_installchangelogs
-	dh_installdocs
-	dh_installexamples
+	# Copy files into the installation tree
 	dh_install -X.elc -X.nosearch -X.tar.bz2 -X.excludes -X-loaddefs -X-cus-load -X-finder-inf -X.sh.def
-	dh_installdebconf	
-	dh_installemacsen --priority=01
-	dh_installinfo
-	dh_installman
 
 	# Clean up the installation tree
 	cd $(deblsp)/lisp/g-client ; rm -f *.html *.org COPYING
 	cd $(deblsp)/etc ; rm -f Makefile NEWS-* applications.html COPYRIGHT remote.txt
 	cd $(deblsp)/xsl ; rm -f Makefile
 
-	dh_link
-	dh_strip
-	dh_compress
-	dh_fixperms
-
-	# Additional permissions fix
+	# Fix permissions
 	find $(deblsp) -type d -exec chmod 0755 {} \;
 	find $(deblsp) -type f -exec chmod 0644 {} \;
 	cd $(deblsp)/etc ; chmod 0755 *.sh *.pl *2*
@@ -81,19 +69,45 @@ install: build
 	cd $(debtmp)-outloud/$(eldir)/servers ; chmod 0755 outloud
 	chmod 0755 $(deblsp)/lisp/g-client/python/contacts.py
 
-	dh_shlibdeps
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
 
 # Build architecture-independent files here.
 binary-indep: build install
+	dh_testdir -i
+	dh_testroot -i
+	dh_installchangelogs -i
+	dh_installdocs -i
+	dh_installexamples -i
+	dh_installdebconf -i
+	dh_installemacsen -i --priority=01
+	dh_installinfo -i
+	dh_installman -i
+	dh_link -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
 
 
 # Build architecture-dependent files here.
 binary-arch: build install
+	dh_testdir -a
+	dh_testroot -a
+	dh_installchangelogs -a
+	dh_installdocs -a
+	dh_installexamples -a
+	dh_installdebconf -a
+	dh_installman -a
+	dh_link -a
+	dh_strip -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_shlibdeps -a
+	dh_installdeb -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
 
 
 binary: binary-indep binary-arch
