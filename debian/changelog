@@ -1,8 +1,30 @@
 emacspeak (31.0-1) unstable; urgency=low
 
   * New upstream release.
+  * Incorporated various improvements collected during several years of
+    extensive use.
+  * Separate package for html documentation.
+  * Excluded plain text, pdf and ps documentation formats.
+  * Build shared libraries for Outloud and eSpeak speech servers.
+  * Provide Outloud and eSpeak speech servers in separate architecture
+    dependent packages.
+  * Cleared out the tcl field in blurbs since Emacspeak doesn't care
+    about DTK_TCL variable anymore.
+  * Modified emacspeakconfig script to fit better for serving software
+    TTS based speech servers and to produce correct configuration file
+    according to actual sense of DTK_TCL and DTK_PROGRAM environment
+    variables.
+  * Dropped alternatives for /usr/bin/emacspeak.
+  * Removed dtk-soft speech server because it cannot be properly
+    compiled without proprietary software.
+  * Don't copy blurbs into the flavor related tree, so compatibility
+    with emacspeak-ss is dropped, but eflite should survive.
+  * Moved tcl and tclx from dependencies to recommendations since these
+    means are not essential for Emacspeak itself, but only for speech
+    servers that are not mandatory and can be replaced by Multispeech or
+    Eflite that do not require tcl.
 
- -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 31 Jan 2010 01:32:35 +0300
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 04 Feb 2010 23:11:19 +0300
 
 emacspeak (29.0-4) unstable; urgency=low
 
