@@ -12,10 +12,10 @@
 
 set -e
 
-CFG=/etc/emacspeak.conf
+CFG=etc/emacspeak.conf
 GROUPFILE=/etc/group
 DRIVERDIR=/usr/lib/emacs/common/emacspeak/drivers
-USUAL=/usr/share/emacs/site-lisp/emacspeak
+USUAL=/usr/local/share/emacs/site-lisp/emacspeak
 
 # on a Slackware or Red Hat system, a user may attempt configuration
 # with awk missing.
@@ -115,20 +115,18 @@ TEXT=$ans
 # get parameters for some new synthesizer
 request_params() {
     text "Please enter the name of the synthesizer" "$DEVICE"; DEVICE=$TEXT
-    if [ "$TCL" = "tcl" ]; then IS_TCL=y; else IS_TCL=n; fi
-    if yesno "Is the speech server a TCL script? " $IS_TCL ; then 
-	echo "These files in $USUAL/servers appear to be TCL scripts:"
-	(cd $USUAL/servers; grep -l dectalk_globals * 2>/dev/null)
-        text "Please enter the name (not path) of the $DEVICE speech server" \
-	    ${PROGRAM:-$TCL}
-        PROGRAM=$TEXT
-	TCL=tcl; 
-    else 
-        text "Please enter the full path name of the $DEVICE speech server" \
+    echo "Usually Emacspeak looks for speech server executable"
+    echo "in $USUAL/servers"
+    echo
+    echo "The following executables are found there:"
+    find -L $USUAL/servers -maxdepth 1 -type f -perm -111 -printf "%f\n"
+    echo
+    echo "If you wish to use some another executable, specify full path."
+    echo
+    text "Please enter the name of the $DEVICE speech server" \
 	${PROGRAM:-$TCL}
-	TCL=$TEXT
-	PROGRAM=; 
-    fi;
+    PROGRAM=$TEXT
+    TCL=;
     if echo $PORT|grep '^/dev/ttyS' >/dev/null; then ans=y; else ans=n; fi;
     if yesno "Is the $DEVICE connected to a serial port?" $ans ; then
 	true;
@@ -136,25 +134,18 @@ request_params() {
 	valid=no;
 	while [ "$valid" = "no" ]; do
             text "Please enter the device (for example, /dev/lp0): " \
-                ${PORT:-/dev/lp0}
-	    PORT=$TEXT; 
-	    if check_port; then valid=yes; fi
+                "none"
+	    PORT=$TEXT;
+            if [ "$PORT" = "none" ]; then
+                valid=yes;
+	    elif check_port; then
+                valid=yes;
+            fi
 	done
 	HAVE_PORT=yes;
     fi;
 
 # echo "PROGRAM=$PROGRAM, TCL=$TCL, PORT=$PORT"
-}
-
-# print warning if a program does not exist
-check_pgm() {
-if [ -x $TCL -o -x /usr/bin/$TCL ]; then true; else
-    echo
-    echo "NOTICE: Before using Emacspeak, please install"
-    echo "        $TCL"
-    echo
-    echo -n "Press Enter to continue: "; read junk;
-fi
 }
 
 # return success if $PORT is (or will be) a valid character device
@@ -373,7 +364,6 @@ if [ $initial = no -o "$PROGRAM" = "" -o "$TCL" = "" ]; then
 	if [ "$area" = "0" -o "$area" = "o" -o "$area" = "O" ]; then
 	    request_params;
 	fi
-	if [ "$PROGRAM" = "none" -o "$PROGRAM" = "" ]; then check_pgm; fi
     done
 fi
 
@@ -384,7 +374,9 @@ if [ "$DEVICE" = "DoubleTalk PC" ]; then
     IN_PORT=/dev/dtlk
 else
     IN_PORT=$PORT
-    if [ "$IN_PORT" = "" -o "$IN_PORT" = "/dev/dtlk" ]; then
+    if [ "$IN_PORT" = "" ]; then
+        IN_PORT=none;
+    elif [ "$IN_PORT" = "/dev/dtlk" ]; then
 	IN_PORT=/dev/ttyS0;
     fi
 fi
@@ -397,7 +389,11 @@ if [ $HAVE_PORT = no ]; then
     (The first serial port would be /dev/ttyS0.
     This is ignored for a software synthesizer)" $IN_PORT
     	    PORT=$TEXT
-    	    if check_port $PORT; then valid=yes; fi
+            if [ "$PORT" = "none" ]; then
+                valid=yes;
+    	    elif check_port $PORT; then
+                valid=yes;
+            fi
     	done
     fi
 fi
@@ -406,15 +402,19 @@ fi
 #echo emacspeak is configured for $DEVICE attached to $PORT
 
 # adjust unix device group membership if needed
-if [ -c "$PORT" ]; then
-    DEVICEGROUP=`ls -l -L $PORT|awk '{print $4}'`
+if [ "$PORT" = "none" ]; then
+    DEVICEGROUP=audio
+    echo "It seems that you use software speech synthesizer,"
+    echo "so you have to be a member of group: $DEVICEGROUP."
 else
-    if [ "$DEVICE" = "DoubleTalk PC" -a -f /etc/makedev.cfg ]; then
-	DEVICEGROUP=`awk '/audio:/{print $4}' /etc/makedev.cfg`
-    else 
-	DEVICEGROUP=audio
+    if [ -c "$PORT" ]; then
+        DEVICEGROUP=`ls -l -L $PORT|awk '{print $4}'`
+    elif [ "$DEVICE" = "DoubleTalk PC" -a -f /etc/makedev.cfg ]; then
+        DEVICEGROUP=`awk '/audio:/{print $4}' /etc/makedev.cfg`
+    else
+        DEVICEGROUP=audio
     fi
-    echo "$PORT is assumed to be in group: $DEVICEGROUP"
+    echo "$PORT is assumed to be in group: $DEVICEGROUP."
 fi
 
 if [ $DEVICEGROUP = root ];
@@ -428,17 +428,20 @@ fi
 # skip the enrolling of additional users if there is already at least
 # one user, and it's the initial installation
 MEMBERS=`grep ^${DEVICEGROUP} $GROUPFILE|awk 'BEGIN{FS=":"}{print $4}'`
-if [ "$MEMBERS" = "" -o $initial = no ];
-then
-    echo " "
-    echo $PORT can be accessed by members of the group: $DEVICEGROUP.
+if [ "$MEMBERS" = "" -o $initial = no ]; then
+    echo
+    if [ "$PORT" = "none" ]; then
+        echo Sound output is allowed for members of the group: $DEVICEGROUP.
+    else
+        echo $PORT can be accessed by members of the group: $DEVICEGROUP.
+    fi
     if [ "$MEMBERS" = "" ]; 
     then echo "Currently, no users are in group $DEVICEGROUP";
     else echo "Currently, these users are in group $DEVICEGROUP: $MEMBERS";
     fi
     finished=no
     while [ $finished = no ]; do
-	echo " "
+	echo
 	echo "If you wish to enroll any other users into group $DEVICEGROUP,"
 	echo "(even if their accounts have not been created yet),"
 	echo -n "please list their usernames here separated by commas: "
