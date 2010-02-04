@@ -1,0 +1,9 @@
+Document: emacspeak
+Title: Emacspeak --The Complete Audio Desktop
+Author: T. V. Raman
+Abstract: This manual documents Emacspeak, a speech interface to Emacs.
+Section: Accessibility
+
+Format: HTML
+Index: /usr/share/doc/emacspeak-doc/html/index.html
+Files: /usr/share/doc/emacspeak-doc/html/*.html

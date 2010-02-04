@@ -1,0 +1,63 @@
+Source: emacspeak
+Section: editors
+Priority: extra
+Maintainer: Igor B. Poretsky <poretsky@mlbox.ru>
+Build-Depends: debhelper (>= 5), po-debconf, libespeak-dev, tcl8.4-dev, libasound2-dev
+Build-Depends-Indep: texi2html, texinfo
+Standards-Version: 3.7.3
+Homepage: http://emacspeak.sf.net
+
+Package: emacspeak
+Architecture: all
+Depends: perl, python, emacsen-common, make, emacs22, adduser, ${misc:Depends}
+Conflicts: emacspeak-dt, emacspeak-ss
+Recommends: multispeech, tclx8.4, tcl8.4
+Suggests: emacspeak-espeak, emacspeak-outloud, eflite, psgml, xsltproc, espeak, w3m-el
+Description: speech output interface to Emacs
+ Emacspeak is a speech output system that will allow someone who
+ cannot see to work directly on a UNIX system.
+ .
+ Emacspeak is built on
+ top of Emacs.  Once Emacs is started with Emacspeak loaded, users get
+ spoken feedback for all actions.  As Emacs can do everything,
+ they get speech feedback for everything they do.
+ .
+ This package also includes speech server written in Tcl to support
+ the DECtalk Express speech synthesizer and remote speech server
+ access scripts.  For other synthesizers, look for separate
+ speech server packages such as emacspeak-espeak, emacspeak-outloud,
+ multispeech and eflite.
+
+Package: emacspeak-doc
+Section: doc
+Architecture: all
+Suggests: emacspeak, www-browser
+Description: Emacspeak documentation
+ Emacspeak is a speech output system that will allow someone who
+ cannot see to work directly on a UNIX system.
+ .
+ This package contains additional documentation in html form.
+
+Package: emacspeak-espeak
+Section: sound
+Architecture: any
+Depends: tclx8.4, ${shlibs:Depends}, ${misc:Depends}
+Recommends: emacspeak
+Description: Espeak speech server for Emacspeak
+ Emacspeak is a speech output system that will allow someone who
+ cannot see to work directly on a UNIX system.
+ .
+ This package provides additional speech output for Emacspeak
+ via eSpeak speech synthesizer.
+
+Package: emacspeak-outloud
+Section: sound
+Architecture: any
+Depends: tclx8.4, ${shlibs:Depends}, ${misc:Depends}
+Recommends: emacspeak
+Description: IBM ViaVoice Outloud speech server for Emacspeak
+ Emacspeak is a speech output system that will allow someone who
+ cannot see to work directly on a UNIX system.
+ .
+ This package allows to use IBM ViaVoice Outloud speech synthesizer
+ for speech output in Emacspeak.

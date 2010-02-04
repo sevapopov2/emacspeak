@@ -1,0 +1,59 @@
+#! /bin/sh -e
+
+FLAVOR=$1
+PACKAGE=emacspeak
+
+if [ ${FLAVOR} = emacs ]; then exit 0; fi
+
+ELDIR=/usr/share/emacs/site-lisp/${PACKAGE}
+ELCDIR=/usr/share/${FLAVOR}/site-lisp/${PACKAGE}
+ELDIR_REL=../../../emacs/site-lisp/${PACKAGE}
+
+if [ -d ${ELCDIR} ]; then
+    # emacspeak is already compiled.
+    exit 0;
+fi
+
+echo install/${PACKAGE}: Handling install for emacsen flavor ${FLAVOR}
+
+case "$FLAVOR" in
+    emacs20) echo "  emacspeak does not support emacs20"
+        exit 0
+        ;;
+    emacs21) echo "  emacspeak does not support emacs21"
+        exit 0
+        ;;
+    xemacs*) echo " emacspeak does not support xemacs"
+        exit 0
+        ;;
+    emacs*) SITEFLAG="--no-site-file"
+        ;;
+    *) echo "unknown flavor $FLAVOR, does not start with emacs or xemacs"
+	exit 1
+        ;;
+esac
+
+install -m 755 -d ${ELCDIR}/lisp/g-client
+
+cd ${ELCDIR}/lisp
+find ../${ELDIR_REL}/lisp \( -name "*.el" -o -name Makefile -o -name xml-forms \) -maxdepth 1 -exec ln -s {} \;
+
+cd g-client
+find ../../${ELDIR_REL}/lisp/g-client -maxdepth 1 -mindepth 1 -not -name "*.in" -not -name indent-files.el -exec ln -s {} \;
+
+cd ${ELCDIR}
+for target in blurbs etc Makefile README realaudio servers shoutcast sounds xsl
+do ln -s ${ELDIR_REL}/$target
+done
+
+make -ks >compile.log 2>&1
+
+rm -f `find lisp -type l -name *.elc | sed 's/\.elc/.el/g'`
+find lisp \( -name *~ -o -name Makefile \) -delete >/dev/null 2>&1
+rm -f Makefile
+
+gzip compile.log
+
+echo "  Compilation log saved to ${ELCDIR}/compile.log.gz"
+
+exit 0

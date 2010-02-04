@@ -1,0 +1,4 @@
+blurb: Remote DECtalk Express server
+program: ssh-dtk-exp
+tcl:
+device: DECtalk Express on another computer

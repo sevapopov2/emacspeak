@@ -1,0 +1,29 @@
+<html><head><base href="http://emacspeak.blogspot.com"></head><body bgcolor="white" text="black"> 
+<div xmlns="http://www.w3.org/1999/xhtml">
+<p>Sourceforge is a nice service, but it can also be painful to
+use because of the heavy-weight Web page design, and the need to
+repeatedly click before you get the download you want.</p>
+<p>The most irksome of these is the download mechanism provided
+by Sourceforge --- where you first need to browse a list of
+download servers, pick a mirror, and then download what you
+want. 
+Emacspeak implements a <em>Smart URL</em> that enables one to
+download from Sourceforge in a single step.</p>
+<p>By default, this uses a North American mirror; the behavior
+can be customized if outside the US.
+Use <em>smart URL</em> <code>Sourceforge Browse Mirror</code> and
+specify the name of a SF hosted project when prompted.
+This brings up the index page for the project's download area,
+sorted by date. Move to the bottom of the page and   hit
+<code>b</code> to move to the latest available download.</p>
+<p>The <em>smart URL</em> sets up the W3 buffer with a
+context-sensitive download function; when on a download link, hit
+<code>C-d</code>
+to start downloading. This command will prompt for the URL;
+rather than hitting <code>return</code> (which would bring you to
+the <em>browse mirrors</em> page, hit <code>M-p</code> to get the
+download URL for your  SF mirror.
+Note that this wizard uses <code>GNU wget</code> to perform the
+download
+via Emacs module <code>w3-wget</code>.</p>
+    </div> <br /><br />--<br><font color="gray" size="2">Posted by T. V. Raman to <a href="http://emacspeak.blogspot.com/2006/01/browsing-sourceforge-download-servers.html">emacspeak The Complete Audio Desktop</a> at 1/27/2006 08:52:45 PM</font></body></html>

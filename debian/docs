@@ -1,0 +1,9 @@
+etc/applications.html
+etc/remote.txt
+etc/NEWS-*
+servers/linux-outloud/VIAVOICE
+servers/software-dtk/DTK
+servers/multispeech-notes
+lisp/g-client/g-client.org
+lisp/g-client/g-client.html
+apocryphal.ChangeLog

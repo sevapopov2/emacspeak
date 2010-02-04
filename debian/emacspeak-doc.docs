@@ -1,0 +1,6 @@
+debian/*.html
+install-guide
+user-guide
+info/html
+info/introducing-emacspeak
+apocryphal.ChangeLog

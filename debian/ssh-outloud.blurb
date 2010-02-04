@@ -1,0 +1,4 @@
+blurb: Remote ViaVoice Outloud server
+program: ssh-outloud
+tcl:
+device: ViaVoice Outloud on another computer

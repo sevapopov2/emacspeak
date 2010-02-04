@@ -1,0 +1,105 @@
+<html><head><base href="http://emacspeak.blogspot.com"></head><body bgcolor="white" text="black"> 
+<div xmlns="http://www.w3.org/1999/xhtml">
+<p>Emacspeak speech-enables <em>SuDoKu</em> implemented  by <a href="http://www.columbia.edu/~jr2075/elisp/index.html">sudoku.el</a>.
+Speech-enabling games is an effective means of discovering what
+additions one needs to make to an auditory interface for
+working effectively in an eyes-free environment --- this was
+aptly demonstrated a few years ago by identifying interesting
+<em>conversational gestures</em> by speech-enabling the game of
+<code>Tetris</code> --- see  <a href="http://emacspeak.sourceforge.net/raman/publications/assets-98/paper.pdf">Conversational
+Gestures For The Audio Desktop</a> from Assets 1998.</p>
+
+
+<h4>Advicing Interactive Commands</h4>
+<p>As with speech-enabling any Emacs module,
+<code>emacspeak-sudoku</code> <em>advices</em> all interactive
+commands to produce spoken feedback.
+In addition to speaking the cell moved to, all navigation
+commands produce an auditory icon that is a function of whether
+the cell value is mutable ---  original values cannot be changed
+and this is indicated with a distinctive icon.</p>
+
+<h4>Additional Interactive Commands</h4>
+
+<p>Playing SuDoKu effectively requires one to build a good mental
+image of the state of the board as well as the ability to
+effectively query the game for currently active constraints. The
+eye's ability to  quickly move around the board and perceive row,
+column and sub-square constraints needs to be compensated for in
+an eyes-free environment. As an example, it is too difficult to
+build the necessary mental model by just listening to the board
+spoken aloud, or by listening to idnividual cells by navigating
+to them.</p>
+
+<p>Here are the set of additional interactive commands that
+needed to be added in order to be able to play the game
+effectively.</p>
+
+<dl>
+<dt><code>r</code></dt>
+<dd>Speak current row.</dd>
+<dt><code>c</code></dt>
+<dd>Speak current column</dd>
+<dt><code>s</code></dt>
+<dd>Speak current sub-square.</dd>
+<dt><code>R</code></dt>
+<dd>Speak number of remaining cells in current row.</dd>
+<dt><code>C</code></dt>
+<dd>Speak number of remaining cells in current column.</dd>
+<dt><code>S</code></dt>
+<dd>Speak number of remaining cells in current sub-square.</dd>
+<dt><code>d</code></dt>
+<dd>Move to the sub-square below the current sub-square.</dd>
+<dt><code>u</code></dt>
+<dd>Move to the sub-square above the current sub-square.</dd>
+<dt><code>n</code></dt>
+<dd>Move to the next sub-square.</dd>
+<dt><code>p</code></dt>
+<dd>Move to the previous sub-square.</dd>
+<dt><code>a</code></dt>
+<dd>Move to the beginning of current row.</dd>
+<dt><code>e</code></dt>
+<dd>Move to the end of the current row.</dd>
+<dt><code>t</code></dt>
+<dd>Move to the top of the current column.</dd>
+<dt><code>b</code></dt>
+<dd>Move to the bottom of the current column.</dd>
+<dt><code>,</code></dt>
+<dd>Speaks information about the overall <em>distribution</em> of
+numbers on the board.
+<ul>
+<li><code>d</code> --- Conveys how many instances of each digit
+have been filled in.</li>
+<li><code>s</code> --- Conveys number of remaining cells in each
+sub-square.</li>
+<li><code>r</code> --- Conveys number of remaining cells in each
+row.</li>
+<li><code>c</code> --- Conveys number of remaining cells in each
+column.</li>
+</ul>
+</dd>
+<dt><code>/</code></dt>
+<dd>Speaks number of remaining cells in the current board.</dd>
+<dt><code>.</code></dt>
+<dd>Speaks value in current cell.</dd>
+</dl>
+
+<p>Notes on how invormation is spoken:</p>
+<ul>
+<li>Numbers are spoken in groups of 3 to achieve effective
+intonation.</li>
+<li>When navigating by sub-squares, point <em>always</em> moves
+to the top left corner of the sub-square.</li>
+<li>Additional commands bound to <code>M-r</code>,
+<code>M-c</code> and <code>M-s</code> erase the current row,
+column or sub-square respectively. These commands would probably
+be convenient to have independent of whether one is using visual
+output.</li>
+</ul>
+
+<h4>Effectiveness Of The Resulting Interface</h4>
+
+<p>With the above interface in place, the simpler levels of the
+game are a breeze, levels <em>difficult</em> and <em>evil</em>
+are sufficiently challenging to be fun.</p>
+    </div> <br /><br />--<br><font color="gray" size="2">Posted by T. V. Raman to <a href="http://emacspeak.blogspot.com/2006/02/playing-sudoku-using-auditory-feedback.html">emacspeak The Complete Audio Desktop</a> at 2/11/2006 06:04:52 PM</font></body></html>

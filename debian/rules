@@ -1,0 +1,100 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+
+# Uncomment this to turn on verbose mode.
+# export DH_VERBOSE=1
+
+package=emacspeak
+debbase         := $(shell pwd)/debian
+debtmp          := $(debbase)/$(package)
+eldir		:= usr/share/emacs/site-lisp/$(package)
+deblsp          := $(debtmp)/$(eldir)
+
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+
+	cd debian ; ln -s templates emacspeak-espeak.templates
+	cd debian ; ln -s templates emacspeak-outloud.templates
+
+	touch configure-stamp
+
+
+build: build-stamp
+
+build-stamp: configure-stamp 
+	dh_testdir
+
+	$(MAKE) -C info
+	$(MAKE) -C servers/linux-espeak
+	$(MAKE) -C servers/linux-outloud
+
+
+	touch build-stamp
+
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+	cd debian ; rm -f emacspeak-espeak.templates emacspeak-outloud.templates
+
+	$(MAKE) -C info clean
+	$(MAKE) -C servers/linux-espeak clean
+	$(MAKE) -C servers/linux-outloud clean
+
+	dh_clean 
+
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+
+	dh_installchangelogs
+	dh_installdocs
+	dh_installexamples
+	dh_install -X.elc -X.nosearch -X.tar.bz2 -X.excludes -X-loaddefs -X-cus-load -X-finder-inf -X.sh.def
+	dh_installdebconf	
+	dh_installemacsen --priority=01
+	dh_installinfo
+	dh_installman
+
+	# Clean up the installation tree
+	cd $(deblsp)/lisp/g-client ; rm -f *.html *.org COPYING
+	cd $(deblsp)/etc ; rm -f Makefile NEWS-* applications.html COPYRIGHT remote.txt
+	cd $(deblsp)/xsl ; rm -f Makefile
+
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+
+	# Additional permissions fix
+	find $(deblsp) -type d -exec chmod 0755 {} \;
+	find $(deblsp) -type f -exec chmod 0644 {} \;
+	cd $(deblsp)/etc ; chmod 0755 *.sh *.pl *2*
+	cd $(deblsp)/servers ; chmod 0755 dtk-exp speech-server ssh-* ; chmod 0644 .servers tts-lib.tcl
+	cd $(debtmp)-espeak/$(eldir)/servers ; chmod 0755 espeak
+	cd $(debtmp)-outloud/$(eldir)/servers ; chmod 0755 outloud
+	chmod 0755 $(deblsp)/lisp/g-client/python/contacts.py
+
+	dh_shlibdeps
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+
+# Build architecture-independent files here.
+binary-indep: build install
+
+
+# Build architecture-dependent files here.
+binary-arch: build install
+
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure
