@@ -23,8 +23,12 @@ emacspeak (31.0-1) unstable; urgency=low
     means are not essential for Emacspeak itself, but only for speech
     servers that are not mandatory and can be replaced by Multispeech or
     Eflite that do not require tcl.
+  * Don't take care of Emacs load-path list in startup file since
+    Emacspeak does it properly itself.
+  * Remove unused variable emacspeak-info-directory. Anyway, the
+    directory it points to does not exist in this installation.
 
- -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 04 Feb 2010 23:11:19 +0300
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 05 Feb 2010 18:54:26 +0300
 
 emacspeak (29.0-4) unstable; urgency=low
 
