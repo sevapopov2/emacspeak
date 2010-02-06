@@ -174,7 +174,7 @@ if ($olddevice ne $device){
     set('shared/emacspeak/tcl',$tcl{$device});
 }
 $port=get('shared/emacspeak/port');
-if ($olddevice ne $device or $port eq "" or $port ne "none" or ! -c $port){
+if ($olddevice ne $device or $port eq "" or ($port ne "none" and ! -c $port)){
     fset('shared/emacspeak/port', 'seen', 'false');
 }
 my $valid=0;
