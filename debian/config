@@ -116,6 +116,9 @@ if ($device eq ''){		# specify a default server
 my $newdatabase='';
 foreach $device (sort keys %db) {
     ($b,$p,$t)=split(':',$db{$device});
+    $blurb{$device}=$b;
+    $program{$device}=$p;
+    $tcl{$device}=$t;
     $newdatabase .= "$b:$p:$t:$device, ";
 }
 if ($database ne $newdatabase){
@@ -171,7 +174,7 @@ if ($olddevice ne $device){
     set('shared/emacspeak/tcl',$tcl{$device});
 }
 $port=get('shared/emacspeak/port');
-if ($olddevice ne $device or $port eq "" or ! -c $port){
+if ($olddevice ne $device or $port eq "" or $port ne "none" or ! -c $port){
     fset('shared/emacspeak/port', 'seen', 'false');
 }
 my $valid=0;
