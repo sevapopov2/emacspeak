@@ -21,6 +21,6 @@
 
   ;; Enable speech feedback if it is requested
   (when (getenv "EMACSPEAK")
-    (load (concat "/usr/share/" (symbol-name debian-emacs-flavor)
-                  "/site-lisp/emacspeak/lisp/emacspeak-setup" t))
+    (load (concat "/usr/share/" (symbol-name flavor)
+                  "/site-lisp/emacspeak/lisp/emacspeak-setup") t)
     (setenv "EMACSPEAK")))
