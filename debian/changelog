@@ -27,8 +27,11 @@ emacspeak (31.0-1) unstable; urgency=low
     Emacspeak does it properly itself.
   * Remove unused variable emacspeak-info-directory. Anyway, the
     directory it points to does not exist in this installation.
+  * When starting Emacspeak, environment variables EDITOR and VISUAL are
+    set to use emacsclient as the default editor if possible. It will
+    affect shell commands started from within Emacs.
 
- -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 05 Feb 2010 18:54:26 +0300
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 06 Feb 2010 03:52:33 +0300
 
 emacspeak (29.0-4) unstable; urgency=low
 
