@@ -48,7 +48,7 @@ done
 
 make -ks >compile.log 2>&1
 
-rm -f `find lisp -type l -name *.elc | sed 's/\.elc/.el/g'`
+rm -f `find lisp -type f -name *.elc | sed 's/\.elc$/.el/g'`
 find lisp \( -name *~ -o -name Makefile \) -delete >/dev/null 2>&1
 rm -f Makefile
 
