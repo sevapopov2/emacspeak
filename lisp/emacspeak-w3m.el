@@ -677,7 +677,8 @@ Indicate change of selection with
    xsl
    nil
    emacspeak-xslt-options
-   (w3m-redisplay-this-page)))
+   (let ((w3m-history-reuse-history-elements 'reload))
+     (w3m-goto-url w3m-current-url 'redisplay 'utf-8))))
 
 (defun emacspeak-w3m-xslt-perform (xsl-name)
   "Perform XSL transformation by name on the current page."
