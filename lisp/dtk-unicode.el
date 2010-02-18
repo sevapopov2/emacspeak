@@ -120,6 +120,7 @@
 (defcustom dtk-unicode-untouched-charsets
   '(ascii latin-iso8859-1)
   "*Characters of these charsets are completely ignored by dtk-unicode-replace-chars."
+  :group 'dtk-unicode
   :type '(repeat symbol))
 
 (defvar dtk-unicode-handlers
@@ -158,7 +159,7 @@ A handler returns a non-nil value if the   replacement was successful, nil other
 
 (defvar dtk-unicode-charset-filter-regexp
   (dtk-unicode-build-skip-regexp dtk-unicode-untouched-charsets)
-  "Regular exppression that matches characters not in dtk-unicode-untouched-charsets.")
+  "Regular expression that matches characters not in dtk-unicode-untouched-charsets.")
 
 (defun dtk-unicode-update-untouched-charsets (charsets)
   "Update list of charsets we will not touch."

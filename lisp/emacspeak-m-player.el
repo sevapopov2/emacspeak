@@ -200,7 +200,6 @@ It is used for tags decoding."
    (list
     (read-directory-name"Media Directory: ")
     (read-key-sequence "Key: ")))
-  (interactive)
   (eval
    `(global-set-key key
                     #'(lambda nil
