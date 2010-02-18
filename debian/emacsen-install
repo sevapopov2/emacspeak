@@ -1,4 +1,5 @@
 #! /bin/sh -e
+# /usr/lib/emacsen-common/packages/install/emacspeak
 
 FLAVOR=$1
 PACKAGE=emacspeak
