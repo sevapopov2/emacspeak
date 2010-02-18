@@ -677,8 +677,7 @@ Indicate change of selection with
    xsl
    nil
    emacspeak-xslt-options
-   (let ((w3m-history-reuse-history-elements 'reload))
-     (w3m-goto-url w3m-current-url 'redisplay 'utf-8))))
+   (w3m-redisplay-this-page)))
 
 (defun emacspeak-w3m-xslt-perform (xsl-name)
   "Perform XSL transformation by name on the current page."
@@ -706,14 +705,23 @@ Indicate change of selection with
   (interactive)
   (emacspeak-w3m-xslt-perform "sort-tables"))
 
-(defadvice  w3m-create-text-page (before emacspeak pre act comp)
+(defadvice w3m-decode-buffer (before emacspeak pre act comp)
   "Apply requested transform if any before displaying the HTML. "
   (when (and emacspeak-we-xsl-p emacspeak-we-xsl-transform)
-    (emacspeak-xslt-region
-     emacspeak-we-xsl-transform
-     (point-min)
-     (point-max)
-     emacspeak-we-xsl-params)))
+    (let* ((content-charset (or (ad-get-arg 1) w3m-current-coding-system))
+           (emacspeak-xslt-options
+            (if content-charset
+                (format "%s %s %s"
+                        emacspeak-xslt-options
+                        "--encoding"
+                        content-charset)
+              emacspeak-xslt-options)))
+      (emacspeak-xslt-region
+       emacspeak-we-xsl-transform
+       (point-min)
+       (point-max)
+       emacspeak-we-xsl-params))
+    (ad-set-arg 1 'utf-8)))
 
 ;; Helper function for xslt functionality
 ;;;###autoload
