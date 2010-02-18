@@ -1,6 +1,43 @@
 This list contains only those changes that were made against original
 releases, but not related to the Debian package.
 
+2010-02-18  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/: emacspeak-w3m.el, emacspeak-xslt.el: Fixed displaying of
+	  Russian pages after XSL transformation in various circumstances.
+
+	* lisp/multispeech-voices.el: Removed some redundancies. There is
+	  no need anymore to declare extra charsets as untouched. Moreover,
+	  this obsolete workaround prevented some special characters from
+	  intelligent reading as punctuations when it is appropriate.
+
+	* lisp/dtk-unicode.el: Just typo fix in doc string.
+
+	* lisp/emacspeak-w3m.el: Fixed Russian content display when
+	  applying XSL transformations.
+
+2010-02-17  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/Makefile: Include russian-spelling.el into the compilation
+	  list.
+
+	* lisp/russian-spelling.el: Added usual comments and encoding
+	  cookie. Prevent repeated loading.
+
+	* lisp/: emacspeak-we.el, g-client/greader.el: Removed duplicated
+	  definitions.
+
+	* lisp/g-client/gphoto.el: Fixed arguments list incompatibility in
+	  function call for gphoto-feeds.
+
+	* lisp/g-client/gweb.el: Get rid of malformed function complains.
+
+	* lisp/emacspeak-m-player.el: Removed redundant interactive
+	  declaration.
+
+	* lisp/dtk-unicode.el: Assigned proper group for
+	  dtk-unicode-untouched-charsets.
+
 2010-02-03  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-perl.el: Take in account some function name

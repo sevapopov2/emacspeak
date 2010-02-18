@@ -1,3 +1,11 @@
+emacspeak (31.0-2) unstable; urgency=low
+
+  * Ensure elisp stuff compilation for an appropriate Emacs flavor.
+  * New fixes and improvements for the upstream sources. See
+    apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 18 Feb 2010 21:38:22 +0300
+
 emacspeak (31.0-1) unstable; urgency=low
 
   * New upstream release.
