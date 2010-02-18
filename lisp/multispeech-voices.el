@@ -469,13 +469,7 @@ and TABLE gives the values along that dimension."
       (set-process-coding-system dtk-speaker-process multispeech-coding-system multispeech-coding-system)
     (set-process-coding-system dtk-speaker-process locale-coding-system locale-coding-system))
   (setq-default dtk-speak-nonprinting-chars nil)
-  (let ((coding-system-for-read 'utf-8))
-    (require 'russian-spelling))
-  (dtk-unicode-update-untouched-charsets
-   '(ascii
-     latin-iso8859-1
-     mule-unicode-0100-24ff
-     cyrillic-iso8859-5)))
+  (require 'russian-spelling))
 
 ;;}}}
 (provide 'multispeech-voices)

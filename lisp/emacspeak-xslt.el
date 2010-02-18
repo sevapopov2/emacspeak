@@ -115,7 +115,7 @@ This is useful when handling bad HTML."
 ;;}}}
 ;;{{{ Functions:
 (defvar emacspeak-xslt-last-command nil
-  "Cache last xsltproc command we exectued.")
+  "Cache last xsltproc command we executed.")
 
 ;;;###autoload
 (defun emacspeak-xslt-region (xsl start end &optional params no-comment)
@@ -134,7 +134,7 @@ part of the libxslt package."
                                    (cdr pair)))
                        params
                        " ")))
-        (coding-system-for-write 'utf-8)
+        (coding-system-for-write 'raw-text)
         (coding-system-for-read 'utf-8)
         (buffer-file-coding-system 'utf-8))
     (setq command

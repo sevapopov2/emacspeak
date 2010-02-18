@@ -219,7 +219,7 @@
     (completing-read
      (or prompt "Google News: ")
                      (dynamic-completion-table
-                      #'(lambda (w)
+                      (lambda (w)
                           (gweb-suggest w "ds=n"))))))))
 
 ;;}}}
