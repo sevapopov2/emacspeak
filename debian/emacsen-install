@@ -17,6 +17,9 @@ fi
 echo install/${PACKAGE}: Handling install for emacsen flavor ${FLAVOR}
 
 case "$FLAVOR" in
+    emacs1*) echo "  emacspeak does not support $FLAVOR"
+        exit 0
+        ;;
     emacs20) echo "  emacspeak does not support emacs20"
         exit 0
         ;;
@@ -46,7 +49,7 @@ for target in blurbs etc Makefile README realaudio servers shoutcast sounds xsl
 do ln -s ${ELDIR_REL}/$target
 done
 
-make -ks >compile.log 2>&1
+make -ks EMACS=${FLAVOR} >compile.log 2>&1
 
 rm -f `find lisp -type f -name *.elc | sed 's/\.elc$/.el/g'`
 find lisp \( -name *~ -o -name Makefile \) -delete >/dev/null 2>&1
