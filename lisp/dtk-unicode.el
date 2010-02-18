@@ -159,7 +159,7 @@ A handler returns a non-nil value if the   replacement was successful, nil other
 
 (defvar dtk-unicode-charset-filter-regexp
   (dtk-unicode-build-skip-regexp dtk-unicode-untouched-charsets)
-  "Regular exppression that matches characters not in dtk-unicode-untouched-charsets.")
+  "Regular expression that matches characters not in dtk-unicode-untouched-charsets.")
 
 (defun dtk-unicode-update-untouched-charsets (charsets)
   "Update list of charsets we will not touch."
