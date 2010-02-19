@@ -1,3 +1,11 @@
+emacspeak (31.0-3) unstable; urgency=low
+
+  * Dependencies corrected according to the Debian policy for Emacs
+    packages.
+  * Recompile elisp stuff when upgrading the package.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 19 Feb 2010 17:53:01 +0300
+
 emacspeak (31.0-2) unstable; urgency=low
 
   * Ensure elisp stuff compilation for an appropriate Emacs flavor.

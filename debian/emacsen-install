@@ -10,11 +10,6 @@ ELDIR=/usr/share/emacs/site-lisp/${PACKAGE}
 ELCDIR=/usr/share/${FLAVOR}/site-lisp/${PACKAGE}
 ELDIR_REL=../../../emacs/site-lisp/${PACKAGE}
 
-if [ -d ${ELCDIR} ]; then
-    # emacspeak is already compiled.
-    exit 0;
-fi
-
 echo install/${PACKAGE}: Handling install for emacsen flavor ${FLAVOR}
 
 case "$FLAVOR" in
@@ -37,6 +32,10 @@ case "$FLAVOR" in
         ;;
 esac
 
+if [ -d ${ELCDIR} ]; then
+    rm -rf ${ELCDIR}/compile.log ${ELCDIR}/lisp
+fi
+
 install -m 755 -d ${ELCDIR}/lisp/g-client
 
 cd ${ELCDIR}/lisp
@@ -47,7 +46,7 @@ find ../../${ELDIR_REL}/lisp/g-client -maxdepth 1 -mindepth 1 -not -name "*.in" 
 
 cd ${ELCDIR}
 for target in blurbs etc Makefile README realaudio servers shoutcast sounds xsl
-do ln -s ${ELDIR_REL}/$target
+do [ -e $target ] || ln -s ${ELDIR_REL}/$target
 done
 
 make -ks EMACS=${FLAVOR} >compile.log 2>&1
