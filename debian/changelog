@@ -1,3 +1,9 @@
+emacspeak (31.0-4) unstable; urgency=low
+
+  * Fixed package upgrade bug introduced in previous release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 19 Feb 2010 21:48:13 +0300
+
 emacspeak (31.0-3) unstable; urgency=low
 
   * Dependencies corrected according to the Debian policy for Emacs
