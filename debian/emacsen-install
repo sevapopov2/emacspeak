@@ -48,6 +48,7 @@ cd ${ELCDIR}
 for target in blurbs etc Makefile README realaudio servers shoutcast sounds xsl
 do [ -e $target ] || ln -s ${ELDIR_REL}/$target
 done
+touch .nosearch
 
 make -ks EMACS=${FLAVOR} >compile.log 2>&1
 
