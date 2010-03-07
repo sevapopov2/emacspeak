@@ -1,6 +1,15 @@
 This list contains only those changes that were made against original
 releases, but not related to the Debian package.
 
+2010-03-07  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/: emacspeak-python.el, emacspeak.el: Provide auditory
+	  feedback for native python mode.
+
+	* lisp/emacspeak-dired.el: Auditory feedback on toggling omit mode.
+
+	* lisp/dtk-speak.el: Minor fix for character pronunciation table.
+
 2010-02-18  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/: emacspeak-w3m.el, emacspeak-xslt.el: Fixed displaying of

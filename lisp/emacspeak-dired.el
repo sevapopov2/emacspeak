@@ -255,6 +255,15 @@ Provide auditory icon when finished."
       (emacspeak-dired-label-fields)
       (emacspeak-auditory-icon 'open-object )
       (emacspeak-speak-mode-line))))
+
+(defadvice dired-omit-mode (after emacspeak pre act comp)
+  "Produce an auditory icon."
+  (when (interactive-p)
+    (emacspeak-auditory-icon
+     (if dired-omit-mode
+         'on
+       'off))))
+
 (defun emacspeak-dired-initialize ()
   "Set up emacspeak dired."
   (voice-lock-mode 1)
