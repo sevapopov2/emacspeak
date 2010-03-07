@@ -33,21 +33,28 @@ case "$FLAVOR" in
 esac
 
 if [ -d ${ELCDIR} ]; then
-    rm -rf ${ELCDIR}/compile.log.gz ${ELCDIR}/lisp
+    rm -f ${ELCDIR}/compile.log.gz ${ELCDIR}/lisp/*.el ${ELCDIR}/lisp/g-client/*.el
 fi
 
 install -m 755 -d ${ELCDIR}/lisp/g-client
 
 cd ${ELCDIR}/lisp
-find ../${ELDIR_REL}/lisp \( -name "*.el" -o -name Makefile -o -name xml-forms \) -maxdepth 1 -exec ln -s {} \;
+find ../${ELDIR_REL}/lisp \( -name "*.el" -o -name Makefile -o -name xml-forms \) -maxdepth 1 -exec ln -s {} \; 2>/dev/null
+for file in *.elc
+do [ -e `basename $file elc`el ] || rm -f $file
+done
 
 cd g-client
-find ../../${ELDIR_REL}/lisp/g-client -maxdepth 1 -mindepth 1 -not -name "*.in" -not -name indent-files.el -exec ln -s {} \;
+find ../../${ELDIR_REL}/lisp/g-client -maxdepth 1 -mindepth 1 -not -name "*.in" -not -name indent-files.el -exec ln -s {} \; 2>/dev/null
+for file in *.elc
+do [ -e `basename $file elc`el ] || rm -f $file
+done
 
 cd ${ELCDIR}
 for target in blurbs etc Makefile README realaudio servers shoutcast sounds xsl
 do [ -e $target ] || ln -s ${ELDIR_REL}/$target
 done
+find -L . -type l -lname '*' -delete
 touch .nosearch
 
 make -ks EMACS=${FLAVOR} >compile.log 2>&1
