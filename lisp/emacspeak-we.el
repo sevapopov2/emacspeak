@@ -687,29 +687,6 @@ values as completion. "
      (format "//*[%s]" filter)
      url
      (or (interactive-p) speak))))
-;;;###autoload
-(defun emacspeak-we-junk-by-class-list(classes   url &optional
-                                                    speak)
-  "Extract elements not having class specified in list `classes' from HTML.
-Extracts specified elements from current WWW page and displays it
-in a separate buffer.  Interactive use provides list of class
-values as completion. "
-  (interactive
-   (list
-    (let ((completion-ignore-case t))
-      (emacspeak-we-css-get-class-list))
-    (emacspeak-webutils-read-this-url)
-    current-prefix-arg))
-  (let ((filter
-         (mapconcat
-          #'(lambda  (c)
-              (format "(@class=\"%s\")" c))
-          classes
-          " or ")))
-    (emacspeak-we-xslt-junk
-     (format "//*[%s]" filter)
-     url
-     (or (interactive-p) speak))))
 
 ;;;###autoload
 (defun emacspeak-we-extract-by-id (id   url &optional speak)
@@ -757,7 +734,7 @@ separate buffer. Interactive use provides list of id values as completion. "
   "Junk elements having class specified in list `classes' from HTML.
 Extracts specified elements from current WWW page and displays it in a
 separate buffer.
- Interactive use provides list of class values as
+Interactive use provides list of class values as
 completion. "
   (interactive
    (list
