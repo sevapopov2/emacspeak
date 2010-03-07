@@ -1,3 +1,12 @@
+emacspeak (31.0-6) unstable; urgency=low
+
+  * Don't do extra recompilation work when upgrading or reconfiguring
+    the package.
+  * New fixes and improvements for the upstream sources. See
+    apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 07 Mar 2010 15:15:15 +0300
+
 emacspeak (31.0-5) unstable; urgency=low
 
   * Get full package tree out of the load-path.
