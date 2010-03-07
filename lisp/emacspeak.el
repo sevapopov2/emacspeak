@@ -241,6 +241,7 @@ speech-enabling extensions."
 (emacspeak-do-package-setup "planner-tasks-overview" 'emacspeak-planner)
 (emacspeak-do-package-setup "psgml" 'emacspeak-psgml)
 (emacspeak-do-package-setup "ps-mode" 'emacspeak-ps)
+(emacspeak-do-package-setup "python" 'emacspeak-python)
 (emacspeak-do-package-setup "python-mode" 'emacspeak-python)
 (emacspeak-do-package-setup "re-builder" 'emacspeak-re-builder)
 (emacspeak-do-package-setup "reftex" 'emacspeak-reftex)
