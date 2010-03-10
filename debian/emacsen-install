@@ -41,13 +41,13 @@ install -m 755 -d ${ELCDIR}/lisp/g-client
 cd ${ELCDIR}/lisp
 find ../${ELDIR_REL}/lisp \( -name "*.el" -o -name Makefile -o -name xml-forms \) -maxdepth 1 -exec ln -s {} \; 2>/dev/null
 for file in *.elc
-do [ -e `basename $file elc`el ] || rm -f $file
+do [ -e "${file%.elc}.el" ] || rm -f $file
 done
 
 cd g-client
 find ../../${ELDIR_REL}/lisp/g-client -maxdepth 1 -mindepth 1 -not -name "*.in" -not -name indent-files.el -exec ln -s {} \; 2>/dev/null
 for file in *.elc
-do [ -e `basename $file elc`el ] || rm -f $file
+do [ -e "${file%.elc}.el" ] || rm -f $file
 done
 
 cd ${ELCDIR}
@@ -59,8 +59,8 @@ touch .nosearch
 
 make -ks EMACS=${FLAVOR} >compile.log 2>&1
 
-rm -f `find lisp -type f -name *.elc | sed 's/\.elc$/.el/g'`
-find lisp \( -name *~ -o -name Makefile \) -delete >/dev/null 2>&1
+rm -f `find lisp -type f -name "*.elc" | sed 's/\.elc$/.el/g'`
+find lisp \( -name "*~" -o -name Makefile \) -delete >/dev/null 2>&1
 rm -f Makefile
 
 gzip compile.log
