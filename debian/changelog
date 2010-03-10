@@ -1,3 +1,12 @@
+emacspeak (31.0-6.1) unstable; urgency=low
+
+  * Fixed the first time installation bug introduced in previous
+    release.
+  * Suggest user to restart running sessions at the end of installation
+    process.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 10 Mar 2010 22:27:20 +0300
+
 emacspeak (31.0-6) unstable; urgency=low
 
   * Don't do extra recompilation work when upgrading or reconfiguring
