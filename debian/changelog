@@ -1,4 +1,4 @@
-emacspeak (31.0-6.1) unstable; urgency=low
+emacspeak (31.0-7) unstable; urgency=low
 
   * Fixed the first time installation bug introduced in previous
     release.
