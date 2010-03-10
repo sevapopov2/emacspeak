@@ -101,6 +101,7 @@ mv -f $CONFIGFILE.tmp $CONFIGFILE
 
 #DEBHELPER#
 
+echo "Please restart all emacspeak sessions if any"
+echo "for changes to take effect."
+
 exit 0
-
-
