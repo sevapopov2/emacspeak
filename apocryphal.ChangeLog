@@ -1,6 +1,15 @@
 This list contains only those changes that were made against original
 releases, but not related to the Debian package.
 
+2010-03-13  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/multispeech-voices.el: Form embedded commands for temporary
+	  punctuations mode switching if requested.
+
+	* lisp/emacspeak-amark.el: Added replacement for
+	  locate-dominating-file if it is not bound. So,
+	  emacspeak-alsaplayer, for instance, now works in emacs22.
+
 2010-03-07  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/: emacspeak-python.el, emacspeak.el: Provide auditory

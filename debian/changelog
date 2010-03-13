@@ -1,3 +1,10 @@
+emacspeak (31.0-8) unstable; urgency=low
+
+  * A couple of fixes for the upstream sources. See apocryphal.ChangeLog
+    for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 13 Mar 2010 22:19:36 +0300
+
 emacspeak (31.0-7) unstable; urgency=low
 
   * Fixed the first time installation bug introduced in previous
