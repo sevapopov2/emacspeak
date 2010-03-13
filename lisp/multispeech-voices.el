@@ -418,7 +418,9 @@ and TABLE gives the values along that dimension."
 
 (defsubst multispeech-get-punctuations-code (value)
   "Return string needed to set specified punctuations mode."
-  "")
+  (if value
+      (format " pu:%s " value)
+    ""))
 
 ;;}}}
 ;;}}}
