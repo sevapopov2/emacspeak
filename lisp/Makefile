@@ -60,7 +60,7 @@ COMPILE =  -f batch-byte-compile
 #The various modules:
 DTK_OBJECTS = acss-structure.elc \
 dtk-speak.elc		dectalk-voices.elc\
-outloud-voices.elc multispeech-voices.elc \
+outloud-voices.elc multispeech-voices.elc russian-spelling.elc \
 espeak-voices.elc dtk-interp.elc dtk-unicode.elc
 
 SPEAK_OBJECTS =   \
@@ -148,6 +148,7 @@ emacspeak-filtertext.elc \
 emacspeak-find-dired.elc \
 emacspeak-find-func.elc \
 emacspeak-finder.elc \
+emacspeak-firevox.elc \
 emacspeak-flyspell.elc \
 emacspeak-folding.elc \
 emacspeak-forms.elc \
@@ -301,6 +302,7 @@ acss-structure.elc: acss-structure.el
 dectalk-voices.elc: dectalk-voices.el voice-setup.elc
 outloud-voices.elc: outloud-voices.el voice-setup.elc
 multispeech-voices.elc: multispeech-voices.el voice-setup.elc
+russian-spelling.elc: russian-spelling.el emacspeak-speak.elc
 espeak-voices.elc: espeak-voices.el voice-setup.elc
 voice-setup.elc: voice-setup.el acss-structure.elc
 emacspeak-alsaplayer.elc: emacspeak-alsaplayer.el
@@ -368,6 +370,7 @@ emacspeak-filtertext.elc: emacspeak-filtertext.el dtk-speak.elc voice-setup.elc
 emacspeak-find-dired.elc: emacspeak-find-dired.el dtk-speak.elc voice-setup.elc
 emacspeak-find-func.elc: emacspeak-find-func.el dtk-speak.elc voice-setup.elc
 emacspeak-finder.elc: emacspeak-finder.el
+emacspeak-firevox.elc: emacspeak-firevox.el
 emacspeak-fix-interactive.elc: emacspeak-fix-interactive.el dtk-speak.elc voice-setup.elc
 emacspeak-flyspell.elc: emacspeak-flyspell.el dtk-speak.elc voice-setup.elc
 emacspeak-folding.elc: emacspeak-folding.el dtk-speak.elc voice-setup.elc

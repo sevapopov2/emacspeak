@@ -3043,23 +3043,29 @@ dates.")
 (defun emacspeak-wizards-rivo (when channel stop-time output directory)
   "Rivo wizard.
 Prompts for relevant information and schedules a rivo job using
-  UNIX At scheduling facility.
+UNIX At scheduling facility.
 RIVO is implemented by rivo.pl ---
- a Perl script  that can be used to launch streaming media and record
-   streaming media for  a specified duration."
+a Perl script  that can be used to launch streaming media and record
+streaming media for  a specified duration."
   (interactive
    (list
     (read-from-minibuffer "At Time: hh:mm Month Day")
     (let ((completion-ignore-case t)
           (emacspeak-speak-messages nil)
+          (insert-default-directory nil)
           (minibuffer-history emacspeak-realaudio-history))
       (emacspeak-pronounce-define-local-pronunciation
        emacspeak-realaudio-shortcuts-directory " shortcuts/ ")
-      (read-file-name "RealAudio resource: "
-                      emacspeak-realaudio-shortcuts-directory
-                      (if (eq major-mode 'dired-mode)
-                          (dired-get-filename)
-                        emacspeak-realaudio-last-url)))
+      (expand-file-name
+       (read-file-name "RealAudio resource: "
+                       emacspeak-realaudio-shortcuts-directory
+                       (if (eq major-mode 'dired-mode)
+                           (dired-get-filename)
+                         emacspeak-realaudio-last-url)
+                       t nil
+                       '(lambda (name)
+                          (string-match "^[^.]" name)))
+       emacspeak-realaudio-shortcuts-directory))
     (read-minibuffer "Length:" "00:30:00")
     (read-minibuffer "Output Name:")
     (read-directory-name "Output Directory:")))
