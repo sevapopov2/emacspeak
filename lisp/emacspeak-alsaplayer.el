@@ -1,5 +1,5 @@
 ;;; emacspeak-alsaplayer.el --- Control alsaplayer from Emacs
-;;; $Id: emacspeak-alsaplayer.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
+;;; $Id: emacspeak-alsaplayer.el 6440 2010-02-23 03:45:10Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Controlling alsaplayer from emacs 
 ;;; Keywords: Emacspeak, alsaplayer
@@ -117,13 +117,6 @@
 		 (string :tag "Driver name"))
   :group 'emacspeak-alsaplayer)
 
-(defcustom emacspeak-alsaplayer-sound-device nil
-  "Alsaplayer sound device.
-Default is hw:0,0 for ALSA and /dev/dsp for OSS output."
-  :type '(choice (const :tag "default" nil)
-		 (string :tag "Device specification"))
-  :group 'emacspeak-alsaplayer)
-
 (defcustom emacspeak-alsaplayer-coding-system nil
   "Alsaplayer output coding system.
 It is used for tags decoding."
@@ -138,7 +131,17 @@ It is used for tags decoding."
 
 (defvar emacspeak-alsaplayer-buffer "*alsaplayer*"
   "Buffer for alsaplayer interaction.")
-
+(defcustom emacspeak-alsaplayer-device nil
+  "Device to use for alsaplayer.
+Default is hw:0,0 for ALSA and /dev/dsp for OSS output."
+  :type '(choice
+          (const :tag "default" nil)
+          (string :tag "Device specification"))
+  :type '(choice
+          (const  :tag "Ignore" nil)
+          (const  :tag "Card 1" "hw:1,0"))
+  :group  'emacspeak-alsaplayer)
+  
 ;;;###autoload
 (defun emacspeak-alsaplayer-launch ()
   "Launch Alsaplayer.
@@ -146,6 +149,7 @@ user is placed in a buffer associated with the newly created
 Alsaplayer session."
   (interactive)
   (declare (special emacspeak-alsaplayer-program emacspeak-alsaplayer-buffer
+		    emacspeak-alsaplayer-device
 		    emacspeak-alsaplayer-height))
   (let ((buffer (get-buffer-create emacspeak-alsaplayer-buffer))
         (coding-system-for-read emacspeak-alsaplayer-coding-system)
@@ -165,8 +169,8 @@ Alsaplayer session."
                  (if emacspeak-alsaplayer-output
                      (format "-o %s " emacspeak-alsaplayer-output)
                    "")
-                 (if emacspeak-alsaplayer-sound-device
-                     (format "-d %s " emacspeak-alsaplayer-sound-device)
+                 (if emacspeak-alsaplayer-device
+                     (format "-d %s " emacspeak-alsaplayer-device)
                    ""))
          (current-buffer))
         (pop-to-buffer buffer 'other-window)
@@ -673,7 +677,8 @@ As the default, use current position."
          emacspeak-alsaplayer-next)
         ("p"
          emacspeak-alsaplayer-previous)
-        ("q" emacspeak-alsaplayer-quit)
+	("q" bury-buffer)
+        ("Q" emacspeak-alsaplayer-quit)
         ("o" other-window)
         ("r" emacspeak-alsaplayer-relative)
         ("s"

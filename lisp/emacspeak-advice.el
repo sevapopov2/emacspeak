@@ -1,5 +1,5 @@
 ;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak intelligently
-;;; $Id: emacspeak-advice.el 6390 2009-11-10 17:02:32Z tv.raman.tv $
+;;; $Id: emacspeak-advice.el 6480 2010-04-25 03:35:25Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Core advice forms that make emacspeak work
 ;;; Keywords: Emacspeak, Speech, Advice, Spoken  output
@@ -236,45 +236,40 @@ If you moved more than a line,
             ad-do-it)
           ad-return-value)))
 
-(defadvice forward-page (after emacspeak pre act)
-  "Provide auditory feedback."
-  (let ((deactivate-mark nil))
-    (when (interactive-p)
-      (emacspeak-auditory-icon 'scroll)
-      (emacspeak-speak-page ))))
+(loop for f in
+      '(forward-page backward-page)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (let ((deactivate-mark nil))
+              (emacspeak-auditory-icon 'scroll)
+              (emacspeak-speak-page ))))))
 
-(defadvice backward-page (after emacspeak pre act)
-  "Provide auditory feedback."
-  (let ((deactivate-mark nil))
-    (when (interactive-p)
-      (emacspeak-auditory-icon 'scroll)
-      (emacspeak-speak-page ))))
+(loop for f in
+      '(scroll-up
+        scroll-down
+        scroll-up-command
+        scroll-down-command)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Speak the next screenful."
+          (when (interactive-p)
+            (let ((deactivate-mark nil))
+              (emacspeak-auditory-icon 'scroll)
+              (dtk-speak (emacspeak-get-window-contents)))))))
 
-(defadvice scroll-up (after emacspeak pre act comp)
-  "Speak the next screenful."
-  (let ((deactivate-mark nil))
-    (when (interactive-p)
-      (emacspeak-auditory-icon 'scroll)
-      (dtk-speak (emacspeak-get-window-contents)))))
-
-(defadvice scroll-down (after emacspeak pre act comp)
-  "Speak the screenful."
-  (let ((deactivate-mark nil))
-    (when (interactive-p)
-      (emacspeak-auditory-icon 'scroll)
-      (dtk-speak (emacspeak-get-window-contents)))))
-
-(defadvice  beginning-of-defun (after emacspeak pre act)
-  "Speak the line."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
-
-(defadvice  end-of-defun (after emacspeak pre act)
-  "Speak the line."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
+(loop for f in
+      '(beginning-of-defun end-of-defun)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Speak the line."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ Advise modify case commands to speak
