@@ -122,9 +122,6 @@
     ("emacspeak-cperl.el"
         "Speech enable CPerl Mode "
         (emacspeak  audio interface to emacs cperl))
-    ("emacspeak-cus-load.el"
-        "automatically extracted custom dependencies"
-        nil)
     ("emacspeak-custom.el"
         "Speech enable interactive Emacs customization "
         (emacspeak  speak  spoken output  custom))
