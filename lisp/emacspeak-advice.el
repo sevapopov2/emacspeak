@@ -432,14 +432,20 @@ the words that were capitalized."
 
 ;;; Large deletions also produce auditory icons if possible
 
-(defadvice kill-line(before emacspeak pre act)
-  "Speak line before killing it. "
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'delete-object)
-    (when dtk-stop-immediately (dtk-stop))
-    (let ((dtk-stop-immediately nil))
-      (dtk-tone 500 30)
-      (emacspeak-speak-line 1))))
+(loop for f in
+      '(kill-line
+        allout-kill-line
+        kill-sentence)
+      do
+      (eval
+       `(defadvice ,f (before emacspeak pre act comp)
+          "Speak line before killing it. "
+          (when (interactive-p)
+            (when dtk-stop-immediately (dtk-stop))
+            (emacspeak-auditory-icon 'delete-object)
+            (let ((dtk-stop-immediately nil))
+              (dtk-tone 500 30)
+              (emacspeak-speak-line 1))))))
 
 (defadvice kill-sexp (before emacspeak pre act )
   "Speak the sexp you killed."
@@ -449,15 +455,6 @@ the words that were capitalized."
     (let ((dtk-stop-immediately nil))
       (dtk-tone 500 30)
       (emacspeak-speak-sexp 1 ))))
-
-(defadvice kill-sentence (before emacspeak pre act )
-  "Speak the line  you killed."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'delete-object)
-    (when dtk-stop-immediately (dtk-stop))
-    (let ((dtk-stop-immediately nil))
-      (dtk-tone 500 30)
-      (emacspeak-speak-line 1 ))))
 
 (defadvice delete-blank-lines (before   emacspeak  pre act )
   "Provide auditory feedback."
@@ -2108,17 +2105,18 @@ Produce an auditory icon if possible."
 ;;}}}
 ;;{{{  Stop talking if activity
 
-(defadvice beginning-of-line (before emacspeak pre act)
-  "Stop speech first."
-  (when (interactive-p)
-    (dtk-stop )
-    (emacspeak-auditory-icon 'select-object)))
-
-(defadvice end-of-line (before emacspeak pre act)
-  "Stop speech first."
-  (when (interactive-p)
-    (dtk-stop )
-    (emacspeak-auditory-icon 'select-object)))
+(loop for f in
+      '(beginning-of-line
+        allout-beginning-of-line
+        end-of-line
+        allout-end-of-line)
+      do
+      (eval
+       `(defadvice ,f (before emacspeak pre act comp)
+          "Stop speech first."
+          (when (interactive-p)
+            (dtk-stop )
+            (emacspeak-auditory-icon 'select-object)))))
 
 (defadvice recenter (before emacspeak pre act)
   "Stop speech first."
@@ -2130,25 +2128,25 @@ Produce an auditory icon if possible."
   "Provide auditory feedback"
   (when (interactive-p)
     (dtk-stop )
-    (dtk-speak (format "Recentered to %s" recenter-last-op))
-    (emacspeak-auditory-icon 'scroll)))
+    (emacspeak-auditory-icon 'scroll)
+    (dtk-speak (format "Recentered to %s" recenter-last-op))))
 
 ;;}}}
 ;;{{{  yanking and popping
 
-(defadvice yank (after emacspeak pre act)
-  "Say what you yanked.
+(loop for f in
+      '(yank
+        allout-yank
+        yank-pop
+        allout-yank-pop)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Say what you yanked.
 Produce an auditory icon if possible."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'yank-object )
-    (emacspeak-speak-region (mark 'force) (point))))
-
-(defadvice yank-pop (after emacspeak pre act)
-  "Say what you yanked.
-Also produce an auditory icon if possible."
-  (when (interactive-p )
-    (emacspeak-auditory-icon 'yank-object)
-    (emacspeak-speak-region (point) (mark 'force))))
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'yank-object )
+            (emacspeak-speak-region (mark 'force) (point))))))
 
 (defadvice yank-rectangle (after emacspeak pre act)
   "Produce an auditory icon if possible."
