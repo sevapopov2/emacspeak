@@ -149,7 +149,7 @@
   (declare (special gphoto-album-or-tag-template-url))
   (format gphoto-album-or-tag-template-url userid kind))
 ;;;###autoload
-(defun gphoto-feeds (kind user)
+(defun gphoto-feeds (kind &optional user)
   "Retrieve and display feed of albums or tags after authenticating."
   (interactive
    (list
