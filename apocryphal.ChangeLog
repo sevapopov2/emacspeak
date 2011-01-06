@@ -1,6 +1,18 @@
 This list contains only those changes that were made against original
 releases, but not related to the Debian package.
 
+2011-01-05  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-advice.el: Auditory feedback for allout command
+	  alternatives.
+
+	* lisp/g-client/org2blogger.el: Don't require recent version of the
+	  org-mode for byte-compilation.
+
+	Merged upstream changes.
+
+	Imported upstream release 32.0
+
 2010-03-13  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/multispeech-voices.el: Form embedded commands for temporary
@@ -114,13 +126,13 @@ releases, but not related to the Debian package.
 
 	Merged upstream changes.
 
-	Import upstream release 31
+	Imported upstream release 31.0
 
 	Merged upstream changes.
 
 2010-01-09  Igor B. Poretsky  <poretsky@mlbox.ru>
 
-	Import upstream release 30
+	Imported upstream release 30.0
 
 	* lisp/emacspeak-advice.el:
 	Revert to the previous version of comint-output-filter advice. I like
@@ -145,7 +157,7 @@ releases, but not related to the Debian package.
 
 	Merged upstream changes.
 
-	Import upstream release 29
+	Imported upstream release 29.0
 
 	* lisp/emacspeak-speak.el:
 	Kill Emacspeak shell command output buffer just after use to prevent
@@ -153,7 +165,7 @@ releases, but not related to the Debian package.
 
 	Merged upstream changes.
 
-	Import upstream release 28
+	Imported upstream release 28.0
 
 2009-01-06  Igor B. Poretsky  <poretsky@mlbox.ru>
 
@@ -320,11 +332,11 @@ releases, but not related to the Debian package.
 	Require "cl" not only when compiling. It is necessary for loading
 	Emacspeak in some circumstances.
 
-	New upstream release.
+	Merged upstream changes.
 
 2008-01-13  Igor B. Poretsky  <poretsky@mlbox.ru>
 
-	Import upstream release 27
+	Imported upstream release 27.0
 
 2007-10-31  Igor B. Poretsky  <master@goga.energo.ru>
 
@@ -411,7 +423,7 @@ releases, but not related to the Debian package.
 
 	Merged upstream changes.
 
-	Import upstream release 26
+	Imported upstream release 26.0
 
 	* lisp/emacspeak-finder-inf.el, lisp/emacspeak-gnuplot.el, lisp/emacspeak-mpg123.el, lisp/emacspeak-wdired.el:
 	More appropriate keywords.
@@ -422,7 +434,7 @@ releases, but not related to the Debian package.
 
 2007-05-04  Igor B. Poretsky  <master@goga.energo.ru>
 
-	Import upstream release 25
+	Imported upstream release 25.0
 
 2007-02-08  Igor B. Poretsky  <master@goga.energo.ru>
 
@@ -512,8 +524,9 @@ releases, but not related to the Debian package.
 
 2006-05-10  Igor B. Poretsky  <master@goga.energo.ru>
 
-	Merging upstream changes into the main trunk.
-	Upstream release 24.0
+	Merged upstream changes.
+
+	Imported upstream release 24.0
 
 2006-01-30  Igor B. Poretsky  <master@goga.energo.ru>
 
@@ -621,7 +634,7 @@ releases, but not related to the Debian package.
 
 2005-12-10  Igor B. Poretsky  <master@goga.energo.ru>
 
-	Merged changes for upstream release 23.
+	Merged changes for upstream release 23.0
 
 2005-12-09  Igor B. Poretsky  <master@goga.energo.ru>
 
@@ -797,7 +810,7 @@ releases, but not related to the Debian package.
 
 2005-05-05  Igor B. Poretsky  <master@goga.energo.ru>
 
-	Import upstream release 22.0
+	Imported upstream release 22.0
 
 	* lisp/emacspeak-gnus.el: Auditory feedback on draft specific commands.
 
@@ -948,7 +961,7 @@ releases, but not related to the Debian package.
 
 	* lisp/emacspeak.el: Added missed requirement of emacspeak-personality.
 
-	Import original version 21.0
+	Imported original version 21.0
 
 	* lisp/emacspeak-dired.el:
 	Fixed emacspeak-dired-show-file-type to honour
@@ -987,13 +1000,13 @@ releases, but not related to the Debian package.
 
 2004-10-13  Igor B. Poretsky  <master@goga.energo.ru>
 
-	Import original version 20.0
+	Imported original version 20.0
 
 	* lisp/emacspeak-speak.el: satisfied requirements.
 
 2004-10-12  Igor B. Poretsky  <master@goga.energo.ru>
 
-	Import original version 19.0
+	Imported original version 19.0
 
 	* lisp/dtk-speak.el, lisp/emacspeak-loaddefs.el, servers/software-dtk/DTK:
 	Just typos in comments.
@@ -1039,7 +1052,7 @@ releases, but not related to the Debian package.
 	* lisp/emacspeak-gnus.el:
 	Some cosmetic fixes to ease merging in future.
 
-	Import original version 18.0
+	Imported original version 18.0
 
 2004-10-07  Igor B. Poretsky  <master@goga.energo.ru>
 
@@ -1052,7 +1065,7 @@ releases, but not related to the Debian package.
 
 	* lisp/emacspeak-w3.el: Replaced reference to a non-existing function.
 
-	Import original version 17.0
+	Imported original version 17.0
 
 	* lisp/emacspeak-gnus.el:
 	Just to make Gnus more comfortable especially with BBDB. These
@@ -1060,4 +1073,4 @@ releases, but not related to the Debian package.
 
 	* lisp/emacspeak-advice.el: Some fixes for transient mark mode.
 
-	Import original version 16.0
+	Imported original version 16.0
