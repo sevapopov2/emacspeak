@@ -12,7 +12,7 @@ Architecture: all
 Depends: emacs22 | emacsen, perl, make, adduser, ${misc:Depends}
 Conflicts: emacspeak-dt, emacspeak-ss
 Recommends: multispeech, python, tclx8.4, tcl8.4
-Suggests: emacspeak-chimes, emacspeak-cartoons, emacspeak-espeak, emacspeak-outloud, eflite, psgml, xsltproc, espeak, w3m-el
+Suggests: emacspeak-chimes, emacspeak-cartoon-22k-mono, emacspeak-espeak, emacspeak-outloud, eflite, psgml, xsltproc, espeak, w3m-el
 Description: speech output interface to Emacs
  Emacspeak is a speech output system that will allow someone who
  cannot see to work directly on a UNIX system.
@@ -61,3 +61,57 @@ Description: IBM ViaVoice Outloud speech server for Emacspeak
  .
  This package allows to use IBM ViaVoice Outloud speech synthesizer
  for speech output in Emacspeak.
+
+Package: emacspeak-cartoon-22k-mono
+Section: sound
+Architecture: all
+Depends: ${misc:Depends}
+Conflicts: emacspeak-cartoons
+Recommends: emacspeak
+Description: Cartoons auditory icons theme for Emacspeak
+ This theme was originally contributed by Bryan Smart
+ and is made up of 22K-mono sounds.
+ .
+ When the package is installed, you can switch Emacspeak to use
+ this theme by command emacspeak-sounds-select-theme
+ bound by default to control-e ).
+
+Package: emacspeak-chimes-mono
+Section: sound
+Architecture: all
+Depends: ${misc:Depends}
+Conflicts: emacspeak-chimes
+Recommends: emacspeak
+Description: Chimes auditory icons theme for Emacspeak
+ This theme is made up mostly of different chimes and short notes
+ from various instruments. The icons are high-quality 44K-mono.
+ .
+ When the package is installed, you can switch Emacspeak to use
+ this theme by command emacspeak-sounds-select-theme
+ bound by default to control-e ).
+
+Package: emacspeak-chimes-stereo
+Section: sound
+Architecture: all
+Depends: ${misc:Depends}
+Recommends: emacspeak
+Description: Chimes auditory icons theme for Emacspeak
+ This theme is made up mostly of different chimes and short notes
+ from various instruments. The icons are high-quality 44K-stereo.
+ .
+ When the package is installed, you can switch Emacspeak to use
+ this theme by command emacspeak-sounds-select-theme
+ bound by default to control-e ).
+
+Package: emacspeak-chimes-11k-stereo
+Section: sound
+Architecture: all
+Depends: ${misc:Depends}
+Recommends: emacspeak
+Description: Chimes auditory icons theme for Emacspeak
+ This theme is made up mostly of different chimes and short notes
+ from various instruments. The icons are moderate quality 11K-stereo.
+ .
+ When the package is installed, you can switch Emacspeak to use
+ this theme by command emacspeak-sounds-select-theme
+ bound by default to control-e ).

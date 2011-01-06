@@ -53,10 +53,10 @@ install: build
 	dh_clean -k 
 
 	# Copy files into the installation tree
-	dh_install -X.elc -X.nosearch -X.tar.bz2 -X.excludes -X-loaddefs -X-cus-load -X-finder-inf -X.sh.def
+	dh_install -X.elc -X.nosearch -X.tar.bz2 -X.tar.gz -X.diff -X.excludes -X-loaddefs -X-cus-load -X-finder-inf -X.sh.def
 
 	# Clean up the installation tree
-	cd $(deblsp)/lisp/g-client ; rm -f *.html *.org COPYING
+	cd $(deblsp)/lisp/g-client ; rm -rf patches *.html *.org COPYING
 	cd $(deblsp)/etc ; rm -f Makefile NEWS-* applications.html COPYRIGHT remote.txt
 	cd $(deblsp)/xsl ; rm -f Makefile
 
@@ -68,6 +68,14 @@ install: build
 	cd $(debtmp)-espeak/$(eldir)/servers ; chmod 0755 espeak
 	cd $(debtmp)-outloud/$(eldir)/servers ; chmod 0755 outloud
 	chmod 0755 $(deblsp)/lisp/g-client/python/contacts.py
+	chmod 0755 $(debtmp)-cartoon-22k-mono/$(eldir)/sounds/cartoon-22k-mono
+	chmod 0644 $(debtmp)-cartoon-22k-mono/$(eldir)/sounds/cartoon-22k-mono/*
+	chmod 0755 $(debtmp)-chimes-mono/$(eldir)/sounds/chimes-mono
+	chmod 0644 $(debtmp)-chimes-mono/$(eldir)/sounds/chimes-mono/*
+	chmod 0755 $(debtmp)-chimes-stereo/$(eldir)/sounds/chimes-stereo
+	chmod 0644 $(debtmp)-chimes-stereo/$(eldir)/sounds/chimes-stereo/*
+	chmod 0755 $(debtmp)-chimes-11k-stereo/$(eldir)/sounds/chimes-11k-stereo
+	chmod 0644 $(debtmp)-chimes-11k-stereo/$(eldir)/sounds/chimes-11k-stereo/*
 
 
 # Build architecture-independent files here.

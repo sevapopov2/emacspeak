@@ -9,10 +9,11 @@ lisp usr/share/emacs/site-lisp/emacspeak
 realaudio usr/share/emacs/site-lisp/emacspeak
 sawfish usr/share/emacs/site-lisp/emacspeak
 shoutcast usr/share/emacs/site-lisp/emacspeak
-sounds usr/share/emacs/site-lisp/emacspeak
 xsl usr/share/emacs/site-lisp/emacspeak
 Makefile usr/share/emacs/site-lisp/emacspeak
 README usr/share/emacs/site-lisp/emacspeak
+sounds/default-8k usr/share/emacs/site-lisp/emacspeak/sounds
+sounds/emacspeak.mp3 usr/share/emacs/site-lisp/emacspeak/sounds
 servers/dtk-exp usr/share/emacs/site-lisp/emacspeak/servers/
 servers/speech-server usr/share/emacs/site-lisp/emacspeak/servers/
 servers/ssh-dtk-exp usr/share/emacs/site-lisp/emacspeak/servers/
