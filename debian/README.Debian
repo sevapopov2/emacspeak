@@ -3,7 +3,7 @@ emacspeak for DEBIAN
 
 This package was originally debianized and maintained by James R. Van
 Zandt <jrv@debian.org> and all debianization stuff was stolen by me
-from that package and then revised. Besides that, I've included in this
+from there and then revised. Besides that, I've included in this
 package all my fixes and improvements that were grown from my own
 experience of using this excellent software (but not in it's
 debianized form) every day for several years. All this history is
@@ -18,6 +18,17 @@ alternative package that is based on the latest upstream version and
 includes all my additions and improvements.
 
 All original comments from James R. Van Zandt are placed below.
+
+On the contrary to these notes, there are no alternatives to the
+emacspeak startup script for various emacs flavors, but
+/usr/bin/emacspeak always starts default emacs flavor with speech
+support.
+
+The emacspeak package itself includes native info documentation and
+man-pages. Some extra documentation (mainly in html form) is provided
+in the separate package emacspeak-doc. Speech servers for eSpeak and
+IBM ViaVoice Outloud software speech synthesizers as well as
+additional sound themes are also provided in separate packages.
 
  -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 04 Feb 2010 23:11:19 +0300
 
