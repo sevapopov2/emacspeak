@@ -122,6 +122,9 @@
     ("emacspeak-cperl.el"
         "Speech enable CPerl Mode "
         (emacspeak  audio interface to emacs cperl))
+    ("emacspeak-cus-load.el"
+        "automatically extracted custom dependencies"
+        nil)
     ("emacspeak-custom.el"
         "Speech enable interactive Emacs customization "
         (emacspeak  speak  spoken output  custom))
@@ -485,6 +488,9 @@
     ("emacspeak-twit.el"
         "Speech-enable Twitter"
         (emacspeak   audio desktop twiter))
+    ("emacspeak-twittering.el"
+        "Speech-enable Twittering-mode"
+        (emacspeak   audio desktop twittering-mode))
     ("emacspeak-url-template.el"
         "Create library of URI templates"
         (emacspeak  audio desktop))
