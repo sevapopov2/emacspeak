@@ -85,19 +85,22 @@
 ;;; This replacement is used within Emacspeak to invoke commands
 ;;; whose output we want to hear.
 
-(defsubst  emacspeak-shell-command (command)
+(defsubst  emacspeak-shell-command (command &rest args)
   "Run shell command and speak its output."
   (let ((emacspeak-speak-messages nil)
+        (curdir default-directory)
         (output (get-buffer-create "*Emacspeak Shell Command*")))
     (save-excursion
       (set-buffer output)
       (erase-buffer)
-      (shell-command
-       command
-       output)
+      (setq default-directory curdir)
+      (if args
+          (apply 'call-process command nil output nil args)
+        (shell-command
+         command
+         output))
       (emacspeak-auditory-icon 'open-object)
-      (dtk-speak (buffer-string)))
-    (kill-buffer output)))
+      (dtk-speak (buffer-string)))))
 
 ;;}}}
 ;;{{{ Completion helper:
