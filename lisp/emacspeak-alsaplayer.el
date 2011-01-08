@@ -156,12 +156,8 @@ Alsaplayer session."
         (deactivate-mark nil))
     (save-current-buffer
       (set-buffer buffer)
-      (cond
-       ((and (get-buffer-process buffer)
-             (eq 'run (process-status (get-buffer-process buffer))))
-        (pop-to-buffer buffer 'other-window)
-        (set-window-text-height nil emacspeak-alsaplayer-height))
-       (t
+      (unless (and (get-buffer-process buffer)
+                   (eq 'run (process-status (get-buffer-process buffer))))
         (setq buffer-undo-list t)
         (shell-command
          (format "%s -r -i daemon %s%s&"
@@ -173,13 +169,13 @@ Alsaplayer session."
                      (format "-d %s " emacspeak-alsaplayer-device)
                    ""))
          (current-buffer))
-        (pop-to-buffer buffer 'other-window)
-        (set-window-text-height nil emacspeak-alsaplayer-height)
         (emacspeak-alsaplayer-mode)))
-      (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
-        (emacspeak-auditory-icon 'open-object)
-        (emacspeak-amark-load)
-        (emacspeak-speak-mode-line)))))
+    (pop-to-buffer buffer)
+    (set-window-text-height nil emacspeak-alsaplayer-height))
+  (emacspeak-amark-load)
+  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
 
 ;;}}}
 ;;{{{  Invoke commands:
@@ -222,12 +218,8 @@ Optional second arg watch-pattern specifies line of output to
     (let ((completion-ignore-case t)
           (read-file-name-completion-ignore-case t))
       (expand-file-name
-       (read-file-name
-          "Media Resource: "
-          (if 
-              (string-match "\\(audio\\)\\|\\(mp3\\)" (expand-file-name default-directory))
-              default-directory
-            emacspeak-alsaplayer-media-directory))))))
+       (read-file-name "Media Resource: "
+                       emacspeak-alsaplayer-media-directory)))))
   (emacspeak-alsaplayer-send-command
    (format "--enqueue %s"
            (shell-quote-wildcard-pattern
@@ -266,9 +258,10 @@ Optional second arg watch-pattern specifies line of output to
                        emacspeak-alsaplayer-media-directory)))))
   (emacspeak-alsaplayer-send-command
    (format "--replace %s"
-           (if (file-directory-p resource)
-               (format "%s/*" resource)
-             resource))
+           (shell-quote-wildcard-pattern
+            (if (file-directory-p resource)
+                (format "%s/*" resource)
+              resource)))
    "playlist_length:")
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p)
@@ -545,7 +538,7 @@ Optional second arg watch-pattern specifies line of output to
 (defun emacspeak-alsaplayer-mark-position   ()
   "Mark currently played position."
   (interactive)
-  (declare (special emacspeak-alsaplayer-mark))e
+  (declare (special emacspeak-alsaplayer-mark))
   (emacspeak-alsaplayer-status)
   (setq emacspeak-alsaplayer-mark
         (emacspeak-alsaplayer-get-position))
@@ -612,6 +605,7 @@ Optional second arg watch-pattern specifies line of output to
 
 ;;}}}
 ;;{{{ AMarks:
+
 ;;;###autoload
 (defun emacspeak-alsaplayer-amark-add (name &optional prompt-position)
   "Set AMark `name' at current position in current audio stream.
@@ -627,17 +621,30 @@ As the default, use current position."
     (prompt-position (read-number "Position: "))
     (t (emacspeak-alsaplayer-get-position))))
   (message "Added Amark %s" name))
+
 ;;;###autoload
 (defun emacspeak-alsaplayer-amark-jump ()
   "Jump to specified AMark."
   (interactive)
-  (let ((amark (call-interactively 'emacspeak-amark-find))
-        (length 0))
-    (emacspeak-alsaplayer-add-to-queue
-     (emacspeak-amark-path amark))
-    (emacspeak-alsaplayer-status)
-    (setq length (emacspeak-alsaplayer-get-playlist-length))
-    (emacspeak-alsaplayer-jump  length)
+  (unless emacspeak-amark-list
+    (error "No amarks are available"))
+  (let* ((amark (call-interactively 'emacspeak-amark-find))
+         (track
+          (if amark
+              (expand-file-name (emacspeak-amark-path amark))
+            (error "Requested amark does not exist")))
+         (length
+          (progn
+            (emacspeak-alsaplayer-replace-queue (file-name-directory track))
+            (string-to-number (emacspeak-alsaplayer-get-playlist-length))))
+         (tn 0))
+    (while (null (emacspeak-alsaplayer-get-path))
+      (emacspeak-alsaplayer-status))
+    (while (and (not (string= (expand-file-name (emacspeak-alsaplayer-get-path)) track))
+                (< (setq tn (1+ tn)) length))
+      (emacspeak-alsaplayer-next))
+    (when (= tn length)
+      (emacspeak-alsaplayer-replace-queue track))
     (emacspeak-alsaplayer-seek (emacspeak-amark-position amark))))
 
 ;;}}}
