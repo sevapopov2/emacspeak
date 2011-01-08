@@ -1,8 +1,8 @@
 ;;; emacspeak-preamble.el --- standard  include for Emacspeak modules
 ;;; $Id: emacspeak-preamble.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
-;;; DescriptionEmacspeak extensions for auctex-mode
-;;; Keywords:emacspeak, audio interface to emacs AUCTEX
+;;; Description: Standard include for various Emacspeak modules
+;;; Keywords: emacspeak, standard include
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:

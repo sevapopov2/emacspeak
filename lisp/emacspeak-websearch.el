@@ -65,6 +65,10 @@
 (defvar emacspeak-websearch-table (make-hash-table)
   "Table holding mapping from search engine names to appropriate searcher functions.")
 
+(defvar emacspeak-websearch-forms-directory
+  (expand-file-name "xml-forms/" emacspeak-lisp-directory)
+  "Directory where xml forms are stored.")
+
 (defsubst emacspeak-websearch-set-searcher  (engine searcher)
   (declare (special emacspeak-websearch-table))
   (setf (gethash engine emacspeak-websearch-table) searcher))
@@ -119,8 +123,8 @@
     (pop-to-buffer "*Help*")
     (help-mode)
     (goto-char (point-min))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'help)))
+    (emacspeak-auditory-icon 'help)
+    (emacspeak-speak-line)))
 
 (emacspeak-websearch-set-searcher  'help
                                    'emacspeak-websearch-help)
@@ -186,13 +190,17 @@ When using supported browsers,  this interface attempts to speak the most releva
   "Display form specified by form-markup."
   (interactive
    (list
-    (let ((emacspeak-speak-messages nil))
+    (let ((emacspeak-speak-messages nil)
+          (insert-default-directory nil))
       (emacspeak-pronounce-define-local-pronunciation
        (expand-file-name "xml-forms"
                          emacspeak-lisp-directory)
        " xml forms ")
-      (read-file-name "Display Form: "
-                      (expand-file-name "xml-forms/" emacspeak-lisp-directory)))))
+      (expand-file-name
+       (read-file-name "Display Form: "
+                       emacspeak-websearch-forms-directory nil t nil
+                       '(lambda (name)
+                          (string-match "\\.xml$" name)))))))
   (declare (special emacspeak-we-xsl-p
                     emacspeak-web-post-process-hook
                     emacspeak-lisp-directory))
@@ -1247,8 +1255,7 @@ Optional interactive  prefix arg local-flag prompts for local
 (emacspeak-websearch-set-key ?. 'google-advanced)
 
 (defvar emacspeak-websearch-google-advanced-form
-  (expand-file-name "xml-forms/google-advanced.xml"
-                    emacspeak-lisp-directory)
+  (expand-file-name "google-advanced.xml" emacspeak-websearch-forms-directory)
   "Markup for Google advanced search form.")
 
 ;;;###autoload
@@ -1393,8 +1400,7 @@ Interactive prefix arg `use-near' searches near our previously cached  location.
 (emacspeak-websearch-set-key ?u 'google-usenet-advanced)
 
 (defvar emacspeak-websearch-google-usenet-advanced-form
-  (expand-file-name "xml-forms/google-usenet-advanced.xml"
-                    emacspeak-lisp-directory)
+  (expand-file-name "google-usenet-advanced.xml" emacspeak-websearch-forms-directory)
   "Usenet advanced search from google.")
 
 ;;;###autoload
@@ -1639,8 +1645,7 @@ Optional prefix arg no-rss scrapes information from HTML."
 ;(emacspeak-websearch-set-key ?r 'recorded-books)
 
 (defvar emacspeak-websearch-recorded-books-advanced-form
-  (expand-file-name "xml-forms/recorded-books-advanced.xml"
-                    emacspeak-lisp-directory)
+  (expand-file-name "recorded-books-advanced.xml" emacspeak-websearch-forms-directory)
   "Search form for finding recorded books.")
 
 ;;;###autoload
@@ -1829,8 +1834,7 @@ Results"
 (emacspeak-websearch-set-key ?X 'exchange-rate-convertor)
 
 (defvar emacspeak-websearch-exchange-rate-form
-  (expand-file-name "xml-forms/exchange-rate-convertor.xml"
-                    emacspeak-lisp-directory)
+  (expand-file-name "exchange-rate-convertor.xml" emacspeak-websearch-forms-directory)
   "Form for performing currency conversion.")
 
 (defvar emacspeak-websearch-exchange-rate-convertor-uri
@@ -1945,8 +1949,7 @@ Results"
 (emacspeak-websearch-set-key 5 'ebay-search)
 
 (defvar emacspeak-websearch-ebay-search-form
-  (expand-file-name "xml-forms/ebay-search.xml"
-                    emacspeak-lisp-directory)
+  (expand-file-name "ebay-search.xml" emacspeak-websearch-forms-directory)
   "Form for Ebay store search.")
 
 ;;;###autoload
@@ -1965,8 +1968,7 @@ Results"
 (emacspeak-websearch-set-key ?S 'shoutcast-search)
 
 (defvar emacspeak-websearch-shoutcast-search-form
-  (expand-file-name "xml-forms/shoutcast-search.xml"
-                    emacspeak-lisp-directory)
+  (expand-file-name "shoutcast-search.xml" emacspeak-websearch-forms-directory)
   "Form for Shoutcast  search.")
 
 ;;;###autoload
