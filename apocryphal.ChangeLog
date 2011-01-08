@@ -1,6 +1,33 @@
 This list contains only those changes that were made against original
 releases, but not related to the Debian package.
 
+2011-01-09  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-alsaplayer.el: Fixed error conditions when
+	  non-existent amark is requested.
+
+	* lisp/emacspeak-alsaplayer.el: Simplified launch command and fixed
+	  initial amark loading. Fixed audio resource replace command.
+	  Jumping to an amark now restores directory playback, not just a
+	  file.
+
+2011-01-07  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-dired.el: When calculating directory size pass
+	  it's name to the shell command as separate string to avoid
+	  problems with some special characters.
+
+	* lisp/emacspeak-speak.el: More flexible shell command execution
+	  mechanism allowing to pass arguments as separate strings to avoid
+	  some problems with special characters.
+
+	* lisp/g-client/g-utils.el: Removed redundant requirement of the
+	  json module that does not exist anymore.
+
+	Merged upstream changes.
+
+	Imported upstream release 33.0
+
 2011-01-05  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-advice.el: Auditory feedback for allout command
