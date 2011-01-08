@@ -626,8 +626,13 @@ As the default, use current position."
 (defun emacspeak-alsaplayer-amark-jump ()
   "Jump to specified AMark."
   (interactive)
+  (unless emacspeak-amark-list
+    (error "No amarks are available"))
   (let* ((amark (call-interactively 'emacspeak-amark-find))
-         (track (expand-file-name (emacspeak-amark-path amark)))
+         (track
+          (if amark
+              (expand-file-name (emacspeak-amark-path amark))
+            (error "Requested amark does not exist")))
          (length
           (progn
             (emacspeak-alsaplayer-replace-queue (file-name-directory track))
