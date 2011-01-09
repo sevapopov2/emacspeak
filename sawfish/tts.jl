@@ -47,7 +47,7 @@
 (defgroup tts "Speech synthesis")
 
 (defcustom tts-client "telnet"
-  "TTS cleint "
+  "TTS client "
   :group     tts
   :type      string
   :allow-nil nil)
@@ -64,35 +64,35 @@
   :type      string
   :allow-nil nil)
 
-(defvar emacspeak "/home/raman/emacs/lisp/emacspeak"
+(defcustom tts-server "multispeech"
+  "TTS server "
+  :group     tts
+  :type      string
+  :allow-nil nil)
+
+(defvar emacspeak "/usr/local/share/emacs/site-lisp/emacspeak"
 "Root of Emacspeak installation.")
 
 (defvar tts-process nil
 "Handle to tts server connection.")
 
+(defvar tts-speaking-events nil
+  "Wether events are to be spoken automatically.")
+
 (defun tts-open-connection ()
   "Open a TTS session."
   (interactive)
-    (setq tts-process (make-process))
-    (start-process tts-process tts-client tts-host
-                   tts-port))
-
-(defvar tts-tcl "/usr/bin/tcl"
-"TCL interpreter")
-
-(defvar tts-dtk
-  (expand-file-name "servers/dtk-exp" emacspeak)
-"DTK tcl server")
-
-(defvar tts-outloud
-  (expand-file-name "servers/outloud" emacspeak)
-  "DTK tcl server")
+  (setq tts-process (make-process))
+  (start-process tts-process tts-client tts-host
+		 tts-port))
 
 (defun tts-open ()
   "Open a TTS session."
   (interactive)
   (setq tts-process (make-process))
-  (start-process tts-process tts-tcl tts-dtk))
+  (start-process tts-process
+		 (expand-file-name tts-server
+				   (expand-file-name "servers" emacspeak))))
 
 (defun tts-close ()
   "Close a TTS session."
@@ -117,7 +117,7 @@
       (tts-open))
   (when tts-stop-immediately
     (format tts-process "s\n"))
-  (format tts-process "q {%s}; d\n" text))
+  (format tts-process "q {%s}\nd\n" text))
 
 (defun tts-say-workspace ()
   "Say the name of the current workspace."
@@ -129,23 +129,52 @@
 (defvar tts-say-window-details-p nil 
 "Non-nil means we also speak the window's position and dimensions.")
 
+(defvar tts-previous-window nil
+  "Previously focused window.")
+
+(defun tts-store-window (window)
+  "Store leaved window for reference."
+  (setq tts-previous-window window))
+
+(defun tts-say-window-details ()
+  "Toggle speaking windows details on and off."
+  (interactive)
+  (setq tts-say-window-details-p
+	(not tts-say-window-details-p))
+  (tts-say (format nil "Speaking window details %s"
+		   (if tts-say-window-details-p
+		       "on"
+		     "off"))))
+
 (defun tts-say-window (window)
   "Say the name of window W."
   (interactive "%W")
-  (when window 
-  (let ((title (window-name window))
-        (position (window-position window))
-        (dimensions (window-dimensions window)))
-    (if tts-say-window-details-p
-        (tts-say
-         (format nil "%s at %s with dimensions %s"
-                 title position dimensions))
-      (tts-say title)))))
+  (when window
+    (let ((title (if (desktop-window-p window)
+		     "Desktop"
+		   (window-name window)))
+	  (position (if (desktop-window-p window)
+			(cons 0 0)
+		      (window-position window)))
+	  (dimensions (if (desktop-window-p window)
+			  (screen-dimensions)
+			(window-dimensions window))))
+      (if tts-say-window-details-p
+	  (tts-say
+	   (format nil "%s at %s with dimensions %s"
+		   title position dimensions))
+	(tts-say title)))))
 
 (defun tts-say-current-window ()
   "Say the name of the current window."
   (interactive)
   (tts-say-window (input-focus)))
+
+(defun tts-say-window-change (window)
+  "Say new window when focus has changed."
+  (unless (eq window tts-previous-window)
+    (tts-store-window window)
+    (tts-say-window window)))
 
 (defun tts-say-workspace-on-change (enable)
   "Enable/disable the reading of a workspace's name when you change to it."
@@ -154,12 +183,38 @@
         (add-hook 'enter-workspace-hook tts-say-workspace))
     (remove-hook 'enter-workspace-hook tts-say-workspace)))
 
+(defun tts-say-window-on-enter (enable)
+  "Enable/disable the reading of a window's name when entering it with mouse."
+  (if enable
+      (unless (in-hook-p 'enter-notify-hook tts-say-window)
+        (add-hook 'enter-notify-hook tts-say-window))
+    (remove-hook 'enter-notify-hook tts-say-window)))
+
 (defun tts-say-window-on-focus (enable)
   "Enable/disable the reading of a window's name when it receives focus."
   (if enable
-      (unless (in-hook-p 'focus-in-hook tts-say-window)
-        (add-hook 'focus-in-hook tts-say-window))
-    (remove-hook 'focus-in-hook tts-say-window)))
+      (unless (in-hook-p 'focus-in-hook tts-say-window-change)
+        (add-hook 'focus-in-hook tts-say-window-change))
+    (remove-hook 'focus-in-hook tts-say-window-change)))
+
+(defun tts-speak-events (enable)
+  "Enable or disable speech feedback on events."
+  (tts-say-window-on-focus enable)
+  (tts-say-window-on-enter enable)
+  (tts-say-workspace-on-change enable)
+  (setq tts-speaking-events enable))
+
+(defun tts-toggle-speaking-events ()
+  "Toggle speech feedback on events."
+  (interactive)
+  (tts-speak-events (not tts-speaking-events))
+  (tts-say (format nil "Speaking events %s"
+		   (if tts-speaking-events
+		       "enabled"
+		     "disabled"))))
+
+(add-hook 'focus-out-hook tts-store-window)
+
 
 (provide 'tts)
 (message "Loaded tts.jl")
