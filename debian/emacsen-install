@@ -33,7 +33,7 @@ case "$FLAVOR" in
 esac
 
 if [ -d ${ELCDIR} ]; then
-    rm -f ${ELCDIR}/compile.log.gz ${ELCDIR}/lisp/*.el ${ELCDIR}/lisp/g-client/*.el
+    rm -rf ${ELCDIR}/lisp ${ELCDIR}/compile.log.gz
 fi
 
 install -m 755 -d ${ELCDIR}/lisp/g-client
