@@ -152,7 +152,6 @@ Alsaplayer session."
 		    emacspeak-alsaplayer-device
 		    emacspeak-alsaplayer-height))
   (let ((buffer (get-buffer-create emacspeak-alsaplayer-buffer))
-        (coding-system-for-read emacspeak-alsaplayer-coding-system)
         (deactivate-mark nil))
     (save-current-buffer
       (set-buffer buffer)
@@ -201,7 +200,10 @@ Optional second arg watch-pattern specifies line of output to
                  "; alsaplayer --status"))
        (current-buffer)))
       (goto-char (point-min))
-      (when (search-forward "path: " nil t)
+      (when (and (search-forward "path: " nil t)
+                 emacspeak-alsaplayer-coding-system
+                 (not (eq (car default-process-coding-system)
+                          emacspeak-alsaplayer-coding-system)))
         (encode-coding-region (point) (line-end-position)
                               emacspeak-alsaplayer-coding-system)
         (decode-coding-region (point) (line-end-position)
