@@ -3,6 +3,9 @@ releases, but not related to the Debian package.
 
 2011-01-09  Igor B. Poretsky <poretsky@mlbox.ru>
 
+	* lisp/emacspeak-alsaplayer.el: Fixed some charset related
+	  problems.
+
 	* lisp/emacspeak-alsaplayer.el: Fixed error conditions when
 	  non-existent amark is requested.
 
