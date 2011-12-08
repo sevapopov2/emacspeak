@@ -1,5 +1,5 @@
 ;;; emacspeak-alsaplayer.el --- Control alsaplayer from Emacs
-;;; $Id: emacspeak-alsaplayer.el 6440 2010-02-23 03:45:10Z tv.raman.tv $
+;;; $Id: emacspeak-alsaplayer.el 6977 2011-04-17 16:18:18Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Controlling alsaplayer from emacs 
 ;;; Keywords: Emacspeak, alsaplayer
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2009, T. V. Raman
+;;; Copyright (c) 1995 -- 2011, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -64,11 +64,25 @@
   "Return information suitable for header line."
   (declare (special emacspeak-alsaplayer-coding-system))
   (let* ((coding-system-for-read emacspeak-alsaplayer-coding-system)
-         (title (shell-command-to-string
-                 "alsaplayer --status 2>/dev/null | grep title:"))
-         (title (and (> (length title) 7)
-                     (substring title 7 -1))))
-    (or title emacspeak-default-header-line-format)))
+         (title (shell-command-to-string "alsaplayer --status |
+grep title:"))
+         (path (shell-command-to-string "alsaplayer --status |
+grep path:")))
+    (cond
+     ((or (null (get-buffer-process (current-buffer)))
+          (not (eq 'run (process-status (get-buffer-process
+                                         (current-buffer))))))
+      "        No Active Session")
+     ((>  (length title) 0)
+      (substring title 6 -1))
+     ((>  (length path) 0)
+      (setq path (substring path 6 -1))
+      (substring  path
+                  (length (file-name-directory path))))
+     (t "New Session"))))
+
+(when (fboundp 'declare-function)
+  (declare-function fundamental-mode ()))
 
 (define-derived-mode emacspeak-alsaplayer-mode fundamental-mode 
   "Alsaplayer Interaction"
@@ -131,17 +145,15 @@ It is used for tags decoding."
 
 (defvar emacspeak-alsaplayer-buffer "*alsaplayer*"
   "Buffer for alsaplayer interaction.")
-(defcustom emacspeak-alsaplayer-device nil
-  "Device to use for alsaplayer.
-Default is hw:0,0 for ALSA and /dev/dsp for OSS output."
-  :type '(choice
-          (const :tag "default" nil)
-          (string :tag "Device specification"))
+(defcustom emacspeak-alsaplayer-device "$ALSA_DEFAULT"
+  "Device to use for alsaplayer"
   :type '(choice
           (const  :tag "Ignore" nil)
-          (const  :tag "Card 1" "hw:1,0"))
+          (const  :tag "Card 1" "hw:1,0")
+          (const :tag "ALSA_DEFAULT"  "$ALSA_DEFAULT")
+          (string :tag "Custom"))
   :group  'emacspeak-alsaplayer)
-  
+
 ;;;###autoload
 (defun emacspeak-alsaplayer-launch ()
   "Launch Alsaplayer.
@@ -149,8 +161,7 @@ user is placed in a buffer associated with the newly created
 Alsaplayer session."
   (interactive)
   (declare (special emacspeak-alsaplayer-program emacspeak-alsaplayer-buffer
-		    emacspeak-alsaplayer-device
-		    emacspeak-alsaplayer-height))
+                    emacspeak-alsaplayer-device emacspeak-alsaplayer-height))
   (let ((buffer (get-buffer-create emacspeak-alsaplayer-buffer))
         (deactivate-mark nil))
     (save-current-buffer
@@ -211,7 +222,7 @@ Optional second arg watch-pattern specifies line of output to
   (when (and watch-pattern
              (eq (current-buffer) (get-buffer emacspeak-alsaplayer-buffer)))
     (goto-char (point-min))
-    (re-search-forward watch-pattern  nil t)))
+    (search-forward watch-pattern  nil t)))
 
 (defun emacspeak-alsaplayer-add-to-queue (resource)
   "Add specified resource to queue."
@@ -284,12 +295,18 @@ Optional second arg watch-pattern specifies line of output to
     (when  emacspeak-alsaplayer-auditory-feedback
       (emacspeak-auditory-icon 'select-object)
       (emacspeak-speak-line))))
+(defvar emacspeak-alsaplayer-paused nil
+  "Record if player is paused.")
 
 (defun emacspeak-alsaplayer-pause ()
   "Pause or resume alsaplayer"
   (interactive)
+  (declare (special emacspeak-alsaplayer-paused))
   (emacspeak-alsaplayer-send-command "--pause"
                                      "position:")
+  (when emacspeak-alsaplayer-paused 
+    (emacspeak-alsaplayer-send-command "--speed 1.0"))
+  (setq emacspeak-alsaplayer-paused (not emacspeak-alsaplayer-paused))
   (when (and emacspeak-alsaplayer-auditory-feedback
              (interactive-p)
              (eq major-mode 'emacspeak-alsaplayer-mode))
@@ -415,14 +432,13 @@ Optional second arg watch-pattern specifies line of output to
   "Quit  alsaplayer"
   (interactive)
   (let ((kill-buffer-query-functions nil))
-    (emacspeak-alsaplayer-send-command "--quit" nil t)
-    (when (eq major-mode 'emacspeak-alsaplayer-mode)
-      (condition-case nil
-          (kill-buffer-and-window)
-        (error nil)))
-    (when (interactive-p)
-      (emacspeak-speak-mode-line)
-      (emacspeak-auditory-icon 'close-object))))
+    (emacspeak-alsaplayer-send-command "--quit")
+    (delete-window)
+    (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
+      (when (eq major-mode 'emacspeak-alsaplayer-mode)
+        (kill-buffer (current-buffer)))
+      (emacspeak-auditory-icon 'close-object)
+      (emacspeak-speak-mode-line))))
 
 ;;;###autoload
 (defun emacspeak-alsaplayer-cd (directory)
@@ -563,12 +579,8 @@ Optional second arg watch-pattern specifies line of output to
 (defun emacspeak-alsaplayer-info ()
   "Speak current path and copy it to kill ring."
   (interactive)
-  (let ((path (emacspeak-alsaplayer-get-path))
-        (emacspeak-speak-messages t))
-    (when path
-      (kill-new path)
-      (emacspeak-auditory-icon 'yank-object)
-      (message "%s" path))))
+  (with-current-buffer emacspeak-alsaplayer-buffer
+    (dtk-speak (emacspeak-alsaplayer-header-line))))
 
 (defvar emacspeak-alsaplayer-mp3split-program "mp3splt"
   "Program used to clip mp3 files.")
@@ -686,7 +698,7 @@ As the default, use current position."
          emacspeak-alsaplayer-next)
         ("p"
          emacspeak-alsaplayer-previous)
-	("q" bury-buffer)
+        ("q" bury-buffer)
         ("Q" emacspeak-alsaplayer-quit)
         ("o" other-window)
         ("r" emacspeak-alsaplayer-relative)
@@ -705,6 +717,20 @@ As the default, use current position."
       (emacspeak-keymap-update  emacspeak-alsaplayer-mode-map k))
 
 ;;}}}
+;;{{{ pause/resume if needed
+
+;;;###autoload
+(defun emacspeak-alsaplayer-pause-or-resume ()
+  "Pause/resume if alsaplayer is running. For use  in
+emacspeak-silence-hook."
+  (declare (special emacspeak-alsaplayer-buffer))
+  (when (and (get-buffer-process emacspeak-alsaplayer-buffer)
+             (eq 'run (process-status (get-buffer-process emacspeak-alsaplayer-buffer))))
+    (emacspeak-alsaplayer-pause)))
+
+(add-hook 'emacspeak-silence-hook 'emacspeak-alsaplayer-pause-or-resume)
+
+;;}}}
 (provide 'emacspeak-alsaplayer)
 ;;{{{ end of file 
 
@@ -714,4 +740,4 @@ As the default, use current position."
 ;;; end: 
 
 ;;}}}
- 
+

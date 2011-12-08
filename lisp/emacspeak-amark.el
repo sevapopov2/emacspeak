@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2009, T. V. Raman 
+;;;Copyright (C) 1995 -- 2011, T. V. Raman 
 ;;; Copyright (c) 1996 by T. V. Raman
 ;;; All Rights Reserved.
 ;;;
@@ -145,7 +145,7 @@ AMarks are bookmarks in audio content."
       (when (interactive-p)
         (message "Saved AMarks in %s"
                  default-directory)
-	(emacspeak-auditory-icon 'save-object)))))
+        (emacspeak-auditory-icon 'save-object)))))
 
 (defun emacspeak-amark-load ()
   "Locate AMarks file from current directory, and load it."

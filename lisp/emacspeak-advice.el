@@ -1,5 +1,5 @@
 ;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak intelligently
-;;; $Id: emacspeak-advice.el 6563 2010-08-16 02:47:30Z tv.raman.tv $
+;;; $Id: emacspeak-advice.el 6976 2011-04-16 05:18:39Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Core advice forms that make emacspeak work
 ;;; Keywords: Emacspeak, Speech, Advice, Spoken  output
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2009, T. V. Raman
+;;;Copyright (C) 1995 -- 2011, T. V. Raman
 ;;; Copyright (c) 1995, 1996,  1997 by T. V. Raman
 ;;; All Rights Reserved.
 ;;;
@@ -75,6 +75,10 @@
 (require 'dtk-speak)
 (require 'emacspeak-speak)
 (require 'emacspeak-sounds)
+
+;;}}}
+;;{{{ Forward Declarations:
+(defvar emacspeak-prefix)
 
 ;;}}}
 ;;{{{ Advice ding
@@ -372,7 +376,6 @@ the words that were capitalized."
     ad-do-it)
    (t ad-do-it))
   ad-return-value)
-
 
 (defadvice ucs-insert (after emacspeak pre act comp)
   "Speak char we inserted."
@@ -791,6 +794,19 @@ Produce an auditory icon if possible."
   "Say what you completed."
   (let ((emacspeak-speak-messages nil)
 	(deactivate-mark nil)
+        (emacspeak-last-message nil))
+    ad-do-it
+    (when  (interactive-p)
+      (dtk-speak
+       (format "%s %s"
+               (save-excursion (backward-char 1)
+                               (sexp-at-point ))
+               (or emacspeak-last-message "")))
+      ad-return-value)))
+
+(defadvice minibuffer-complete-shell-command (around emacspeak pre act)
+  "Say what you completed."
+  (let ((emacspeak-speak-messages nil)
         (emacspeak-last-message nil))
     ad-do-it
     (when  (interactive-p)
@@ -1519,10 +1535,9 @@ Produce an auditory icon if possible."
 Use an auditory icon if possible."
   (cond
    ((interactive-p)
-    (let ((count (count-lines (region-beginning)
-                              (region-end))))
-      ad-do-it
+    (let ((count (count-lines (region-beginning) (region-end))))
       (emacspeak-auditory-icon 'delete-object )
+      ad-do-it
       (message "Killed region containing %s lines" count)))
    (t ad-do-it))
   ad-return-value)
@@ -2596,7 +2611,6 @@ emacspeak running."
   (when (interactive-p)
     (dtk-speak ad-return-value))
   ad-return-value)
-  
 
 (defadvice where-is (around emacspeak pre act comp)
   "Provide spoken feedback"
@@ -2908,6 +2922,12 @@ Variable mark-even-if-inactive is set true ."
      (if current-input-method 'on 'off))
     (message "Current input method is %s"
              (or current-input-method "none"))))
+
+;;}}}
+;;{{{ silence midnight cleanup:
+(defadvice clean-buffer-list(around emacspeak pre act comp)
+  (let ((emacspeak-speak-messages nil))
+    ad-do-it))
 
 ;;}}}
 (provide 'emacspeak-advice)

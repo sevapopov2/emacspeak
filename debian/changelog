@@ -1,3 +1,9 @@
+emacspeak (34.0-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 08 Dec 2011 21:43:40 +0400
+
 emacspeak (33.0-2) unstable; urgency=low
 
   * Fixed emacsen-install script to avoid upgrade conflict.
