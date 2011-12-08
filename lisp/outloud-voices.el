@@ -136,8 +136,9 @@ COMMAND-STRING to the TTS engine."
 
 ;;}}}
 ;;{{{  the inaudible voice
+;;; no special code needed --handled by Emacspeak engine.
 
-(outloud-define-voice 'inaudible " `vv0 ")
+(outloud-define-voice 'inaudible "")
 
 ;;}}}
 ;;{{{  Mapping css parameters to tts codes
@@ -483,6 +484,7 @@ and TABLE gives the values along that dimension."
   (fset 'tts-voice-defined-p 'outloud-voice-defined-p)
   (fset 'tts-get-voice-command 'outloud-get-voice-command)
   (fset 'tts-define-voice-from-speech-style 'outloud-define-voice-from-speech-style)
+  (setq tts-default-voice 'paul)
   (setq tts-default-speech-rate outloud-default-speech-rate)
   (set-default 'tts-default-speech-rate outloud-default-speech-rate)
   (setq dtk-speech-rate-step 8

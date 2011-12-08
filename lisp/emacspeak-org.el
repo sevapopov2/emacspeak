@@ -100,8 +100,9 @@
        `(defadvice ,f(after emacspeak pre act comp)
           "Provide spoken feedback."
           (when (interactive-p)
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'large-movement)))))
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-line)))))
+
 (defadvice org-cycle-list-bullet (after emacspeak pre act comp)
   "Provide spoken feedback."
   (when (interactive-p)
@@ -161,8 +162,8 @@
        `(defadvice ,f(after emacspeak pre act comp)
           "Provide spoken feedback."
           (when (interactive-p)
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'open-object)))))
+            (emacspeak-auditory-icon 'open-object)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ cut and paste:
@@ -177,8 +178,8 @@
        `(defadvice ,f(after emacspeak pre act comp)
           "Provide spoken feedback."
           (when (interactive-p)
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'yank-object)))))
+            (emacspeak-auditory-icon 'yank-object)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ completion:
@@ -350,6 +351,7 @@
   "Speak character you're deleting."
   (cond
    ((interactive-p )
+    (when dtk-stop-immediately (dtk-stop))
     (dtk-tone 500 30 'force)
     (emacspeak-speak-this-char (preceding-char ))
     ad-do-it)
@@ -366,6 +368,7 @@
   "Speak character you're deleting."
   (cond
    ((interactive-p )
+    (when dtk-stop-immediately (dtk-stop))
     (dtk-tone 500 30 'force)
     (emacspeak-speak-char t)
     ad-do-it)

@@ -711,6 +711,7 @@ browsing table elements"
   (declare (special emacspeak-table-speak-element))
   (message emacspeak-table-select-automatic-speaking-method-prompt)
   (let ((key (read-char)))
+    (emacspeak-auditory-icon 'button)
     (setq emacspeak-table-speak-element
           (case  key
             (?b 'emacspeak-table-speak-both-headers-and-element)
@@ -721,8 +722,7 @@ browsing table elements"
             (?g 'emacspeak-table-speak-column-filtered)
             (?. 'emacspeak-table-speak-coordinates)
             (otherwise (message "Invalid method specified")
-                       emacspeak-table-speak-element)))
-    (emacspeak-auditory-icon 'button)))
+                       emacspeak-table-speak-element)))))
 
 ;;}}}
 ;;{{{ Navigating the table:
@@ -790,8 +790,8 @@ browsing table elements"
     (error "Cannot find table associated with this buffer."))
    (t (emacspeak-table-goto-cell emacspeak-table row column)
       (emacspeak-table-synchronize-display)
-      (funcall emacspeak-table-speak-element)
-      (emacspeak-auditory-icon 'large-movement))))
+      (emacspeak-auditory-icon 'large-movement)
+      (funcall emacspeak-table-speak-element))))
 
 (defun emacspeak-table-goto-top ()
   "Goes to the top of the current column."
@@ -802,8 +802,8 @@ browsing table elements"
   (emacspeak-table-goto-cell emacspeak-table
                              0 (emacspeak-table-current-column emacspeak-table))
   (emacspeak-table-synchronize-display)
-  (funcall emacspeak-table-speak-element)
-  (emacspeak-auditory-icon 'large-movement))
+  (emacspeak-auditory-icon 'large-movement)
+  (funcall emacspeak-table-speak-element))
 
 (defun emacspeak-table-goto-bottom ()
   "Goes to the bottom of the current column."
@@ -816,8 +816,8 @@ browsing table elements"
                              (emacspeak-table-current-column
                               emacspeak-table))
   (emacspeak-table-synchronize-display)
-  (funcall emacspeak-table-speak-element)
-  (emacspeak-auditory-icon 'large-movement))
+  (emacspeak-auditory-icon 'large-movement)
+  (funcall emacspeak-table-speak-element))
 
 (defun emacspeak-table-goto-left ()
   "Goes to the left of the current row."
@@ -829,8 +829,8 @@ browsing table elements"
                              (emacspeak-table-current-row emacspeak-table)
                              0)
   (emacspeak-table-synchronize-display)
-  (funcall emacspeak-table-speak-element)
-  (emacspeak-auditory-icon 'large-movement))
+  (emacspeak-auditory-icon 'large-movement)
+  (funcall emacspeak-table-speak-element))
 
 (defun emacspeak-table-goto-right ()
   "Goes to the right of the current row."
@@ -843,8 +843,8 @@ browsing table elements"
                              (1- (emacspeak-table-num-columns
                                   emacspeak-table)))
   (emacspeak-table-synchronize-display)
-  (funcall emacspeak-table-speak-element)
-  (emacspeak-auditory-icon 'large-movement))
+  (emacspeak-auditory-icon 'large-movement)
+  (funcall emacspeak-table-speak-element))
 
 ;;}}}
 ;;{{{ searching and finding:

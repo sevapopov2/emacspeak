@@ -721,8 +721,8 @@ No-op if content under point is not currently displayed."
   (interactive)
   (forward-line -1)
   (beginning-of-line)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'select-object))
+  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-speak-line))
 
 ;;;###autoload
 (defun emacspeak-daisy-define-outline-pattern (regexp)
@@ -752,8 +752,8 @@ No-op if content under point is not currently displayed."
   (interactive)
   (forward-line 1)
   (beginning-of-line)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'select-object))
+  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-speak-line))
 
 ;;}}}
 ;;{{{ Configure w3 post processor hook to record viewer buffer:

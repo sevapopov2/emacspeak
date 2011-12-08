@@ -1,8 +1,8 @@
 ;;; emacspeak-man.el --- Speech enable Man mode -- Use this for UNIX Man pages
 ;;; $Id: emacspeak-man.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
-;;; DescriptionEmacspeak extensions for man-mode
-;;; Keywords:emacspeak, audio interface to emacs man 
+;;; Description: Emacspeak extensions for man-mode
+;;; Keywords: emacspeak, audio interface to emacs man 
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:

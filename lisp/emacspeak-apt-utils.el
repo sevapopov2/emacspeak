@@ -14,7 +14,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Initial version: Author: Igor B. Poretsky <master@goga.energo.ru>
+;;; Initial version: Author: Igor B. Poretsky <poretsky@mlbox.ru>
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -80,112 +80,72 @@
 ;;}}}
 ;;{{{ Advice interactive commands to speak.
 
-(defadvice apt-utils-show-package (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
+(loop for f in
+      '(apt-utils-search
+	apt-utils-search-names-only
+	apt-utils-search-grep-dctrl
+	apt-utils-search-file-names)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'search-hit)))))
 
-(defadvice apt-utils-choose-package-link (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
+(loop for f in
+      '(apt-utils-quit
+	apt-utils-kill-buffer)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'close-object)
+	    (emacspeak-speak-mode-line)))))
 
-(defadvice apt-utils-view-previous-package (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)))
+(loop for f in
+      '(apt-utils-rebuild-package-lists
+	apt-utils-toggle-package-info)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'task-done)))))
 
-(defadvice apt-utils-search (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'search-hit)))
+(loop for f in
+      '(apt-utils-show-package
+	apt-utils-choose-package-link
+	apt-utils-view-previous-package
+	apt-utils-view-copyright
+	apt-utils-view-readme
+	apt-utils-view-debian-readme
+	apt-utils-view-news
+	apt-utils-view-debian-news
+	apt-utils-view-changelog
+	apt-utils-view-debian-changelog
+	apt-utils-follow-link)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (when (interactive-p)
+	    (emacspeak-auditory-icon 'open-object)))))
 
-(defadvice apt-utils-search-names-only (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'search-hit)))
-
-(defadvice apt-utils-search-grep-dctrl (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'search-hit)))
-
-(defadvice apt-utils-search-file-names (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'search-hit)))
-
-(defadvice apt-utils-quit (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
-
-(defadvice apt-utils-kill-buffer (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
-
-(defadvice apt-utils-rebuild-package-lists (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'task-done)))
-
-(defadvice apt-utils-toggle-package-info (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'task-done)))
-
-(defadvice apt-utils-view-copyright (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
-
-(defadvice apt-utils-view-readme (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
-
-(defadvice apt-utils-view-debian-readme (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
-
-(defadvice apt-utils-view-news (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
-
-(defadvice apt-utils-view-debian-news (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
-
-(defadvice apt-utils-view-changelog (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
-
-(defadvice apt-utils-view-debian-changelog (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
-
-(defadvice apt-utils-follow-link (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
-
-(defadvice apt-utils-previous-package (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)))
-
-(defadvice apt-utils-next-package (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)))
+(loop for f in
+      '(apt-utils-previous-package
+	apt-utils-next-package)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
+	  "Provide auditory feedback."
+	  (if (interactive-p)
+	      (let ((emacspeak-speak-messages nil))
+		ad-do-it
+		(emacspeak-auditory-icon 'large-movement)
+		(emacspeak-speak-text-range 'apt-package))
+	    ad-do-it)
+	  ad-return-value)))
 
 ;;}}}
 ;;{{{ mapping font faces to personalities

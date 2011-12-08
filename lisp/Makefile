@@ -60,7 +60,7 @@ COMPILE =  -f batch-byte-compile
 #The various modules:
 DTK_OBJECTS = acss-structure.elc \
 dtk-speak.elc		dectalk-voices.elc\
-outloud-voices.elc multispeech-voices.elc mac-voices.elc\
+outloud-voices.elc multispeech-voices.elc russian-spelling.elc mac-voices.elc\
 espeak-voices.elc dtk-interp.elc dtk-unicode.elc
 
 SPEAK_OBJECTS =   \
@@ -94,6 +94,7 @@ emacspeak-ansi-color.elc \
 emacspeak-apt-sources.elc \
 emacspeak-apt-utils.elc \
 emacspeak-arc.elc \
+emacspeak-asm.elc \
 emacspeak-auctex.elc \
 emacspeak-autoload.el \
 emacspeak-aumix.elc \
@@ -116,11 +117,15 @@ emacspeak-cmuscheme.elc \
 emacspeak-compile.elc \
 emacspeak-cperl.elc \
 emacspeak-custom.elc \
+emacspeak-cyclebuffer.elc \
+emacspeak-edb.elc \
 emacspeak-daisy.elc \
 emacspeak-damlite.elc \
+emacspeak-debian-bug.elc \
 emacspeak-dictation.elc \
 emacspeak-dictionary.elc \
 emacspeak-desktop.elc \
+emacspeak-diff.elc \
 emacspeak-dired.elc \
 emacspeak-dismal.elc \
 emacspeak-dmacro.elc \
@@ -143,6 +148,7 @@ emacspeak-filtertext.elc \
 emacspeak-find-dired.elc \
 emacspeak-find-func.elc \
 emacspeak-finder.elc \
+emacspeak-firevox.elc \
 emacspeak-flyspell.elc \
 emacspeak-folding.elc \
 emacspeak-forms.elc \
@@ -153,6 +159,7 @@ emacspeak-gomoku.elc \
 emacspeak-google.elc \
 emacspeak-gridtext.elc \
 emacspeak-gud.elc \
+emacspeak-hexl.elc \
 emacspeak-hide.elc \
 emacspeak-hideshow.elc \
 emacspeak-ibuffer.elc \
@@ -188,9 +195,11 @@ emacspeak-outline.elc \
 emacspeak-pcl-cvs.elc \
 emacspeak-perl.elc \
 emacspeak-php-mode.elc \
+emacspeak-planner.elc \
 emacspeak-piglets.elc \
 emacspeak-proced.elc \
 emacspeak-psgml.elc \
+emacspeak-ps.elc \
 emacspeak-python.elc \
 emacspeak-re-builder.elc \
 emacspeak-realaudio.elc \
@@ -233,7 +242,9 @@ emacspeak-webspace.elc \
 emacspeak-webutils.elc \
 emacspeak-webmarks.elc \
 emacspeak-websearch.elc \
+emacspeak-wget.elc \
 emacspeak-widget.elc \
+emacspeak-wiki.elc \
 emacspeak-windmove.elc \
 emacspeak-winring.elc \
 emacspeak-wizards.elc  \
@@ -295,6 +306,7 @@ acss-structure.elc: acss-structure.el
 dectalk-voices.elc: dectalk-voices.el voice-setup.elc
 outloud-voices.elc: outloud-voices.el voice-setup.elc
 multispeech-voices.elc: multispeech-voices.el voice-setup.elc
+russian-spelling.elc: russian-spelling.el emacspeak-speak.elc
 mac-voices.elc: mac-voices.el voice-setup.elc
 espeak-voices.elc: espeak-voices.el voice-setup.elc
 voice-setup.elc: voice-setup.el acss-structure.elc
@@ -310,6 +322,7 @@ emacspeak-ansi-color.elc: emacspeak-ansi-color.el dtk-speak.elc voice-setup.elc
 emacspeak-apt-sources.elc: emacspeak-apt-sources.el dtk-speak.elc voice-setup.elc
 emacspeak-apt-utils.elc: emacspeak-apt-utils.el dtk-speak.elc voice-setup.elc
 emacspeak-arc.elc: emacspeak-arc.el dtk-speak.elc voice-setup.elc
+emacspeak-asm.elc: emacspeak-asm.el dtk-speak.elc voice-setup.elc
 emacspeak-auctex.elc: emacspeak-auctex.el dtk-speak.elc voice-setup.elc
 emacspeak-aumix.elc: emacspeak-aumix.el dtk-speak.elc voice-setup.elc
 emacspeak-autoload.elc: emacspeak-autoload.el
@@ -332,12 +345,15 @@ emacspeak-checkdoc.elc: emacspeak-checkdoc.el dtk-speak.elc voice-setup.elc
 emacspeak-cperl.elc: emacspeak-cperl.el dtk-speak.elc voice-setup.elc
 emacspeak-custom.elc: emacspeak-custom.el dtk-speak.elc voice-setup.elc
 emacspeak-cyclebuffer.elc: emacspeak-cyclebuffer.el dtk-speak.elc
+emacspeak-edb.elc: emacspeak-edb.el dtk-speak.elc voice-setup.elc
 emacspeak-daisy.elc: emacspeak-daisy.el dtk-speak.elc voice-setup.elc
 emacspeak-ebook.elc: emacspeak-ebook.el dtk-speak.elc voice-setup.elc
 emacspeak-damlite.elc: emacspeak-damlite.el dtk-speak.elc voice-setup.elc
+emacspeak-debian-bug.elc: emacspeak-debian-bug.el dtk-speak.elc voice-setup.elc
 emacspeak-desktop.elc: emacspeak-desktop.el dtk-speak.elc voice-setup.elc
 emacspeak-dictation.elc: emacspeak-dictation.el dtk-speak.elc voice-setup.elc
 emacspeak-dictionary.elc: emacspeak-dictionary.el dtk-speak.elc voice-setup.elc
+emacspeak-diff.elc: emacspeak-diff.el dtk-speak.elc voice-setup.elc
 emacspeak-dired.elc: emacspeak-dired.el dtk-speak.elc voice-setup.elc
 emacspeak-dismal.elc: emacspeak-dismal.el dtk-speak.elc voice-setup.elc
 emacspeak-dmacro.elc: emacspeak-dmacro.el dtk-speak.elc voice-setup.elc
@@ -359,6 +375,7 @@ emacspeak-filtertext.elc: emacspeak-filtertext.el dtk-speak.elc voice-setup.elc
 emacspeak-find-dired.elc: emacspeak-find-dired.el dtk-speak.elc voice-setup.elc
 emacspeak-find-func.elc: emacspeak-find-func.el dtk-speak.elc voice-setup.elc
 emacspeak-finder.elc: emacspeak-finder.el
+emacspeak-firevox.elc: emacspeak-firevox.el
 emacspeak-fix-interactive.elc: emacspeak-fix-interactive.el dtk-speak.elc voice-setup.elc
 emacspeak-flyspell.elc: emacspeak-flyspell.el dtk-speak.elc voice-setup.elc
 emacspeak-folding.elc: emacspeak-folding.el dtk-speak.elc voice-setup.elc
@@ -370,6 +387,7 @@ emacspeak-google.elc: emacspeak-google.el dtk-speak.elc
 emacspeak-gomoku.elc: emacspeak-gomoku.el dtk-speak.elc voice-setup.elc
 emacspeak-gridtext.elc: emacspeak-gridtext.el dtk-speak.elc voice-setup.elc
 emacspeak-gud.elc: emacspeak-gud.el dtk-speak.elc voice-setup.elc
+emacspeak-hexl.elc: emacspeak-hexl.el emacspeak-speak.elc emacspeak-redefine.elc
 emacspeak-hide.elc: emacspeak-hide.el emacspeak-speak.elc
 emacspeak-hideshow.elc: emacspeak-hideshow.el dtk-speak.elc voice-setup.elc
 emacspeak-ibuffer.elc: emacspeak-ibuffer.el dtk-speak.elc voice-setup.elc
@@ -396,7 +414,7 @@ emacspeak-metapost.elc: emacspeak-metapost.el dtk-speak.elc voice-setup.elc
 emacspeak-midge.elc: emacspeak-midge.el dtk-speak.elc voice-setup.elc
 emacspeak-mpg123.elc: emacspeak-mpg123.el dtk-speak.elc voice-setup.elc
 emacspeak-moz.elc: emacspeak-moz.el dtk-speak.elc voice-setup.elc
-emacspeak-muse.elc: emacspeak-muse.el dtk-speak.elc
+emacspeak-muse.elc: emacspeak-muse.el dtk-speak.elc voice-setup.elc
 emacspeak-mspools.elc: emacspeak-mspools.el dtk-speak.elc voice-setup.elc
 emacspeak-net-utils.elc: emacspeak-net-utils.el dtk-speak.elc voice-setup.elc
 emacspeak-newsticker.elc: emacspeak-newsticker.el dtk-speak.elc voice-setup.elc
@@ -409,10 +427,12 @@ emacspeak-pcl-cvs.elc: emacspeak-pcl-cvs.el dtk-speak.elc voice-setup.elc
 emacspeak-perl.elc: emacspeak-perl.el dtk-speak.elc voice-setup.elc
 emacspeak-piglets.elc: emacspeak-piglets.el emacspeak-moz.elc
 emacspeak-php-mode.elc: emacspeak-php-mode.el dtk-speak.elc voice-setup.elc
+emacspeak-planner.elc: emacspeak-planner.el dtk-speak.elc voice-setup.elc
 emacspeak-pronounce.elc: emacspeak-pronounce.el
 emacspeak-personality.elc: emacspeak-personality.el
 emacspeak-proced.elc: emacspeak-proced.el dtk-speak.elc voice-setup.elc
 emacspeak-psgml.elc: emacspeak-psgml.el dtk-speak.elc voice-setup.elc
+emacspeak-ps.elc: emacspeak-ps.el dtk-speak.elc voice-setup.elc
 emacspeak-python.elc: emacspeak-python.el dtk-speak.elc voice-setup.elc
 emacspeak-re-builder.elc: emacspeak-re-builder.el dtk-speak.elc voice-setup.elc
 emacspeak-realaudio.elc: emacspeak-realaudio.el dtk-speak.elc voice-setup.elc
@@ -462,7 +482,9 @@ emacspeak-webutils.elc: emacspeak-webutils.el dtk-speak.elc voice-setup.elc
 emacspeak-webspace.elc: emacspeak-webspace.el emacspeak-webutils.elc
 emacspeak-websearch.elc: emacspeak-websearch.el emacspeak-we.elc
 emacspeak-webmarks.elc: emacspeak-webmarks.el emacspeak-we.elc
+emacspeak-wget.elc: emacspeak-wget.el dtk-speak.elc
 emacspeak-widget.elc: emacspeak-widget.el dtk-speak.elc voice-setup.elc
+emacspeak-wiki.elc: emacspeak-wiki.el dtk-speak.elc voice-setup.elc
 emacspeak-winring.elc: emacspeak-winring.el dtk-speak.elc voice-setup.elc
 emacspeak-windmove.elc: emacspeak-windmove.el dtk-speak.elc voice-setup.elc
 emacspeak-wizards.elc: emacspeak-wizards.el dtk-speak.elc voice-setup.elc

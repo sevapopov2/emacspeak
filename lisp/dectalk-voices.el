@@ -630,6 +630,7 @@ and TABLE gives the values along that dimension."
   (fset 'tts-get-voice-command 'dectalk-get-voice-command)
   (fset 'tts-voice-defined-p 'dectalk-voice-defined-p)
   (fset 'tts-define-voice-from-speech-style 'dectalk-define-voice-from-speech-style)
+  (setq tts-default-voice 'paul)
   (setq tts-default-speech-rate dectalk-default-speech-rate)
   (set-default 'tts-default-speech-rate dectalk-default-speech-rate)
   (setq dtk-speech-rate-step 50

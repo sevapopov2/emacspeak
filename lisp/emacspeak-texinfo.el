@@ -51,24 +51,6 @@
 ;;; Code:
 
 ;;}}}
-;;{{{ voice locking
-
-(defun emacspeak-texinfo-mode-hook ()
-  "Setup Emacspeak extensions"
-  (declare (special dtk-split-caps))
-  
-  
-  (voice-lock-mode 1)
-  (dtk-set-punctuations 'all)
-  (or dtk-split-caps
-      (dtk-toggle-split-caps))
-  (or emacspeak-audio-indentation
-      (emacspeak-toggle-audio-indentation))
-  (emacspeak-dtk-sync))
-
-(add-hook 'texinfo-mode-hook 'emacspeak-texinfo-mode-hook)
-
-;;}}}
 ;;{{{ advice
 
 (defadvice texinfo-insert-@end (after emacspeak pre act

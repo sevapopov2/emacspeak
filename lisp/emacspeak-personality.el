@@ -87,11 +87,14 @@
 ;;{{{ attach voice lock to global font lock
 (defadvice font-lock-mode (after  emacspeak pre act comp)
   "Attach voice-lock-mode to font-lock-mode."
-  (voice-lock-mode   font-lock-mode))
+  (voice-lock-mode   font-lock-mode)
+  (when (interactive-p)
+    (emacspeak-auditory-icon (if font-lock-mode 'on 'off))))
 (defadvice global-font-lock-mode (after emacspeak pre act comp)
   "Attach voice lock to font lock."
-  (when global-font-lock-mode
-    (setq-default voice-lock-mode t)))
+  (setq-default voice-lock-mode global-font-lock-mode)
+  (when (interactive-p)
+    (emacspeak-auditory-icon (if global-font-lock-mode 'on 'off))))
 
 ;;}}}
 ;;{{{ cumulative personalities
@@ -114,35 +117,24 @@ personality settings."
   "Append specified personality to text bounded by start and end.
 Existing personality properties on the text range are preserved."
   (when (and (integer-or-marker-p start)
-             (integer-or-marker-p end )
-             (not (= start end)))
-    (ems-modify-buffer-safely
-     (let ((v (if (listp personality)
-                  (delete-duplicates personality :test #'eq)
-                personality))
-           (orig (get-text-property start 'personality object))
-           (new nil)
-           (extent
-            (next-single-property-change
-             start 'personality object end)))
-       (cond
-        ((null orig)                    ;simple case
-         (ad-Orig-put-text-property start extent 'personality v object)
-         (when (< extent end)
-           (emacspeak-personality-append extent end v object)))
-        (t                             ;accumulate the new personality
-         (unless (or (equal  v orig)
-                     (listp orig)
-                     (and (listp orig)(memq v orig)))
-           (setq new
-                 (delete-duplicates
-                  (nconc
-                   (if (listp orig) orig (list orig))
-                   (if (listp v) v (list v)))))
-           (ad-Orig-put-text-property start extent
-                                      'personality new object))
-         (when (< extent end)
-           (emacspeak-personality-append extent end v object))))))))
+             (integer-or-marker-p end ))
+    (while (< start end)
+      (let* ((orig (get-text-property start 'personality object))
+             (new (if(null orig)
+                      personality
+                    (if (or (equal orig personality)
+                            (and (listp orig)(memq personality orig)))
+                        nil
+                      (nconc
+                       (if (listp orig) orig (list orig))
+                       (if (listp personality)
+                           personality (list personality))))))
+             (extent
+              (next-single-property-change
+               start 'personality object end)))
+        (when new
+          (emacspeak-personality-put start extent new object))
+        (setq start extent)))))
 
 ;;;###autoload
 (defun emacspeak-personality-prepend  (start end
@@ -150,35 +142,23 @@ Existing personality properties on the text range are preserved."
   "Prepend specified personality to text bounded by start and end.
 Existing personality properties on the text range are preserved."
   (when (and (integer-or-marker-p start)
-             (integer-or-marker-p end )
-             (not (= start end)))
-    (ems-modify-buffer-safely
-     (let ((v (if (listp personality)
-                  (delete-duplicates personality :test #'eq)
-                personality))
-           (orig (get-text-property start 'personality object))
-           (new nil)
-           (extent
-            (next-single-property-change
-             start 'personality object end)))
-       (cond
-        ((null orig)                    ;simple case
-         (ad-Orig-put-text-property start extent 'personality v object)
-         (when (< extent end)
-           (emacspeak-personality-prepend extent end v object)))
-        (t                             ;accumulate the new personality
-         (unless (or (equal v orig)
-                     (listp orig)
-                     (and (listp orig) (memq v orig)))
-           (setq new
-                 (delete-duplicates
-                  (nconc
-                   (if (listp v) v (list v))
-                   (if (listp orig) orig (list orig)))))
-           (ad-Orig-put-text-property start extent
-                                      'personality new object))
-         (when (< extent end)
-           (emacspeak-personality-prepend extent end v object))))))))
+             (integer-or-marker-p end ))
+    (while (< start end)
+      (let* ((orig (get-text-property start 'personality object))
+             (new (if(null orig)
+                      personality
+                    (if (or (equal orig personality)
+                            (and (listp orig)(memq personality orig)))
+                        nil
+                      (nconc
+                       (if (listp personality) personality (list personality))
+                       (if (listp orig) orig (list orig))))))
+             (extent
+              (next-single-property-change
+               start 'personality object end)))
+        (when new
+          (emacspeak-personality-put start extent new object))
+        (setq start extent)))))
 
 (defun emacspeak-personality-remove  (start end
                                             personality
@@ -187,34 +167,24 @@ Existing personality properties on the text range are preserved."
 Other existing personality properties on the text range are
 preserved."
   (when (and (integer-or-marker-p start)
-             (integer-or-marker-p end )
-             (not (= start end)))
+             (integer-or-marker-p end ))
     (ems-modify-buffer-safely
-     (let ((orig (get-text-property start 'personality object))
-           (new nil)
-           (extent
-            (next-single-property-change
-             start 'personality (current-buffer) end)))
-       (cond
-        ((null orig)                    ;simple case
-         (when (< extent end)
-           (emacspeak-personality-remove extent end personality)))
-        (t                              ;remove the new personality
-         (setq new
-               (cond
-                ((equal orig personality) nil)
-                ((listp orig)
-                 (remove personality orig))
-                (t nil)))
-         (if new
-             (ad-Orig-put-text-property start extent
-                                        'personality new object)
-           (ad-Orig-remove-text-properties start extent
-                                           (list 'personality )
-                                           object))
-         (when (< extent end)
-           (emacspeak-personality-remove extent end
-                                         personality))))))))
+     (while (< start end)
+       (let* ((orig (get-text-property start 'personality object))
+              (new (if (listp orig)
+                       (remove personality orig)
+                     nil))
+              (extent
+               (next-single-property-change
+                start 'personality object end)))
+         (when orig
+           (if new
+               (ad-Orig-put-text-property start extent
+                                          'personality new object)
+             (ad-Orig-remove-text-properties start extent
+                                             (list 'personality )
+                                             object)))
+         (setq start extent))))))
 
 ;;}}}
 ;;{{{ helper: face-p

@@ -120,6 +120,7 @@
 (defcustom dtk-unicode-untouched-charsets
   '(ascii latin-iso8859-1)
   "*Characters of these charsets are completely ignored by dtk-unicode-replace-chars."
+  :group 'dtk-unicode
   :type '(repeat symbol))
 
 (defvar dtk-unicode-handlers
@@ -158,7 +159,7 @@ A handler returns a non-nil value if the   replacement was successful, nil other
 
 (defvar dtk-unicode-charset-filter-regexp
   (dtk-unicode-build-skip-regexp dtk-unicode-untouched-charsets)
-  "Regular exppression that matches characters not in dtk-unicode-untouched-charsets.")
+  "Regular expression that matches characters not in dtk-unicode-untouched-charsets.")
 
 (defun dtk-unicode-update-untouched-charsets (charsets)
   "Update list of charsets we will not touch."
@@ -224,9 +225,11 @@ Converts char to unicode if necessary (for emacs 22)."
 (defsubst dtk-unicode-name-for-char (char)
   "Return unicode name for character CHAR.
 nil if CHAR is not in Unicode."
-  (downcase
-   (or (cadar (describe-char-unicode-data char)) "")))
-   
+  (let ((name (or (cadar (describe-char-unicode-data char))
+                  (dtk-unicode-char-property char "Name"))))
+    (when (and (stringp name) (string-equal name "<control>"))
+      (setq name (dtk-unicode-char-property char "Old name")))
+    (and (stringp name) (downcase name))))
 
 (defsubst dtk-unicode-char-punctuation-p (char)
   "Use unicode properties to determine whether CHAR is a ppunctuation character."
