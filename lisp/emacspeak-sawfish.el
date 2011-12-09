@@ -1,5 +1,5 @@
 ;;; emacspeak-sawfish.el --- speech-enable sawfish mode
-;;; $Id: emacspeak-sawfish.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
+;;; $Id: emacspeak-sawfish.el 7068 2011-06-26 00:53:00Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable
 ;;; sawfish mode
@@ -17,7 +17,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2009, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2011, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -144,8 +144,6 @@
   (when (interactive-p)
     (emacspeak-speak-mode-line)
     (emacspeak-auditory-icon 'open-object)))
-
- 
 
 (defadvice sawfish-complete-symbol (around emacspeak pre act)
   "Say what you completed."

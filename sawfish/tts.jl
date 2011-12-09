@@ -1,5 +1,5 @@
 ;;; tts.jl -- Sawfish interface  to Emacspeak speech servers 
-;;; $Id: tts.jl 4047 2006-08-11 19:11:17Z tv.raman.tv $
+;;; $Id: tts.jl 7078 2011-06-29 22:07:46Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:   Interface REP/Sawfish to Emacspeak TTS servers
 ;;; Keywords: Sawfish, Emacspeak, Audio Desktop
@@ -8,8 +8,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-11 12:11:17 -0700 (Fri, 11 Aug 2006) $ |
-;;;  $Revision: 4047 $ |
+;;; $Date: 2011-06-29 15:07:46 -0700 (Wed, 29 Jun 2011) $ |
+;;;  $Revision: 7078 $ |
 ;;; Location undetermined
 ;;;
 
@@ -42,27 +42,9 @@
 ;;; Interface REP/Sawfish to Emacspeak TTS servers
 
 ;;}}}
-;; Customise options.
+;; Customization  options.
 
 (defgroup tts "Speech synthesis")
-
-(defcustom tts-client "telnet"
-  "TTS cleint "
-  :group     tts
-  :type      string
-  :allow-nil nil)
-
-(defcustom tts-host "localhost"
-  "Host running TTS  "
-  :group     tts
-  :type      string
-  :allow-nil nil)
-
-(defcustom tts-port "2222"
-  "TTS port on server "
-  :group     tts
-  :type      string
-  :allow-nil nil)
 
 (defvar emacspeak "/home/raman/emacs/lisp/emacspeak"
 "Root of Emacspeak installation.")
@@ -70,15 +52,9 @@
 (defvar tts-process nil
 "Handle to tts server connection.")
 
-(defun tts-open-connection ()
-  "Open a TTS session."
-  (interactive)
-    (setq tts-process (make-process))
-    (start-process tts-process tts-client tts-host
-                   tts-port))
 
-(defvar tts-tcl "/usr/bin/tcl"
-"TCL interpreter")
+
+;;; Servers
 
 (defvar tts-dtk
   (expand-file-name "servers/dtk-exp" emacspeak)
@@ -86,13 +62,19 @@
 
 (defvar tts-outloud
   (expand-file-name "servers/outloud" emacspeak)
-  "DTK tcl server")
+  "Outloud tcl server")
+
+(defvar tts-32-outloud
+  (expand-file-name "servers/32-outloud" emacspeak)
+  "Outloud tcl server")
+(defvar tts-engine tts-dtk
+"Default TTS  engine. User settable.")
 
 (defun tts-open ()
   "Open a TTS session."
   (interactive)
   (setq tts-process (make-process))
-  (start-process tts-process tts-tcl tts-dtk))
+  (start-process tts-process  tts-engine))
 
 (defun tts-close ()
   "Close a TTS session."
@@ -160,6 +142,13 @@
       (unless (in-hook-p 'focus-in-hook tts-say-window)
         (add-hook 'focus-in-hook tts-say-window))
     (remove-hook 'focus-in-hook tts-say-window)))
+(defun tts-describe-key ()
+  "Speak the output of `describe-key'."
+  (interactive)
+  (tts-say
+   (let ((standard-output (make-string-output-stream)))
+     (describe-key)
+     (get-output-stream-string standard-output))))
 
 (provide 'tts)
 (message "Loaded tts.jl")

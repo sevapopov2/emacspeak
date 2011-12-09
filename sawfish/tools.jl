@@ -1,4 +1,4 @@
-;;;$Id: tools.jl 4047 2006-08-11 19:11:17Z tv.raman.tv $
+;;;$Id: tools.jl 7106 2011-07-07 17:35:40Z tv.raman.tv $
 ;;; tools.jl --- Emacs tool for sawfish
 ;;; $Author: tv.raman.tv $
 ;;; Description:   Commands for launching or switching to
@@ -9,8 +9,8 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;; $Date: 2006-08-11 12:11:17 -0700 (Fri, 11 Aug 2006) $ |
-;;;  $Revision: 4047 $ |
+;;; $Date: 2011-07-07 10:35:40 -0700 (Thu, 07 Jul 2011) $ |
+;;;  $Revision: 7106 $ |
 ;;; Location undetermined
 ;;;
 
@@ -46,12 +46,8 @@
 (require 'tts)
 ;;; Set this to the executable you wish to run  via command `emacs'
 (defcustom emacs-program
- "emacs -i &"
+ "emacsclient  -c &"
   "Emacs executable to run.")
-(defcustom xemacs-program
- "/usr/bin/xemacs -i &"
-  "Emacs executable to run.")
-
 
 ;;; Interactive command to start emacs or switch to an
 ;;; existing session.
@@ -69,30 +65,15 @@
       (system emacs-program))
     (and (tts-running-p) (tts-say-current-window))))
 
+(defcustom lock-program
+  "xlock -mode goop -startCmd '/usr/bin/ogg123 /usr/share/sounds/ubuntu/stereo/service-logout.ogg  &' -endCmd '/usr/bin/ogg123 /usr/share/sounds/ubuntu/stereo/service-login.ogg  &'"
+  "How we lock the screen.")
 
-(defun xemacs  ()
-  "Switch to a running xemacs or start one if necessary."
+(defun lock-screen  ()
+  "Lock screen."
   (interactive)
-  (let ((w (car
-            (delete-if-not
-             (lambda (x)
-               (string= (window-class x) "xEmacs"))
-             (managed-windows)))))
-    (if w
-	(display-window w)
-      (system xemacs-program))
-    (and (tts-running-p) (tts-say-current-window))))
-(defun switch-to-emacs  ()
-  "Switch to a running emacs "
-  (interactive)
-  (let ((w (car
-            (delete-if-not
-             (lambda (x)
-               (string= (window-class x) "Emacs"))
-             (managed-windows)))))
-    (if w
-	(display-window w))
-    (and (tts-running-p) (tts-say-current-window))))
+    (tts-say "Locking  screen.")
+    (system   lock-program))
 
 (defun delete-this-window-safely ()
   "Delete current window safely."
@@ -108,7 +89,7 @@
                (string= (window-class x) program))
              (managed-windows)))))
     (if w
-	(display-window w)
+        (display-window w)
       (system program))
     (and (tts-running-p) (tts-say-current-window))))
 
