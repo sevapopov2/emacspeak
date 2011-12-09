@@ -1,9 +1,8 @@
-;;; xml-compat.el --- Compatibility  for xml.el and libxml
-;;; $Id: xml-compat>.el 4797 2007-07-16 23:31:22Z tv.raman.tv $
+;;; emacspeak-dbus.el --- DBus Tools For Emacspeak Desktop
+;;; $Id: emacspeak-dbus.el 4797 2007-07-16 23:31:22Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
-;;; Description:  Compatibility  layer for cutting over to xml.el
-;;; and libxml 
-;;; Keywords: Emacspeak,  Audio Desktop xml
+;;; Description:  DBus Tools For The Emacspeak Desktop
+;;; Keywords: Emacspeak,  Audio Desktop dbus
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
@@ -29,7 +28,7 @@
 ;;;
 ;;; GNU Emacs is distributed in the hope that it will be useful,
 ;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITN<SKELETON> FOR A PARTICULAR PURPOSE.  See the
+;;; MERCHANTABILITY or FITNDBUS FOR A PARTICULAR PURPOSE.  See the
 ;;; GNU General Public License for more details.
 ;;;
 ;;; You should have received a copy of the GNU General Public License
@@ -42,33 +41,47 @@
 ;;{{{  introduction
 
 ;;; Commentary:
-;;; Defines needed compatibility layer so we can move from
-;;;xml-parse.el to xml.el with libxml  if available 
+;;; Set up Emacspeak to respond to DBus notifications
 
 ;;}}}
 ;;{{{  Required modules
 
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
+(require 'emacspeak-preamble)
+(require 'dbus)
 
 ;;}}}
-;;{{{  Compatibility Functions 
+;;{{{ Customize:
 
-(defsubst xml-tag-child (node name)
-  "Return first child matching name."
-  (first (xml-get-children node name)))
+(defgroup emacspeak-dbus nil
+  "DBus  bindings and hooks for Emacspeak desktop."
+  :group 'emacspeak)
 
-;;;###autoload 
-(cond
- ((fboundp 'libxml-parse-xml-region)
-  (defalias 'xml-parse-xml-region 'libxml-parse-xml-region))
- (t
-  (defun xml-parse-xml-region (start end)
-    "Parse region using xml-parse."
-    (car (xml-parse-region start end)))))
+;;}}}
+;;{{{ NM Handlers
+
+(defun emacspeak-dbus-nm-connected ()
+  "Announce  network manager connection."
+  (declare (special emacspeak-speak-network-interfaces-list))
+  (setq emacspeak-speak-network-interfaces-list (mapcar #'car (network-interface-list)))
+  (emacspeak-auditory-icon 'network-up)
+  (message
+   (mapconcat #'identity emacspeak-speak-network-interfaces-list "")))
+
+(defun emacspeak-dbus-nm-disconnected ()
+  "Announce  network manager disconnection."
+  (declare (special emacspeak-speak-network-interfaces-list))
+  (setq emacspeak-speak-network-interfaces-list (mapcar #'car (network-interface-list)))
+  (emacspeak-auditory-icon 'network-down)
+  (message (mapconcat #'identity emacspeak-speak-network-interfaces-list "")))
+
+(add-hook 'nm-connected-hook 'emacspeak-dbus-nm-connected)
+(add-hook 'nm-disconnected-hook 'emacspeak-dbus-nm-disconnected)
+
 ;;}}}
 
-(provide 'xml-compat)
+(provide 'emacspeak-dbus)
 ;;{{{ end of file
 
 ;;; local variables:
