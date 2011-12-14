@@ -1,5 +1,5 @@
 ;;; emacspeak-gnus.el --- Speech enable GNUS -- Fluent spoken access to usenet
-;;; $Id: emacspeak-gnus.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
+;;; $Id: emacspeak-gnus.el 7323 2011-10-26 00:50:39Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension to speech enable Gnus
 ;;; Keywords: Emacspeak, Gnus, Advice, Spoken Output, News
@@ -146,8 +146,7 @@ reading news."
   (save-excursion
     (set-buffer  gnus-article-buffer)
     (goto-char (point-min))
-    (dtk-set-punctuations 'some)
-    (voice-lock-mode 1)
+    (setq dtk-punctuation-mode 'some)
     (emacspeak-dtk-sync)
     (cond
      ((< (count-lines (point-min) (point-max))

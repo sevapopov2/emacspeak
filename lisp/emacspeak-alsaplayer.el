@@ -1,5 +1,5 @@
 ;;; emacspeak-alsaplayer.el --- Control alsaplayer from Emacs
-;;; $Id: emacspeak-alsaplayer.el 6977 2011-04-17 16:18:18Z tv.raman.tv $
+;;; $Id: emacspeak-alsaplayer.el 7057 2011-06-20 00:53:47Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Controlling alsaplayer from emacs 
 ;;; Keywords: Emacspeak, alsaplayer
@@ -88,7 +88,8 @@ grep path:")))
   "Alsaplayer Interaction"
   "Major mode for alsaplayer interaction. \n\n
 \\{emacspeak-alsaplayer-mode-map}"
-  (setq header-line-format '((:eval (emacspeak-alsaplayer-header-line)))))
+  (setq header-line-format '((:eval
+                              (emacspeak-alsaplayer-header-line)))))
 
 ;;}}}
 ;;{{{ launch  emacspeak-alsaplayer
@@ -103,16 +104,12 @@ grep path:")))
   :type 'boolean
   :group 'emacspeak-alsaplayer)
 
-(defcustom emacspeak-alsaplayer-rewind-step 2
+(defcustom emacspeak-alsaplayer-rewind-step 10
   "Forward or backward rewind step in seconds."
   :type 'integer
   :group 'emacspeak-alsaplayer)
 
-(defcustom emacspeak-alsaplayer-height 1
-  "Height of alsaplayer window."
-  :type 'number
-  :group 'emacspeak-alsaplayer)
-
+;;;###autoload
 (defcustom emacspeak-alsaplayer-program
   "alsaplayer"
   "Alsaplayer executable."
@@ -161,13 +158,16 @@ user is placed in a buffer associated with the newly created
 Alsaplayer session."
   (interactive)
   (declare (special emacspeak-alsaplayer-program emacspeak-alsaplayer-buffer
-                    emacspeak-alsaplayer-device emacspeak-alsaplayer-height))
+                    emacspeak-alsaplayer-device))
   (let ((buffer (get-buffer-create emacspeak-alsaplayer-buffer))
         (deactivate-mark nil))
     (save-current-buffer
       (set-buffer buffer)
-      (unless (and (get-buffer-process buffer)
-                   (eq 'run (process-status (get-buffer-process buffer))))
+      (cond
+       ((and (get-buffer-process buffer)
+             (eq 'run (process-status (get-buffer-process buffer))))
+        (pop-to-buffer buffer 'other-window))
+       (t
         (setq buffer-undo-list t)
         (shell-command
          (format "%s -r -i daemon %s%s&"
@@ -179,13 +179,12 @@ Alsaplayer session."
                      (format "-d %s " emacspeak-alsaplayer-device)
                    ""))
          (current-buffer))
+        (pop-to-buffer buffer 'other-window)
         (emacspeak-alsaplayer-mode)))
-    (pop-to-buffer buffer)
-    (set-window-text-height nil emacspeak-alsaplayer-height))
-  (emacspeak-amark-load)
-  (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-mode-line)))
+      (emacspeak-amark-load)
+      (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
+        (emacspeak-auditory-icon 'open-object)
+        (emacspeak-speak-mode-line)))))
 
 ;;}}}
 ;;{{{  Invoke commands:
