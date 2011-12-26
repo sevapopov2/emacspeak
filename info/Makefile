@@ -11,7 +11,7 @@ infodir =/usr/share/info#normally supplied by caller
 INSTALL = install
 EMACS=emacs
 
-all: emacspeak.info html introducing-emacspeak.html
+all: emacspeak.info html introducing-emacspeak
 
 info: *.texi
 	$(MAKEINFO) emacspeak.texi
@@ -78,12 +78,12 @@ htm: emacspeak.texi
 		tidy -q -mic -asxml  $$f 2>&1 > /dev/null  || echo tidy; \
 		done
 
-introducing-emacspeak.html: introducing-emacspeak.texi
-	$(TEXI2HTML) --split chapter --top-file index.html $<
+introducing-emacspeak: introducing-emacspeak.texi
+	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
 
 
-pub:  html/index.html introducing-emacspeak.html
-	rsync introducing-emacspeak.html ${SF_HOME}/info/
+pub:  html/index.html introducing-emacspeak/index.html
+	rsync -avz introducing-emacspeak ${SF_HOME}/info/
 	rsync -avz  html ${SF_HOME}/info/
 
 %.info: %.texi
