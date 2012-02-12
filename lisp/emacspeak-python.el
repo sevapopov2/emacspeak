@@ -1,5 +1,5 @@
 ;;; emacspeak-python.el --- Speech enable Python development environment
-;;; $Id: emacspeak-python.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
+;;; $Id: emacspeak-python.el 7225 2011-09-29 00:20:40Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to python mode
 ;;; Keywords: Emacspeak, Speak, Spoken Output, python
@@ -42,7 +42,7 @@
 
 ;;; Commentary:
 
-;;; This speech-enables python-mode available on sourceforge
+;;; This speech-enables python-mode bundled with Emacs
 
 ;;; Code:
 
@@ -57,7 +57,8 @@
 ;;{{{  electric editing
 
 (loop for f in
-      '(py-electric-colon python-electric-colon)
+      '(py-electric-colon
+        python-electric-colon)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -66,7 +67,11 @@
             (dtk-say " colon ")))))
 
 (loop for f in
-      '(py-electric-backspace py-electric-delete python-backspace)
+      '(py-electric-backspace
+        py-electric-delete
+        python-electric-backspace
+        python-electric-delete
+        python-backspace)
       do
       (eval
        `(defadvice ,f (before emacspeak pre act comp)
@@ -78,51 +83,22 @@
 ;;}}}
 ;;{{{ interactive programming
 
-(defadvice py-shell (after emacspeak pre act comp)
-  "Provide auditory feedback"
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-mode-line)))
-
-(defadvice py-clear-queue (after emacspeak pre act comp)
+(defadvice python-send-region (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'task-done)))
 
-(defadvice py-execute-region (after emacspeak pre act comp)
+(defadvice python-send-buffer (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
     (emacspeak-auditory-icon 'task-done)))
-
-(defadvice py-execute-buffer (after emacspeak pre act comp)
-  "Provide auditory feedback"
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'task-done)))
-
-(defadvice py-goto-exception(after emacspeak pre act comp)
-  "Speak line you moved to"
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
-
-(defadvice py-down-exception(after emacspeak pre act comp)
-  "Speak line you moved to"
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
-
-(defadvice py-up-exception(after emacspeak pre act comp)
-  "Speak line you moved to"
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
 
 ;;}}}
 ;;{{{  whitespace management and indentation
 (loop for f in
-      (list 'py-fill-paragraph
-            'py-fill-comment
-            'py-fill-string)
+      (list 'python-fill-paragraph
+            
+            )
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -130,16 +106,7 @@
           (when (interactive-p)
             (emacspeak-auditory-icon 'fill-object)))))
 
-(defadvice py-newline-and-indent(after emacspeak pre act comp)
-  "Speak line so we know current indentation"
-  (when (interactive-p)
-    (dtk-speak-using-voice voice-annotate
-                           (format
-                            "indent %s"
-                            (current-column)))
-    (dtk-force)))
-
-(defadvice py-shift-region-left (after emacspeak pre act comp)
+(defadvice python-shift-left (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
@@ -147,15 +114,14 @@
      (format "Left shifted block  containing %s lines"
              (count-lines  (region-beginning)
                            (region-end))))))
-
-(defadvice py-shift-region-right (after emacspeak pre act comp)
+(defadvice python-shift-right (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
   (when (interactive-p)
     (dtk-speak
      (format "Right shifted block  containing %s lines"
              (count-lines  (region-beginning)
                            (region-end))))))
-(defadvice py-indent-region (after emacspeak pre act comp)
+(defadvice python-indent-region (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
   (when (interactive-p)
     (emacspeak-auditory-icon 'fill-object)
@@ -185,7 +151,9 @@
         end-of-python-def-or-class
         python-previous-statement
         python-next-statement
-        python-beginning-of-block)
+        python-beginning-of-block
+        python-beginning-of-def-or-class
+        python-end-of-def-or-class)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -197,7 +165,8 @@
 (loop for f in
       '(py-mark-block
         py-mark-def-or-class
-        python-mark-block)
+        python-mark-block
+        python-mark-def-or-class)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -209,31 +178,38 @@
                      (count-lines (region-beginning)
                                   (region-end))))))))
 
-(defadvice py-narrow-to-defun (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (message "%s %s lines"
-             (save-excursion
-               (goto-char (point-min))
-               (buffer-substring (line-beginning-position)
-                                 (line-end-position)))
-             (count-lines (point-min)
-                          (point-max)))))
+(loop for f in
+      '(py-narrow-to-defun
+        python-narrow-to-defun)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (message "%s %s lines"
+                     (save-excursion
+                       (goto-char (point-min))
+                       (buffer-substring (line-beginning-position)
+                                         (line-end-position)))
+                     (count-lines (point-min)
+                                  (point-max)))))))
 
-(defadvice py-forward-into-nomenclature(after emacspeak pre act comp)
-  "Speak rest of current word"
-  (when (interactive-p)
-    (emacspeak-speak-word 1)))
-
-(defadvice py-backward-into-nomenclature(after emacspeak pre act comp)
-  "Speak rest of current word"
-  (when (interactive-p)
-    (emacspeak-speak-word 1)))
+(loop for f in
+      '(py-forward-into-nomenclature
+        py-backward-into-nomenclature
+        python-forward-into-nomenclature
+        python-backward-into-nomenclature)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Speak rest of current word"
+          (when (interactive-p)
+            (emacspeak-speak-word 1)))))
 
 ;;}}}
 ;;{{{ the process buffer
 
-(defadvice py-process-filter (around emacspeak pre act)
+(defadvice python-process-filter (around emacspeak pre act)
   "Make comint in Python speak its output. "
   (declare (special emacspeak-comint-autospeak))
   (let ((prior (point ))
@@ -252,7 +228,7 @@
 
 ;;}}}
 ;;{{{ Additional navigation
-(defun emacspeak-py-previous-block()
+(defun emacspeak-python-previous-block()
   "Move backward to the beginning of the current block.
 If already at the beginning then move to previous block."
   (interactive)
@@ -263,7 +239,7 @@ If already at the beginning then move to previous block."
       (emacspeak-auditory-icon 'large-movement)
       (emacspeak-speak-line))))
 
-(defun emacspeak-py-next-block()
+(defun emacspeak-python-next-block()
   "Move forward to the beginning of the next block."
   (interactive)
   (end-of-python-def-or-class)
@@ -275,6 +251,17 @@ If already at the beginning then move to previous block."
 
 ;;}}}
 ;;{{{ keybindings
+
+(progn
+  (declaim (special  python-mode-map))
+  (define-key python-mode-map "\M-a" 'beginning-of-python-def-or-class)
+  (define-key python-mode-map "\M-e" 'end-of-python-def-or-class)
+  (define-key python-mode-map "\M-n" 'python-next-statement)
+  (define-key python-mode-map "\M-p" 'python-previous-statement)
+  (define-key python-mode-map "\C-\M-u" 'python-goto-block-up)
+  (define-key python-mode-map "\C-\M-n" 'emacspeak-python-next-block)
+  (define-key python-mode-map "\C-\M-p" 'emacspeak-python-previous-block)
+  )
 
 (declaim (special  py-mode-map))
 (add-hook 'python-mode-hook

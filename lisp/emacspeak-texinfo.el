@@ -1,5 +1,5 @@
 ;;; emacspeak-texinfo.el --- Speech enable texinfo mode
-;;; $Id: emacspeak-texinfo.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
+;;; $Id: emacspeak-texinfo.el 7323 2011-10-26 00:50:39Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension to speech enable
 ;;; texinfo mode
@@ -49,6 +49,21 @@
 ;;; This module speech enables net-texinfo mode
 
 ;;; Code:
+
+;;}}}
+;;{{{ voice locking
+
+(defun emacspeak-texinfo-mode-hook ()
+  "Setup Emacspeak extensions"
+  (declare (special dtk-split-caps))
+  (dtk-set-punctuations 'all)
+  (or dtk-split-caps
+      (dtk-toggle-split-caps))
+  (or emacspeak-audio-indentation
+      (emacspeak-toggle-audio-indentation))
+  (emacspeak-dtk-sync))
+
+(add-hook 'texinfo-mode-hook 'emacspeak-texinfo-mode-hook)
 
 ;;}}}
 ;;{{{ advice

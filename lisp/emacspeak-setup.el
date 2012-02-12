@@ -1,5 +1,5 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el 7023 2011-05-12 15:38:42Z tv.raman.tv $
+;;; $Id: emacspeak-setup.el 7431 2011-11-23 03:30:52Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
@@ -95,7 +95,7 @@ pronunciation dictionaries are stored. ")
 ;;;###autoload
 (defconst emacspeak-version
   (format
-   "34.0 %s"
+   "35.0 %s"
    (cond
     ((file-exists-p emacspeak-readme-file)
      (let ((buffer (find-file-noselect emacspeak-readme-file))
@@ -118,7 +118,7 @@ pronunciation dictionaries are stored. ")
 
 ;;;###autoload
 (defconst emacspeak-codename
-  "Bubbles"
+  "HeadDog"
   "Code name of present release.")
 
 ;;}}}
@@ -170,9 +170,6 @@ Don't set this variable manually. Use customization interface."
   :group 'tts
   :type 'integer)
 
-(defvar tts-default-speech-rate dectalk-default-speech-rate
-  "Setup on a per engine basis.")
-
 ;;}}}
 ;;{{{ Hooks
 
@@ -186,10 +183,8 @@ Don't set this variable manually. Use customization interface."
   "Default hook function run after TTS is started."
   (tts-configure-synthesis-setup)
   (dtk-set-rate tts-default-speech-rate t)
-  (dtk-interp-sync))
-
-(add-hook 'dtk-startup-hook
-          'emacspeak-tts-startup-hook)
+  (dtk-interp-sync)
+  (add-hook 'dtk-startup-hook 'emacspeak-tts-startup-hook))
 
 (defvar emacspeak-startup-hook nil)
 (defun emacspeak-setup-header-line ()
@@ -200,16 +195,16 @@ Don't set this variable manually. Use customization interface."
   (when emacspeak-use-header-line
     (setq header-line-format
           emacspeak-header-line-format)))
+
 (defun emacspeak-tvr-startup-hook ()
   "Emacspeak startup hook that I use."
   (load-library "emacspeak-alsaplayer")
-  (load-library "emacspeak-webspace"))
+  (load-library "emacspeak-webspace")
+  (when (locate-library "dbus")
+    (load-library "emacspeak-dbus")))
 
 (add-hook 'emacspeak-startup-hook 'emacspeak-setup-header-line)
 (add-hook 'emacspeak-startup-hook 'emacspeak-tvr-startup-hook)
-
-;;; Use (add-hook 'emacspeak-startup-hook ...)
-;;; to add your personal settings.
 
 ;;}}}
 (emacspeak)

@@ -1,5 +1,5 @@
 ;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
-;;; $Id: emacspeak-dired.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
+;;; $Id: emacspeak-dired.el 7322 2011-10-26 00:43:56Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enable dired
 ;;; Keywords: Emacspeak, Dired, Spoken Output
@@ -251,7 +251,6 @@ Provide auditory icon when finished."
   "Produce an auditory icon."
   (when (interactive-p)
     (let ((emacspeak-speak-messages nil))
-      (voice-lock-mode 1)
       (emacspeak-dired-label-fields)
       (emacspeak-auditory-icon 'open-object )
       (emacspeak-speak-mode-line))))
@@ -269,79 +268,59 @@ Provide auditory icon when finished."
   (voice-lock-mode 1)
   (emacspeak-dired-label-fields))
 
+(defadvice dired  (after  emacspeak pre act comp)
+  "Produce an auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object )
+    (emacspeak-speak-mode-line)))
+
 (loop for f in
-      '(dired
-        dired-find-file
+      '(dired-find-file
 	dired-find-file-other-window
 	dired-display-file
 	dired-view-file)
       do
       (eval
-       `(defadvice ,f  (after  emacspeak pre act comp)
+       `(defadvice ,f  (around  emacspeak pre act comp)
           "Produce an auditory feedback."
-          (when (interactive-p)
-            (emacspeak-auditory-icon 'open-object )
-            (emacspeak-speak-mode-line)))))
+          (cond
+           ((interactive-p)
+            (let ((directory-p (file-directory-p (dired-get-filename t t ))))
+              ad-do-it
+              (when directory-p
+                (emacspeak-dired-label-fields))
+              (emacspeak-auditory-icon 'open-object)
+              (emacspeak-speak-mode-line)))
+           (t ad-do-it))
+          ad-return-value)))
 
-(defadvice dired-tree-up (after emacspeak pre act)
-  "Speak the filename."
-  (when (interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-dired-speak-line)))
+(loop for f in
+      '(dired-next-line
+        dired-previous-line)
+      do
+      (eval
+       `(defadvice ,f  (after  emacspeak pre act comp)
+          "Speak the filename."
+          (when (interactive-p )
+            (emacspeak-auditory-icon 'select-object)
+            (emacspeak-dired-speak-line)))))
 
-(defadvice dired-tree-down (after emacspeak pre act)
-  "Speak the filename."
-  (when (interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-dired-speak-line)))
-
-(defadvice dired-next-line (after emacspeak pre act)
-  "Speak the filename name."
-  (when (interactive-p )
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-dired-speak-line)))
-
-(defadvice dired-previous-line (after emacspeak pre act)
-  "Speak the filename name."
-  (when (interactive-p )
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-dired-speak-line)))
-
-(defadvice dired-next-marked-file (after emacspeak pre act)
-  "Speak the filename name."
-  (when (interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-dired-speak-line)))
-
-(defadvice dired-prev-marked-file  (after emacspeak pre act)
-  "Speak the filename name."
-  (when (interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-dired-speak-line)))
-
-(defadvice dired-prev-subdir (after emacspeak pre act)
-  "Speak the filename name."
-  (when (interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-dired-speak-line)))
-
-(defadvice dired-next-subdir (after emacspeak pre act)
-  "Speak the filename name."
-  (when (interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-dired-speak-line)))
-
-(defadvice dired-next-dirline (after emacspeak pre act)
-  "Speak the filename name."
-  (when (interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-dired-speak-line)))
-
-(defadvice dired-prev-dirline (after emacspeak pre act)
-  "Speak the filename name."
-  (when (interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-dired-speak-line)))
+(loop for f in
+      '(dired-tree-up
+        dired-tree-down
+        dired-next-marked-file
+        dired-prev-marked-file
+        dired-next-subdir
+        dired-prev-subdir
+        dired-next-dirline
+        dired-prev-dirline)
+      do
+      (eval
+       `(defadvice ,f  (after  emacspeak pre act comp)
+          "Speak the filename."
+          (when (interactive-p )
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-dired-speak-line)))))
 
 (defadvice dired-unmark-backward (after emacspeak pre act)
   "Speak the filename name."
@@ -404,8 +383,7 @@ Assumes that `dired-listing-switches' contains  -al"
 
 (defun emacspeak-dired-label-fields ()
   "Labels the fields of the listing in the dired buffer.
-Currently is a no-op  unless
-unless `dired-listing-switches' contains -al"
+Currently is a no-op unless `dired-listing-switches' contains -al"
   (interactive)
   (declare (special dired-listing-switches))
   (when (save-match-data
