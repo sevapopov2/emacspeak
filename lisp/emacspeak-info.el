@@ -172,14 +172,13 @@ and then cue the next selected buffer."
   (interactive)
   (declare (special Info-use-header-line
                     Info-header-line))
-  (let (cond
-        ((and (boundp 'Info-use-header-line)
-              (boundp 'Info-header-line)
-              Info-header-line)
-         (dtk-speak Info-header-line))
-        (t (save-excursion
-             (goto-char (point-min))
-             (emacspeak-speak-line))))))
+  (if (and (boundp 'Info-use-header-line)
+           (boundp 'Info-header-line)
+           Info-header-line)
+      (dtk-speak Info-header-line)
+    (save-excursion
+      (goto-char (point-min))
+      (emacspeak-speak-line))))
 
 ;;}}}
 ;;{{{ Inhibit spurious speech feedback
