@@ -70,12 +70,8 @@ install: build
 	chmod 0755 $(deblsp)/lisp/g-client/python/contacts.py
 	chmod 0755 $(debtmp)-cartoon-22k-mono/$(eldir)/sounds/cartoon-22k-mono
 	chmod 0644 $(debtmp)-cartoon-22k-mono/$(eldir)/sounds/cartoon-22k-mono/*
-	chmod 0755 $(debtmp)-chimes-mono/$(eldir)/sounds/chimes-mono
-	chmod 0644 $(debtmp)-chimes-mono/$(eldir)/sounds/chimes-mono/*
 	chmod 0755 $(debtmp)-chimes-stereo/$(eldir)/sounds/chimes-stereo
 	chmod 0644 $(debtmp)-chimes-stereo/$(eldir)/sounds/chimes-stereo/*
-	chmod 0755 $(debtmp)-chimes-11k-stereo/$(eldir)/sounds/chimes-11k-stereo
-	chmod 0644 $(debtmp)-chimes-11k-stereo/$(eldir)/sounds/chimes-11k-stereo/*
 
 
 # Build architecture-independent files here.
