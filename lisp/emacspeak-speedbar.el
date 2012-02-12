@@ -115,8 +115,8 @@
    ((interactive-p)
     (let ((emacspeak-speak-messages nil))
       ad-do-it
-      (emacspeak-speedbar-speak-line)
-      (emacspeak-auditory-icon 'select-object)))
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-speedbar-speak-line)))
    (t ad-do-it))
   ad-return-value)
 (defadvice speedbar-prev (around emacspeak pre act comp)
@@ -125,8 +125,8 @@
    ((interactive-p)
     (let ((emacspeak-speak-messages nil))
       ad-do-it
-      (emacspeak-speedbar-speak-line)
-      (emacspeak-auditory-icon 'select-object)))
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-speedbar-speak-line)))
    (t ad-do-it))
   ad-return-value)
 (defadvice speedbar-edit-line (after emacspeak pre act comp)
@@ -147,14 +147,14 @@
                                        comp)
   "Speak the line we just expanded"
   (when (interactive-p) 
-    (emacspeak-speedbar-speak-line)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speedbar-speak-line)))
 
 (defadvice speedbar-contract-line (after emacspeak pre act comp)
   "Speak the line we just contracted"
   (when (interactive-p) 
-    (emacspeak-speedbar-speak-line)
-    (emacspeak-auditory-icon 'close-object)))
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speedbar-speak-line)))
 
 (defadvice speedbar-up-directory (around emacspeak pre act comp)
   " Auditory icon and speech feedback indicate result of the

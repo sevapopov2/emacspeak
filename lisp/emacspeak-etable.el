@@ -75,6 +75,7 @@
   "Speak character you're deleting."
   (cond
    ((interactive-p )
+    (when dtk-stop-immediately (dtk-stop))
     (dtk-tone 500 30 'force)
     (emacspeak-speak-char t)
     ad-do-it)
@@ -85,6 +86,7 @@
   "Speak character you're deleting."
   (cond
    ((interactive-p )
+    (when dtk-stop-immediately (dtk-stop))
     (dtk-tone 500 30 'force)
     (emacspeak-speak-this-char (preceding-char ))
     ad-do-it)

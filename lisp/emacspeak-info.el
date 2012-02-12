@@ -145,16 +145,23 @@ and then cue the next selected buffer."
   (when (interactive-p )
     (dtk-stop)
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (with-current-buffer (window-buffer)
+      (emacspeak-speak-mode-line))))
 
-(defadvice Info-next-reference (after emacspeak pre act)
-  "Speak the line. "
-  (when (interactive-p)
-    (emacspeak-speak-line)))
+(loop for f in
+      '(Info-next-reference Info-prev-reference)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act)
+          "Play an auditory icon and speak the line. "
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-line)))))
 
-(defadvice Info-prev-reference (after emacspeak pre act)
-  "Speak the line. "
+(defadvice Info-search (after emacspeak pre act)
+  "Play an auditory icon and speak the line."
   (when (interactive-p)
+    (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 
 ;;}}}
@@ -165,25 +172,24 @@ and then cue the next selected buffer."
   (interactive)
   (declare (special Info-use-header-line
                     Info-header-line))
-  (let (cond
-        ((and (boundp 'Info-use-header-line)
-              (boundp 'Info-header-line)
-              Info-header-line)
-         (dtk-speak Info-header-line))
-        (t (save-excursion
-             (goto-char (point-min))
-             (emacspeak-speak-line))))))
+  (if (and (boundp 'Info-use-header-line)
+           (boundp 'Info-header-line)
+           Info-header-line)
+      (dtk-speak Info-header-line)
+    (save-excursion
+      (goto-char (point-min))
+      (emacspeak-speak-line))))
 
 ;;}}}
-;;{{{  Emacs 21
-;;; There is a bug in Emacs 21 that causes info-extract-pointer to be
-;;; called erroneously.
+;;{{{ Inhibit spurious speech feedback
 
-(defadvice Info-extract-pointer  (around emacspeak pre act comp)
+(defadvice Info-check-pointer  (around emacspeak pre act comp)
   "Silence emacspeak during call."
   (let ((emacspeak-speak-messages nil)
+        (emacspeak-speak-cue-errors nil)
         (emacspeak-use-auditory-icons nil))
     ad-do-it))
+
 ;;}}}
 ;;{{{ keymaps
 (declaim (special Info-mode-map))
