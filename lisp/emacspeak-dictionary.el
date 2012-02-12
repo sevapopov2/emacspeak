@@ -48,31 +48,78 @@
 ;;; server at dict.org:2628
 
 ;;}}}
+;;{{{ Helper functions.
+
+(defun referenced-p ()
+  "Return t if the call was caused by selecting a link."
+  (declare (special referenced-p))
+  (when (and (boundp 'referenced-p) referenced-p)
+    (setq referenced-p nil)
+    t))
+
+;;}}}
 ;;{{{ Advice interactive commands to speak.
+(defadvice link-selected (around emacspeak pre act comp)
+  "Get referenced calls to be recognizable."
+  (let ((referenced-p t))
+    ad-do-it)
+  ad-return-value)
+
 (defadvice dictionary (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
-(defadvice dictionary-close (after emacspeak pre act comp)
+(defadvice dictionary-close (around emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (if (not (or (interactive-p) (referenced-p)))
+      ad-do-it
+    ad-do-it
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line))
+  ad-return-value)
+(defadvice dictionary-restore-state (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (referenced-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 (defadvice dictionary-select-dictionary (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (message "Selected dictionary")))
+  (when (or (interactive-p) (referenced-p))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 (defadvice dictionary-select-strategy (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (or (interactive-p) (referenced-p))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
+
+(defadvice dictionary-set-dictionary (around emacspeak pre act comp)
+  "Provide auditory feedback."
+  (if (not (referenced-p))
+      ad-do-it
     (emacspeak-auditory-icon 'select-object)
-    (message "Selected strategy")))
+    (let ((emacspeak-speak-messages t))
+      ad-do-it))
+  ad-return-value)
+
+(defadvice dictionary-set-strategy (around emacspeak pre act comp)
+  "Provide auditory feedback."
+  (if (not (referenced-p))
+      ad-do-it
+    (emacspeak-auditory-icon 'select-object)
+    (let ((emacspeak-speak-messages t))
+      ad-do-it))
+  ad-return-value)
 
 (defadvice dictionary-search (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (or (interactive-p) (referenced-p))
+    (emacspeak-auditory-icon 'search-hit)
+    (emacspeak-speak-line)))
+(defadvice dictionary-new-search (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (or (interactive-p) (referenced-p))
     (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 (defadvice dictionary-lookup-definition (after emacspeak pre act comp)
@@ -83,7 +130,7 @@
 
 (defadvice dictionary-match-words (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (or (interactive-p) (referenced-p))
     (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 
@@ -103,6 +150,16 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-text-range 'link-function)))
+
+;;}}}
+;;{{{ mapping font faces to personalities 
+
+(voice-setup-add-map
+ '(
+   (dictionary-button-face voice-bolden)
+   (dictionary-word-entry-face voice-animate)
+   (dictionary-reference-face voice-bolden)
+   ))
 
 ;;}}}
 (provide 'emacspeak-dictionary)
