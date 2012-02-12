@@ -76,20 +76,6 @@ Description: Cartoons auditory icons theme for Emacspeak
  this theme by command emacspeak-sounds-select-theme
  bound by default to control-e ).
 
-Package: emacspeak-chimes-mono
-Section: sound
-Architecture: all
-Depends: ${misc:Depends}
-Conflicts: emacspeak-chimes
-Recommends: emacspeak
-Description: Chimes auditory icons theme for Emacspeak
- This theme is made up mostly of different chimes and short notes
- from various instruments. The icons are high-quality 44K-mono.
- .
- When the package is installed, you can switch Emacspeak to use
- this theme by command emacspeak-sounds-select-theme
- bound by default to control-e ).
-
 Package: emacspeak-chimes-stereo
 Section: sound
 Architecture: all
@@ -98,19 +84,6 @@ Recommends: emacspeak
 Description: Chimes auditory icons theme for Emacspeak
  This theme is made up mostly of different chimes and short notes
  from various instruments. The icons are high-quality 44K-stereo.
- .
- When the package is installed, you can switch Emacspeak to use
- this theme by command emacspeak-sounds-select-theme
- bound by default to control-e ).
-
-Package: emacspeak-chimes-11k-stereo
-Section: sound
-Architecture: all
-Depends: ${misc:Depends}
-Recommends: emacspeak
-Description: Chimes auditory icons theme for Emacspeak
- This theme is made up mostly of different chimes and short notes
- from various instruments. The icons are moderate quality 11K-stereo.
  .
  When the package is installed, you can switch Emacspeak to use
  this theme by command emacspeak-sounds-select-theme
