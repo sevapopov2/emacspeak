@@ -1,6 +1,16 @@
 This list contains only those changes that were made against original
 releases, but not related to the Debian package.
 
+2012-02-13  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-alsaplayer.el: Fixed default for alsaplayer device.
+
+	* lisp/emacspeak-info.el: Fixed info header speaking functionality.
+
+	* lisp/dtk-speak.el:
+	Restored initial speech rate for Multispeech to be the same as for the
+	DecTalk speech server.
+
 2011-01-09  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-alsaplayer.el: Fixed some charset related
