@@ -86,7 +86,6 @@ emacspeak-re-builder.elc \
 
 AUX_OBJECTS =  cd-tool.elc \
 amixer.elc \
-nm.elc \
 emacspeak-add-log.elc \
 emacspeak-alsaplayer.elc \
 emacspeak-amark.elc \
@@ -122,7 +121,6 @@ emacspeak-cyclebuffer.elc \
 emacspeak-edb.elc \
 emacspeak-daisy.elc \
 emacspeak-damlite.elc \
-emacspeak-dbus.elc \
 emacspeak-debian-bug.elc \
 emacspeak-dictation.elc \
 emacspeak-dictionary.elc \
@@ -259,6 +257,10 @@ emacspeak-xslide.elc  \
 emacspeak-xslt.elc \
 emacspeak-xslt-process.elc   \
 emacspeak-zinf.elc
+
+ifneq ($(strip $(shell emacs -batch -Q -eval '(message (locate-library "dbus"))' 2>&1)),)
+AUX_OBJECTS += nm.elc emacspeak-dbus.elc
+endif
 
 ADDON_OBJECTS= tapestry.elc   stack-f.elc  xml-parse.elc toy-braille.elc
 
