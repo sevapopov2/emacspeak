@@ -185,7 +185,7 @@ split caps Do not set this variable by hand, use command
   "Variable holding last output.")
 
 (defvar dtk-speech-rate
-  (if (string-match "dtk" dtk-program)
+  (if (string-match "dtk\\|multispeech" dtk-program)
       225 100)
   "Rate at which tts talks.
 Do not modify this variable directly; use command  `dtk-set-rate'

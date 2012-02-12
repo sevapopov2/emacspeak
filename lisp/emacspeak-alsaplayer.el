@@ -142,12 +142,12 @@ It is used for tags decoding."
 
 (defvar emacspeak-alsaplayer-buffer "*alsaplayer*"
   "Buffer for alsaplayer interaction.")
-(defcustom emacspeak-alsaplayer-device "$ALSA_DEFAULT"
+(defcustom emacspeak-alsaplayer-device "default"
   "Device to use for alsaplayer"
   :type '(choice
           (const  :tag "Ignore" nil)
           (const  :tag "Card 1" "hw:1,0")
-          (const :tag "ALSA_DEFAULT"  "$ALSA_DEFAULT")
+          (const :tag "ALSA_DEFAULT"  "default")
           (string :tag "Custom"))
   :group  'emacspeak-alsaplayer)
 
