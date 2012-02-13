@@ -151,6 +151,14 @@ It is used for tags decoding."
           (string :tag "Custom"))
   :group  'emacspeak-alsaplayer)
 
+(defun emacspeak-alsaplayer-active-p ()
+  "Check if the alsaplayer is running."
+  (declare (special emacspeak-alsaplayer-buffer))
+  (let ((buffer (get-buffer emacspeak-alsaplayer-buffer)))
+    (and buffer
+         (get-buffer-process buffer)
+         (eq 'run (process-status (get-buffer-process buffer))))))
+
 ;;;###autoload
 (defun emacspeak-alsaplayer-launch ()
   "Launch Alsaplayer.
@@ -196,10 +204,14 @@ Optional second arg watch-pattern specifies line of output to
   getting status twice."
   (declare (special emacspeak-alsaplayer-program
                     emacspeak-alsaplayer-buffer))
+  (unless (emacspeak-alsaplayer-active-p)
+    (emacspeak-alsaplayer-launch)
+    (unless (emacspeak-alsaplayer-active-p)
+      (error "Cannot launch alsaplayer session")))
   (save-current-buffer
     (let ((deactivate-mark nil)
           (coding-system-for-read emacspeak-alsaplayer-coding-system))
-      (set-buffer (get-buffer-create emacspeak-alsaplayer-buffer))
+      (set-buffer (get-buffer emacspeak-alsaplayer-buffer))
       (erase-buffer)
       (shell-command
        (format "%s %s %s"
@@ -431,11 +443,12 @@ Optional second arg watch-pattern specifies line of output to
   "Quit  alsaplayer"
   (interactive)
   (let ((kill-buffer-query-functions nil))
-    (emacspeak-alsaplayer-send-command "--quit")
-    (delete-window)
+    (when (emacspeak-alsaplayer-active-p)
+      (emacspeak-alsaplayer-send-command "--quit"))
+    (when (eq major-mode 'emacspeak-alsaplayer-mode)
+      (kill-buffer (current-buffer))
+      (delete-window))
     (when (and emacspeak-alsaplayer-auditory-feedback (interactive-p))
-      (when (eq major-mode 'emacspeak-alsaplayer-mode)
-        (kill-buffer (current-buffer)))
       (emacspeak-auditory-icon 'close-object)
       (emacspeak-speak-mode-line))))
 

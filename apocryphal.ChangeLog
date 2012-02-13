@@ -3,6 +3,17 @@ releases, but not related to the Debian package.
 
 2012-02-13  Igor B. Poretsky <poretsky@mlbox.ru>
 
+	* lisp/emacspeak-alsaplayer.el:
+	Don't send alsaplayer command if no active session is available, try
+	to launch one in that case. Always kill alsaplayer buffer indeed when
+	quitting.
+
+	* lisp/emacspeak-jabber.el:
+	Auditory feedback improvements especially for new versions of
+	emacs-jabber.
+
+2012-02-13  Igor B. Poretsky <poretsky@mlbox.ru>
+
 	* lisp/emacspeak-alsaplayer.el: Fixed default for alsaplayer device.
 
 	* lisp/emacspeak-info.el: Fixed info header speaking functionality.
@@ -10,6 +21,22 @@ releases, but not related to the Debian package.
 	* lisp/dtk-speak.el:
 	Restored initial speech rate for Multispeech to be the same as for the
 	DecTalk speech server.
+
+2011-12-14  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	Merged upstream changes.
+
+2011-12-09  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	Import upstream release 35.0
+
+2011-12-08  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	Merged upstream changes.
+
+2011-12-06  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	Import upstream release 34.0
 
 2011-01-09  Igor B. Poretsky <poretsky@mlbox.ru>
 

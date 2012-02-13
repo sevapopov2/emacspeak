@@ -1,3 +1,11 @@
+emacspeak (35.0-3) unstable; urgency=low
+
+  * Fixed Emacs flavor distinguishing during installation.
+  * Some upstream sources improvements. See apocryphal.ChangeLog for
+    details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 13 Feb 2012 20:05:23 +0400
+
 emacspeak (35.0-2) unstable; urgency=low
 
   * Implemented several fixes to the upstream sources. See

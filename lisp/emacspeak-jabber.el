@@ -78,10 +78,15 @@
 ;;}}}
 ;;{{{ Advice interactive commands:
 
-(defadvice jabber-connect (after emacspeak pre act comp)
-  "Provide auditory icon if possible."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'on)))
+(loop for f in
+      '(jabber-connect
+        jabber-connect-all)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory icon if possible."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'on)))))
 
 (defadvice jabber-disconnect (after emacspeak pre act comp)
   "Provide auditory icon if possible."
@@ -147,7 +152,8 @@
     (emacspeak-auditory-icon 'close-object)))
 
 (loop for f in
-      '(jabber-chat-with
+      '(jabber-roster-ret-action-at-point
+        jabber-chat-with
         jabber-chat-with-jid-at-point
         jabber-switch-to-roster-buffer
         jabber-vcard-edit)
@@ -163,7 +169,8 @@
 ;;{{{ roster buffer:
 
 (loop for f in
-      '(jabber-go-to-next-jid jabber-go-to-previous-jid)
+      '(jabber-go-to-next-jid
+        jabber-go-to-previous-jid)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -171,6 +178,21 @@
           (when (interactive-p)
             (emacspeak-auditory-icon 'large-movement)
             (emacspeak-speak-text-range 'jabber-jid)))))
+
+(loop for f in
+      '(jabber-roster-delete-jid-at-point
+        jabber-roster-delete-at-point)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory icon if possible."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'delete-object)))))
+
+(defadvice jabber-roster-toggle-binding-display (after emacspeak pre act comp)
+  "Provide auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon (if jabber-roster-show-bindings 'on 'off))))
 
 ;;}}}
 ;;{{{ alerts
