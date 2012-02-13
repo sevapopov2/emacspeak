@@ -183,9 +183,9 @@ many available corrections."
           (emacspeak-speak-messages nil))
       (setq emacspeak-last-message nil)
       ad-do-it
+      (emacspeak-auditory-icon 'task-done)
       (when (interactive-p)
-        (emacspeak-speak-message-again))
-      (emacspeak-auditory-icon 'task-done)))
+        (emacspeak-speak-message-again))))
    (t ad-do-it))
   ad-return-value)
 

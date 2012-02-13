@@ -66,8 +66,10 @@
 
 ;;}}}
 ;;{{{ Forward Declarations:
-(declare-function emacspeak-auditory-icon "emacspeak-sounds.el" (icon))
-(declare-function emacspeak-queue-auditory-icon "emacspeak-sounds.el" (icon))
+(when (fboundp 'declare-function)
+  (declare-function emacspeak-auditory-icon "emacspeak-sounds.el" (icon))
+  (declare-function emacspeak-queue-auditory-icon "emacspeak-sounds.el" (icon)))
+
 ;;;###autoload 
 (defvar dtk-program
   (or  (getenv "DTK_PROGRAM" ) "dtk-exp")
@@ -183,7 +185,7 @@ split caps Do not set this variable by hand, use command
   "Variable holding last output.")
 
 (defvar dtk-speech-rate
-  (if (string-match "dtk" dtk-program)
+  (if (string-match "dtk\\|multispeech" dtk-program)
       225 100)
   "Rate at which tts talks.
 Do not modify this variable directly; use command  `dtk-set-rate'
@@ -794,10 +796,13 @@ Argument OUTPUT is the newly arrived output."
            (setq ,switch (not ,switch ))))
       (when (interactive-p)
         (emacspeak-auditory-icon (if ,switch 'on 'off))
-        (message "Turned %s %s  %s."
-                 (if ,switch "on" "off" )
-                 ',switch
-                 (if prefix "" " locally"))))))
+        (let ((state ,switch)
+              (dtk-quiet nil)
+              (emacspeak-speak-messages t))
+          (message "Turned %s %s  %s."
+                   (if state "on" "off" )
+                   ',switch
+                   (if prefix "" " locally")))))))
 
 ;;}}}
 ;;{{{  sending commands
@@ -1229,7 +1234,7 @@ available TTS servers.")
     (aset  table 75 "cap[*]k")
     (aset  table 76 "cap[*]l")
     (aset  table 77 "cap[*]m")
-    (aset  table 78 "cap[*]m")
+    (aset  table 78 "cap[*]n")
     (aset  table 79 "cap[*]o")
     (aset  table 80 "cap[*]p")
     (aset  table 81 "cap[*]q")
