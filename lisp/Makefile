@@ -258,7 +258,7 @@ emacspeak-xslt.elc \
 emacspeak-xslt-process.elc   \
 emacspeak-zinf.elc
 
-ifneq ($(strip $(shell emacs -batch -Q -eval '(message (locate-library "dbus"))' 2>&1)),)
+ifneq ($(strip $(shell $(EMACS) -batch -Q -eval '(message (locate-library "dbus"))' 2>&1)),)
 AUX_OBJECTS += nm.elc emacspeak-dbus.elc
 endif
 
