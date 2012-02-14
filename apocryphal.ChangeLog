@@ -1,6 +1,17 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2012-02-15  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-advice.el:
+	Don't produce extra messages about buffer saving, especially when no
+	changes need to be saved in fact.
+
+	* lisp/emacspeak-speak.el:
+	Improved emacspeak-speak-message-again function. Now it does not
+	stumble when cached message is requested, but the message cache is
+	empty.
+
 2012-02-14  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/dtk-speak.el:

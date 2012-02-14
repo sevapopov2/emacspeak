@@ -1,3 +1,10 @@
+emacspeak (35.0-5) unstable; urgency=low
+
+  * Fixed some aspects of speaking messages. See apocryphal.ChangeLog
+    for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 15 Feb 2012 00:47:47 +0400
+
 emacspeak (35.0-4) unstable; urgency=low
 
   * Minor fix for speech server initialization. See apocryphal.ChangeLog

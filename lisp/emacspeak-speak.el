@@ -2498,10 +2498,12 @@ if `emacspeak-speak-message-again-should-copy-to-kill-ring' is set."
                     emacspeak-speak-message-again-should-copy-to-kill-ring))
   (cond
    (from-message-cache
-    (dtk-speak   emacspeak-last-message)
-    (when (and (interactive-p)
-               emacspeak-speak-message-again-should-copy-to-kill-ring)
-      (kill-new emacspeak-last-message)))
+    (if (null emacspeak-last-message)
+        (dtk-speak "Message cache is empty")
+      (dtk-speak emacspeak-last-message)
+      (when (and (interactive-p)
+                 emacspeak-speak-message-again-should-copy-to-kill-ring)
+        (kill-new emacspeak-last-message))))
    (t (save-excursion
         (set-buffer "*Messages*")
         (goto-char (point-max))
