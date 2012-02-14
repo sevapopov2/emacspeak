@@ -1,5 +1,12 @@
 This list contains only those changes that were made against original
-releases, but not related to the Debian package.
+releases, but not especially related to the Debian package.
+
+2012-02-14  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/dtk-speak.el:
+	Temporary switch to the home directory before starting speech server
+	subprocess to prevent unexpected lock of mounted file systems in some
+	certain circumstances.
 
 2012-02-13  Igor B. Poretsky <poretsky@mlbox.ru>
 

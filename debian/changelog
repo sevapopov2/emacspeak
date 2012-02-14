@@ -1,3 +1,10 @@
+emacspeak (35.0-4) unstable; urgency=low
+
+  * Minor fix for speech server initialization. See apocryphal.ChangeLog
+    for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 14 Feb 2012 20:16:07 +0400
+
 emacspeak (35.0-3) unstable; urgency=low
 
   * Fixed Emacs flavor distinguishing during installation.
