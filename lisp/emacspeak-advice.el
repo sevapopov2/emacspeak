@@ -1530,30 +1530,20 @@ Produce an auditory icon if possible."
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line )))
 
-(defadvice save-buffer (around emacspeak pre act)
-  "Produce an auditory icon if possible."
-  (declare (special emacspeak-last-message))
-  (cond
-   ((interactive-p)
-    (setq emacspeak-last-message nil)
-    ad-do-it
-    (emacspeak-auditory-icon 'save-object)
-    (or emacspeak-last-message
-        (message "Wrote %s"
-                 (buffer-file-name))))
-   (t ad-do-it))
-  ad-return-value)
-
-(defadvice save-some-buffers (around emacspeak pre act)
-  "Produce an auditory icon if possible."
-  (declare (special emacspeak-last-message))
-  (cond
-   ((interactive-p)
-    (setq emacspeak-last-message nil)
-    ad-do-it
-    (emacspeak-auditory-icon 'save-object))
-   (t ad-do-it))
-  ad-return-value)
+(loop for f in 
+      '(save-buffer save-some-buffers)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
+          "Produce an auditory icon if possible."
+          (declare (special emacspeak-last-message))
+          (cond
+           ((interactive-p)
+            (setq emacspeak-last-message nil)
+            ad-do-it
+            (emacspeak-auditory-icon 'save-object))
+           (t ad-do-it))
+          ad-return-value)))
 
 (defadvice kill-region (around emacspeak pre act)
   "Indicate region has been killed.
