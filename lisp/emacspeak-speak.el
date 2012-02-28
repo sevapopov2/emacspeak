@@ -1922,11 +1922,8 @@ Second interactive prefix sets clock to new timezone."
     (put-text-property 0 (length emacspeak-codename)
                        'personality voice-bolden
                        emacspeak-codename)
-    (when (and  emacspeak-use-auditory-icons
-                (file-exists-p "/usr/bin/mpg123"))
-      (start-process "mp3" nil "mpg123"
-                     "-q"
-                     (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))
+    (when  emacspeak-use-auditory-icons
+      (emacspeak-play-startup-icon))
     (tts-with-punctuations 'some
                            (dtk-speak
                             (concat signature

@@ -421,12 +421,12 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
 (defsubst emacspeak-play-startup-icon ()
   "Play startup icon if requested."
   (declare (special emacspeak-play-emacspeak-startup-icon))
-  (let ((player  (or (executable-find "mplayer")
-                     (executable-find "mpg321"))))
+  (let ((player  (or (executable-find "mpg123")
+                     (executable-find "mpg321")
+                     (executable-find "mplayer"))))
     (when (and  emacspeak-play-emacspeak-startup-icon player)
-      (start-process "mp3" nil
-                     player
-                     (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))))
+      (call-process player nil 0 nil
+                    (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))))
 ;;;###autoload
 (defun emacspeak()
   "Starts the Emacspeak speech subsystem.  Use emacs as you
