@@ -471,6 +471,7 @@ and TABLE gives the values along that dimension."
       (set-process-coding-system dtk-speaker-process multispeech-coding-system multispeech-coding-system)
     (set-process-coding-system dtk-speaker-process locale-coding-system locale-coding-system))
   (setq-default dtk-speak-nonprinting-chars nil)
+  (dtk-unicode-update-untouched-charsets '(ascii latin-iso8859-1 cyrillic-iso8859-5))
   (require 'russian-spelling))
 
 ;;}}}
