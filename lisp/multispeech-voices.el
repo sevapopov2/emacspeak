@@ -41,12 +41,10 @@
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'acss-structure)
+(require 'dtk-unicode)
 
 ;;}}}
 ;;{{{  voice table
-
-(defvar tts-default-voice nil
-  "Default voice used. ")
 
 (defvar multispeech-default-voice-string ""
   "Default Multispeech tag for  default voice.")

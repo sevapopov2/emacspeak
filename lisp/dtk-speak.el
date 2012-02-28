@@ -66,9 +66,12 @@
 
 ;;}}}
 ;;{{{ Forward Declarations:
-(when (fboundp 'declare-function)
-  (declare-function emacspeak-auditory-icon "emacspeak-sounds.el" (icon))
-  (declare-function emacspeak-queue-auditory-icon "emacspeak-sounds.el" (icon)))
+
+(unless (fboundp 'declare-function)
+  (defmacro declare-function (&rest args) nil))
+
+(declare-function emacspeak-auditory-icon "emacspeak-sounds.el" (icon))
+(declare-function emacspeak-queue-auditory-icon "emacspeak-sounds.el" (icon))
 
 ;;;###autoload 
 (defvar dtk-program

@@ -81,8 +81,7 @@ grep path:")))
                   (length (file-name-directory path))))
      (t "New Session"))))
 
-(when (fboundp 'declare-function)
-  (declare-function fundamental-mode ()))
+(declare-function fundamental-mode ())
 
 (define-derived-mode emacspeak-alsaplayer-mode fundamental-mode 
   "Alsaplayer Interaction"
