@@ -230,7 +230,7 @@ were marked or unmarked for deletion."
 Turn on voice lock temporarily.
 Provide auditory icon when finished."
   (declare (special voice-lock-mode ))
-  (let ((voice-lock-mode 1)
+  (let ((voice-lock-mode t)
         (emacspeak-speak-messages nil))
     (dtk-stop)
     (unwind-protect

@@ -196,9 +196,6 @@ Do not modify this variable directly; use command  `dtk-set-rate'
 
 (make-variable-buffer-local 'dtk-speech-rate)
 
-;;;declared here to help compilation
-(defvar voice-lock-mode nil)
-
 ;;}}}
 ;;{{{ helper: apply pronunciations
 ;;; moved here from the emacspeak-pronounce module for efficient
@@ -1891,8 +1888,8 @@ only speak upto the first ctrl-m."
                 dtk-split-caps split-caps
                 dtk-speak-nonprinting-chars
                 inherit-speak-nonprinting-chars
-                tts-strip-octals inherit-strip-octals
-                voice-lock-mode voice-lock)
+                tts-strip-octals inherit-strip-octals)
+          (voice-lock-mode (if voice-lock 1 -1))
           (set-syntax-table syntax-table )
           (set-buffer-multibyte inherit-enable-multibyte-characters)
           (insert  text)

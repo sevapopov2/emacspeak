@@ -74,7 +74,7 @@
                                         ;"Wrapper to force speedbar to work outside a windowing system. "
                                         ;(let ((spoofing-p (not window-system)))
                                         ;ad-do-it
-                                        ;     (setq voice-lock-mode t))
+                                        ;     (voice-lock-mode 1))
                                         ;   ad-return-value)
 
 ;;}}}
@@ -196,7 +196,7 @@ An automatically updating speedbar consumes resources.")
     (speedbar-frame-mode))
   (pop-to-buffer (get-buffer " SPEEDBAR"))
   (set-window-dedicated-p (selected-window) nil)
-  (setq voice-lock-mode t)
+  (voice-lock-mode 1)
   (when emacspeak-speedbar-disable-updates 
     (speedbar-stealthy-updates)
     (speedbar-disable-update))

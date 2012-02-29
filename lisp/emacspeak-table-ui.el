@@ -187,7 +187,7 @@ feature. Note that you can intersperse meaningful strings in the list that
 specifies the filter"
   (declare (special emacspeak-table-keymap))
   (use-local-map emacspeak-table-keymap)
-  (set (make-local-variable 'voice-lock-mode) t)
+  (voice-lock-mode 1)
   (setq major-mode 'emacspeak-table-mode
         mode-name "table")
   (put-text-property

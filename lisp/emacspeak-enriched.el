@@ -57,7 +57,7 @@ Useful in voicifying rich text."
   (interactive "r")
   (declare (special
             emacspeak-enriched-font-faces-to-voiceify))
-  (set (make-local-variable 'voice-lock-mode) t)
+  (voice-lock-mode 1)
   (ems-modify-buffer-safely
    (save-excursion
      (goto-char start)

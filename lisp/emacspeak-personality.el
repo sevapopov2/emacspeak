@@ -87,7 +87,7 @@
 ;;{{{ attach voice lock to global font lock
 (defadvice font-lock-mode (after  emacspeak pre act comp)
   "Attach voice-lock-mode to font-lock-mode."
-  (voice-lock-mode   font-lock-mode)
+  (voice-lock-mode (if font-lock-mode 1 -1))
   (when (interactive-p)
     (emacspeak-auditory-icon (if font-lock-mode 'on 'off))))
 (defadvice global-font-lock-mode (after emacspeak pre act comp)

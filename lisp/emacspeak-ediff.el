@@ -319,9 +319,8 @@
 
 (add-hook 'ediff-startup-hook
           (function (lambda ()
-                      (declare (special ediff-mode-map
-                                        voice-lock-mode))
-                      (setq voice-lock-mode t)
+                      (declare (special ediff-mode-map))
+                      (voice-lock-mode 1)
                       (define-key ediff-mode-map "." 'emacspeak-ediff-speak-current-difference)
                       (emacspeak-ediff-voicify-differences))))
 

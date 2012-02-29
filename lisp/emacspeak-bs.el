@@ -119,7 +119,7 @@
 
 (defadvice bs-mode (after emacspeak pre act comp)
   "Speech-enable bs mode"
-  (setq voice-lock-mode t))
+  (voice-lock-mode 1))
 
 (defadvice bs-kill (after emacspeak pre act comp)
   "Speech-enable bs mode"

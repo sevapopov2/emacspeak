@@ -74,7 +74,7 @@ that is being replaced."
   "Stop message from chattering.
 Turn on voice lock temporarily. "
   (declare (special voice-lock-mode ))
-  (let ((voice-lock-mode 1)
+  (let ((voice-lock-mode t)
         (emacspeak-speak-messages nil))
     (dtk-stop)
     (unwind-protect
@@ -89,7 +89,7 @@ Turn on voice lock temporarily. "
   "Stop message from chattering.
 Turn on voice lock temporarily. "
   (declare (special voice-lock-mode ))
-  (let ((voice-lock-mode 1)
+  (let ((voice-lock-mode t)
         (emacspeak-speak-messages nil))
     (dtk-stop)
     (unwind-protect

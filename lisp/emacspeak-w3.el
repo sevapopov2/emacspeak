@@ -120,7 +120,7 @@
                     emacspeak-web-post-process-hook
                     emacspeak-w3-create-imenu-index
                     emacspeak-w3-punctuation-mode))
-  (set (make-local-variable 'voice-lock-mode) t)
+  (voice-lock-mode 1)
   (modify-syntax-entry 10 " ")
   (modify-syntax-entry 160 " ")
   (when emacspeak-w3-punctuation-mode

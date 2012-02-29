@@ -466,43 +466,14 @@ punctuations.")
   "Toggle voice lock mode."
   t nil nil
   (when (interactive-p)
-    (let ((state (if voice-lock-mode 'on 'off)))
-      (when (interactive-p)
-        (emacspeak-auditory-icon state)))))
+    (emacspeak-auditory-icon (if voice-lock-mode 'on 'off))))
 
-;;;###autoload
-(defun turn-on-voice-lock ()
-  "Turn on Voice Lock mode ."
-  (interactive)
-  (unless voice-lock-mode (voice-lock-mode)))
-
-;;;###autoload
-(defun turn-off-voice-lock ()
-  "Turn off Voice Lock mode ."
-  (interactive)
-  (when voice-lock-mode (voice-lock-mode -1)))
-
-;;;### autoload
-(defun voice-lock-toggle ()
-  "Interactively toggle voice lock."
-  (interactive)
-  (if voice-lock-mode
-      (turn-off-voice-lock)
-    (turn-on-voice-lock))
-  (when (interactive-p)
-    (let ((state (if voice-lock-mode 'on 'off)))
-      (when (interactive-p)
-        (emacspeak-auditory-icon state)))))
-(defvar global-voice-lock-mode t
-  "Global value of voice-lock-mode.")
-
-(when (string-match "24" emacs-version)
-  (define-globalized-minor-mode global-voice-lock-mode
-    voice-lock-mode turn-on-voice-lock
-    :initialize 'custom-initialize-delay
-    :init-value (not (or noninteractive emacs-basic-display))
-    :group 'voice-lock
-    :version "22.1"))
+(define-globalized-minor-mode global-voice-lock-mode voice-lock-mode
+  (lambda ()
+    (voice-lock-mode 1))
+  :init-value t
+  :group 'voice-fonts
+  :version "22.1")
 
 ;; Install ourselves:
 (declaim (special text-property-default-nonsticky))
