@@ -185,9 +185,10 @@ having 8 columns, a row filter of ( 1 2 3) will speak only entries 1 2 and 3.
 Use the sample table matrix.dat to familiarize yourself with this
 feature. Note that you can intersperse meaningful strings in the list that
 specifies the filter"
-  (declare (special emacspeak-table-keymap))
+  (declare (special emacspeak-table-keymap
+                    global-voice-lock-mode))
   (use-local-map emacspeak-table-keymap)
-  (voice-lock-mode 1)
+  (voice-lock-mode (if global-voice-lock-mode 1 -1))
   (setq major-mode 'emacspeak-table-mode
         mode-name "table")
   (put-text-property

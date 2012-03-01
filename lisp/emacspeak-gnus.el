@@ -1155,7 +1155,7 @@ Indicate change of selection with
 
 (defadvice gnus-article-mode (after emacspeak pre act comp)
   "Turn on voice lock mode."
-  (voice-lock-mode 1))
+  (voice-lock-mode (if global-voice-lock-mode 1 -1)))
 
 (defun gnus-summary-downcase-article ()
   "Downcases the article body

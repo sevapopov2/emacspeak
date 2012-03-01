@@ -464,7 +464,7 @@ punctuations.")
 ;;;###autoload
 (define-minor-mode voice-lock-mode
   "Toggle voice lock mode."
-  t nil nil
+  :lighter " Voice"
   (when (interactive-p)
     (emacspeak-auditory-icon (if voice-lock-mode 'on 'off))))
 
@@ -479,9 +479,6 @@ punctuations.")
 (declaim (special text-property-default-nonsticky))
 (unless (assq 'personality text-property-default-nonsticky)
   (push  (cons 'personality t) text-property-default-nonsticky))
-
-(unless (assq 'voice-lock-mode minor-mode-alist)
-  (setq minor-mode-alist (cons '(voice-lock-mode " Voice") minor-mode-alist)))
 
 ;;}}}
 ;;{{{ list-voices-display

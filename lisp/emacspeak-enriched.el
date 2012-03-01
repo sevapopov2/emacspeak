@@ -55,9 +55,9 @@
   "Map base fonts to voices.
 Useful in voicifying rich text."
   (interactive "r")
-  (declare (special
-            emacspeak-enriched-font-faces-to-voiceify))
-  (voice-lock-mode 1)
+  (declare (special global-voice-lock-mode
+                    emacspeak-enriched-font-faces-to-voiceify))
+  (voice-lock-mode (if global-voice-lock-mode 1 -1))
   (ems-modify-buffer-safely
    (save-excursion
      (goto-char start)

@@ -119,8 +119,9 @@
   (declare (special imenu-create-index-function
                     emacspeak-web-post-process-hook
                     emacspeak-w3-create-imenu-index
-                    emacspeak-w3-punctuation-mode))
-  (voice-lock-mode 1)
+                    emacspeak-w3-punctuation-mode
+                    global-voice-lock-mode))
+  (voice-lock-mode (if global-voice-lock-mode 1 -1))
   (modify-syntax-entry 10 " ")
   (modify-syntax-entry 160 " ")
   (when emacspeak-w3-punctuation-mode

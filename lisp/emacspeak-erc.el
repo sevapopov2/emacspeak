@@ -98,7 +98,7 @@ server."
 (defadvice erc-mode (after emacspeak pre act comp)
   "Turn on voice lock mode."
   (emacspeak-pronounce-refresh-pronunciations)
-  (voice-lock-mode 1))
+  (voice-lock-mode (if global-voice-lock-mode 1 -1)))
 
 (defadvice erc-select (after emacspeak pre act comp)
   "Provide auditory feedback."

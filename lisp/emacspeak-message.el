@@ -261,7 +261,7 @@
           (lambda ()
             (dtk-set-punctuations emacspeak-message-punctuation-mode)
             (emacspeak-pronounce-refresh-pronunciations)
-            (voice-lock-mode 1)
+            (voice-lock-mode (if global-voice-lock-mode 1 -1))
             (emacspeak-auditory-icon 'open-object)
             (message "Starting message %s ... done"
                      (buffer-name))))

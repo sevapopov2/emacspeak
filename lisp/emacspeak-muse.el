@@ -59,7 +59,7 @@
 
 (defadvice muse-mode (after emacspeak pre act comp)
   "Setup Emacspeak extensions."
-  (voice-lock-mode 1)
+  (voice-lock-mode (if global-voice-lock-mode 1 -1))
   (dtk-set-punctuations 'all))
 
 (loop for f in

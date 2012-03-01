@@ -73,8 +73,9 @@ that is being replaced."
 (defadvice query-replace-regexp (around emacspeak pre act compile)
   "Stop message from chattering.
 Turn on voice lock temporarily. "
-  (declare (special voice-lock-mode ))
-  (let ((voice-lock-mode t)
+  (declare (special voice-lock-mode
+                    global-voice-lock-mode))
+  (let ((voice-lock-mode global-voice-lock-mode)
         (emacspeak-speak-messages nil))
     (dtk-stop)
     (unwind-protect
@@ -88,8 +89,9 @@ Turn on voice lock temporarily. "
 (defadvice query-replace (around emacspeak pre act compile)
   "Stop message from chattering.
 Turn on voice lock temporarily. "
-  (declare (special voice-lock-mode ))
-  (let ((voice-lock-mode t)
+  (declare (special voice-lock-mode
+                    global-voice-lock-mode))
+  (let ((voice-lock-mode global-voice-lock-mode)
         (emacspeak-speak-messages nil))
     (dtk-stop)
     (unwind-protect

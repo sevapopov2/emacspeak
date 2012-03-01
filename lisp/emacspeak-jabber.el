@@ -108,7 +108,7 @@
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Turn on voice lock mode."
 	  (emacspeak-pronounce-refresh-pronunciations)
-	  (voice-lock-mode 1))))
+	  (voice-lock-mode (if global-voice-lock-mode 1 -1)))))
 
 ;;}}}
 ;;{{{ silence keepalive

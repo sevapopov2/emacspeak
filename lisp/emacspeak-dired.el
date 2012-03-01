@@ -229,8 +229,9 @@ were marked or unmarked for deletion."
   "Stop message from chattering.
 Turn on voice lock temporarily.
 Provide auditory icon when finished."
-  (declare (special voice-lock-mode ))
-  (let ((voice-lock-mode t)
+  (declare (special voice-lock-mode
+                    global-voice-lock-mode))
+  (let ((voice-lock-mode global-voice-lock-mode)
         (emacspeak-speak-messages nil))
     (dtk-stop)
     (unwind-protect
@@ -265,7 +266,8 @@ Provide auditory icon when finished."
 
 (defun emacspeak-dired-initialize ()
   "Set up emacspeak dired."
-  (voice-lock-mode 1)
+  (declare (special global-voice-lock-mode))
+  (voice-lock-mode (if global-voice-lock-mode 1 -1))
   (emacspeak-dired-label-fields))
 
 (defadvice dired  (after  emacspeak pre act comp)
