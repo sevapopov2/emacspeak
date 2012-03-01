@@ -612,13 +612,6 @@ element. "
 ;;;###autoload
 
 ;;}}}
-;;{{{ backward compatibility
-
-;;; this will go away
-(defalias 'make-dtk-speech-style 'make-acss)
-(defalias 'dtk-personality-from-speech-style 'acss-personality-from-speech-style)
-
-;;}}}
 ;;{{{ define pronunciation for document's base URI
 
 (defcustom emacspeak-w3-base-uri-pronunciation
