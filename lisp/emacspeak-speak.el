@@ -81,8 +81,10 @@
 (defvar voice-punctuations-some)
 (defvar voice-smoothen)
 
-(when (fboundp 'declare-function)
-  (declare-function operate-on-rectangle(start end coerse-tabs)))
+(unless (fboundp 'declare-function)
+  (defmacro declare-function (&rest args) nil))
+
+(declare-function operate-on-rectangle(start end coerse-tabs))
 
 ;;}}}
 ;;{{{  custom group
@@ -1886,6 +1888,17 @@ Optional second arg `set' sets the TZ environment variable as well."
                     zone)))))
 
 ;;}}}
+
+(defsubst emacspeak-play-startup-icon ()
+  "Play startup icon if requested."
+  (declare (special emacspeak-play-emacspeak-startup-icon))
+  (let ((player  (or (executable-find "mpg123")
+                     (executable-find "mpg321")
+                     (executable-find "mplayer"))))
+    (when (and  emacspeak-play-emacspeak-startup-icon player)
+      (call-process player nil 0 nil
+                    (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))))
+
 ;;;###autoload
 (defun emacspeak-speak-time (&optional world)
   "Speak the time.
@@ -1922,11 +1935,8 @@ Second interactive prefix sets clock to new timezone."
     (put-text-property 0 (length emacspeak-codename)
                        'personality voice-bolden
                        emacspeak-codename)
-    (when (and  emacspeak-use-auditory-icons
-                (file-exists-p "/usr/bin/mpg123"))
-      (start-process "mp3" nil "mpg123"
-                     "-q"
-                     (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))
+    (when  emacspeak-use-auditory-icons
+      (emacspeak-play-startup-icon))
     (tts-with-punctuations 'some
                            (dtk-speak
                             (concat signature

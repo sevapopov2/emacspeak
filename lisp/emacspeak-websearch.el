@@ -44,6 +44,7 @@
 (require 'emacspeak-webutils)
 (require 'emacspeak-google)
 (require 'gweb)
+(require 'gtube)
 (require  'emacspeak-we)
 (require 'calendar)
 
@@ -62,10 +63,9 @@
 (defvar emacspeak-xslt-directory)
 (defvar emacspeak-wizards-personal-portfolio)
 
-(when (fboundp 'declare-function)
-  (declare-function gweb-google-autocomplete (&optional prompt))
-  (declare-function gtube-video-by-tag(tag &optional page count))
-  (declare-function calendar-astro-date-string (&optional date)))
+(declare-function gweb-google-autocomplete (&optional prompt))
+(declare-function gtube-video-by-tag(tag &optional page count))
+(declare-function calendar-astro-date-string (&optional date))
 
 ;;}}}
 ;;{{{ searcher table

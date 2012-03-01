@@ -418,15 +418,7 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
   "If set to T, emacspeak plays its icon as it launches."
   :type 'boolean
   :group 'emacspeak)
-(defsubst emacspeak-play-startup-icon ()
-  "Play startup icon if requested."
-  (declare (special emacspeak-play-emacspeak-startup-icon))
-  (let ((player  (or (executable-find "mplayer")
-                     (executable-find "mpg321"))))
-    (when (and  emacspeak-play-emacspeak-startup-icon player)
-      (start-process "mp3" nil
-                     player
-                     (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))))
+
 ;;;###autoload
 (defun emacspeak()
   "Starts the Emacspeak speech subsystem.  Use emacs as you

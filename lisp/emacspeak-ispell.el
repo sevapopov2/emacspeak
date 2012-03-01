@@ -114,7 +114,7 @@ many available corrections."
                                             'line)))
     (save-excursion
       (set-buffer scratch-buffer)
-      (setq voice-lock-mode t)
+      (voice-lock-mode (if global-voice-lock-mode 1 -1))
       (setq buffer-undo-list t)
       (dtk-set-punctuations 'all)
       (erase-buffer)

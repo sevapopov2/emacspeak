@@ -56,6 +56,7 @@
 ;;{{{ Preamble
 
 (require 'cl)
+(require 'custom)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'descr-text)
 
@@ -119,11 +120,8 @@
 ;;}}}
 ;;{{{ Variables
 
-(defcustom dtk-unicode-untouched-charsets
-  '(ascii latin-iso8859-1)
-  "*Characters of these charsets are completely ignored by dtk-unicode-replace-chars."
-  :group 'dtk-unicode
-  :type '(repeat symbol))
+(defvar dtk-unicode-charset-filter-regexp nil
+  "Regular expression that matches characters not in dtk-unicode-untouched-charsets.")
 
 (defvar dtk-unicode-handlers
   '(dtk-unicode-user-table-handler dtk-unicode-full-table-handler)
@@ -159,14 +157,26 @@ A handler returns a non-nil value if the   replacement was successful, nil other
                 when (charsetp charset)
                 concat (apply 'format "%c-%c" (dtk-unicode-charset-limits charset)))))
 
-(defvar dtk-unicode-charset-filter-regexp
-  (dtk-unicode-build-skip-regexp dtk-unicode-untouched-charsets)
-  "Regular expression that matches characters not in dtk-unicode-untouched-charsets.")
+(defcustom dtk-unicode-untouched-charsets
+  '(ascii latin-iso8859-1)
+  "*Characters of these charsets are completely ignored by dtk-unicode-replace-chars.
+Currently active speech server tries to take care of this option
+while it is not customized explicitly by user."
+  :group 'dtk-unicode
+  :type (list 'repeat
+              (let ((menu '(choice)))
+                (dolist (item charset-list menu)
+                  (add-to-list 'menu (list 'const item) t))))
+  :set (lambda (symbol value)
+         (setq dtk-unicode-charset-filter-regexp (dtk-unicode-build-skip-regexp value))
+         (custom-set-default symbol value)))
 
 (defun dtk-unicode-update-untouched-charsets (charsets)
   "Update list of charsets we will not touch."
-  (setq dtk-unicode-untouched-charsets charsets)
-  (setq dtk-unicode-charset-filter-regexp (dtk-unicode-build-skip-regexp dtk-unicode-untouched-charsets)))
+  (unless (or (get 'dtk-unicode-untouched-charsets 'customized-value)
+              (get 'dtk-unicode-untouched-charsets 'saved-value))
+    (setq dtk-unicode-untouched-charsets charsets
+          dtk-unicode-charset-filter-regexp (dtk-unicode-build-skip-regexp charsets))))
 
 (eval-and-compile
   (if (> emacs-major-version 22)

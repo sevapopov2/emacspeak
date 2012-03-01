@@ -119,8 +119,9 @@
   (declare (special imenu-create-index-function
                     emacspeak-web-post-process-hook
                     emacspeak-w3-create-imenu-index
-                    emacspeak-w3-punctuation-mode))
-  (set (make-local-variable 'voice-lock-mode) t)
+                    emacspeak-w3-punctuation-mode
+                    global-voice-lock-mode))
+  (voice-lock-mode (if global-voice-lock-mode 1 -1))
   (modify-syntax-entry 10 " ")
   (modify-syntax-entry 160 " ")
   (when emacspeak-w3-punctuation-mode
@@ -609,13 +610,6 @@ element. "
 ;;{{{ pull RSS feed
 
 ;;;###autoload
-
-;;}}}
-;;{{{ backward compatibility
-
-;;; this will go away
-(defalias 'make-dtk-speech-style 'make-acss)
-(defalias 'dtk-personality-from-speech-style 'acss-personality-from-speech-style)
 
 ;;}}}
 ;;{{{ define pronunciation for document's base URI

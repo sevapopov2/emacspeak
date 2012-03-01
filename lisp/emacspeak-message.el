@@ -259,10 +259,9 @@
 
 (add-hook 'message-mode-hook
           (lambda ()
-            (declare (special voice-lock-mode))
             (dtk-set-punctuations emacspeak-message-punctuation-mode)
             (emacspeak-pronounce-refresh-pronunciations)
-            (setq voice-lock-mode t)
+            (voice-lock-mode (if global-voice-lock-mode 1 -1))
             (emacspeak-auditory-icon 'open-object)
             (message "Starting message %s ... done"
                      (buffer-name))))

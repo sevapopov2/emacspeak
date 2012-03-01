@@ -66,6 +66,14 @@
 (require 'emacspeak-webutils)
 (require 'emacspeak-we)
 (require 'emacspeak-xslt)
+(require 'emacspeak-eterm)
+(require 'emacspeak-m-player)
+(require 'emacspeak-url-template)
+(require 'toy-braille)
+(require 'emacspeak-fix-interactive)
+(require 'gweb)
+(require 'calendar)
+
 ;;}}}
 ;;{{{ custom
 
@@ -2866,7 +2874,7 @@ for the current voice family."
             (loop for p from 0 to 9 by step do
                   (loop for a from 0 to 9 by step do
                         (loop for r from 0 to 9 by step do
-                              (setq voice (voice-setup-personality-from-style
+                              (setq voice (voice-setup-personality-from-style nil
                                            (list nil a p s r )))
                               (insert
                                (format
@@ -2989,6 +2997,9 @@ dates.")
 ;;}}}
 
 ;;{{{ rivo
+
+(defvar emacspeak-media-history nil)
+(defvar emacspeak-media-last-url nil)
 
 (defvar emacspeak-wizards-rivo-program
   (expand-file-name "rivo.pl" emacspeak-etc-directory)

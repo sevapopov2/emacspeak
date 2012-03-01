@@ -66,9 +66,12 @@
 
 ;;}}}
 ;;{{{ Forward Declarations:
-(when (fboundp 'declare-function)
-  (declare-function emacspeak-auditory-icon "emacspeak-sounds.el" (icon))
-  (declare-function emacspeak-queue-auditory-icon "emacspeak-sounds.el" (icon)))
+
+(unless (fboundp 'declare-function)
+  (defmacro declare-function (&rest args) nil))
+
+(declare-function emacspeak-auditory-icon "emacspeak-sounds.el" (icon))
+(declare-function emacspeak-queue-auditory-icon "emacspeak-sounds.el" (icon))
 
 ;;;###autoload 
 (defvar dtk-program
@@ -109,7 +112,9 @@ Particularly useful for web browsing."
 ;;;###autoload
 (defcustom dtk-speech-rate-base
   (if (string-match "dtk" dtk-program) 180 50)
-  "*Value of lowest tolerable speech rate."
+  "*Value of lowest tolerable speech rate.
+Speech server automatically initializes this option
+with reasonable value if it is not customized explicitly."
   :type 'integer
   :group 'tts)
 ;;;###autoload
@@ -118,7 +123,9 @@ Particularly useful for web browsing."
   "*Value of speech rate increment.
 This determines step size used when setting speech rate via command
 `dtk-set-predefined-speech-rate'.  Formula used is
-dtk-speech-rate-base  +  dtk-speech-rate-step*level."
+dtk-speech-rate-base  +  dtk-speech-rate-step*level.
+Active speech server initializes this option with a reasonable value
+if it is not explicitly customized by user."
   :type 'integer
   :group 'tts)
 ;;;###autoload
@@ -192,9 +199,6 @@ Do not modify this variable directly; use command  `dtk-set-rate'
  bound to \\[dtk-set-rate].")
 
 (make-variable-buffer-local 'dtk-speech-rate)
-
-;;;declared here to help compilation
-(defvar voice-lock-mode nil)
 
 ;;}}}
 ;;{{{ helper: apply pronunciations
@@ -1888,8 +1892,8 @@ only speak upto the first ctrl-m."
                 dtk-split-caps split-caps
                 dtk-speak-nonprinting-chars
                 inherit-speak-nonprinting-chars
-                tts-strip-octals inherit-strip-octals
-                voice-lock-mode voice-lock)
+                tts-strip-octals inherit-strip-octals)
+          (voice-lock-mode (if voice-lock 1 -1))
           (set-syntax-table syntax-table )
           (set-buffer-multibyte inherit-enable-multibyte-characters)
           (insert  text)

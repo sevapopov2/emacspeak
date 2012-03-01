@@ -141,7 +141,7 @@ reading news."
 
 (defsubst emacspeak-gnus-speak-article-body ()
   (declare (special emacspeak-gnus-large-article
-                    voice-lock-mode dtk-punctuation-mode
+                    dtk-punctuation-mode
                     gnus-article-buffer))
   (save-excursion
     (set-buffer  gnus-article-buffer)
@@ -1155,8 +1155,7 @@ Indicate change of selection with
 
 (defadvice gnus-article-mode (after emacspeak pre act comp)
   "Turn on voice lock mode."
-  (declare (special voice-lock-mode))
-  (setq voice-lock-mode t))
+  (voice-lock-mode (if global-voice-lock-mode 1 -1)))
 
 (defun gnus-summary-downcase-article ()
   "Downcases the article body
@@ -1296,7 +1295,7 @@ Helps to prevent words from being spelled instead of spoken."
    (gnus-summary-normal-undownloaded-face voice-bolden) ;; emacs 21
    (gnus-summary-normal-undownloaded voice-bolden-and-animate)
    (gnus-summary-high-undownloaded-face voice-bolden-and-animate) ;; emacs 21
-   (gnus-summary-high-undownloadedvoice-bolden-and-animate)
+   (gnus-summary-high-undownloaded voice-bolden-and-animate)
    (gnus-summary-low-undownloaded-face voice-bolden) ;; emacs 21
    (gnus-summary-low-undownloaded voice-bolden-and-animate)
    (gnus-summary-low-unread-face voice-bolden-extra) ;; emacs 21

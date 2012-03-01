@@ -49,10 +49,12 @@
 (defstruct amixer-control
   numid iface name setting)
 
-(when (fboundp 'declare-function)
-  (declare-function amixer-control-name  "amixer.el" (amixer))
-  (declare-function amixer-control-numid  "amixer.el" (amixer))
-  (declare-function amixer-control-iface  "amixer.el" (amixer)))
+(unless (fboundp 'declare-function)
+  (defmacro declare-function (&rest args) nil))
+
+(declare-function amixer-control-name  "amixer.el" (amixer))
+(declare-function amixer-control-numid  "amixer.el" (amixer))
+(declare-function amixer-control-iface  "amixer.el" (amixer))
 
 (defstruct amixer-control-setting
   type access values

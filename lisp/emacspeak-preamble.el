@@ -53,8 +53,10 @@
 (require 'emacspeak-pronounce)
 (require 'emacspeak-speak)
 (require 'emacspeak-keymap)
+
 ;;}}}
 ;;{{{ Utilities:
+
 (defsubst emacspeak-url-encode (str)
   "URL encode string."
   (mapconcat
@@ -67,8 +69,14 @@
              (t (upcase (format "%%%02x" c)))))
    str
    ""))
+
+(unless (fboundp 'declare-function)
+  (defmacro declare-function (&rest args) nil))
+
 ;;}}}
+
 (provide  'emacspeak-preamble)
+
 ;;{{{  emacs local variables 
 
 ;;; local variables:
