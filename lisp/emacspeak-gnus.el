@@ -1295,7 +1295,7 @@ Helps to prevent words from being spelled instead of spoken."
    (gnus-summary-normal-undownloaded-face voice-bolden) ;; emacs 21
    (gnus-summary-normal-undownloaded voice-bolden-and-animate)
    (gnus-summary-high-undownloaded-face voice-bolden-and-animate) ;; emacs 21
-   (gnus-summary-high-undownloadedvoice-bolden-and-animate)
+   (gnus-summary-high-undownloaded voice-bolden-and-animate)
    (gnus-summary-low-undownloaded-face voice-bolden) ;; emacs 21
    (gnus-summary-low-undownloaded voice-bolden-and-animate)
    (gnus-summary-low-unread-face voice-bolden-extra) ;; emacs 21
