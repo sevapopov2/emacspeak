@@ -462,9 +462,17 @@ and TABLE gives the values along that dimension."
   (fset 'tts-voice-defined-p 'multispeech-voice-defined-p)
   (fset 'tts-get-voice-command 'multispeech-get-voice-command)
   (fset 'tts-define-voice-from-speech-style 'multispeech-define-voice-from-speech-style)
-  (setq tts-default-voice nil)
-  (setq tts-default-speech-rate multispeech-default-speech-rate)
-  (set-default 'tts-default-speech-rate multispeech-default-speech-rate)
+  (setq tts-default-voice nil
+        tts-default-speech-rate multispeech-default-speech-rate
+        dtk-speech-rate multispeech-default-speech-rate)
+  (setq-default tts-default-speech-rate multispeech-default-speech-rate
+                dtk-speech-rate multispeech-default-speech-rate)
+  (unless (or (get 'dtk-speech-rate-step 'customized-value)
+              (get 'dtk-speech-rate-step 'saved-value))
+    (setq dtk-speech-rate-step 25))
+  (unless (or (get 'dtk-speech-rate-base 'customized-value)
+              (get 'dtk-speech-rate-base 'saved-value))
+    (setq dtk-speech-rate-base 225))
   (if multispeech-coding-system
       (set-process-coding-system dtk-speaker-process multispeech-coding-system multispeech-coding-system)
     (set-process-coding-system dtk-speaker-process locale-coding-system locale-coding-system))
