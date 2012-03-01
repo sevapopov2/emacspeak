@@ -5,8 +5,10 @@ emacspeak (35.0-6) unstable; urgency=low
     speech rate base and step, especially for Multispeech. Revised and
     fixed voice fonts customization. Other minor improvements and fixes.
     See apocryphal.ChangeLog for details.
+  * Source directories added to the load path to allow source access
+    from help screens.
 
- -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 01 Mar 2012 23:02:56 +0400
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 01 Mar 2012 23:16:01 +0400
 
 emacspeak (35.0-5) unstable; urgency=low
 

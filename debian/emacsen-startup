@@ -21,6 +21,10 @@
 
   ;; Enable speech feedback if it is requested
   (when (getenv "EMACSPEAK")
+    ;; Make sure that the uncompiled files are also in the load-path, near the
+    ;; end.  This is for moving point to the code when view help.
+    (add-to-list 'load-path "/usr/share/emacs/site-lisp/emacspeak/lisp" t)
+    (add-to-list 'load-path "/usr/share/emacs/site-lisp/emacspeak/lisp/g-client" t)
     (load (concat "/usr/share/" (symbol-name flavor)
                   "/site-lisp/emacspeak/lisp/emacspeak-setup") t)
     (setenv "EMACSPEAK")))
