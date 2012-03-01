@@ -89,8 +89,8 @@
 (defadvice bookmark-bmenu-this-window (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 (defadvice bookmark-bmenu-select (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
