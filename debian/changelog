@@ -1,3 +1,13 @@
+emacspeak (35.0-6) unstable; urgency=low
+
+  * Respecting cyrillic charset when Multispeech is used. Fixed
+    customization of untouched unicode charsets. Fixed initialization of
+    speech rate base and step, especially for Multispeech. Revised and
+    fixed voice fonts customization. Other minor improvements and fixes.
+    See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 01 Mar 2012 23:02:56 +0400
+
 emacspeak (35.0-5) unstable; urgency=low
 
   * Fixed some aspects of speaking messages. See apocryphal.ChangeLog

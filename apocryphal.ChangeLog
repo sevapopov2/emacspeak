@@ -1,6 +1,62 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2012-03-01  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/g-client/Makefile, lisp/g-client/g-utils.el, lisp/g-client/gfeeds.el, lisp/g-client/greader.el, lisp/g-client/gweb.el, lisp/g-client/json.el:
+	Restored missed module.
+
+	* lisp/dectalk-voices.el, lisp/dtk-speak.el, lisp/multispeech-voices.el, lisp/outloud-voices.el:
+	Proper initialization of speech rate base and step for
+	Multispeech. Don't touch these options if they are explicitly
+	customized.
+
+	* lisp/voice-setup.el: Removed duplication.
+
+	* lisp/voice-setup.el:
+	Reorganized voice fonts customization group so that the global mode
+	switcher to be at the top of buffer. All face to voice associations
+	moved to separate child group.
+
+	* lisp/emacspeak-wizards.el, lisp/voice-setup.el:
+	Fixed and revised voices customization mechanism to avoid some side
+	effects when customizing and make it more clear in general.
+
+	* lisp/emacspeak-w3.el: Removed a couple of obsolete definitions.
+
+	* lisp/emacspeak-gnus.el: Fixed bug in voice assignment.
+
+	* lisp/emacspeak-firevox.el: Fixed file name in comment.
+
+	* lisp/emacspeak-bs.el, lisp/emacspeak-dired.el, lisp/emacspeak-ediff.el, lisp/emacspeak-enriched.el, lisp/emacspeak-erc.el, lisp/emacspeak-gnus.el, lisp/emacspeak-ispell.el, lisp/emacspeak-jabber.el, lisp/emacspeak-message.el, lisp/emacspeak-muse.el, lisp/emacspeak-personality.el, lisp/emacspeak-replace.el, lisp/emacspeak-speedbar.el, lisp/emacspeak-table-ui.el, lisp/emacspeak-w3.el, lisp/voice-setup.el:
+	Further voice lock mode clarifications. When initializing it for a
+	buffer always take in account the global state.
+
+2012-02-29  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/dtk-speak.el, lisp/emacspeak-bs.el, lisp/emacspeak-dired.el, lisp/emacspeak-dismal.el, lisp/emacspeak-ediff.el, lisp/emacspeak-enriched.el, lisp/emacspeak-erc.el, lisp/emacspeak-gnus.el, lisp/emacspeak-ispell.el, lisp/emacspeak-jabber.el, lisp/emacspeak-message.el, lisp/emacspeak-personality.el, lisp/emacspeak-replace.el, lisp/emacspeak-speedbar.el, lisp/emacspeak-table-ui.el, lisp/emacspeak-w3.el, lisp/voice-setup.el:
+	Voice lock mode related general clarifications.
+
+	* lisp/amixer.el, lisp/dtk-speak.el, lisp/emacspeak-advice.el, lisp/emacspeak-alsaplayer.el, lisp/emacspeak-bookshare.el, lisp/emacspeak-daisy.el, lisp/emacspeak-librivox.el, lisp/emacspeak-moz.el, lisp/emacspeak-pianobar.el, lisp/emacspeak-piglets.el, lisp/emacspeak-preamble.el, lisp/emacspeak-setup.el, lisp/emacspeak-speak.el, lisp/emacspeak-websearch.el, lisp/emacspeak-widget.el, lisp/emacspeak-wizards.el, lisp/emacspeak-zinf.el, lisp/emacspeak.el, lisp/espeak-voices.el, lisp/flite-voices.el, lisp/g-client/gdocs.el, lisp/g-client/gtube.el, lisp/mac-voices.el, lisp/multispeech-voices.el, lisp/toy-braille.el:
+	Some code clarification mainly to diminish compiler complaints.
+
+2012-02-28  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-speak.el, lisp/emacspeak.el:
+	Play startup auditory icon in the general way. Try mpg123 and mpg321
+	players before mplayer for this task.
+
+	* lisp/multispeech-voices.el:
+	Cyrillic charset is added to the list of untouched unicode charsets
+	list when configuring Multispeech backend.
+
+	* lisp/dtk-unicode.el:
+	Fixed dtk-unicode-untouched-charsets customization issues. When
+	customizing the charsets are now chosen from the list instead of
+	entering obscure names manually and all necessary work is done by the
+	way. Usually this option is set up automatically according to chosen
+	speech server, but only when it is not explicitly customized by user.
+
 2012-02-15  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-advice.el:
