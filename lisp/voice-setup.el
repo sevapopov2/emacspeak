@@ -101,11 +101,15 @@
 (require 'dectalk-voices)
 
 ;;}}}
-;;{{{ customization group
+;;{{{ customization groups
 
 (defgroup voice-fonts nil
   "Customization group for setting voices."
   :group 'emacspeak)
+
+(defgroup personalities nil
+  "Customization group for assignment voices to faces."
+  :group 'voice-fonts)
 
 ;;}}}
 ;;{{{  helper for voice custom items:
@@ -188,7 +192,7 @@
            ',voice
            ,documentation
            :type (voice-setup-custom-menu)
-           :group 'voice-fonts
+           :group 'personalities
            :set '(lambda (sym val)
                    (voice-setup-set-voice-for-face ,face val)
                    (set-default sym val))
@@ -292,6 +296,28 @@ command \\[customize-variable] on <personality>-settings.. "
           (setq ,personality
                 (voice-setup-personality-from-style ',personality val))
           (set-default sym val)))))
+
+;;}}}
+;;{{{ new light-weight voice lock
+
+;;;###autoload
+(define-minor-mode voice-lock-mode
+  "Toggle voice lock mode."
+  :lighter " Voice"
+  (when (interactive-p)
+    (emacspeak-auditory-icon (if voice-lock-mode 'on 'off))))
+
+(define-globalized-minor-mode global-voice-lock-mode voice-lock-mode
+  (lambda ()
+    (voice-lock-mode 1))
+  :init-value t
+  :group 'voice-fonts
+  :version "22.1")
+
+;; Install ourselves:
+(declaim (special text-property-default-nonsticky))
+(unless (assq 'personality text-property-default-nonsticky)
+  (push  (cons 'personality t) text-property-default-nonsticky))
 
 ;;}}}                                   ; ; ; ;
 ;;{{{ voices defined using ACSS         
@@ -430,28 +456,6 @@ punctuations.")
    (region voice-brighten)
    (underline voice-lighten-medium)
    ))
-
-;;}}}
-;;{{{ new light-weight voice lock
-
-;;;###autoload
-(define-minor-mode voice-lock-mode
-  "Toggle voice lock mode."
-  :lighter " Voice"
-  (when (interactive-p)
-    (emacspeak-auditory-icon (if voice-lock-mode 'on 'off))))
-
-(define-globalized-minor-mode global-voice-lock-mode voice-lock-mode
-  (lambda ()
-    (voice-lock-mode 1))
-  :init-value t
-  :group 'voice-fonts
-  :version "22.1")
-
-;; Install ourselves:
-(declaim (special text-property-default-nonsticky))
-(unless (assq 'personality text-property-default-nonsticky)
-  (push  (cons 'personality t) text-property-default-nonsticky))
 
 ;;}}}
 ;;{{{ list-voices-display
