@@ -1,6 +1,6 @@
 #!/bin/sh
 # emacspeak - execute emacs with speech enhancements
-#$Id: emacspeak.sh,v 1.1.2.1 2010/02/02 22:55:31 master Exp $
+#$Id: emacspeak.sh,v 1.1.2.2 2012/03/02 16:45:38 master Exp $
 # WARNING:
 # This file is not the original one: modified for Debian speech support
 #
@@ -26,8 +26,8 @@ for CL in $* ; do
 done
 export DTK_PROGRAM
 
-# Once we use Emacs as an all-purpose shell:
-EDITOR="emacsclient --alternate-editor vi"
+# Once we use Emacspeak as an all-purpose shell:
+EDITOR="emacsclient --alternate-editor emacspeak"
 VISUAL=$EDITOR
 export EDITOR
 export VISUAL
