@@ -41,6 +41,7 @@
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'acss-structure)
+(require 'dtk-unicode)
 
 ;;}}}
 ;;{{{ Top-Level TTS Call
@@ -54,9 +55,6 @@
 
 ;;}}}
 ;;{{{  voice table
-
-(defvar tts-default-voice nil
-  "Default voice used. ")
 
 (defvar espeak-default-voice-string ""
   "Default Espeak tag for  default voice.")
