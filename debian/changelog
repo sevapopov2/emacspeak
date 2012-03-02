@@ -1,3 +1,14 @@
+emacspeak (35.0-7) unstable; urgency=low
+
+  * Fixed cursor behaviour in the inferior shell buffer and other minor
+    fixes. See apocryphal.ChangeLog for details.
+  * Pass emacspeak as an alternative editor to emacs-client when
+    invoking it from within emacspeak via respective environment
+    variables.
+  * Fixed package dependencies.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 02 Mar 2012 20:43:14 +0400
+
 emacspeak (35.0-6) unstable; urgency=low
 
   * Respecting cyrillic charset when Multispeech is used. Fixed
