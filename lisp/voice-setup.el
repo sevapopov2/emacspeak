@@ -261,7 +261,7 @@ command \\[customize-variable] on <personality>-settings.. "
      (defvar ,personality nil
        ,(concat
          doc
-         (format "Customize this overlay via %s-settings."
+         (format "\nCustomize this overlay via %s-settings."
                  personality )))
      (defcustom ,(intern (format "%s-settings"  personality))
        ,settings

@@ -1,6 +1,18 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2012-03-02  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-speak.el, lisp/voice-setup.el: Minor cosmetic fix.
+
+	* lisp/emacspeak-advice.el:
+	reverted original advice for comint-output-filter that does not
+	interfere with native cursor movements in the inferior shell buffer,
+	but my robustness related fix is preserved.
+
+	* lisp/emacspeak-w3m.el:
+	Applied patch generously suggested by Dmitry Paduchikh.
+
 2012-03-01  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/g-client/Makefile, lisp/g-client/g-utils.el, lisp/g-client/gfeeds.el, lisp/g-client/greader.el, lisp/g-client/gweb.el, lisp/g-client/json.el:

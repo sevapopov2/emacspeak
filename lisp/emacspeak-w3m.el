@@ -41,10 +41,8 @@
 (require 'emacspeak-m-player)
 (require 'custom)
 (eval-when-compile
-  (condition-case nil
-      (require 'w3m)
-    (require 'w3m-util)
-    (error nil)))
+  (require 'w3m nil 'noerror)
+  (require 'w3m-util nil 'noerror))
 (eval-when (load)
   (require 'w3m-util)
   (require 'w3m-form))
