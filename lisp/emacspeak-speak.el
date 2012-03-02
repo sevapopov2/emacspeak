@@ -1928,20 +1928,19 @@ Second interactive prefix sets clock to new timezone."
                     emacspeak-sounds-directory
                     emacspeak-use-auditory-icons
                     emacspeak-codename))
-  (let ((signature "You are using  ")
-        (version (format "Emacspeak %s" emacspeak-version)))
-    (put-text-property 0 (length version)
-                       'personality voice-animate version)
-    (put-text-property 0 (length emacspeak-codename)
-                       'personality voice-bolden
-                       emacspeak-codename)
+  (let* ((signature "You are using ")
+         (version (format "Emacspeak %s " emacspeak-version))
+         (text (concat signature version emacspeak-codename)))
+    (put-text-property (length signature)
+                       (+ (length signature) (length version))
+                       'personality voice-animate text)
+    (put-text-property (+ (length signature) (length version))
+                       (length text)
+                       'personality voice-bolden text)
     (when  emacspeak-use-auditory-icons
       (emacspeak-play-startup-icon))
     (tts-with-punctuations 'some
-                           (dtk-speak
-                            (concat signature
-                                    version
-                                    emacspeak-codename)))))
+                           (dtk-speak text))))
 
 ;;;###autoload
 (defun emacspeak-speak-current-kill (count)
