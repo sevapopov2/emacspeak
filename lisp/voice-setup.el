@@ -306,12 +306,19 @@ command \\[customize-variable] on <personality>-settings.. "
   (when (interactive-p)
     (emacspeak-auditory-icon (if voice-lock-mode 'on 'off))))
 
-(define-globalized-minor-mode global-voice-lock-mode voice-lock-mode
-  (lambda ()
-    (voice-lock-mode 1))
-  :init-value t
-  :group 'voice-fonts
-  :version "22.1")
+;;;###autoload
+(defcustom global-voice-lock-mode t
+  "Enable or disable voice lock mode globally."
+  :type 'boolean
+  :set (lambda (symbol value)
+         (setq-default voice-lock-mode value)
+         (dolist (buf (buffer-list))
+           (with-current-buffer buf
+             (when (or (and voice-lock-mode (not value))
+                       (and (not voice-lock-mode) value))
+               (voice-lock-mode (if value 1 -1)))))
+         (custom-set-default symbol value))
+  :group 'voice-fonts)
 
 ;; Install ourselves:
 (declaim (special text-property-default-nonsticky))
