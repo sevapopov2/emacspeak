@@ -174,11 +174,15 @@ and then cue the next selected buffer."
                     Info-header-line))
   (if (and (boundp 'Info-use-header-line)
            (boundp 'Info-header-line)
+           Info-use-header-line
            Info-header-line)
       (dtk-speak Info-header-line)
     (save-excursion
       (goto-char (point-min))
-      (emacspeak-speak-line))))
+      (emacspeak-speak-line)
+      (when (invisible-p (line-end-position))
+        (forward-line)
+        (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ Inhibit spurious speech feedback
