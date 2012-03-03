@@ -1,6 +1,14 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2012-03-04  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/voice-setup.el: Fixed global voice lock mode customization.
+
+	* lisp/emacspeak-info.el:
+	Fixed speaking of info buffer header when switching buffer in new
+	Emacs versions.
+
 2012-03-02  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-speak.el, lisp/voice-setup.el: Minor cosmetic fix.
