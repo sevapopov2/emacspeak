@@ -72,39 +72,35 @@ that is being replaced."
 
 (defadvice query-replace-regexp (around emacspeak pre act compile)
   "Stop message from chattering.
- Turn on voice lock temporarily. "
-  (declare (special voice-lock-mode ))
-  (let ((saved-voice-lock voice-lock-mode)
+Turn on voice lock temporarily. "
+  (declare (special voice-lock-mode
+                    global-voice-lock-mode))
+  (let ((voice-lock-mode global-voice-lock-mode)
         (emacspeak-speak-messages nil))
     (dtk-stop)
     (unwind-protect
         (progn
-          (setq voice-lock-mode 1)
           (setq emacspeak-replace-start nil 
                 emacspeak-replace-end nil 
                 emacspeak-replace-highlight-on nil )
           (save-match-data ad-do-it))
-      (emacspeak-auditory-icon 'task-done)
-      (setq voice-lock-mode saved-voice-lock
-            emacspeak-speak-messages t))))
+      (emacspeak-auditory-icon 'task-done))))
 
 (defadvice query-replace (around emacspeak pre act compile)
   "Stop message from chattering.
- Turn on voice lock temporarily. "
-  (declare (special voice-lock-mode ))
-  (let ((saved-voice-lock voice-lock-mode)
+Turn on voice lock temporarily. "
+  (declare (special voice-lock-mode
+                    global-voice-lock-mode))
+  (let ((voice-lock-mode global-voice-lock-mode)
         (emacspeak-speak-messages nil))
     (dtk-stop)
     (unwind-protect
         (progn
-          (setq voice-lock-mode 1)
           (setq emacspeak-replace-start nil 
                 emacspeak-replace-end nil 
                 emacspeak-replace-highlight-on nil )
           (save-match-data ad-do-it))
-      (emacspeak-auditory-icon 'task-done)
-      (setq voice-lock-mode saved-voice-lock
-            emacspeak-speak-messages t))))
+      (emacspeak-auditory-icon 'task-done))))
 
 (defadvice replace-highlight (before  emacspeak pre act)
   "Voicify and speak the line containing the replacement. "
