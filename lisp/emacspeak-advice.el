@@ -120,13 +120,13 @@
        `(defadvice ,f (after emacspeak pre act comp)
           "Speak the button."
           (when (interactive-p)
+            (emacspeak-auditory-icon 'large-movement)
             (condition-case nil
                 (let* ((button (button-at (point)))
                        (start (button-start button))
                        (end (button-end button)))
                   (dtk-speak (buffer-substring start end)))
-              (error nil))
-            (emacspeak-auditory-icon 'large-movement)))))
+              (error nil))))))
 
 (defadvice forward-word (after emacspeak pre act)
   "Speak the word you just moved to."
@@ -2836,16 +2836,6 @@ Variable mark-even-if-inactive is set true ."
   (when (interactive-p)
     (emacspeak-auditory-icon 'button)
     (emacspeak-speak-line)))
-
-(loop for f in
-      '(forward-button backward-button)
-      do
-      (eval
-       `(defadvice ,f (after  emacspeak pre act comp)
-          "Provide auditory feedback."
-          (when (interactive-p)
-            (emacspeak-auditory-icon 'large-movement)
-            (emacspeak-speak-text-range 'button)))))
 
 ;;}}}
 ;;{{{ silence whitespace cleanup:
