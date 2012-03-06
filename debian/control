@@ -9,10 +9,10 @@ Homepage: http://emacspeak.sf.net
 
 Package: emacspeak
 Architecture: all
-Depends: emacs22 | emacsen, perl, make, adduser, ${misc:Depends}
+Depends: emacs23 | emacs22 | emacsen, perl, make, adduser, ${misc:Depends}
 Conflicts: emacspeak-dt, emacspeak-ss
 Recommends: multispeech, python, tclx8.4, tcl8.4
-Suggests: emacspeak-chimes-stereo, emacspeak-cartoon-22k-mono, emacspeak-espeak, emacspeak-outloud, eflite, psgml, xsltproc, espeak, w3m-el | w3m-el-snapshot
+Suggests: emacspeak-chimes-stereo, emacspeak-cartoon-22k-mono, emacspeak-espeak, emacspeak-outloud, eflite, psgml, xsltproc, espeak, w3m-el
 Description: speech output interface to Emacs
  Emacspeak is a speech output system that will allow someone who
  cannot see to work directly on a UNIX system.
