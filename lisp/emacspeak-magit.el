@@ -140,7 +140,8 @@
          (buffer-string))))))
 ;;; load the magit-key-mode file so the above advice gets applied:
 
-(load-library "magit-key-mode")
+(when (locate-library "magit-key-mode")
+  (load-library "magit-key-mode"))
 
 ;;}}}
 ;;{{{ Advice hide/show commands:
