@@ -74,7 +74,7 @@
                                         ;"Wrapper to force speedbar to work outside a windowing system. "
                                         ;(let ((spoofing-p (not window-system)))
                                         ;ad-do-it
-                                        ;     (setq voice-lock-mode t))
+                                        ;     (voice-lock-mode (if global-voice-lock-mode 1 -1)))
                                         ;   ad-return-value)
 
 ;;}}}
@@ -115,8 +115,8 @@
    ((interactive-p)
     (let ((emacspeak-speak-messages nil))
       ad-do-it
-      (emacspeak-speedbar-speak-line)
-      (emacspeak-auditory-icon 'select-object)))
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-speedbar-speak-line)))
    (t ad-do-it))
   ad-return-value)
 (defadvice speedbar-prev (around emacspeak pre act comp)
@@ -125,8 +125,8 @@
    ((interactive-p)
     (let ((emacspeak-speak-messages nil))
       ad-do-it
-      (emacspeak-speedbar-speak-line)
-      (emacspeak-auditory-icon 'select-object)))
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-speedbar-speak-line)))
    (t ad-do-it))
   ad-return-value)
 (defadvice speedbar-edit-line (after emacspeak pre act comp)
@@ -147,14 +147,14 @@
                                        comp)
   "Speak the line we just expanded"
   (when (interactive-p) 
-    (emacspeak-speedbar-speak-line)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speedbar-speak-line)))
 
 (defadvice speedbar-contract-line (after emacspeak pre act comp)
   "Speak the line we just contracted"
   (when (interactive-p) 
-    (emacspeak-speedbar-speak-line)
-    (emacspeak-auditory-icon 'close-object)))
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speedbar-speak-line)))
 
 (defadvice speedbar-up-directory (around emacspeak pre act comp)
   " Auditory icon and speech feedback indicate result of the
@@ -191,12 +191,13 @@ An automatically updating speedbar consumes resources.")
 (defun emacspeak-speedbar-goto-speedbar ()
   "Switch to the speedbar"
   (interactive)
-  (declare (special emacspeak-speedbar-disable-updates))
+  (declare (special emacspeak-speedbar-disable-updates
+                    global-voice-lock-mode))
   (unless (get-buffer " SPEEDBAR")
     (speedbar-frame-mode))
   (pop-to-buffer (get-buffer " SPEEDBAR"))
   (set-window-dedicated-p (selected-window) nil)
-  (setq voice-lock-mode t)
+  (voice-lock-mode (if global-voice-lock-mode 1 -1))
   (when emacspeak-speedbar-disable-updates 
     (speedbar-stealthy-updates)
     (speedbar-disable-update))

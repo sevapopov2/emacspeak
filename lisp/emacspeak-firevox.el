@@ -1,4 +1,4 @@
-;;; emacspeak-firevox.el.el --- FireVox Piglet
+;;; emacspeak-firevox.el --- FireVox Piglet
 ;;; $Id: emacspeak-firevox.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Play Firevox game from Emacs in Firefox

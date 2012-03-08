@@ -58,6 +58,8 @@
 (require 'wid-edit)
 (require 'emacspeak-speak)
 (require 'emacspeak-sounds)
+(require 'emacspeak-we)
+(require 'emacspeak-webutils)
 
 ;;}}}
 ;;{{{  Customize global behavior
