@@ -92,6 +92,17 @@
 ;;}}}
 ;;{{{ Advice navigation commands:
 
+(defadvice magit-correct-point-after-command (around emacspeak pre act comp)
+  "Fix speech feedback when walking around a magit buffer."
+  (let ((from-invisible (invisible-p (point))))
+    ad-do-it
+    (unless (invisible-p (point))
+      (when (and from-invisible
+                 (or (eq this-command 'next-line)
+                     (eq this-command 'previous-line)))
+        (emacspeak-speak-line)))
+    ad-return-value))
+
 ;;; Advice navigators:
 (defadvice magit-mark-item (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -140,7 +151,8 @@
          (buffer-string))))))
 ;;; load the magit-key-mode file so the above advice gets applied:
 
-(load-library "magit-key-mode")
+(when (locate-library "magit-key-mode")
+  (load-library "magit-key-mode"))
 
 ;;}}}
 ;;{{{ Advice hide/show commands:
@@ -155,24 +167,28 @@
                    magit-show-level-4 magit-show-level-4-all
                    magit-show-only-files magit-show-only-files-all
                    magit-expand-section magit-expand-collapse-section
-                   magit-show-section magit-show-stash)
+                   magit-show-section magit-show-stash
+                   magit-status
+                   magit-visit-item)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'open-object)))))
+            (emacspeak-auditory-icon 'open-object)
+            (emacspeak-speak-line)))))
 
 (loop for f in
-      '(magit-hide-section magit-collapse-section)
+      '(magit-hide-section
+        magit-collapse-section
+        magit-quit-window)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'close-object)))))
+            (emacspeak-auditory-icon 'close-object)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ Additional commands to advice:
@@ -183,51 +199,31 @@
     (emacspeak-auditory-icon 'open-object)
     (message "Displayed process buffer in other window.")))
 
-(defadvice magit-refresh (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'task-done)
-    (emacspeak-speak-line)))
-
-(defadvice magit-status (after emacspeak pre act  comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
-
-(defadvice magit-quit-window (after emacspeak pre act  comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-line)))
-
-(defadvice magit-refresh-all (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'task-done)
-    (emacspeak-speak-line)))
+(loop for f in
+      '(magit-refresh
+        magit-refresh-all
+        magit-change-what-branch-tracks)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'task-done)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ Branches:
 
-(defadvice magit-remove-branch (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'delete-object)
-    (emacspeak-speak-line)))
-
-(defadvice magit-remove-branch-in-remote-repo (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'delete-object)
-    (emacspeak-speak-line)))
-
-(defadvice magit-change-what-branch-tracks (after emacspeak pre
-                                                  act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'task-done)
-    (emacspeak-speak-line)))
+(loop for f in
+      '(magit-remove-branch
+        magit-remove-branch-in-remote-repo)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'delete-object)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ Setting Command Options:
@@ -238,10 +234,10 @@
         (option-name (ad-get-arg 1)))
     (cond
      ((not (member option-name magit-key-mode-current-options))
-      (message "Removed %s for %s" option-name for-group)
-      (emacspeak-auditory-icon 'delete-object))
-     (t (message "Added %s for %s" option-name for-group)
-        (emacspeak-auditory-icon 'select-object)))))
+      (emacspeak-auditory-icon 'delete-object)
+      (message "Removed %s for %s" option-name for-group))
+     (t (emacspeak-auditory-icon 'select-object)
+        (message "Added %s for %s" option-name for-group)))))
 
 (defadvice magit-key-mode-exec-at-point (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -254,6 +250,7 @@
   (when (interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
+
 (defsubst emacspeak-magit-key-mode-header-line ()
   "Currently set options and args for use in header-line."
   (declare (special magit-key-mode-current-options magit-key-mode-current-args))
@@ -279,11 +276,6 @@
   "Provide auditory feedback."
   (emacspeak-auditory-icon 'button)
   (emacspeak-speak-line))
-(defadvice magit-visit-item (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'open-object)))
 
 (defadvice magit-key-mode(after emacspeak pre act comp)
   "Provide auditory icon."

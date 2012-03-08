@@ -1,6 +1,22 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2012-03-08  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-magit.el:
+	Code cleanups. Auditory icons are always emitted prior speech
+	messages. More general customization.
+
+	* lisp/emacspeak-magit.el:
+	Fixed speech feedback on buffer movement commands.
+
+	* lisp/emacspeak-personality.el:
+	Don't override existing voiceification when voiceifying
+	overlays. Appropriately take in account respective options.
+
+	* lisp/emacspeak-magit.el:
+	An optional module absence should not cause an error.
+
 2012-03-05  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-advice.el:
