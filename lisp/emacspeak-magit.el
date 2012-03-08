@@ -92,6 +92,17 @@
 ;;}}}
 ;;{{{ Advice navigation commands:
 
+(defadvice magit-correct-point-after-command (around emacspeak pre act comp)
+  "Fix speech feedback when walking around a magit buffer."
+  (let ((from-invisible (invisible-p (point))))
+    ad-do-it
+    (unless (invisible-p (point))
+      (when (and from-invisible
+                 (or (eq this-command 'next-line)
+                     (eq this-command 'previous-line)))
+        (emacspeak-speak-line)))
+    ad-return-value))
+
 ;;; Advice navigators:
 (defadvice magit-mark-item (after emacspeak pre act comp)
   "Provide auditory feedback."
