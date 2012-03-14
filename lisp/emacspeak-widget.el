@@ -171,11 +171,11 @@ Returns a string with appropriate personality."
   (let* ((inhibit-read-only t)
          (label (emacspeak-widget-label widget))
          (help-echo (emacspeak-widget-help-echo widget))
-         (v  (widget-value widget ))
-         (value
-          (cond
-           ((null v) nil)
-           (t (prin1-to-string v 'no-escape)))))
+         (v
+          (condition-case nil
+              (widget-value widget )
+            (error nil)))
+         (value (and v (prin1-to-string v 'no-escape))))
     (when  value
       (put-text-property 0 (length value)
                          'personality voice-bolden value))
