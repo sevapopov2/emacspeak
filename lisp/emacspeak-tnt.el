@@ -186,8 +186,8 @@
 ;;{{{  advice builtins
 (defadvice tnt-push-event (after emacspeak pre act comp)
   "Alert user to event being pushed."
-  (message (ad-get-arg 0))
-  (emacspeak-auditory-icon 'item))
+  (emacspeak-auditory-icon 'item)
+  (message (ad-get-arg 0)))
 
 (defadvice tnt-im-mode (after emacspeak pre act comp)
   "Turn on outline minor mode to enable navigation. "
