@@ -1,6 +1,11 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2012-03-14  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-widget.el:
+	Get rid of error condition when summarizing widget in some cases.
+
 2012-03-08  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-magit.el:
