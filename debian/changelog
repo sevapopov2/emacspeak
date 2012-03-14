@@ -1,3 +1,9 @@
+emacspeak (35.0-11) unstable; urgency=low
+
+  * Get rid of error condition when summarizing widget in some cases.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 14 Mar 2012 18:49:50 +0400
+
 emacspeak (35.0-10) unstable; urgency=low
 
   * Overlay voiceification fix.
