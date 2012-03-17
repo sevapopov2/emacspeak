@@ -1,3 +1,9 @@
+emacspeak (35.0-12) unstable; urgency=low
+
+  * More auditory feedback for Magit.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 17 Mar 2012 12:10:30 +0400
+
 emacspeak (35.0-11) unstable; urgency=low
 
   * Get rid of error condition when summarizing widget in some cases.
