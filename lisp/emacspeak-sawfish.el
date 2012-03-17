@@ -142,8 +142,8 @@
                                       comp)
   "Provide auditory feedback. "
   (when (interactive-p)
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice sawfish-complete-symbol (around emacspeak pre act)
   "Say what you completed."
