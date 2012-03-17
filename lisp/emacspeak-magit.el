@@ -120,7 +120,7 @@
       (emacspeak-speak-line))))
 
 (loop for f in
-      '(
+      '(magit-stash-snapshot
         magit-ignore-file magit-ignore-item
                           magit-stage-item magit-stash
                           magit-ignore-item-locally
@@ -169,7 +169,13 @@
                    magit-expand-section magit-expand-collapse-section
                    magit-show-section magit-show-stash
                    magit-status
-                   magit-visit-item)
+                   magit-visit-item
+                   magit-log
+                   magit-log-long
+                   magit-reflog
+                   magit-reflog-head
+                   magit-wazzup
+                   magit-interactive-resolve-item)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -193,6 +199,22 @@
 ;;}}}
 ;;{{{ Additional commands to advice:
 
+(loop for f in
+      '(magit-add-log
+        magit-log-edit
+        magit-annotated-tag)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'open-object)))))
+
+(defadvice magit-log-edit-commit (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'close-object)))
+
 (defadvice magit-display-process (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
@@ -202,21 +224,47 @@
 (loop for f in
       '(magit-refresh
         magit-refresh-all
-        magit-change-what-branch-tracks)
+        magit-change-what-branch-tracks
+        magit-tag
+        magit-diff
+        magit-diff-with-mark
+        magit-diff-working-tree
+        magit-apply-item
+        magit-cherry-pick-item
+        magit-stage-all
+        magit-reset-head
+        magit-reset-working-tree
+        magit-checkout
+        magit-create-branch
+        magit-automatic-merge
+        magit-manual-merge
+        magit-remote-update
+        magit-pull
+        magit-push
+        magit-rebase-step
+        magit-rewrite-start
+        magit-rewrite-stop
+        magit-rewrite-finish
+        magit-rewrite-abort
+        magit-rewrite-set-used
+        magit-rewrite-set-unused
+        magit-svn-rebase
+        magit-svn-dcommit)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
-            (emacspeak-auditory-icon 'task-done)
-            (emacspeak-speak-line)))))
+            (emacspeak-auditory-icon 'task-done)))))
 
 ;;}}}
 ;;{{{ Branches:
 
 (loop for f in
       '(magit-remove-branch
-        magit-remove-branch-in-remote-repo)
+        magit-remove-branch-in-remote-repo
+        magit-revert-item
+        magit-discard-item)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
