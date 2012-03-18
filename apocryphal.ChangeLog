@@ -1,6 +1,13 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2012-03-18  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-magit.el:
+	On asynchronous commands auditory icon is now produced on process
+	finishing, not on invoking. Added auditory icon on copying item to
+	kill ring.
+
 2012-03-17  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-magit.el: More auditory feedback.
