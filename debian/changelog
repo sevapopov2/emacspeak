@@ -1,3 +1,9 @@
+emacspeak (35.0-13) unstable; urgency=low
+
+  * Auditory feedback improvement for Magit.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 18 Mar 2012 09:58:08 +0400
+
 emacspeak (35.0-12) unstable; urgency=low
 
   * More auditory feedback for Magit.
