@@ -110,6 +110,11 @@
     (emacspeak-auditory-icon 'mark-object)
     (emacspeak-speak-line)))
 
+(defadvice magit-copy-item-as-kill (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'mark-object)))
+
 (defadvice magit-toggle-section (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (interactive-p)
@@ -238,24 +243,23 @@
         magit-create-branch
         magit-automatic-merge
         magit-manual-merge
-        magit-remote-update
-        magit-pull
-        magit-push
         magit-rebase-step
         magit-rewrite-start
         magit-rewrite-stop
         magit-rewrite-finish
         magit-rewrite-abort
         magit-rewrite-set-used
-        magit-rewrite-set-unused
-        magit-svn-rebase
-        magit-svn-dcommit)
+        magit-rewrite-set-unused)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (interactive-p)
             (emacspeak-auditory-icon 'task-done)))))
+
+(defadvice magit-process-sentinel (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (emacspeak-auditory-icon 'task-done))
 
 ;;}}}
 ;;{{{ Branches:
