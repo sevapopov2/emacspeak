@@ -174,6 +174,7 @@ speech-enabling extensions."
 (emacspeak-do-package-setup "debian-bug" 'emacspeak-debian-bug )
 (emacspeak-do-package-setup "desktop" 'emacspeak-desktop )
 (emacspeak-do-package-setup "diff" 'emacspeak-diff)
+(emacspeak-do-package-setup "diff-mode" 'emacspeak-diff)
 (emacspeak-do-package-setup "dired" 'emacspeak-dired )
 (emacspeak-do-package-setup "dismal" 'emacspeak-dismal)
 (emacspeak-do-package-setup "dictation" 'emacspeak-dictation)

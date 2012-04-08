@@ -27,17 +27,91 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{ required modules
-
-(require 'emacspeak-preamble)
-;;}}}
 ;;{{{  Introduction:
 
 ;;; Commentary:
 ;;; diff is an emacs package for using UNIX diff from emacs.
 ;;; this module speech-enables diff.
 
+;;}}}
+
 ;;; Code:
+;;{{{ required modules
+(require 'emacspeak-preamble)
+
+;;}}}
+;;{{{ Personalities  
+(voice-setup-add-map
+ '(
+   (diff-header voice-bolden)
+   (diff-file-header voice-animate)
+   (diff-hunk-header voice-animate-medium)
+   (diff-added voice-animate-extra)
+   (diff-removed voice-animate-extra)
+   (diff-changed voice-animate-extra)
+   (diff-indicator-added voice-animate-extra)
+   (diff-indicator-removed voice-animate-extra)
+   (diff-indicator-changed voice-animate-extra)
+   (diff-nonexistent voice-monotone)
+   ))
+
+;;}}}
+;;{{{ advice  interactive commands
+
+(defadvice diff-goto-source (after emacspeak pre act comp)
+  "Provide spoken feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
+
+(loop for f in 
+      '(diff-hunk-next diff-hunk-prev)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide spoken feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'select-object)
+            (emacspeak-speak-line)))))
+
+(loop for f in 
+      '(diff-file-next diff-file-prev)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide spoken feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-line)))))
+
+(loop for f in 
+      '(diff-hunk-kill diff-file-kill)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide spoken feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'delete-object)
+            (emacspeak-speak-line)))))
+
+(loop for f in 
+      '(diff-apply-hunk
+        diff-refine-hunk
+        diff-context->unified
+        diff-unified->context
+        diff-ediff-patch
+        diff-reverse-direction
+        diff-split-hunk
+        diff-test-hunk)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide spoken feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'task-done)))))
+
+;;}}}
+;;{{{ advise process filter and sentinels
 
 (defadvice diff-sentinel (after emacspeak pre act )
   "Provide auditory feedback."
