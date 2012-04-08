@@ -58,6 +58,8 @@
 (require 'xml-parse)
 (require 'xml)
 (require 'derived)
+(require 'emacspeak-we)
+
 ;;}}}
 ;;{{{ Customizations
 
@@ -1057,6 +1059,7 @@ Make sure it's downloaded and unpacked first."
 (defun emacspeak-bookshare-extract-xml (url)
   "Extract content refered to by link under point, and return an XML buffer."
   (interactive "sURL: ")
+  (declare (special emacspeak-we-xsl-filter))
   (let ((fields (split-string url "#"))
         (id nil)
         (url nil))

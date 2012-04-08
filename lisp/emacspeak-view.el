@@ -1,8 +1,8 @@
 ;;; emacspeak-view.el --- Speech enable View mode -- Efficient browsing of read-only content
 ;;; $Id: emacspeak-view.el 7323 2011-10-26 00:50:39Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
-;;; DescriptionEmacspeak extensions for view
-;;; Keywords:emacspeak, audio interface to emacs, view-mode
+;;; Description: Emacspeak extensions for view
+;;; Keywords: emacspeak, audio interface to emacs, view-mode
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
@@ -62,9 +62,9 @@
 (defun emacspeak-view-line-to-top ()
   "Moves current line to top of window"
   (interactive)
+  (emacspeak-auditory-icon 'select-object)
   (recenter 0)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'select-object))
+  (emacspeak-speak-line))
 
 ;;}}}
 ;;{{{ Advise additional interactive commands:
@@ -105,30 +105,30 @@
 (defadvice View-search-regexp-forward (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
+    (emacspeak-auditory-icon 'search-hit)
     (let ((emacspeak-show-point t))
-      (emacspeak-speak-line ))
-    (emacspeak-auditory-icon 'search-hit)))
+      (emacspeak-speak-line ))))
 
 (defadvice View-search-regexp-backward (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
+    (emacspeak-auditory-icon 'search-hit)
     (let ((emacspeak-show-point t))
-      (emacspeak-speak-line ))
-    (emacspeak-auditory-icon 'search-hit)))
+      (emacspeak-speak-line ))))
 
 (defadvice View-search-last-regexp-forward (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
+    (emacspeak-auditory-icon 'search-hit)
     (let ((emacspeak-show-point t))
-      (emacspeak-speak-line ))
-    (emacspeak-auditory-icon 'search-hit)))
+      (emacspeak-speak-line ))))
 
 (defadvice View-search-last-regexp-backward (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
+    (emacspeak-auditory-icon 'search-hit)
     (let ((emacspeak-show-point t))
-      (emacspeak-speak-line ))
-    (emacspeak-auditory-icon 'search-hit)))
+      (emacspeak-speak-line ))))
 
 (defadvice view-exit (after emacspeak pre act comp)
   "Provide auditory feedback"
@@ -248,8 +248,8 @@
 (defadvice View-scroll-to-buffer-end (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
 
 (defadvice View-goto-percent (after emacspeak pre act comp)
   "Provide auditory feedback"

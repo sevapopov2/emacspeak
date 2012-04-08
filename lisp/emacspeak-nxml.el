@@ -1,8 +1,8 @@
 ;;; emacspeak-nxml.el --- Speech enable nxml mode
 ;;; $Id: emacspeak-nxml.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
-;;; Description: Controlling mplayer from emacs 
-;;; Keywords: Emacspeak, nxml streaming media 
+;;; Description: Emacspeak extension to speech enable nxml mode
+;;; Keywords: Emacspeak, nxml
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
@@ -245,8 +245,10 @@
   (declare (special o-close))
   (cond
    ((get-text-property (point) 'nxml-outline-state)
+    (emacspeak-auditory-icon 'ellipses)
     (let ((o-open nil)
-          (o-end nil))
+          (o-end nil)
+	  (deactivate-mark nil))
       (save-excursion
         (setq o-open (car (overlays-at (point))))
         (next-line 1)
@@ -255,8 +257,7 @@
         (setq o-close (car (overlays-at (point))))
         (dtk-speak (concat 
                     (overlay-get  o-open 'display)
-                    (overlay-get o-close 'display)))))
-    (emacspeak-auditory-icon 'ellipses))
+                    (overlay-get o-close 'display))))))
    (t (message "Not on a hidden outline"))))
 
 ;;}}}

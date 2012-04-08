@@ -41,10 +41,8 @@
 (require 'emacspeak-m-player)
 (require 'custom)
 (eval-when-compile
-  (condition-case nil
-      (require 'w3m)
-    (require 'w3m-util)
-    (error nil)))
+  (require 'w3m nil 'noerror)
+  (require 'w3m-util nil 'noerror))
 (eval-when (load)
   (require 'w3m-util)
   (require 'w3m-form))
@@ -96,6 +94,12 @@ instead of the modeline."
 (define-key w3m-mode-map "\C-cgx" 'emacspeak-webutils-google-extract-from-cache)
 (define-key w3m-mode-map "\C-cgl" 'emacspeak-webutils-google-similar-to-this-page)
 (define-key w3m-mode-map (kbd "<C-return>") 'emacspeak-webutils-open-in-other-browser)
+
+(define-key w3m-mode-map "xa" 'emacspeak-w3m-xslt-apply)
+(define-key w3m-mode-map "xv" 'emacspeak-w3m-xsl-add-submit-button)
+(define-key w3m-mode-map "xh" 'emacspeak-w3m-xsl-google-hits)
+(define-key w3m-mode-map "xl" 'emacspeak-w3m-xsl-linearize-tables)
+(define-key w3m-mode-map "xn" 'emacspeak-w3m-xsl-sort-tables)
 
 ;;}}}
 ;;{{{ helpers
@@ -295,41 +299,30 @@ instead of the modeline."
             emacspeak-w3m-form-button-voice))))
 
 ;;}}}
-;;{{{  advice interactive commands:
-;;{{{  commenting out for now:
+;;{{{  advice interactive commands.
 
-;; (defadvice w3m-goto-url (around emacspeak pre act)
-;;   "Speech-enable W3M."
-;;   (cond
-;;    ((interactive-p)
-;;     (emacspeak-auditory-icon 'select-object)
-;;     (let ((emacspeak-speak-messages nil))
-;;       ad-do-it))
-;;    (t ad-do-it))ad-return-value)
-
-;; (defadvice w3m-redisplay-this-page (around emacspeak pre act)
-;;   "Speech-enable W3M."
-;;   (cond
-;;    ((interactive-p)
-;;     (emacspeak-auditory-icon 'select-object)
-;;     (let ((emacspeak-speak-messages nil))
-;;       ad-do-it))
-;;    (t ad-do-it))ad-return-value)
-
-;; (defadvice w3m-reload-this-page (around emacspeak pre act)
-;;   "Speech-enable W3M."
-;;   (cond
-;;    ((interactive-p)
-;;     (emacspeak-auditory-icon 'select-object)
-;;     (let ((emacspeak-speak-messages nil))
-;;       ad-do-it))
-;;    (t ad-do-it))ad-return-value)
-
-;;}}}
 (loop for f in
-      '(w3m-print-current-url  w3m-print-this-url
-                               w3m-search
-                               w3m-edit-current-url w3m-edit-this-url)
+      '(w3m-goto-url
+        w3m-redisplay-this-page
+        w3m-reload-this-page
+        w3m-bookmark-view
+        w3m-weather)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
+          "Speech-enable W3M."
+          (cond
+           ((interactive-p)
+            (emacspeak-auditory-icon 'select-object)
+            (let ((emacspeak-speak-messages nil))
+              ad-do-it))
+           (t ad-do-it))
+          ad-return-value)))
+
+(loop for f in
+      '(w3m-print-current-url
+        w3m-print-this-url
+        w3m-search)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -337,15 +330,28 @@ instead of the modeline."
           (when (interactive-p)
             (emacspeak-auditory-icon 'select-object)))))
 
+(loop for f in
+      '(w3m-edit-current-url w3m-edit-this-url)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Produce auditory icon."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'select-object)
+            (emacspeak-speak-mode-line)))))
+
 (defadvice w3m-submit-form (after emacspeak pre act comp)
   "Produce auditory icon."
   (when (interactive-p)
     (emacspeak-auditory-icon 'button)))
 
 (loop for f in
-      '(w3m-previous-buffer w3m-next-buffer
-                            w3m-view-next-page w3m-view-previous-page
-                            w3m-view-parent-page w3m-gohome)
+      '(w3m-previous-buffer
+        w3m-next-buffer
+        w3m-view-next-page
+        w3m-view-previous-page
+        w3m-view-parent-page
+        w3m-gohome)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -357,23 +363,19 @@ instead of the modeline."
                 (dtk-speak w3m-current-title)
               (emacspeak-speak-mode-line))))))
 
-(defadvice w3m-delete-buffer (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (declare (special w3m-current-title))
-    (emacspeak-auditory-icon 'close-object)
-    (if emacspeak-w3m-speak-titles-on-switch
-        (dtk-speak w3m-current-title)
-      (emacspeak-speak-mode-line))))
-
-(defadvice w3m-delete-other-buffers (after emacspeak pre act comp)
-  "Produce auditory icon."
-  (when (interactive-p)
-    (declare (special w3m-current-title))
-    (emacspeak-auditory-icon 'close-object)
-    (if emacspeak-w3m-speak-titles-on-switch
-        (dtk-speak w3m-current-title)
-      (emacspeak-speak-mode-line))))
+(loop for f in
+      '(w3m-delete-buffer
+        w3m-delete-other-buffers)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (declare (special w3m-current-title))
+            (emacspeak-auditory-icon 'close-object)
+            (if emacspeak-w3m-speak-titles-on-switch
+                (dtk-speak w3m-current-title)
+              (emacspeak-speak-mode-line))))))
 
 (defadvice w3m-bookmark-kill-entry (around emacspeak pre act comp)
   "Resets the punctuation mode to the one before the delete"
@@ -450,15 +452,6 @@ instead of the modeline."
       ad-do-it))
    (t ad-do-it))ad-return-value)
 
-(defadvice w3m-bookmark-view (around emacspeak pre act)
-  "Speech-enable W3M."
-  (cond
-   ((interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it))
-   (t ad-do-it))ad-return-value)
-
 (loop for f in
       '(w3m-scroll-up-or-next-url
         w3m-scroll-down-or-previous-url w3m-scroll-left
@@ -493,7 +486,8 @@ instead of the modeline."
       ad-do-it)
     (when (eq (ad-get-arg 0) 'popup)
       (emacspeak-speak-mode-line)))
-   (t ad-do-it))ad-return-value)
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice w3m-process-stop (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -553,6 +547,17 @@ instead of the modeline."
   "Speech enable w3m"
   (when (interactive-p)
     (dtk-speak "Viewing history")))
+
+;;}}}
+;;{{{ page display notification
+
+(add-hook 'w3m-display-hook
+          (lambda (url)
+            (declare (special w3m-current-title))
+            (emacspeak-auditory-icon 'open-object)
+            (when (stringp w3m-current-title)
+              (dtk-speak w3m-current-title)))
+          t)
 
 ;;}}}
 ;;{{{ webutils variables
@@ -625,6 +630,14 @@ instead of the modeline."
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
+(defadvice w3m-e21-switch-to-buffer  (after emacspeak pre act)
+  "Speak the modeline.
+Indicate change of selection with
+  an auditory icon if possible."
+  (when (interactive-p )
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
+
 ;;}}}
 ;;{{{ input select mode
 
@@ -661,14 +674,59 @@ instead of the modeline."
 ;;}}}
 ;;{{{ TVR: applying XSL
 
-(defadvice  w3m-create-text-page (before emacspeak pre act comp)
+(defun emacspeak-w3m-xslt-apply (xsl)
+  "Apply specified transformation to current Web page."
+  (interactive (list (emacspeak-xslt-read)))
+  (emacspeak-webutils-browser-check)
+  (emacspeak-webutils-with-xsl-environment
+   xsl
+   nil
+   emacspeak-xslt-options
+   (w3m-redisplay-this-page)))
+
+(defun emacspeak-w3m-xslt-perform (xsl-name)
+  "Perform XSL transformation by name on the current page."
+  (let ((xsl (expand-file-name (concat xsl-name ".xsl")
+                               emacspeak-xslt-directory)))
+    (emacspeak-w3m-xslt-apply xsl)))
+
+(defun emacspeak-w3m-xsl-add-submit-button ()
+  "Add regular submit button to the current page if needed."
+  (interactive)
+  (emacspeak-w3m-xslt-perform "add-submit-button"))
+
+(defun emacspeak-w3m-xsl-google-hits ()
+  "Extracts Google hits from the current page."
+  (interactive)
+  (emacspeak-w3m-xslt-perform "google-hits"))
+
+(defun emacspeak-w3m-xsl-linearize-tables ()
+  "Linearizes tables on the current page."
+  (interactive)
+  (emacspeak-w3m-xslt-perform "linearize-tables"))
+
+(defun emacspeak-w3m-xsl-sort-tables ()
+  "Sorts tables on the current page."
+  (interactive)
+  (emacspeak-w3m-xslt-perform "sort-tables"))
+
+(defadvice w3m-decode-buffer (before emacspeak pre act comp)
   "Apply requested transform if any before displaying the HTML. "
   (when (and emacspeak-we-xsl-p emacspeak-we-xsl-transform)
-    (emacspeak-xslt-region
-     emacspeak-we-xsl-transform
-     (point-min)
-     (point-max)
-     emacspeak-we-xsl-params)))
+    (let* ((content-charset (or (ad-get-arg 1) w3m-current-coding-system))
+           (emacspeak-xslt-options
+            (if content-charset
+                (format "%s %s %s"
+                        emacspeak-xslt-options
+                        "--encoding"
+                        content-charset)
+              emacspeak-xslt-options)))
+      (emacspeak-xslt-region
+       emacspeak-we-xsl-transform
+       (point-min)
+       (point-max)
+       emacspeak-we-xsl-params))
+    (ad-set-arg 1 'utf-8)))
 
 ;; Helper function for xslt functionality
 ;;;###autoload
@@ -702,20 +760,21 @@ instead of the modeline."
                  ["Add regular submit button"
                   emacspeak-w3m-xsl-add-submit-button t]
                  ["Show only search hits"
-                  emacspeak-wizards-google-hits t]
+                  emacspeak-w3m-xsl-google-hits t]
                  ["Linearize tables"
-                  emacspeak-we-xsl-linearize-tables t]
+                  emacspeak-w3m-xsl-linearize-tables t]
                  ["Sort tables"
-                  emacspeak-we-xsl-sort-tables t]
+                  emacspeak-w3m-xsl-sort-tables t]
                  ["Select default transformation"
                   emacspeak-we-xslt-select t]
                  ["Apply specified transformation"
-                  emacspeak-we-xslt-apply t]
+                  emacspeak-w3m-xslt-apply t]
                  )))
           t)
 
 ;;}}}
 ;;{{{ tvr: mapping font faces to personalities
+
 (voice-setup-add-map
  '(
    (w3m-italic voice-animate)
@@ -737,10 +796,30 @@ instead of the modeline."
    (w3m-image voice-brighten)
    ))
 
+(voice-setup-add-map
+ '(
+   (w3m-italic-face voice-animate)
+   (w3m-insert-face voice-bolden)
+   (w3m-strike-through-face voice-smoothen-extra)
+   (w3m-history-current-url-face voice-bolden)
+   (w3m-current-anchor-face voice-bolden-extra)
+   (w3m-arrived-anchor-face voice-lighten-extra)
+   (w3m-anchor-face voice-lighten)
+   (w3m-bold-face voice-bolden-medium)
+   (w3m-underline-face voice-brighten-extra)
+   (w3m-header-line-location-title-face voice-bolden)
+   (w3m-header-line-location-content-face voice-animate)
+   (w3m-form-button-face voice-smoothen)
+   (w3m-form-button-pressed-face voice-animate)
+   (w3m-tab-unselected-face voice-monotone)
+   (w3m-tab-selected-face voice-animate-extra)
+   (w3m-form-face voice-brighten)
+   (w3m-image-face voice-brighten)
+   ))
+
 (defadvice w3m-mode (after emacspeak pre act comp)
   "Set punctuation mode and refresh punctuations."
-  (declare (special dtk-punctuation-mode))
-  (setq dtk-punctuation-mode 'some)
+  (dtk-set-punctuations 'some)
   (emacspeak-pronounce-refresh-pronunciations)
   (define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command))
 

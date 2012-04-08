@@ -54,7 +54,7 @@
 
 ;;; Code:
 
-(setq toy-braille-map
+(defvar toy-braille-map
       '((?  . "⠀") (?. . "⠲") (?, . "⠐")
 
         (?1 . "⠼⠁") (?2 . "⠼⠃") (?3 . "⠼⠉") (?4 . "⠼⠙")
