@@ -1,3 +1,9 @@
+emacspeak (35.0-14) unstable; urgency=low
+
+  * Auditory feedback for diff mode.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 08 Apr 2012 18:52:43 +0400
+
 emacspeak (35.0-13) unstable; urgency=low
 
   * Auditory feedback improvement for Magit.
