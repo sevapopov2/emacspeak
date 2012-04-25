@@ -1,3 +1,9 @@
+emacspeak (35.0-15) unstable; urgency=low
+
+  * Emacs23 compatibility fixes.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 25 Apr 2012 07:03:03 +0400
+
 emacspeak (35.0-14) unstable; urgency=low
 
   * Auditory feedback for diff mode.
