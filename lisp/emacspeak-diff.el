@@ -97,6 +97,7 @@
 (loop for f in 
       '(diff-apply-hunk
         diff-refine-hunk
+        diff-ignore-whitespace-hunk
         diff-context->unified
         diff-unified->context
         diff-ediff-patch
