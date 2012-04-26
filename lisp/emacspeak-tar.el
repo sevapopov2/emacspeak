@@ -51,7 +51,7 @@
 ;;{{{ Helpers
 
 (unless (fboundp 'tar-desc-tokens)
-  (defmacro tar-desc-tokens (x) x))
+  (defsubst tar-desc-tokens (x) x))
 
 (defun emacspeak-tar-speak-line ()
   "Speak line in tar mode intelligently"
