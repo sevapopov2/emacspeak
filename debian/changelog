@@ -1,3 +1,9 @@
+emacspeak (35.0-16) unstable; urgency=low
+
+  * Emacs23 compatibility fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 26 Apr 2012 04:06:50 +0400
+
 emacspeak (35.0-15) unstable; urgency=low
 
   * Emacs23 compatibility fixes.
