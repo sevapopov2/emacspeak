@@ -519,9 +519,9 @@ explicitly turn pronunciations on or off."
    (t                                   ;turn it on
     (setq emacspeak-pronounce-pronunciation-table
           (emacspeak-pronounce-compose-pronunciation-table))
+    (emacspeak-auditory-icon 'on)
     (message
-     "Emacspeak pronunciations have been re-activated in this buffer")
-    (emacspeak-auditory-icon 'on))))
+     "Emacspeak pronunciations have been re-activated in this buffer"))))
 ;;;###autoload
 (defun emacspeak-pronounce-refresh-pronunciations ()
   "Refresh pronunciation table for current buffer.
