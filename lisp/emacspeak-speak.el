@@ -1,5 +1,5 @@
 ;;; emacspeak-speak.el --- Implements Emacspeak's core speech services
-;;; $Id: emacspeak-speak.el 7409 2011-11-16 03:22:20Z tv.raman.tv $
+;;; $Id: emacspeak-speak.el 7710 2012-04-22 20:50:15Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Contains the functions for speaking various chunks of text
 ;;; Keywords: Emacspeak,  Spoken Output
@@ -227,8 +227,6 @@ Argument BODY specifies forms to execute."
 ;;}}}
 ;;{{{  Apply audio annotations
 
-;;; prompt for auditory icon with completion
-
 (defun emacspeak-audio-annotate-paragraphs ()
   "Set property auditory-icon at front of all paragraphs."
   (interactive )
@@ -239,7 +237,7 @@ Argument BODY specifies forms to execute."
        (let ((sound-cue 'paragraph))
 	 (while (not (bobp))
 	   (backward-paragraph)
-	   (put-text-property  (1+ (point))
+	   (put-text-property  (point)
 			       (+ 2    (point ))
 			       'auditory-icon sound-cue )))))))
 
@@ -602,17 +600,18 @@ current local  value to the result.")
         (pair nil)
         (personality (if invert-filter nil
                        'inaudible)))
-    (when invert-filter
-      (put-text-property  0   l
-                          'personality 'inaudible line))
-    (while filter
-      (setq pair (pop filter))
-      (when (and (<= (first pair) l)
-                 (<= (second pair) l))
-        (put-text-property (first pair)
-                           (second pair)
-                           'personality personality
-                           line)))
+    (ems-modify-buffer-safely
+     (when invert-filter
+       (put-text-property  0   l
+                           'personality 'inaudible line))
+     (while filter
+       (setq pair (pop filter))
+       (when (and (<= (first pair) l)
+                  (<= (second pair) l))
+         (put-text-property (first pair)
+                            (second pair)
+                            'personality personality
+                            line))))
     line))
 
 (defsubst emacspeak-speak-persist-filter-entry (k v)
@@ -1080,9 +1079,11 @@ char is assumed to be one of a--z."
   "Speak character under point.
 Pronounces character phonetically unless  called with a PREFIX arg."
   (interactive "P")
-  (let ((char  (following-char )))
+  (let ((char  (following-char ))
+        (display (get-char-property (point) 'display)))
     (when char
       (cond
+       (display (dtk-speak display))
        ((and (not prefix)
              (emacspeak-is-alpha-p char))
         (dtk-speak (emacspeak-get-phonetic-string char )))
@@ -2390,8 +2391,10 @@ set the current local value to the result.")
                     emacspeak-use-header-line))
   (when emacspeak-use-header-line
     (setq header-line-format
-          '((:eval (format "%s %s"
-                           default-directory mode-name)))))
+          '((:eval
+             (format "%s  %s"
+                     (abbreviate-file-name default-directory)
+                     (propertize (buffer-name) 'personality voice-annotate))))))
   (dtk-set-punctuations 'all)
   (define-key comint-mode-map "\C-o" 'switch-to-completions)
   (emacspeak-pronounce-refresh-pronunciations))
@@ -3091,14 +3094,15 @@ Argument O specifies overlay."
 ;;; Make all occurrences of string inaudible
 (defsubst emacspeak-make-string-inaudible(string)
   (unless (string-match "^ *$" string)
-    (save-excursion
-      (goto-char (point-min))
-      (save-match-data
-        (ems-modify-buffer-safely
-         (while (search-forward string nil t)
-           (put-text-property (match-beginning 0)
-                              (match-end 0)
-                              'personality 'inaudible)))))))
+    (ems-modify-buffer-safely
+     (save-excursion
+       (goto-char (point-min))
+       (save-match-data
+         (ems-modify-buffer-safely
+          (while (search-forward string nil t)
+            (put-text-property (match-beginning 0)
+                               (match-end 0)
+                               'personality 'inaudible))))))))
 
 ;;;###autoload
 (defun emacspeak-switch-to-reference-buffer ()
