@@ -1,3 +1,9 @@
+emacspeak (36.0-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 18 Jul 2012 06:29:11 +0400
+
 emacspeak (35.0-16) unstable; urgency=low
 
   * Emacs23 compatibility fix.
