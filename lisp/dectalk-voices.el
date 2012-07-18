@@ -1,5 +1,5 @@
 ;;; dectalk-voices.el --- Define various device independent voices in terms of Dectalk codes.
-;;; $Id: dectalk-voices.el 6959 2011-04-01 15:39:52Z tv.raman.tv $
+;;; $Id: dectalk-voices.el 7511 2012-02-13 21:55:37Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Module to set up Dectalk voices and personalities
 ;;; Keywords: Voice, Personality, Dectalk
@@ -616,7 +616,7 @@ and TABLE gives the values along that dimension."
 
 ;;}}}
 ;;{{{ configurater
-
+;;;###autoload
 (defun dectalk-configure-tts ()
   "Configures TTS environment to use Dectalk family of synthesizers."
   (declare (special  dectalk-default-speech-rate

@@ -451,6 +451,7 @@ and TABLE gives the values along that dimension."
 ;;}}}
 ;;{{{ Configurater 
 
+;;;###autoload
 (defun multispeech-configure-tts ()
   "Configure TTS environment to use multilingual speech server."
   (declare (special tts-default-speech-rate
