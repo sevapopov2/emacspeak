@@ -1,3 +1,9 @@
+emacspeak (36.0-2) unstable; urgency=low
+
+  * Restored auditory feedback on password prompts.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 19 Jul 2012 06:00:11 +0400
+
 emacspeak (36.0-1) unstable; urgency=low
 
   * New upstream release.

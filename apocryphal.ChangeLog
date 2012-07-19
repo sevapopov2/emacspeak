@@ -1,6 +1,11 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2012-07-19  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-advice.el:
+	Restored auditory feedback on password prompts.
+
 2012-07-18  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	Merged upstream release 36.0.
