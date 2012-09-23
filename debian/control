@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Igor B. Poretsky <poretsky@mlbox.ru>
 Build-Depends: debhelper (>= 5), po-debconf, libespeak-dev, tcl8.4-dev, libasound2-dev
 Build-Depends-Indep: texi2html, texinfo
-Standards-Version: 3.7.3
+Standards-Version: 3.9.3
 Homepage: http://emacspeak.sf.net
 
 Package: emacspeak
@@ -31,6 +31,8 @@ Description: speech output interface to Emacs
 Package: emacspeak-doc
 Section: doc
 Architecture: all
+Replaces: emacspeak
+Depends: ${misc:Depends}
 Suggests: emacspeak, www-browser
 Description: Emacspeak documentation
  Emacspeak is a speech output system that will allow someone who
@@ -59,7 +61,7 @@ Description: IBM ViaVoice Outloud speech server for Emacspeak
  Emacspeak is a speech output system that will allow someone who
  cannot see to work directly on a UNIX system.
  .
- This package allows to use IBM ViaVoice Outloud speech synthesizer
+ This package allows one to use IBM ViaVoice Outloud speech synthesizer
  for speech output in Emacspeak.
 
 Package: emacspeak-cartoon-22k-mono
