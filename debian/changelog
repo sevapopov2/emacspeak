@@ -1,3 +1,12 @@
+emacspeak (36.0-4lucid1) lucid; urgency=low
+
+  * More neatly separated architecture dependent and independent
+    packages building.
+  * Separate package for each supported distribution.
+  * Corrected build dependencies.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 02 Oct 2012 01:31:00 +0400
+
 emacspeak (36.0-3) unstable; urgency=low
 
   * Fixed compiling in x86-64 environment.
