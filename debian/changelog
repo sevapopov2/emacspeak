@@ -3,8 +3,9 @@ emacspeak (36.0-4precise1) precise; urgency=low
   * More neatly separated architecture dependent and independent
     packages building.
   * Separate package for each supported distribution.
+  * Corrected build dependencies.
 
- -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 01 Oct 2012 23:11:32 +0400
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 02 Oct 2012 00:31:01 +0400
 
 emacspeak (36.0-3) unstable; urgency=low
 
