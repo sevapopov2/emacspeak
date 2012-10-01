@@ -2,8 +2,7 @@ Source: emacspeak
 Section: editors
 Priority: extra
 Maintainer: Igor B. Poretsky <poretsky@mlbox.ru>
-Build-Depends: debhelper (>= 5), po-debconf, libespeak-dev, tcl8.4-dev, libasound2-dev
-Build-Depends-Indep: texi2html, texinfo
+Build-Depends: debhelper (>= 5), po-debconf, libespeak-dev, tcl8.4-dev, libasound2-dev, texi2html, texinfo
 Standards-Version: 3.9.3
 Homepage: http://emacspeak.sf.net
 
