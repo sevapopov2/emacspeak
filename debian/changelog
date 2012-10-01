@@ -1,3 +1,11 @@
+emacspeak (36.0-4precise1) precise; urgency=low
+
+  * More neatly separated architecture dependent and independent
+    packages building.
+  * Separate package for each supported distribution.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 01 Oct 2012 23:11:32 +0400
+
 emacspeak (36.0-3) unstable; urgency=low
 
   * Fixed compiling in x86-64 environment.
