@@ -54,14 +54,11 @@
 
 (defun emacspeak-edb-speak-current-field ()
   "Speak the field under point."
-  (declare (special dbf-this-field-beginning-pos
-		    dbf-this-field-end-marker))
-  (if dbf-this-field-beginning-pos
-      (emacspeak-speak-region dbf-this-field-beginning-pos
-			      (or (marker-position dbf-this-field-end-marker)
-				  (point-max)))
-    (message "Not within a field")
-    (ding)))
+  (let ((beg-pos (edb--S :fbeg)))
+    (if beg-pos
+        (emacspeak-speak-region beg-pos (dbf-this-field-end-pos))
+      (message "Not within a field")
+      (ding))))
 
 ;; Now, advising some functions.
 
@@ -135,11 +132,10 @@
       (eval
        `(defadvice ,f (around emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (declare (special dbf-this-field-index))
 	  (if (interactive-p)
-	      (let ((prev dbf-this-field-index))
+	      (let ((prev (edb--S :this-fidx)))
 		ad-do-it
-		(unless (= prev dbf-this-field-index)
+		(unless (= prev (edb--S :this-fidx))
 		  (emacspeak-auditory-icon 'select-object))
 		(emacspeak-speak-line))
 	    ad-do-it)
@@ -213,13 +209,12 @@
 See command \\[emacspeak-toggle-line-echo].  Otherwise cue the user to
 the newly created blank line or speak the next field
 if we were moved to."
-  (declare (special emacspeak-line-echo
-		    dbf-this-field-index))
+  (declare (special emacspeak-line-echo))
   (if (interactive-p)
       (if (not emacspeak-line-echo)
-	  (let ((prev dbf-this-field-index))
+	  (let ((prev (edb--S :this-fidx)))
 	    ad-do-it
-	    (if (not (= prev dbf-this-field-index))
+	    (if (not (= prev (edb--S :this-fidx)))
 		(emacspeak-edb-speak-current-field)
 	      (when dtk-stop-immediately (dtk-stop))
 	      (dtk-tone 225 120 'force)))
@@ -253,11 +248,9 @@ Produce an auditory icon if possible."
 (defadvice db-kill-to-end (around emacspeak pre act comp)
   "Indicate region has been killed.
 Use an auditory icon if possible."
-  (declare (special dbf-this-field-end-marker))
   (cond
    ((interactive-p)
-    (let ((count (count-lines (point)
-                              (marker-position dbf-this-field-end-marker))))
+    (let ((count (count-lines (point) (dbf-this-field-end-pos))))
       ad-do-it
       (emacspeak-auditory-icon 'delete-object )
       (message "Killed region containing %s lines" count)))

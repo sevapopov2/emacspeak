@@ -1,3 +1,10 @@
+emacspeak (36.0-5lucid1) lucid; urgency=low
+
+  * Module emacspeak-edb synchronized with edb version used in recent
+    Debian and Ubuntu distributions.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 13 Oct 2012 16:41:46 +0400
+
 emacspeak (36.0-4lucid1) lucid; urgency=low
 
   * More neatly separated architecture dependent and independent
