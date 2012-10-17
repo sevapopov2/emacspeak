@@ -1,3 +1,9 @@
+emacspeak (36.0-6squeeze1) squeeze; urgency=low
+
+  * Fixed customization buffers voicifying in modern Emacs versions.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 18 Oct 2012 00:01:28 +0400
+
 emacspeak (36.0-5squeeze1) squeeze; urgency=low
 
   * Module emacspeak-edb synchronized with edb version used in recent
