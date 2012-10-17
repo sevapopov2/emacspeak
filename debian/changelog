@@ -1,3 +1,9 @@
+emacspeak (36.0-6precise1) precise; urgency=low
+
+  * Fixed customization buffers voicifying in modern Emacs versions.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 17 Oct 2012 23:49:58 +0400
+
 emacspeak (36.0-5precise1) precise; urgency=low
 
   * Module emacspeak-edb synchronized with edb version used in recent
