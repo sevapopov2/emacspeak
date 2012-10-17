@@ -175,6 +175,30 @@
 ;;{{{ define voices
 (voice-setup-add-map
  '(
+   ;; New names:
+   (custom-button voice-bolden)
+   (custom-button-pressed voice-bolden-extra)
+   (custom-button-pressed-unraised voice-bolden-extra)
+   (custom-button-mouse voice-bolden-medium)
+   (custom-button-unraised voice-smoothen)
+   (custom-changed voice-smoothen)
+   (custom-comment voice-monotone-medium)
+   (custom-comment-tag voice-monotone)
+   (custom-documentation voice-brighten-medium)
+   (custom-face-tag voice-lighten)
+   (custom-group-tag-1 voice-lighten-medium)
+   (custom-group-tag voice-bolden)
+   (custom-invalid voice-animate-extra)
+   (custom-link voice-bolden)
+   (custom-modified voice-lighten-medium)
+   (custom-rogue voice-bolden-and-animate)
+   (custom-modified voice-lighten-medium)
+   (custom-saved voice-smoothen-extra)
+   (custom-set voice-smoothen-medium)
+   (custom-state voice-smoothen)
+   (custom-variable-button voice-animate)
+   (custom-variable-tag voice-bolden-medium)
+   ;; Old names:
    (custom-button-face voice-bolden)
    (custom-button-pressed-face voice-bolden-extra)
    (custom-button-pressed-unraised-face voice-bolden-extra)
