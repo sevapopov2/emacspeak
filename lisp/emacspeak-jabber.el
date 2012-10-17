@@ -58,17 +58,17 @@
  '(
    (jabber-activity-face        voice-animate)
    (jabber-chat-error           voice-bolden-and-animate)
-   (jabber-chat-prompt-foreign  voice-brighten-medium)
-   (jabber-chat-prompt-local    voice-smoothen-medium)
+   (jabber-chat-prompt-foreign  voice-animate-medium)
+   (jabber-chat-prompt-local    voice-bolden-medium)
    (jabber-chat-prompt-system   voice-brighten-extra)
-   (jabber-chat-text-foreign    voice-brighten)
+   (jabber-chat-text-foreign    voice-animate)
    (jabber-chat-text-local      voice-smoothen)
    (jabber-rare-time-face       voice-animate-extra)
    (jabber-roster-user-away     voice-smoothen-extra)
    (jabber-roster-user-chatty   voice-brighten)
    (jabber-roster-user-dnd      voice-lighten-medium)
    (jabber-roster-user-error    voice-bolden-and-animate)
-   (jabber-roster-user-offline  voice-smoothen-extra)
+   (jabber-roster-user-offline  voice-lighten-extra)
    (jabber-roster-user-online   voice-bolden)
    (jabber-roster-user-xa       voice-lighten)
    (jabber-title-large          voice-bolden-extra)
@@ -77,6 +77,38 @@
    ))
 ;;}}}
 ;;{{{ Advice interactive commands:
+
+(loop for f in
+      '(jabber-connect
+        jabber-connect-all)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory icon if possible."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'on)))))
+
+(defadvice jabber-disconnect (after emacspeak pre act comp)
+  "Provide auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'off)))
+
+(defadvice jabber-customize (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
+
+(loop for f in
+      '(jabber-roster-mode
+	jabber-chat-mode
+	jabber-browse-mode)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Turn on voice lock mode."
+	  (emacspeak-pronounce-refresh-pronunciations)
+	  (voice-lock-mode (if global-voice-lock-mode 1 -1)))))
 
 ;;}}}
 ;;{{{ silence keepalive
@@ -119,18 +151,51 @@
     (emacspeak-auditory-icon 'close-object)))
 
 (loop for f in
-      '(jabber-chat-with
-        jabber-chat-with-jid-at-point)
+      '(jabber-roster-ret-action-at-point
+        jabber-chat-with
+        jabber-chat-with-jid-at-point
+        jabber-switch-to-roster-buffer
+        jabber-vcard-edit)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
-          "Silence keepalive messages."
+          "Provide auditory feedback."
           (when (interactive-p)
             (emacspeak-auditory-icon 'open-object)
             (emacspeak-speak-mode-line)))))
 
 ;;}}}
+;;{{{ roster buffer:
+
+(loop for f in
+      '(jabber-go-to-next-jid
+        jabber-go-to-previous-jid)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-text-range 'jabber-jid)))))
+
+(loop for f in
+      '(jabber-roster-delete-jid-at-point
+        jabber-roster-delete-at-point)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory icon if possible."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'delete-object)))))
+
+(defadvice jabber-roster-toggle-binding-display (after emacspeak pre act comp)
+  "Provide auditory icon if possible."
+  (when (interactive-p)
+    (emacspeak-auditory-icon (if jabber-roster-show-bindings 'on 'off))))
+
+;;}}}
 ;;{{{ alerts
+
 (defcustom emacspeak-jabber-speak-presence-alerts nil
   "Set to T if you want to hear presence alerts."
   :type  'boolean
@@ -169,9 +234,11 @@
                                                    act comp)
   "Allow emacspeak to control if the message is spoken."
   (cond
-   (emacspeak-jabber-speak-presence-alerts ad-do-it)
+   (emacspeak-jabber-speak-presence-alerts
+    (let ((emacspeak-speak-messages t))
+      ad-do-it))
    (t (let ((emacspeak-speak-messages nil))
-        ad-do-i)))
+        ad-do-it)))
   ad-return-value)
 
 ;;;this is what I use as my jabber alert function:
