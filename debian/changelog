@@ -1,3 +1,9 @@
+emacspeak (36.0-6lucid1) lucid; urgency=low
+
+  * Fixed customization buffers voicifying in modern Emacs versions.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 17 Oct 2012 23:54:46 +0400
+
 emacspeak (36.0-5lucid1) lucid; urgency=low
 
   * Module emacspeak-edb synchronized with edb version used in recent

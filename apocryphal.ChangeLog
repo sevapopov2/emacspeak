@@ -1,6 +1,11 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2012-10-17  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-custom.el:
+	Fixed customization buffers voicifying in modern Emacs versions.
+
 2012-07-19  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-advice.el:
