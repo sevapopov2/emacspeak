@@ -721,8 +721,8 @@ No-op if content under point is not currently displayed."
   (interactive)
   (forward-line -1)
   (beginning-of-line)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'select-object))
+  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-speak-line))
 
 ;;;###autoload
 (defun emacspeak-daisy-define-outline-pattern (regexp)
@@ -752,8 +752,8 @@ No-op if content under point is not currently displayed."
   (interactive)
   (forward-line 1)
   (beginning-of-line)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'select-object))
+  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-speak-line))
 
 ;;}}}
 ;;{{{ Configure w3 post processor hook to record viewer buffer:
@@ -782,9 +782,12 @@ Also puts the displayed buffer in outline-minor-mode and gives it
               (t (emacspeak-speak-mode-line)))))))
 
 ;;}}}
-;;{{{ w3 support update:
-eed to handle text/xml and application/xml
+;;{{{ w3 support updated to handle text/xml and application/xml
+
 (defun w3-fetch-callback (url)
+  (declare (special w3-explicit-coding-system
+                    url-current-object
+                    url-current-mime-headers))
   (w3-nasty-disgusting-http-equiv-handling (current-buffer) url)
   ;; Process any cookie and refresh headers.
   (let (headers)
