@@ -1,3 +1,12 @@
+emacspeak (36.0-7precise1) precise; urgency=low
+
+  * Added customization option to make use of some special form input
+    fields in w3m.
+  * Minimized special symbol replacements performed by Emacspeak when
+    Multispeech is in use.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 29 Oct 2012 04:30:44 +0400
+
 emacspeak (36.0-6precise1) precise; urgency=low
 
   * Fixed customization buffers voicifying in modern Emacs versions.

@@ -395,7 +395,7 @@ will set \"en_GB\".
 ;;; This is necessary because
 ;;;  [] marks dtk commands; {} is special to tcl
 ;;; Optionally post-process the text with cleanup function if one is specified.
-(defconst dtk-bracket-regexp
+(defvar dtk-bracket-regexp
   "[][{}<>\\|`#\n]"
   "Brackets and other chars  that are special to dtk and tcl.
 Newlines  become spaces so each server request is a single line.
@@ -1533,21 +1533,24 @@ This is setup on a per engine basis.")
 (defun tts-configure-synthesis-setup (&optional tts-name)
   "Setup synthesis environment. "
   (declare (special dtk-program emacspeak-auditory-icon-function
-                    tts-voice-reset-code))
+                    tts-voice-reset-code dtk-bracket-regexp))
   (unless tts-name (setq tts-name dtk-program))
   (cond
                                         ;viavoice outloud family 
    ((string-match "outloud" tts-name) (outloud-configure-tts))
                                         ;all dectalks
    ((string-match "dtk-" tts-name) (dectalk-configure-tts))
-   ((string-match "^multispeech$" tts-name) (multispeech-configure-tts))
                                         ;exact match
+   ((string-match "^multispeech$" tts-name) (multispeech-configure-tts))
    ((string-match "^mac$" tts-name) (mac-configure-tts))
-                                        ; exact match
    ((string-match "^espeak$" tts-name) (espeak-configure-tts))
    ((string-match "^eflite$" tts-name) (flite-configure-tts))
                                         ; generic configure
    (t (plain-configure-tts)))
+  (setq dtk-bracket-regexp
+        (if (string-match "^multispeech$" tts-name)
+            "[][{}\n]"
+          "[][{}<>\\|`#\n]"))
   (when (string-match "^ssh" tts-name)  ;remote server
     (setq emacspeak-auditory-icon-function 'emacspeak-serve-auditory-icon))
   (load-library "voice-setup")
