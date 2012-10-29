@@ -63,6 +63,13 @@ instead of the modeline."
   :type 'boolean
   :group 'emacspeak-w3m)
 
+(defcustom emacspeak-w3m-text-input-field-types "email"
+  "input types that should be treated as text input fields.
+Several types can be specified using regular expression syntax.
+This hack helps to deal with some specially designed forms."
+  :type 'regexp
+  :group 'emacspeak-w3m)
+
 ;;}}}
 ;;{{{ keybindings
 
@@ -712,6 +719,12 @@ Indicate change of selection with
 
 (defadvice w3m-decode-buffer (before emacspeak pre act comp)
   "Apply requested transform if any before displaying the HTML. "
+  (when emacspeak-w3m-text-input-field-types
+    (goto-char (point-min))
+    (while (re-search-forward (format "<input[ \t\r\f\n]\\([^>]*[ \t\r\f\n]\\)?type=\"\\(%s\\)\""
+                                      emacspeak-w3m-text-input-field-types)
+                              nil t)
+      (replace-match "text" t t nil 2)))
   (when (and emacspeak-we-xsl-p emacspeak-we-xsl-transform)
     (let* ((content-charset (or (ad-get-arg 1) w3m-current-coding-system))
            (emacspeak-xslt-options

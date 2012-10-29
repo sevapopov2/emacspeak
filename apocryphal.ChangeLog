@@ -1,6 +1,15 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2012-10-29  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/dtk-speak.el:
+	Minimized special symbol replacements for multispeech.
+
+	* lisp/emacspeak-w3m.el:
+	Added customization option to make some special input fields
+	functional.
+
 2012-10-17  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-custom.el:
