@@ -46,7 +46,7 @@
 ;;}}}
 ;;{{{ Required Modules
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
 (eval-when (compile)
@@ -126,7 +126,7 @@ pronunciation dictionaries are stored. ")
   "Code name of present release.")
 
 ;;}}}
-;;{{{ speech rate
+;;{{{ speech server initial defaults
 
 ;;;###autoload
 (defcustom outloud-default-speech-rate 50
@@ -145,6 +145,24 @@ pronunciation dictionaries are stored. ")
   "Default speech rate for multispeech."
   :group 'tts
   :type 'integer)
+
+;;;###autoload
+(defcustom multispeech-coding-system nil
+  "Coding system for interaction with multispeech.
+The value nil means current locale coding system.
+Don't set this variable manually. Use customization interface."
+  :set '(lambda (sym val)
+          (declare (special dtk-speaker-process
+                            dtk-speak-server-initialized))
+          (and (boundp 'dtk-speak-server-initialized)
+               dtk-speak-server-initialized
+               (if val
+                   (set-process-coding-system dtk-speaker-process val val)
+                 (set-process-coding-system dtk-speaker-process locale-coding-system locale-coding-system)))
+          (set-default sym val))
+  :group 'tts
+  :type '(coding-system :size 0))
+
 ;;;###autoload
 (defcustom dectalk-default-speech-rate 225
   "*Default speech rate at which TTS is started. "
@@ -167,6 +185,7 @@ pronunciation dictionaries are stored. ")
 (defvar dtk-startup-hook nil)
 (defun emacspeak-tts-startup-hook ()
   "Default hook function run after TTS is started."
+  (declare (special tts-default-speech-rate))
   (tts-configure-synthesis-setup)
   (dtk-set-rate tts-default-speech-rate t)
   (dtk-interp-sync))
@@ -187,7 +206,8 @@ pronunciation dictionaries are stored. ")
   "Emacspeak startup hook that I use."
   (load-library "emacspeak-alsaplayer")
   (load-library "emacspeak-webspace")
-  (load-library "emacspeak-dbus"))
+  (when (locate-library "dbus")
+    (load-library "emacspeak-dbus")))
 
 (add-hook 'emacspeak-startup-hook 'emacspeak-setup-header-line)
 (add-hook 'emacspeak-startup-hook 'emacspeak-tvr-startup-hook)
