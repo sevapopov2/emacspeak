@@ -1644,8 +1644,6 @@ Interactive prefix arg speaks buffer info."
                     (buffer-modified-p))
             (dtk-tone 950 100))
           (when buffer-read-only (dtk-tone 250 100)))
-        (put-text-property 0 (length global-info)
-                           'personality voice-bolden-medium global-info)
         (tts-with-punctuations
          'all
          (dtk-speak
@@ -1655,7 +1653,7 @@ Interactive prefix arg speaks buffer info."
            (when line-number-mode
              (format "line %d " (emacspeak-get-current-line-number)))
            (when column-number-mode
-             (format "Column %d" (current-column)))
+             (format "Column %d " (current-column)))
            (emacspeak-get-voicefied-mode-name mode-name)
            (emacspeak-get-current-percentage-verbously)
            global-info

@@ -1,3 +1,12 @@
+emacspeak (36.0-8precise1) precise; urgency=low
+
+  * Improved mode line speaking. See apocryphal.ChangeLog.
+  * Source directories are now not included into the load path, but
+    symlinks to the source files are preserved to make them available
+    from help view.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 30 Oct 2012 19:48:56 +0400
+
 emacspeak (36.0-7precise1) precise; urgency=low
 
   * Added customization option to make use of some special form input
