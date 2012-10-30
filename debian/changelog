@@ -1,3 +1,12 @@
+emacspeak (36.0-8squeeze1) squeeze; urgency=low
+
+  * Improved mode line speaking. See apocryphal.ChangeLog.
+  * Source directories are now not included into the load path, but
+    symlinks to the source files are preserved to make them available
+    from help view.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 30 Oct 2012 19:58:32 +0400
+
 emacspeak (36.0-7squeeze1) squeeze; urgency=low
 
   * Added customization option to make use of some special form input
