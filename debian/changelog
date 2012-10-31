@@ -1,3 +1,10 @@
+emacspeak (36.0-9precise1) precise; urgency=low
+
+  * Enhanced processing of repeating patterns. See apocryphal.ChangeLog
+    for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 31 Oct 2012 19:19:12 +0400
+
 emacspeak (36.0-8precise1) precise; urgency=low
 
   * Improved mode line speaking. See apocryphal.ChangeLog.
