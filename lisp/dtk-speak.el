@@ -517,14 +517,20 @@ Argument MODE  specifies the current pronunciation mode."
       (setq personality
             (get-text-property (point) 'personality))
       (setq replacement
-            (if  (eq 'all  mode)
+            (if (or (eq 'all  mode)
+                    (and (eq 'some mode)
+                         (not (and (= len 1)
+                                   (string-match-p "[-!?:;,'.]" string)))))
                 (format " aw %s %s"
                         (/ (- (match-end 0 ) (match-beginning 0))
                            len)
                         (if (string-equal " " pattern)
                             " space " string))
-              ""))
-      (replace-match replacement)
+              (if (and (= len 1)
+                       (not (string-equal "\\" string)))
+                  (concat string string string)
+                string)))
+      (replace-match replacement t t)
       (setq start (- (point) (length replacement)))
       (when personality
         (put-text-property start (point)
