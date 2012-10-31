@@ -1,3 +1,10 @@
+emacspeak (36.0-9lucid1) lucid; urgency=low
+
+  * Enhanced processing of repeating patterns. See apocryphal.ChangeLog
+    for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 31 Oct 2012 19:23:07 +0400
+
 emacspeak (36.0-8lucid1) lucid; urgency=low
 
   * Improved mode line speaking. See apocryphal.ChangeLog.
