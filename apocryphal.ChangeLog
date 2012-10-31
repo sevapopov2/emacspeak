@@ -1,6 +1,16 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2012-10-31  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/dtk-speak.el:
+	Modified repeating patterns processing, so that they are never simply
+	removed, but only shortened in some circumstances. It prevents
+	undesirable concatenation of the chunks actually separated by
+	punctuations and gives speech server a chance to use preserved
+	punctuations for making right intonation. Moreover, when some
+	punctuations are to be spoken, some patterns are replaced as well.
+
 2012-10-30  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-speak.el:
