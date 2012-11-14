@@ -2154,9 +2154,9 @@ See http://www.cbsradio.com/streaming/index.html for a list of CBS  stations tha
       (set-buffer standard-output)
       (fill-region (point-min)
                    (point-max)))
-    (help-print-return-message))
-  (emacspeak-speak-help)
-  (emacspeak-auditory-icon 'help))
+    (print-help-return-message))
+  (emacspeak-auditory-icon 'help)
+  (emacspeak-speak-help))
 
 (defvar emacspeak-url-template-current-ut nil
   "Records name and args of URL template we're executing.")

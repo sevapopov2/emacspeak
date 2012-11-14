@@ -63,6 +63,7 @@
 (require 'g-utils)
 (require 'g-auth)
 (require 'browse-url)
+(require 'json)
 
 ;;}}}
 ;;{{{ customizations
