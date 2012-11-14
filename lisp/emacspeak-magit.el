@@ -193,8 +193,7 @@
 
 (loop for f in
       '(magit-hide-section
-        magit-collapse-section
-        magit-quit-window)
+        magit-collapse-section)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -202,6 +201,18 @@
           (when (interactive-p)
             (emacspeak-auditory-icon 'close-object)
             (emacspeak-speak-line)))))
+
+(loop for f in
+      '(magit-quit-window
+        magit-quit-branches-window
+        magit-key-mode-kill-buffer)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (interactive-p)
+            (emacspeak-auditory-icon 'close-object)
+            (emacspeak-speak-mode-line)))))
 
 ;;}}}
 ;;{{{ Additional commands to advice:
@@ -251,7 +262,8 @@
         magit-rewrite-finish
         magit-rewrite-abort
         magit-rewrite-set-used
-        magit-rewrite-set-unused)
+        magit-rewrite-set-unused
+        magit-branches-window-checkout)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -297,13 +309,6 @@
   "Provide auditory feedback."
   (when (interactive-p)
     (emacspeak-auditory-icon 'button)))
-
-(defadvice magit-key-mode-kill-buffer (after emacspeak pre act
-                                             comp)
-  "Provide auditory feedback."
-  (when (interactive-p)
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
 
 (defsubst emacspeak-magit-key-mode-header-line ()
   "Currently set options and args for use in header-line."
