@@ -1,3 +1,9 @@
+emacspeak (36.0-10lucid1) lucid; urgency=low
+
+  * Minor improvement for Magit support.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 15 Nov 2012 07:06:52 +0400
+
 emacspeak (36.0-9lucid1) lucid; urgency=low
 
   * Enhanced processing of repeating patterns. See apocryphal.ChangeLog
