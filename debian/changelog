@@ -1,3 +1,9 @@
+emacspeak (36.0-10squeeze1) squeeze; urgency=low
+
+  * Minor improvement for Magit support.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 15 Nov 2012 07:11:14 +0400
+
 emacspeak (36.0-9squeeze1) squeeze; urgency=low
 
   * Enhanced processing of repeating patterns. See apocryphal.ChangeLog
