@@ -185,6 +185,13 @@ on a specific directory."
             val)
            (set-default sym val)))
 
+(defcustom emacspeak-m-player-coding-system nil
+  "Media player output coding system.
+It is used for tags decoding."
+  :type '(coding-system :size 0)
+  :group 'emacspeak-m-player)
+
+
 ;;;###autoload
 (defun emacspeak-multimedia  ()
   "Start or control Emacspeak multimedia player."
@@ -343,6 +350,8 @@ The player is placed in a buffer in emacspeak-m-player-mode."
       (setq emacspeak-m-player-process
             (apply 'start-process "M PLayer" buffer
                    emacspeak-m-player-program options))
+      (set-process-coding-system emacspeak-m-player-process
+                                 emacspeak-m-player-coding-system)
       (set-buffer buffer)
       (emacspeak-m-player-mode))))
 
