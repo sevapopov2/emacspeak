@@ -1,3 +1,12 @@
+emacspeak (36.0-11precise1) precise; urgency=low
+
+  * Do not install an alternative json module if Emacs flavor has it's
+    own one.
+  * Minor improvements for Magit support.
+  * A couple of default unicode translations.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 11 Mar 2013 06:19:01 +0400
+
 emacspeak (36.0-10precise1) precise; urgency=low
 
   * Minor improvement for Magit support.

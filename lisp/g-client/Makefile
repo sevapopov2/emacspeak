@@ -41,8 +41,7 @@ EMACS = emacs
 BATCH = -batch -q -no-site-file  -eval '(setq vc-handled-backends nil)'
 DEPS= -l ./g-load-path.el -l ./g-loaddefs.el
 COMPILE =  -f batch-byte-compile
-OBJECTS= json.elc \
-g-auth.elc \
+OBJECTS= g-auth.elc \
 g-app.elc \
 g-utils.elc \
 g.elc \
@@ -60,6 +59,9 @@ gweb.elc \
 gtube.elc \
 gsheet.elc
 
+ifeq ($(strip $(shell $(EMACS) -batch -Q -eval '(message (locate-library "json"))' 2>&1)),)
+OBJECTS += json.elc
+endif
 
 all:g-loaddefs.el g-cus-load.el  ${OBJECTS}
 
