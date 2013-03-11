@@ -129,8 +129,8 @@
 (loop for f in
       '(magit-stash-snapshot
         magit-ignore-file magit-ignore-item
-                          magit-stage-item magit-stash
-                          magit-ignore-item-locally
+                          magit-stage-item magit-unstage-item
+                          magit-stash magit-ignore-item-locally
                           magit-goto-next-section magit-goto-previous-section
                           magit-goto-parent-section magit-goto-line
                           magit-goto-section magit-goto-section-at-path)
@@ -250,10 +250,12 @@
         magit-apply-item
         magit-cherry-pick-item
         magit-stage-all
+        magit-unstage-all
         magit-reset-head
         magit-reset-working-tree
         magit-checkout
         magit-create-branch
+        magit-merge
         magit-automatic-merge
         magit-manual-merge
         magit-rebase-step
