@@ -1,6 +1,12 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2013-03-10  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-magit.el: More auditory feedback.
+
+	* lisp/dtk-unicode.el: Added a couple of default unicode translations.
+
 2012-11-14  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-magit.el: Improved auditory feedback in branch list.

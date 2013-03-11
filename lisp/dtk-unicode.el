@@ -73,7 +73,9 @@
   '(
     (? . "-")                   ; START OF GUARDED AREA
     (?━ .  "-")                     ; horiz bars
+    (?─ .  "-")                     ; horiz bar
     (?┃ . "|")                      ; vertical block
+    (?│ . "|")                      ; vertical bar
     (?° . " degrees ")              ; degree sign
     (?℃ . "Degree C")               ; celsius
     (?℉ . "Degree F ")              ; Fahrenheit
