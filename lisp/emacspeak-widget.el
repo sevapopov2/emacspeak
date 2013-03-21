@@ -573,12 +573,12 @@ Returns a string with appropriate personality."
 
 (defadvice widget-button-press (around emacspeak pre act comp)
   "Provide auditory feedback"
-  (let ((inhibit-read-only t)
-        (widget (widget-at (ad-get-arg 0))))
+  (let ((widget (widget-at (ad-get-arg 0))))
     (cond
      (widget                           ; First record some state:
       (let ((pos (ad-get-arg 0))
-            (old-position (point)))
+            (old-position (point))
+            (inhibit-read-only t))
         (cond
          ((and
            (or (eq major-mode 'w3-mode) (eq major-mode 'w3m-mode))
