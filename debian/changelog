@@ -1,3 +1,9 @@
+emacspeak (36.0-12precise1) precise; urgency=low
+
+  * Fixed widget buffers behaviour.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 22 Mar 2013 00:50:50 +0400
+
 emacspeak (36.0-11precise1) precise; urgency=low
 
   * Do not install an alternative json module if Emacs flavor has it's

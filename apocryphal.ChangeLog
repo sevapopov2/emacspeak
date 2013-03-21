@@ -1,6 +1,12 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2013-03-22  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-widget.el:
+	Fixed possible widget buffer pollution by pressing enter outside
+	widgets.
+
 2013-03-10  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-magit.el: More auditory feedback.
