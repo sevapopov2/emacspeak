@@ -1,3 +1,77 @@
+emacspeak (36.0-12wheezy1) wheezy; urgency=low
+
+  * Per distribution build.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 12 Jun 2013 21:11:45 +0400
+
+emacspeak (36.0-12precise1) precise; urgency=low
+
+  * Fixed widget buffers behaviour.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 22 Mar 2013 00:50:50 +0400
+
+emacspeak (36.0-11precise1) precise; urgency=low
+
+  * Do not install an alternative json module if Emacs flavor has it's
+    own one.
+  * Minor improvements for Magit support.
+  * A couple of default unicode translations.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 11 Mar 2013 06:19:01 +0400
+
+emacspeak (36.0-10precise1) precise; urgency=low
+
+  * Minor improvement for Magit support.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 15 Nov 2012 07:01:53 +0400
+
+emacspeak (36.0-9precise1) precise; urgency=low
+
+  * Enhanced processing of repeating patterns. See apocryphal.ChangeLog
+    for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 31 Oct 2012 19:19:12 +0400
+
+emacspeak (36.0-8precise1) precise; urgency=low
+
+  * Improved mode line speaking. See apocryphal.ChangeLog.
+  * Source directories are now not included into the load path, but
+    symlinks to the source files are preserved to make them available
+    from help view.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 30 Oct 2012 19:48:56 +0400
+
+emacspeak (36.0-7precise1) precise; urgency=low
+
+  * Added customization option to make use of some special form input
+    fields in w3m.
+  * Minimized special symbol replacements performed by Emacspeak when
+    Multispeech is in use.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 29 Oct 2012 04:30:44 +0400
+
+emacspeak (36.0-6precise1) precise; urgency=low
+
+  * Fixed customization buffers voicifying in modern Emacs versions.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 17 Oct 2012 23:49:58 +0400
+
+emacspeak (36.0-5precise1) precise; urgency=low
+
+  * Module emacspeak-edb synchronized with edb version used in recent
+    Debian and Ubuntu distributions.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 13 Oct 2012 16:36:38 +0400
+
+emacspeak (36.0-4precise1) precise; urgency=low
+
+  * More neatly separated architecture dependent and independent
+    packages building.
+  * Separate package for each supported distribution.
+  * Corrected build dependencies.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 02 Oct 2012 00:31:01 +0400
+
 emacspeak (36.0-3) unstable; urgency=low
 
   * Fixed compiling in x86-64 environment.
