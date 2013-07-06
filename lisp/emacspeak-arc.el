@@ -1,5 +1,5 @@
 ;;; emacspeak-arc.el --- Speech enable archive-mode -- a  Emacs interface to zip and friends
-;;; $Id: emacspeak-arc.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
+;;; $Id: emacspeak-arc.el 7823 2012-06-03 01:16:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to archive mode
 ;;; Keywords: Emacspeak, Speak, Spoken Output, archive
@@ -61,13 +61,13 @@
 
 (defadvice archive-mark (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'mark-object)
     (emacspeak-archive-speak-line)))
 
 (defadvice archive-next-line (before emacspeak pre act com)
   "Produce auditory icon  if we cant move."
-  (when (and (interactive-p)
+  (when (and (ems-interactive-p)
              (save-excursion
                (end-of-line)
                (eobp)))
@@ -75,7 +75,7 @@
 
 (defadvice archive-previous-line (before emacspeak pre act com)
   "Produce auditory icon  if we cant move."
-  (when (and (interactive-p)
+  (when (and (ems-interactive-p)
              (save-excursion
                (beginning-of-line)
                (bobp)))
@@ -83,48 +83,48 @@
 
 (defadvice archive-next-line (after emacspeak pre act comp)
   "Provide spoken feedback"
-  (when (interactive-p )
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-archive-speak-line)))
 
 (defadvice archive-previous-line (after emacspeak pre act comp)
   "Provide spoken feedback"
-  (when (interactive-p )
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-archive-speak-line)))
 
 (defadvice archive-flag-deleted (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'delete-object)
     (emacspeak-archive-speak-line)))
 
 (defadvice archive-unflag (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-archive-speak-line)))
 (defadvice archive-unflag-backwards (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-archive-speak-line)))
 
 (defadvice archive-extract (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice archive-extract-other-window (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice archive-view (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 

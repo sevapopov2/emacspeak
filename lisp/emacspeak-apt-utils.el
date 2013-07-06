@@ -88,7 +88,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'search-hit)))))
 
 (loop for f in
@@ -98,7 +98,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'close-object)
 	    (emacspeak-speak-mode-line)))))
 
@@ -109,7 +109,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'task-done)))))
 
 (loop for f in
@@ -128,7 +128,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'open-object)))))
 
 (loop for f in
@@ -138,7 +138,7 @@
       (eval
        `(defadvice ,f (around emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (if (interactive-p)
+	  (if (ems-interactive-p)
 	      (let ((emacspeak-speak-messages nil))
 		ad-do-it
 		(emacspeak-auditory-icon 'large-movement)

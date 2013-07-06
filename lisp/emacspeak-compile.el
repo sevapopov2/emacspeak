@@ -82,7 +82,7 @@
       (eval
        `(defadvice ,f (after  emacspeak pre act )
           "Speak the line containing the error. "
-          (when (interactive-p)
+          (when (ems-interactive-p )
             (dtk-stop)
             (with-current-buffer (window-buffer)
               (emacspeak-compilation-speak-error))))))
@@ -97,7 +97,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide spoken feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'select-object)
             (emacspeak-speak-line)))))
 
@@ -106,7 +106,7 @@
 
 (defadvice compile (after emacspeak pre act )
   "provide auditory confirmation"
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (message "Launched compilation")))
 

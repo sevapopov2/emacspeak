@@ -47,28 +47,28 @@
 
 (defadvice wget (after emacspeak pre act comp)
   "provide auditory confirmation"
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice wget-web-page (after emacspeak pre act comp)
   "provide auditory confirmation"
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice wget-info (after emacspeak pre act comp)
   "provide auditory confirmation"
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice wget-next-line (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
 (defadvice wget-previous-line (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
@@ -79,12 +79,12 @@
 
 (defadvice wget-quit (after emacspeak pre act comp)
   "provide auditory confirmation"
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)))
 
 (defadvice wget-quit-and-exit (after emacspeak pre act comp)
   "provide auditory confirmation"
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)))
 
 ;;}}}
