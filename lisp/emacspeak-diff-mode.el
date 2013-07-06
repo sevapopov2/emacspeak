@@ -1,8 +1,8 @@
-;;; emacspeak-ftf.el --- Speech-enable find-things-fast
-;;; $Id: emacspeak-ftf.el 4797 2007-07-16 23:31:22Z tv.raman.tv $
+;;; emacspeak-diff-mode.el --- Speech-enable DIFF-MODE
+;;; $Id: emacspeak-diff-mode.el 4797 2007-07-16 23:31:22Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
-;;; Description:  Speech-enable find-things-fast -- a tool to find things fast in a project
-;;; Keywords: Emacspeak,  Audio Desktop ftf, project, git
+;;; Description:  Speech-enable DIFF-MODE An Emacs Interface to diff-mode
+;;; Keywords: Emacspeak,  Audio Desktop diff-mode
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
@@ -28,7 +28,7 @@
 ;;;
 ;;; GNU Emacs is distributed in the hope that it will be useful,
 ;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNFTF FOR A PARTICULAR PURPOSE.  See the
+;;; MERCHANTABILITY or FITNDIFF-MODE FOR A PARTICULAR PURPOSE.  See the
 ;;; GNU General Public License for more details.
 ;;;
 ;;; You should have received a copy of the GNU General Public License
@@ -41,8 +41,7 @@
 ;;{{{  introduction
 
 ;;; Commentary:
-;;; FTF ==  find-things-fast
-;;; Package ftf --- find-things-fast -- is available from the marmalade emacs package archive
+;;; DIFF-MODE  support.
 
 ;;}}}
 ;;{{{  Required modules
@@ -52,22 +51,30 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
-;;{{{ Advice interactive commands:
+;;{{{ Faces from  diff-mode.el
 
-(defadvice ftf-find-file (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'open-object)
-
-    (emacspeak-speak-mode-line)))
-
-(defadvice ftf-grepsource (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'task-done)))
+(voice-setup-add-map
+ '(
+   (diff-added voice-brighten)
+   (diff-changed voice-animate)
+   (diff-context voice-monotone)
+   (diff-file-header voice-bolden)
+   (diff-function voice-smoothen)
+   (diff-header voice-bolden-extra)
+   (diff-hunk-header voice-bolden-medium)
+   (diff-index voice-monotone)
+   (diff-indicator-added voice-annotate)
+   (diff-indicator-changed voice-annotate)
+   (diff-indicator-removed voice-smoothen)
+   (diff-nonexistent voice-lighten-extra)
+   (diff-refine-added voice-lighten)
+   (diff-refine-change voice-brighten-medium)
+   (diff-refine-removed voice-smoothen)
+   (diff-removed voice-smoothen-extra)
+   ))
 
 ;;}}}
-(provide 'emacspeak-ftf)
+(provide 'emacspeak-diff-mode)
 ;;{{{ end of file
 
 ;;; local variables:
