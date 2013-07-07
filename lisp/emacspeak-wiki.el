@@ -44,7 +44,7 @@
 
 (defadvice emacs-wiki-find-file (around emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (if (not (interactive-p))
+  (if (not (ems-interactive-p))
       ad-do-it
     (ad-set-arg 0 (car (ad-get-arg 0)))
     ad-do-it
@@ -54,19 +54,19 @@
 
 (defadvice emacs-wiki-follow-name-at-point (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice emacs-wiki-index (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice emacs-wiki-next-reference (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (if (not (emacs-wiki-link-at-point))
 	(let ((emacspeak-speak-messages t))
 	  (emacspeak-auditory-icon 'warn-user)
@@ -76,7 +76,7 @@
 
 (defadvice emacs-wiki-previous-reference (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (if (not (emacs-wiki-link-at-point))
 	(let ((emacspeak-speak-messages t))
 	  (emacspeak-auditory-icon 'warn-user)
@@ -86,7 +86,7 @@
 
 (defadvice emacs-wiki-publish (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'save-object)))
 
 ;;}}}

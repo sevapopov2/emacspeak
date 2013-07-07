@@ -64,7 +64,7 @@
 
 (defadvice emacspeak-speak-current-field (around emacspeak-edb pre act comp)
   "Treat fealds appropriately in the database mode."
-  (if (and (interactive-p)
+  (if (and (ems-interactive-p)
 	   (eq major-mode 'database-mode))
       (emacspeak-edb-speak-current-field)
     ad-do-it))
@@ -75,7 +75,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'open-object)
 	    (emacspeak-speak-mode-line)))))
 
@@ -88,7 +88,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'open-object)
 	    (emacspeak-speak-line)))))
 
@@ -98,13 +98,13 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'select-object)
 	    (emacspeak-edb-speak-current-field)))))
 
 (defadvice db-view-mode (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)))
 
 (loop for f in
@@ -119,7 +119,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide auditory feedback. Play auditory icon if possible."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (dtk-stop)
 	    (emacspeak-auditory-icon 'scroll)
 	    (if (string-match "Database.*Summary" mode-name)
@@ -132,7 +132,7 @@
       (eval
        `(defadvice ,f (around emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (if (interactive-p)
+	  (if (ems-interactive-p)
 	      (let ((prev (edb--S :this-fidx)))
 		ad-do-it
 		(unless (= prev (edb--S :this-fidx))
@@ -143,7 +143,7 @@
 
 (defadvice dbs-view (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-current-window)))
 
@@ -153,7 +153,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'close-object)
 	    (emacspeak-speak-mode-line)))))
 
@@ -165,12 +165,12 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide auditory feedback."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'save-object)))))
 
 (defadvice db-mark-record (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'mark-object)))
 
 (loop for f in
@@ -179,19 +179,19 @@
       (eval
        `(defadvice ,f (before emacspeak pre act comp)
 	  "Provide auditory feedback. Pause ongoing speech first."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'open-object)
 	    (dtk-pause)))))
 
 (defadvice db-search-field (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 
 (defadvice db-delete-record (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'delete-object)
     (emacspeak-speak-line)))
 
@@ -201,7 +201,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide an auditory icon when finished."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'task-done)))))
 
 (defadvice db-newline (around emacspeak pre act comp)
@@ -210,7 +210,7 @@ See command \\[emacspeak-toggle-line-echo].  Otherwise cue the user to
 the newly created blank line or speak the next field
 if we were moved to."
   (declare (special emacspeak-line-echo))
-  (if (interactive-p)
+  (if (ems-interactive-p)
       (if (not emacspeak-line-echo)
 	  (let ((prev (edb--S :this-fidx)))
 	    ad-do-it
@@ -227,7 +227,7 @@ if we were moved to."
   "Indicate region has been killed.
 Use an auditory icon if possible."
   (cond
-   ((interactive-p)
+   ((ems-interactive-p)
     (let ((count (count-lines (region-beginning)
                               (region-end))))
       ad-do-it
@@ -239,7 +239,7 @@ Use an auditory icon if possible."
 (defadvice db-copy-region-as-kill (after emacspeak pre act comp)
   "Indicate that region has been copied to the kill ring.
 Produce an auditory icon if possible."
-  (when (interactive-p )
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'mark-object )
     (message "region containing %s lines  copied to kill ring "
              (count-lines (region-beginning)
@@ -249,7 +249,7 @@ Produce an auditory icon if possible."
   "Indicate region has been killed.
 Use an auditory icon if possible."
   (cond
-   ((interactive-p)
+   ((ems-interactive-p)
     (let ((count (count-lines (point) (dbf-this-field-end-pos))))
       ad-do-it
       (emacspeak-auditory-icon 'delete-object )
@@ -259,7 +259,7 @@ Use an auditory icon if possible."
 
 (defadvice db-kill-word (before emacspeak pre act comp)
   "Speak word before killing it."
-  (when (interactive-p )
+  (when (ems-interactive-p )
     (save-excursion
       (skip-syntax-forward " ")
       (when dtk-stop-immediately (dtk-stop))
@@ -269,7 +269,7 @@ Use an auditory icon if possible."
 
 (defadvice db-backward-kill-word (before emacspeak pre act comp)
   "Speak word before killing it."
-  (when (interactive-p )
+  (when (ems-interactive-p )
     (when dtk-stop-immediately (dtk-stop))
     (let ((start (point ))
           (dtk-stop-immediately nil))
@@ -280,7 +280,7 @@ Use an auditory icon if possible."
 
 (defadvice db-kill-line(before emacspeak pre act comp)
   "Speak line before killing it. "
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'delete-object)
     (when dtk-stop-immediately (dtk-stop))
     (let ((dtk-stop-immediately nil))
@@ -290,7 +290,7 @@ Use an auditory icon if possible."
 (defadvice db-backward-delete-char (around emacspeak pre act comp)
   "Speak character you're deleting."
   (cond
-   ((interactive-p )
+   ((ems-interactive-p )
     (dtk-tone 500 30 'force)
     (emacspeak-speak-this-char (preceding-char ))
     (let ((pos (point)))
@@ -303,7 +303,7 @@ Use an auditory icon if possible."
 (defadvice db-delete-char (around emacspeak pre act comp)
   "Speak character you're deleting."
   (cond
-   ((interactive-p )
+   ((ems-interactive-p )
     (dtk-tone 500 30 'force)
     (emacspeak-speak-char t)
     ad-do-it)
@@ -316,7 +316,7 @@ Use an auditory icon if possible."
       (eval
        `(defadvice ,f (after emacspeak pre act)
 	  "Provide auditory feedback."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (dtk-stop)
 	    (emacspeak-auditory-icon 'select-object)))))
 
@@ -328,7 +328,7 @@ Use an auditory icon if possible."
 	  "Speak character moved to. Produce an auditory icon if we can not move."
 	  (let ((prevpos (point)))
 	    ad-do-it
-	    (if (interactive-p)
+	    (if (ems-interactive-p)
 		(if (= (point) prevpos)
 		    (emacspeak-auditory-icon 'warn-user)
 		  (and dtk-stop-immediately (dtk-stop))
@@ -337,13 +337,13 @@ Use an auditory icon if possible."
 
 (defadvice db-forward-word (after emacspeak pre act)
   "Speak the word you just moved to."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (skip-syntax-forward " ")
     (emacspeak-speak-word )))
 
 (defadvice db-backward-word (after emacspeak pre act)
   "Speak the word you just moved to."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-speak-word )))
 
 (provide 'emacspeak-edb)

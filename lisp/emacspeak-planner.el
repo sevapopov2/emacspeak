@@ -66,7 +66,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Produce an auditory icon if possible."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'open-object)
 	    (with-current-buffer (window-buffer)
 	      (emacspeak-speak-mode-line))))))
@@ -87,7 +87,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Produce an auditory icon if possible."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'mark-object)))))
 
 (loop for f in
@@ -104,7 +104,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Produce an auditory icon if possible."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'save-object)))))
 
 (loop for f in
@@ -128,17 +128,17 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Produce an auditory icon if possible."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'task-done)))))
 
 (defadvice planner-delete-task (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'delete-object)))
 
 (defadvice planner-seek-next-unfinished-task (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (if (not ad-return-value)
 	(let ((emacspeak-speak-messages t))
 	  (emacspeak-auditory-icon 'warn-user)
@@ -148,7 +148,7 @@
 
 (defadvice planner-calendar-show (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (if ad-return-value
 	(emacspeak-auditory-icon 'help)
       (let ((emacspeak-speak-messages t))
@@ -157,7 +157,7 @@
 
 (defadvice planner-schedule-show-end-project (around emacspeak pre act comp)
   "Provide speech feedback."
-  (if (interactive-p)
+  (if (ems-interactive-p)
       (let ((emacspeak-speak-messages t))
 	(emacspeak-auditory-icon 'select-object)
 	ad-do-it)

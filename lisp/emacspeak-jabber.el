@@ -1,5 +1,5 @@
 ;;; emacspeak-jabber.el --- Speech-Enable jabber
-;;; $Id: emacspeak-jabber.el 7225 2011-09-29 00:20:40Z tv.raman.tv $
+;;; $Id: emacspeak-jabber.el 7823 2012-06-03 01:16:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: speech-enable jabber
 ;;; Keywords: Emacspeak, jabber
@@ -85,17 +85,17 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory icon if possible."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'on)))))
 
 (defadvice jabber-disconnect (after emacspeak pre act comp)
   "Provide auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'off)))
 
 (defadvice jabber-customize (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
@@ -138,7 +138,7 @@
 
 (defadvice jabber-activity-switch-to (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-mode-line)))
 
@@ -147,7 +147,7 @@
 
 (defadvice jabber-chat-buffer-send (after emacspeak pre act comp)
   "Produce auditory icon."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)))
 
 (loop for f in
@@ -160,7 +160,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'open-object)
             (emacspeak-speak-mode-line)))))
 
@@ -174,7 +174,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'large-movement)
             (emacspeak-speak-text-range 'jabber-jid)))))
 
@@ -185,12 +185,12 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory icon if possible."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'delete-object)))))
 
 (defadvice jabber-roster-toggle-binding-display (after emacspeak pre act comp)
   "Provide auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon (if jabber-roster-show-bindings 'on 'off))))
 
 ;;}}}
@@ -203,30 +203,30 @@
 (defadvice jabber-send-default-presence (after emacspeak pre act
                                                comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'open-object)
     (message "Sent default presence.")))
 
 (defadvice jabber-send-away-presence (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)
     (message "Set to be away.")))
 
 (defadvice jabber-send-xa-presence (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)
     (message "Set extended  away.")))
 (defadvice jabber-go-to-next-jid (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
 (defadvice jabber-go-to-previous-jid (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
@@ -298,7 +298,7 @@ Returns a cons (start . end) that delimits the message."
   (let ((start nil)
         (end nil))
     (save-excursion
-      (when (interactive-p)
+      (when (ems-interactive-p )
         (unless (looking-at "^\\[")
           (re-search-backward "^\\[" nil t)))
       (setq start

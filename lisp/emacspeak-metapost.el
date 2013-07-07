@@ -1,5 +1,5 @@
 ;;; emacspeak-metapost.el --- speech-enable metapost mode
-;;; $Id: emacspeak-metapost.el 7378 2011-11-10 17:34:32Z tv.raman.tv $
+;;; $Id: emacspeak-metapost.el 7823 2012-06-03 01:16:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak module for speech-enabling
 ;;; metapost mode
@@ -71,13 +71,13 @@
 
 (defadvice meta-indent-line (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line )))
 
 (defadvice meta-fill-paragraph (after emacspeak pre act)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'fill-object )
     (message "Filled current paragraph")))
 
@@ -85,13 +85,13 @@
 ;;{{{  navigation 
 (defadvice  meta-beginning-of-defun (after emacspeak pre act)
   "Speak the line."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
 (defadvice  meta-end-of-defun (after emacspeak pre act)
   "Speak the line."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
@@ -100,7 +100,7 @@
 
 (defadvice meta-comment-region (after emacspeak pre act )
   "Provide spoken feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (let ((prefix-arg (ad-get-arg 2)))
       (emacspeak-auditory-icon 'section)
       (message "%s region containing %s lines"
@@ -112,7 +112,7 @@
 
 (defadvice meta-comment-defun (after emacspeak pre act )
   "Provide spoken feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (let ((prefix-arg (ad-get-arg 2)))
       (emacspeak-auditory-icon 'section)
       (message "%s environment containing %s lines"
@@ -123,35 +123,35 @@
 
 (defadvice meta-uncomment-defun (after emacspeak pre act )
   "Provide spoken feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'section)
     (message "Uncommented environment containing %s lines"
              (count-lines (point) (mark 'force)))))
 
 (defadvice meta-uncomment-region (after emacspeak pre act )
   "Provide spoken feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'section)
     (message "Uncommented  region containing %s lines"
              (count-lines (point) (mark 'force)))))
 
 (defadvice meta-indent-region (after emacspeak pre act )
   "Provide spoken feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'fill-object)
     (message "Indented  region containing %s lines"
              (count-lines (point) (mark 'force)))))
 
 (defadvice meta-indent-buffer (after emacspeak pre act )
   "Provide spoken feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'fill-object)
     (message "Indented  buffer containing %s lines"
              (count-lines (point-min) (point-max 'force)))))
 
 (defadvice meta-mark-defun (after emacspeak pre act)
   "Produce an auditory icon if possible."
-  (when (interactive-p )
+  (when (ems-interactive-p  )
     (emacspeak-auditory-icon 'mark-object)
     (message "Marked function containing %s lines"
              (count-lines (point)
@@ -159,7 +159,7 @@
 
 (defadvice meta-indent-defun (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'fill-object)
     (message "Indented current defun. ")))
 
