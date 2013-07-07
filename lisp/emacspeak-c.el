@@ -1,5 +1,5 @@
 ;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java
-;;; $Id: emacspeak-c.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
+;;; $Id: emacspeak-c.el 7998 2012-08-25 15:53:21Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak extensions for C and C++ mode
 ;;; Keywords:emacspeak, audio interface to emacs C, C++
@@ -58,7 +58,7 @@
 (defadvice c-electric-delete-forward (around emacspeak pre act)
   "Speak character you're deleting."
   (cond
-   ((interactive-p )
+   ((ems-interactive-p  )
     (dtk-tone 500 30 'force)
     (emacspeak-speak-this-char (following-char ))
     ad-do-it)
@@ -68,7 +68,7 @@
 (defadvice c-electric-backspace (around emacspeak pre act)
   "Speak character you're deleting."
   (cond
-   ((interactive-p )
+   ((ems-interactive-p  )
     (dtk-tone 500 30 'force)
     (emacspeak-speak-this-char (preceding-char ))
     ad-do-it)
@@ -83,7 +83,7 @@
 (defadvice c-electric-semi&comma (after emacspeak pre act comp)
   "Speak the line when a statement is completed."
   (declare (special last-input-event))
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (cond 
      ((= last-input-event ?,) (emacspeak-speak-this-char last-input-event))
      (t (emacspeak-speak-line )))))
@@ -93,8 +93,6 @@
         c-electric-slash
         c-electric-lt-gt
         electric-c-terminator
-        c-electric-colon
-        c-electric-paren
         c-electric-pound
         c-electric-brace
         electric-c-semi
@@ -105,12 +103,26 @@
        `(defadvice ,f (after emacspeak pre act comp)
           "Speak what you typed"
           (declare (special last-input-event))
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-speak-this-char last-input-event)))))
+
+(unless (and (boundp 'post-self-insert-hook)
+             post-self-insert-hook
+             (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
+  (loop for f in
+        '(c-electric-colon
+          c-electric-paren)
+        do
+        (eval
+         `(defadvice ,f (after emacspeak pre act comp)
+            "Speak what you typed"
+            (declare (special last-input-event))
+            (when (ems-interactive-p)
+              (emacspeak-speak-this-char last-input-event))))))
 
 (defadvice c-electric-delete (before emacspeak pre act )
   "Speak char before deleting it."
-  (when (interactive-p )
+  (when (ems-interactive-p  )
     (emacspeak-speak-this-char(preceding-char ))
     (dtk-tone 500 30)))
 
@@ -129,13 +141,13 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Speak the line moved to."
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'large-movement)
 	    (emacspeak-speak-line )))))
 
 (defadvice c-mark-function (after emacspeak pre act )
   "Provide spoken and auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'mark-object)
     (emacspeak-speak-line)))
 
@@ -144,7 +156,7 @@
 
 (defadvice c-scope-operator (after emacspeak pre act )
   "speak what you inserted."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (dtk-speak "colon colon")))
 
 ;;}}}
@@ -331,13 +343,13 @@ and their meanings. ")
 ;;{{{  indenting commands
 
 (defadvice c-indent-defun (after emacspeak pre act)
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'fill-object)
     (message "Indented function")))
 
 (defadvice c-indent-command (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-speak-line )))
 
 ;;}}}
@@ -370,7 +382,7 @@ and their meanings. ")
 
 (voice-setup-add-map
  '(
-   (c-nonbreakable-space-face voice-brighten)
+   (c-annotation-face voice-annotate)
    ))
 
 ;;}}}

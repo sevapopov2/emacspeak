@@ -59,9 +59,6 @@ gweb.elc \
 gtube.elc \
 gsheet.elc
 
-ifeq ($(strip $(shell $(EMACS) -batch -Q -eval '(message (locate-library "json"))' 2>&1)),)
-OBJECTS += json.elc
-endif
 
 all:g-loaddefs.el g-cus-load.el  ${OBJECTS}
 

@@ -1,3 +1,10 @@
+emacspeak (37.0-1squeeze1) squeeze; urgency=low
+
+  * New upstream release.
+  * Dropped emacs22 support.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 08 Jul 2013 01:17:46 +0400
+
 emacspeak (36.0-12squeeze1) squeeze; urgency=low
 
   * Fixed widget buffers behaviour.

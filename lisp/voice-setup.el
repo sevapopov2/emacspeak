@@ -1,5 +1,5 @@
 ;;; voice-setup.el --- Setup voices for voice-lock
-;;; $Id: voice-setup.el 7409 2011-11-16 03:22:20Z tv.raman.tv $
+;;; $Id: voice-setup.el 8046 2012-12-20 01:33:38Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Voice lock mode for Emacspeak
 ;;{{{  LCD Archive entry:
@@ -48,7 +48,6 @@
 ;;
 ;; Comments will be spoken in `emacspeak-voice-lock-comment-personality'.
 ;; Strings will be spoken in `emacspeak-voice-lock-string-personality'.
-;; Doc strings will be spoken in `emacspeak-voice-lock-doc-string-personality'.
 ;; Function and variable names (in their defining forms) will be
 ;;  spoken in `emacspeak-voice-lock-function-name-personality'.
 ;; Reserved words will be spoken in `emacspeak-voice-lock-keyword-personality'.
@@ -161,14 +160,11 @@
         voice
       (gethash voice voice-setup-personality-table 'default))))
 
-(defun voice-setup-show-rogue-voices ()
+(defun voice-setup-show-rogue-faces ()
   "Return list of voices that map to non-existent faces."
   (declare (special voice-setup-face-voice-table))
-  (loop
-   for v being the hash-keys of
-   voice-setup-face-voice-table
-   unless (facep v)
-   collect v))
+  (loop for f being the hash-keys of voice-setup-face-voice-table
+        unless (facep f) collect f))
 
 ;;}}}
 ;;{{{ special form def-voice-font
@@ -303,7 +299,7 @@ command \\[customize-variable] on <personality>-settings.. "
 (define-minor-mode voice-lock-mode
   "Toggle voice lock mode."
   :lighter " Voice"
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon (if voice-lock-mode 'on 'off))))
 
 ;;;###autoload
@@ -433,9 +429,9 @@ punctuations.")
 (voice-setup-add-map
  '(
    (bold voice-bolden)
+   (variable-pitch voice-animate)
    (bold-italic voice-bolden-and-animate)
    (button voice-bolden)
-   (fixed voice-monotone)
    (fixed-pitch voice-monotone)
    (font-lock-builtin-face voice-bolden)
    (font-lock-comment-face voice-monotone)
@@ -445,12 +441,10 @@ punctuations.")
    (font-lock-negation-char-face voice-brighten-extra)
    (font-lock-constant-face voice-lighten)
    (font-lock-doc-face voice-monotone-medium)
-   (font-lock-doc-string-face voice-smoothen-extra)
    (font-lock-function-name-face voice-bolden-medium)
    (font-lock-keyword-face voice-animate-extra)
    (font-lock-preprocessor-face voice-monotone-medium)
    (shadow voice-monotone-medium)
-   (font-lock-reference-face voice-animate-medium)
    (font-lock-string-face voice-lighten-extra)
    (font-lock-type-face voice-smoothen)
    (font-lock-variable-name-face voice-bolden)
@@ -462,6 +456,62 @@ punctuations.")
    (region voice-brighten)
    (underline voice-lighten-medium)
    ))
+
+;;}}}
+;;{{{ new light-weight voice lock
+
+;;;###autoload
+(define-minor-mode voice-lock-mode
+  "Toggle voice lock mode."
+  t nil nil
+  (when (ems-interactive-p )
+    (let ((state (if voice-lock-mode 'on 'off)))
+      (when (ems-interactive-p )
+        (emacspeak-auditory-icon state)))))
+
+;;;###autoload
+(defun turn-on-voice-lock ()
+  "Turn on Voice Lock mode ."
+  (interactive)
+  (unless voice-lock-mode (voice-lock-mode)))
+
+;;;###autoload
+(defun turn-off-voice-lock ()
+  "Turn off Voice Lock mode ."
+  (interactive)
+  (when voice-lock-mode (voice-lock-mode -1)))
+
+;;;### autoload
+(defun voice-lock-toggle ()
+  "Interactively toggle voice lock."
+  (interactive)
+  (if voice-lock-mode
+      (turn-off-voice-lock)
+    (turn-on-voice-lock))
+  (when (ems-interactive-p )
+    (let ((state (if voice-lock-mode 'on 'off)))
+      (when (ems-interactive-p )
+        (emacspeak-auditory-icon state)))))
+
+;;;###autoload
+(defvar global-voice-lock-mode t
+  "Global value of voice-lock-mode.")
+
+(when (string-match "24" emacs-version)
+  (define-globalized-minor-mode global-voice-lock-mode
+    voice-lock-mode turn-on-voice-lock
+    :initialize 'custom-initialize-delay
+    :init-value (not (or noninteractive emacs-basic-display))
+    :group 'voice-lock
+    :version "24.1"))
+
+;; Install ourselves:
+(declaim (special text-property-default-nonsticky))
+(unless (assq 'personality text-property-default-nonsticky)
+  (push  (cons 'personality t) text-property-default-nonsticky))
+
+(unless (assq 'voice-lock-mode minor-mode-alist)
+  (setq minor-mode-alist (cons '(voice-lock-mode " Voice") minor-mode-alist)))
 
 ;;}}}
 ;;{{{ list-voices-display

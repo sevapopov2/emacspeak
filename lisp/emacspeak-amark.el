@@ -142,7 +142,7 @@ AMarks are bookmarks in audio content."
       (print  l buff) 
       (save-buffer buff)
       (kill-buffer buff)
-      (when (interactive-p)
+      (when (ems-interactive-p )
         (message "Saved AMarks in %s"
                  default-directory)
         (emacspeak-auditory-icon 'save-object)))))
@@ -158,7 +158,7 @@ AMarks are bookmarks in audio content."
          (locate-dominating-file default-directory emacspeak-amark-file)))
     (cond
      ((null where)
-      (when (interactive-p)
+      (when (ems-interactive-p )
         (message "No AMarks found.")))
      (t (setq buff
               (find-file-noselect (expand-file-name emacspeak-amark-file where)))
@@ -168,7 +168,7 @@ AMarks are bookmarks in audio content."
           (setq l (read buff))
           (kill-buffer buff))
         (setq emacspeak-amark-list l)
-        (when (interactive-p)
+        (when (ems-interactive-p )
           (emacspeak-auditory-icon 'open-object)
           (message "Loaded AMarks from %s" where))))))
 
