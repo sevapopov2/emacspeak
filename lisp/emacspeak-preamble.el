@@ -1,8 +1,8 @@
 ;;; emacspeak-preamble.el --- standard  include for Emacspeak modules
 ;;; $Id: emacspeak-preamble.el 8035 2012-12-08 17:03:23Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
-;;; DescriptionEmacspeak extensions for auctex-mode
-;;; Keywords:emacspeak, audio interface to emacs AUCTEX
+;;; Description: Standard include for various Emacspeak modules
+;;; Keywords: emacspeak, standard include
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
@@ -53,6 +53,7 @@
 
 ;;}}}
 ;;{{{ Utilities:
+
 (defsubst emacspeak-url-encode (str)
   "URL encode string."
   (mapconcat
@@ -66,8 +67,13 @@
    str
    ""))
 
+(unless (fboundp 'declare-function)
+  (defmacro declare-function (&rest args) nil))
+
 ;;}}}
+
 (provide  'emacspeak-preamble)
+
 ;;{{{  emacs local variables 
 
 ;;; local variables:

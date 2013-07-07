@@ -226,8 +226,7 @@
 
 (defadvice bmk-mgr-mode (after emacspeak pre act comp)
   "Set punctuation mode and refresh punctuations."
-  (declare (special dtk-punctuation-mode))
-  (setq dtk-punctuation-mode 'some)
+  (dtk-set-punctuations 'some)
   (emacspeak-pronounce-refresh-pronunciations)
   (define-key bmk-mgr-mode-map emacspeak-prefix 'emacspeak-prefix-command))
 

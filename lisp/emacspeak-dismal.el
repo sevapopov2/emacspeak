@@ -181,7 +181,6 @@ emacspeak-dismal-row-summarizer-list"
   (interactive)
   (declare (special emacspeak-dismal-row-summarizer-list
                     emacspeak-dismal-value-personality
-                    voice-lock-mode
                     dismal-current-row))
   (unless  (and  emacspeak-dismal-row-summarizer-list
                  (vectorp emacspeak-dismal-row-summarizer-list))
@@ -227,7 +226,7 @@ emacspeak-dismal-row-summarizer-list"
 emacspeak-dismal-col-summarizer-list"
   (interactive)
   (declare (special emacspeak-dismal-col-summarizer-list
-                    emacspeak-dismal-value-personality voice-lock-mode
+                    emacspeak-dismal-value-personality
                     dismal-current-col))
   (unless  (and  emacspeak-dismal-col-summarizer-list
                  (vectorp emacspeak-dismal-col-summarizer-list))

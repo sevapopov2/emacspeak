@@ -83,16 +83,16 @@
    ((ems-interactive-p )
     (let ((opoint (point)))
       ad-do-it
-      (emacspeak-speak-region opoint (point))
-      (emacspeak-auditory-icon 'yank-object)))
+      (emacspeak-auditory-icon 'yank-object)
+      (emacspeak-speak-region opoint (point))))
    (t ad-do-it))
   ad-return-value)
 (defadvice sc-insert-citation (after emacspeak pre act
                                      comp)
   "Speak what we inserted"
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'yank-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'yank-object)
+    (emacspeak-speak-line)))
 
 (defadvice sc-open-line (after emacspeak pre act comp)
   "Provide auditory feedback"

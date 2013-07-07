@@ -53,11 +53,12 @@
 (setq byte-compile-warnings t)
                                         ;'(redefine callargs free-vars unresolved obsolete))
 
-(cond
- ((fboundp 'called-interactively-p)
-  (defsubst ems-interactive-p  ()
-    "called-interactively-p 'interactive"
-    (called-interactively-p 'interactive)))
- (t (defalias 'ems-interactive-p  'interactive-p )))
+(condition-case nil
+    (progn
+      (called-interactively-p nil)
+      (defsubst ems-interactive-p  ()
+        "called-interactively-p 'interactive"
+        (called-interactively-p 'interactive)))
+  (error (defalias 'ems-interactive-p  'interactive-p )))
 
 (provide 'emacspeak-load-path)

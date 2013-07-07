@@ -60,6 +60,8 @@
 (require 'xml-parse)
 (require 'xml)
 (require 'derived)
+(require 'emacspeak-we)
+
 ;;}}}
 ;;{{{ Customizations
 

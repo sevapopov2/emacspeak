@@ -1,8 +1,8 @@
 ;;; emacspeak-cperl.el --- Speech enable CPerl Mode 
 ;;; $Id: emacspeak-cperl.el 7998 2012-08-25 15:53:21Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
-;;; DescriptionEmacspeak extensions for CPerl mode
-;;; Keywords:emacspeak, audio interface to emacs CPerl
+;;; Description: Emacspeak extensions for CPerl mode
+;;; Keywords: emacspeak, audio interface to emacs CPerl
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
@@ -138,14 +138,15 @@ Otherwise cue user to the line just created. "
 (defadvice cperl-invert-if-unless (after emacspeak pre act
                                          comp)
   "Speak updated line"
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 
 (defadvice cperl-comment-region (after emacspeak pre act )
   "Provide spoken feedback."
   (when (ems-interactive-p )
     (let ((prefix-arg (ad-get-arg 2)))
+      (emacspeak-auditory-icon 'section)
       (message "%s region containing %s lines"
                (if (and prefix-arg
                         (< prefix-arg 0))
@@ -157,6 +158,7 @@ Otherwise cue user to the line just created. "
   "Provide spoken feedback."
   (when (ems-interactive-p )
     (let ((prefix-arg (ad-get-arg 2)))
+      (emacspeak-auditory-icon 'section)
       (message "%s region containing %s lines"
                (if (and prefix-arg
                         (< prefix-arg 0))
@@ -167,9 +169,9 @@ Otherwise cue user to the line just created. "
 (defadvice cperl-indent-command (after emacspeak pre act
                                        comp)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
 
 (defadvice cperl-indent-region (after emacspeak pre act
                                       comp)
@@ -190,16 +192,17 @@ Otherwise cue user to the line just created. "
 (defadvice cperl-switch-to-doc-buffer (after emacspeak pre
                                              act comp)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'open-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice cperl-find-bad-style (after emacspeak pre act
                                        comp)
   "Provide auditory feedback when done."
-  (when (ems-interactive-p )
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'task-done)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'task-done)
+    (emacspeak-speak-mode-line)))
+
 ;;}}}
 ;;{{{ set up hooks 
 

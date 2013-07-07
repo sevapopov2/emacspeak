@@ -182,6 +182,14 @@ Note that some badly formed mime messages  cause trouble."
                       to)))
             (lines (vm-su-line-count message))
             (summary nil))
+      (cond 
+       ((and self-p
+             (= 0 self-p)                    ) ;mail to me and others 
+        (emacspeak-auditory-icon 'item))
+       (self-p				;mail to others including me
+        (emacspeak-auditory-icon 'mark-object))
+       (t			     ;got it because of a mailing list
+        (emacspeak-auditory-icon 'select-object)))
       (dtk-speak
        (vm-decode-mime-encoded-words-in-string
         (format "%s %s %s   %s %s "
@@ -357,9 +365,9 @@ Then speak the screenful. "
     (emacspeak-speak-mode-line )))
 (defadvice vm-mail-send (after emacspeak pre act comp)
   "Provide auditory context"
-  (when  (ems-interactive-p )
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'close-object)))
+  (when  (ems-interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice vm-mail-send-and-exit (after emacspeak pre act comp)
   "Provide auditory context"
@@ -392,8 +400,8 @@ Then speak the screenful. "
   (vm-goto-message 1)
   (vm-delete-message
    (read vm-ml-highest-message-number))
-  (message "All messages have been marked as deleted.")
-  (emacspeak-auditory-icon 'delete-object))
+  (emacspeak-auditory-icon 'delete-object)
+  (message "All messages have been marked as deleted."))
 
 ;;}}}
 ;;{{{  Keybindings:
