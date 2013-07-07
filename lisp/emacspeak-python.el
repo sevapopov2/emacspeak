@@ -1,5 +1,5 @@
 ;;; emacspeak-python.el --- Speech enable Python development environment
-;;; $Id: emacspeak-python.el 7225 2011-09-29 00:20:40Z tv.raman.tv $
+;;; $Id: emacspeak-python.el 7998 2012-08-25 15:53:21Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to python mode
 ;;; Keywords: Emacspeak, Speak, Spoken Output, python
@@ -56,15 +56,18 @@
 
 ;;{{{  electric editing
 
-(loop for f in
-      '(py-electric-colon
-        python-electric-colon)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-          "Speak what you inserted"
-          (when (interactive-p)
-            (dtk-say " colon ")))))
+(unless (and (boundp 'post-self-insert-hook)
+             post-self-insert-hook
+             (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
+  (loop for f in
+        '(py-electric-colon
+          python-electric-colon)
+        do
+        (eval
+         `(defadvice ,f (after emacspeak pre act comp)
+            "Speak what you inserted"
+            (when (ems-interactive-p)
+              (dtk-say " colon "))))))
 
 (loop for f in
       '(py-electric-backspace
@@ -76,7 +79,7 @@
       (eval
        `(defadvice ,f (before emacspeak pre act comp)
           "Speak character you're deleting."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (dtk-tone 500 30 'force)
             (emacspeak-speak-this-char (preceding-char ))))))
 
@@ -85,12 +88,12 @@
 
 (defadvice python-send-region (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'task-done)))
 
 (defadvice python-send-buffer (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'task-done)))
 
 ;;}}}
@@ -103,12 +106,12 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p )
             (emacspeak-auditory-icon 'fill-object)))))
 
 (defadvice python-shift-left (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'large-movement)
     (dtk-speak
      (format "Left shifted block  containing %s lines"
@@ -116,14 +119,14 @@
                            (region-end))))))
 (defadvice python-shift-right (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (dtk-speak
      (format "Right shifted block  containing %s lines"
              (count-lines  (region-beginning)
                            (region-end))))))
 (defadvice python-indent-region (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'fill-object)
     (dtk-speak
      (format "Indented region   containing %s lines"
@@ -132,7 +135,7 @@
 
 (defadvice py-comment-region (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'section)
     (dtk-speak
      (format "Commented  block  containing %s lines"
@@ -141,6 +144,7 @@
 
 ;;}}}
 ;;{{{  buffer navigation
+
 (loop for f in
       '(py-previous-statement
         py-next-statement
@@ -158,7 +162,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Speak current statement after moving"
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'large-movement)
             (emacspeak-speak-line)))))
 
@@ -171,7 +175,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Speak number of lines marked"
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'mark-object)
             (dtk-speak
              (format "Marked block containing %s lines"
@@ -185,7 +189,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (message "%s %s lines"
                      (save-excursion
                        (goto-char (point-min))
@@ -203,7 +207,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Speak rest of current word"
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-speak-word 1)))))
 
 ;;}}}

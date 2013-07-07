@@ -1,5 +1,5 @@
 ;;; emacspeak-preamble.el --- standard  include for Emacspeak modules
-;;; $Id: emacspeak-preamble.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
+;;; $Id: emacspeak-preamble.el 8035 2012-12-08 17:03:23Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Standard include for various Emacspeak modules
 ;;; Keywords: emacspeak, standard include
@@ -40,13 +40,10 @@
 ;;{{{ Required modules 
 
 (require 'cl)
+(when (locate-library "cl-lib")
+  (require 'cl-lib))
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'advice)
-(require 'backquote)
-(require 'custom)
-(require 'widget)
-(require 'wid-edit)
-(require 'thingatpt)
 (require 'emacspeak-load-path)
 (require 'voice-setup)
 (require 'dtk-speak)

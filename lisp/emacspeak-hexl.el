@@ -81,130 +81,130 @@
 (defadvice hexl-self-insert-command (after emacspeak pre act comp)
   "Speak characters when typing."
   (when (and emacspeak-character-echo
-	     (interactive-p ))
+	     (ems-interactive-p ))
     (when dtk-stop-immediately-while-typing (dtk-stop))
     (emacspeak-speak-this-char last-input-char )))
 
 (defadvice hexl-forward-char (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-hexl-speak-current-byte-code)))
 
 (defadvice hexl-backward-char (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-hexl-speak-current-byte-code)))
 
 (defadvice hexl-forward-short (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-hexl-speak-current-byte-code)))
 
 (defadvice hexl-backward-short (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-hexl-speak-current-byte-code)))
 
 (defadvice hexl-forward-word (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-hexl-speak-current-byte-code)))
 
 (defadvice hexl-backward-word (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-hexl-speak-current-byte-code)))
 
 (defadvice hexl-next-line (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-hexl-speak-current-line-address)))
 
 (defadvice hexl-previous-line (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-hexl-speak-current-line-address)))
 
 (defadvice hexl-beginning-of-line (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice hexl-end-of-line (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice hexl-beginning-of-buffer (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice hexl-end-of-buffer (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice hexl-beginning-of-1k-page (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice hexl-end-of-1k-page (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice hexl-beginning-of-512b-page (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice hexl-end-of-512b-page (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice hexl-scroll-up (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'scroll)
     (emacspeak-hexl-speak-current-address)))
 
 (defadvice hexl-scroll-down (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'scroll)
     (emacspeak-hexl-speak-current-address)))
 
 (defadvice hexl-goto-address (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-hexl-speak-current-byte-code)))
 
 (defadvice hexl-goto-hex-address (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-hexl-speak-current-byte-code)))
 
 (defadvice hexl-mode (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'on)))
 
 (defadvice hexl-mode-exit (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'off)))
 
 (defadvice hexl-find-file (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)))
 
 (defadvice hexlify-buffer (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)))
 
 ;;; Keymap tweaking:

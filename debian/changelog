@@ -1,3 +1,10 @@
+emacspeak (37.0-1precise1) precise; urgency=low
+
+  * New upstream release.
+  * Dropped emacs22 support.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 08 Jul 2013 00:59:16 +0400
+
 emacspeak (36.0-12precise1) precise; urgency=low
 
   * Fixed widget buffers behaviour.

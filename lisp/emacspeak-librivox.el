@@ -240,9 +240,8 @@
 (defun emacspeak-librivox-play ()
   "Play current book as a playlist."
   (interactive)
-  (declare (special emacspeak-table
-                    emacspeak-librivox-directory
-                    emacspeak-xslt-program))
+  (declare (special emacspeak-table emacspeak-xslt-program
+                    emacspeak-librivox-directory))
   (unless (and (eq major-mode 'emacspeak-librivox-mode)
                (boundp 'emacspeak-table)
                emacspeak-table)

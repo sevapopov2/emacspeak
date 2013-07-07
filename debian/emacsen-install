@@ -22,6 +22,9 @@ case "$FLAVOR" in
     emacs21) echo "  emacspeak does not support emacs21"
         exit 0
         ;;
+    emacs22) echo "  emacspeak does not support emacs22"
+        exit 0
+        ;;
     xemacs*) echo " emacspeak does not support xemacs"
         exit 0
         ;;
@@ -54,7 +57,7 @@ do [ -e "${file%.elc}.el" ] || rm -f $file
 done
 
 cd ${ELCDIR}
-for target in blurbs etc Makefile README realaudio servers shoutcast sounds xsl
+for target in blurbs etc Makefile README realaudio servers sounds xsl
 do [ -e $target ] || ln -s ${ELDIR_REL}/$target
 done
 find -L . -type l -lname '*' -delete

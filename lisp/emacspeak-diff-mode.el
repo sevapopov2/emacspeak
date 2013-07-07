@@ -1,12 +1,23 @@
-;;; emacspeak-diff.el --- Speech enable  diff
-;;; Description:   extension to speech enable diff
-;;; Keywords: Emacspeak, Audio Desktop
+;;; emacspeak-diff-mode.el --- Speech-enable DIFF-MODE
+;;; $Id: emacspeak-diff-mode.el 4797 2007-07-16 23:31:22Z tv.raman.tv $
+;;; $Author: tv.raman.tv $
+;;; Description:  Speech-enable DIFF-MODE An Emacs Interface to diff-mode
+;;; Keywords: Emacspeak,  Audio Desktop diff-mode
 ;;{{{  LCD Archive entry:
+
+;;; LCD Archive Entry:
+;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
+;;; A speech interface to Emacs |
+;;; $Date: 2007-05-03 18:13:44 -0700 (Thu, 03 May 2007) $ |
+;;;  $Revision: 4532 $ |
+;;; Location undetermined
+;;;
 
 ;;}}}
 ;;{{{  Copyright:
-
-;;; Initial version: Author: Igor B. Poretsky <poretsky@mlbox.ru>
+;;;Copyright (C) 1995 -- 2007, 2011, T. V. Raman
+;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
+;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
@@ -17,7 +28,7 @@
 ;;;
 ;;; GNU Emacs is distributed in the hope that it will be useful,
 ;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; MERCHANTABILITY or FITNDIFF-MODE FOR A PARTICULAR PURPOSE.  See the
 ;;; GNU General Public License for more details.
 ;;;
 ;;; You should have received a copy of the GNU General Public License
@@ -27,32 +38,39 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  Introduction:
+;;{{{  introduction
 
 ;;; Commentary:
-;;; diff is an emacs package for using UNIX diff from emacs.
-;;; this module speech-enables diff.
+;;; DIFF-MODE  support.
 
 ;;}}}
+;;{{{  Required modules
 
-;;; Code:
-;;{{{ required modules
+(require 'cl)
+(declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
 ;;}}}
-;;{{{ Personalities  
+;;{{{ Faces from  diff-mode.el
+
 (voice-setup-add-map
  '(
-   (diff-header voice-bolden)
-   (diff-file-header voice-animate)
-   (diff-hunk-header voice-animate-medium)
-   (diff-added voice-animate-extra)
-   (diff-removed voice-animate-extra)
-   (diff-changed voice-animate-extra)
-   (diff-indicator-added voice-animate-extra)
-   (diff-indicator-removed voice-animate-extra)
-   (diff-indicator-changed voice-animate-extra)
-   (diff-nonexistent voice-monotone)
+   (diff-added voice-brighten)
+   (diff-changed voice-animate)
+   (diff-context voice-monotone)
+   (diff-file-header voice-bolden)
+   (diff-function voice-smoothen)
+   (diff-header voice-bolden-extra)
+   (diff-hunk-header voice-bolden-medium)
+   (diff-index voice-monotone)
+   (diff-indicator-added voice-annotate)
+   (diff-indicator-changed voice-annotate)
+   (diff-indicator-removed voice-smoothen)
+   (diff-nonexistent voice-lighten-extra)
+   (diff-refine-added voice-lighten)
+   (diff-refine-change voice-brighten-medium)
+   (diff-refine-removed voice-smoothen)
+   (diff-removed voice-smoothen-extra)
    ))
 
 ;;}}}
@@ -60,7 +78,7 @@
 
 (defadvice diff-goto-source (after emacspeak pre act comp)
   "Provide spoken feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
@@ -70,7 +88,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide spoken feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'select-object)
             (emacspeak-speak-line)))))
 
@@ -80,7 +98,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide spoken feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'large-movement)
             (emacspeak-speak-line)))))
 
@@ -90,7 +108,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide spoken feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'delete-object)
             (emacspeak-speak-line)))))
 
@@ -108,7 +126,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide spoken feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'task-done)))))
 
 ;;}}}
@@ -123,7 +141,7 @@
              "")))
 
 ;;}}}
-(provide 'emacspeak-diff)
+(provide 'emacspeak-diff-mode)
 ;;{{{ end of file
 
 ;;; local variables:
