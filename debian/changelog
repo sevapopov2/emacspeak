@@ -1,3 +1,9 @@
+emacspeak (37.0-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 07 Jul 2013 23:58:57 +0400
+
 emacspeak (36.0-3) unstable; urgency=low
 
   * Fixed compiling in x86-64 environment.

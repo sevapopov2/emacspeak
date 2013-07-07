@@ -7,7 +7,6 @@ etc usr/share/emacs/site-lisp/emacspeak
 js usr/share/emacs/site-lisp/emacspeak
 lisp usr/share/emacs/site-lisp/emacspeak
 realaudio usr/share/emacs/site-lisp/emacspeak
-shoutcast usr/share/emacs/site-lisp/emacspeak
 xsl usr/share/emacs/site-lisp/emacspeak
 Makefile usr/share/emacs/site-lisp/emacspeak
 README usr/share/emacs/site-lisp/emacspeak
