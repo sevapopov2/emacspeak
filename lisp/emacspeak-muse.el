@@ -1,5 +1,5 @@
 ;;; emacspeak-muse.el --- Speech-enable Muse
-;;; $Id: emacspeak-muse.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
+;;; $Id: emacspeak-muse.el 7823 2012-06-03 01:16:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Speech-enable Muse
 ;;; Keywords: Emacspeak,  Audio Desktop Muse
@@ -68,7 +68,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide speech feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (if (not (muse-link-at-point))
                 (let ((emacspeak-speak-messages t))
                   (emacspeak-auditory-icon 'warn-user)
@@ -84,7 +84,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide speech feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'yank-object)
             (when (sit-for 0.1)
               (save-excursion
@@ -97,8 +97,8 @@
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
-          "Produce an auditory icon if possible."
-          (when (interactive-p)
+          "Provide auditory feedback."
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'open-object)
             (emacspeak-speak-mode-line)))))
 
@@ -107,7 +107,7 @@
   (when (listp (ad-get-arg 0))
     (ad-set-arg 0 (car (ad-get-arg 0))))
   ad-do-it
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line))
   ad-return-value)
@@ -120,37 +120,37 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Produce an auditory icon if possible."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'save-object)))))
 
 (defadvice muse-insert-tag (after emacspeak pre act comp)
-  "Produce an auditory icon if possible."
-  (when (interactive-p)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'yank-object)
     (emacspeak-speak-line)))
 
 (defadvice muse-insert-list-item (after emacspeak pre act comp)
-  "Produce an auditory icon if possible."
-  (when (interactive-p)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'item)
     (emacspeak-speak-line)))
 
 (defadvice muse-decrease-list-item-indentation (after emacspeak pre act comp)
-  "Produce an auditory icon if possible."
-  (when (interactive-p)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'left)
     (emacspeak-speak-line)))
 
 (defadvice muse-increase-list-item-indentation (after emacspeak pre act comp)
-  "Produce an auditory icon if possible."
-  (when (interactive-p)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'right)
     (emacspeak-speak-line)))
 
 (defadvice muse-colors-toggle-inline-images (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
   (declare (special muse-colors-inline-images))
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon (if muse-colors-inline-images 'on 'off))))
 
 ;;}}}

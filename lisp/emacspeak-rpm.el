@@ -1,5 +1,5 @@
 ;;; emacspeak-rpm.el --- speech-enable RPM
-;;; $Id: emacspeak-rpm.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
+;;; $Id: emacspeak-rpm.el 7823 2012-06-03 01:16:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable RPM
 ;;; Keywords: Emacspeak, rpm, Red Hat Package Manager
@@ -59,49 +59,49 @@
 
 (defadvice rpm (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (message "Welcome to RPM")))
 
 (defadvice rpm-invert-sort (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'task-done)
     (message "Inverted sort order")))
 (defadvice rpm-toggle-format (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'task-done)))
 (defadvice rpm-mark (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'mark-object)
     (emacspeak-speak-line)))
 (defadvice rpm-mark-delete (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'mark-object)
     (emacspeak-speak-line)))
 (defadvice rpm-unmark (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-speak-line)))
 
 (defadvice rpm-requires (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)))
 
 (defadvice rpm-quit (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice rpm-rebuild-index (after emacspeak pre act comp)
   "Provide speech feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'task-done)
     (message "Rebuilt index")))
 
@@ -128,7 +128,7 @@
 ;;}}}
 
 ;;; emacspeak-rpm.el --- search utilities
-;;; $Id: emacspeak-rpm.el 6708 2011-01-04 02:27:29Z tv.raman.tv $
+;;; $Id: emacspeak-rpm.el 7823 2012-06-03 01:16:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to make Web searching convenient
 ;;; Keywords: Emacspeak, WWW interaction

@@ -1,6 +1,15 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2013-07-07  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/dtk-speak.el, lisp/emacspeak-load-path.el:
+	Fixed compatibility with early versions of Emacs 23.
+
+2013-07-06  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	Merged upstream release 37.0.
+
 2013-03-22  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-widget.el:

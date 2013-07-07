@@ -318,7 +318,7 @@ interactively prompts for it."
 	    ;(etag-header (format "-H 'If-None-Match: %s'" etag))
 	    (etag-header "-H 'If-None-Match: fixme'")
 	    (g-curl-version-header 
-	     (format "-H 'Content-Type: %s' -H 'GData-Version: 2'" 
+	     (format "-H 'Content-Type: %s' -H 'GData-Version: 2.0'" 
 		     content-type))
 	    (curl-cmd 
 	     (format
@@ -355,7 +355,7 @@ interactively prompts for it."
 
 ;;}}}
 ;;{{{ Publishing plain text and HTML:
-
+;;;###autoload
 (defun gdocs-publish (content-type)
   "Export from given content type to Google Docs."
   (interactive)
