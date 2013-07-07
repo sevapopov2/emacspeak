@@ -44,7 +44,7 @@ See command \\[emacspeak-toggle-line-echo].
 Otherwise cue user to the line just created."
   (declare (special emacspeak-line-echo ))
   (cond
-   ((interactive-p)
+   ((ems-interactive-p)
     (cond
      (emacspeak-line-echo
       (emacspeak-speak-line )
@@ -64,7 +64,7 @@ Otherwise cue user to the line just created."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide speech feedback"
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-speak-line)))))
 
 ;;}}}

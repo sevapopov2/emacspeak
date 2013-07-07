@@ -1,5 +1,5 @@
 ;;; emacspeak-w3m.el --- speech-enables w3m-el
-;;;$Id: emacspeak-w3m.el 7378 2011-11-10 17:34:32Z tv.raman.tv $
+;;;$Id: emacspeak-w3m.el 7823 2012-06-03 01:16:29Z tv.raman.tv $
 ;;{{{ Copyright
 
 ;;; This file is not part of Emacs, but the same terms and
@@ -319,7 +319,7 @@ This hack helps to deal with some specially designed forms."
        `(defadvice ,f (around emacspeak pre act comp)
           "Speech-enable W3M."
           (cond
-           ((interactive-p)
+           ((ems-interactive-p)
             (emacspeak-auditory-icon 'select-object)
             (let ((emacspeak-speak-messages nil))
               ad-do-it))
@@ -334,7 +334,7 @@ This hack helps to deal with some specially designed forms."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Produce auditory icon."
-          (when (interactive-p)
+          (when (ems-interactive-p )
             (emacspeak-auditory-icon 'select-object)))))
 
 (loop for f in
@@ -343,13 +343,13 @@ This hack helps to deal with some specially designed forms."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Produce auditory icon."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'select-object)
             (emacspeak-speak-mode-line)))))
 
 (defadvice w3m-submit-form (after emacspeak pre act comp)
   "Produce auditory icon."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'button)))
 
 (loop for f in
@@ -363,7 +363,7 @@ This hack helps to deal with some specially designed forms."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p )
             (declare (special w3m-current-title))
             (emacspeak-auditory-icon 'select-object)
             (if emacspeak-w3m-speak-titles-on-switch
@@ -377,7 +377,7 @@ This hack helps to deal with some specially designed forms."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (interactive-p)
+          (when (ems-interactive-p)
             (declare (special w3m-current-title))
             (emacspeak-auditory-icon 'close-object)
             (if emacspeak-w3m-speak-titles-on-switch
@@ -386,7 +386,7 @@ This hack helps to deal with some specially designed forms."
 
 (defadvice w3m-bookmark-kill-entry (around emacspeak pre act comp)
   "Resets the punctuation mode to the one before the delete"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'ask-question)
     (let ((current-punct-mode dtk-punctuation-mode))
       ad-do-it
@@ -395,12 +395,12 @@ This hack helps to deal with some specially designed forms."
 
 (defadvice w3m-bookmark-add-current-url (after emacspeak pre act comp)
   "Produce auditory icon."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'save-object)))
 
 (defadvice w3m-bookmark-add-this-url (after emacspeak pre act comp)
   "Produce auditory icon."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'save-object)))
 
 (loop for f in
@@ -412,7 +412,7 @@ This hack helps to deal with some specially designed forms."
        `(defadvice ,f (around emacspeak pre act)
           "Speech-enable W3M."
           (cond
-           ((interactive-p)
+           ((ems-interactive-p )
             (let ((emacspeak-speak-messages nil))
               ad-do-it
               (emacspeak-auditory-icon 'large-movement)
@@ -423,7 +423,7 @@ This hack helps to deal with some specially designed forms."
 (defadvice w3m-view-this-url (around emacspeak pre act comp)
   "Speech-enable W3M."
   (cond
-   ((interactive-p)
+   ((ems-interactive-p )
     (let ((url (emacspeak-w3m-anchor))
           (act (emacspeak-w3m-action)))
       (when url
@@ -444,7 +444,7 @@ This hack helps to deal with some specially designed forms."
 (defadvice w3m-history (around emacspeak pre act)
   "Speech-enable W3M."
   (cond
-   ((interactive-p)
+   ((ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
       ad-do-it))
@@ -453,7 +453,7 @@ This hack helps to deal with some specially designed forms."
 (defadvice w3m-antenna (around emacspeak pre act)
   "Speech-enable W3M."
   (cond
-   ((interactive-p)
+   ((ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
       ad-do-it))
@@ -471,7 +471,7 @@ This hack helps to deal with some specially designed forms."
        `(defadvice ,f (around emacspeak pre act comp)
           "Speech-enable scrolling."
           (cond
-           ((interactive-p)
+           ((ems-interactive-p )
             (let ((opoint (save-excursion
                             (beginning-of-line)
                             (point))))
@@ -487,7 +487,7 @@ This hack helps to deal with some specially designed forms."
 (defadvice w3m (around emacspeak pre act)
   "Speech-enable W3M."
   (cond
-   ((interactive-p)
+   ((ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (let ((emacspeak-speak-messages nil))
       ad-do-it)
@@ -498,31 +498,31 @@ This hack helps to deal with some specially designed forms."
 
 (defadvice w3m-process-stop (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)))
 
 (defadvice w3m-close-window (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)
     (with-current-buffer (window-buffer)
       (emacspeak-speak-mode-line))))
 
 (defadvice w3m-quit (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)
     (with-current-buffer (window-buffer)
       (emacspeak-speak-mode-line))))
 
 (defadvice w3m-wget (after emacspeak pre act comp)
   "provide auditory confirmation"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice w3m-view-header (after emacspeak pre act comp)
   "Speech enable w3m"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (declare (special w3m-current-title
                       w3m-current-url))
     (cond
@@ -531,7 +531,7 @@ This hack helps to deal with some specially designed forms."
 
 (defadvice w3m-view-source (after emacspeak pre act comp)
   "Speech enable w3m"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (declare (special w3m-current-title
                       w3m-current-url))
     (cond
@@ -540,19 +540,19 @@ This hack helps to deal with some specially designed forms."
 
 (defadvice w3m-history-store-position (after emacspeak pre act comp)
   "Speech enable w3m."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (dtk-speak "Marking page position")))
 
 (defadvice w3m-history-restore-position (after emacspeak pre act comp)
   "Speech enable w3m."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (dtk-speak "Restoring previously marked position")))
 
 (defadvice w3m-history (after emacspeak pre act comp)
   "Speech enable w3m"
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (dtk-speak "Viewing history")))
 
 ;;}}}
@@ -580,60 +580,60 @@ This hack helps to deal with some specially designed forms."
 
 (defadvice w3m-select-buffer (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice w3m-select-buffer-show-this-line (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'scroll)
     (emacspeak-speak-other-window 1)))
 
 (defadvice w3m-select-buffer-show-this-line-and-down (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'scroll)
     (emacspeak-speak-other-window 1)))
 
 (defadvice w3m-select-buffer-show-this-line-and-switch (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice w3m-select-buffer-show-this-line-and-quit (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice w3m-select-buffer-next-line (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
 (defadvice w3m-select-buffer-previous-line (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
 (defadvice w3m-select-buffer-delete-buffer (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'delete-object)
     (emacspeak-speak-line)))
 
 (defadvice w3m-select-buffer-delete-other-buffers (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'delete-object)))
 
 (defadvice w3m-select-buffer-quit (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
@@ -641,7 +641,7 @@ This hack helps to deal with some specially designed forms."
   "Speak the modeline.
 Indicate change of selection with
   an auditory icon if possible."
-  (when (interactive-p )
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-mode-line)))
 
@@ -654,11 +654,11 @@ Indicate change of selection with
             (emacspeak-speak-line)))
 
 (defadvice w3m-form-input-select-set (after emacspeak pre act comp)
-  (when (and (interactive-p) (w3m-anchor-sequence))
+  (when (and (ems-interactive-p ) (w3m-anchor-sequence))
     (emacspeak-w3m-speak-this-anchor)))
 
 (defadvice w3m-form-input-select-exit (after emacspeak pre act comp)
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)))
 
 ;;}}}
@@ -670,12 +670,12 @@ Indicate change of selection with
             (dtk-speak "edit text area")))
 
 (defadvice w3m-form-input-textarea-set (after emacspeak pre act comp)
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-w3m-speak-this-anchor)))
 
 (defadvice w3m-form-input-textarea-exit (after emacspeak pre act comp)
-  (when (interactive-p)
+  (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)))
 
 ;;}}}

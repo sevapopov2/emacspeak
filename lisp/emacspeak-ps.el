@@ -44,7 +44,7 @@ See command \\[emacspeak-toggle-line-echo].
 Otherwise cue user to the line just created."
   (declare (special emacspeak-line-echo ))
   (cond
-   ((interactive-p)
+   ((ems-interactive-p)
     (cond
      (emacspeak-line-echo
       (emacspeak-speak-line )
@@ -60,14 +60,14 @@ Otherwise cue user to the line just created."
 
 (defadvice ps-mode-tabkey (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-current-column)))
 
 (defadvice ps-mode-backward-delete-char (around emacspeak pre act comp)
   "Speak character you're deleting."
   (cond
-   ((interactive-p )
+   ((ems-interactive-p )
     (dtk-tone 500 30 'force)
     (emacspeak-speak-this-char (preceding-char ))
     ad-do-it)
@@ -80,31 +80,31 @@ Otherwise cue user to the line just created."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Speak the character you inserted"
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-speak-this-char last-input-char)))))
 
 (defadvice ps-mode-comment-out-region (after emacspeak pre act comp)
   "Provide spoken feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'section)
     (message "Commented region containing %s lines"
 	     (count-lines (point) (mark)))))
 
 (defadvice ps-mode-uncomment-region (after emacspeak pre act comp)
   "Provide spoken feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'section)
     (message "Uncommented region containing %s lines"
 	     (count-lines (point) (mark)))))
 
 (defadvice ps-mode-epsf-rich (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'yank-object)))
 
 (defadvice ps-run-start (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (interactive-p)
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)))
 
 (loop for f in
@@ -117,7 +117,7 @@ Otherwise cue user to the line just created."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide an auditory icon if possible"
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'task-done)))))
 
 (loop for f in
@@ -126,7 +126,7 @@ Otherwise cue user to the line just created."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
 	  "Provide an auditory icon if possible"
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'close-object)))))
 
 (loop for f in
@@ -135,7 +135,7 @@ Otherwise cue user to the line just created."
       (eval
        `(defadvice ,f (after  emacspeak pre act comp)
 	  "Speak the line containing the error. "
-	  (when (interactive-p)
+	  (when (ems-interactive-p)
             (dtk-stop)
 	    (let ((dtk-stop-immediately nil)
 		  (emacspeak-show-point t))
@@ -143,7 +143,7 @@ Otherwise cue user to the line just created."
 
 (defadvice ps-mode-show-version (around emacspeak pre act comp)
   "Provide speech feedback."
-  (if (interactive-p)
+  (if (ems-interactive-p)
       (let ((emacspeak-speak-messages t))
 	ad-do-it)
     ad-do-it)

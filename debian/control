@@ -8,7 +8,7 @@ Homepage: http://emacspeak.sf.net
 
 Package: emacspeak
 Architecture: all
-Depends: emacs23 | emacs22 | emacsen, perl, make, adduser, ${misc:Depends}
+Depends: emacs23 | emacsen, perl, make, adduser, ${misc:Depends}
 Conflicts: emacspeak-dt, emacspeak-ss
 Recommends: multispeech, python, tclx8.4, tcl8.4
 Suggests: emacspeak-chimes-stereo, emacspeak-cartoon-22k-mono, emacspeak-espeak, emacspeak-outloud, eflite, psgml, xsltproc, espeak, w3m-el
