@@ -62,13 +62,8 @@
 
 ;;}}}
 ;;{{{ Forward Declarations:
-
-(unless (fboundp 'declare-function)
-  (defmacro declare-function (&rest args) nil))
-
 (declare-function emacspeak-auditory-icon "emacspeak-sounds.el" (icon))
 (declare-function emacspeak-queue-auditory-icon "emacspeak-sounds.el" (icon))
-
 ;;;###autoload 
 (defvar dtk-program
   (or  (getenv "DTK_PROGRAM" ) "dtk-exp")
