@@ -3276,7 +3276,7 @@ Starts a terminal, or switches to an existing one."
   (let ((term (get-buffer "*ansi-term*")))
     (cond
      ((and term
-           (process-live-p (get-buffer-process term)))
+           (ems-process-live-p (get-buffer-process term)))
       (switch-to-buffer term)
       (emacspeak-auditory-icon 'select-object)
       (emacspeak-speak-mode-line))
