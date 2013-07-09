@@ -81,6 +81,7 @@
 (defvar voice-smoothen)
 
 (declare-function operate-on-rectangle(start end coerse-tabs))
+(declare-function emacspeak-info-speak-header "emacspeak-info.el" ())
 
 ;;}}}
 ;;{{{  custom group

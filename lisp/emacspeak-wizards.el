@@ -75,6 +75,11 @@
 (require 'calendar)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function cl-prettyprint "cl-extra.el" (form))
+
+;;}}}
 ;;{{{ custom
 
 (defgroup emacspeak-wizards nil

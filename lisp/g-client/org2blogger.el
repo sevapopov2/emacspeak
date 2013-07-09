@@ -35,6 +35,10 @@
   (error "You need a recent version of org."))
 (require 'gblogger)
 
+;;;_. Forward declarations
+
+(declare-function org-infile-export-plist "org-exp.el" ())
+
 ;;;_. Body
 
 (defun org2gblogger ()
