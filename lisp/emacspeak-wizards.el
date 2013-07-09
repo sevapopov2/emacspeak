@@ -78,6 +78,9 @@
 ;;{{{ Forward declarations
 
 (declare-function cl-prettyprint "cl-extra.el" (form))
+(declare-function cperl-pod2man-build-command "cperl-mode.el" ())
+(declare-function solar-get-number "solar.el" (prompt))
+(declare-function solar-sunrise-sunset-string "solar.el" (date &optional nolocation))
 
 ;;}}}
 ;;{{{ custom
