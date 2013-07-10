@@ -53,7 +53,6 @@
 
 ;;}}}
 ;;{{{ Utilities:
-
 (defsubst emacspeak-url-encode (str)
   "URL encode string."
   (mapconcat
@@ -67,13 +66,8 @@
    str
    ""))
 
-(unless (fboundp 'declare-function)
-  (defmacro declare-function (&rest args) nil))
-
 ;;}}}
-
 (provide  'emacspeak-preamble)
-
 ;;{{{  emacs local variables 
 
 ;;; local variables:

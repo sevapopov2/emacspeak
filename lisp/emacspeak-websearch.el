@@ -66,6 +66,8 @@
 (declare-function gweb-google-autocomplete (&optional prompt))
 (declare-function gtube-video-by-tag(tag &optional page count))
 (declare-function calendar-astro-date-string (&optional date))
+(declare-function widget-at "wid-edit.el" (&optional pos))
+(declare-function widget-forward "wid-edit.el" (arg))
 
 ;;}}}
 ;;{{{ searcher table

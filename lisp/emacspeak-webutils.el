@@ -55,8 +55,15 @@
 (require 'url)
 (require 'gfeeds)
 (require 'browse-url)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function w3m-browse-url "ext:w3m.el" (url &optional new-session))
+
 ;;}}}
 ;;{{{ keymap: web-prefix
+
 (define-prefix-command 'emacspeak-web-prefix)
 
 (declaim (special emacspeak-web-prefix))

@@ -236,7 +236,8 @@
 (defadvice org-eval-in-calendar (after emacspeak pre act comp)
   "Speak what is returned."
   (declare (special org-ans2))
-  (dtk-speak org-ans2))
+  (when (and (boundp 'org-ans2) org-ans2)
+    (dtk-speak org-ans2)))
 
 ;;}}}
 ;;{{{ Agenda:
