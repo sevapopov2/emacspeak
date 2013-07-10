@@ -69,9 +69,9 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Speak the entry."
-          (when (ems-interactive-p )
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'select-object)))))
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'select-object)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 (provide 'emacspeak-ediary)

@@ -101,9 +101,9 @@
       (eval
        `(defadvice ,f(after emacspeak pre act comp)
           "Provide spoken feedback."
-          (when (ems-interactive-p )
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'large-movement)))))
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-line)))))
 
 (defadvice org-cycle-list-bullet (after emacspeak pre act comp)
   "Provide spoken feedback."
@@ -162,9 +162,9 @@
       (eval
        `(defadvice ,f(after emacspeak pre act comp)
           "Provide spoken feedback."
-          (when (ems-interactive-p )
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'open-object)))))
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'open-object)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ cut and paste:
@@ -178,9 +178,9 @@
       (eval
        `(defadvice ,f(after emacspeak pre act comp)
           "Provide spoken feedback."
-          (when (ems-interactive-p )
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'yank-object)))))
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'yank-object)
+            (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{ completion:
@@ -236,7 +236,8 @@
 (defadvice org-eval-in-calendar (after emacspeak pre act comp)
   "Speak what is returned."
   (declare (special org-ans2))
-  (dtk-speak org-ans2))
+  (when (and (boundp 'org-ans2) org-ans2)
+    (dtk-speak org-ans2)))
 
 ;;}}}
 ;;{{{ Agenda:
@@ -358,7 +359,8 @@
 (defadvice org-delete-backward-char (around emacspeak pre act)
   "Speak character you're deleting."
   (cond
-   ((ems-interactive-p  )
+   ((ems-interactive-p )
+    (when dtk-stop-immediately (dtk-stop))
     (dtk-tone 500 30 'force)
     (emacspeak-speak-this-char (preceding-char ))
     ad-do-it)
@@ -375,7 +377,8 @@
 (defadvice org-delete-char (around emacspeak pre act)
   "Speak character you're deleting."
   (cond
-   ((ems-interactive-p  )
+   ((ems-interactive-p )
+    (when dtk-stop-immediately (dtk-stop))
     (dtk-tone 500 30 'force)
     (emacspeak-speak-char t)
     ad-do-it)
