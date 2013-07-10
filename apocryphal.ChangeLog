@@ -3,6 +3,9 @@ releases, but not especially related to the Debian package.
 
 2013-07-10  Igor B. Poretsky <poretsky@mlbox.ru>
 
+	* lisp/emacspeak-edb.el:
+	Added forward declarations to avoid compilation warnings.
+
 	* lisp/emacspeak-bmk-mgr.el, lisp/emacspeak-bookshare.el, lisp/emacspeak-dismal.el, lisp/emacspeak-ecb.el, lisp/emacspeak-eperiodic.el, lisp/emacspeak-jawbreaker.el, lisp/emacspeak-moz.el, lisp/emacspeak-mpg123.el, lisp/emacspeak-pianobar.el, lisp/emacspeak-piglets.el, lisp/emacspeak-sudoku.el, lisp/emacspeak-tetris.el, lisp/emacspeak-vm.el:
 	Added forward declaration to avoid compilation warnings.
 
