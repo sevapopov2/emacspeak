@@ -51,6 +51,9 @@
 
 ;;; Code:
 
+(declare-function mpg123:in-music-list-p "ext:mpg123.el" ())
+(declare-function mpg123-forward "ext:mpg123.el" (arg))
+
 ;;}}}
 ;;{{{ helpers 
 (defsubst emacspeak-mpg123-current-track ()

@@ -61,6 +61,18 @@
 (require 'xml)
 (require 'derived)
 (require 'emacspeak-we)
+(require 'dired)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function xml-substitute-numeric-entities (string))
+(declare-function emacspeak-bookshare-get-id ())
+(declare-function emacspeak-bookshare-get-author ())
+(declare-function emacspeak-bookshare-get-title ())
+(declare-function emacspeak-bookshare-get-metadata ())
+(declare-function emacspeak-bookshare-get-target ())
+(declare-function emacspeak-bookshare-get-directory ())
 
 ;;}}}
 ;;{{{ Customizations

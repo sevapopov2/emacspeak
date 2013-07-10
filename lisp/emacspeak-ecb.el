@@ -49,6 +49,15 @@
 ;;; This module speech-enables ECB
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function tree-buffer-find-common-substring "ext:tree-buffer.el" (lis subs &optional only-prefix))
+(declare-function ecb-goto-window-methods "ext:ecb-method-browser.el" ())
+(declare-function ecb-goto-window-directories "ext:ecb-file-browser.el" ())
+(declare-function ecb-goto-window-history "ext:ecb-file-browser.el" ())
+(declare-function ecb-goto-window-sources "ext:ecb-file-browser.el" ())
+
+;;}}}
 ;;{{{  advice interactive commands
 
 (defadvice ecb-activate (after emacspeak pre act comp)
