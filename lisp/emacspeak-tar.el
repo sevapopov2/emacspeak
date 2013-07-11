@@ -50,8 +50,10 @@
 ;;}}}
 ;;{{{ Helpers
 
+(declare-function tar-desc-tokens (x))
+
 (unless (fboundp 'tar-desc-tokens)
-  (defsubst tar-desc-tokens (x) x))
+  (defun tar-desc-tokens (x) x))
 
 (defun emacspeak-tar-speak-line ()
   "Speak line in tar mode intelligently"

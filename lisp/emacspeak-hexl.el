@@ -27,13 +27,6 @@
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{ required modules
-
-(require 'emacspeak-preamble)
-(require 'emacspeak-speak)
-(require 'emacspeak-redefine)
-
-;;}}}
 ;;{{{  Introduction:
 
 ;;; Commentary:
@@ -42,10 +35,22 @@
 ;;; providing auditory feedback on the most
 ;;; specific functions and key strokes.
 
-;;}}}
-;;{{{
-
 ;;; Code:
+
+;;}}}
+;;{{{ required modules
+
+(require 'emacspeak-preamble)
+(require 'emacspeak-speak)
+(require 'emacspeak-redefine)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function hexl-current-address "hexl.el" (&optional VALIDATE))
+
+;;}}}
+;;{{{ Helper functions
 
 (defun emacspeak-hexl-speak-current-byte-code ()
   "Speak hex code of current byte."
@@ -76,7 +81,8 @@
   (let ((dtk-stop-immediately nil))
     (emacspeak-speak-spell-word (format "%x" (hexl-current-address)))))
 
-;;; Advising interactive functions:
+;;}}}
+;;{{{ Advising interactive commands
 
 (defadvice hexl-self-insert-command (after emacspeak pre act comp)
   "Speak characters when typing."
@@ -207,7 +213,8 @@
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)))
 
-;;; Keymap tweaking:
+;;}}}
+;;{{{ Keymap tweaking:
 
 (declaim (special hexl-mode-map
 		  emacspeak-prefix))
@@ -225,6 +232,7 @@
 (emacspeak-rebind 'end-of-buffer 'hexl-end-of-buffer hexl-mode-map)
 
 ;;}}}
+
 (provide 'emacspeak-hexl)
 ;;{{{ end of file
 

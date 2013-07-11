@@ -1627,29 +1627,19 @@ Produce an auditory icon if possible."
            (t ad-do-it))
           ad-return-value)))
 
-(defadvice kill-region (around emacspeak pre act)
-  "Indicate region has been killed.
-Use an auditory icon if possible."
-  (cond
-   ((ems-interactive-p )
-    (let ((count (count-lines (region-beginning) (region-end))))
-      ad-do-it
-      (emacspeak-auditory-icon 'delete-object )
-      (message "Killed region containing %s lines" count)))
-   (t ad-do-it))
-  ad-return-value)
-
-(defadvice completion-kill-region (around emacspeak pre act)
-  "Indicate region has been killed.
-Use an auditory icon if possible."
-  (cond
-   ((ems-interactive-p )
-    (let ((count (count-lines (region-beginning) (region-end))))
-      ad-do-it
-      (message "Killed region containing %s lines" count)
-      (emacspeak-auditory-icon 'delete-object )))
-   (t ad-do-it))
-  ad-return-value)
+(loop for f in 
+      '(kill-region completion-kill-region)
+      do
+      (eval
+       `(defadvice ,f (around emacspeak pre act comp)
+          "Indicate region has been killed. Use an auditory icon if possible."
+          (if (ems-interactive-p)
+              (let ((count (count-lines (region-beginning) (region-end))))
+                ad-do-it
+                (emacspeak-auditory-icon 'delete-object )
+                (message "Killed region containing %s lines" count))
+            ad-do-it)
+          ad-return-value)))
 
 (defadvice kill-ring-save (after emacspeak pre act)
   "Indicate that region has been copied to the kill ring.

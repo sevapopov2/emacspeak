@@ -52,6 +52,20 @@
 (require 'emacspeak-preamble)
 (require 'stack-f)
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function sudoku-column "ext:sudoku.el" (board n))
+(declare-function sudoku-subsquare "ext:sudoku.el" (board n))
+(declare-function sudoku-get-cell-from-point "ext:sudoku.el" (num))
+(declare-function sudoku-row "ext:sudoku.el" (board n))
+(declare-function sudoku-cell "ext:sudoku.el" (board x y))
+(declare-function sudoku-cell-possibles "ext:sudoku.el" (board x y))
+(declare-function sudoku-remaining-cells "ext:sudoku.el" (board))
+(declare-function sudoku-goto-cell "ext:sudoku.el" (coords))
+(declare-function sudoku-change-cell "ext:sudoku.el" (board x y input))
+(declare-function sudoku-board-print "ext:sudoku.el" (board message))
+
+;;}}}
 ;;{{{ Define additional speak commands:
 
 (defun emacspeak-sudoku-board-summarizer ()

@@ -51,6 +51,16 @@
 ;;{{{  Required modules
 
 (require 'emacspeak-preamble)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function jabber-muc-sender-p "ext:jabber-muc.el" (jid))
+(declare-function jabber-jid-resource "ext:jabber-util.el" (string))
+(declare-function jabber-jid-displayname "ext:jabber-util.el" (string))
+(declare-function jabber-jid-user "ext:jabber-util.el" (string))
+(declare-function jabber-display-roster "ext:jabber-roster.el" ())
+
 ;;}}}
 ;;{{{ map voices
 

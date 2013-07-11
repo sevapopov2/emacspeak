@@ -2162,7 +2162,7 @@ See http://www.cbsradio.com/streaming/index.html for a list of CBS  stations tha
       (set-buffer standard-output)
       (fill-region (point-min)
                    (point-max)))
-    (print-help-return-message))
+    (ems-print-help-return-message))
   (emacspeak-auditory-icon 'help)
   (emacspeak-speak-help))
 

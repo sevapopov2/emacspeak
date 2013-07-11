@@ -51,6 +51,11 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function apt-utils-package-at "ext:apt-utils.el" ())
+
+;;}}}
 ;;{{{  Initial setup
 
 (defun emacspeak-apt-utils-grab-package-at-point ()

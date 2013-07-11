@@ -61,6 +61,11 @@
 (require 'json)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function emacspeak-calendar-setup-sunrise-sunset "emacspeak-calendar.el" ())
+
+;;}}}
 ;;{{{ Customizations
 
 (defgroup gweb nil
