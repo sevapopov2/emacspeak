@@ -75,6 +75,14 @@
 (require 'calendar)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function cl-prettyprint "cl-extra.el" (form))
+(declare-function cperl-pod2man-build-command "cperl-mode.el" ())
+(declare-function solar-get-number "solar.el" (prompt))
+(declare-function solar-sunrise-sunset-string "solar.el" (date &optional nolocation))
+
+;;}}}
 ;;{{{ custom
 
 (defgroup emacspeak-wizards nil
@@ -3268,7 +3276,7 @@ Starts a terminal, or switches to an existing one."
   (let ((term (get-buffer "*ansi-term*")))
     (cond
      ((and term
-           (process-live-p (get-buffer-process term)))
+           (ems-process-live-p (get-buffer-process term)))
       (switch-to-buffer term)
       (emacspeak-auditory-icon 'select-object)
       (emacspeak-speak-mode-line))

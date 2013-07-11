@@ -55,6 +55,12 @@
 (require 'comint)
 (require 'emacspeak-webutils)
 (require 'browse-url)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function inferior-moz-process "ext:moz.el" ())
+
 ;;}}}
 ;;{{{ Customizations
 

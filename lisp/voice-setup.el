@@ -299,20 +299,34 @@ command \\[customize-variable] on <personality>-settings.. "
 (define-minor-mode voice-lock-mode
   "Toggle voice lock mode."
   :lighter " Voice"
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon (if voice-lock-mode 'on 'off))))
+  (when (ems-interactive-p )
+    (let ((state (if voice-lock-mode 'on 'off)))
+      (emacspeak-auditory-icon state))))
+
+;;;###autoload
+(defun turn-on-voice-lock ()
+  "Turn on Voice Lock mode ."
+  (interactive)
+  (unless voice-lock-mode (voice-lock-mode)))
+
+;;;###autoload
+(defun turn-off-voice-lock ()
+  "Turn off Voice Lock mode ."
+  (interactive)
+  (when voice-lock-mode (voice-lock-mode)))
 
 ;;;###autoload
 (defcustom global-voice-lock-mode t
   "Enable or disable voice lock mode globally."
   :type 'boolean
   :set (lambda (symbol value)
-         (setq-default voice-lock-mode value)
-         (dolist (buf (buffer-list))
-           (with-current-buffer buf
-             (when (or (and voice-lock-mode (not value))
-                       (and (not voice-lock-mode) value))
-               (voice-lock-mode (if value 1 -1)))))
+         (unless (or noninteractive emacs-basic-display)
+           (setq-default voice-lock-mode value)
+           (dolist (buf (buffer-list))
+             (with-current-buffer buf
+               (when (or (and voice-lock-mode (not value))
+                         (and (not voice-lock-mode) value))
+                 (voice-lock-mode)))))
          (custom-set-default symbol value))
   :group 'voice-fonts)
 
@@ -320,6 +334,9 @@ command \\[customize-variable] on <personality>-settings.. "
 (declaim (special text-property-default-nonsticky))
 (unless (assq 'personality text-property-default-nonsticky)
   (push  (cons 'personality t) text-property-default-nonsticky))
+
+(unless (assq 'voice-lock-mode minor-mode-alist)
+  (setq minor-mode-alist (cons '(voice-lock-mode " Voice") minor-mode-alist)))
 
 ;;}}}                                   ; ; ; ;
 ;;{{{ voices defined using ACSS         
@@ -456,62 +473,6 @@ punctuations.")
    (region voice-brighten)
    (underline voice-lighten-medium)
    ))
-
-;;}}}
-;;{{{ new light-weight voice lock
-
-;;;###autoload
-(define-minor-mode voice-lock-mode
-  "Toggle voice lock mode."
-  t nil nil
-  (when (ems-interactive-p )
-    (let ((state (if voice-lock-mode 'on 'off)))
-      (when (ems-interactive-p )
-        (emacspeak-auditory-icon state)))))
-
-;;;###autoload
-(defun turn-on-voice-lock ()
-  "Turn on Voice Lock mode ."
-  (interactive)
-  (unless voice-lock-mode (voice-lock-mode)))
-
-;;;###autoload
-(defun turn-off-voice-lock ()
-  "Turn off Voice Lock mode ."
-  (interactive)
-  (when voice-lock-mode (voice-lock-mode -1)))
-
-;;;### autoload
-(defun voice-lock-toggle ()
-  "Interactively toggle voice lock."
-  (interactive)
-  (if voice-lock-mode
-      (turn-off-voice-lock)
-    (turn-on-voice-lock))
-  (when (ems-interactive-p )
-    (let ((state (if voice-lock-mode 'on 'off)))
-      (when (ems-interactive-p )
-        (emacspeak-auditory-icon state)))))
-
-;;;###autoload
-(defvar global-voice-lock-mode t
-  "Global value of voice-lock-mode.")
-
-(when (string-match "24" emacs-version)
-  (define-globalized-minor-mode global-voice-lock-mode
-    voice-lock-mode turn-on-voice-lock
-    :initialize 'custom-initialize-delay
-    :init-value (not (or noninteractive emacs-basic-display))
-    :group 'voice-lock
-    :version "24.1"))
-
-;; Install ourselves:
-(declaim (special text-property-default-nonsticky))
-(unless (assq 'personality text-property-default-nonsticky)
-  (push  (cons 'personality t) text-property-default-nonsticky))
-
-(unless (assq 'voice-lock-mode minor-mode-alist)
-  (setq minor-mode-alist (cons '(voice-lock-mode " Voice") minor-mode-alist)))
 
 ;;}}}
 ;;{{{ list-voices-display
