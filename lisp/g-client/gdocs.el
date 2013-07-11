@@ -90,6 +90,12 @@
   (error "You need a recent version of org."))
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function org-export-get-title-from-subtree "org-exp.el" ())
+(declare-function org-export-grab-title-from-buffer "org-exp.el" ())
+
+;;}}}
 ;;{{{ Customizations
 
 (defgroup gdocs nil

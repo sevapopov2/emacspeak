@@ -36,6 +36,9 @@
 
 (require 'emacspeak-preamble)
 
+(declare-function dbf-this-field-end-pos "ext:db-format.el" ())
+(declare-function edb--S "ext:db-util.el" (property))
+
 ;; First, let's fix some keybindings.
 
 (declaim (special database-view-mode-map

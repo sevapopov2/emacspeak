@@ -47,6 +47,25 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function vm-from-of "ext:vm-message.el" (message))
+(declare-function vm-subject-of "ext:vm-message.el" (message))
+(declare-function vm-to-of "ext:vm-message.el" (message))
+(declare-function vm-labels-of "ext:vm-message.el" (message))
+
+(declare-function vm-su-full-name "ext:vm-summary.el" (m))
+(declare-function vm-su-from "ext:vm-summary.el" (m))
+(declare-function vm-su-subject "ext:vm-summary.el" (m))
+(declare-function vm-su-to-names "ext:vm-summary.el" (m))
+(declare-function vm-su-to "ext:vm-summary.el" (m))
+(declare-function vm-su-line-count "ext:vm-summary.el" (m))
+
+(declare-function vm-decode-mime-encoded-words-in-string "ext:vm-mime.el" (string))
+(declare-function vm-goto-message "ext:vm-motion.el" (n))
+(declare-function vm-delete-message "ext:vm-delete.el" (count))
+
+;;}}}
 ;;{{{ voice locking:
 
 (defgroup emacspeak-vm nil

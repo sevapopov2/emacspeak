@@ -50,6 +50,13 @@
 ;;; Code:
 
 (require 'emacspeak-preamble)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function eperiodic-element-at "ext:eperiodic.el" (&optional posn))
+(declare-function eperiodic-get-element-property "ext:eperiodic.el" (z prop))
+
 ;;}}}
 ;;{{{ faces and voices 
 (voice-setup-add-map

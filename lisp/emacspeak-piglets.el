@@ -68,6 +68,12 @@
 (require 'emacspeak-moz)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function inferior-moz-process "ext:moz.el" ())
+(declare-function inferior-moz-mode "ext:moz.el" ())
+
+;;}}}
 ;;{{{ Constants
 
 ;;}}}
