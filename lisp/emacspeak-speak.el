@@ -80,10 +80,8 @@
 (defvar voice-punctuations-some)
 (defvar voice-smoothen)
 
-(unless (fboundp 'declare-function)
-  (defmacro declare-function (&rest args) nil))
-
 (declare-function operate-on-rectangle(start end coerse-tabs))
+(declare-function emacspeak-info-speak-header "emacspeak-info.el" ())
 
 ;;}}}
 ;;{{{  custom group

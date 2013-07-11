@@ -1,6 +1,55 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2013-07-10  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-edb.el:
+	Added forward declarations to avoid compilation warnings.
+
+	* lisp/emacspeak-bmk-mgr.el, lisp/emacspeak-bookshare.el, lisp/emacspeak-dismal.el, lisp/emacspeak-ecb.el, lisp/emacspeak-eperiodic.el, lisp/emacspeak-jawbreaker.el, lisp/emacspeak-moz.el, lisp/emacspeak-mpg123.el, lisp/emacspeak-pianobar.el, lisp/emacspeak-piglets.el, lisp/emacspeak-sudoku.el, lisp/emacspeak-tetris.el, lisp/emacspeak-vm.el:
+	Added forward declaration to avoid compilation warnings.
+
+	* lisp/emacspeak-gnus.el:
+	Almost totally revised. Removed duplicates and redundants. Issues
+	fixed.
+
+	* lisp/emacspeak-advice.el: A bit more compact code representation.
+
+2013-07-09  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-load-path.el, lisp/emacspeak-url-template.el, lisp/emacspeak-wizards.el:
+	Fixed some compatibility issues for various versions of emacs23.
+
+	* lisp/emacspeak-remote.el, lisp/emacspeak-ses.el, lisp/emacspeak-tar.el, lisp/emacspeak-wizards.el, lisp/g-client/gfeeds.el:
+	Added forward declarations to avoid compilation warnings.
+
+	* lisp/voice-setup.el:
+	Removed some ambiguities and duplicate definitions.
+
+	* lisp/emacspeak-rmail.el:
+	Used proper function to retrieve message headers.
+
+	* lisp/emacspeak-py.el, lisp/emacspeak-python.el:
+	Used more common functions. Added forward declarations to avoid
+	compilation warnings.
+
+	* lisp/emacspeak-dired.el:
+	Reordered definitions to avoid compilation warnings caused by forward
+	references.
+
+	* lisp/emacspeak-apt-utils.el, lisp/emacspeak-calendar.el, lisp/emacspeak-daisy.el, lisp/emacspeak-eudc.el, lisp/emacspeak-hexl.el, lisp/emacspeak-jabber.el, lisp/emacspeak-psgml.el, lisp/emacspeak-speak.el, lisp/emacspeak-w3.el, lisp/emacspeak-we.el, lisp/emacspeak-websearch.el, lisp/emacspeak-webutils.el, lisp/emacspeak-wizards.el, lisp/g-client/gdocs.el, lisp/g-client/gweb.el, lisp/g-client/org2blogger.el:
+	Added some forward declarations to avoid compilation warnings.
+
+2013-07-08  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-tar.el: Get rid of compilation warnings.
+
+	* lisp/amixer.el, lisp/dtk-speak.el, lisp/emacspeak-preamble.el, lisp/emacspeak-speak.el:
+	Removed some fake declarations added earlier for emacs22
+	compatibility.
+
+	* lisp/emacspeak-org.el: Fixed void variable referencing.
+
 2013-07-07  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/dtk-speak.el, lisp/emacspeak-load-path.el:

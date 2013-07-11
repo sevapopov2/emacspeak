@@ -59,6 +59,12 @@
 (require 'emacspeak-xslt)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function widget-at "wid-edit.el" (&optional pos))
+(declare-function widget-forward "wid-edit.el" (arg))
+
+;;}}}
 ;;{{{  custom
 
 (defgroup emacspeak-w3 nil

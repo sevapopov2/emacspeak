@@ -51,6 +51,11 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function sgml-mark-current-element "psgml-edit.el" ())
+
+;;}}}
 ;;{{{  helpers
 
 (defsubst emacspeak-psgml-summarize-element ()

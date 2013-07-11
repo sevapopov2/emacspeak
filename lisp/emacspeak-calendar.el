@@ -47,8 +47,15 @@
 ;;; Code:
 (require 'emacspeak-preamble)
 (require 'calendar)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function g-json-get "ext:g-utils.el" (key object))
+
 ;;}}}
 ;;{{{  personalities
+
 (voice-setup-add-map
  '(
    (calendar-today voice-lighten)

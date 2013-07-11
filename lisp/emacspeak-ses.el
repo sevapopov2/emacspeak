@@ -51,8 +51,14 @@
 ;;; Code:
 (require 'emacspeak-preamble)
 (require 'emacspeak-redefine)
-;;}}}
 
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function ses-get-cell "ses.el" (row col))
+(declare-function ses-cell-property-get-fun "ses.el" (property cell))
+
+;;}}}
 ;;{{{ SES Accessors:
 
 ;;; these are defined as macros in ses.el 

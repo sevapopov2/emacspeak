@@ -62,6 +62,12 @@
 (require 'ansi-color)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function pianobar "ext:pianobar.el" ())
+(declare-function pianobar-send-string "ext:pianobar.el" (string))
+
+;;}}}
 ;;{{{ Pianobar Fixups:
 
 (defun emacspeak-pianobar-current-song  ()

@@ -46,6 +46,20 @@
 ;;{{{  requires 
 (require 'cl)
 (require 'emacspeak-preamble)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function dismal-get-val "ext:dismal.el" (r c))
+(declare-function dismal-convert-cellexpr-to-string "ext:dismal.el" (sexp))
+(declare-function dismal-get-exp "ext:dismal.el" (r c))
+(declare-function dismal-display-current-cell-expr "ext:dismal.el" (row column))
+(declare-function dis-forward-row "ext:dismal.el" (rows))
+(declare-function dis-backward-row "ext:dismal.el" (rows))
+(declare-function dis-forward-column "ext:dismal.el" (cols))
+(declare-function dis-backward-column "ext:dismal.el" (cols))
+(declare-function dis-recalculate-matrix "ext:dismal.el" ())
+
 ;;}}}
 ;;{{{ custom
 

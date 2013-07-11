@@ -59,6 +59,12 @@
 (require 'json)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function gfeeds-feed-entries (f))
+(declare-function gfeeds-feed-title (f))
+
+;;}}}
 ;;{{{ Customizations
 
 (defgroup gfeeds nil
