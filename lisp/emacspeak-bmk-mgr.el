@@ -49,6 +49,15 @@
     (error nil)))
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function bmk-mgr-get-node-at-point "ext:bmk-mgr.el" (&optional buffer))
+(declare-function bmk-mgr-node-url-p "ext:bmk-mgr.el" (n))
+(declare-function bmk-mgr-node-url "ext:bmk-mgr.el" (n))
+(declare-function bmk-mgr-node-name "ext:bmk-mgr.el" (n))
+(declare-function bmk-mgr-node-child-folders "ext:bmk-mgr.el" (node &optional path))
+
+;;}}}
 ;;{{{ keybindings 
 
 (declaim (special bmk-mgr-mode-map
@@ -226,8 +235,7 @@
 
 (defadvice bmk-mgr-mode (after emacspeak pre act comp)
   "Set punctuation mode and refresh punctuations."
-  (declare (special dtk-punctuation-mode))
-  (setq dtk-punctuation-mode 'some)
+  (dtk-set-punctuations 'some)
   (emacspeak-pronounce-refresh-pronunciations)
   (define-key bmk-mgr-mode-map emacspeak-prefix 'emacspeak-prefix-command))
 

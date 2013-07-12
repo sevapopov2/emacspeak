@@ -103,7 +103,9 @@ Particularly useful for web browsing."
 ;;;###autoload
 (defcustom dtk-speech-rate-base
   (if (string-match "dtk" dtk-program) 180 50)
-  "*Value of lowest tolerable speech rate."
+  "*Value of lowest tolerable speech rate.
+Speech server automatically initializes this option
+with reasonable value if it is not customized explicitly."
   :type 'integer
   :group 'tts)
 ;;;###autoload
@@ -112,7 +114,9 @@ Particularly useful for web browsing."
   "*Value of speech rate increment.
 This determines step size used when setting speech rate via command
 `dtk-set-predefined-speech-rate'.  Formula used is
-dtk-speech-rate-base  +  dtk-speech-rate-step*level."
+dtk-speech-rate-base  +  dtk-speech-rate-step*level.
+Active speech server initializes this option with a reasonable value
+if it is not explicitly customized by user."
   :type 'integer
   :group 'tts)
 ;;;###autoload
@@ -179,16 +183,13 @@ split caps Do not set this variable by hand, use command
   "Variable holding last output.")
 
 (defvar dtk-speech-rate
-  (if (string-match "dtk" dtk-program)
+  (if (string-match "dtk\\|multispeech" dtk-program)
       225 100)
   "Rate at which tts talks.
 Do not modify this variable directly; use command  `dtk-set-rate'
  bound to \\[dtk-set-rate].")
 
 (make-variable-buffer-local 'dtk-speech-rate)
-
-;;;declared here to help compilation
-(defvar voice-lock-mode nil)
 
 ;;}}}
 ;;{{{ helper: apply pronunciations
@@ -388,7 +389,7 @@ will set \"en_GB\".
 ;;; This is necessary because
 ;;;  [] marks dtk commands; {} is special to tcl
 ;;; Optionally post-process the text with cleanup function if one is specified.
-(defconst dtk-bracket-regexp
+(defvar dtk-bracket-regexp
   "[][{}<>\\|`#\n]"
   "Brackets and other chars  that are special to dtk and tcl.
 Newlines  become spaces so each server request is a single line.
@@ -510,14 +511,20 @@ Argument MODE  specifies the current pronunciation mode."
       (setq personality
             (get-text-property (point) 'personality))
       (setq replacement
-            (if  (eq 'all  mode)
+            (if (or (eq 'all  mode)
+                    (and (eq 'some mode)
+                         (not (and (= len 1)
+                                   (string-match-p "[-!?:;,'.]" string)))))
                 (format " aw %s %s"
                         (/ (- (match-end 0 ) (match-beginning 0))
                            len)
                         (if (string-equal " " pattern)
                             " space " string))
-              ""))
-      (replace-match replacement)
+              (if (and (= len 1)
+                       (not (string-equal "\\" string)))
+                  (concat string string string)
+                string)))
+      (replace-match replacement t t)
       (setq start (- (point) (length replacement)))
       (when personality
         (put-text-property start (point)
@@ -789,15 +796,15 @@ Argument OUTPUT is the newly arrived output."
         (setq ,switch (default-value ',switch )))
        (t  (make-local-variable ',switch)
            (setq ,switch (not ,switch ))))
-      (when
-          (if (fboundp 'called-interactively-p)
-              (called-interactively-p 'interactive)
-            (interactive-p))
+      (when (ems-interactive-p)
         (emacspeak-auditory-icon (if ,switch 'on 'off))
-        (message "Turned %s %s  %s."
-                 (if ,switch "on" "off" )
-                 ',switch
-                 (if prefix "" " locally"))))))
+        (let ((state ,switch)
+              (dtk-quiet nil)
+              (emacspeak-speak-messages t))
+          (message "Turned %s %s  %s."
+                   (if state "on" "off" )
+                   ',switch
+                   (if prefix "" " locally")))))))
 
 ;;}}}
 ;;{{{  sending commands
@@ -1215,7 +1222,7 @@ available TTS servers.")
     (aset  table 75 "cap[*]k")
     (aset  table 76 "cap[*]l")
     (aset  table 77 "cap[*]m")
-    (aset  table 78 "cap[*]m")
+    (aset  table 78 "cap[*]n")
     (aset  table 79 "cap[*]o")
     (aset  table 80 "cap[*]p")
     (aset  table 81 "cap[*]q")
@@ -1526,21 +1533,24 @@ This is setup on a per engine basis.")
 (defun tts-configure-synthesis-setup (&optional tts-name)
   "Setup synthesis environment. "
   (declare (special dtk-program emacspeak-auditory-icon-function
-                    tts-voice-reset-code))
+                    tts-voice-reset-code dtk-bracket-regexp))
   (unless tts-name (setq tts-name dtk-program))
   (cond
                                         ;viavoice outloud family 
    ((string-match "outloud" tts-name) (outloud-configure-tts))
                                         ;all dectalks
    ((string-match "dtk-" tts-name) (dectalk-configure-tts))
-   ((string-match "^multispeech$" tts-name) (multispeech-configure-tts))
                                         ;exact match
+   ((string-match "^multispeech$" tts-name) (multispeech-configure-tts))
    ((string-match "^mac$" tts-name) (mac-configure-tts))
-                                        ; exact match
    ((string-match "^espeak$" tts-name) (espeak-configure-tts))
    ((string-match "^eflite$" tts-name) (flite-configure-tts))
                                         ; generic configure
    (t (plain-configure-tts)))
+  (setq dtk-bracket-regexp
+        (if (string-match "^multispeech$" tts-name)
+            "[][{}\n]"
+          "[][{}<>\\|`#\n]"))
   (when (string-match "^ssh" tts-name)  ;remote server
     (setq emacspeak-auditory-icon-function 'emacspeak-serve-auditory-icon))
   (load-library "voice-setup")
@@ -1714,11 +1724,13 @@ Default is to use pipes.")
                     dtk-startup-hook emacspeak-servers-directory))
   (let ((new-process nil)
         (process-connection-type  dtk-speak-process-connection-type))
-    (setq new-process
-          (start-process
-           "speaker"
-           (and dtk-debug tts-debug-buffer)
-           (expand-file-name dtk-program emacspeak-servers-directory)))
+    (with-temp-buffer
+      (cd "~")
+      (setq new-process
+            (start-process
+             "speaker"
+             (and dtk-debug tts-debug-buffer)
+             (expand-file-name dtk-program emacspeak-servers-directory))))
     (setq dtk-speak-server-initialized
           (or (eq 'run (process-status new-process ))
               (eq 'open (process-status new-process))))
@@ -1865,8 +1877,8 @@ only speak upto the first ctrl-m."
                 dtk-split-caps split-caps
                 dtk-speak-nonprinting-chars
                 inherit-speak-nonprinting-chars
-                tts-strip-octals inherit-strip-octals
-                voice-lock-mode voice-lock)
+                tts-strip-octals inherit-strip-octals)
+          (voice-lock-mode (if voice-lock 1 -1))
           (set-syntax-table syntax-table )
           (set-buffer-multibyte inherit-enable-multibyte-characters)
           (insert  text)

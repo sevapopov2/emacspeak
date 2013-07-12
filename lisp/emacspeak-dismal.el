@@ -46,6 +46,20 @@
 ;;{{{  requires 
 (require 'cl)
 (require 'emacspeak-preamble)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function dismal-get-val "ext:dismal.el" (r c))
+(declare-function dismal-convert-cellexpr-to-string "ext:dismal.el" (sexp))
+(declare-function dismal-get-exp "ext:dismal.el" (r c))
+(declare-function dismal-display-current-cell-expr "ext:dismal.el" (row column))
+(declare-function dis-forward-row "ext:dismal.el" (rows))
+(declare-function dis-backward-row "ext:dismal.el" (rows))
+(declare-function dis-forward-column "ext:dismal.el" (cols))
+(declare-function dis-backward-column "ext:dismal.el" (cols))
+(declare-function dis-recalculate-matrix "ext:dismal.el" ())
+
 ;;}}}
 ;;{{{ custom
 
@@ -181,7 +195,6 @@ emacspeak-dismal-row-summarizer-list"
   (interactive)
   (declare (special emacspeak-dismal-row-summarizer-list
                     emacspeak-dismal-value-personality
-                    voice-lock-mode
                     dismal-current-row))
   (unless  (and  emacspeak-dismal-row-summarizer-list
                  (vectorp emacspeak-dismal-row-summarizer-list))
@@ -227,7 +240,7 @@ emacspeak-dismal-row-summarizer-list"
 emacspeak-dismal-col-summarizer-list"
   (interactive)
   (declare (special emacspeak-dismal-col-summarizer-list
-                    emacspeak-dismal-value-personality voice-lock-mode
+                    emacspeak-dismal-value-personality
                     dismal-current-col))
   (unless  (and  emacspeak-dismal-col-summarizer-list
                  (vectorp emacspeak-dismal-col-summarizer-list))

@@ -1,5 +1,5 @@
 ;;; emacspeak-amark.el --- BookMarks For Audio Content
-;;; $Id: acss-structure.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
+;;; $Id: emacspeak-amark.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Bookmarks for audio content like mp3
 ;;; Keywords:emacspeak, audio interface to emacs MP3
@@ -77,6 +77,28 @@ Automatically becomes buffer-local when set.")
 
 ;;}}}
 ;;{{{ AMark Functions:
+
+;; Hack for emacs22
+(unless (functionp 'locate-dominating-file)
+  (defun locate-dominating-file (file name)
+    "Look up the directory hierarchy from FILE for a file named NAME.
+  Stop at the first parent directory containing a file NAME,
+  and return the directory.  Return nil if not found."
+    (setq file (abbreviate-file-name file))
+    (let ((root nil)
+          (prev-file file)
+          (stop-dir-regexp "\\`\\(?:[\\/][\\/][^\\/]+\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'")
+          (try nil))
+      (while (not (or root
+                      (null file)
+                      (string-match stop-dir-regexp file)))
+        (setq try (file-exists-p (expand-file-name name file)))
+        (cond (try (setq root file))
+              ((equal file (setq prev-file file
+                                 file (file-name-directory
+                                       (directory-file-name file))))
+               (setq file nil))))
+      root)))
 
 (defun emacspeak-amark-add (path name position)
   "Add an AMark to the buffer local list of AMarks.

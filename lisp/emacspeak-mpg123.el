@@ -2,7 +2,7 @@
 ;;; $Id: emacspeak-mpg123.el 7823 2012-06-03 01:16:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable MP3 player
-;;; Keywords: Emacspeak, WWW interaction
+;;; Keywords: Emacspeak, streaming media, MPG123 interaction
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
@@ -50,6 +50,9 @@
 ;;; MPG123 is an MP3 player.
 
 ;;; Code:
+
+(declare-function mpg123:in-music-list-p "ext:mpg123.el" ())
+(declare-function mpg123-forward "ext:mpg123.el" (arg))
 
 ;;}}}
 ;;{{{ helpers 

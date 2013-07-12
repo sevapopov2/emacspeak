@@ -55,6 +55,7 @@
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'emacspeak-table-ui)
+(require 'emacspeak-xslt)
 (require 'derived)
 
 ;;}}}
@@ -67,7 +68,9 @@
 (defcustom emacspeak-librivox-directory
   (expand-file-name "librivox"
                     emacspeak-resource-directory)
-  "Location where we cache  librivox data.")
+  "Location where we cache  librivox data."
+  :type 'directory
+  :group 'emacspeak-librivox)
 
 (defvar emacspeak-librivox-catalog-location
   (expand-file-name "catalog.csv" emacspeak-librivox-directory)

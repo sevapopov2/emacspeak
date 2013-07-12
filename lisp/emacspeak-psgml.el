@@ -51,6 +51,11 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function sgml-mark-current-element "psgml-edit.el" ())
+
+;;}}}
 ;;{{{  helpers
 
 (defsubst emacspeak-psgml-summarize-element ()
@@ -338,7 +343,6 @@ window")))
  (function
   (lambda ()
     (declare (special sgml-mode-map))
-    (emacspeak-setup-programming-mode)
     (define-key sgml-mode-map "\C-c\C-b"
       'emacspeak-xml-browse-mode))))
 

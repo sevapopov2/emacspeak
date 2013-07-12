@@ -35,62 +35,162 @@
 ;;; along with GNU Emacs; see the file COPYING.  If not, write to
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
-;;}}}
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;{{{  introduction
+;; You should have received a copy of the GNU General Public License
+;; along with this program; if not, write to the Free Software
+;; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+;; 02111-1307, USA.
 
-;;; Commentary:
-;;; Speech enable Muse
+;; Commentary:
 
-;;}}}
-;;{{{  Required modules
+;; This module provides speech support for the muse publishing and
+;; authoring environment which allows emacs users to create complex
+;; documents using simple markup rules. Muse can be downloaded at ;;
+;; http://www.newartisans.com/johnw/Emacs/muse.tar.gz. Muse is very
+;; similar to emacs-wiki.el. The only difference is that it allows output
+;; in several formats including latex, pdf, texinfo and so on.
 
-;;; Code:
+;; Code:
 
+;;{{{ required modules
 (require 'emacspeak-preamble)
-(require 'browse-url)
-(require 'emacspeak-outline)
 
 ;;}}}
-;;{{{ Voice definitions:
+;;{{{ Advice interactive commands to speak.
+
+(defadvice muse-mode (after emacspeak pre act comp)
+  "Setup Emacspeak extensions."
+  (voice-lock-mode (if global-voice-lock-mode 1 -1))
+  (dtk-set-punctuations 'all))
+
+(loop for f in
+      '(muse-next-reference muse-previous-reference)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide speech feedback."
+          (when (ems-interactive-p)
+            (if (not (muse-link-at-point))
+                (let ((emacspeak-speak-messages t))
+                  (emacspeak-auditory-icon 'warn-user)
+                  (message "No links on this page"))
+              (emacspeak-auditory-icon 'large-movement)
+              (emacspeak-speak-text-range 'keymap))))))
+
+(loop for f in
+      '(muse-edit-link-at-point
+        muse-insert-relative-link-to-file
+        muse-insert-url)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide speech feedback."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'yank-object)
+            (when (sit-for 0.1)
+              (save-excursion
+                (backward-char)
+                (emacspeak-speak-text-range 'keymap)))))))
+
+(loop for f in
+      '(muse-follow-name-at-point
+        muse-index)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'open-object)
+            (emacspeak-speak-mode-line)))))
+
+(defadvice muse-project-find-file (around emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (listp (ad-get-arg 0))
+    (ad-set-arg 0 (car (ad-get-arg 0))))
+  ad-do-it
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line))
+  ad-return-value)
+
+(loop for f in
+      '(muse-project-publish
+        muse-project-publish-this-file
+        muse-publish-this-file)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Produce an auditory icon if possible."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'save-object)))))
+
+(defadvice muse-insert-tag (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'yank-object)
+    (emacspeak-speak-line)))
+
+(defadvice muse-insert-list-item (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'item)
+    (emacspeak-speak-line)))
+
+(defadvice muse-decrease-list-item-indentation (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'left)
+    (emacspeak-speak-line)))
+
+(defadvice muse-increase-list-item-indentation (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'right)
+    (emacspeak-speak-line)))
+
+(defadvice muse-colors-toggle-inline-images (after emacspeak pre act comp)
+  "Produce an auditory icon if possible."
+  (declare (special muse-colors-inline-images))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon (if muse-colors-inline-images 'on 'off))))
+
+;;}}}
+;;{{{ mapping font faces to personalities 
+
 (voice-setup-add-map
  '(
-   (muse-bad-link-face voice-bolden-and-animate)
-   (muse-emphasis-1 voice-lighten)
-   (muse-emphasis-2 voice-lighten-medium)
-   (muse-emphasis-3 voice-lighten-extra)
-   (muse-header-1 voice-bolden)
-   (muse-header-2 voice-bolden-medium)
-   (muse-header-3 voice-bolden-extra)
-   (muse-header-4 voice-bolden-extra)
-   (muse-header-5 voice-bolden-extra)
-   (muse-link-face voice-brighten)
-   (muse-verbatim-face voice-monotone)
+   (muse-link-face voice-bolden)
+   (muse-bad-link-face voice-lighten)
+   (muse-header-1-face voice-bolden-and-animate)
+   (muse-header-2-face voice-bolden-and-animate)
+   (muse-header-3-face voice-bolden-and-animate)
+   (muse-header-4-face voice-bolden-and-animate)
+   (muse-header-5-face voice-bolden-and-animate)
+   (muse-header-6-face voice-bolden-and-animate)
+   ))
+
+(voice-setup-add-map
+ '(
+   (muse-link voice-bolden)
+   (muse-bad-link voice-lighten)
+   (muse-header-1 voice-bolden-and-animate)
+   (muse-header-2 voice-bolden-and-animate)
+   (muse-header-3 voice-bolden-and-animate)
+   (muse-header-4 voice-bolden-and-animate)
+   (muse-header-5 voice-bolden-and-animate)
+   (muse-header-6 voice-bolden-and-animate)
+   (muse-verbatim voice-monotone)
+   (muse-emphasis-1 voice-animate)
+   (muse-emphasis-2 voice-bolden-medium)
+   (muse-emphasis-3 voice-bolden-extra)
    ))
 
 ;;}}}
-;;{{{ advice interactive commands
-(loop for f in
-      '(muse-follow-name-at-point
-        muse-follow-name-at-point-other-window
-        muse-next-reference
-        muse-previous-reference)
-      do
-      (eval
-       `(defadvice   ,f (after emacspeak pre act comp)
-          "Provide auditory feedback."
-          (when (ems-interactive-p )
-            (emacspeak-auditory-icon 'large-movement)
-            (emacspeak-speak-line)))))
-
-;;}}}
 (provide 'emacspeak-muse)
-;;{{{ end of file
+;;{{{  emacs local variables 
 
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: t
-;;; end:
+;;; end: 
 
 ;;}}}

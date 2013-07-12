@@ -53,11 +53,22 @@
 (setq byte-compile-warnings t)
                                         ;'(redefine callargs free-vars unresolved obsolete))
 
-(cond
- ((fboundp 'called-interactively-p)
-  (defsubst ems-interactive-p  ()
-    "called-interactively-p 'interactive"
-    (called-interactively-p 'interactive)))
- (t (defalias 'ems-interactive-p  'interactive-p )))
+(condition-case nil
+    (progn
+      (called-interactively-p nil)
+      (defsubst ems-interactive-p  ()
+        "called-interactively-p 'interactive"
+        (called-interactively-p 'interactive)))
+  (error (defalias 'ems-interactive-p  'interactive-p )))
+
+(if (fboundp 'process-live-p)
+    (defalias 'ems-process-live-p 'process-live-p)
+  (defun ems-process-live-p (process)
+    "Returns non-nil if process is alive."
+    (memq (process-status process) '(run open listen connect stop))))
+
+(if (fboundp 'help-print-return-message)
+    (defalias 'ems-print-help-return-message 'help-print-return-message)
+  (defalias 'ems-print-help-return-message 'print-help-return-message))
 
 (provide 'emacspeak-load-path)

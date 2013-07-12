@@ -47,6 +47,25 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function vm-from-of "ext:vm-message.el" (message))
+(declare-function vm-subject-of "ext:vm-message.el" (message))
+(declare-function vm-to-of "ext:vm-message.el" (message))
+(declare-function vm-labels-of "ext:vm-message.el" (message))
+
+(declare-function vm-su-full-name "ext:vm-summary.el" (m))
+(declare-function vm-su-from "ext:vm-summary.el" (m))
+(declare-function vm-su-subject "ext:vm-summary.el" (m))
+(declare-function vm-su-to-names "ext:vm-summary.el" (m))
+(declare-function vm-su-to "ext:vm-summary.el" (m))
+(declare-function vm-su-line-count "ext:vm-summary.el" (m))
+
+(declare-function vm-decode-mime-encoded-words-in-string "ext:vm-mime.el" (string))
+(declare-function vm-goto-message "ext:vm-motion.el" (n))
+(declare-function vm-delete-message "ext:vm-delete.el" (count))
+
+;;}}}
 ;;{{{ voice locking:
 
 (defgroup emacspeak-vm nil
@@ -182,6 +201,14 @@ Note that some badly formed mime messages  cause trouble."
                       to)))
             (lines (vm-su-line-count message))
             (summary nil))
+      (cond 
+       ((and self-p
+             (= 0 self-p)                    ) ;mail to me and others 
+        (emacspeak-auditory-icon 'item))
+       (self-p				;mail to others including me
+        (emacspeak-auditory-icon 'mark-object))
+       (t			     ;got it because of a mailing list
+        (emacspeak-auditory-icon 'select-object)))
       (dtk-speak
        (vm-decode-mime-encoded-words-in-string
         (format "%s %s %s   %s %s "
@@ -357,9 +384,9 @@ Then speak the screenful. "
     (emacspeak-speak-mode-line )))
 (defadvice vm-mail-send (after emacspeak pre act comp)
   "Provide auditory context"
-  (when  (ems-interactive-p )
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'close-object)))
+  (when  (ems-interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice vm-mail-send-and-exit (after emacspeak pre act comp)
   "Provide auditory context"
@@ -392,8 +419,8 @@ Then speak the screenful. "
   (vm-goto-message 1)
   (vm-delete-message
    (read vm-ml-highest-message-number))
-  (message "All messages have been marked as deleted.")
-  (emacspeak-auditory-icon 'delete-object))
+  (emacspeak-auditory-icon 'delete-object)
+  (message "All messages have been marked as deleted."))
 
 ;;}}}
 ;;{{{  Keybindings:

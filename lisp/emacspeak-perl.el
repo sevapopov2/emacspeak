@@ -1,8 +1,8 @@
 ;;; emacspeak-perl.el --- Speech enable Perl Mode 
 ;;; $Id: emacspeak-perl.el 7998 2012-08-25 15:53:21Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
-;;; DescriptionEmacspeak extensions for perl-mode
-;;; Keywords:emacspeak, audio interface to emacs perl
+;;; Description: Emacspeak extensions for perl-mode
+;;; Keywords: emacspeak, audio interface to emacs perl
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
@@ -47,22 +47,31 @@
 
 ;;}}}
 ;;{{{  Advice electric insertion to talk:
+
 (unless (and (boundp 'post-self-insert-hook)
              post-self-insert-hook
              (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
-  (defadvice electric-perl-terminator  (after emacspeak pre act comp )
-    "Speak what you inserted."
-    (when (ems-interactive-p )
-      (emacspeak-speak-this-char last-input-event))))
+  (loop for f in
+        '(electric-perl-terminator perl-electric-terminator)
+        do
+        (eval
+         `(defadvice ,f  (after emacspeak pre act comp )
+            "Speak what you inserted."
+            (when (ems-interactive-p)
+              (emacspeak-speak-this-char last-input-event))))))
 
 ;;}}}
 ;;{{{  Program structure:
 
-(defadvice mark-perl-function (after emacspeak pre act comp)
-  "Provide auditory feedback"
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'mark-object)
-    (message "Marked procedure")))
+(loop for f in
+      '(mark-perl-function perl-mark-function)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback"
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'mark-object)
+            (message "Marked procedure")))))
 
 (defadvice perl-beginning-of-function (after emacspeak pre act comp)
   "Provide auditory feedback."
