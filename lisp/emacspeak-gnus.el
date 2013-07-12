@@ -563,15 +563,14 @@ indicating the article is being opened."
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-gnus-speak-article-body)))
 
-(loop for f in
-      '(gnus-summary-save-article
-        mm-save-part)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-          "Produce an auditory icon if possible."
-          (when (ems-interactive-p)
-            (emacspeak-auditory-icon 'save-object)))))
+(defadvice gnus-summary-save-article (after emacspeak pre act comp)
+  "Produce an auditory icon if possible."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'save-object)))
+
+(defadvice mm-save-part (after emacspeak pre act comp)
+  "Produce an auditory icon if possible."
+  (emacspeak-auditory-icon 'save-object))
 
 (defadvice gnus-summary-display-article (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
