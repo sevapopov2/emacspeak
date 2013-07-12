@@ -1,3 +1,9 @@
+emacspeak (37.0-3) unstable; urgency=low
+
+  * Fixed auditory feedback for Gnus article part saving functions.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 12 Jul 2013 23:06:49 +0400
+
 emacspeak (37.0-2) unstable; urgency=low
 
   * Upstream code fixes and improvements. See apocryphal.ChangeLog for
