@@ -1,3 +1,9 @@
+emacspeak (37.0-3precise1) precise; urgency=low
+
+  * Fixed auditory feedback for Gnus article part saving functions.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 12 Jul 2013 23:09:50 +0400
+
 emacspeak (37.0-2precise1) precise; urgency=low
 
   * Upstream code fixes and improvements. See apocryphal.ChangeLog for
