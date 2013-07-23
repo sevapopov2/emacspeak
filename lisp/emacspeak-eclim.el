@@ -1,8 +1,8 @@
-;;; emacspeak-ftf.el --- Speech-enable find-things-fast
-;;; $Id: emacspeak-ftf.el 4797 2007-07-16 23:31:22Z tv.raman.tv $
+;;; emacspeak-eclim.el --- Speech-enable ECLIM: emacs/eclipse integration
+;;; $Id: emacspeak-eclim.el 4797 2007-07-16 23:31:22Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
-;;; Description:  Speech-enable find-things-fast -- a tool to find things fast in a project
-;;; Keywords: Emacspeak,  Audio Desktop ftf, project, git
+;;; Description:  Speech-enable ECLIM An Emacs Interface to eclim: eclipse/emacs integration    
+;;; Keywords: Emacspeak,  Audio Desktop, eclim: Emacs/Eclipse
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
@@ -28,7 +28,7 @@
 ;;;
 ;;; GNU Emacs is distributed in the hope that it will be useful,
 ;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNFTF FOR A PARTICULAR PURPOSE.  See the
+;;; MERCHANTABILITY or FITNECLIM FOR A PARTICULAR PURPOSE.  See the
 ;;; GNU General Public License for more details.
 ;;;
 ;;; You should have received a copy of the GNU General Public License
@@ -41,8 +41,11 @@
 ;;{{{  introduction
 
 ;;; Commentary:
-;;; FTF ==  find-things-fast
-;;; Package ftf --- find-things-fast -- is available from the marmalade emacs package archive
+;;; ECLIM ==  Eclipse/Vim integration.
+;;; http://www.eclim.org turns Eclipse into a headless server that can be called from other programs.
+;;; Package Emacs-Eclim connects Emacs to Eclim.
+;;; Package emacspeak-eclim speech-enables emacs-eclim.
+;;;
 
 ;;}}}
 ;;{{{  Required modules
@@ -52,27 +55,50 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
-;;{{{ Advice interactive commands:
+;;{{{ eclim-ant.el
 
-(defadvice ftf-find-file (after emacspeak pre act comp)
+(defadvice eclim-ant-clear-cache (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'open-object)
-
-    (emacspeak-speak-mode-line)))
-
-(defadvice ftf-grepsource (after emacspeak pre act comp)
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'delete-object)))
+(defadvice eclim-ant-validate (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'open-object)))
+
+(defadvice eclim-ant-run (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'task-done)))
 
 ;;}}}
-(provide 'emacspeak-ftf)
+;;{{{ eclim-completion.el
+
+;;}}}
+;;{{{ eclimd.el
+
+;;}}}
+;;{{{ eclim.el
+
+;;}}}
+;;{{{ eclim-java.el
+
+;;}}}
+;;{{{ eclim-maven.el
+
+;;}}}
+;;{{{ eclim-problems.el
+
+;;}}}
+;;{{{  eclim-project.el
+
+;;}}}
+(provide 'emacspeak-eclim)
 ;;{{{ end of file
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}
