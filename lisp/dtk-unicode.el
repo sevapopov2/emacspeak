@@ -6,7 +6,7 @@
 ;;; Using patch from Lukas.
 ;;
 ;; Author: Lukas Loehrer <loehrerl |at| gmx.net>
-;; Version: $Id: dtk-unicode.el 7832 2012-06-03 20:13:54Z tv.raman.tv $
+;; Version: $Id: dtk-unicode.el 8146 2013-02-09 20:05:08Z tv.raman.tv $
 ;; Keywords:  TTS, Unicode
 
 ;;}}}
@@ -218,7 +218,7 @@ charsets returned by operations such as `find-charset-region'."
 (defvar dtk-unicode-cache (make-hash-table)
   "Cache for unicode data lookups.")
 
-(defadvice describe-char-unicode-data (around dtk-unicode pre act)
+(defadvice describe-char-unicode-data (around emacspeak pre act comp)
   "Cache result."
   (let* ((char (ad-get-arg 0))
          (result (gethash char dtk-unicode-cache 'not-found)))
@@ -234,7 +234,7 @@ charsets returned by operations such as `find-charset-region'."
 Converts char to unicode if necessary (for emacs 22)."
   (let ((unicode (encode-char char 'ucs)))
     (and unicode (condition-case nil
-                     (let ((emacspeak-speak-cue-errors nil)
+                     (let ((emacspeak-speak-errors nil)
                            (emacspeak-speak-messages nil))
                        (describe-char-unicode-data unicode))
                    (error nil)))))
@@ -246,9 +246,9 @@ Converts char to unicode if necessary (for emacs 22)."
 (defsubst dtk-unicode-name-for-char (char)
   "Return unicode name for character CHAR.
 nil if CHAR is not in Unicode."
-  (let ((name (or (cadar (describe-char-unicode-data char))
-                  (and (fboundp 'ucs-names)
+  (let ((name (or (and (fboundp 'ucs-names)
                        (car (rassoc char (ucs-names))))
+                  (cadar (describe-char-unicode-data char))
                   (dtk-unicode-char-property char "Name"))))
     (when (and (stringp name) (string-equal name "<control>"))
       (setq name (dtk-unicode-char-property char "Old name")))
@@ -351,7 +351,7 @@ Does nothing for unibyte buffers."
 ;;; local variables:
 ;;; coding: utf-8
 ;;; folded-file: t
-;;; byte-compile-dynamic: t
+;;; byte-compile-dynamic: nil
 ;;; end:
 
 ;;}}}
