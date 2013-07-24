@@ -63,6 +63,7 @@
 
 (declare-function widget-at "wid-edit.el" (&optional pos))
 (declare-function widget-forward "wid-edit.el" (arg))
+(declare-function imenu--make-index-alist "imenu.el" (&optional NOERROR))
 
 ;;}}}
 ;;{{{  custom

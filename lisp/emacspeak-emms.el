@@ -56,6 +56,11 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function emms-player-pause "ext:emms.el" ())
+
+;;}}}
 ;;{{{ module emms:
 
 (defun emacspeak-emms-speak-current-track ()
