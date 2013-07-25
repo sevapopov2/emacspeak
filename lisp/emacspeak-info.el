@@ -190,7 +190,7 @@ and then cue the next selected buffer."
 (defadvice Info-check-pointer  (around emacspeak pre act comp)
   "Silence emacspeak during call."
   (let ((emacspeak-speak-messages nil)
-        (emacspeak-speak-cue-errors nil)
+        (emacspeak-speak-errors nil)
         (emacspeak-use-auditory-icons nil))
     ad-do-it))
 
