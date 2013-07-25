@@ -1,5 +1,5 @@
 ;;; emacspeak-info.el --- Speech enable Info -- Emacs' online documentation viewer
-;;; $Id: emacspeak-info.el 7823 2012-06-03 01:16:29Z tv.raman.tv $
+;;; $Id: emacspeak-info.el 8146 2013-02-09 20:05:08Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Module for customizing Emacs info
 ;;; Keywords:emacspeak, audio interface to emacs
@@ -190,7 +190,7 @@ and then cue the next selected buffer."
 (defadvice Info-check-pointer  (around emacspeak pre act comp)
   "Silence emacspeak during call."
   (let ((emacspeak-speak-messages nil)
-        (emacspeak-speak-cue-errors nil)
+        (emacspeak-speak-errors nil)
         (emacspeak-use-auditory-icons nil))
     ad-do-it))
 
@@ -220,7 +220,7 @@ node-spec."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: t
+;;; byte-compile-dynamic: nil
 ;;; end:
 
 ;;}}}
