@@ -375,7 +375,6 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
                  'emacspeak-setup-programming-mode))
    (list 'c-mode-common-hook
 	 'asm-mode-hook
-         'python-mode-hook
          'conf-unix-mode-hook
          'prolog-mode-hook
          'lisp-mode-hook
