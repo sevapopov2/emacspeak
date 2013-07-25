@@ -1,4 +1,4 @@
-;;; emacspeak-moz.el.el --- Talk to Firefox via MozRepl
+;;; emacspeak-moz.el --- Talk to Firefox via MozRepl
 ;;; $Id: emacspeak-moz.el 8146 2013-02-09 20:05:08Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Control Firefox from Emacs
@@ -55,6 +55,12 @@
 (require 'comint)
 (require 'emacspeak-webutils)
 (require 'browse-url)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function inferior-moz-process "ext:moz.el" ())
+
 ;;}}}
 ;;{{{ Customizations
 

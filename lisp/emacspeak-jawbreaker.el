@@ -65,6 +65,11 @@
 (require 'emacspeak-piglets)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function inferior-moz-process "ext:moz.el" ())
+
+;;}}}
 ;;{{{ Constants
 
 (defvar emacspeak-jawbreaker-url

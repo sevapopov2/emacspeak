@@ -56,13 +56,20 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function emms-player-pause "ext:emms.el" ())
+(declare-function emms-track-name "ext:emms.el" (track))
+(declare-function emms-playlist-current-selected-track "ext:emms.el" ())
+
+;;}}}
 ;;{{{ module emms:
 
 (defun emacspeak-emms-speak-current-track ()
   "Speak current track."
   (interactive)
   (message
-   (cdr (assq 'name (emms-playlist-current-track)))))
+   (emms-track-name (emms-playlist-current-selected-track))))
 
 (loop for f in
       '(emms-next emms-next-noerror emms-previous)

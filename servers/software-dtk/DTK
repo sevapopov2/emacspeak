@@ -35,7 +35,7 @@ This provides the compiled Emacspeak software dtk server --file servers/software
 * Testing:
 
 Next, test that your installation of the Emacspeak Software Dectalk 
-support works.  The Dectalk  Outloud speech server is called
+support works.  The Dectalk  Software speech server is called
 dtk-soft  and is installed in the emacspeak/servers  directory along
 with other speech servers.
 
@@ -66,7 +66,7 @@ Alternatively start emacspeak with the "-d" option.
 * Using dtk-soft as the default synthesizer:
 
 Once you've confirmed that everything is working with the
-Outloud engine and Emacspeak, you can make dtk-soft your
+Dectalk engine and Emacspeak, you can make dtk-soft your
 default synthesizer by:
 ** If you have emacspeak launched from inside your .emacs:
 
