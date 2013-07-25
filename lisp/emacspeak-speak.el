@@ -81,6 +81,7 @@
 (defvar voice-smoothen)
 
 (declare-function operate-on-rectangle(start end coerse-tabs))
+(declare-function emacspeak-play-startup-icon "emacspeak.el" ())
 (declare-function emacspeak-info-speak-header "emacspeak-info.el" ())
 (declare-function which-function "which-func.el" ())
 
@@ -1901,17 +1902,6 @@ Optional second arg `set' sets the TZ environment variable as well."
                     zone)))))
 
 ;;}}}
-
-(defsubst emacspeak-play-startup-icon ()
-  "Play startup icon if requested."
-  (declare (special emacspeak-play-emacspeak-startup-icon))
-  (let ((player  (or (executable-find "mpg123")
-                     (executable-find "mpg321")
-                     (executable-find "mplayer"))))
-    (when (and  emacspeak-play-emacspeak-startup-icon player)
-      (call-process player nil 0 nil
-                    (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))))
-
 ;;;###autoload
 (defun emacspeak-speak-time (&optional world)
   "Speak the time.
