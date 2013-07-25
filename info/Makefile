@@ -1,4 +1,4 @@
-#$Id: Makefile 6217 2009-08-28 21:13:56Z tv.raman.tv $
+#$Id: Makefile 8282 2013-04-01 15:51:37Z tv.raman.tv $
 SF_HOME= raman,emacspeak@web.sourceforge.net:/home/groups/e/em/emacspeak/htdocs
 HTML_FILES=$(shell find . -name '*.html' -print)
 TEXINDEX=texindex
@@ -13,7 +13,7 @@ EMACS=emacs
 
 all: emacspeak.info html introducing-emacspeak
 
-info: *.texi
+info: emacspeak.texi
 	$(MAKEINFO) emacspeak.texi
 .PHONY: commands.texi 
 
@@ -101,5 +101,6 @@ clean:
 
 spell:
 	@mv .spell.words .spell.tex
-	@cat ${FILES} | aspell -t -l | sort | uniq > .spell.words
+	@cat ${FILES} | aspell --ignore-case -t --list --add-filter texinfo   \
+ | sort | uniq > .spell.words
 	@diff .spell.tex .spell.words
