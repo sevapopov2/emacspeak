@@ -1,6 +1,39 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2013-07-25  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-speak.el, lisp/emacspeak.el:
+	Definition moved to it's original place.
+
+	* lisp/emacspeak.el, lisp/espeak-voices.el, lisp/multispeech-voices.el, lisp/outloud-voices.el:
+	Removed duplicates.
+
+	* lisp/emacspeak-amark.el, lisp/emacspeak-setup.el:
+	Removed redundant emacs22 hacks.
+
+	* lisp/emacspeak-org.el: Added forward declarations.
+
+	* lisp/emacspeak-info.el: Option reference corrected.
+
+	* lisp/g-client/g-auth.el:
+	Fixed compatibility with old versions of auth-source library.
+
+	* lisp/emacspeak-emms.el: Fixed current track name extraction.
+
+	* lisp/dtk-speak.el:
+	Restored voice changing by inline control codes that are more widely
+	supported by speech servers rather than using special commands.
+
+2013-07-24  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-emms.el, lisp/emacspeak-js2.el, lisp/emacspeak-speak.el, lisp/emacspeak-w3.el, lisp/emacspeak-wizards.el:
+	Added forward declarations.
+
+	* lisp/g-client/gmaps.el: Fixed improper function call.
+
+	Merged upstream release 38.0.
+
 2013-07-10  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-edb.el:

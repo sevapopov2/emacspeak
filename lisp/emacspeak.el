@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- Emacspeak -- The Complete Audio Desktop
-;;; $Id: emacspeak.el 8047 2012-12-20 02:59:43Z tv.raman.tv $
+;;; $Id: emacspeak.el 8344 2013-05-11 16:15:32Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak: A speech interface to Emacs
 ;;; Keywords: Emacspeak, Speech, Dectalk,
@@ -189,6 +189,7 @@ speech-enabling extensions."
 (emacspeak-do-package-setup "erc" 'emacspeak-erc)
 (emacspeak-do-package-setup "eshell" 'emacspeak-eshell)
 (emacspeak-do-package-setup "ess" 'emacspeak-ess)
+(emacspeak-do-package-setup "eclim" 'emacspeak-eclim)
 (emacspeak-do-package-setup "enriched" 'emacspeak-enriched)
 (emacspeak-do-package-setup "facemenu" 'emacspeak-facemenu)
 (emacspeak-do-package-setup "find-dired" 'emacspeak-find-dired)
@@ -198,6 +199,7 @@ speech-enabling extensions."
 (emacspeak-do-package-setup "folding" 'emacspeak-folding)
 (emacspeak-do-package-setup "forms" 'emacspeak-forms)
 (emacspeak-do-package-setup "generic" 'emacspeak-generic)
+(emacspeak-do-package-setup "gtags" 'emacspeak-gtags)
 (emacspeak-do-package-setup "gnus" 'emacspeak-gnus)
 (emacspeak-do-package-setup "gnuplot" 'emacspeak-gnuplot)
 (emacspeak-do-package-setup "gomoku" 'emacspeak-gomoku)
@@ -246,7 +248,6 @@ speech-enabling extensions."
 (emacspeak-do-package-setup "psgml" 'emacspeak-psgml)
 (emacspeak-do-package-setup "ps-mode" 'emacspeak-ps)
 (emacspeak-do-package-setup "python" 'emacspeak-python)
-(emacspeak-do-package-setup "python-mode" 'emacspeak-python)
 (emacspeak-do-package-setup "python-mode" 'emacspeak-py)
 (emacspeak-do-package-setup "re-builder" 'emacspeak-re-builder)
 (emacspeak-do-package-setup "reftex" 'emacspeak-reftex)
@@ -374,7 +375,6 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
                  'emacspeak-setup-programming-mode))
    (list 'c-mode-common-hook
 	 'asm-mode-hook
-         'python-mode-hook
          'conf-unix-mode-hook
          'prolog-mode-hook
          'lisp-mode-hook
@@ -404,7 +404,8 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
          'tcl-mode-hook
          'html-helper-mode-hook
          'scheme-mode-hook
-         'dired-mode-hook)))
+         'dired-mode-hook
+         'python-mode-hook)))
 
 ;;}}}
 ;;{{{ set up after-init-hook to fix interactive functions
@@ -420,6 +421,16 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
   "If set to T, emacspeak plays its icon as it launches."
   :type 'boolean
   :group 'emacspeak)
+
+(defsubst emacspeak-play-startup-icon ()
+  "Play startup icon if requested."
+  (declare (special emacspeak-play-emacspeak-startup-icon))
+  (let ((player  (or (executable-find "mpg123")
+                     (executable-find "mpg321")
+                     (executable-find "mplayer"))))
+    (when (and  emacspeak-play-emacspeak-startup-icon player)
+      (call-process player nil 0 nil
+                    (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))))
 
 ;;;###autoload
 (defun emacspeak()
@@ -491,7 +502,7 @@ functions for details.   "
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: t
+;;; byte-compile-dynamic: nil
 ;;; end:
 
 ;;}}}

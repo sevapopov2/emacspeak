@@ -1,5 +1,5 @@
 ;;; g-auth.el --- Google Authentication Module
-;;;$Id: g-auth.el 7726 2012-04-27 22:58:45Z tv.raman.tv $
+;;;$Id: g-auth.el 8146 2013-02-09 20:05:08Z tv.raman.tv $
 ;;; $Author: raman $
 ;;; Description:  Google Authentication Module
 ;;; Keywords: Google   Auth
@@ -162,11 +162,12 @@
   (let* ((auth-source-creation-prompts 
           '((user . "Google E-Mail: ")
             (secret . "Google Password: ")))
-         (found (nth 0 (auth-source-search :max 1
-                                           :host "www.google.com"
-                                           :port service
-                                           :require '(:user :secret)
-                                           :create t))))
+         (found (and (fboundp 'auth-source-search)
+                     (nth 0 (auth-source-search :max 1
+                                                :host "www.google.com"
+                                                :port service
+                                                :require '(:user :secret)
+                                                :create t)))))
     (if found
         (list (plist-get found :user)
               (let ((secret (plist-get found :secret)))
@@ -243,7 +244,7 @@ Populate auth-handle with the returned cookies and token."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: t
+;;; byte-compile-dynamic: nil
 ;;; end:
 
 ;;}}}

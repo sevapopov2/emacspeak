@@ -1,5 +1,5 @@
 ;;; emacspeak-python.el --- Speech enable Python development environment
-;;; $Id: emacspeak-python.el 7998 2012-08-25 15:53:21Z tv.raman.tv $
+;;; $Id: emacspeak-python.el 8330 2013-05-07 18:01:41Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to python mode
 ;;; Keywords: Emacspeak, Speak, Spoken Output, python
@@ -80,7 +80,8 @@
         py-electric-delete
         python-electric-backspace
         python-electric-delete
-        python-backspace)
+        python-backspace
+        python-indent-dedent-line-backspace)
       do
       (eval
        `(defadvice ,f (before emacspeak pre act comp)
@@ -294,7 +295,7 @@ If already at the beginning then move to previous block."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: t
+;;; byte-compile-dynamic: nil
 ;;; end: 
 
 ;;}}}

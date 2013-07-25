@@ -1,3 +1,9 @@
+emacspeak (38.0-1lucid1) lucid; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 25 Jul 2013 23:10:55 +0400
+
 emacspeak (37.0-3lucid1) lucid; urgency=low
 
   * Fixed auditory feedback for Gnus article part saving functions.

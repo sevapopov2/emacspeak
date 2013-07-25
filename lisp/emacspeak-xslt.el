@@ -1,5 +1,5 @@
 ;;; emacspeak-xslt.el --- Implements Emacspeak  xslt transform engine
-;;; $Id: emacspeak-xslt.el 7823 2012-06-03 01:16:29Z tv.raman.tv $
+;;; $Id: emacspeak-xslt.el 8276 2013-03-30 15:19:30Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  xslt transformation routines
 ;;; Keywords: Emacspeak,  Audio Desktop XSLT
@@ -96,7 +96,7 @@
 
 ;;;###autoload
 (defcustom emacspeak-xslt-options
-  "--html --nonet --novalid"
+  "--html --nonet --novalid --encoding utf-8"
   "Options passed to xsltproc."
   :type 'string
   :group 'emacspeak-xslt)
@@ -114,8 +114,6 @@ This is useful when handling bad HTML."
 
 ;;}}}
 ;;{{{ Functions:
-(defvar emacspeak-xslt-last-command nil
-  "Cache last xsltproc command we executed.")
 
 ;;;###autoload
 (defun emacspeak-xslt-region (xsl start end &optional params no-comment)
@@ -123,7 +121,6 @@ This is useful when handling bad HTML."
 the result.  This uses XSLT processor xsltproc available as
 part of the libxslt package."
   (declare (special emacspeak-xslt-program emacspeak-xslt-options
-                    emacspeak-xslt-last-command
                     emacspeak-xslt-keep-errors modification-flag ))
   (let ((command nil)
         (parameters (when params
@@ -145,7 +142,6 @@ part of the libxslt package."
            (or parameters "")
            xsl
            (unless  emacspeak-xslt-keep-errors " 2>/dev/null ")))
-    (setq emacspeak-xslt-last-command command)
     (shell-command-on-region
      start end
      command
@@ -409,7 +405,7 @@ part of the libxslt package."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: t
+;;; byte-compile-dynamic: nil
 ;;; end:
 
 ;;}}}
