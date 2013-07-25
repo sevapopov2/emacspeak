@@ -207,8 +207,7 @@ Don't set this variable manually. Use customization interface."
   "Emacspeak startup hook that I use."
   (load-library "emacspeak-alsaplayer")
   (load-library "emacspeak-webspace")
-  (when (locate-library "dbus")
-    (load-library "emacspeak-dbus")))
+  (load-library "emacspeak-dbus"))
 
 (add-hook 'emacspeak-startup-hook 'emacspeak-setup-header-line)
 (add-hook 'emacspeak-startup-hook 'emacspeak-tvr-startup-hook)
