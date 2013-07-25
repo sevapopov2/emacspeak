@@ -55,6 +55,11 @@
                                         ;(require 'emacspeak-redefine)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function org-capture "ext:org-capture.el" (&optional goto keys))
+
+;;}}}
 ;;{{{ voice locking:
 
 (voice-setup-add-map
