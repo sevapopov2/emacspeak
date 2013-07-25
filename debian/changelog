@@ -1,3 +1,9 @@
+emacspeak (38.0-1wheezy1) wheezy; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 25 Jul 2013 23:14:07 +0400
+
 emacspeak (37.0-3wheezy1) wheezy; urgency=low
 
   * Fixed auditory feedback for Gnus article part saving functions.
