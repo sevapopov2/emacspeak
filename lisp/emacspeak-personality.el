@@ -84,18 +84,6 @@
 (require 'voice-setup)
 
 ;;}}}
-;;{{{ attach voice lock to global font lock
-(defadvice font-lock-mode (after  emacspeak pre act comp)
-  "Attach voice-lock-mode to font-lock-mode."
-  (voice-lock-mode (if (and global-voice-lock-mode font-lock-mode) 1 -1))
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon (if font-lock-mode 'on 'off))))
-(defadvice global-font-lock-mode (after emacspeak pre act comp)
-  "Provide an auditory icon if possible."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon (if global-font-lock-mode 'on 'off))))
-
-;;}}}
 ;;{{{ cumulative personalities
 
 ;;;###autoload
