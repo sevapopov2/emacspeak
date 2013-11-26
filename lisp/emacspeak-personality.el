@@ -374,7 +374,7 @@ displayed in the messages area."
 ;;{{{ advice overlay-put
 
 (defcustom emacspeak-personality-voiceify-overlays
-  'emacspeak-personality-prepend
+  'emacspeak-personality-append
   "Determines how and if we voiceify overlays.
 
 None means that overlay faces are not mapped to voices.
