@@ -5,10 +5,9 @@ This package was originally debianized and maintained by James R. Van
 Zandt <jrv@debian.org> and all debianization stuff was stolen by me
 from there and then revised. Besides that, I've included in this
 package all my fixes and improvements that were grown from my own
-experience of using this excellent software (but not in it's
-debianized form) every day for several years. All this history is
-reflected in file apocryphal.ChangeLog in this directory. Also see
-changelog.Debian for package related changes.
+experience of using this excellent software every day for several years.
+All this history is reflected in file apocryphal.ChangeLog
+in this directory. Also see changelog.Debian for package related changes.
 
 I pretty like Emacspeak itself, but the official Debian package could
 not satisfy my needs, because of lacking some extra functionality that
@@ -23,6 +22,9 @@ On the contrary to these notes, there are no alternatives to the
 emacspeak startup script for various emacs flavors, but
 /usr/bin/emacspeak always starts default emacs flavor with speech
 support.
+
+Also note that this package in it's present form supports only
+Emacs (not Xemacs) flavors of versions 23 or higher.
 
 The emacspeak package itself includes native info documentation and
 man-pages. Some extra documentation (mainly in html form) is provided

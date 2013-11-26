@@ -3049,6 +3049,19 @@ Variable mark-even-if-inactive is set true ."
             (emacspeak-auditory-icon 'select-object)))))
 
 ;;}}}
+;;{{{ Font lock mode toggling commands
+
+(defadvice font-lock-mode (after  emacspeak pre act comp)
+  "Provide an auditory icon if possible."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon (if font-lock-mode 'on 'off))))
+
+(defadvice global-font-lock-mode (after emacspeak pre act comp)
+  "Provide an auditory icon if possible."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon (if global-font-lock-mode 'on 'off))))
+
+;;}}}
 (provide 'emacspeak-advice)
 ;;{{{ end of file
 
