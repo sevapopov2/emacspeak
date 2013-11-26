@@ -85,8 +85,6 @@
         (finder-compile-keywords
          emacspeak-lisp-directory
          (expand-file-name "g-client"
-                           emacspeak-lisp-directory)
-         (expand-file-name "atom-blogger"
                            emacspeak-lisp-directory))))
 
 ;;; older version for pre-22

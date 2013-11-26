@@ -62,10 +62,10 @@
 ;;{{{  helper functions:
 
 (defun emacspeak-rmail-summarize-message (message)
-  "Summarize message in rmail identified by message number message"
-  (let ((subject (rmail-fetch-field message "Subject"))
-        (to (rmail-fetch-field message "To"))
-        (from (rmail-fetch-field message "From"))
+  "Summarize message in rmail identified by message number message."
+  (let ((subject (rmail-get-header "Subject" message))
+        (to (rmail-get-header "To" message))
+        (from (rmail-get-header "From" message))
         (lines (count-lines (rmail-msgbeg message)
                             (rmail-msgend message)))
         (labels (let ((rmail-current-message message ))
@@ -91,8 +91,8 @@
 
 (defadvice rmail-bury(after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'select-object)
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 (defadvice rmail (after emacspeak pre act comp)
   "Provide auditory feedback"
