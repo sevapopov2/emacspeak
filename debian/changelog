@@ -1,3 +1,12 @@
+emacspeak (38.0-2squeeze1) squeeze; urgency=low
+
+  * Added a note about supported Emacs flavors.
+  * Fixed buffer overlays voicification. See apocryphal.ChangeLog for
+    details.
+  * Fixed and greatly enhanced Emms support.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 26 Nov 2013 07:53:50 +0400
+
 emacspeak (38.0-1squeeze1) squeeze; urgency=low
 
   * New upstream release.

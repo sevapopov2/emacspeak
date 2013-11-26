@@ -1,6 +1,20 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2013-11-26  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-emms.el: Auditory feedback fixed and greatly enhanced.
+
+	* lisp/emacspeak-personality.el:
+	Changed overlays voiceification default.
+
+2013-11-20  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-advice.el, lisp/emacspeak-personality.el:
+	Dropped dependency between font lock and voice lock toggling.
+
+	* lisp/emacspeak-personality.el: Fixed overlays voicification.
+
 2013-07-25  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-speak.el, lisp/emacspeak.el:
