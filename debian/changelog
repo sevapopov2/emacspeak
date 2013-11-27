@@ -1,3 +1,9 @@
+emacspeak (38.0-3) unstable; urgency=low
+
+  * Voice lock fixes. See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 27 Nov 2013 19:09:05 +0400
+
 emacspeak (38.0-2) unstable; urgency=low
 
   * Added a note about supported Emacs flavors.
