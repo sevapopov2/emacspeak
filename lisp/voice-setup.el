@@ -158,7 +158,7 @@
   (let ((voice (gethash face voice-setup-face-voice-table)))
     (if (eq voice 'inaudible)
         voice
-      (gethash voice voice-setup-personality-table 'default))))
+      (gethash voice voice-setup-personality-table))))
 
 (defun voice-setup-show-rogue-faces ()
   "Return list of voices that map to non-existent faces."

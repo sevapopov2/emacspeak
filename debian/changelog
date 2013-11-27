@@ -1,3 +1,9 @@
+emacspeak (38.0-3squeeze1) squeeze; urgency=low
+
+  * Voice lock fixes. See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 27 Nov 2013 19:21:58 +0400
+
 emacspeak (38.0-2squeeze1) squeeze; urgency=low
 
   * Added a note about supported Emacs flavors.
