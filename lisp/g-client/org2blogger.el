@@ -30,8 +30,14 @@
 ;;;_ , Requires
 
 (require 'org)
-(require 'org-exp)
+(condition-case nil
+    (require 'org-exp)
+  (error "You need a recent version of org."))
 (require 'gblogger)
+
+;;;_. Forward declarations
+
+(declare-function org-infile-export-plist "org-exp.el" ())
 
 ;;;_. Body
 

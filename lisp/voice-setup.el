@@ -88,7 +88,7 @@
 
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
-(require 'custom)
+(require 'backquote)
 (eval-when-compile (require 'easy-mmode))
 (require 'custom)
 (require 'acss-structure)
@@ -99,29 +99,32 @@
 (require 'dectalk-voices)
 
 ;;}}}
-;;{{{ customization group
+;;{{{ customization groups
 
 (defgroup voice-fonts nil
   "Customization group for setting voices."
   :group 'emacspeak)
 
+(defgroup personalities nil
+  "Customization group for assignment voices to faces."
+  :group 'voice-fonts)
+
 ;;}}}
 ;;{{{  helper for voice custom items:
 
 (defalias 'tts-list-voices 'dectalk-list-voices)
+
 (defun voice-setup-custom-menu ()
   "Return a choice widget used in selecting voices."
-  (let ((v (tts-list-voices))
-        (menu nil))
-    (setq menu
-          (mapcar
-           #'(lambda (voice)
-               (list 'const voice))
-           v))
-    (setq menu
-          (cons
-           (list 'symbol :tag "Other")
-           menu))
+  (declare (special voice-setup-personality-table))
+  (let ((menu
+         (mapcar
+          #'(lambda (voice)
+              (list 'const voice))
+          (loop for k being the hash-keys of voice-setup-personality-table
+                collect   k))))
+    (add-to-list 'menu '(const default))
+    (add-to-list 'menu '(const inaudible))
     (cons 'choice menu)))
 
 (defun voice-setup-read-personality (&optional prompt)
@@ -146,12 +149,16 @@
 (defsubst voice-setup-set-voice-for-face (face voice)
   "Map face --a symbol-- to relevant voice."
   (declare (special  voice-setup-face-voice-table))
-  (setf (gethash face voice-setup-face-voice-table) voice))
+  (puthash face voice voice-setup-face-voice-table))
 
 (defsubst voice-setup-get-voice-for-face (face)
   "Map face --a symbol-- to relevant voice."
-  (declare (special  voice-setup-face-voice-table))
-  (gethash face voice-setup-face-voice-table))
+  (declare (special voice-setup-face-voice-table
+                    voice-setup-personality-table))
+  (let ((voice (gethash face voice-setup-face-voice-table)))
+    (if (eq voice 'inaudible)
+        voice
+      (gethash voice voice-setup-personality-table))))
 
 (defun voice-setup-show-rogue-faces ()
   "Return list of voices that map to non-existent faces."
@@ -162,40 +169,29 @@
 ;;}}}
 ;;{{{ special form def-voice-font
 
-;;; note that when defined, personalities are registered as
-;;; observers with the voice they use this gets unregistered when
-;;; the mapping is changed via custom.
-
 (defmacro  def-voice-font (personality voice face doc &rest args)
   "Define personality and map it to specified face."
   (let ((documentation
          (concat
           doc
-          (format "\nThis personality uses  %s whose  effect can be changed globally by customizing %s-settings."
-                  voice  voice))))
+          (if (or (eq voice 'default)
+                  (eq voice 'inaudible))
+              (format "\nThis personality originally uses %s voice." voice)
+            (format "\nThis personality originally uses %s whose effect\ncan be changed globally by customizing %s-settings."
+                    voice  voice))
+          "\nYou can choose another voice here.")))
     `(progn
        (unless (boundp ',personality)
 ;;; New Personality
          (defcustom  ,personality
-           ,voice
+           ',voice
            ,documentation
            :type (voice-setup-custom-menu)
-           :group 'voice-fonts
+           :group 'personalities
            :set '(lambda (sym val)
-                   (let ((observing  (get sym 'observing)))
-                     (when (and (symbolp sym)
-                                (symbolp observing))
-                       (remprop observing sym))
-                     (set-default sym val)))
-           ,@args))
-;;; other actions performed at define time
-       (voice-setup-set-voice-for-face ,face ',personality)
-;;;record  personality as an
-;;;observer of  voice and vice versa
-       (when (symbolp ',personality)
-         (put  ',personality 'observing ',voice))
-       (when (symbolp ',voice)
-         (put  ',voice ',personality t)))))
+                   (voice-setup-set-voice-for-face ,face val)
+                   (set-default sym val))
+           ,@args)))))
 
 (defsubst voice-setup-name-personality (face-name)
   "Compute personality name to use."
@@ -233,7 +229,7 @@
   "Maps personality names to ACSS  settings.
 Keys are personality names.")
 
-(defsubst voice-setup-personality-from-style (style-list)
+(defsubst voice-setup-personality-from-style (personality style-list)
   "Define a personality given a list of speech style settings."
   (declare (special voice-setup-personality-table))
   (let ((voice
@@ -245,25 +241,9 @@ Keys are personality names.")
            :stress (nth 3 style-list)
            :richness (nth 4  style-list)
            :punctuations (nth 5  style-list)))))
-    (puthash  voice style-list voice-setup-personality-table)
+    (when personality
+      (puthash personality voice voice-setup-personality-table))
     voice))
-
-(defsubst voice-setup-observing-personalities  (voice-name)
-  "Return a list of personalities that are `observing' VOICE-NAME.
-Observing personalities are automatically updated when settings for
-VOICE-NAME are  changed."
-  (let* ((plist (symbol-plist voice-name))
-         (l (1- (length plist))))
-    (loop for i from 0 to l by 2
-          collect (nth i plist))))
-
-(defun voice-setup-update-personalities (personality)
-  "Update  personalities  that use this voice to  new setting."
-  (let ((value (symbol-value personality))
-        (observers (voice-setup-observing-personalities personality)))
-    (loop for o in observers
-          do                            ;o is already quoted
-          (set o value))))
 
 ;;; note that for now we dont use  gain settings
 
@@ -274,11 +254,10 @@ that speaks `all' punctuations.  Once
 defined, the newly declared personality can be customized by calling
 command \\[customize-variable] on <personality>-settings.. "
   `(progn
-     (defvar  ,personality
-       (voice-setup-personality-from-style ,settings)
+     (defvar ,personality nil
        ,(concat
          doc
-         (format "Customize this overlay via %s-settings."
+         (format "\nCustomize this overlay via %s-settings."
                  personality )))
      (defcustom ,(intern (format "%s-settings"  personality))
        ,settings
@@ -309,11 +288,55 @@ command \\[customize-variable] on <personality>-settings.. "
        :group 'voice-fonts
        :set
        '(lambda  (sym val)
-          (let ((voice-name (voice-setup-personality-from-style val)))
-            (setq ,personality voice-name)
-;;; update all observers                ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
-            (voice-setup-update-personalities ',personality)
-            (set-default sym val))))))
+          (setq ,personality
+                (voice-setup-personality-from-style ',personality val))
+          (set-default sym val)))))
+
+;;}}}
+;;{{{ new light-weight voice lock
+
+;;;###autoload
+(define-minor-mode voice-lock-mode
+  "Toggle voice lock mode."
+  :lighter " Voice"
+  (when (ems-interactive-p )
+    (let ((state (if voice-lock-mode 'on 'off)))
+      (emacspeak-auditory-icon state))))
+
+;;;###autoload
+(defun turn-on-voice-lock ()
+  "Turn on Voice Lock mode ."
+  (interactive)
+  (unless voice-lock-mode (voice-lock-mode)))
+
+;;;###autoload
+(defun turn-off-voice-lock ()
+  "Turn off Voice Lock mode ."
+  (interactive)
+  (when voice-lock-mode (voice-lock-mode)))
+
+;;;###autoload
+(defcustom global-voice-lock-mode t
+  "Enable or disable voice lock mode globally."
+  :type 'boolean
+  :set (lambda (symbol value)
+         (unless (or noninteractive emacs-basic-display)
+           (setq-default voice-lock-mode value)
+           (dolist (buf (buffer-list))
+             (with-current-buffer buf
+               (when (or (and voice-lock-mode (not value))
+                         (and (not voice-lock-mode) value))
+                 (voice-lock-mode)))))
+         (custom-set-default symbol value))
+  :group 'voice-fonts)
+
+;; Install ourselves:
+(declaim (special text-property-default-nonsticky))
+(unless (assq 'personality text-property-default-nonsticky)
+  (push  (cons 'personality t) text-property-default-nonsticky))
+
+(unless (assq 'voice-lock-mode minor-mode-alist)
+  (setq minor-mode-alist (cons '(voice-lock-mode " Voice") minor-mode-alist)))
 
 ;;}}}                                   ; ; ; ;
 ;;{{{ voices defined using ACSS         
@@ -455,62 +478,6 @@ punctuations.")
    ))
 
 ;;}}}
-;;{{{ new light-weight voice lock
-
-;;;###autoload
-(define-minor-mode voice-lock-mode
-  "Toggle voice lock mode."
-  t nil nil
-  (when (ems-interactive-p )
-    (let ((state (if voice-lock-mode 'on 'off)))
-      (when (ems-interactive-p )
-        (emacspeak-auditory-icon state)))))
-
-;;;###autoload
-(defun turn-on-voice-lock ()
-  "Turn on Voice Lock mode ."
-  (interactive)
-  (unless voice-lock-mode (voice-lock-mode)))
-
-;;;###autoload
-(defun turn-off-voice-lock ()
-  "Turn off Voice Lock mode ."
-  (interactive)
-  (when voice-lock-mode (voice-lock-mode -1)))
-
-;;;### autoload
-(defun voice-lock-toggle ()
-  "Interactively toggle voice lock."
-  (interactive)
-  (if voice-lock-mode
-      (turn-off-voice-lock)
-    (turn-on-voice-lock))
-  (when (ems-interactive-p )
-    (let ((state (if voice-lock-mode 'on 'off)))
-      (when (ems-interactive-p )
-        (emacspeak-auditory-icon state)))))
-
-;;;###autoload
-(defvar global-voice-lock-mode t
-  "Global value of voice-lock-mode.")
-
-(when (string-match "24" emacs-version)
-  (define-globalized-minor-mode global-voice-lock-mode
-    voice-lock-mode turn-on-voice-lock
-    :initialize 'custom-initialize-delay
-    :init-value (not (or noninteractive emacs-basic-display))
-    :group 'voice-lock
-    :version "24.1"))
-
-;; Install ourselves:
-(declaim (special text-property-default-nonsticky))
-(unless (assq 'personality text-property-default-nonsticky)
-  (push  (cons 'personality t) text-property-default-nonsticky))
-
-(unless (assq 'voice-lock-mode minor-mode-alist)
-  (setq minor-mode-alist (cons '(voice-lock-mode " Voice") minor-mode-alist)))
-
-;;}}}
 ;;{{{ list-voices-display
 
 (defcustom voice-setup-sample-text
@@ -548,17 +515,15 @@ either case, the buffer is refontified to have the new mapping
 take effect."
   (interactive)
   (declare (special voice-setup-buffer-face-voice-table))
-  (let* ((personality (get-text-property (point) 'personality))
-         (face (get-text-property (point) 'face))
+  (let* ((face (get-text-property (point) 'face))
+         (personality (gethash face voice-setup-face-voice-table))
          (orig (gethash face voice-setup-buffer-face-voice-table)))
     (cond
      ((eq personality  'inaudible)
       (voice-setup-set-voice-for-face face  orig)
       (emacspeak-auditory-icon 'open-object))    
      (t (voice-setup-set-voice-for-face face 'inaudible)
-        (setf
-         (gethash face voice-setup-buffer-face-voice-table)
-         personality)
+        (puthash face personality voice-setup-buffer-face-voice-table)
         (emacspeak-auditory-icon 'close-object)))
     (when (buffer-file-name)
       (normal-mode))))

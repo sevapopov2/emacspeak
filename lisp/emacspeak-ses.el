@@ -51,8 +51,14 @@
 ;;; Code:
 (require 'emacspeak-preamble)
 (require 'emacspeak-redefine)
-;;}}}
 
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function ses-get-cell "ses.el" (row col))
+(declare-function ses-cell-property-get-fun "ses.el" (property cell))
+
+;;}}}
 ;;{{{ SES Accessors:
 
 ;;; these are defined as macros in ses.el 
@@ -163,13 +169,13 @@ interest."
 (defun emacspeak-ses-forward-row-and-summarize ()
   "Move to next row and summarize."
   (interactive)
-  (next-line)
+  (forward-line)
   (emacspeak-ses-summarize-current-cell))
 
 (defun emacspeak-ses-backward-row-and-summarize ()
   "Move to previous row  and summarize."
   (interactive)
-  (previous-line)
+  (forward-line -1)
   (emacspeak-ses-summarize-current-cell))
 
 ;;}}}

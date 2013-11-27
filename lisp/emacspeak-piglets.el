@@ -1,4 +1,4 @@
-;;; emacspeak-piglets.el.el --- Result of large pigs connecting over a socket
+;;; emacspeak-piglets.el --- Result of large pigs connecting over a socket
 ;;; $Id: emacspeak-piglets.el 8260 2013-03-28 15:21:49Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Result of connecting Emacs and Firefox
@@ -66,6 +66,12 @@
 (require 'emacspeak-preamble)
 (require 'derived)
 (require 'emacspeak-moz)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function inferior-moz-process "ext:moz.el" ())
+(declare-function inferior-moz-mode "ext:moz.el" ())
 
 ;;}}}
 ;;{{{ Constants
