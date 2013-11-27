@@ -1,6 +1,14 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2013-11-27  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-advice.el:
+	Avoid the first letter voiceification in completions since it breaks
+	words and sounds incomprehensively.
+
+	* lisp/voice-setup.el: Don't generate a personality for default voice.
+
 2013-11-26  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-emms.el: Auditory feedback fixed and greatly enhanced.

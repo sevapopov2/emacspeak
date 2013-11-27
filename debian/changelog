@@ -1,3 +1,9 @@
+emacspeak (38.0-3wheezy1) wheezy; urgency=low
+
+  * Voice lock fixes. See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 27 Nov 2013 19:24:45 +0400
+
 emacspeak (38.0-2wheezy1) wheezy; urgency=low
 
   * Added a note about supported Emacs flavors.

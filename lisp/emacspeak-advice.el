@@ -872,7 +872,7 @@ Produce an auditory icon if possible."
  '(
    (completions-annotations voice-annotate)
    (completions-common-part voice-monotone)
-   (completions-first-difference voice-brighten)))
+   (completions-first-difference default)))
 (loop for f in
       '(minibuffer-complete-word  minibuffer-complete)
       do
