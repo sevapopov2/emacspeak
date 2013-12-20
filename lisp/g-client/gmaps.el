@@ -58,6 +58,11 @@
 (require 'g-utils)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function emacspeak-calendar-setup-sunrise-sunset "ext:emacspeak-calendar.el" ())
+
+;;}}}
 ;;{{{ Customizations
 
 (defgroup gmaps nil
@@ -315,7 +320,7 @@ Parameter `key' is the API  key."
             (insert (format "Leg:%d: From %s to %s\n"
                             i
                             (g-json-get 'start_address leg)
-                            (g-json-get 'end_address)))
+                            (g-json-get 'end_address leg)))
             (gmaps-display-leg leg)
             (incf i))))
     (insert

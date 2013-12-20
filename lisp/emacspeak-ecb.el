@@ -49,6 +49,15 @@
 ;;; This module speech-enables ECB
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function tree-buffer-find-common-substring "ext:tree-buffer.el" (lis subs &optional only-prefix))
+(declare-function ecb-goto-window-methods "ext:ecb-method-browser.el" ())
+(declare-function ecb-goto-window-directories "ext:ecb-file-browser.el" ())
+(declare-function ecb-goto-window-history "ext:ecb-file-browser.el" ())
+(declare-function ecb-goto-window-sources "ext:ecb-file-browser.el" ())
+
+;;}}}
 ;;{{{  advice interactive commands
 
 (defadvice ecb-activate (after emacspeak pre act comp)
@@ -84,15 +93,15 @@
       (eval 
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (ems-interactive-p )
-            (emacspeak-speak-line)
-            (emacspeak-auditory-icon 'select-object)))))
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'select-object)
+            (emacspeak-speak-line)))))
 
 (defadvice ecb-select-ecb-frame (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'select-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
 
 ;;}}}
 ;;{{{  inform tree browser about emacspeak
@@ -111,8 +120,8 @@
                    0
                    (max 0 (1- (length
                                tree-buffer-incr-searchpattern)))))
-  (dtk-speak  tree-buffer-incr-searchpattern)
-  (emacspeak-auditory-icon 'delete-object))
+  (emacspeak-auditory-icon 'delete-object)
+  (dtk-speak  tree-buffer-incr-searchpattern))
 
 (defun emacspeak-ecb-tree-clear ()
   "Clear search pattern during incremental search in tree buffers."
@@ -184,11 +193,11 @@ available."
             (backward-char 1)
             (search-forward tree-buffer-incr-searchpattern)
             (setq end (point))
+            (emacspeak-auditory-icon 'search-hit)
             (with-silent-modifications
               (ems-set-personality-temporarily
                beg end   voice-bolden
-               (emacspeak-speak-line)))
-            (emacspeak-auditory-icon 'search-hit))))
+               (emacspeak-speak-line))))))
        (t (emacspeak-auditory-icon 'search-miss)))))
    (t ad-do-it))
   ad-return-value)
