@@ -1,4 +1,4 @@
-;;;$Id: emacspeak-finder.el 6342 2009-10-20 19:12:40Z tv.raman.tv $
+;;;$Id: emacspeak-finder.el 8146 2013-02-09 20:05:08Z tv.raman.tv $
 ;;; emacspeak-finder-inf.el --- keyword-to-package mapping
 ;; Keywords: help
 ;;; Commentary:
@@ -6,6 +6,8 @@
 ;;; function emacspeak-finder-compile-keywords
 ;;; Code:
 (require 'cl)
+(require 'finder)
+(defvar finder-package-info nil)
 
 (setq emacspeak-finder-package-info '(
     ("acss-structure.el"
@@ -17,6 +19,9 @@
     ("cd-tool.el"
         "Play  CDs from Emacs"
         nil)
+    ("congrats.el"
+        "Data Sonification, Graphics To Sound for emacspeak"
+        (emacspeak   audio desktop congrats))
     ("dectalk-voices.el"
         "Define various device independent voices in terms of Dectalk codes."
         (voice  personality  dectalk))
@@ -44,9 +49,6 @@
     ("emacspeak-amark.el"
         "BookMarks For Audio Content"
         (emacspeak  audio interface to emacs mp3))
-    ("emacspeak-amphetadesk.el"
-        "Emacspeak News Portal Interface"
-        (emacspeak   audio desktop rss))
     ("emacspeak-analog.el"
         "Speech-enable analog -- a log viewer"
         (emacspeak  analog))
@@ -80,12 +82,12 @@
     ("emacspeak-bibtex.el"
         "Speech enable bibtex -- Supports maintaining bibliographies in bibtex format"
         (emacspeak  audio interface to emacs  bibtex))
-    ("emacspeak-bmk-mgr.el"
-        "speech-enables bmk-mgr.el"
-        (emacspeak  bmk-mgr))
     ("emacspeak-bookmark.el"
         "Speech enable Emacs' builtin bookmarks"
         (emacspeak  speak  spoken output  bookmark))
+    ("emacspeak-bookshare.el"
+        "Speech-enabled  BOOKSHARE client"
+        (emacspeak   audio desktop bookshare))
     ("emacspeak-browse-kill-ring.el"
         "browse-kill-ring  for emacspeak desktop"
         (emacspeak  browse-kill-ring))
@@ -134,6 +136,9 @@
     ("emacspeak-damlite.el"
         "Speech-enable damlite"
         (emacspeak  damlite ))
+    ("emacspeak-dbus.el"
+        "DBus Tools For Emacspeak Desktop"
+        (emacspeak   audio desktop dbus))
     ("emacspeak-desktop.el"
         "Speech-enable desktop"
         (emacspeak   audio desktop  desktop))
@@ -143,6 +148,9 @@
     ("emacspeak-dictionary.el"
         "speech-enable dictionaries "
         (emacspeak  audio desktop))
+    ("emacspeak-diff-mode.el"
+        "Speech-enable DIFF-MODE"
+        (emacspeak   audio desktop diff-mode))
     ("emacspeak-dired.el"
         "Speech enable Dired Mode -- A powerful File Manager"
         (emacspeak  dired  spoken output))
@@ -152,18 +160,21 @@
     ("emacspeak-dmacro.el"
         "Speech enable DMacro -- Dynamic  Macros "
         (emacspeak  audio interface to emacs dmacro))
-    ("emacspeak-ebook.el"
-        "epubs Front-end for emacspeak desktop"
-        (emacspeak  epubs digital talking books))
     ("emacspeak-ecb.el"
         "speech-enable Emacs Class Browser"
         (emacspeak  ecb))
+    ("emacspeak-eclim.el"
+        "Speech-enable ECLIM: emacs/eclipse integration"
+        (emacspeak   audio desktop  eclim: emacs/eclipse))
     ("emacspeak-ediary.el"
         "Speech-enable ediary"
         (emacspeak  diary))
     ("emacspeak-ediff.el"
         "Speech enable Emacs interface to diff and merge"
         (emacspeak  audio interface to emacs  comparing files))
+    ("emacspeak-ein.el"
+        "Speech-enable EIN"
+        (emacspeak   audio desktop ein))
     ("emacspeak-emms.el"
         "Speech-enable EMMS Multimedia UI"
         (emacspeak  multimedia))
@@ -176,6 +187,9 @@
     ("emacspeak-eperiodic.el"
         "Speech-enable Periodic Table"
         (emacspeak  periodic  table))
+    ("emacspeak-epub.el"
+        "epubs Front-end for emacspeak desktop"
+        (emacspeak  epubs digital talking books))
     ("emacspeak-erc.el"
         "speech-enable erc irc client"
         (emacspeak  erc))
@@ -212,9 +226,6 @@
     ("emacspeak-finder.el"
         "Generate a database of keywords and descriptions for all Emacspeak  packages"
         (emacspeak  finder))
-    ("emacspeak-firevox.el"
-        "FireVox Piglet"
-        (emacspeak   audio desktop firefox  piglets ))
     ("emacspeak-fix-interactive.el"
         "Tools to make  Emacs' builtin prompts   speak"
         (emacspeak  advice  automatic advice  interactive))
@@ -222,11 +233,14 @@
         "Speech enable Ispell -- Emacs' interactive spell checker"
         (emacspeak  ispell  spoken output  fly spell checking))
     ("emacspeak-folding.el"
-        "Speech enable Folding Mode -- enables structured editting"
+        "Speech enable Folding Mode -- enables structured editing"
         (emacspeak  audio interface to emacs folding editor))
     ("emacspeak-forms.el"
         "Speech enable Emacs' forms mode  -- provides  a convenient database interface"
         (emacspeak  audio interface to emacs forms ))
+    ("emacspeak-ftf.el"
+        "Speech-enable find-things-fast"
+        (emacspeak   audio desktop ftf  project  git))
     ("emacspeak-generic.el"
         "Speech enable  generic modes"
         (emacspeak  audio desktop))
@@ -245,6 +259,9 @@
     ("emacspeak-gridtext.el"
         "Overlay Grids To filter columnar text"
         (emacspeak  gridtext))
+    ("emacspeak-gtags.el"
+        "Speech-enable GTAGS"
+        (emacspeak   audio desktop gtags))
     ("emacspeak-gud.el"
         "Speech enable Emacs' debugger interface --covers GDB, JDB, and PerlDB"
         (emacspeak  audio interface to emacs debuggers))
@@ -275,21 +292,27 @@
     ("emacspeak-jabber.el"
         "Speech-Enable jabber"
         (emacspeak  jabber))
-    ("emacspeak-jawbreaker.el"
-        "Talk to Firefox/JawBreaker  via MozRepl"
-        (emacspeak   audio desktop firefox  piglets ))
     ("emacspeak-jde.el"
         "Speech enable JDE -- An integrated Java Development Environment"
         (emacspeak  speak  spoken output  java))
     ("emacspeak-js2.el"
         "Speech-enable JS2"
         (emacspeak   audio desktop js2))
+    ("emacspeak-jss.el"
+        "Speech-enable JSS"
+        (emacspeak   audio desktop jss))
     ("emacspeak-keymap.el"
         "Setup all keymaps and keybindings provided by Emacspeak"
         (emacspeak))
+    ("emacspeak-kite.el"
+        "Speech-enable KITE"
+        (emacspeak   audio desktop kite))
     ("emacspeak-kmacro.el"
         "Speech-enable kbd macro interface"
         (emacspeak  kmacro ))
+    ("emacspeak-librivox.el"
+        "Speech-enabled  LIBRIVOX API client"
+        (emacspeak   audio desktop librivox))
     ("emacspeak-load-path.el"
         "Setup Emacs load-path for compiling Emacspeak"
         (emacspeak  speech extension for emacs))
@@ -302,6 +325,9 @@
     ("emacspeak-madplay.el"
         "Control madplay from Emacs"
         (emacspeak  madplay))
+    ("emacspeak-magit.el"
+        "Speech-enable MAGIT: Git Client"
+        (emacspeak   audio desktop magit))
     ("emacspeak-make-mode.el"
         "Speech enable make-mode"
         (emacspeak  make))
@@ -317,9 +343,6 @@
     ("emacspeak-midge.el"
         "Speech-enable MIDI editor"
         (emacspeak  midi ))
-    ("emacspeak-moz.el"
-        "Talk to Firefox via MozRepl"
-        (emacspeak   audio desktop firefox))
     ("emacspeak-mpg123.el"
         "Speech enable MP3 Player"
         (emacspeak  www interaction))
@@ -335,6 +358,9 @@
     ("emacspeak-newsticker.el"
         "Speech-enable newsticker"
         (emacspeak  newsticker ))
+    ("emacspeak-npr.el"
+        "Speech-enabled  NPR client"
+        (emacspeak   audio desktop npr))
     ("emacspeak-nxml.el"
         "Speech enable nxml mode"
         (emacspeak  nxml streaming media ))
@@ -359,9 +385,9 @@
     ("emacspeak-php-mode.el"
         "Speech-Enable php-mode "
         (emacspeak  php))
-    ("emacspeak-piglets.el"
-        "Result of large pigs connecting over a socket"
-        (emacspeak   audio desktop firefox  piglets ))
+    ("emacspeak-pianobar.el"
+        "Pandora Radio: Speech-enable PIANOBAR"
+        (emacspeak   audio desktop pianobar))
     ("emacspeak-preamble.el"
         "standard  include for Emacspeak modules"
         (emacspeak  audio interface to emacs auctex))
@@ -374,15 +400,15 @@
     ("emacspeak-psgml.el"
         "Speech enable psgml package"
         (emacspeak  audio interface to emacs psgml))
+    ("emacspeak-py.el"
+        "Speech enable Python development environment"
+        (emacspeak  speak  spoken output  python))
     ("emacspeak-python.el"
         "Speech enable Python development environment"
         (emacspeak  speak  spoken output  python))
     ("emacspeak-re-builder.el"
         "speech-enable re-builder"
         (emacspeak  audio desktop))
-    ("emacspeak-realaudio.el"
-        "Play realaudio from Emacs"
-        (emacspeak  realaudio))
     ("emacspeak-redefine.el"
         "Redefines some key Emacs builtins to speak"
         (emacspeak  redefine  spoken output))
@@ -485,18 +511,12 @@
     ("emacspeak-todo-mode.el"
         "speech-enable todo-mode"
         (emacspeak  todo-mode ))
-    ("emacspeak-twit.el"
-        "Speech-enable Twitter"
-        (emacspeak   audio desktop twiter))
     ("emacspeak-twittering.el"
         "Speech-enable Twittering-mode"
         (emacspeak   audio desktop twittering-mode))
     ("emacspeak-url-template.el"
         "Create library of URI templates"
         (emacspeak  audio desktop))
-    ("emacspeak-view-process.el"
-        "Speech enable View Processes -- A powerful task manager"
-        (emacspeak  audio interface to emacs administering processes))
     ("emacspeak-view.el"
         "Speech enable View mode -- Efficient browsing of read-only content"
         (emacspeak  audio interface to emacs  view-mode))
@@ -515,9 +535,6 @@
     ("emacspeak-we.el"
         "Transform Web Pages Using XSLT"
         (emacspeak   audio desktop web  xslt))
-    ("emacspeak-webmarks.el"
-        "Web Bookmarks Via Google"
-        (emacspeak   audio desktop web  bookmarks))
     ("emacspeak-websearch.el"
         "search utilities"
         (emacspeak  www interaction))
@@ -539,6 +556,9 @@
     ("emacspeak-wizards.el"
         "Implements Emacspeak  convenience wizards"
         (emacspeak   audio desktop wizards))
+    ("emacspeak-woman.el"
+        "Speech-enable WOMAN"
+        (emacspeak   audio desktop woman  man pages))
     ("emacspeak-xml-shell.el"
         "Implements a simple XML browser"
         (emacspeak   audio desktop xml-shell))
@@ -563,27 +583,45 @@
     ("flite-voices.el"
         "Emacspeak FLite"
         (emacspeak   audio desktop flite))
+    ("mac-voices.el"
+        "Define various device independent voices in terms of Mac tags"
+        (voice  personality  mac))
     ("multispeech-voices.el"
         "Define various device independent voices in terms of Multispeech tags"
         (voice  personality  multispeech))
+    ("nm.el"
+        "Simple NetworkManager integration through D-Bus."
+        nil)
     ("outloud-voices.el"
         "Define various device independent voices in terms of OutLoud tags"
         (voice  personality  ibm viavoice outloud))
+    ("plain-voices.el"
+        "Define various device independent voices in terms of Plain codes."
+        (voice  personality  plain))
     ("russian-spelling.el"
         nil
         nil)
+    ("shr-url.el"
+        "Speech-enable SHR"
+        (emacspeak   audio desktop shr))
     ("stack-f.el"
         nil
         (extensions  lisp))
     ("tapestry.el"
         nil
         nil)
+    ("tetris.el"
+        "implementation of Tetris for Emacs"
+        (games))
     ("toy-braille.el"
         nil
         (emacs  unicode  ucs  toy  braille))
     ("voice-setup.el"
         "Setup voices for voice-lock"
         nil)
+    ("xml-compat.el"
+        "Compatibility  for xml.el and libxml"
+        (emacspeak   audio desktop xml))
     ("xml-parse.el"
         "code to efficiently read/write XML data with Elisp"
         (convenience languages lisp xml parse data))

@@ -2,35 +2,32 @@
 ;;
 ;;; Code:
 
+(put 'applications 'custom-loads '(g))
+(put 'g 'custom-loads '(g-auth g-utils gblogger gbooks gcal gcontacts gdocs gfeeds ghealth gmaps gnotebook gphoto gsheet gskeleton gtube gweb))
+(put 'g-auth 'custom-loads '(g-auth))
+(put 'gblogger 'custom-loads '(gblogger))
+(put 'gbooks 'custom-loads '(gbooks))
+(put 'gcal 'custom-loads '(gcal))
+(put 'gcontacts 'custom-loads '(gcontacts))
+(put 'gdocs 'custom-loads '(gdocs))
 (put 'gfeeds 'custom-loads '(gfeeds))
 (put 'ghealth 'custom-loads '(ghealth))
+(put 'gmaps 'custom-loads '(gmaps))
 (put 'gnotebook 'custom-loads '(gnotebook))
-(put 'gfinance 'custom-loads '(gfinance))
 (put 'gphoto 'custom-loads '(gphoto))
-(put 'gdocs 'custom-loads '(gdocs))
-(put 'greader 'custom-loads '(greader))
-(put 'applications 'custom-loads '(g))
-(put 'g-auth 'custom-loads '(g-auth))
-(put 'gcontacts 'custom-loads '(gcontacts))
-(put 'gskeleton 'custom-loads '(gskeleton))
-(put 'gcal 'custom-loads '(gcal))
 (put 'gsheet 'custom-loads '(gsheet))
+(put 'gskeleton 'custom-loads '(gskeleton))
 (put 'gtube 'custom-loads '(gtube))
-(put 'gblogger 'custom-loads '(gblogger))
+(put 'gweb 'custom-loads '(gmaps))
 (put 'gwis 'custom-loads '(gwis))
-(put 'g 'custom-loads '(g-utils g-auth gblogger gcal gcontacts gdocs gfeeds gfinance ghealth gnotebook gphoto greader gsheet gskeleton gtube gweb))
-;; These are for handling :version.  We need to have a minimum of
-;; information so `customize-changed-options' could do its job.
+
+;; The remainder of this file is for handling :version.
+;; We provide a minimum of information so that `customize-changed-options'
+;; can do its job.
 
 ;; For groups we set `custom-version', `group-documentation' and
 ;; `custom-tag' (which are shown in the customize buffer), so we
 ;; don't have to load the file containing the group.
-
-;; `custom-versions-load-alist' is an alist that has as car a version
-;; number and as elts the files that have variables or faces that
-;; contain that version. These files should be loaded before showing
-;; the customization buffer that `customize-changed-options'
-;; generates.
 
 ;; This macro is used so we don't modify the information about
 ;; variables and groups if it's already set. (We don't know when
@@ -42,7 +39,12 @@
 
 
 (defvar custom-versions-load-alist nil
- "For internal use by custom.")
+  "For internal use by custom.
+This is an alist whose members have as car a version string, and as
+elements the files that have variables or faces that contain that
+version.  These files should be loaded before showing the customization
+buffer that `customize-changed-options' generates.")
+
 
 (provide 'g-cus-load)
 ;; Local Variables:
