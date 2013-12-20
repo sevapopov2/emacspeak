@@ -1,5 +1,5 @@
 ;;; emacspeak-sounds.el --- Defines Emacspeak auditory icons
-;;; $Id: emacspeak-sounds.el 8146 2013-02-09 20:05:08Z tv.raman.tv $
+;;; $Id: emacspeak-sounds.el 8395 2013-08-21 15:20:06Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Module for adding sound cues to emacspeak
 ;;; Keywords:emacspeak, audio interface to emacs, auditory icons
@@ -315,7 +315,9 @@ sparc20's."
   "Produce auditory icon SOUND-NAME.
 Sound is produced only if `emacspeak-use-auditory-icons' is true.
 See command `emacspeak-toggle-auditory-icons' bound to \\[emacspeak-toggle-auditory-icons ]."
-  (declare (special  emacspeak-use-auditory-icons emacspeak-play-program))
+  (declare (special  emacspeak-use-auditory-icons
+                     emacspeak-play-program
+                     emacspeak-play-args))
   (and emacspeak-use-auditory-icons
        (let ((process-connection-type nil)
              (default-directory (file-name-as-directory (getenv "HOME"))))
