@@ -89,6 +89,7 @@ is nil if SYM is not a symbol that names a cell."
 
 (defsubst emacspeak-ses-cell-printer (row &optional col)
   "From a CELL or a pair (ROW,COL), get the function that prints its value."
+  (declare (special ses--cells))
   (aref (if col (ses-get-cell row col) row) 2))
 (defsubst emacspeak-ses-cell-property-get (property-name row &optional col)
   "Get property named PROPERTY-NAME from a CELL or a pair (ROWCOL).
@@ -96,6 +97,7 @@ is nil if SYM is not a symbol that names a cell."
 When COL is omitted CELL=ROW is a cell object.  When COL is
 present ROW and COL are the integer coordinates of the cell of
 interest."
+  (declare (special ses--cells))
   (ses-cell-property-get-fun
    property-name
    (if col (ses-get-cell row col) row)))

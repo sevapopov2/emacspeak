@@ -1822,7 +1822,7 @@ Extracted content is placed as a csv file in task.csv."
     (read-from-minibuffer "Count: ")))
   (declare (special emacspeak-wizards-table-content-extractor))
   (let ((buffer (get-buffer-create " *table extractor*")))
-    (save-cur
+    (save-current-buffer
      (set-buffer buffer)
      (erase-buffer)
      (setq buffer-undo-list t)
@@ -3182,7 +3182,7 @@ Default is to add autoload cookies to current file."
   (or f (setq f (buffer-file-name)))
   (let ((buffer (find-file-noselect f))
         (count 0))
-    (save-cur
+    (save-current-buffer
      (set-buffer buffer)
      (goto-char (point-min))
      (unless (eq major-mode'emacs-lisp-mode)
