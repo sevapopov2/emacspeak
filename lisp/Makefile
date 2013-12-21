@@ -1,4 +1,4 @@
-# $Id: Makefile 8344 2013-05-11 16:15:32Z tv.raman.tv $
+# $Id: Makefile 8580 2013-11-25 23:35:01Z tv.raman.tv $
 # $Author: tv.raman.tv $
 # Description:  Makefile for Emacspeak
 # Keywords: Emacspeak, Dectalk, Makefile
@@ -104,7 +104,6 @@ emacspeak-bbdb.elc \
 emacspeak-bibtex.elc \
 emacspeak-bookmark.elc \
 emacspeak-bookshare.elc \
-emacspeak-bmk-mgr.elc \
 emacspeak-browse-kill-ring.elc \
 emacspeak-bs.elc \
 emacspeak-buff-menu.elc \
@@ -134,8 +133,10 @@ emacspeak-dismal.elc \
 emacspeak-dmacro.elc \
 emacspeak-epub.elc \
 emacspeak-ecb.elc \
+emacspeak-ein.elc \
 emacspeak-ediary.elc \
 emacspeak-ediff.elc \
+emacspeak-eww.elc \
 flite-voices.elc \
 emacspeak-eclim.elc \
 emacspeak-enriched.elc \
@@ -175,8 +176,8 @@ emacspeak-ispell.elc \
 emacspeak-iswitchb.elc \
 emacspeak-jabber.elc \
 emacspeak-jde.elc \
-emacspeak-jawbreaker.elc \
 emacspeak-js2.elc \
+emacspeak-jss.elc \
 emacspeak-kite.elc \
 emacspeak-kmacro.elc  \
 emacspeak-librivox.elc \
@@ -189,7 +190,6 @@ emacspeak-message.elc \
 emacspeak-metapost.elc \
 emacspeak-midge.elc \
 emacspeak-mpg123.elc \
-emacspeak-moz.elc \
 emacspeak-muse.elc \
 emacspeak-mspools.elc \
 emacspeak-net-utils.elc \
@@ -203,8 +203,6 @@ emacspeak-pcl-cvs.elc \
 emacspeak-perl.elc \
 emacspeak-php-mode.elc \
 emacspeak-pianobar.elc \
-emacspeak-piglets.elc \
-emacspeak-planner.elc \
 emacspeak-proced.elc \
 emacspeak-ps.elc \
 emacspeak-psgml.elc \
@@ -341,7 +339,6 @@ emacspeak-bbdb.elc: emacspeak-bbdb.el dtk-speak.elc voice-setup.elc
 emacspeak-bibtex.elc: emacspeak-bibtex.el dtk-speak.elc voice-setup.elc
 emacspeak-bookmark.elc: emacspeak-bookmark.el dtk-speak.elc voice-setup.elc
 emacspeak-bookshare.elc: emacspeak-bookshare.el dtk-speak.elc voice-setup.elc emacspeak-webutils.elc
-emacspeak-bmk-mgr.elc: emacspeak-bmk-mgr.el dtk-speak.elc voice-setup.elc
 emacspeak-browse-kill-ring.elc: emacspeak-browse-kill-ring.el dtk-speak.elc voice-setup.elc
 emacspeak-bs.elc: emacspeak-bs.el dtk-speak.elc voice-setup.elc
 emacspeak-buff-menu.elc: emacspeak-buff-menu.el dtk-speak.elc voice-setup.elc
@@ -371,6 +368,7 @@ emacspeak-dired.elc: emacspeak-dired.el dtk-speak.elc voice-setup.elc
 emacspeak-dismal.elc: emacspeak-dismal.el dtk-speak.elc voice-setup.elc
 emacspeak-dmacro.elc: emacspeak-dmacro.el dtk-speak.elc voice-setup.elc
 emacspeak-ecb.elc: emacspeak-ecb.el dtk-speak.elc voice-setup.elc
+emacspeak-ein.elc: emacspeak-ein.el dtk-speak.elc voice-setup.elc
 emacspeak-ediary.elc: emacspeak-ediary.el dtk-speak.elc voice-setup.elc
 emacspeak-ediff.elc: emacspeak-ediff.el dtk-speak.elc voice-setup.elc
 flite-voices.elc: flite-voices.el
@@ -384,6 +382,7 @@ emacspeak-eshell.elc: emacspeak-eshell.el dtk-speak.elc voice-setup.elc
 emacspeak-ess.elc: emacspeak-ess.el dtk-speak.elc voice-setup.elc
 emacspeak-eterm.elc: emacspeak-eterm.el dtk-speak.elc voice-setup.elc
 emacspeak-eudc.elc: emacspeak-eudc.el dtk-speak.elc voice-setup.elc
+emacspeak-eww.elc: emacspeak-eww.el dtk-speak.elc voice-setup.elc
 emacspeak-facemenu.elc: emacspeak-facemenu.el dtk-speak.elc voice-setup.elc
 emacspeak-filtertext.elc: emacspeak-filtertext.el dtk-speak.elc voice-setup.elc
 emacspeak-find-dired.elc: emacspeak-find-dired.el dtk-speak.elc voice-setup.elc
@@ -414,8 +413,8 @@ emacspeak-iswitchb.elc: emacspeak-iswitchb.el dtk-speak.elc voice-setup.elc
 emacspeak-jabber.elc: emacspeak-jabber.el dtk-speak.elc
 emacspeak-jde.elc: emacspeak-jde.el dtk-speak.elc voice-setup.elc
 emacspeak-js2.elc: emacspeak-js2.el dtk-speak.elc voice-setup.elc
-emacspeak-jawbreaker.elc: emacspeak-jawbreaker.el emacspeak-piglets.elc
 emacspeak-keymap.elc: emacspeak-keymap.el
+emacspeak-jss.elc: emacspeak-jss.el dtk-speak.elc voice-setup.elc
 emacspeak-kite.elc: emacspeak-kite.el dtk-speak.elc voice-setup.elc
 emacspeak-kmacro.elc: emacspeak-kmacro.el dtk-speak.elc voice-setup.elc
 emacspeak-librivox.elc: emacspeak-librivox.el dtk-speak.elc voice-setup.elc
@@ -430,8 +429,7 @@ emacspeak-message.elc: emacspeak-message.el dtk-speak.elc voice-setup.elc
 emacspeak-metapost.elc: emacspeak-metapost.el dtk-speak.elc voice-setup.elc
 emacspeak-midge.elc: emacspeak-midge.el dtk-speak.elc voice-setup.elc
 emacspeak-mpg123.elc: emacspeak-mpg123.el dtk-speak.elc voice-setup.elc
-emacspeak-moz.elc: emacspeak-moz.el dtk-speak.elc voice-setup.elc
-emacspeak-muse.elc: emacspeak-muse.el dtk-speak.elc voice-setup.elc
+emacspeak-muse.elc: emacspeak-muse.el dtk-speak.elc
 emacspeak-mspools.elc: emacspeak-mspools.el dtk-speak.elc voice-setup.elc
 emacspeak-net-utils.elc: emacspeak-net-utils.el dtk-speak.elc voice-setup.elc
 emacspeak-newsticker.elc: emacspeak-newsticker.el dtk-speak.elc voice-setup.elc
@@ -442,7 +440,6 @@ emacspeak-outline.elc: emacspeak-outline.el dtk-speak.elc voice-setup.elc
 emacspeak-ocr.elc: emacspeak-ocr.el dtk-speak.elc voice-setup.elc
 emacspeak-pcl-cvs.elc: emacspeak-pcl-cvs.el dtk-speak.elc voice-setup.elc
 emacspeak-perl.elc: emacspeak-perl.el dtk-speak.elc voice-setup.elc
-emacspeak-piglets.elc: emacspeak-piglets.el emacspeak-moz.elc
 emacspeak-php-mode.elc: emacspeak-php-mode.el dtk-speak.elc voice-setup.elc
 emacspeak-pianobar.elc: emacspeak-pianobar.el dtk-speak.elc voice-setup.elc
 emacspeak-planner.elc: emacspeak-planner.el dtk-speak.elc voice-setup.elc

@@ -1,6 +1,17 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2013-12-21  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-dired.el, lisp/emacspeak-ein.el, lisp/emacspeak-eww.el, lisp/emacspeak-ido.el, lisp/emacspeak-iswitchb.el, lisp/emacspeak-m-player.el, lisp/emacspeak-ses.el, lisp/emacspeak-webspace.el, lisp/emacspeak-wizards.el, lisp/g-client/Makefile, lisp/g-client/greader.el, lisp/g-client/obsolete/greader.el:
+	Fixes implied by compiler warnings.
+
+	* lisp/emacspeak-setup.el: Version corrected.
+
+2013-12-20  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	Merged upstream version 39.0
+
 2013-11-27  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-advice.el:

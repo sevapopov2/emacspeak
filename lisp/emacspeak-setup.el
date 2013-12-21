@@ -1,5 +1,5 @@
 ;;; emacspeak-setup.el --- Setup Emacspeak environment --loaded to start Emacspeak
-;;; $Id: emacspeak-setup.el 8334 2013-05-08 15:41:47Z tv.raman.tv $
+;;; $Id: emacspeak-setup.el 8573 2013-11-23 16:32:11Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  File for setting up and starting Emacspeak
 ;;; Keywords: Emacspeak, Setup, Spoken Output
@@ -95,12 +95,12 @@ pronunciation dictionaries are stored. ")
 ;;;###autoload
 (defconst emacspeak-version
   (format
-   "38.0 %s"
+   "39.0 %s"
    (cond
     ((file-exists-p emacspeak-readme-file)
      (let ((buffer (find-file-noselect emacspeak-readme-file))
            (revision nil))
-       (save-excursion
+       (save-current-buffer
          (set-buffer buffer)
          (goto-char (point-min))
          (setq revision
@@ -118,7 +118,7 @@ pronunciation dictionaries are stored. ")
 
 ;;;###autoload
 (defconst emacspeak-codename
-  "FreeDog"
+  "BigDog"
   "Code name of present release.")
 
 ;;}}}
@@ -165,7 +165,7 @@ Don't set this variable manually. Use customization interface."
   :group 'tts
   :type 'integer)
 ;;;###autoload
-(defcustom espeak-default-speech-rate 100
+(defcustom espeak-default-speech-rate 175
   "Default speech rate for eSpeak."
   :group 'tts
   :type 'integer)
