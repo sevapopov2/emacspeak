@@ -1,5 +1,5 @@
 ;;; greader.el --- Google Reader
-;;;$Id: greader.el 8146 2013-02-09 20:05:08Z tv.raman.tv $
+;;;$Id: greader.el 8374 2013-07-27 19:33:27Z tv.raman.tv $
 ;;; $Author: raman $
 ;;; Description:  Google Reader
 ;;; Keywords: Google   Atom API
@@ -63,7 +63,6 @@
 (require 'g-utils)
 (require 'g-auth)
 (require 'browse-url)
-(require 'json)
 
 ;;}}}
 ;;{{{ customizations

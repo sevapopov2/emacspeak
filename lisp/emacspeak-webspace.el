@@ -1,5 +1,5 @@
 ;;; emacspeak-webspace.el --- Webspaces In Emacspeak
-;;; $Id: emacspeak-webspace.el 8276 2013-03-30 15:19:30Z tv.raman.tv $
+;;; $Id: emacspeak-webspace.el 8398 2013-08-26 01:52:29Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: WebSpace provides smart updates from the Web.
 ;;; Keywords: Emacspeak, Audio Desktop webspace
@@ -80,7 +80,6 @@
         ("b" emacspeak-webspace-previous-link)
         ("y" emacspeak-webspace-yank-link)
         ("A"emacspeak-webspace-atom-view)
-        ("r" greader-reading-list)
         ("R" emacspeak-webspace-rss-view)
         ("F" emacspeak-webspace-feed-view)
         ("t" emacspeak-webspace-transcode)
@@ -180,8 +179,6 @@
 ;;}}}
 ;;{{{ WebSpace Display:
 
-(global-set-key [C-return] 'emacspeak-webspace-reading-list-view)
-
 ;;;###autoload
 (defun emacspeak-webspace-headlines-view ()
   "Display all cached headlines in a special interaction buffer."
@@ -226,7 +223,7 @@ Generates auditory and visual display."
         )
       do
       (define-key emacspeak-webspace-keymap (first k) (second k)))
-
+(global-set-key [C-return] 'emacspeak-webspace-headlines-view)
 ;;}}}
 ;;{{{ Headlines:
 
@@ -389,73 +386,16 @@ Updated weather is found in `emacspeak-webspace-current-weather'."
 
 (defun emacspeak-webspace-reader-create ()
   "Prepare Reader buffer."
-  (declare (special emacspeak-webspace-reader-buffer))
-  (let ((subscriptions (greader-subscriptions))
-        (buffer (get-buffer-create emacspeak-webspace-reader-buffer))
-        (inhibit-read-only t)
-        (start nil))
-    (save-excursion
-      (set-buffer buffer)
-      (erase-buffer)
-      (setq buffer-undo-list t)
-      (goto-char (point-min))
-      (insert
-       (format "Google Reader %d\n"
-               (length subscriptions)))
-      (setq start (point))
-      (loop for feed across subscriptions
-            and i from 1
-            do
-            (insert
-             (format "%d. %s\n"
-                     i
-                     (cdr (assq 'title feed))))
-            (put-text-property start (point)
-                               'link (greader-id-to-url (cdr
-                                                         (assoc
-                                                          'id
-                                                          feed))))
-            (setq start (point)))
-      (setq buffer-read-only t)
-      (emacspeak-webspace-mode)
-      (local-set-key "u" 'emacspeak-webspace-reader-unsubscribe))
-    buffer))
+  (declare (special emacspeak-webspace-reader-buffer
+                    emacspeak-webspace-reader-feed-list))
+  (browse-url (format "file:%s"emacspeak-webspace-reader-feed-list)))
 
 ;;;###autoload
-
-(defun emacspeak-webspace-reader-rip (file)
-  "RIP Google Reader.
-Save Reader subscriptions to a specified file."
-  (interactive
-   (list
-    (expand-file-name
-     (read-file-name
-      "Save feed list to file: "
-      emacspeak-resource-directory "reader.html")
-     emacspeak-resource-directory)))
-  (let ((subscriptions (greader-subscriptions))
-        (buffer (find-file-noselect file))
-        )
-    (save-excursion
-      (set-buffer buffer)
-      (erase-buffer)
-      (setq buffer-undo-list t)
-      (goto-char (point-min))
-      (insert "<html><head><title>Subscription List</title></head>\n")
-      (insert "<body>\n")
-      (insert
-       (format "<h1>Google Reader %d</h1>\n"
-               (length subscriptions)))
-      (insert "<ol>\n")
-      (loop for feed across subscriptions
-            do
-            (insert
-             (format
-              "<li> <a href='%s'>%s</a></li>\n"
-              (greader-id-to-url (cdr (assoc 'id feed)))
-              (cdr (assq 'title feed)))))
-      (insert "</ol>\n</body>\n</html>\n")
-      (save-buffer))))
+(defcustom emacspeak-webspace-reader-feed-list
+  (expand-file-name  "reader.html" "~/.emacspeak")
+  "HTML file containing list of feeds."
+  :type 'file
+  :group  'emacspeak-webspace)
 
 ;;;###autoload 
 (defun emacspeak-webspace-reader (&optional refresh)
@@ -528,14 +468,6 @@ Optional interactive prefix arg forces a refresh."
   (emacspeak-auditory-icon 'open-object))
 
 ;;;###autoload
-(defun emacspeak-webspace-reader-unsubscribe ()
-  "Unsubscribe to link under point."
-  (interactive)
-  (let ((link (get-text-property (point) 'link)))
-    (cond
-     (link 
-      (greader-unsubscribe-feed link))
-     (t (call-interactively 'greader-unsubscribe-feed)))))
 
 (defun emacspeak-webspace-reading-list-get-some-title ()
   "Returns a title chosen at random.
