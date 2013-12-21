@@ -1,5 +1,5 @@
 ;;; emacspeak-ses.el --- Speech-enable ses spread-sheet
-;;; $Id: emacspeak-ses.el 8146 2013-02-09 20:05:08Z tv.raman.tv $
+;;; $Id: emacspeak-ses.el 8461 2013-10-26 00:37:32Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for SES 
 ;;; Keywords: Emacspeak, ses 
@@ -51,6 +51,7 @@
 ;;; Code:
 (require 'emacspeak-preamble)
 (require 'emacspeak-redefine)
+(require 'ses)
 
 ;;}}}
 ;;{{{ Forward declarations
@@ -88,6 +89,7 @@ is nil if SYM is not a symbol that names a cell."
 
 (defsubst emacspeak-ses-cell-printer (row &optional col)
   "From a CELL or a pair (ROW,COL), get the function that prints its value."
+  (declare (special ses--cells))
   (aref (if col (ses-get-cell row col) row) 2))
 (defsubst emacspeak-ses-cell-property-get (property-name row &optional col)
   "Get property named PROPERTY-NAME from a CELL or a pair (ROWCOL).
@@ -95,7 +97,7 @@ is nil if SYM is not a symbol that names a cell."
 When COL is omitted CELL=ROW is a cell object.  When COL is
 present ROW and COL are the integer coordinates of the cell of
 interest."
-  (declare (debug t))
+  (declare (special ses--cells))
   (ses-cell-property-get-fun
    property-name
    (if col (ses-get-cell row col) row)))

@@ -1,5 +1,5 @@
 ;;; emacspeak-rmail.el --- Speech enable RMail -- Emacs' default mail agent
-;;; $Id: emacspeak-rmail.el 8146 2013-02-09 20:05:08Z tv.raman.tv $
+;;; $Id: emacspeak-rmail.el 8523 2013-11-08 15:12:31Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Emacspeak extension for rmail
 ;;; Keywords:emacspeak, audio interface to emacs mail
@@ -62,7 +62,7 @@
 ;;{{{  helper functions:
 
 (defun emacspeak-rmail-summarize-message (message)
-  "Summarize message in rmail identified by message number message."
+  "Summarize message in rmail identified by message number message"
   (let ((subject (rmail-get-header "Subject" message))
         (to (rmail-get-header "To" message))
         (from (rmail-get-header "From" message))
