@@ -53,6 +53,22 @@
 (require 'xml-parse)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function mail-narrow-to-head "mail-parse.el" ())
+(declare-function mail-header-extract "mailheader.el" ())
+(declare-function mm-dissect-buffer "mm-decode.el" (&optional no-strict-mime loose-mime from))
+(declare-function mm-handle-media-type "mm-decode.el" (handle))
+(declare-function mm-insert-part "mm-decode.el" (handle &optional no-cache))
+(declare-function mm-destroy-parts "mm-decode.el" (handles))
+(declare-function mm-handle-type "mm-decode.el" (handle))
+(declare-function mm-handle-buffer "mm-decode.el" (handle))
+(declare-function mm-inlinable-p "mm-decode.el" (handle &optional type))
+(declare-function mm-display-part "mm-decode.el" (handle &optional no-default))
+(declare-function mm-handle-media-supertype "mm-decode.el" (handle))
+(declare-function url-mark-buffer-as-dead "url.el" (buff))
+
+;;}}}
 ;;{{{  Customization variables
 (defgroup emacspeak-daisy nil
   "Daisy Digital Talking Books  for the Emacspeak desktop."
@@ -721,8 +737,8 @@ No-op if content under point is not currently displayed."
   (interactive)
   (forward-line -1)
   (beginning-of-line)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'select-object))
+  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-speak-line))
 
 ;;;###autoload
 (defun emacspeak-daisy-define-outline-pattern (regexp)
@@ -752,8 +768,8 @@ No-op if content under point is not currently displayed."
   (interactive)
   (forward-line 1)
   (beginning-of-line)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'select-object))
+  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-speak-line))
 
 ;;}}}
 ;;{{{ Configure w3 post processor hook to record viewer buffer:
@@ -785,6 +801,9 @@ Also puts the displayed buffer in outline-minor-mode and gives it
 ;;{{{ w3 support update:
 ;;; need to handle text/xml and application/xml
 (defun w3-fetch-callback (url)
+  (declare (special w3-explicit-coding-system
+                    url-current-object
+                    url-current-mime-headers))
   (w3-nasty-disgusting-http-equiv-handling (current-buffer) url)
   ;; Process any cookie and refresh headers.
   (let (headers)
