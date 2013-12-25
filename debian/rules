@@ -63,7 +63,7 @@ install: build-indep
 	dh_install -X.elc -X.nosearch -X.tar.bz2 -X.tar.gz -X.diff -X.excludes -X-loaddefs -X-cus-load -X-finder-inf -X.sh.def -X.pyc -X.pyo
 
 	# Clean up the installation tree
-	cd $(deblsp)/lisp/g-client ; rm -rf patches *.html *.org COPYING
+	cd $(deblsp)/lisp/g-client ; rm -rf obsolete patches *.html *.org COPYING
 	cd $(deblsp)/etc ; rm -f Makefile NEWS-* applications.html COPYRIGHT remote.txt
 	cd $(deblsp)/xsl ; rm -f Makefile
 
