@@ -1,3 +1,10 @@
+emacspeak (39.0-2lucid1) lucid; urgency=low
+
+  * Some Emacs versions compatibility fix.
+  * Removed some redundant stuff.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 25 Dec 2013 20:12:32 +0400
+
 emacspeak (39.0-1lucid1) lucid; urgency=low
 
   * New upstream release.

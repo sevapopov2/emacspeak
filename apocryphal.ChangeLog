@@ -1,6 +1,14 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2013-12-25  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-load-path.el:
+	Fixed compatibility with Emacs versions lacking
+	"with-silent-modifications" macro.
+
+	* lisp/emacspeak-advice.el: Duplicate statement removed.
+
 2013-12-21  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-dired.el, lisp/emacspeak-ein.el, lisp/emacspeak-eww.el, lisp/emacspeak-ido.el, lisp/emacspeak-iswitchb.el, lisp/emacspeak-m-player.el, lisp/emacspeak-ses.el, lisp/emacspeak-webspace.el, lisp/emacspeak-wizards.el, lisp/g-client/Makefile, lisp/g-client/greader.el, lisp/g-client/obsolete/greader.el:
