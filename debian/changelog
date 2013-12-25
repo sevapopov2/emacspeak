@@ -1,3 +1,10 @@
+emacspeak (39.0-2precise1) precise; urgency=low
+
+  * Some Emacs versions compatibility fix.
+  * Removed some redundant stuff.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 25 Dec 2013 20:09:18 +0400
+
 emacspeak (39.0-1precise1) precise; urgency=low
 
   * New upstream release.
