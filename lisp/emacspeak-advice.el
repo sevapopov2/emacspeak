@@ -77,7 +77,6 @@
 (require 'emacspeak-speak)
 (require 'emacspeak-sounds)
 (require 'ansi-color)
-(require 'emacspeak-pronounce)
 (eval-when-compile
   (require 'which-func nil))
 
