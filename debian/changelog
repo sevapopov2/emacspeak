@@ -1,3 +1,9 @@
+emacspeak (39.0-3) unstable; urgency=low
+
+  * Voicification fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 03 Jan 2014 13:52:18 +0400
+
 emacspeak (39.0-2) unstable; urgency=low
 
   * Some Emacs versions compatibility fix.
