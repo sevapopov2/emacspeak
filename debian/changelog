@@ -1,3 +1,9 @@
+emacspeak (39.0-3precise1) precise; urgency=low
+
+  * Voicification fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 03 Jan 2014 14:16:23 +0400
+
 emacspeak (39.0-2precise1) precise; urgency=low
 
   * Some Emacs versions compatibility fix.
