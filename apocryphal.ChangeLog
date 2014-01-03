@@ -1,6 +1,11 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2014-01-03  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-personality.el:
+	Don't trash the advices for text properties removal functions.
+
 2013-12-25  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-load-path.el:

@@ -1,3 +1,9 @@
+emacspeak (39.0-3wheezy1) wheezy; urgency=low
+
+  * Voicification fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 03 Jan 2014 14:24:38 +0400
+
 emacspeak (39.0-2wheezy1) wheezy; urgency=low
 
   * Some Emacs versions compatibility fix.
