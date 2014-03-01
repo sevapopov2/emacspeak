@@ -1,6 +1,10 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2014-03-01  author  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-w3m.el: Fixed stack overflow on preparing some pages.
+
 2014-01-03  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-personality.el:
