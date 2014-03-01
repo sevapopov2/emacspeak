@@ -87,7 +87,7 @@ many available corrections."
           (ems-set-personality-temporarily
            start end voice-bolden (thing-at-point 'line)))
     (with-current-buffer scratch-buffer
-      (setq voice-lock-mode t)
+      (voice-lock-mode (if global-voice-lock-mode 1 -1))
       (setq buffer-undo-list t)
       (dtk-set-punctuations 'all)
       (erase-buffer)
@@ -152,9 +152,9 @@ many available corrections."
           (emacspeak-speak-messages nil))
       (setq emacspeak-last-message nil)
       ad-do-it
-      (when (ems-interactive-p )
-        (emacspeak-speak-message-again))
-      (emacspeak-auditory-icon 'task-done)))
+      (emacspeak-auditory-icon 'task-done)
+      (when (ems-interactive-p)
+        (emacspeak-speak-message-again))))
    (t ad-do-it))
   ad-return-value)
 
