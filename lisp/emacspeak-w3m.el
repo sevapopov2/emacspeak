@@ -721,10 +721,10 @@ Indicate change of selection with
   "Apply requested transform if any before displaying the HTML. "
   (when emacspeak-w3m-text-input-field-types
     (goto-char (point-min))
-    (while (re-search-forward (format "<input[ \t\r\f\n]\\([^>]*[ \t\r\f\n]\\)?type=\"\\(%s\\)\""
+    (while (re-search-forward (format "<input[^>]*?[[:blank:]]type=\"\\(%s\\)\""
                                       emacspeak-w3m-text-input-field-types)
                               nil t)
-      (replace-match "text" t t nil 2)))
+      (replace-match "text" t t nil 1)))
   (when (and emacspeak-we-xsl-p emacspeak-we-xsl-transform)
     (let* ((content-charset (or (ad-get-arg 1) w3m-current-coding-system))
            (emacspeak-xslt-options

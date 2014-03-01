@@ -1,3 +1,9 @@
+emacspeak (39.0-4precise1) precise; urgency=low
+
+  * Fixed W3m behaviour. See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 01 Mar 2014 19:41:16 +0400
+
 emacspeak (39.0-3precise1) precise; urgency=low
 
   * Voicification fix.
