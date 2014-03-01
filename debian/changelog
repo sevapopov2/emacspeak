@@ -1,3 +1,9 @@
+emacspeak (39.0-4lucid1) lucid; urgency=low
+
+  * Fixed W3m behaviour. See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 01 Mar 2014 19:38:31 +0400
+
 emacspeak (39.0-3lucid1) lucid; urgency=low
 
   * Voicification fix.
