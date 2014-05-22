@@ -1,7 +1,15 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
-2014-03-01  author  Igor B. Poretsky <poretsky@mlbox.ru>
+2014-05-22  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-widget.el:
+	Fixed auditory feedback on widget button press when current buffer
+	changes.
+
+	* lisp/emacspeak-org.el: A bit more auditory feedback.
+
+2014-03-01  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-w3m.el: Fixed stack overflow on preparing some pages.
 

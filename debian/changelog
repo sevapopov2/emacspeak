@@ -1,3 +1,9 @@
+emacspeak (39.0-5precise1) precise; urgency=low
+
+  * Some auditory feedback fixes. See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 22 May 2014 20:22:27 +0400
+
 emacspeak (39.0-4precise1) precise; urgency=low
 
   * Fixed W3m behaviour. See apocryphal.ChangeLog for details.
