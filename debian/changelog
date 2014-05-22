@@ -1,3 +1,9 @@
+emacspeak (39.0-5) unstable; urgency=low
+
+  * Some auditory feedback fixes. See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 22 May 2014 20:05:12 +0400
+
 emacspeak (39.0-4) unstable; urgency=low
 
   * Fixed W3m behaviour. See apocryphal.ChangeLog for details.
