@@ -1,5 +1,6 @@
-Emacspeak  Revision 8590
+Emacspeak  Revision apocryphal 8590
 Distribution created by raman on retriever.mtv.corp.google.com
+Modified by Igor B. Poretsky
 Unpack the  distribution And type make config 
 Then type make
 See the Makefile for details. 

@@ -54,6 +54,12 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function browse-url-interactive-arg "ext:browse-url.el" (PROMPT))
+(declare-function eww "ext:eww.el" (URL))
+
+;;}}}
 ;;{{{ Map Faces To Voices:
 
 
