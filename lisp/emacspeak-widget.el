@@ -580,6 +580,7 @@ Returns a string with appropriate personality."
      (widget                           ; First record some state:
       (let ((pos (ad-get-arg 0))
             (old-position (point))
+            (old-buffer (current-buffer))
             (inhibit-read-only t))
         (cond
          ((and
@@ -593,6 +594,9 @@ Returns a string with appropriate personality."
           (call-interactively 'emacspeak-we-url-expand-and-execute))
          (t ad-do-it
             (cond
+             ((not (eq (current-buffer) old-buffer))
+              (emacspeak-auditory-icon 'large-movement)
+              (emacspeak-speak-mode-line))
              ((= old-position (point )) ;did not move
               (emacspeak-auditory-icon 'button)
               (emacspeak-widget-summarize (widget-at pos)))
