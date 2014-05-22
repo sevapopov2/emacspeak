@@ -472,11 +472,16 @@
 
 ;;}}}
 ;;{{{ fix misc commands:
-(defadvice org-end-of-line (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (dtk-stop)
-    (emacspeak-auditory-icon 'select-object)))
+
+(loop for f in
+      '(org-beginning-of-line org-end-of-line)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p )
+            (dtk-stop)
+            (emacspeak-auditory-icon 'select-object)))))
 
 (loop for f in
       '(
