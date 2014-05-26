@@ -283,8 +283,7 @@ Provide auditory icon when finished."
   "Set up emacspeak dired."
   (declare (special global-voice-lock-mode))
   (voice-lock-mode (if global-voice-lock-mode 1 -1))
-  (emacspeak-dired-label-fields)
-  (emacspeak-dired-setup-keys))
+  (emacspeak-dired-label-fields))
 (loop
  for  f in
  '(dired ido-dired
@@ -294,7 +293,6 @@ Provide auditory icon when finished."
   `(defadvice ,f (after emacspeak pre act comp)
      "Set up emacspeak."
      (when (ems-interactive-p)
-       (emacspeak-dired-initialize)
        (emacspeak-auditory-icon 'open-object )
        (emacspeak-speak-mode-line)))))
 
@@ -549,7 +547,8 @@ On a directory line, run du -s on the directory to speak its size."
   (define-key dired-mode-map "\C-t" 'emacspeak-dired-speak-symlink-target)
   (define-key dired-mode-map "\C-i" 'emacspeak-speak-next-field)
   (define-key dired-mode-map  "," 'emacspeak-speak-previous-field))
-(add-hook 'emacspeak-dired-initialize 'append)
+(add-hook 'dired-mode-hook 'emacspeak-dired-initialize 'append)
+(add-hook 'dired-mode-hook 'emacspeak-dired-setup-keys)
 
 ;;}}}
 (provide 'emacspeak-dired)
