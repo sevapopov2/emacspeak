@@ -174,9 +174,7 @@
        (emacspeak-speak-line )))))
 (loop
  for f in
- '(tab-to-tab-stop indent-for-tab-command reindent-then-newline-and-indent
-                   indent-sexp indent-pp-sexp
-                   indent-region indent-relative)
+ '(tab-to-tab-stop indent-for-tab-command indent-relative)
  do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
@@ -1295,6 +1293,30 @@ Produce an auditory icon if possible."
              (count-lines (region-beginning)
                           (region-end)))))
 
+(defadvice reindent-then-newline-and-indent (after emacspeak pre act comp)
+  "Provide auditory feedback to indicate indentation."
+  (when (ems-interactive-p )
+    (emacspeak-speak-line)))
+
+(defadvice indent-region (after emacspeak pre act comp)
+  "Provide auditory feedback to indicate indentation."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon 'fill-object)
+    (message "Indented current region containing %s lines"
+             (count-lines (region-beginning)
+                          (region-end)))))
+
+(loop
+ for f in
+ '(indent-sexp indent-pp-sexp)
+ do
+ (eval
+  `(defadvice ,f  (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p )
+       (emacspeak-auditory-icon 'fill-object )
+       (message "Indented current s expression ")))))
+
 ;;}}}
 ;;{{{ vc:
 
@@ -1706,21 +1728,41 @@ Auditory highlight indicates position of point."
             (let ((emacspeak-show-point t))
               (emacspeak-speak-line))))))
 
+(defadvice newline (before emacspeak pre act comp)
+  "Speak the previous line if line echo is on.
+See command \\[emacspeak-toggle-line-echo].  Otherwise cue the user to
+the newly created blank line."
+  (declare (special emacspeak-line-echo ))
+  (when (ems-interactive-p )
+    (cond
+     (emacspeak-line-echo (emacspeak-speak-line ))
+     (t(when dtk-stop-immediately (dtk-stop))
+       (dtk-tone 225 120 'force   )))))
+
 (loop
  for f in
- '(newline newline-and-indent comment-indent-new-line)
+ '(newline-and-indent comment-indent-new-line)
  do
  (eval
-  `(defadvice ,f (before emacspeak pre act comp)
+  `(defadvice ,f (around emacspeak pre act comp)
      "Speak the previous line if line echo is on.
-See command \\[emacspeak-toggle-line-echo]. Otherwise cue the user to
-the newly created blank line."
+See command \\[emacspeak-toggle-line-echo].
+Otherwise cue user to the line just created."
      (declare (special emacspeak-line-echo ))
-     (when (ems-interactive-p )
+     (cond
+      ((ems-interactive-p)
        (cond
-        (emacspeak-line-echo (emacspeak-speak-line ))
-        (t(when dtk-stop-immediately (dtk-stop))
-          (dtk-tone 225 120 'force )))))))
+        (emacspeak-line-echo
+         ad-do-it
+         (emacspeak-speak-line ))
+        (t ad-do-it
+           (dtk-speak-using-voice voice-annotate
+                                  (format
+                                   "indent %s"
+                                   (current-column)))
+           (dtk-force))))
+      (t ad-do-it))
+     ad-return-value)))
 (loop
  for f in
  '(keyboard-quit keyboard-escape-quit)
