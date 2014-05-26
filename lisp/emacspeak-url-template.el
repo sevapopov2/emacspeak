@@ -1675,15 +1675,16 @@ See http://www.cbsradio.com/streaming/index.html for a list of CBS  stations tha
       (set-buffer standard-output)
       (fill-region (point-min)
                    (point-max)))
-    (help-print-return-message))
-  (emacspeak-speak-help)
-  (emacspeak-auditory-icon 'help))
+    (ems-print-help-return-message))
+  (emacspeak-auditory-icon 'help)
+  (emacspeak-speak-help))
+
 (defun emacspeak-url-template-generate-name-setter (name)
   "Generate a setter that sets emacspeak-eww-url-template
 to specified name for use as a callback."
   (eval
-   (function
-    `(lambda ()
+   `(function
+     (lambda ()
        (declare (special emacspeak-eww-url-template))
        (setq emacspeak-eww-url-template ',name)))))
 

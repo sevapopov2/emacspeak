@@ -63,6 +63,11 @@
 (require 'emacspeak-webutils)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function emacspeak-w3-html-stack "emacspeak-w3.el" ())
+
+;;}}}
 ;;{{{ URL Rewrite:
 
 ;;;###autoload

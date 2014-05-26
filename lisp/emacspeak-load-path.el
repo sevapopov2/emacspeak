@@ -53,11 +53,44 @@
 (setq byte-compile-warnings t)
                                         ;'(redefine callargs free-vars unresolved obsolete))
 
-(cond
- ((string-match "24" emacs-version)
-  (defsubst ems-interactive-p  ()
-    "called-interactively-p 'interactive"
-    (called-interactively-p 'interactive)))
- (t (defalias 'ems-interactive-p  'interactive-p )))
+(condition-case nil
+    (progn
+      (called-interactively-p nil)
+      (defsubst ems-interactive-p  ()
+        "called-interactively-p 'interactive"
+        (called-interactively-p 'interactive)))
+  (error (defalias 'ems-interactive-p  'interactive-p )))
+
+(if (fboundp 'process-live-p)
+    (defalias 'ems-process-live-p 'process-live-p)
+  (defun ems-process-live-p (process)
+    "Returns non-nil if process is alive."
+    (memq (process-status process) '(run open listen connect stop))))
+
+(if (fboundp 'help-print-return-message)
+    (defalias 'ems-print-help-return-message 'help-print-return-message)
+  (defalias 'ems-print-help-return-message 'print-help-return-message))
+
+(unless (fboundp 'with-silent-modifications)
+  (defmacro with-silent-modifications (&rest body)
+    "Execute BODY, pretending it does not modify the buffer.
+If BODY performs real modifications to the buffer's text, other
+than cosmetic ones, undo data may become corrupted.
+Typically used around modifications of text-properties which do not really
+affect the buffer's content."
+    (declare (debug t) (indent 0))
+    (let ((modified (make-symbol "modified")))
+      `(let* ((,modified (buffer-modified-p))
+              (buffer-undo-list t)
+              (inhibit-read-only t)
+              (inhibit-modification-hooks t)
+              deactivate-mark
+              buffer-file-name
+              buffer-file-truename)
+         (unwind-protect
+             (progn
+               ,@body)
+           (unless ,modified
+             (restore-buffer-modified-p nil)))))))
 
 (provide 'emacspeak-load-path)
