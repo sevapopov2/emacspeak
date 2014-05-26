@@ -1602,6 +1602,7 @@ Interactive prefix arg speaks buffer info."
                      column-number-mode line-number-mode
                      emacspeak-mail-alert mode-line-format ))
   (force-mode-line-update)
+  (when dtk-stop-immediately (dtk-stop))
   (ems-sync-mode-punctuation-setting major-mode)
   (emacspeak-dtk-sync)
   (when   emacspeak-mail-alert (emacspeak-mail-alert-user))
