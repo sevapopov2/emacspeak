@@ -58,6 +58,7 @@
 ;;{{{ Forward declarations
 
 (declare-function org-capture "ext:org-capture.el" (&optional goto keys))
+(declare-function org-table-get-field "ext:org-table.el" (&optional n replace))
 
 ;;}}}
 ;;{{{ voice locking:

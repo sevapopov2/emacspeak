@@ -715,8 +715,6 @@ icon."
 Produce an auditory icon if possible."
   (let ((deactivate-mark nil))
     (emacspeak-auditory-icon 'ask-short-question )
-    (when emacspeak-speak-messages-pause
-      (dtk-pause))
     (tts-with-punctuations 'all
                            (dtk-speak (format "%s  y or n" (ad-get-arg  0 ))))
     ad-do-it

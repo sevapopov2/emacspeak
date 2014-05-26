@@ -64,6 +64,14 @@
 (declare-function widget-at "wid-edit.el" (&optional pos))
 (declare-function widget-forward "wid-edit.el" (arg))
 (declare-function imenu--make-index-alist "imenu.el" (&optional NOERROR))
+(declare-function w3-view-this-url "ext:w3.el" (&optional no-show))
+(declare-function w3-fetch "ext:w3.el" (&optional url target))
+(declare-function w3-relative-link "ext:w3.el" (url))
+(declare-function w3-masquerade-stub "ext:w3-emulate.el" (arg app version))
+(declare-function w3-setup-terminal-chars "ext:w3-display.el" ())
+(declare-function w3-speak-summarize-form-field "ext:w3-speak.el" ())
+(declare-function w3-table-info "ext:w3-speak-table.el" (&optional to-depth noerror))
+(declare-function w3-table-move-to-table-end "ext:w3-speak-table.el" (&optional at-depth table-info))
 
 ;;}}}
 ;;{{{  custom

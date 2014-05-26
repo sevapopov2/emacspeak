@@ -61,6 +61,7 @@
 ;;{{{ Forward declarations
 
 (declare-function emacspeak-calendar-setup-sunrise-sunset "ext:emacspeak-calendar.el" ())
+(declare-function emacspeak-auditory-icon "ext:emacspeak-sounds.el" (icon))
 
 ;;}}}
 ;;{{{ Customizations

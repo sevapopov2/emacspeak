@@ -84,6 +84,7 @@
 (declare-function emacspeak-play-startup-icon "emacspeak.el" ())
 (declare-function emacspeak-info-speak-header "emacspeak-info.el" ())
 (declare-function which-function "which-func.el" ())
+(declare-function calendar-cursor-to-nearest-date "ext:cal-move.el" ())
 
 ;;}}}
 ;;{{{  custom group
