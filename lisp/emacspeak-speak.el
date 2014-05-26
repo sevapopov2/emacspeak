@@ -1,5 +1,5 @@
 ;;; emacspeak-speak.el --- Implements Emacspeak's core speech services
-;;; $Id: emacspeak-speak.el 8578 2013-11-25 17:59:49Z tv.raman.tv $
+;;; $Id: emacspeak-speak.el 9113 2014-04-30 15:44:07Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Contains the functions for speaking various chunks of text
 ;;; Keywords: Emacspeak,  Spoken Output
@@ -87,6 +87,7 @@
 
 ;;}}}
 ;;{{{  custom group
+
 (defgroup emacspeak-speak nil
   "Basic speech output commands."
   :group 'emacspeak)
@@ -96,9 +97,27 @@
 
 (defsubst ems-same-line-p (orig current)
   "Check if current is in the same line as orig."
-  (save-excursion
-    (goto-char orig)
-    (< current (line-end-position))))
+  (let ((deactivate-mark nil))
+    (save-excursion
+      (goto-char orig)
+      (< current (line-end-position)))))
+
+;;}}}
+;;{{{ Per-Mode Punctuations:
+
+(defvar emacspeak-speak-mode-punctuation-table
+  (make-hash-table :test #'eq)
+  "Store mode-specific punctuation mode setting.")
+
+(defsubst ems-get-mode-punctuation-setting (mode)
+  "Return punctuation setting for specified mode."
+  (declare (special emacspeak-speak-mode-punctuation-table))
+  (gethash  mode emacspeak-speak-mode-punctuation-table))
+
+(defsubst ems-set-mode-punctuation-setting (mode value)
+  "Set punctuation setting for specified mode."
+  (declare (special emacspeak-speak-mode-punctuation-table))
+  (puthash   mode value emacspeak-speak-mode-punctuation-table))
 
 ;;}}}
 ;;{{{ Shell Command Helper:
@@ -109,6 +128,7 @@
 
 (defsubst  emacspeak-shell-command (command &rest args)
   "Run shell command and speak its output."
+  (interactive)
   (let ((emacspeak-speak-messages nil)
         (curdir default-directory)
         (output (get-buffer-create "*Emacspeak Shell Command*")))
@@ -118,9 +138,7 @@
       (setq default-directory curdir)
       (if args
           (apply 'call-process command nil output nil args)
-        (shell-command
-         command
-         output))
+        (shell-command command output))
       (emacspeak-auditory-icon 'open-object)
       (dtk-speak (buffer-string)))))
 
@@ -139,9 +157,9 @@
         (set-buffer completions )
         (dtk-chunk-on-white-space-and-punctuations)
         (next-completion 1)
-        (tts-with-punctuations 'all
-                               (dtk-speak
-                                (buffer-substring (point) (point-max))))))
+        (tts-with-punctuations
+         'all
+         (dtk-speak (buffer-substring (point) (point-max))))))
      (t (emacspeak-speak-line)))))
 
 ;;}}}
@@ -171,23 +189,23 @@ Argument BODY specifies forms to execute."
 
 (defmacro ems-with-errors-silenced  (&rest body)
   "Evaluate body  after temporarily silencing auditory error feedback."
-  `(progn
-     (let ((emacspeak-speak-errors nil))
-       ,@body)))
+  `(let ((emacspeak-speak-errors nil))
+     ,@body))
 
 ;;}}}
 ;;{{{ getting and speaking text ranges
 
 (defsubst emacspeak-speak-get-text-range (property)
-  "Return text range  around  at point and having the same value as  specified by argument PROPERTY."
+  "Return text range  around   point and having the same value as  specified by argument PROPERTY."
   (buffer-substring
-   (previous-single-property-change (1+ (point))
-                                    property nil (point-min))
+   (previous-single-property-change
+    (1+ (point)) property nil (point-min))
    (next-single-property-change
     (point) property nil (point-max))))
 
 (defun emacspeak-speak-text-range (property)
   "Speak text range identified by this PROPERTY."
+  (interactive)
   (dtk-speak (emacspeak-speak-get-text-range property)))
 
 ;;}}}
@@ -195,7 +213,6 @@ Argument BODY specifies forms to execute."
 
 (defun emacspeak-audio-annotate-paragraphs ()
   "Set property auditory-icon at front of all paragraphs."
-  (interactive )
   (save-excursion
     (let ((deactivate-mark nil))
       (goto-char (point-max))
@@ -213,8 +230,7 @@ Argument BODY specifies forms to execute."
   :type 'symbol)
 
 (defvar emacspeak-speak-voice-annotated-paragraphs nil
-  "Records if paragraphs in this buffer have been voice
-  annotated.")
+  "Records if paragraphs in this buffer have been voice annotated.")
 
 (make-variable-buffer-local 'emacspeak-speak-voice-annotated-paragraphs)
 
@@ -249,8 +265,26 @@ Useful to do this before you listen to an entire buffer."
 ;;}}}
 ;;{{{  sync emacspeak and TTS:
 
-(defalias 'emacspeak-dtk-sync 'dtk-interp-sync)
+(defsubst ems-sync-mode-punctuation-setting (mode)
+  "Update per-mode punctuation setting if needed."
+  (declare (special dtk-punctuation-mode))
+  (let ((p (ems-get-mode-punctuation-setting mode)))
+    (when (and p (not (eq p dtk-punctuation-mode)))
+      (dtk-set-punctuations p))))
 
+(defalias 'emacspeak-dtk-sync 'dtk-interp-sync)
+;;;###autoload
+(defun emacspeak-speak-set-mode-punctuations  (setting)
+  "Set punctuation mode for all buffers in current mode."
+  (interactive
+   (list
+    (intern (completing-read "Punctuation Mode: " '(all none some)))))
+  (declare (special major-mode))
+  (ems-set-mode-punctuation-setting major-mode setting)
+  (ems-sync-mode-punctuation-setting major-mode)
+  (when (ems-interactive-p)
+    (message "Set punctuations to %s in %s" setting mode-name)
+    (emacspeak-auditory-icon 'select-objjjject)))
 ;;}}}
 ;;{{{ helper function --decode ISO date-time used in ical:
 
@@ -333,7 +367,7 @@ Value returned is compatible with `encode-time'."
 
 ;;;###autoload
 (defcustom emacspeak-speak-embedded-url-pattern
-  "<http:.*>"
+  "<https?:[^ \t]*>"
   "Pattern to recognize embedded URLs."
   :type 'string
   :group 'emacspeak-speak)
@@ -357,10 +391,11 @@ point is spoken."
 (make-variable-buffer-local 'emacspeak-action-mode)
 
 ;;; Record in the mode line
-(or (assq 'emacspeak-action-mode minor-mode-alist)
-    (setq minor-mode-alist
-          (append minor-mode-alist
-                  '((emacspeak-action-mode " Action")))))
+(or
+ (assq 'emacspeak-action-mode minor-mode-alist)
+ (setq minor-mode-alist
+       (append minor-mode-alist
+               '((emacspeak-action-mode " Action")))))
 
 ;;; Return the appropriate action hook variable that defines actions
 ;;; for this mode.
@@ -447,7 +482,6 @@ current local  value to the result.")
 
 ;;}}}
 ;;{{{ compute percentage into the buffer:
-;;{{{ simple percentage getter
 
 (defsubst emacspeak-get-current-percentage-into-buffer ()
   "Return percentage of position into current buffer."
@@ -466,8 +500,6 @@ current local  value to the result.")
      ((= 0 percent) " top ")
      ((= 100 percent) " bottom ")
      (t (format " %d%% " percent)))))
-
-;;}}}
 
 ;;}}}
 ;;{{{  indentation:
@@ -614,7 +646,9 @@ emacspeak-speak-filter-table)\n" k v )))
   "Persist emacspeak filter settings for future sessions."
   (declare (special emacspeak-speak-filter-persistent-store
                     emacspeak-speak-filter-table))
-  (let ((buffer (find-file-noselect
+  (let ((print-level nil)
+        (print-length nil)
+        (buffer (find-file-noselect
                  emacspeak-speak-filter-persistent-store)))
     (save-current-buffer
       (set-buffer buffer)
@@ -674,8 +708,8 @@ the sense of the filter. "
     (message "Unset column filter")
     (setq emacspeak-speak-line-column-filter nil))))
 
-;;}}}                                   ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
-;;{{{  Speak units of text              ; ; ;
+;;}}}
+;;{{{  Speak units of text              
 
 (defsubst emacspeak-speak-region (start end )
   "Speak region.
@@ -751,39 +785,6 @@ with a long string of gibberish."
   "Pattern that matches white space."
   :type 'string
   :group 'emacspeak)
-
-(unless (fboundp 'format-mode-line)
-  (defun format-mode-line (spec)
-    "Process mode line format spec."
-    (cond
-;;; leaves                              ; ; ; ; ; ; ; ;
-     ((symbolp spec) (symbol-value  spec))
-     ((stringp spec) spec)
-;;; leaf + tree:                        ; ; ; ; ; ; ; ;
-     ((and (listp spec)
-           (stringp (car spec)))
-      (concat
-       (car spec)
-       (format-mode-line (cdr spec))))
-     ((and (listp spec)
-           (symbolp (car spec))
-           (null (car spec)))
-      (format-mode-line (cdr spec)))
-     ((and (listp spec)
-           (eq :eval  (car spec)))
-      (eval (cadr spec)))
-     ((and (listp spec)
-           (symbolp (car spec)))
-      (concat
-       (format-mode-line (symbol-value (car spec)))
-       (if (cdr spec)
-           (format-mode-line (cdr spec))
-         "")))
-     ((and (listp spec)
-           (caar spec))
-      (concat
-       (format-mode-line  (symbol-value (cadar spec)))
-       (format-mode-line (cdr spec)))))))
 
 ;;;###autoload                          ;
 (defun emacspeak-speak-line (&optional arg)
@@ -1600,7 +1601,7 @@ Interactive prefix arg speaks buffer info."
                      column-number-mode line-number-mode
                      emacspeak-mail-alert mode-line-format ))
   (force-mode-line-update)
-  (dtk-stop)
+  (ems-sync-mode-punctuation-setting major-mode)
   (emacspeak-dtk-sync)
   (when   emacspeak-mail-alert (emacspeak-mail-alert-user))
   (cond
@@ -1849,6 +1850,7 @@ Optional second arg `set' sets the TZ environment variable as well."
    (list
     (let ((completion-ignore-case t)
           (insert-default-directory nil)
+          (ido-case-fold t)
           (read-file-name-completion-ignore-case t))
       (read-file-name
        "Timezone: "
@@ -2507,7 +2509,8 @@ Otherwise just display a message."
 ;;Return current window contents
 (defsubst emacspeak-get-window-contents ()
   "Return window contents."
-  (let ((start nil))
+  (let ((deactivate-mark nil)
+        (start nil))
     (save-excursion
       (move-to-window-line 0)
       (setq start (point))
@@ -3334,6 +3337,44 @@ also copied to the kill ring for convenient yanking."
     (if address
         (ems-get-ip-address)
       (ems-get-active-network-interfaces)))))
+
+;;}}}
+;;{{{ Smart date prompers:
+
+(defun emacspeak-speak-collect-date (prompt time-format-string)
+  "Smart date collector.
+Prompts with `prompt'.
+`time-format-string' is format argument for format-time-string.
+This function is sensitive to calendar mode when prompting."
+  (let ((default (format-time-string time-format-string))) ; today is default
+    (when (eq major-mode 'calendar-mode)
+                                        ;get smart default from calendar
+      (let ((date (calendar-cursor-to-nearest-date)))
+        (setq default (format-time-string time-format-string
+                                          (apply 'encode-time 0 0
+                                                 0
+                                                 (second date)
+                                                 (first date)
+                                                 (list (third date )))))))
+    (read-from-minibuffer prompt
+                          default
+                          nil nil nil
+                          default)))
+
+(defun emacspeak-speak-read-date-year/month/date ()
+  "Return today as yyyy/mm/dd"
+  (emacspeak-speak-collect-date "Date:"
+                                "%Y/%m/%d"))
+
+(defun emacspeak-speak-date-YearMonthDate ()
+  "Return today as yyyymmdd"
+  (emacspeak-speak-collect-date "Date:"
+                                "%Y%m%d"))
+
+(defun emacspeak-speak-date-month/date ()
+  "Return today as mm/dd"
+  (emacspeak-speak-collect-date "Date:"
+                                "%m/%d") )
 
 ;;}}}
 (provide 'emacspeak-speak )
