@@ -1,4 +1,6 @@
 usr/share/emacs/site-lisp/emacspeak/etc/NEWS usr/share/doc/emacspeak/NEWS
+usr/share/emacs/site-lisp/emacspeak/etc/applications.html usr/share/doc/emacspeak/applications.html
+usr/share/emacs/site-lisp/emacspeak/etc/tips.html usr/share/doc/emacspeak/tips.html
 usr/share/emacs/site-lisp/emacspeak/etc/FAQ usr/share/doc/emacspeak/FAQ
 usr/share/emacs/site-lisp/emacspeak/etc/HELP usr/share/doc/emacspeak/HELP
 usr/share/emacs/site-lisp/emacspeak/etc/emacspeak.sh usr/bin/emacspeak

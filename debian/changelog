@@ -1,3 +1,9 @@
+emacspeak (40.0-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 27 May 2014 18:44:51 +0400
+
 emacspeak (39.0-5) unstable; urgency=low
 
   * Some auditory feedback fixes. See apocryphal.ChangeLog for details.

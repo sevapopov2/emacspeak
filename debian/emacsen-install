@@ -48,10 +48,7 @@ do [ -e "${file%.elc}.el" ] || rm -f $file
 done
 
 cd g-client
-find ../../${ELDIR_REL}/lisp/g-client -maxdepth 1 -mindepth 1 -not -name "*.in" -not -name indent-files.el -not -name json.el -exec ln -s {} \; 2>/dev/null
-if [ -z `${FLAVOR} ${SITEFLAG} -q -batch -eval '(message (locate-library "json"))' 2>&1` ]
-then ln -s ../../${ELDIR_REL}/lisp/g-client/json.el
-fi
+find ../../${ELDIR_REL}/lisp/g-client -maxdepth 1 -mindepth 1 -not -name "*.in" -not -name indent-files.el -exec ln -s {} \; 2>/dev/null
 for file in *.elc
 do [ -e "${file%.elc}.el" ] || rm -f $file
 done

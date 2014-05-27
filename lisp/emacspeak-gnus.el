@@ -1,5 +1,5 @@
 ;;; emacspeak-gnus.el --- Speech enable GNUS -- Fluent spoken access to usenet
-;;; $Id: emacspeak-gnus.el 8535 2013-11-13 01:49:39Z tv.raman.tv $
+;;; $Id: emacspeak-gnus.el 9072 2014-04-16 15:27:01Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension to speech enable Gnus
 ;;; Keywords: Emacspeak, Gnus, Advice, Spoken Output, News
@@ -42,20 +42,17 @@
 ;;; Commentary
 
 ;;; This module advices gnus to speak. 
+;;; Updating support in 2014 (Emacspeak is nearly 20 years old)
 
 ;;}}}
 ;;{{{ requires
+(require 'cl)
 (require 'emacspeak-preamble)
+(require 'emacspeak-hide)
 (require 'gnus)
 (require 'gnus-art)
 (require 'gnus-sum)
-
-;; This may not be needed. It seems emacs version of gnus had 
-;; gnus-article-buffer as far back as emacs 21.
-(unless (and (symbolp 'gnus-article-buffer)
-             (boundp 'gnus-article-buffer))
-  (defvar gnus-article-buffer "*Article*"))
-
+(require 'gm-nnir) ; for smart GMail search
 ;;}}}
 ;;{{{  Customizations:
 
@@ -65,7 +62,7 @@
   :group 'gnus
   :prefix "emacspeak-gnus-")
 
-(defcustom emacspeak-gnus-punctuation-mode  'some
+(defcustom emacspeak-gnus-punctuation-mode  'all
   "Pronunciation mode to use for gnus buffers."
   :type '(choice
           (const  :tag "Ignore" nil)
@@ -73,6 +70,14 @@
           (const  :tag "all" all))
   :group 'emacspeak-gnus)
 
+(defcustom  emacspeak-gnus-large-article 100
+  "*Articles having more than
+emacspeak-gnus-large-article lines will be considered to be a large article.
+A large article is not spoken all at once;
+instead you hear only the first screenful."
+  :type 'integer
+  :group 'emacspeak-gnus 
+  )
 ;;; These customizations to gnus make it convenient to listen to news:
 ;;; You can read news mostly by using the four arrow keys.
 ;;; By default all article headers are hidden, so you hear the real news.
@@ -82,16 +87,11 @@
 (defun emacspeak-gnus-setup-keys ()
   "Setup Emacspeak keys."
   (declare (special gnus-summary-mode-map
-                    gnus-group-mode-map
+                    gnus-group-mmode-map
                     gnus-article-mode-map))
-  (when (boundp 'gnus-summary-mode-map))
-  (when (boundp 'gnus-article-mode-map)
-    )
-  (when (boundp 'gnus-group-mode-map))
   (define-key gnus-summary-mode-map "\C-t" 'gnus-summary-toggle-header)
-  (define-key gnus-summary-mode-map "T" 'gnus-summary-hide-all-headers )
-  (define-key gnus-summary-mode-map "t"
-    'gnus-summary-show-some-headers)
+  (define-key gnus-summary-mode-map "T" 'emacspeak-gnus-summary-hide-all-headers )
+  (define-key gnus-summary-mode-map "t" 'emacspeak-gnus-summary-show-some-headers)
   (define-key gnus-summary-wash-map "D" 'emacspeak-gnus-summary-downcase-article))
 
 (add-hook 'gnus-started-hook 'emacspeak-gnus-setup-keys)
@@ -99,7 +99,7 @@
 ;;}}}
 ;;{{{  Hiding headers
 
-(defvar  gnus-ignored-most-headers
+(defvar  emacspeak-gnus-ignored-most-headers
   (concat
    "^Path:\\|^Posting-Version:\\|^Article-I.D.:\\|^Expires:"
    "\\|^Date-Received:\\|^References:\\|^Control:\\|^Xref:"
@@ -112,18 +112,18 @@
    "\\|^Followup-To:\\|^Original-Cc:\\|^Reply-To:")
   "Article headers to ignore when only important article headers are to be
 spoken.
-See command \\[gnus-summary-show-some-headers].")
+See command \\[emacspeak-gnus-summary-show-some-headers].")
 
-(defun gnus-summary-show-some-headers ()
+(defun emacspeak-gnus-summary-show-some-headers ()
   "Show only the important article headers,
 i.e. sender name, and subject."
   (interactive)
-  (declare (special gnus-ignored-most-headers )) 
-  (let ((gnus-ignored-headers gnus-ignored-most-headers ))
+  (declare (special emacspeak-gnus-ignored-most-headers )) 
+  (let ((gnus-ignored-headers emacspeak-gnus-ignored-most-headers ))
     (gnus-summary-toggle-header 1)
     (gnus-summary-toggle-header -1)))
 
-(defun gnus-summary-hide-all-headers()
+(defun emacspeak-gnus-summary-hide-all-headers()
   "Hide all headers in the article.
 Use this command if you don't want to listen to any article headers when
 reading news."
@@ -150,7 +150,6 @@ instead you hear only the first screenful.")
                     gnus-article-buffer))
   (with-current-buffer gnus-article-buffer
     (goto-char (point-min))
-    (setq dtk-punctuation-mode 'some)
     (emacspeak-dtk-sync)
     (cond
      ((< (count-lines (point-min) (point-max))
@@ -252,6 +251,11 @@ Helps to prevent words from being spelled instead of spoken."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'task-done)
     (message "Done ")))
+
+(defadvice nnheader-message-maybe (around emacspeak pre act comp)
+  "Silence emacspeak"
+  (let ((emacspeak-speak-messages nil))
+    ad-do-it))
 
 ;;}}}
 ;;{{{  Newsgroup selection
@@ -643,6 +647,12 @@ indicating the article is being opened."
 	 'deselect-object
        'mark-object))))
 
+(defadvice gnus-summary-hide-all-threads (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-line)))
+
 ;;}}}
 ;;{{{  Article reading
 
@@ -709,45 +719,21 @@ an auditory icon if possible."
   (voice-lock-mode (if global-voice-lock-mode 1 -1)))
 
 ;;}}}
-;;{{{ rdc: refreshing the pronunciation  and punctuation mode
+;;{{{ refreshing the pronunciation  and punctuation mode
 
-(add-hook 'gnus-article-mode-hook
-          (function (lambda ()
-                      (dtk-set-punctuations emacspeak-gnus-punctuation-mode)
-                      (emacspeak-pronounce-refresh-pronunciations))))
-
-(add-hook 'gnus-group-mode-hook
-          (function (lambda ()
-                      (dtk-set-punctuations emacspeak-gnus-punctuation-mode)
-                      (emacspeak-pronounce-refresh-pronunciations))))
-
-;; the following is for summary mode.  By default, the 
-;; summary mode hook is defined as gnus-agent-mode
-
-(add-hook 'gnus-agent-mode-hook
-          (function (lambda ()
-                      (dtk-set-punctuations emacspeak-gnus-punctuation-mode)
-                      (emacspeak-pronounce-refresh-pronunciations))))
-
-(add-hook 'gnus-article-edit-mode-hook
-          (function (lambda ()
-                      (dtk-set-punctuations emacspeak-gnus-punctuation-mode)
-                      (emacspeak-pronounce-refresh-pronunciations))))
-
-(add-hook 'gnus-category-mode-hook
-          (function (lambda ()
-                      (dtk-set-punctuations emacspeak-gnus-punctuation-mode)
-                      (emacspeak-pronounce-refresh-pronunciations))))
-
-(add-hook 'gnus-score-mode-hook
-          (function (lambda ()
-                      (dtk-set-punctuations emacspeak-gnus-punctuation-mode)
-                      (emacspeak-pronounce-refresh-pronunciations))))
-
-(add-hook 'gnus-server-mode-hook
-          (function (lambda ()
-                      (dtk-set-punctuations emacspeak-gnus-punctuation-mode)
-                      (emacspeak-pronounce-refresh-pronunciations))))
+(loop
+ for hook  in 
+ '(
+   gnus-article-mode-hook gnus-group-mode-hook gnus-summary-mode-hook
+                          gnus-agent-mode-hook  gnus-article-edit-mode-hook
+                          gnus-server-mode-hook gnus-category-mode-hook
+                          )
+ do
+ (add-hook
+  hook 
+  #'(lambda ()
+      (dtk-set-punctuations emacspeak-gnus-punctuation-mode)
+      (emacspeak-pronounce-refresh-pronunciations))))
 
 (declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
 (emacspeak-pronounce-augment-pronunciations 'gnus-article-mode
@@ -771,8 +757,8 @@ an auditory icon if possible."
    (gnus-cite-1 voice-bolden-medium)
    (gnus-cite-2 voice-lighten) 
    (gnus-cite-3 voice-lighten-extra)
-   (gnus-cite-4 voice-bolden)
-   (gnus-cite-5 voice-bolden-medium)
+   (gnus-cite-4 voice-smoothen)
+   (gnus-cite-5 voice-smoothen-extra)
    (gnus-cite-6 voice-lighten)
    (gnus-cite-7 voice-lighten-extra)
    (gnus-cite-8 voice-bolden)
@@ -795,7 +781,7 @@ an auditory icon if possible."
    ;; on the same thing are given the same voice.  Any user that
    ;; uses low and high interest is sufficiently advanced to change
    ;; the voice to his own preferences
-   (gnus-summary-normal-read voice-bolden)
+   (gnus-summary-normal-read voice-smoothen)
    (gnus-summary-high-read voice-bolden)
    (gnus-summary-low-read voice-bolden)
    (gnus-summary-normal-ticked voice-brighten-extra)
@@ -849,6 +835,7 @@ an auditory icon if possible."
    (gnus-server-denied voice-bolden-extra)
    (gnus-server-offline voice-animate)
    (gnus-server-opened voice-lighten)))
+
 ;;}}}
 (provide 'emacspeak-gnus)
 ;;{{{  end of file 
