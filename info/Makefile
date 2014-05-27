@@ -1,4 +1,4 @@
-#$Id: Makefile 8282 2013-04-01 15:51:37Z tv.raman.tv $
+#$Id: Makefile 8911 2014-03-25 00:53:12Z tv.raman.tv $
 SF_HOME= raman,emacspeak@web.sourceforge.net:/home/groups/e/em/emacspeak/htdocs
 HTML_FILES=$(shell find . -name '*.html' -print)
 TEXINDEX=texindex
@@ -13,8 +13,9 @@ EMACS=emacs
 
 all: emacspeak.info html introducing-emacspeak
 
-info: emacspeak.texi
+info: emacspeak.texi introducing-emacspeak.texi
 	$(MAKEINFO) emacspeak.texi
+	$(MAKEINFO) introducing-emacspeak.texi
 .PHONY: commands.texi 
 
 commands.texi: 
