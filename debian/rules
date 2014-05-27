@@ -64,7 +64,7 @@ install: build-indep
 
 	# Clean up the installation tree
 	cd $(deblsp)/lisp/g-client ; rm -rf obsolete patches *.html *.org COPYING
-	cd $(deblsp)/etc ; rm -f Makefile NEWS-* applications.html COPYRIGHT remote.txt
+	cd $(deblsp)/etc ; rm -f Makefile NEWS-* COPYRIGHT remote.txt
 	cd $(deblsp)/xsl ; rm -f Makefile
 
 	# Fix permissions
