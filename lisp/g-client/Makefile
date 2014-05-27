@@ -53,9 +53,11 @@ gdocs.elc \
 gfeeds.elc \
 gnotebook.elc \
 greader.elc \
+gf.elc \
 gphoto.elc \
 gweb.elc \
 gmaps.elc \
+gm-nnir.elc \
 gtube.elc \
 gsheet.elc
 
@@ -93,7 +95,9 @@ ghealth.elc: ghealth.el g-app.elc
 greader.elc: greader.el g-app.elc
 gsheet.elc: gsheet.el g-app.elc
 gweb.elc: gweb.el g-utils.elc
+gf.elc: gf.el g-utils.elc
 gmaps.elc: gmaps.el g-utils.elc
+gm-nnir.elc: gm-nnir.el 
 gcal.elc: gcal.el g-app.elc
 gcontacts.elc: gcontacts.el
 gdocs.elc: gdocs.el g-app.elc
@@ -104,9 +108,9 @@ org2blogger.elc: org2blogger.el gblogger.elc
 # }}}
 # {{{dist
 
-dist:g-client.tar.bz2
+dist:../g-client.tar.bz2
 
-g-client.tar.bz2: 
+../g-client.tar.bz2: 
 	rm -f $@
 	tar  cfj $@ -X .excludes -C ..  g-client
 

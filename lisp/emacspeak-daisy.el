@@ -67,6 +67,14 @@
 (declare-function mm-display-part "mm-decode.el" (handle &optional no-default))
 (declare-function mm-handle-media-supertype "mm-decode.el" (handle))
 (declare-function url-mark-buffer-as-dead "url.el" (buff))
+(declare-function w3-mode "ext:w3.el" ())
+(declare-function w3-nasty-disgusting-http-equiv-handling "ext:w3.el" (buffer url))
+(declare-function w3-handle-refresh-header "ext:w3.el" (reload))
+(declare-function w3-recall-explicit-coding-system "ext:w3.el" (url))
+(declare-function w3-decode-charset "ext:w3.el" (handle))
+(declare-function w3-notify-when-ready "ext:w3.el" (buff))
+(declare-function w3-prepare-buffer "ext:w3-display.el" ())
+(declare-function w3-prepare-tree "ext:w3-display.el" (parse))
 
 ;;}}}
 ;;{{{  Customization variables

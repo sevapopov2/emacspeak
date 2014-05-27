@@ -1,3 +1,9 @@
+emacspeak (40.0-1squeze1) squeeze; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 27 May 2014 19:14:09 +0400
+
 emacspeak (39.0-5squeeze1) squeeze; urgency=low
 
   * Some auditory feedback fixes. See apocryphal.ChangeLog for details.

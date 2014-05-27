@@ -30,9 +30,7 @@
 ;;;_ , Requires
 
 (require 'org)
-(condition-case nil
-    (require 'org-exp)
-  (error "You need a recent version of org."))
+;(require 'org-exp)
 (require 'gblogger)
 
 ;;;_. Forward declarations

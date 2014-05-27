@@ -1,4 +1,4 @@
 (define-package
   "emacspeak"
-  "39.0"
+  "40.0"
   "Emacspeak --- The  Complete Audio Desktop")
