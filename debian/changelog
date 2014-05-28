@@ -1,3 +1,9 @@
+emacspeak (40.0-2precise1) precise; urgency=low
+
+  * Jabber client support fixes. See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 28 May 2014 20:36:24 +0400
+
 emacspeak (40.0-1precise1) precise; urgency=low
 
   * New upstream release.

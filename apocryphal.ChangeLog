@@ -1,6 +1,16 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2014-05-28  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-jabber.el:
+	Removed duplications. The roster buffer now is not automatically
+	popped up by Emacspeak when connecting, but auditory feedback of the
+	operation is provided instead. IMHO, Emacspeak should not modify
+	essential behaviour of the supported program. Cursor positioning in
+	`emacspeak-jabber-popup-roster' command now takes in account whether
+	key bindings description is enabled or not. Some other minor fixes.
+
 2014-05-25  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	Merged upstream release 40.0
