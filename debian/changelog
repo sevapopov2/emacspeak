@@ -1,3 +1,9 @@
+emacspeak (40.0-2lucid1) lucid; urgency=low
+
+  * Jabber client support fixes. See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 28 May 2014 20:33:50 +0400
+
 emacspeak (40.0-1lucid1) lucid; urgency=low
 
   * New upstream release.
