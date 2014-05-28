@@ -1,3 +1,9 @@
+emacspeak (40.0-2wheezy1) wheezy; urgency=low
+
+  * Jabber client support fixes. See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 28 May 2014 20:30:46 +0400
+
 emacspeak (40.0-1wheezy1) wheezy; urgency=low
 
   * New upstream release.
