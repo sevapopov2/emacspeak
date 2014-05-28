@@ -85,13 +85,9 @@
    (jabber-title-medium         voice-bolden)
    (jabber-title-small          voice-lighten)
    ))
+
 ;;}}}
 ;;{{{ Advice interactive commands:
-(defadvice jabber-switch-to-roster-buffer (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-mode-line)))
 
 (loop for f in
       '(jabber-connect
@@ -126,27 +122,21 @@
 	  (voice-lock-mode (if global-voice-lock-mode 1 -1)))))
 
 ;;}}}
-;;{{{ silence keepalive
+;;{{{ silence keepalive messages and image type errors
 
 (loop for f in
       '(jabber-keepalive-do
         jabber-process-roster
-        jabber-keepalive-got-response)
+        jabber-keepalive-got-response
+        image-type)
       do
       (eval
        `(defadvice ,f (around emacspeak pre act comp)
-          "Silence keepalive messages."
-          (let ((emacspeak-speak-messages nil))
+          "Silence messages."
+          (let ((emacspeak-speak-messages nil)
+                (emacspeak-use-auditory-icons nil))
             ad-do-it
             ad-return-value))))
-
-;;}}}
-;;{{{  silence image type errors
-
-(defadvice image-type (around emacspeak pre act comp)
-  (let ((emacspeak-speak-messages nil)
-        (emacspeak-use-auditory-icons nil))
-    ad-do-it))
 
 ;;}}}
 ;;{{{ jabber activity:
@@ -165,6 +155,9 @@
   (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)))
 
+;;}}}
+;;{{{ roster buffer:
+
 (loop for f in
       '(jabber-roster-ret-action-at-point
         jabber-chat-with
@@ -178,9 +171,6 @@
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'open-object)
             (emacspeak-speak-mode-line)))))
-
-;;}}}
-;;{{{ roster buffer:
 
 (loop for f in
       '(jabber-go-to-next-jid
@@ -233,17 +223,6 @@
   (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)
     (message "Set extended  away.")))
-(defadvice jabber-go-to-next-jid (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
-
-(defadvice jabber-go-to-previous-jid (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
 
 (defadvice jabber-presence-default-message (around emacspeak pre
                                                    act comp)
@@ -270,38 +249,24 @@
                  (jabber-jid-displayname (jabber-jid-user from)))
        (format "%s: %s" (jabber-jid-displayname from) text)))))
 
+;;}}}
 ;;{{{ interactive commands:
 
 (defun emacspeak-jabber-popup-roster ()
   "Pop to Jabber roster."
   (interactive)
-  (declare (special jabber-roster-buffer *jabber-connected*))
+  (declare (special jabber-roster-buffer jabber-roster-show-bindings *jabber-connected*))
   (unless *jabber-connected* (call-interactively 'jabber-connect))
   (unless (buffer-live-p jabber-roster-buffer) (call-interactively 'jabber-display-roster))
   (pop-to-buffer jabber-roster-buffer)
   (goto-char (point-min))
-  (forward-line 4)
+  (forward-line (if jabber-roster-show-bindings 15 4))
   (emacspeak-auditory-icon 'select-object)
   (emacspeak-speak-line))
-(defadvice jabber-connect-all (after emacspeak pre act comp)
-  "switch to roster so we give it a chance to update."
-  (when (ems-interactive-p)
-    (switch-to-buffer jabber-roster-buffer)))
-(defadvice jabber-roster-update (around emacspeak    pre act  comp)
-  "Make this operation a No-Op unless the roster is visible."
-  (when (get-buffer-window-list jabber-roster-buffer)
-    ad-do-it))
-
-;; (defadvice jabber-display-roster (around emacspeak    pre act  comp)
-;;   "Make this operation a No-Op unless called interactively."
-;;   (when (ems-interactive-p) ad-do-it))
-
-(add-hook 'jabber-post-connect-hook 'jabber-switch-to-roster-buffer)
-
-;;}}}
 
 ;;}}}
 ;;{{{ Pronunciations
+
 (declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
 (emacspeak-pronounce-augment-pronunciations 'jabber-chat-mode
                                             emacspeak-pronounce-internet-smileys-pronunciations)
