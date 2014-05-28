@@ -92,6 +92,7 @@
 
 (defadvice iswitchb-toggle-ignore (after emacspeak pre act comp)
   "Provide auditory feedback."
+  (declare (special iswitchb-ignore))
   (when (ems-interactive-p )
     (emacspeak-auditory-icon
      (if iswitchb-ignore 'on 'off))

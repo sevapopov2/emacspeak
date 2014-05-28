@@ -134,6 +134,7 @@ The default value of 12 is too high for using ido effectively with speech. "
 (defvar ido-process-ignore-lists) 
 (defadvice ido-toggle-ignore (after emacspeak pre act comp)
   "Provide auditory feedback."
+  (declare (special ido-process-ignore-lists))
   (when (ems-interactive-p )
     (emacspeak-auditory-icon
      (if ido-process-ignore-lists 'on 'off))

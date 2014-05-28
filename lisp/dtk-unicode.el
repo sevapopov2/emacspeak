@@ -56,6 +56,7 @@
 ;;{{{ Preamble
 
 (require 'cl)
+(require 'custom)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'descr-text)
 
@@ -72,7 +73,9 @@
   '(
     (? . "-")                   ; START OF GUARDED AREA
     (?━ .  "-")                     ; horiz bars
+    (?─ .  "-")                     ; horiz bar
     (?┃ . "|")                      ; vertical block
+    (?│ . "|")                      ; vertical bar
     (?° . " degrees ")              ; degree sign
     (?℃ . "Degree C")               ; celsius
     (?℉ . "Degree F ")              ; Fahrenheit
@@ -126,10 +129,8 @@ themselves, e.g., when using an Asian language."
 ;;}}}
 ;;{{{ Variables
 
-(defcustom dtk-unicode-untouched-charsets
-  '(ascii latin-iso8859-1)
-  "*Characters of these charsets are completely ignored by dtk-unicode-replace-chars."
-  :type '(repeat symbol))
+(defvar dtk-unicode-charset-filter-regexp nil
+  "Regular expression that matches characters not in dtk-unicode-untouched-charsets.")
 
 (defvar dtk-unicode-handlers
   '(dtk-unicode-user-table-handler dtk-unicode-full-table-handler)
@@ -165,14 +166,26 @@ A handler returns a non-nil value if the   replacement was successful, nil other
                 when (charsetp charset)
                 concat (apply 'format "%c-%c" (dtk-unicode-charset-limits charset)))))
 
-(defvar dtk-unicode-charset-filter-regexp
-  (dtk-unicode-build-skip-regexp dtk-unicode-untouched-charsets)
-  "Regular exppression that matches characters not in dtk-unicode-untouched-charsets.")
+(defcustom dtk-unicode-untouched-charsets
+  '(ascii latin-iso8859-1)
+  "*Characters of these charsets are completely ignored by dtk-unicode-replace-chars.
+Currently active speech server tries to take care of this option
+while it is not customized explicitly by user."
+  :group 'dtk-unicode
+  :type (list 'repeat
+              (let ((menu '(choice)))
+                (dolist (item charset-list menu)
+                  (add-to-list 'menu (list 'const item) t))))
+  :set (lambda (symbol value)
+         (setq dtk-unicode-charset-filter-regexp (dtk-unicode-build-skip-regexp value))
+         (custom-set-default symbol value)))
 
 (defun dtk-unicode-update-untouched-charsets (charsets)
   "Update list of charsets we will not touch."
-  (setq dtk-unicode-untouched-charsets charsets)
-  (setq dtk-unicode-charset-filter-regexp (dtk-unicode-build-skip-regexp dtk-unicode-untouched-charsets)))
+  (unless (or (get 'dtk-unicode-untouched-charsets 'customized-value)
+              (get 'dtk-unicode-untouched-charsets 'saved-value))
+    (setq dtk-unicode-untouched-charsets charsets
+          dtk-unicode-charset-filter-regexp (dtk-unicode-build-skip-regexp charsets))))
 
 (eval-and-compile
   (if (> emacs-major-version 22)
@@ -218,10 +231,13 @@ charsets returned by operations such as `find-charset-region'."
 (defsubst dtk-unicode-name-for-char (char)
   "Return unicode name for character CHAR.
 nil if CHAR is not in Unicode."
-  (downcase
-   (or (get-char-code-property char 'name)
-       (car (rassoc char (ucs-names)))
-       "")))
+  (let ((name (or (get-char-code-property char 'name)
+                  (car (rassoc char (ucs-names)))
+                  (dtk-unicode-char-property char "Name"))))
+    (when (and (stringp name) (string-equal name "<control>"))
+      (setq name (dtk-unicode-char-property char "Old name")))
+    (and (stringp name)
+         (downcase name))))
 
 (defsubst dtk-unicode-char-properties (char)
   "Return unicode properties for CHAR."
