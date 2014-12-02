@@ -1,8 +1,8 @@
 ;;; emacspeak-ediff.el --- Speech enable Emacs interface to diff and merge
 ;;; $Id: emacspeak-ediff.el 8574 2013-11-24 02:01:07Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
-;;; DescriptionEmacspeak extensions for ediff
-;;; Keywords:emacspeak, audio interface to emacs, Comparing files
+;;; Description: Emacspeak extensions for ediff
+;;; Keywords: emacspeak, audio interface to emacs, Comparing files
 ;;{{{ LCD Archive entry:
 
 ;;; LCD Archive Entry:
@@ -253,8 +253,8 @@
 
 (defadvice ediff-recenter (after emacspeak pre act )
   "Provide spoken feedback"
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'select-object )
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement )
     (message "Refreshed the ediff display")))
 
 (defadvice ediff-jump-to-difference (after emacspeak pre act )
@@ -273,19 +273,20 @@
 (defadvice ediff-previous-meta-item (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object )))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
+
 (defadvice ediff-next-meta-item (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object )))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'select-object )
+    (emacspeak-speak-line)))
 
 (defadvice ediff-registry-action (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'open-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice ediff-show-registry (after emacspeak pre act comp)
   "Provide auditory feedback."

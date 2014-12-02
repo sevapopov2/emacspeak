@@ -56,8 +56,13 @@
 
 (require 'cl)
 (require 'backquote)
-(require 'json)
 (declaim  (optimize  (safety 0) (speed 3)))
+(require 'json)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function shr-render-region "ext:shr.el" (begin end &optional buffer))
 
 ;;}}}
 ;;{{{ Customizations:

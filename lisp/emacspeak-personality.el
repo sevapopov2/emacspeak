@@ -127,7 +127,6 @@ Existing personality properties on the text range are preserved."
             (emacspeak-personality-append extent end v object)))
          (t                        ;accumulate the new personality
           (unless (or (equal  v orig)
-                      (listp orig)
                       (and (listp orig)(memq v orig)))
             (setq new
                   (delete-duplicates
@@ -164,7 +163,6 @@ Existing personality properties on the text range are preserved."
             (emacspeak-personality-prepend extent end v object)))
          (t                        ;accumulate the new personality
           (unless (or (equal v orig)
-                      (listp orig)
                       (and (listp orig) (memq v orig)))
             (setq new
                   (delete-duplicates
@@ -189,26 +187,27 @@ Preserve other existing personality properties on the text range."
             (new nil)
             (extent
              (next-single-property-change
-              start 'personality (current-buffer) end)))
+              start 'personality object end)))
         (cond
          ((null orig)                    ;simple case
           (when (< extent end)
-            (emacspeak-personality-remove extent end personality)))
+            (emacspeak-personality-remove extent end personality object)))
          (t                            ;remove the new personality
           (setq new
                 (cond
                  ((equal orig personality) nil)
                  ((listp orig)
                   (remove personality orig))
-                 (t nil)))
+                 (t orig)))
           (if new
-              (put-text-property start extent
-                                 'personality new object)
+              (unless (equal orig new)
+                (put-text-property start extent
+                                   'personality new object))
             (remove-text-properties start extent
                                     (list 'personality )
                                     object))
           (when (< extent end)
-            (emacspeak-personality-remove extent end personality))))))))
+            (emacspeak-personality-remove extent end personality object))))))))
 
 ;;}}}
 ;;{{{ helper: face-p
@@ -376,15 +375,11 @@ displayed in the messages area."
         (put-text-property start end
                            'personality nil object)))))
 
-;;; deactivate these for now
-(ad-deactivate 'remove-list-of-text-properties)
-(ad-deactivate 'remove-text-properties)
-
 ;;}}}
 ;;{{{ advice overlay-put
 
 (defcustom emacspeak-personality-voiceify-overlays
-  'emacspeak-personality-prepend
+  'emacspeak-personality-append
   "Determines how and if we voiceify overlays.
 
 None means that overlay faces are not mapped to voices.
@@ -401,7 +396,7 @@ Append means place corresponding personality at the end."
 
 (defadvice overlay-put (after emacspeak-personality  pre act)
   "Used by emacspeak to augment font lock."
-  (when emacspeak-personality-voiceify-overlays
+  (when (and voice-lock-mode emacspeak-personality-voiceify-overlays)
     (let ((overlay (ad-get-arg 0))
           (prop (ad-get-arg 1))
           (value (ad-get-arg 2))
@@ -431,10 +426,10 @@ Append means place corresponding personality at the end."
           (beg (ad-get-arg 1))
           (end (ad-get-arg 2))
           (object (ad-get-arg 3))
-          (voice nil))
-      (setq voice (overlay-get  overlay 'personality))
+          (voice (overlay-get  overlay 'personality)))
       (when
           (and voice
+               voice-lock-mode
                emacspeak-personality-voiceify-overlays
                (integer-or-marker-p (overlay-start overlay))
                (integer-or-marker-p (overlay-end overlay)))

@@ -51,6 +51,16 @@
 ;;{{{  Required modules
 
 (require 'emacspeak-preamble)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function jabber-muc-sender-p "ext:jabber-muc.el" (jid))
+(declare-function jabber-jid-resource "ext:jabber-util.el" (string))
+(declare-function jabber-jid-displayname "ext:jabber-util.el" (string))
+(declare-function jabber-jid-user "ext:jabber-util.el" (string))
+(declare-function jabber-display-roster "ext:jabber-roster.el" ())
+
 ;;}}}
 ;;{{{ map voices
 
@@ -58,53 +68,75 @@
  '(
    (jabber-activity-face        voice-animate)
    (jabber-chat-error           voice-bolden-and-animate)
-   (jabber-chat-prompt-foreign  voice-brighten-medium)
-   (jabber-chat-prompt-local    voice-smoothen-medium)
+   (jabber-chat-prompt-foreign  voice-animate-medium)
+   (jabber-chat-prompt-local    voice-bolden-medium)
    (jabber-chat-prompt-system   voice-brighten-extra)
-   (jabber-chat-text-foreign    voice-brighten)
+   (jabber-chat-text-foreign    voice-animate)
    (jabber-chat-text-local      voice-smoothen)
    (jabber-rare-time-face       voice-animate-extra)
    (jabber-roster-user-away     voice-smoothen-extra)
    (jabber-roster-user-chatty   voice-brighten)
    (jabber-roster-user-dnd      voice-lighten-medium)
    (jabber-roster-user-error    voice-bolden-and-animate)
-   (jabber-roster-user-offline  voice-smoothen-extra)
+   (jabber-roster-user-offline  voice-lighten-extra)
    (jabber-roster-user-online   voice-bolden)
    (jabber-roster-user-xa       voice-lighten)
    (jabber-title-large          voice-bolden-extra)
    (jabber-title-medium         voice-bolden)
    (jabber-title-small          voice-lighten)
    ))
+
 ;;}}}
 ;;{{{ Advice interactive commands:
-(defadvice jabber-switch-to-roster-buffer (after emacspeak pre act comp)
+
+(loop for f in
+      '(jabber-connect
+        jabber-connect-all)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory icon if possible."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'on)))))
+
+(defadvice jabber-disconnect (after emacspeak pre act comp)
+  "Provide auditory icon if possible."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'off)))
+
+(defadvice jabber-customize (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-speak-line)))
+
+(loop for f in
+      '(jabber-roster-mode
+	jabber-chat-mode
+	jabber-browse-mode)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Turn on voice lock mode."
+	  (emacspeak-pronounce-refresh-pronunciations)
+	  (voice-lock-mode (if global-voice-lock-mode 1 -1)))))
 
 ;;}}}
-;;{{{ silence keepalive
+;;{{{ silence keepalive messages and image type errors
 
 (loop for f in
       '(jabber-keepalive-do
         jabber-process-roster
-        jabber-keepalive-got-response)
+        jabber-keepalive-got-response
+        image-type)
       do
       (eval
        `(defadvice ,f (around emacspeak pre act comp)
-          "Silence keepalive messages."
-          (let ((emacspeak-speak-messages nil))
+          "Silence messages."
+          (let ((emacspeak-speak-messages nil)
+                (emacspeak-use-auditory-icons nil))
             ad-do-it
             ad-return-value))))
-
-;;}}}
-;;{{{  silence image type errors
-
-(defadvice image-type (around emacspeak pre act comp)
-  (let ((emacspeak-speak-messages nil)
-        (emacspeak-use-auditory-icons nil))
-    ad-do-it))
 
 ;;}}}
 ;;{{{ jabber activity:
@@ -123,19 +155,52 @@
   (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)))
 
+;;}}}
+;;{{{ roster buffer:
+
 (loop for f in
-      '(jabber-chat-with
-        jabber-chat-with-jid-at-point)
+      '(jabber-roster-ret-action-at-point
+        jabber-chat-with
+        jabber-chat-with-jid-at-point
+        jabber-switch-to-roster-buffer
+        jabber-vcard-edit)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
-          "Silence keepalive messages."
-          (when (ems-interactive-p )
+          "Provide auditory feedback."
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'open-object)
             (emacspeak-speak-mode-line)))))
 
+(loop for f in
+      '(jabber-go-to-next-jid
+        jabber-go-to-previous-jid)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-text-range 'jabber-jid)))))
+
+(loop for f in
+      '(jabber-roster-delete-jid-at-point
+        jabber-roster-delete-at-point)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory icon if possible."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'delete-object)))))
+
+(defadvice jabber-roster-toggle-binding-display (after emacspeak pre act comp)
+  "Provide auditory icon if possible."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon (if jabber-roster-show-bindings 'on 'off))))
+
 ;;}}}
 ;;{{{ alerts
+
 (defcustom emacspeak-jabber-speak-presence-alerts nil
   "Set to T if you want to hear presence alerts."
   :type  'boolean
@@ -158,25 +223,16 @@
   (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)
     (message "Set extended  away.")))
-(defadvice jabber-go-to-next-jid (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
-
-(defadvice jabber-go-to-previous-jid (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
 
 (defadvice jabber-presence-default-message (around emacspeak pre
                                                    act comp)
   "Allow emacspeak to control if the message is spoken."
   (cond
-   (emacspeak-jabber-speak-presence-alerts ad-do-it)
+   (emacspeak-jabber-speak-presence-alerts
+    (let ((emacspeak-speak-messages t))
+      ad-do-it))
    (t (let ((emacspeak-speak-messages nil))
-        ad-do-i)))
+        ad-do-it)))
   ad-return-value)
 
 ;;;this is what I use as my jabber alert function:
@@ -193,38 +249,24 @@
                  (jabber-jid-displayname (jabber-jid-user from)))
        (format "%s: %s" (jabber-jid-displayname from) text)))))
 
+;;}}}
 ;;{{{ interactive commands:
 
 (defun emacspeak-jabber-popup-roster ()
   "Pop to Jabber roster."
   (interactive)
-  (declare (special jabber-roster-buffer *jabber-connected*))
+  (declare (special jabber-roster-buffer jabber-roster-show-bindings *jabber-connected*))
   (unless *jabber-connected* (call-interactively 'jabber-connect))
   (unless (buffer-live-p jabber-roster-buffer) (call-interactively 'jabber-display-roster))
   (pop-to-buffer jabber-roster-buffer)
   (goto-char (point-min))
-  (forward-line 4)
+  (forward-line (if jabber-roster-show-bindings 15 4))
   (emacspeak-auditory-icon 'select-object)
   (emacspeak-speak-line))
-(defadvice jabber-connect-all (after emacspeak pre act comp)
-  "switch to roster so we give it a chance to update."
-  (when (ems-interactive-p)
-    (switch-to-buffer jabber-roster-buffer)))
-(defadvice jabber-roster-update (around emacspeak    pre act  comp)
-  "Make this operation a No-Op unless the roster is visible."
-  (when (get-buffer-window-list jabber-roster-buffer)
-    ad-do-it))
-
-;; (defadvice jabber-display-roster (around emacspeak    pre act  comp)
-;;   "Make this operation a No-Op unless called interactively."
-;;   (when (ems-interactive-p) ad-do-it))
-
-(add-hook 'jabber-post-connect-hook 'jabber-switch-to-roster-buffer)
-
-;;}}}
 
 ;;}}}
 ;;{{{ Pronunciations
+
 (declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
 (emacspeak-pronounce-augment-pronunciations 'jabber-chat-mode
                                             emacspeak-pronounce-internet-smileys-pronunciations)

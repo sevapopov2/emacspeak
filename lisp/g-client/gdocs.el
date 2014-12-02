@@ -90,6 +90,12 @@
   (error "You need a recent version of org."))
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function org-export-get-title-from-subtree "org-exp.el" ())
+(declare-function org-export-grab-title-from-buffer "org-exp.el" ())
+
+;;}}}
 ;;{{{ Customizations
 
 (defgroup gdocs nil
@@ -240,17 +246,18 @@ Interactive prefix arg prompts for a query string."
 the buffer local variable gdocs-docid. If that is not present,
 this interactively prompts for it."
   (interactive)
-  (if (boundp 'gdocs-docid)
-    (setq docid gdocs-docid)
-    (setq docid (read-from-minibuffer "Doc ID:")))
   (declare (special gdocs-auth-handle
                     g-atom-view-xsl
                     g-curl-program g-curl-common-options
                     g-cookie-options))
-  (let ((location 
-	 (concat (gdocs-download-url)
-		 (format "?id=%s&exportFormat=%s&format=%s"
-			 docid export-format export-format))))
+  (let* ((docid
+          (if (boundp 'gdocs-docid)
+              gdocs-docid
+            (read-from-minibuffer "Doc ID:")))
+         (location 
+          (concat (gdocs-download-url)
+                  (format "?id=%s&exportFormat=%s&format=%s"
+                          docid export-format export-format))))
     (g-auth-ensure-token gdocs-auth-handle)
     (g-get-result
      (format
@@ -292,9 +299,6 @@ server side they will be overwritten. The docid is taken from the
 buffer local variable gdocs-docid. If that is not present, this
 interactively prompts for it."
   (interactive)
-  (if (boundp 'gdocs-docid)
-    (setq docid gdocs-docid)
-    (setq docid (read-from-minibuffer "Doc ID:")))
   ;(setq etag (read-from-minibuffer "ETag:"))
   (declare (special g-cookie-options
                     g-curl-program g-curl-common-options
@@ -303,8 +307,12 @@ interactively prompts for it."
 		    gdocs-auth-handle
 		    g-curl-program))
   (g-auth-ensure-token gdocs-auth-handle)
-  (let ((text-buffer (current-buffer))
-	(location (concat (gdocs-update-url) docid)))
+  (let* ((text-buffer (current-buffer))
+         (docid
+          (if (boundp 'gdocs-docid)
+              gdocs-docid
+            (read-from-minibuffer "Doc ID:")))
+         (location (concat (gdocs-update-url) docid)))
     (g-using-scratch
      (save-excursion
        (set-buffer text-buffer)
