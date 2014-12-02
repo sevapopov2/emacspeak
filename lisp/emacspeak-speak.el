@@ -129,7 +129,12 @@
 
 ;;;###autoload
 (defun emacspeak-speak-set-line-reading-mode (setting)
-  "Set how lines are to be read when moving up and down."
+  "Set how lines are to be read when moving up and down.
+
+There are three modes:
+`full' - lines are read normally from the beginning up to the end,
+`head' - lines are read from the beginning up to the cursor position,
+`tail' - lines are read from the cursor position up to the end."
   (interactive
    (list
     (intern (completing-read "Line Reading Mode: " '("full" "head" "tail") nil t))))
