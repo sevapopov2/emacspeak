@@ -121,6 +121,33 @@
   (puthash   mode value emacspeak-speak-mode-punctuation-table))
 
 ;;}}}
+;;{{{ Line reading mode:
+
+(defvar emacspeak-speak-line-reading-mode nil
+  "Current line reading mode when moving up and down.")
+(make-variable-buffer-local 'emacspeak-speak-line-reading-mode)
+
+;;;###autoload
+(defun emacspeak-speak-set-line-reading-mode (setting)
+  "Set how lines are to be read when moving up and down.
+
+There are three modes:
+`full' - lines are read normally from the beginning up to the end,
+`head' - lines are read from the beginning up to the cursor position,
+`tail' - lines are read from the cursor position up to the end."
+  (interactive
+   (list
+    (intern (completing-read "Line Reading Mode: " '("full" "head" "tail") nil t))))
+  (setq emacspeak-speak-line-reading-mode
+        (cond
+         ((string-equal setting "head") -1)
+         ((string-equal setting "tail") 1)
+         (t (setq setting "full") nil)))
+  (when (ems-interactive-p)
+    (message "Set line reading mode to %s in current buffer" setting)
+    (emacspeak-auditory-icon 'select-object)))
+
+;;}}}
 ;;{{{ Shell Command Helper:
 
 ;;; Emacspeak silences messages from shell-command when called non-interactively.
@@ -279,13 +306,13 @@ Useful to do this before you listen to an entire buffer."
   "Set punctuation mode for all buffers in current mode."
   (interactive
    (list
-    (intern (completing-read "Punctuation Mode: " '(all none some)))))
+    (intern (completing-read "Punctuation Mode: " dtk-punctuation-mode-alist nil t))))
   (declare (special major-mode))
   (ems-set-mode-punctuation-setting major-mode setting)
   (ems-sync-mode-punctuation-setting major-mode)
   (when (ems-interactive-p)
     (message "Set punctuations to %s in %s" setting mode-name)
-    (emacspeak-auditory-icon 'select-objjjject)))
+    (emacspeak-auditory-icon 'select-object)))
 ;;}}}
 ;;{{{ helper function --decode ISO date-time used in ical:
 
