@@ -96,8 +96,16 @@
 
 (loop
  for f in
- '(next-line previous-line goto-line
-             delete-indentation back-to-indentation lisp-indent-line)
+ '(next-line previous-line)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Speak line that you just moved to."
+     (when (ems-interactive-p ) (emacspeak-speak-line emacspeak-speak-line-reading-mode)))))
+
+(loop
+ for f in
+ '(goto-line delete-indentation back-to-indentation lisp-indent-line)
  do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
