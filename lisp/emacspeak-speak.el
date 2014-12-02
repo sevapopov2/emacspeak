@@ -121,6 +121,28 @@
   (puthash   mode value emacspeak-speak-mode-punctuation-table))
 
 ;;}}}
+;;{{{ Line reading mode:
+
+(defvar emacspeak-speak-line-reading-mode nil
+  "Current line reading mode when moving up and down.")
+(make-variable-buffer-local 'emacspeak-speak-line-reading-mode)
+
+;;;###autoload
+(defun emacspeak-speak-set-line-reading-mode (setting)
+  "Set how lines are to be read when moving up and down."
+  (interactive
+   (list
+    (intern (completing-read "Line Reading Mode: " '("full" "head" "tail") nil t))))
+  (setq emacspeak-speak-line-reading-mode
+        (cond
+         ((string-equal setting "head") -1)
+         ((string-equal setting "tail") 1)
+         (t (setq setting "full") nil)))
+  (when (ems-interactive-p)
+    (message "Set line reading mode to %s in current buffer" setting)
+    (emacspeak-auditory-icon 'select-object)))
+
+;;}}}
 ;;{{{ Shell Command Helper:
 
 ;;; Emacspeak silences messages from shell-command when called non-interactively.
