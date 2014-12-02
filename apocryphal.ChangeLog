@@ -1,6 +1,18 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2014-12-02  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-speak.el: Use convenient punctuations mode list.
+
+	* lisp/emacspeak-speak.el: More detailed comment.
+
+	* lisp/emacspeak-advice.el, lisp/emacspeak-keymap.el, lisp/emacspeak-speak.el:
+	Implemented line reading modes allowing to read only line heads or
+	tails when moving up and down across a buffer.
+
+	* lisp/emacspeak-speak.el: Typo fix.
+
 2014-05-28  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-jabber.el:

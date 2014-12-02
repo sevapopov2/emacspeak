@@ -1,3 +1,10 @@
+emacspeak (40.0-3) unstable; urgency=low
+
+  * Implemented line reading modes that allow selectively read line
+    heads or tails when moving across a buffer line by line.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 02 Dec 2014 17:16:29 +0300
+
 emacspeak (40.0-2) unstable; urgency=low
 
   * Jabber client support fixes. See apocryphal.ChangeLog for details.
