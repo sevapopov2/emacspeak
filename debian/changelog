@@ -1,3 +1,10 @@
+emacspeak (40.0-3squeeze1) squeeze; urgency=low
+
+  * Implemented line reading modes that allow selectively read line
+    heads or tails when moving across a buffer line by line.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 02 Dec 2014 17:22:49 +0300
+
 emacspeak (40.0-2squeeze1) squeeze; urgency=low
 
   * Jabber client support fixes. See apocryphal.ChangeLog for details.
