@@ -1,3 +1,10 @@
+emacspeak (40.0-4wheezy1) wheezy; urgency=low
+
+  * W3m support enhancements. See apocryphal.ChangeLog for details.
+  * Treat js-mode as a programming mode.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 19 Dec 2014 00:17:22 +0300
+
 emacspeak (40.0-3wheezy1) wheezy; urgency=low
 
   * Implemented line reading modes that allow selectively read line
