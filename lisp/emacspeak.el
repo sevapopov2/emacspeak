@@ -385,6 +385,7 @@ sets punctuation mode to all, activates the dictionary and turns on split caps."
     'emacs-lisp-mode-hook
     'lisp-interaction-mode-hook
     'javascript-mode-hook
+    'js-mode-hook
     'js2-mode-hook
     'scala-mode-hook
     'midge-mode-hook
