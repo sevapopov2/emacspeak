@@ -248,13 +248,22 @@ This hack helps to deal with some specially designed forms."
 (defun emacspeak-w3m-speak-form-submit (form &optional name value new-session download)
   "Speak submit button."
   (declare (special emacspeak-w3m-form-button-voice))
-  (dtk-speak
-   (if (equal value "")
-       "submit button"
-     (format "button %s"
-             (emacspeak-w3m-personalize-string
-              value
-              emacspeak-w3m-form-button-voice)))))
+  (let ((text (emacspeak-w3m-anchor-text)))
+    (dtk-speak
+     (cond
+      ((and text (not (string-match "^[[:blank:]]*$" text)))
+       (format "button %s" text))
+      ((and value (not (string-match "^[[:blank:]]*$" value)))
+       (format "button %s"
+               (emacspeak-w3m-personalize-string
+                value
+                emacspeak-w3m-form-button-voice)))
+      ((and name (not (string-match "^[[:blank:]]*$" name)))
+       (format "button %s"
+               (emacspeak-w3m-personalize-string
+                name
+                emacspeak-w3m-form-button-voice)))
+      (t "submit button")))))
 
 (defun emacspeak-w3m-speak-form-input-radio (form name value)
   "speech enable radio buttons."
@@ -299,11 +308,14 @@ This hack helps to deal with some specially designed forms."
 (defun emacspeak-w3m-speak-form-reset (form)
   "Reset button."
   (declare (special emacspeak-w3m-form-button-voice))
-  (dtk-speak
-   (format "button %s"
-           (emacspeak-w3m-personalize-string
-            "reset"
-            emacspeak-w3m-form-button-voice))))
+  (let ((text (emacspeak-w3m-anchor-text)))
+    (dtk-speak
+     (format "button %s"
+             (if (and text (not (string-match "^[[:blank:]]*$" text)))
+                 text
+               (emacspeak-w3m-personalize-string
+                "reset"
+                emacspeak-w3m-form-button-voice))))))
 
 ;;}}}
 ;;{{{  advice interactive commands.
