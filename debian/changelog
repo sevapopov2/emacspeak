@@ -1,3 +1,10 @@
+emacspeak (40.0-4precise1) precise; urgency=low
+
+  * W3m support enhancements. See apocryphal.ChangeLog for details.
+  * Treat js-mode as a programming mode.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 19 Dec 2014 00:22:36 +0300
+
 emacspeak (40.0-3precise1) precise; urgency=low
 
   * Implemented line reading modes that allow selectively read line
