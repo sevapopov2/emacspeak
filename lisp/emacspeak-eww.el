@@ -84,6 +84,15 @@
   (emacspeak-pronounce-toggle-use-of-dictionaries t))
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function browse-url-interactive-arg "ext:browse-url.el" (PROMPT))
+(declare-function eww "ext:eww.el" (URL))
+(declare-function eww-save-history "ext:eww.el" ())
+(declare-function eww-restore-history "ext:eww.el" (elem))
+(declare-function shr-insert-document "ext:shr.el" (dom))
+
+;;}}}
 ;;{{{ Map Faces To Voices:
 
 (voice-setup-add-map
