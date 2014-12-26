@@ -81,6 +81,8 @@
 (declare-function solar-get-number "solar.el" (prompt))
 (declare-function solar-sunrise-sunset-string "solar.el" (date &optional nolocation))
 (declare-function gmaps-geocode "ext:gmaps.el" (address &optional raw-p))
+(declare-function list-buffers--refresh "buff-menu.el" (&optional buffer-list old-buffer))
+(declare-function tabulated-list-print "tabulated-list.el" (&optional remember-pos))
 
 ;;}}}
 ;;{{{ custom
@@ -1031,10 +1033,11 @@ end:\n\n")
                (key-description "")
                (commentary nil)
                (this-module (find-lisp-object-file-name f 'defun))
-               (source-file nil))
+               (source-file nil)
+               (module nil))
             (when this-module
               (setq source-file (locate-library this-module ))
-              (setq this-module
+              (setq module
                     (file-name-nondirectory
                      (file-name-sans-extension this-module)))
               (unless (string-equal module this-module)
@@ -1057,7 +1060,7 @@ for commands defined in module  %s.\n\n"
                   module)))
                                         ; generate command documentation
               (insert (format "\n\n@deffn {Interactive Command} %s  %s\n"
-                              f (help-function-arglist f t)))
+                              f (help-function-arglist f)))
               (setq key-description
                     (cond
                      (key
@@ -3537,7 +3540,10 @@ Lang is obtained from property `lang' on string, or  via an interactive prompt."
 (defun emacspeak-wizards-eww-buffer-list ()
   "Display list of open EWW buffers."
   (interactive)
-  (funcall-interactively 'emacspeak-wizards-view-buffers-filtered-by-mode 'eww-mode))
+  (if (fboundp 'funcall-interactively)
+      (funcall-interactively 'emacspeak-wizards-view-buffers-filtered-by-mode 'eww-mode)
+    (funcall 'emacspeak-wizards-view-buffers-filtered-by-mode 'eww-mode)))
+
 ;;}}}
 (provide 'emacspeak-wizards)
 ;;{{{ end of file

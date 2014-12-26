@@ -69,6 +69,7 @@
 ;;{{{ Forward declarations
 
 (declare-function xml-substitute-numeric-entities (string))
+(declare-function eww-display-html "ext:eww.el" (charset url &optional document point buffer encode))
 (declare-function emacspeak-bookshare-get-id ())
 (declare-function emacspeak-bookshare-get-author ())
 (declare-function emacspeak-bookshare-get-title ())

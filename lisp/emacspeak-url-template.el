@@ -381,6 +381,12 @@ dont-url-encode if true then url arguments are not url-encoded "
 
 
 
+(defsubst emacspeak-url-template-make-cse (meta-url)
+  "Builds up a CSE url for specified meta-url."
+  (format
+   "http://www.google.com/cse/tools/makecse?url=%s"
+   meta-url))
+
 (emacspeak-url-template-define
  "Official GoogleBlog Search"
  "http://www.google.com/cse?q=%s&loading=1&cref=%s"
@@ -394,12 +400,6 @@ dont-url-encode if true then url arguments are not url-encoded "
  #'(lambda (url)
      (emacspeak-we-extract-by-class "g" url 'speak)))
 
-
-(defsubst emacspeak-url-template-make-cse (meta-url)
-  "Builds up a CSE url for specified meta-url."
-  (format
-   "http://www.google.com/cse/tools/makecse?url=%s"
-   meta-url))
 
 (emacspeak-url-template-define
  "On The Fly CSE"

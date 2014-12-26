@@ -53,6 +53,11 @@
 (require 'emacspeak-preamble)
 (eval-when-compile (require 'company "company" 'no-error))
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function company-fetch-metadata "company.el" ())
+
+;;}}}
 ;;{{{ Customizations:
 
 ;;}}}

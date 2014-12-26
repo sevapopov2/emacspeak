@@ -55,6 +55,12 @@
 (require 'emacspeak-amark)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(defvar emacspeak-media-directory-regexp)
+(defvar ido-work-directory-list)
+
+;;}}}
 ;;{{{ define a derived mode for alsaplayer interaction
 
 ;;;###autoload
