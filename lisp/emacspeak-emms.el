@@ -56,28 +56,32 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function emms-player-pause "ext:emms.el" ())
+(declare-function emms-track-name "ext:emms.el" (track))
+(declare-function emms-playlist-current-selected-track "ext:emms.el" ())
+
+;;}}}
 ;;{{{ module emms:
 
 (defun emacspeak-emms-speak-current-track ()
   "Speak current track."
   (interactive)
   (message
-   (cdr (assq 'name (emms-playlist-current-track)))))
-
-(loop for f in
-      '(emms-next emms-next-noerror emms-previous)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-          "Speak track name."
-          (when (ems-interactive-p )
-            (emacspeak-auditory-icon 'select-object)))))
+   (emms-track-name (emms-playlist-current-selected-track))))
 
 ;;; these commands should not be made to talk since that would  interferes
 ;;; with real work.
 (loop for f in
-      '(emms-start emms-stop emms-sort
-                   emms-shuffle emms-random)
+      '(emms-start
+        emms-stop
+        emms-sort
+        emms-shuffle
+        emms-random
+        emms-next
+        emms-next-noerror
+        emms-previous)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -86,8 +90,23 @@
             (emacspeak-auditory-icon 'select-object)))))
 
 (loop for f in
-      '(emms-playlist-first emms-playlist-last
-                            emms-playlist-mode-first emms-playlist-mode-last)
+      '(emms-playlist-first
+        emms-playlist-last
+        emms-playlist-mode-first
+        emms-playlist-mode-last
+        emms-tag-editor-prev-field
+        emms-tag-editor-next-field
+        emms-tag-editor-prev-track
+        emms-tag-editor-next-track
+        emms-browser-toggle-subitems
+        emms-browser-collapse-all
+        emms-browser-expand-to-level-2
+        emms-browser-expand-to-level-3
+        emms-browser-expand-to-level-4
+        emms-browser-expand-all
+        emms-browser-goto-random
+        emms-browser-prev-non-track
+        emms-browser-next-non-track)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -95,16 +114,175 @@
           (when (ems-interactive-p )
             (emacspeak-auditory-icon 'large-movement)
             (emacspeak-speak-line)))))
+
 (loop for f in
-      '(emms-browser emms-browser-next-filter
-                     emms-browser-previous-filter)
+      '(emms
+        emms-browser
+        emms-browser-next-filter
+        emms-browser-previous-filter
+        emms-browser-view-in-dired
+        emms-browse-by-artist
+        emms-browse-by-album
+        emms-browse-by-genre
+        emms-browse-by-year
+        emms-browse-by-composer
+        emms-browse-by-performer
+        emms-streams
+        emms-stream-popup
+        emms-stream-popup-revert
+        emms-playlist-mode-go
+        emms-playlist-mode-goto-dired-at-point
+        emms-tag-editor-edit
+        emms-playlist-set-playlist-buffer
+        emms-metaplaylist-mode-go
+        emms-metaplaylist-mode-goto-current)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (ems-interactive-p )
-            (emacspeak-speak-mode-line)
-            (emacspeak-auditory-icon 'open-object)))))
+            (emacspeak-auditory-icon 'open-object)
+            (emacspeak-speak-mode-line)))))
+
+(defadvice emms-toggle-repeat-playlist (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon (if emms-repeat-playlist 'on 'off))))
+
+(defadvice emms-toggle-repeat-track (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon (if emms-repeat-track 'on 'off))))
+
+(loop for f in
+      '(emms-playlist-save
+        emms-tag-editor-submit)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p )
+            (emacspeak-auditory-icon 'save-object)))))
+
+(loop for f in
+      '(emms-playlist-mode-clear
+        emms-browser-clear-playlist
+        emms-browser-delete-files)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p )
+            (emacspeak-auditory-icon 'delete-object)))))
+
+(loop for f in
+      '(emms-playlist-mode-add-contents
+        emms-browser-add-tracks)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p )
+            (emacspeak-auditory-icon 'yank-object)))))
+
+;;}}}
+;;{{{ Interactive playlists:
+
+(loop for f in
+      '(emms-playlist-mode-kill-track
+        emms-playlist-mode-kill-entire-track
+        emms-stream-delete-bookmark)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p )
+            (emacspeak-auditory-icon 'delete-object)
+            (emacspeak-speak-line)))))
+
+(defadvice emms-playlist-mode-insert-newline (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p )
+    (emacspeak-speak-line)))
+
+(defadvice emms-playlist-mode-kill (around emacspeak pre act comp)
+  "Indicate region has been killed. Use an auditory icon if possible."
+  (if (ems-interactive-p)
+      (let ((count (count-lines (region-beginning) (region-end))))
+        ad-do-it
+        (emacspeak-auditory-icon 'delete-object )
+        (message "Killed region containing %s lines" count))
+    ad-do-it)
+  ad-return-value)
+
+(loop for f in
+      '(emms-playlist-mode-yank
+        emms-playlist-mode-yank-pop)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Say what you yanked.
+Produce an auditory icon if possible."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'yank-object )
+            (emacspeak-speak-region (mark 'force) (point))))))
+
+(defadvice emms-playlist-mode-undo (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon 'unmodified-object)))
+
+(loop for f in
+      '(emms-playlist-sort-by-info-composer
+        emms-playlist-sort-by-list
+        emms-playlist-sort-by-name
+        emms-playlist-sort-by-info-artist
+        emms-playlist-sort-by-info-album
+        emms-playlist-sort-by-play-count
+        emms-playlist-sort-by-file-extension
+        emms-playlist-sort-by-last-played
+        emms-playlist-sort-by-natural-order
+        emms-playlist-sort-by-info-note
+        emms-playlist-sort-by-info-performer
+        emms-playlist-sort-by-info-title
+        emms-playlist-sort-by-info-year)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p )
+            (emacspeak-auditory-icon 'task-done)
+            (emacspeak-speak-mode-line)))))
+
+;;}}}
+;;{{{ Markable playlists:
+
+(defadvice emms-mark-forward (after emacspeak pre act comp)
+  "Give speech feedback. Also provide an auditory icon."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon 'mark-object )
+    (emacspeak-speak-line)))
+
+(defadvice emms-mark-unmark-forward (after emacspeak pre act comp)
+  "Give speech feedback. Also provide an auditory icon."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon 'deselect-object )
+    (emacspeak-speak-line)))
+
+(defadvice emms-mark-copy-marked-tracks (after emacspeak pre act comp)
+  "Produce an auditory icon if possible."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon 'mark-object )))
+
+(loop for f in
+      '(emms-mark-kill-marked-tracks
+        emms-mark-delete-marked-tracks)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Produce an auditory icon if possible."
+          (when (ems-interactive-p )
+            (emacspeak-auditory-icon 'delete-object)))))
 
 ;;}}}
 ;;{{{ Module emms-streaming:
@@ -114,13 +292,6 @@
   (define-key emms-stream-mode-map "\C-e"
     'emacspeak-prefix-command))
 
-(defadvice emms-stream-delete-bookmark (after emacspeak pre act
-                                              comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'delete-object)
-    (emacspeak-speak-line)))
-
 (defadvice emms-stream-save-bookmarks-file (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p )
@@ -128,15 +299,17 @@
     (message "Saved stream bookmarks.")))
 
 (loop for f in
-      '(emms-streams emms-stream-quit
-                     emms-stream-popup emms-stream-popup-revert
-                     emms-playlist-mode-go
-                     )
+      '(emms-stream-quit
+        emms-playlist-mode-bury-buffer
+        emms-playlist-mode-current-kill
+        emms-tag-editor-submit-and-exit
+        emms-browser-bury-buffer)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (ems-interactive-p )
+            (emacspeak-auditory-icon 'close-object)
             (emacspeak-speak-mode-line)))))
 
 (loop for f in
@@ -147,11 +320,6 @@
           "Provide auditory feedback."
           (when (ems-interactive-p )
             (emacspeak-speak-line)))))
-(defadvice emms-playlist-mode-bury-buffer (after emacspeak pre act)
-  "Announce the buffer that becomes current."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-mode-line )))
 
 ;;}}}
 ;;{{{ silence chatter from info
@@ -162,6 +330,15 @@
   "Silence messages."
   (let ((emacspeak-speak-messages nil))
     ad-do-it))
+
+;;}}}
+;;{{{ Browser buffer voicification:
+
+(defadvice emms-browser-format-spec (around emacspeak pre act comp)
+  "Properly voicify buffer."
+  (let ((text-property-default-nonsticky (remove (assq 'personality text-property-default-nonsticky) text-property-default-nonsticky)))
+    ad-do-it)
+  ad-return-value)
 
 ;;}}}
 ;;{{{ pause/resume if needed
@@ -176,6 +353,25 @@ emacspeak-silence-hook."
     (emms-player-pause)))
 
 (add-hook 'emacspeak-silence-hook 'emacspeak-emms-pause-or-resume)
+
+;;}}}
+;;{{{ Define personalities
+
+(voice-setup-add-map
+ '(
+   (emms-metaplaylist-mode-face voice-bolden-medium)
+   (emms-metaplaylist-mode-current-face voice-animate)
+   (emms-playlist-track-face voice-bolden)
+   (emms-playlist-selected-face voice-animate)
+   (emms-stream-name-face voice-bolden)
+   (emms-stream-url-face voice-lighten)
+   (emms-browser-year/genre-face voice-lighten)
+   (emms-browser-artist-face voice-lighten-and-animate)
+   (emms-browser-composer-face voice-lighten-and-animate)
+   (emms-browser-performer-face voice-lighten-and-animate)
+   (emms-browser-album-face voice-bolden-medium)
+   (emms-browser-track-face voice-bolden)
+   ))
 
 ;;}}}
 (provide 'emacspeak-emms)

@@ -62,6 +62,12 @@
 (require 'ansi-color)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function pianobar "ext:pianobar.el" ())
+(declare-function pianobar-send-string "ext:pianobar.el" (string))
+
+;;}}}
 ;;{{{ Pianobar Fixups:
 
 (defun emacspeak-pianobar-current-song  ()
@@ -180,6 +186,7 @@ If electric mode is on, keystrokes invoke pianobar commands directly."
 
 (defun emacspeak-pianobar-hide-or-show ()
   "Hide or show pianobar."
+  (declare (special pianobar-buffer))
   (cond
    ((eq (current-buffer) (get-buffer pianobar-buffer))
     (bury-buffer)

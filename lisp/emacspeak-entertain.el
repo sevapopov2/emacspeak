@@ -125,9 +125,9 @@
 
 (defadvice hangman (after emacseak pre act comp)
   "Speech enable hangman."
-  (when (ems-interactive-p )
-    (emacspeak-hangman-setup-pronunciations)
-    (emacspeak-auditory-icon 'open-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-hangman-setup-pronunciations)))
 (declaim (special hm-map))
 (when (boundp 'hm-map)
   (declaim (special hm-map))

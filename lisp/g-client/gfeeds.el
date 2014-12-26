@@ -56,6 +56,13 @@
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'g-utils)
+(require 'json)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function gfeeds-feed-entries (f))
+(declare-function gfeeds-feed-title (f))
 
 ;;}}}
 ;;{{{ Customizations
