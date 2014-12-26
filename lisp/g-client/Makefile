@@ -51,6 +51,8 @@ gcal.elc \
 gcontacts.elc \
 gdocs.elc \
 gfeeds.elc \
+gnotebook.elc \
+greader.elc \
 gf.elc \
 gphoto.elc \
 gweb.elc \
@@ -89,6 +91,7 @@ g-auth.elc: g-auth.el g-utils.elc
 g-app.elc: g-auth.elc g-utils.elc g-app.el
 g.elc: g.el  g-auth.elc
 gfeeds.elc: g-utils.elc gfeeds.el
+greader.elc: greader.el g-app.elc
 gsheet.elc: gsheet.el g-app.elc
 gweb.elc: gweb.el g-utils.elc
 gf.elc: gf.el g-utils.elc

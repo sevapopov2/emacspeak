@@ -65,6 +65,25 @@
 (require 'emacspeak-webutils)
 (require 'emacspeak-we)
 (require 'emacspeak-xslt)
+(require 'emacspeak-eterm)
+(require 'emacspeak-m-player)
+(require 'emacspeak-url-template)
+(require 'toy-braille)
+(require 'emacspeak-fix-interactive)
+(require 'gweb)
+(require 'calendar)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function cl-prettyprint "cl-extra.el" (form))
+(declare-function cperl-pod2man-build-command "cperl-mode.el" ())
+(declare-function solar-get-number "solar.el" (prompt))
+(declare-function solar-sunrise-sunset-string "solar.el" (date &optional nolocation))
+(declare-function gmaps-geocode "ext:gmaps.el" (address &optional raw-p))
+(declare-function list-buffers--refresh "buff-menu.el" (&optional buffer-list old-buffer))
+(declare-function tabulated-list-print "tabulated-list.el" (&optional remember-pos))
+
 ;;}}}
 ;;{{{ custom
 
@@ -485,8 +504,8 @@ With prefix arg, opens the phone book for editing."
   (cond
    (edit
     (find-file emacspeak-speak-telephone-directory)
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'open-object))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line))
    ((file-exists-p emacspeak-speak-telephone-directory)
     (emacspeak-shell-command
      (format "%s %s %s"
@@ -707,8 +726,8 @@ user."
 
 (defun emacspeak-cvs-done-alert (process state)
   "Alert user of cvs status."
-  (message "Done getting CVS snapshot.")
-  (emacspeak-auditory-icon 'task-done))
+  (emacspeak-auditory-icon 'task-done)
+  (message "Done getting CVS snapshot."))
 
 ;;;###autoload
 (defun emacspeak-cvs-get-anonymous  ()
@@ -1014,10 +1033,11 @@ end:\n\n")
                (key-description "")
                (commentary nil)
                (this-module (find-lisp-object-file-name f 'defun))
-               (source-file nil))
+               (source-file nil)
+               (module nil))
             (when this-module
               (setq source-file (locate-library this-module ))
-              (setq this-module
+              (setq module
                     (file-name-nondirectory
                      (file-name-sans-extension this-module)))
               (unless (string-equal module this-module)
@@ -1040,7 +1060,7 @@ for commands defined in module  %s.\n\n"
                   module)))
                                         ; generate command documentation
               (insert (format "\n\n@deffn {Interactive Command} %s  %s\n"
-                              f (help-function-arglist f t)))
+                              f (help-function-arglist f)))
               (setq key-description
                     (cond
                      (key
@@ -1182,9 +1202,9 @@ With optional PREFIX argument, label current frame."
    (prefix
     (call-interactively 'set-frame-name))
    (t (call-interactively 'select-frame-by-name)))
-  (when (ems-interactive-p )
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'select-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-mode-line)))
 
 ;;;###autoload
 (defun emacspeak-next-frame-or-buffer (&optional frame)
@@ -1259,7 +1279,7 @@ the display to speak."
       (save-window-excursion
         (emacspeak-speak-region
          (window-point win)
-         (window-end win))))))
+         (window-end win t))))))
 ;;;###autoload
 (defun emacspeak-speak-this-buffer-previous-display ()
   "Speak this buffer as displayed in a `previous' window.
@@ -1309,8 +1329,8 @@ the display to select."
           (nth (% window (length window-list ))
                window-list))
     (select-frame (window-frame win))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-line)))
 ;;;###autoload
 (defun emacspeak-select-this-buffer-previous-display ()
   "Select this buffer as displayed in a `previous' window.
@@ -1780,7 +1800,7 @@ Extracted content is placed as a csv file in task.csv."
     (read-from-minibuffer "Count: ")))
   (declare (special emacspeak-wizards-table-content-extractor))
   (let ((buffer (get-buffer-create " *table extractor*")))
-    (save-cur
+    (save-current-buffer
      (set-buffer buffer)
      (erase-buffer)
      (setq buffer-undo-list t)
@@ -2403,6 +2423,7 @@ directory to where find is to be launched."
          (current (position browse-url-browser-function emacspeak-wizards-available-browsers))
          (next  (% (1+ current) count) ))
     (setq browse-url-browser-function (nth  next emacspeak-wizards-available-browsers))
+    (emacspeak-auditory-icon 'select-object)
     (message "Browser set to %s" browse-url-browser-function)))
 
 ;;}}}
@@ -2489,8 +2510,8 @@ prompts for and sets value of the file local pattern."
          (boundp 'emacspeak-occur-pattern)
          emacspeak-occur-pattern)
     (occur emacspeak-occur-pattern)
-    (message "Displayed header lines in other window.")
-    (emacspeak-auditory-icon 'open-object))
+    (emacspeak-auditory-icon 'open-object)
+    (message "Displayed header lines in other window."))
    (t
     (let ((pattern  (read-from-minibuffer "Regular expression: ")))
       (setq emacspeak-occur-pattern pattern)
@@ -2505,8 +2526,8 @@ Obsoleted by `previous-buffer' in Emacs 22"
   (interactive)
   (switch-to-buffer (other-buffer
                      (current-buffer) 'visible-ok))
-  (emacspeak-speak-mode-line )
-  (emacspeak-auditory-icon 'select-object ))
+  (emacspeak-auditory-icon 'select-object )
+  (emacspeak-speak-mode-line ))
 ;;;###autoload
 (defun emacspeak-kill-buffer-quietly   ()
   "Kill current buffer without asking for confirmation."
@@ -2682,8 +2703,8 @@ Use with caution."
   (interactive)
   (declare (special last-input-event))
   (emacspeak-wizards-vc-viewer (format "%c" last-input-event))
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'open-object))
+  (emacspeak-auditory-icon 'open-object)
+  (emacspeak-speak-line))
 
 (declaim (special emacspeak-wizards-vc-viewer-mode-map))
 
@@ -2832,8 +2853,8 @@ Interactive  arguments specify filename pattern and search pattern."
     (when (ems-interactive-p )
       (switch-to-buffer output)
       (goto-char (point-min))
-      (emacspeak-speak-mode-line)
-      (emacspeak-auditory-icon 'open-object))))
+      (emacspeak-auditory-icon 'open-object)
+      (emacspeak-speak-mode-line))))
 
 ;;}}}
 ;;{{{ voice sample
@@ -2863,7 +2884,7 @@ for the current voice family."
             (loop for p from 0 to 9 by step do
                   (loop for a from 0 to 9 by step do
                         (loop for r from 0 to 9 by step do
-                              (setq voice (voice-setup-personality-from-style
+                              (setq voice (voice-setup-personality-from-style nil
                                            (list nil a p s r )))
                               (insert
                                (format
@@ -3011,6 +3032,9 @@ dates.")
 
 ;;{{{ rivo
 
+(defvar emacspeak-media-history nil)
+(defvar emacspeak-media-last-url nil)
+
 (defvar emacspeak-wizards-rivo-program
   (expand-file-name "rivo.pl" emacspeak-etc-directory)
   "Rivo script used by emacspeak.")
@@ -3018,10 +3042,10 @@ dates.")
 (defun emacspeak-wizards-rivo (when channel stop-time output directory)
   "Rivo wizard.
 Prompts for relevant information and schedules a rivo job using
-  UNIX At scheduling facility.
+UNIX At scheduling facility.
 RIVO is implemented by rivo.pl ---
- a Perl script  that can be used to launch streaming media and record
-   streaming media for  a specified duration."
+a Perl script  that can be used to launch streaming media and record
+streaming media for  a specified duration."
   (interactive
    (list
     (read-from-minibuffer "At Time: hh:mm Month Day")
@@ -3165,7 +3189,7 @@ Default is to add autoload cookies to current file."
   (or f (setq f (buffer-file-name)))
   (let ((buffer (find-file-noselect f))
         (count 0))
-    (save-cur
+    (save-current-buffer
      (set-buffer buffer)
      (goto-char (point-min))
      (unless (eq major-mode'emacs-lisp-mode)
@@ -3516,7 +3540,10 @@ Lang is obtained from property `lang' on string, or  via an interactive prompt."
 (defun emacspeak-wizards-eww-buffer-list ()
   "Display list of open EWW buffers."
   (interactive)
-  (funcall-interactively 'emacspeak-wizards-view-buffers-filtered-by-mode 'eww-mode))
+  (if (fboundp 'funcall-interactively)
+      (funcall-interactively 'emacspeak-wizards-view-buffers-filtered-by-mode 'eww-mode)
+    (funcall 'emacspeak-wizards-view-buffers-filtered-by-mode 'eww-mode)))
+
 ;;}}}
 (provide 'emacspeak-wizards)
 ;;{{{ end of file

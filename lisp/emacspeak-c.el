@@ -1,7 +1,7 @@
 ;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java
 ;;; $Id: emacspeak-c.el 9336 2014-08-18 01:26:04Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
-;;; DescriptionEmacspeak extensions for C and C++ mode
+;;; Description: Emacspeak extensions for C and C++ mode
 ;;; Keywords:emacspeak, audio interface to emacs C, C++
 ;;{{{  LCD Archive entry:
 
@@ -78,72 +78,38 @@
 ;;}}}
 ;;{{{  advice things to speak
 ;;{{{  Electric chars speak
-(defadvice c-electric-semi&comma (after emacspeak pre act )
+
+(defadvice c-electric-semi&comma (after emacspeak pre act comp)
   "Speak the line when a statement is completed."
-  (when (ems-interactive-p )
-    (cond
-     ((= last-input-event ?,) (dtk-speak " comma "))
+  (declare (special last-input-event))
+  (when (ems-interactive-p)
+    (cond 
+     ((= last-input-event ?,) (emacspeak-speak-this-char last-input-event))
      (t (emacspeak-speak-line )))))
 
 (unless
     (and (boundp 'post-self-insert-hook)
          post-self-insert-hook
          (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
-  
-  (defadvice c-electric-star (after emacspeak pre act )
-    "Speak what you typed"
-    (when (ems-interactive-p ) (dtk-say "star")))
-
-  (defadvice c-electric-slash (after emacspeak pre act )
-    "Speak slash"
-    (when (ems-interactive-p )
-      (dtk-say "slash")))
-
-  (defadvice c-electric-lt-gt (after emacspeak pre act )
-    "Speak what you typed"
-    (declare (special last-input-event))
-    (when (ems-interactive-p )
-      (emacspeak-speak-this-char last-input-event)))
-
-  (defadvice electric-c-terminator (after emacspeak pre act )
-    "Speak what was typed. "
-    (when (ems-interactive-p )
-      (emacspeak-speak-this-char last-input-event)))
-
-  (defadvice c-electric-colon (after emacspeak pre act )
-    "Speak the character you inserted"
-    (when (ems-interactive-p )
-      (emacspeak-speak-this-char last-input-event)))
-
-  (defadvice c-electric-paren (after emacspeak pre act )
-    "Speak the character you inserted"
-    (when (ems-interactive-p )
-      (emacspeak-speak-this-char last-input-event)))
-
-  (defadvice c-electric-pound (after emacspeak pre act )
-    "Speak the character you inserted"
-    (when (ems-interactive-p )
-      (emacspeak-speak-this-char last-input-event)))
-
-  (defadvice c-electric-brace (after emacspeak pre act )
-    "Speak the character you inserted"
-    (when (ems-interactive-p )
-      (emacspeak-speak-this-char last-input-event)))
-
-  (defadvice electric-c-semi (after emacspeak pre act )
-    "Speak what was typed. "
-    (when (ems-interactive-p )
-      (emacspeak-speak-this-char last-input-event)))
-
-  (defadvice electric-c-sharp-sign (after emacspeak pre act )
-    "Speak what was typed. "
-    (when (ems-interactive-p )
-      (emacspeak-speak-this-char last-input-event)))
-
-  (defadvice electric-c-brace (after emacspeak pre act )
-    "Speak what was typed. "
-    (when (ems-interactive-p )
-      (emacspeak-speak-this-char last-input-event))))
+  (loop for f in
+        '(c-electric-star
+          c-electric-slash
+          c-electric-lt-gt
+          electric-c-terminator
+          c-electric-pound
+          c-electric-brace
+          electric-c-semi
+          electric-c-sharp-sign
+          electric-c-brace
+          c-electric-colon
+          c-electric-paren)
+        do
+        (eval
+         `(defadvice ,f (after emacspeak pre act comp)
+            "Speak what you typed"
+            (declare (special last-input-event))
+            (when (ems-interactive-p)
+              (emacspeak-speak-this-char last-input-event))))))
 
 (defadvice c-electric-delete (before emacspeak pre act )
   "Speak char before deleting it."
@@ -154,61 +120,26 @@
 ;;}}}
 ;;{{{  Moving across logical chunks
 
-;;; CPP directives:
-
-(defadvice c-up-conditional (after emacspeak pre act )
-  "Speak the line moved to."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line )))
-
-(defadvice c-forward-conditional (after emacspeak pre act )
-  "Speak the line moved to."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line )))
-
-(defadvice c-backward-conditional (after emacspeak pre act )
-  "Speak the line moved to."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line )))
-
-;;; Statements
-
-(defadvice c-beginning-of-statement (after emacspeak pre act )
-  "Speak the line moved to."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line )))
-
-(defadvice c-end-of-statement (after emacspeak pre act )
-  "Speak the line moved to."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line )))
+(loop for f in
+      '(c-up-conditional
+	c-forward-conditional
+	c-backward-conditional
+	c-beginning-of-statement
+	c-end-of-statement
+	c-beginning-of-defun
+	c-end-of-defun)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Speak the line moved to."
+	  (when (ems-interactive-p)
+	    (emacspeak-auditory-icon 'large-movement)
+	    (emacspeak-speak-line )))))
 
 (defadvice c-mark-function (after emacspeak pre act )
   "Provide spoken and auditory feedback."
   (when (ems-interactive-p )
     (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-speak-line)))
-
-;;}}}
-
-;;}}}
-;;{{{ advice program navigation
-
-(defadvice  c-beginning-of-defun (after emacspeak pre act)
-  "Speak the line."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
-
-(defadvice  c-end-of-defun (after emacspeak pre act)
-  "Speak the line."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
 ;;}}}
@@ -434,8 +365,6 @@ and their meanings. ")
                         (define-key c-mode-base-map "\M-p"
                           'c-previous-statement))
                       (emacspeak-pronounce-toggle-use-of-dictionaries 'on)
-                      (or dtk-split-caps
-                          (dtk-toggle-split-caps))
                       (or dtk-allcaps-beep
                           (dtk-toggle-allcaps-beep)))))
 

@@ -381,6 +381,12 @@ dont-url-encode if true then url arguments are not url-encoded "
 
 
 
+(defsubst emacspeak-url-template-make-cse (meta-url)
+  "Builds up a CSE url for specified meta-url."
+  (format
+   "http://www.google.com/cse/tools/makecse?url=%s"
+   meta-url))
+
 (emacspeak-url-template-define
  "Official GoogleBlog Search"
  "http://www.google.com/cse?q=%s&loading=1&cref=%s"
@@ -394,12 +400,6 @@ dont-url-encode if true then url arguments are not url-encoded "
  #'(lambda (url)
      (emacspeak-we-extract-by-class "g" url 'speak)))
 
-
-(defsubst emacspeak-url-template-make-cse (meta-url)
-  "Builds up a CSE url for specified meta-url."
-  (format
-   "http://www.google.com/cse/tools/makecse?url=%s"
-   meta-url))
 
 (emacspeak-url-template-define
  "On The Fly CSE"
@@ -1577,15 +1577,16 @@ See http://www.cbsradio.com/streaming/index.html for a list of CBS  stations tha
       (set-buffer standard-output)
       (fill-region (point-min)
                    (point-max)))
-    (help-print-return-message))
-  (emacspeak-speak-help)
-  (emacspeak-auditory-icon 'help))
+    (ems-print-help-return-message))
+  (emacspeak-auditory-icon 'help)
+  (emacspeak-speak-help))
+
 (defun emacspeak-url-template-generate-name-setter (name)
   "Generate a setter that sets emacspeak-eww-url-template
 to specified name for use as a callback."
   (eval
-   (function
-    `(lambda ()
+   `(function
+     (lambda ()
        (declare (special emacspeak-eww-url-template))
        (setq emacspeak-eww-url-template ',name)))))
 

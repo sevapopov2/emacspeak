@@ -59,6 +59,21 @@
 (require 'emacspeak-xslt)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function widget-at "wid-edit.el" (&optional pos))
+(declare-function widget-forward "wid-edit.el" (arg))
+(declare-function imenu--make-index-alist "imenu.el" (&optional NOERROR))
+(declare-function w3-view-this-url "ext:w3.el" (&optional no-show))
+(declare-function w3-fetch "ext:w3.el" (&optional url target))
+(declare-function w3-relative-link "ext:w3.el" (url))
+(declare-function w3-masquerade-stub "ext:w3-emulate.el" (arg app version))
+(declare-function w3-setup-terminal-chars "ext:w3-display.el" ())
+(declare-function w3-speak-summarize-form-field "ext:w3-speak.el" ())
+(declare-function w3-table-info "ext:w3-speak-table.el" (&optional to-depth noerror))
+(declare-function w3-table-move-to-table-end "ext:w3-speak-table.el" (&optional at-depth table-info))
+
+;;}}}
 ;;{{{  custom
 
 (defgroup emacspeak-w3 nil
@@ -103,10 +118,14 @@
   "Updated emacspeak hook for W3 mode."
   (declare (special imenu-create-index-function
                     emacspeak-web-post-process-hook
-                    emacspeak-w3-create-imenu-index ))
-  (set (make-local-variable 'voice-lock-mode) t)
+                    emacspeak-w3-create-imenu-index
+                    emacspeak-w3-punctuation-mode
+                    global-voice-lock-mode))
+  (voice-lock-mode (if global-voice-lock-mode 1 -1))
   (modify-syntax-entry 10 " ")
   (modify-syntax-entry 160 " ")
+  (when emacspeak-w3-punctuation-mode
+    (dtk-set-punctuations emacspeak-w3-punctuation-mode))
   (emacspeak-auditory-icon 'open-object)
   (when (featurep 'w3-imenu)
     (setq imenu-create-index-function 'w3-imenu-create-index))
@@ -340,8 +359,8 @@ document is displayed in a separate buffer. "
                                               'html-stack ))
       (setq current (emacspeak-w3-html-stack)))
     (setq end (point))
-    (emacspeak-speak-region start end)
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-speak-region start end)))
 
 (defun emacspeak-w3-next-doc-element (&optional count)
   "Move forward  to the next document element.
@@ -407,8 +426,8 @@ implemented. ")))
                                               (current-buffer)
                                               (point-max)))
       (setq end (point))
-      (emacspeak-speak-region start end )
-      (emacspeak-auditory-icon 'select-object))))
+      (emacspeak-auditory-icon 'select-object)
+      (emacspeak-speak-region start end ))))
 
 (defun emacspeak-w3-speak-next-element ()
   "Speak next document element."
@@ -495,8 +514,8 @@ element. "
       (when
           (eq (aref (widget-get (widget-at (point)) :w3-form-data) 0)
               'submit)
-        (w3-speak-summarize-form-field)
         (emacspeak-auditory-icon 'large-movement)
+        (w3-speak-summarize-form-field)
         (setq found t)))
     (message "Could not find submit button.")))
 
@@ -543,13 +562,6 @@ element. "
 ;;   "silence spoken messages."
 ;;   (let ((emacspeak-speak-messages nil))
 ;;     ad-do-it))
-
-;;}}}
-;;{{{ backward compatibility
-
-;;; this will go away
-(defalias 'make-dtk-speech-style 'make-acss)
-(defalias 'dtk-personality-from-speech-style 'acss-personality-from-speech-style)
 
 ;;}}}
 ;;{{{ define pronunciation for document's base URI

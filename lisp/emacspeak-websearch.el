@@ -44,6 +44,7 @@
 (require 'emacspeak-webutils)
 (require 'emacspeak-google)
 (require 'gweb)
+(require 'gtube)
 (require  'emacspeak-we)
 (require 'calendar)
 
@@ -65,6 +66,9 @@
 (declare-function gweb-google-autocomplete (&optional prompt))
 (declare-function gtube-video-by-tag(tag &optional page count))
 (declare-function calendar-astro-date-string (&optional date))
+(declare-function widget-at "wid-edit.el" (&optional pos))
+(declare-function widget-forward "wid-edit.el" (arg))
+
 ;;}}}
 ;;{{{ searcher table
 ;;;###autoload
@@ -73,6 +77,10 @@
   :group 'emacspeak)
 (defvar emacspeak-websearch-table (make-hash-table)
   "Table holding mapping from search engine names to appropriate searcher functions.")
+
+(defvar emacspeak-websearch-forms-directory
+  (expand-file-name "xml-forms/" emacspeak-lisp-directory)
+  "Directory where xml forms are stored.")
 
 (defsubst emacspeak-websearch-set-searcher  (engine searcher)
   (declare (special emacspeak-websearch-table))
@@ -128,8 +136,8 @@
     (pop-to-buffer "*Help*")
     (help-mode)
     (goto-char (point-min))
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'help)))
+    (emacspeak-auditory-icon 'help)
+    (emacspeak-speak-line)))
 
 (emacspeak-websearch-set-searcher  'help
                                    'emacspeak-websearch-help)
@@ -193,13 +201,17 @@ When using supported browsers,  this interface attempts to speak the most releva
   "Display form specified by form-markup."
   (interactive
    (list
-    (let ((emacspeak-speak-messages nil))
+    (let ((emacspeak-speak-messages nil)
+          (insert-default-directory nil))
       (emacspeak-pronounce-define-local-pronunciation
        (expand-file-name "xml-forms"
                          emacspeak-lisp-directory)
        " xml forms ")
-      (read-file-name "Display Form: "
-                      (expand-file-name "xml-forms/" emacspeak-lisp-directory)))))
+      (expand-file-name
+       (read-file-name "Display Form: "
+                       emacspeak-websearch-forms-directory nil t nil
+                       '(lambda (name)
+                          (string-match "\\.xml$" name)))))))
   (declare (special emacspeak-we-xsl-p
                     emacspeak-web-post-process-hook
                     emacspeak-lisp-directory))
@@ -978,8 +990,7 @@ https://www.google.com/options/specialsearches.html "
 (emacspeak-websearch-set-key ?. 'google-advanced)
 
 (defvar emacspeak-websearch-google-advanced-form
-  (expand-file-name "xml-forms/google-advanced.xml"
-                    emacspeak-lisp-directory)
+  (expand-file-name "google-advanced.xml" emacspeak-websearch-forms-directory)
   "Markup for Google advanced search form.")
 
 ;;;###autoload
@@ -1039,8 +1050,7 @@ https://www.google.com/options/specialsearches.html "
 (emacspeak-websearch-set-key ?u 'google-usenet-advanced)
 
 (defvar emacspeak-websearch-google-usenet-advanced-form
-  (expand-file-name "xml-forms/google-usenet-advanced.xml"
-                    emacspeak-lisp-directory)
+  (expand-file-name "google-usenet-advanced.xml" emacspeak-websearch-forms-directory)
   "Usenet advanced search from google.")
 
 ;;;###autoload
@@ -1250,8 +1260,7 @@ Optional prefix arg no-rss scrapes information from HTML."
                                         ;(emacspeak-websearch-set-key ?r 'recorded-books)
 
 (defvar emacspeak-websearch-recorded-books-advanced-form
-  (expand-file-name "xml-forms/recorded-books-advanced.xml"
-                    emacspeak-lisp-directory)
+  (expand-file-name "recorded-books-advanced.xml" emacspeak-websearch-forms-directory)
   "Search form for finding recorded books.")
 
 ;;;###autoload
@@ -1386,8 +1395,7 @@ Results"
 (emacspeak-websearch-set-key ?X 'exchange-rate-convertor)
 
 (defvar emacspeak-websearch-exchange-rate-form
-  (expand-file-name "xml-forms/exchange-rate-convertor.xml"
-                    emacspeak-lisp-directory)
+  (expand-file-name "exchange-rate-convertor.xml" emacspeak-websearch-forms-directory)
   "Form for performing currency conversion.")
 
 (defvar emacspeak-websearch-exchange-rate-convertor-uri
@@ -1475,8 +1483,7 @@ Results"
 (emacspeak-websearch-set-key 5 'ebay-search)
 
 (defvar emacspeak-websearch-ebay-search-form
-  (expand-file-name "xml-forms/ebay-search.xml"
-                    emacspeak-lisp-directory)
+  (expand-file-name "ebay-search.xml" emacspeak-websearch-forms-directory)
   "Form for Ebay store search.")
 
 ;;;###autoload

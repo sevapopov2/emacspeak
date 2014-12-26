@@ -66,6 +66,20 @@
 (require 'emacspeak-google)
 
 (require 'xml)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function browse-url-interactive-arg "ext:browse-url.el" (PROMPT))
+(declare-function eww "ext:eww.el" (URL))
+(declare-function eww-save-history "ext:eww.el" ())
+(declare-function eww-restore-history "ext:eww.el" (elem))
+(declare-function eww-update-header-line-format "ext:eww.el" ())
+(declare-function shr-insert-document "ext:shr.el" (dom))
+(declare-function emacspeak-eww-current-dom ())
+(declare-function emacspeak-eww-current-title ())
+(declare-function emacspeak-eww-current-url ())
+
 ;;}}}
 ;;{{{ Compatibility Helpers:
 

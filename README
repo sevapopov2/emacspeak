@@ -1,5 +1,6 @@
-Emacspeak  Revision 9596M
+Emacspeak  Revision apocryphal 9596M
 Distribution created by raman on raman-glaptop
+Modified by Igor B. Poretsky
 Unpack the  distribution And type make config 
 Then type make
 See the Makefile for details. 

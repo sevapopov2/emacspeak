@@ -50,6 +50,13 @@
 ;;; Code:
 
 (require 'emacspeak-preamble)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function eperiodic-element-at "ext:eperiodic.el" (&optional posn))
+(declare-function eperiodic-get-element-property "ext:eperiodic.el" (z prop))
+
 ;;}}}
 ;;{{{ faces and voices 
 (voice-setup-add-map
@@ -115,8 +122,8 @@
    (text-property-any (point) (point-max)
                       'face 'eperiodic-header-face))
   (forward-line 2)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'large-movement))
+  (emacspeak-auditory-icon 'large-movement)
+  (emacspeak-speak-line))
 (declaim (special eperiodic-mode-map))
 (define-key eperiodic-mode-map " " 'emacspeak-eperiodic-speak-current-element)
 (define-key  eperiodic-mode-map "x" 'emacspeak-eperiodic-goto-property-section)
@@ -147,21 +154,21 @@
 
 (defadvice eperiodic-find-element (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when  t ;(ems-interactive-p )
-    (emacspeak-eperiodic-speak-current-element)
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-eperiodic-speak-current-element)))
 
 (defadvice eperiodic-previous-element (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (dtk-speak (emacspeak-eperiodic-name-element-at-point))
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (dtk-speak (emacspeak-eperiodic-name-element-at-point))))
 
 (defadvice eperiodic-next-element (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (dtk-speak (emacspeak-eperiodic-name-element-at-point))
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (dtk-speak (emacspeak-eperiodic-name-element-at-point))))
 (defadvice eperiodic (after emacspeak pre act comp)
   "Provide spoken feedback."
   (when (ems-interactive-p )

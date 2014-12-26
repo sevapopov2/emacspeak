@@ -146,16 +146,23 @@ and then cue the next selected buffer."
   (when (ems-interactive-p  )
     (dtk-stop)
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (with-current-buffer (window-buffer)
+      (emacspeak-speak-mode-line))))
 
-(defadvice Info-next-reference (after emacspeak pre act)
-  "Speak the line. "
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)))
+(loop for f in
+      '(Info-next-reference Info-prev-reference)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act)
+          "Play an auditory icon and speak the line. "
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'large-movement)
+            (emacspeak-speak-line)))))
 
-(defadvice Info-prev-reference (after emacspeak pre act)
-  "Speak the line. "
-  (when (ems-interactive-p )
+(defadvice Info-search (after emacspeak pre act)
+  "Play an auditory icon and speak the line."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 
 ;;}}}
@@ -166,17 +173,27 @@ and then cue the next selected buffer."
   (interactive)
   (declare (special Info-use-header-line
                     Info-header-line))
-  (let (cond
-        ((and (boundp 'Info-use-header-line)
-              (boundp 'Info-header-line)
-              Info-header-line)
-         (dtk-speak Info-header-line))
-        (t (save-excursion
-             (goto-char (point-min))
-             (emacspeak-speak-line))))))
+  (if (and (boundp 'Info-use-header-line)
+           (boundp 'Info-header-line)
+           Info-use-header-line
+           Info-header-line)
+      (dtk-speak Info-header-line)
+    (save-excursion
+      (goto-char (point-min))
+      (emacspeak-speak-line)
+      (when (invisible-p (line-end-position))
+        (forward-line)
+        (emacspeak-speak-line)))))
 
 ;;}}}
-;;{{{  Emacs 21
+;;{{{ Inhibit spurious speech feedback
+
+(defadvice Info-check-pointer  (around emacspeak pre act comp)
+  "Silence emacspeak during call."
+  (let ((emacspeak-speak-messages nil)
+        (emacspeak-speak-errors nil)
+        (emacspeak-use-auditory-icons nil))
+    ad-do-it))
 
 ;;}}}
 ;;{{{ keymaps
