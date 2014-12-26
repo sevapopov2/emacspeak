@@ -1,6 +1,12 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2014-12-26  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-advice.el: Stop speech on line beginning or end jumps.
+
+	Merged upstream release 41.0
+
 2014-12-18  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak.el: Treat js-mode as a programming mode.
