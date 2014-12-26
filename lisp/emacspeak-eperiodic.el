@@ -1,5 +1,5 @@
 ;;; emacspeak-eperiodic.el --- Speech-enable Periodic Table
-;;; $Id: emacspeak-eperiodic.el 8575 2013-11-24 02:06:18Z tv.raman.tv $
+;;; $Id: emacspeak-eperiodic.el 9459 2014-09-22 02:03:04Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak speech-enabler for Periodic Table
 ;;; Keywords: Emacspeak, periodic  Table
@@ -101,15 +101,14 @@
   "Move to next row and speak element."
   (interactive)
   (forward-line -1)
-  (emacspeak-auditory-icon 'select-object)
-  (emacspeak-eperiodic-speak-current-element))
+  (call-interactively 'eperiodic-next-element))
 
 (defun emacspeak-eperiodic-next-line ()
   "Move to next row and speak element."
   (interactive)
   (forward-line 1)
-  (emacspeak-auditory-icon 'select-object)
-  (emacspeak-eperiodic-speak-current-element))
+  (call-interactively 'eperiodic-next-element))
+
 (defun emacspeak-eperiodic-speak-current-element ()
   "Speak element at point."
   (interactive)
@@ -157,7 +156,7 @@
   "Provide auditory feedback."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
-    (dtk-speak (emacspeak-eperiodic-name-element-at-point))))
+    (emacspeak-eperiodic-speak-current-element)))
 
 (defadvice eperiodic-previous-element (after emacspeak pre act comp)
   "Provide auditory feedback."
