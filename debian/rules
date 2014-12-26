@@ -66,6 +66,7 @@ install: build-indep
 	cd $(deblsp)/lisp/g-client ; rm -rf obsolete patches *.html *.org COPYING
 	cd $(deblsp)/etc ; rm -f Makefile NEWS-* COPYRIGHT remote.txt
 	cd $(deblsp)/xsl ; rm -f Makefile
+	cd $(deblsp)/lisp ; patch -i $(debbase)/emacspeak-tetris.patch
 
 	# Fix permissions
 	find $(deblsp) -type d -exec chmod 0755 {} \;

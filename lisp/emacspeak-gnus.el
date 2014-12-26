@@ -1,5 +1,5 @@
 ;;; emacspeak-gnus.el --- Speech enable GNUS -- Fluent spoken access to usenet
-;;; $Id: emacspeak-gnus.el 9072 2014-04-16 15:27:01Z tv.raman.tv $
+;;; $Id: emacspeak-gnus.el 9336 2014-08-18 01:26:04Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension to speech enable Gnus
 ;;; Keywords: Emacspeak, Gnus, Advice, Spoken Output, News
@@ -260,51 +260,21 @@ Helps to prevent words from being spelled instead of spoken."
 ;;}}}
 ;;{{{  Newsgroup selection
 
-(defadvice gnus-group-select-group (after emacspeak pre act comp)
-  "Provide auditory feedback.
-Produce an auditory icon if possible."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))
-
-(defadvice gnus-group-read-group  (after  emacspeak pre act comp)
-  "Speak the article subject line.
-Produce an auditory icon indicating 
-an object has been opened."
-  (when (ems-interactive-p ) 
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-gnus-summary-speak-subject)))
-
-(loop for f in
-      '(gnus-group-prev-group
-        gnus-group-prev-unread-group
-        gnus-group-next-group
-        gnus-group-next-unread-group)
-      do
-      (eval
-       `(defadvice ,f (around emacspeak pre act comp)
-          "Speak the newsgroup line. Produce an auditory icon if possible."
-          (let ((saved-point (point )))
-            ad-do-it
-            (when (ems-interactive-p )
-              (emacspeak-auditory-icon 'select-object)
-              (if (= saved-point (point))
-                  (dtk-speak "No more newsgroups ")
-                (emacspeak-speak-line)))
-            ad-return-value))))
-
-(loop for f in
-      '(gnus-group-first-unread-group
-        gnus-group-best-unread-group
-        gnus-group-jump-to-group
-        gnus-group-get-new-news-this-group)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-          "Provide auditory feedback."
-          (when (ems-interactive-p )
-            (emacspeak-auditory-icon 'select-object)
-            (emacspeak-speak-line)))))
+(loop
+ for f in
+ '(gnus-group-select-group gnus-group-first-unread-group
+                           gnus-group-read-group
+                           gnus-group-prev-group gnus-group-next-group
+                           gnus-group-prev-unread-group  gnus-group-next-unread-group
+                           gnus-group-get-new-news-this-group
+                           gnus-group-best-unread-group gnus-group-jump-to-group)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p )
+       (emacspeak-auditory-icon 'select-object)
+       (emacspeak-speak-line)))))
 
 (defadvice gnus-group-unsubscribe-current-group (after emacspeak pre act comp)
   "Produce an auditory icon indicating this group is being deselected."
@@ -325,7 +295,8 @@ an object has been opened."
     (emacspeak-speak-line)))
 
 (defadvice gnus-group-list-groups (after emacspeak pre act comp)
-  "Provide auditory feedback."
+  "Provide auditory feedback.
+Produce an auditory icon if possible."
   (when (ems-interactive-p )
     (emacspeak-auditory-icon 'open-object)
     (dtk-speak "Listing groups... done")))

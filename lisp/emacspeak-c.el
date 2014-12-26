@@ -1,5 +1,5 @@
 ;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java
-;;; $Id: emacspeak-c.el 8146 2013-02-09 20:05:08Z tv.raman.tv $
+;;; $Id: emacspeak-c.el 9336 2014-08-18 01:26:04Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak extensions for C and C++ mode
 ;;; Keywords:emacspeak, audio interface to emacs C, C++
@@ -77,7 +77,6 @@
 
 ;;}}}
 ;;{{{  advice things to speak
-
 ;;{{{  Electric chars speak
 
 (defadvice c-electric-semi&comma (after emacspeak pre act comp)
@@ -88,29 +87,21 @@
      ((= last-input-event ?,) (emacspeak-speak-this-char last-input-event))
      (t (emacspeak-speak-line )))))
 
-(loop for f in
-      '(c-electric-star
-        c-electric-slash
-        c-electric-lt-gt
-        electric-c-terminator
-        c-electric-pound
-        c-electric-brace
-        electric-c-semi
-        electric-c-sharp-sign
-        electric-c-brace)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-          "Speak what you typed"
-          (declare (special last-input-event))
-          (when (ems-interactive-p)
-            (emacspeak-speak-this-char last-input-event)))))
-
-(unless (and (boundp 'post-self-insert-hook)
-             post-self-insert-hook
-             (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
+(unless
+    (and (boundp 'post-self-insert-hook)
+         post-self-insert-hook
+         (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
   (loop for f in
-        '(c-electric-colon
+        '(c-electric-star
+          c-electric-slash
+          c-electric-lt-gt
+          electric-c-terminator
+          c-electric-pound
+          c-electric-brace
+          electric-c-semi
+          electric-c-sharp-sign
+          electric-c-brace
+          c-electric-colon
           c-electric-paren)
         do
         (eval
