@@ -2126,9 +2126,9 @@ Produce an auditory icon if possible."
  do
  (eval
   `(defadvice ,f (before emacspeak pre act comp)
-     "Speak line."
+     "Stop speech first."
      (when (ems-interactive-p )
-       (emacspeak-speak-line)
+       (dtk-stop )
        (emacspeak-auditory-icon 'select-object)))))
 
 ;;}}}
