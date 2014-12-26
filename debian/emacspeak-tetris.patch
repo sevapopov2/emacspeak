@@ -1,0 +1,19 @@
+diff -au emacspeak-tetris.el.orig emacspeak-tetris.el
+--- emacspeak-tetris.el.orig	2014-12-26 20:06:57.000000000 +0300
++++ emacspeak-tetris.el	2014-12-26 21:25:03.000000000 +0300
+@@ -47,6 +47,15 @@
+ ;;; Auditory interface to tetris
+ 
+ ;;}}}
++;;{{{ Forward declarations
++
++(declare-function tetris-erase-shape "tetris.el" ())
++(declare-function tetris-test-shape "tetris.el" ())
++(declare-function tetris-draw-shape "tetris.el" ())
++(declare-function tetris-shape-width "tetris.el" ())
++(declare-function gamegrid-get-cell "gamegrid.el" (x y))
++
++;;}}}
+ ;;{{{  Setup speech display table 
+ 
+ (defvar emacspeak-tetris-pronunciations-defined nil
