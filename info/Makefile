@@ -11,7 +11,7 @@ infodir =/usr/share/info#normally supplied by caller
 INSTALL = install
 EMACS=emacs
 
-all: emacspeak.info introducing-emacspeak.info turning-twenty.info html introducing-emacspeak
+all: emacspeak.info html introducing-emacspeak turning-twenty
 
 info: emacspeak.texi introducing-emacspeak.texi turning-twenty.texi
 	$(MAKEINFO) emacspeak.texi
@@ -81,6 +81,9 @@ htm: emacspeak.texi
 		done
 
 introducing-emacspeak: introducing-emacspeak.texi
+	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
+
+turning-twenty: turning-twenty.texi
 	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
 
 
