@@ -1,3 +1,9 @@
+emacspeak (41.0-2squeeze1) squeeze; urgency=low
+
+  * All extra documentation moved into emacspeak-doc package.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 27 Dec 2014 09:11:02 +0300
+
 emacspeak (41.0-1squeeze1) squeeze; urgency=low
 
   * New upstream release.
