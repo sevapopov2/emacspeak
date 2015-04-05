@@ -258,6 +258,16 @@ Helps to prevent words from being spelled instead of spoken."
     ad-do-it))
 
 ;;}}}
+;;{{{  prompts and queries:
+
+(defadvice gnus-multiple-choice (around emacspeak pre act comp)
+  "Provide auditory feedback."
+  (emacspeak-auditory-icon 'ask-short-question )
+  (let ((emacspeak-speak-messages t))
+    (tts-with-punctuations 'all ad-do-it)
+    ad-return-value))
+
+;;}}}
 ;;{{{  Newsgroup selection
 
 (loop
