@@ -1,3 +1,9 @@
+emacspeak (41.0-3squeeze1) squeeze; urgency=low
+
+  * Auditory feedback on gnus query prompts.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 05 Apr 2015 05:42:47 +0300
+
 emacspeak (41.0-2squeeze1) squeeze; urgency=low
 
   * All extra documentation moved into emacspeak-doc package.

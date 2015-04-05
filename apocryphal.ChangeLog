@@ -1,6 +1,10 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2015-04-05  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-gnus.el: Auditory feedback on prompting some queries.
+
 2014-12-26  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-advice.el: Stop speech on line beginning or end jumps.
