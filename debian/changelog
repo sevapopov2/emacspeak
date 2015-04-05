@@ -1,3 +1,9 @@
+emacspeak (41.0-3precise1) precise; urgency=low
+
+  * Auditory feedback on gnus query prompts.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 05 Apr 2015 05:52:21 +0300
+
 emacspeak (41.0-2precise1) precise; urgency=low
 
   * All extra documentation moved into emacspeak-doc package.
