@@ -53,6 +53,8 @@
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'custom)
+(require 'dtk-unicode)
+(require 'dectalk-voices)
 
 ;;}}}
 ;;;###autoload
