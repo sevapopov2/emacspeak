@@ -1,3 +1,10 @@
+emacspeak (41.0-4wheezy1) wheezy; urgency=low
+
+  * Added links fix to the web-page preparation in w3m to make them work
+    properly.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 23 Apr 2015 08:03:50 +0300
+
 emacspeak (41.0-3wheezy1) wheezy; urgency=low
 
   * Auditory feedback on gnus query prompts.
