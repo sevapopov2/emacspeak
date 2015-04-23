@@ -1,3 +1,10 @@
+emacspeak (41.0-4precise1) precise; urgency=low
+
+  * Added links fix to the web-page preparation in w3m to make them work
+    properly.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 23 Apr 2015 08:09:08 +0300
+
 emacspeak (41.0-3precise1) precise; urgency=low
 
   * Auditory feedback on gnus query prompts.
