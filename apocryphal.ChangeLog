@@ -1,6 +1,12 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2015-04-23  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-w3m.el:
+	Added links fix to the web-page preparation to make them work
+	properly.
+
 2015-04-05  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-gnus.el: Auditory feedback on prompting some queries.

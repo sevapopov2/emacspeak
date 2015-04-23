@@ -733,6 +733,9 @@ Indicate change of selection with
 (defadvice w3m-decode-buffer (before emacspeak pre act comp)
   "Apply requested transform if any before displaying the HTML. "
   (goto-char (point-min))
+  (while (re-search-forward "=\"https?://[^/?]+\\(\\?\\)" nil t)
+    (replace-match "/?" t t nil 1))
+  (goto-char (point-min))
   (while (re-search-forward "<a[[:blank:]][^>]*?[[:blank:]]title=\"\\([^\"]*\\)\"[^>]*?>\\([[:blank:]]*?\\)</a>" nil t)
     (replace-match (match-string 1) t t nil 2))
   (when emacspeak-w3m-text-input-field-types

@@ -1,3 +1,10 @@
+emacspeak (41.0-4) unstable; urgency=low
+
+  * Added links fix to the web-page preparation in w3m to make them work
+    properly.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 23 Apr 2015 07:28:28 +0300
+
 emacspeak (41.0-3) unstable; urgency=low
 
   * Auditory feedback on gnus query prompts.
