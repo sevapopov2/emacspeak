@@ -188,6 +188,13 @@ on a specific directory."
   "\\(mp3\\)\\|\\(audio\\)"
   "Pattern matching locations where we store media.")
 
+(defcustom emacspeak-m-player-coding-system nil
+  "Media player output coding system.
+It is used for tags decoding."
+  :type '(coding-system :size 0)
+  :group 'emacspeak-m-player)
+
+
 ;;;###autoload
 (defun emacspeak-multimedia  ()
   "Start or control Emacspeak multimedia player."
@@ -298,20 +305,22 @@ Optional prefix argument play-list interprets resource as a play-list.
 Resource is a media resource or playlist containing media resources.
 The player is placed in a buffer in emacspeak-m-player-mode."
   (interactive
-   (list
-    (let ((completion-ignore-case t)
-          (emacspeak-speak-messages nil)
-          (read-file-name-completion-ignore-case t)
-          (ido-work-directory-list
-           (remove-if-not 
-            #'(lambda (d)
-                (string-match  emacspeak-media-directory-regexp  d))
-            ido-work-directory-list)))
-      (read-file-name
-       "MP3 Resource: "
-       (emacspeak-m-player-guess-directory)
-       (when (eq major-mode 'dired-mode) (dired-get-filename))))
-    current-prefix-arg))
+   (progn
+     (declare (special ido-work-directory-list))
+     (list
+      (let ((completion-ignore-case t)
+            (emacspeak-speak-messages nil)
+            (read-file-name-completion-ignore-case t)
+            (ido-work-directory-list
+             (remove-if-not 
+              #'(lambda (d)
+                  (string-match  emacspeak-media-directory-regexp  d))
+              ido-work-directory-list)))
+        (read-file-name
+         "MP3 Resource: "
+         (emacspeak-m-player-guess-directory)
+         (when (eq major-mode 'dired-mode) (dired-get-filename))))
+      current-prefix-arg)))
   (declare (special emacspeak-media-extensions default-directory
                     emacspeak-media-directory-regexp
                     emacspeak-m-player-current-directory
@@ -355,6 +364,8 @@ The player is placed in a buffer in emacspeak-m-player-mode."
       (setq emacspeak-m-player-process
             (apply 'start-process "MPLayer" buffer
                    emacspeak-m-player-program options))
+      (set-process-coding-system emacspeak-m-player-process
+                                 emacspeak-m-player-coding-system)
       (set-buffer buffer)
       (emacspeak-m-player-mode)
       (message "MPlayer opened  %s" resource))))

@@ -41,6 +41,7 @@
 (require 'cl)
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'acss-structure)
+(require 'dtk-unicode)
 
 ;;}}}
 ;;{{{ Top-Level TTS Call
@@ -497,7 +498,6 @@ and TABLE gives the values along that dimension."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
 ;;; byte-compile-dynamic: nil
 ;;; end:
 

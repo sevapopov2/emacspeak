@@ -106,8 +106,9 @@
                              'auditory-icon 'mark-object)
           (put-text-property start end
                              'personality voice-animate))
-        (emacspeak-speak-line)
-        (emacspeak-auditory-icon 'mark-object)))))
+        (emacspeak-auditory-icon 'mark-object)
+        (emacspeak-speak-line)))))
+
 (defadvice xslt-process-remove-breakpoint (after emacspeak pre
                                                  act comp)
   "Provide auditory feedback."
@@ -120,8 +121,8 @@
         (with-silent-modifications
           (put-text-property start end
                              'auditory-icon nil))
-        (emacspeak-speak-line)
-        (emacspeak-auditory-icon 'deselect-object)))))
+        (emacspeak-auditory-icon 'deselect-object)
+        (emacspeak-speak-line)))))
 
 (defadvice xslt-process-do-run (after emacspeak pre act
                                       comp)
