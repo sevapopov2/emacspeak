@@ -1,6 +1,10 @@
 This list contains only those changes that were made against original
 releases, but not especially related to the Debian package.
 
+2015-05-25  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* lisp/emacspeak-gnus.el: Fixed Gnus group customization function.
+
 2015-04-23  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* lisp/emacspeak-w3m.el:
