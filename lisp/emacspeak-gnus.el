@@ -353,11 +353,14 @@ Produce an auditory icon if possible."
     (emacspeak-auditory-icon 'open-object)
     (dtk-speak "Listing zombie groups... done")))
 
-(defadvice gnus-group-customize (before emacspeak pre act comp)
+(defadvice gnus-group-customize (around emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p )
     (emacspeak-auditory-icon 'open-object)
-    (message "Customizing group %s" (gnus-group-group-name))))
+    (message "Customizing group %s" (gnus-group-group-name)))
+  (let ((max-specpdl-size 2000))
+    ad-do-it)
+  ad-return-value)
 
 ;;}}}
 ;;{{{  summary mode 
