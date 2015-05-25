@@ -74,7 +74,8 @@
 (defadvice *table--cell-delete-char (around emacspeak pre act)
   "Speak character you're deleting."
   (cond
-   ((ems-interactive-p  )
+   ((ems-interactive-p )
+    (when dtk-stop-immediately (dtk-stop))
     (dtk-tone 500 30 'force)
     (emacspeak-speak-char t)
     ad-do-it)
@@ -84,7 +85,8 @@
 (defadvice *table--cell-delete-backward-char (around emacspeak pre act)
   "Speak character you're deleting."
   (cond
-   ((ems-interactive-p  )
+   ((ems-interactive-p )
+    (when dtk-stop-immediately (dtk-stop))
     (dtk-tone 500 30 'force)
     (emacspeak-speak-this-char (preceding-char ))
     ad-do-it)

@@ -80,16 +80,16 @@
   (when (ems-interactive-p )
     (save-excursion
       (set-buffer reb-target-buffer)
-      (emacspeak-speak-line)
-      (emacspeak-auditory-icon 'large-movement))))
+      (emacspeak-auditory-icon 'large-movement)
+      (emacspeak-speak-line))))
 
 (defadvice reb-prev-match (after emacspeak pre act comp)
   "Speak matched line."
   (when (ems-interactive-p )
     (save-excursion
       (set-buffer reb-target-buffer)
-      (emacspeak-speak-line)
-      (emacspeak-auditory-icon 'large-movement))))
+      (emacspeak-auditory-icon 'large-movement)
+      (emacspeak-speak-line))))
 
 (defadvice reb-toggle-case (after emacspeak pre act comp)
   "Provide spoken feedback."

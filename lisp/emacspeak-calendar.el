@@ -50,8 +50,15 @@
 (require 'solar)
 (require 'g-utils)
 (require 'appt)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function g-json-get "ext:g-utils.el" (key object))
+
 ;;}}}
 ;;{{{  personalities
+
 (voice-setup-add-map
  '(
    (calendar-today voice-lighten)
@@ -135,9 +142,8 @@
        ((buffer-live-p (get-buffer "*Fancy Diary Entries*"))
         (save-current-buffer
           (set-buffer "*Fancy Diary Entries*")
-          (tts-with-punctuations
-           "some"
-           (emacspeak-speak-buffer))))
+          (tts-with-punctuations 'some
+                                 (emacspeak-speak-buffer))))
        (t (dtk-speak "No diary entries."))))))
 
 (defadvice  mark-visible-calendar-date (after emacspeak pre act )
@@ -177,100 +183,100 @@
 
 (defadvice calendar-goto-date (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p  )
-    (emacspeak-calendar-speak-date ))
-  (emacspeak-auditory-icon 'select-object))
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-goto-today (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p  )
-    (emacspeak-calendar-speak-date ))
-
-  (emacspeak-auditory-icon 'select-object))
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-backward-day (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'select-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-forward-day (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'select-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-backward-week (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-forward-week (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-backward-month (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-forward-month (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-backward-year (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-forward-year (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-beginning-of-week (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-beginning-of-month (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-beginning-of-year (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-end-of-week (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'large-movement)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-end-of-month (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'select-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-calendar-speak-date )))
 
 (defadvice calendar-end-of-year (after emacspeak pre act)
   "Speak the date. "
-  (when (ems-interactive-p )
-    (emacspeak-calendar-speak-date )
-    (emacspeak-auditory-icon 'select-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-calendar-speak-date )))
+
 (loop for f in
       '(exit-calendar calendar-exit calendar-quit)
       do
@@ -400,11 +406,10 @@
 
 (defun emacspeak-appt-speak-appointment (minutes-left new-time message )
   "Speak the appointment in addition to  displaying it visually."
-  (let ((emacspeak-speak-messages-pause nil))
-    (emacspeak-auditory-icon 'alarm)
-    (message "You have an appointment in %s minutes. %s"
-             minutes-left message )
-    (appt-disp-window minutes-left new-time  message)))
+  (emacspeak-auditory-icon 'alarm)
+  (message "You have an appointment in %s minutes. %s"
+           minutes-left message )
+  (appt-disp-window minutes-left new-time  message))
 
 (defun emacspeak-appt-delete-display ()
   "Function to delete appointment message"

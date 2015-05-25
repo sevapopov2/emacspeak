@@ -52,6 +52,12 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function python-beginning-of-defun "python.el" ())
+(declare-function python-end-of-defun "python.el" ())
+
+;;}}}
 ;;{{{ Advice interactive commands:
 
 ;;{{{  electric editing
@@ -296,21 +302,21 @@
 If already at the beginning then move to previous block."
   (interactive)
   (let ((start (point)))
-    (beginning-of-python-def-or-class)
+    (python-beginning-of-defun)
     (unless (eq start (point))
       (beginning-of-line)
-      (emacspeak-speak-line)
-      (emacspeak-auditory-icon 'large-movement))))
+      (emacspeak-auditory-icon 'large-movement)
+      (emacspeak-speak-line))))
 
 (defun emacspeak-py-next-block()
   "Move forward to the beginning of the next block."
   (interactive)
-  (end-of-python-def-or-class)
+  (python-end-of-defun)
   (skip-syntax-forward " ")
   (forward-line 1)
   (beginning-of-line)
-  (emacspeak-speak-line)
-  (emacspeak-auditory-icon 'large-movement))
+  (emacspeak-auditory-icon 'large-movement)
+  (emacspeak-speak-line))
 
 ;;}}}
 ;;{{{ keybindings
