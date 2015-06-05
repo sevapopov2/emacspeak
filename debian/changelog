@@ -1,3 +1,9 @@
+emacspeak (41.0-6squeeze1) squeeze; urgency=low
+
+  * W3m support fixes. See apocryphal.ChangeLog for details.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 05 Jun 2015 21:56:35 +0300
+
 emacspeak (41.0-5squeeze1) squeeze; urgency=low
 
   * Fixed Gnus group customization function.
