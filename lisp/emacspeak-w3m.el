@@ -123,18 +123,21 @@ This hack helps to deal with some specially designed forms."
 (fset 'emacspeak-w3m-get-action
       (byte-compile '(lambda () (w3m-action))))
 
-(defun emacspeak-w3m-action ()
-  (let ((act (emacspeak-w3m-get-action)))
-    (if (numberp (nth 2 act))
-        (append (list (car act) (cadr act)) (nthcdr 3 act))
-      act)))
-
-(defun emacspeak-w3m-form-get (form name))
+(defun emacspeak-w3m-form-get (form id))
 (fset 'emacspeak-w3m-form-get
-      (if (functionp 'w3m-form-get-by-name)
-          'w3m-form-get-by-name
-        (byte-compile '(lambda (form name)
-                         (w3m-form-get form name)))))
+      (byte-compile '(lambda (form id)
+                       (w3m-form-get form id))))
+
+(defun emacspeak-w3m-form-plist (form))
+(fset 'emacspeak-w3m-form-plist
+      (byte-compile '(lambda (form id)
+                       (w3m-form-plist form))))
+
+(defsubst emacspeak-w3m-form-arglist (args)
+  "Canonicalize form arguments list."
+  (if (numberp (car args))
+      (cdr args)
+    args))
 
 (defsubst emacspeak-w3m-personalize-string (string personality)
   (let ((newstring (copy-sequence string)))
@@ -196,7 +199,7 @@ This hack helps to deal with some specially designed forms."
 
 (defun emacspeak-w3m-speak-this-anchor ()
   (let ((url (emacspeak-w3m-anchor))
-        (act (emacspeak-w3m-action)))
+        (act (emacspeak-w3m-get-action)))
     (cond
      (url (emacspeak-w3m-speak-cursor-anchor))
      ((consp act)
@@ -211,44 +214,55 @@ This hack helps to deal with some specially designed forms."
 ;;}}}
 ;;{{{  forms
 
-(defun emacspeak-w3m-speak-form-input (form name type width maxlength
-                                            value)
+(defun emacspeak-w3m-speak-form-input (form &rest args)
   "Speak form input"
   (declare (special emacspeak-w3m-form-voice))
-  (dtk-speak
-   (format "%s input %s  %s"
-           type
-           name
-           (emacspeak-w3m-personalize-string
-            (or (emacspeak-w3m-form-get form name) value)
-            emacspeak-w3m-form-voice))))
+  (let* ((id (car args))
+         (arglist (emacspeak-w3m-form-arglist args))
+         (name (car arglist))
+         (type (cadr arglist))
+         (value (nth 4 arglist)))
+    (dtk-speak
+     (format "%s input %s  %s"
+             type
+             name
+             (emacspeak-w3m-personalize-string
+              (or (emacspeak-w3m-form-get form id) value)
+              emacspeak-w3m-form-voice)))))
 
-(defun emacspeak-w3m-speak-form-input-checkbox (form name value)
+(defun emacspeak-w3m-speak-form-input-checkbox (form &rest args)
   "Speak checkbox"
   (declare (special emacspeak-w3m-form-voice))
-  (dtk-speak
-   (format "checkbox %s is %s"
-           name
-           (emacspeak-w3m-personalize-string
-            (if (emacspeak-w3m-form-get form name)
-                "on"
-              "off")
-            emacspeak-w3m-form-voice))))
+  (let* ((id (car args))
+         (arglist (emacspeak-w3m-form-arglist args))
+         (name (car arglist))
+         (value (cadr arglist)))
+    (dtk-speak
+     (format "checkbox %s is %s"
+             name
+             (emacspeak-w3m-personalize-string
+              (if (member value (emacspeak-w3m-form-get form id))
+                  "on"
+                "off")
+              emacspeak-w3m-form-voice)))))
 
-(defun emacspeak-w3m-speak-form-input-password (form name)
+(defun emacspeak-w3m-speak-form-input-password (form &rest args)
   "Speech-enable password form element."
   (declare (special emacspeak-w3m-form-voice))
   (dtk-speak
    (format "password input %s  %s"
-           name
+           (car (emacspeak-w3m-form-arglist args))
            (emacspeak-w3m-personalize-string
             (emacspeak-w3m-anchor-text)
             emacspeak-w3m-form-voice))))
 
-(defun emacspeak-w3m-speak-form-submit (form &optional name value new-session download)
+(defun emacspeak-w3m-speak-form-submit (form &rest args)
   "Speak submit button."
   (declare (special emacspeak-w3m-form-button-voice))
-  (let ((text (emacspeak-w3m-anchor-text)))
+  (let* ((text (emacspeak-w3m-anchor-text))
+         (arglist (emacspeak-w3m-form-arglist args))
+         (name (car arglist))
+         (value (cadr arglist)))
     (dtk-speak
      (cond
       ((and text (not (string-match "^[[:blank:]]*$" text)))
@@ -265,11 +279,15 @@ This hack helps to deal with some specially designed forms."
                 emacspeak-w3m-form-button-voice)))
       (t "submit button")))))
 
-(defun emacspeak-w3m-speak-form-input-radio (form name value)
+(defun emacspeak-w3m-speak-form-input-radio (form &rest args)
   "speech enable radio buttons."
   (declare (special emacspeak-w3m-form-voice))
   (and dtk-stop-immediately (dtk-stop))
-  (let* ((active (equal value (emacspeak-w3m-form-get form name)))
+  (let* ((id (car args))
+         (arglist (emacspeak-w3m-form-arglist args))
+         (name (car arglist))
+         (value (cadr arglist))
+         (active (equal value (emacspeak-w3m-form-get form id)))
          (personality (if active
                           emacspeak-w3m-form-voice))
          (dtk-stop-immediately nil))
@@ -285,17 +303,17 @@ This hack helps to deal with some specially designed forms."
                 personality)
                name)))))
 
-(defun emacspeak-w3m-speak-form-input-select (form name)
+(defun emacspeak-w3m-speak-form-input-select (form &rest args)
   "speech enable select control."
   (declare (special emacspeak-w3m-form-voice))
   (dtk-speak
    (format "select %s  %s"
-           name
+           (car (emacspeak-w3m-form-arglist args))
            (emacspeak-w3m-personalize-string
             (emacspeak-w3m-anchor-text)
             emacspeak-w3m-form-voice))))
 
-(defun emacspeak-w3m-speak-form-input-textarea (form &optional hseq)
+(defun emacspeak-w3m-speak-form-input-textarea (form)
   "speech enable text area."
   (declare (special emacspeak-w3m-form-voice))
   (dtk-speak
@@ -316,6 +334,21 @@ This hack helps to deal with some specially designed forms."
                (emacspeak-w3m-personalize-string
                 "reset"
                 emacspeak-w3m-form-button-voice))))))
+
+;;}}}
+;;{{{  forms fix
+
+(defadvice w3m-form-make-form-data (before emacspeak pre act comp)
+  "Withstand some poorly designed forms."
+  (let ((plist (emacspeak-w3m-form-plist (ad-get-arg 0))))
+    (while plist
+      (let* ((pair (plist-get (cadr plist) :value))
+	     (value (cdr pair)))
+        (when (and (consp value)
+                   (null (car value))
+                   (null (cdr value)))
+          (setcdr pair nil))
+	(setq plist (cddr plist))))))
 
 ;;}}}
 ;;{{{  advice interactive commands.
@@ -437,7 +470,7 @@ This hack helps to deal with some specially designed forms."
   (cond
    ((ems-interactive-p )
     (let ((url (emacspeak-w3m-anchor))
-          (act (emacspeak-w3m-action)))
+          (act (emacspeak-w3m-get-action)))
       (when url
         (emacspeak-auditory-icon 'select-object))
       ad-do-it
