@@ -56,6 +56,11 @@
 (require 'browse-url)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function cl-prettyprint "cl-extra.el" (form))
+
+;;}}}
 ;;{{{  feed cache
 
 ;;;###autoload

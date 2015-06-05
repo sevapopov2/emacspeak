@@ -54,6 +54,12 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function json-read-from-string "json.el" (STRING))
+(declare-function xkcd-get-json "ext:xkcd.el" (url &optional num))
+
+;;}}}
 ;;; Eventually move this to the emacs-xkcd package if possible.
 
 (defvar xkcd-transcript nil
@@ -62,6 +68,7 @@
 ;;; Content downloaded by the time this is called.
 (defsubst emacspeak-xkcd-get-current-transcript ()
   "Cache current transcript."
+  (declare (special xkcd-cur))
   (setq 
    xkcd-transcript 
    (cdr 

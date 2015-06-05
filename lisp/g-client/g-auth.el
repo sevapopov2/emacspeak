@@ -162,11 +162,12 @@
   (let* ((auth-source-creation-prompts 
           '((user . "Google E-Mail: ")
             (secret . "Google Password: ")))
-         (found (nth 0 (auth-source-search :max 1
-                                           :host "www.google.com"
-                                           :port service
-                                           :require '(:user :secret)
-                                           :create t))))
+         (found (and (fboundp 'auth-source-search)
+                     (nth 0 (auth-source-search :max 1
+                                                :host "www.google.com"
+                                                :port service
+                                                :require '(:user :secret)
+                                                :create t)))))
     (if found
         (list (plist-get found :user)
               (let ((secret (plist-get found :secret)))
