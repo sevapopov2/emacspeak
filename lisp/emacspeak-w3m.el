@@ -130,7 +130,7 @@ This hack helps to deal with some specially designed forms."
 
 (defun emacspeak-w3m-form-plist (form))
 (fset 'emacspeak-w3m-form-plist
-      (byte-compile '(lambda (form id)
+      (byte-compile '(lambda (form)
                        (w3m-form-plist form))))
 
 (defsubst emacspeak-w3m-form-arglist (args)
