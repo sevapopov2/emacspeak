@@ -1,3 +1,9 @@
+emacspeak (41.0-7lucid1) lucid; urgency=low
+
+  * Fixed regression introduced in release 41.0-6.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 06 Jun 2015 10:45:09 +0300
+
 emacspeak (41.0-6lucid1) lucid; urgency=low
 
   * W3m support fixes. See apocryphal.ChangeLog for details.
