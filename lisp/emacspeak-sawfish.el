@@ -141,9 +141,9 @@
 (defadvice sawfish-interaction (after emacspeak pre act
                                       comp)
   "Provide auditory feedback. "
-  (when (ems-interactive-p )
-    (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'open-object)))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice sawfish-complete-symbol (around emacspeak pre act)
   "Say what you completed."

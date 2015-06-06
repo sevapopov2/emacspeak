@@ -64,6 +64,12 @@
 (require 'derived)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function w3-fetch "ext:w3.el" (&optional url target))
+(declare-function w3-download-url "ext:w3.el" (url &optional file-name))
+
+;;}}}
 ;;{{{  Customizations, Variables:
 
 (defgroup emacspeak-epub nil

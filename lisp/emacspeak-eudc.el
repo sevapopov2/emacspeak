@@ -53,6 +53,12 @@
 ;;; Code:
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function widget-type "wid-edit.el" (widget))
+(declare-function widget-at "wid-edit.el" (&optional pos))
+
+;;}}}
 ;;{{{ speech enable interactive commands 
 
 (defadvice eudc-move-to-next-record (after emacspeak pre act comp)
