@@ -1,3 +1,9 @@
+emacspeak (41.0-7precise1) precise; urgency=low
+
+  * Fixed regression introduced in release 41.0-6.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 06 Jun 2015 10:47:19 +0300
+
 emacspeak (41.0-6precise1) precise; urgency=low
 
   * W3m support fixes. See apocryphal.ChangeLog for details.
