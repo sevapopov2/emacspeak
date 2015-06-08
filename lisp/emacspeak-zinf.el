@@ -53,6 +53,8 @@
 ;;{{{  Required modules
 
 (require 'emacspeak-preamble)
+(require 'dired)
+
 ;;}}}
 ;;{{{ define a derived mode for zinf interaction 
 

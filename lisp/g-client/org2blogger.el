@@ -33,6 +33,10 @@
 ;(require 'org-exp)
 (require 'gblogger)
 
+;;;_. Forward declarations
+
+(declare-function org-infile-export-plist "org-exp.el" ())
+
 ;;;_. Body
 
 (defun org2gblogger ()

@@ -206,8 +206,10 @@ personalities."
     (cond
      ((= (point) (point-max))
       (message "Sending EOF to comint process"))
-     (t (dtk-tone 500 30 'force)
-        (emacspeak-speak-char t)))
+     (t
+      (when dtk-stop-immediately (dtk-stop))
+      (dtk-tone 500 30 'force)
+      (emacspeak-speak-char t)))
     ad-do-it)
    (t ad-do-it))
   ad-return-value)
@@ -215,7 +217,8 @@ personalities."
 (defadvice eshell-delete-backward-char (around emacspeak pre act)
   "Speak character you're deleting."
   (cond
-   ((ems-interactive-p  )
+   ((ems-interactive-p )
+    (when dtk-stop-immediately (dtk-stop))
     (dtk-tone 500 30 'force)
     (emacspeak-speak-this-char (preceding-char ))
     ad-do-it)
@@ -248,21 +251,21 @@ personalities."
 
 (defadvice eshell-toggle (after emacspeak pre act comp)
   "Provide spoken context feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'select-object)
     (cond
      ((eq major-mode 'eshell-mode)
       (emacspeak-setup-programming-mode)
       (emacspeak-speak-line))
-     (t (emacspeak-speak-mode-line)))
-    (emacspeak-auditory-icon 'select-object)))
+     (t (emacspeak-speak-mode-line)))))
 (defadvice eshell-toggle-cd (after emacspeak pre act comp)
   "Provide spoken context feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'select-object)
     (cond
      ((eq major-mode 'eshell-mode)
       (emacspeak-speak-line))
-     (t (emacspeak-speak-mode-line)))
-    (emacspeak-auditory-icon 'select-object)))
+     (t (emacspeak-speak-mode-line)))))
 
 ;;}}}
 
