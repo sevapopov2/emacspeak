@@ -313,7 +313,7 @@ This hack helps to deal with some specially designed forms."
             (emacspeak-w3m-anchor-text)
             emacspeak-w3m-form-voice))))
 
-(defun emacspeak-w3m-speak-form-input-textarea (form)
+(defun emacspeak-w3m-speak-form-input-textarea (&rest ignore)
   "speech enable text area."
   (declare (special emacspeak-w3m-form-voice))
   (dtk-speak
@@ -323,7 +323,7 @@ This hack helps to deal with some specially designed forms."
             (emacspeak-w3m-anchor-text)
             emacspeak-w3m-form-voice))))
 
-(defun emacspeak-w3m-speak-form-reset (form)
+(defun emacspeak-w3m-speak-form-reset (&rest ignore)
   "Reset button."
   (declare (special emacspeak-w3m-form-button-voice))
   (let ((text (emacspeak-w3m-anchor-text)))
