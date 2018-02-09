@@ -1,6 +1,6 @@
 diff -au emacspeak-tetris.el.orig emacspeak-tetris.el
---- emacspeak-tetris.el.orig	2014-12-26 20:06:57.000000000 +0300
-+++ emacspeak-tetris.el	2014-12-26 21:25:03.000000000 +0300
+--- emacspeak-tetris.el.orig	2018-02-09 20:55:45.000000000 +0300
++++ emacspeak-tetris.el	2018-02-09 21:04:02.969790143 +0300
 @@ -47,6 +47,15 @@
  ;;; Auditory interface to tetris
  
@@ -17,3 +17,12 @@ diff -au emacspeak-tetris.el.orig emacspeak-tetris.el
  ;;{{{  Setup speech display table 
  
  (defvar emacspeak-tetris-pronunciations-defined nil
+@@ -321,7 +330,7 @@
+ interaction.  Despite the clock being slowed down, playing
+ Tetris with speech feedback alone requires a lot of
+ concentration and the game is a good mental challenge. "
+-  (declare (special tetris-tick-period
++  (declare (special tetris-tick-period tetris-height
+                     emacspeak-tetris-blank-row))
+   (when (ems-interactive-p )
+     (setq tetris-tick-period emacspeak-tetris-tick-period)

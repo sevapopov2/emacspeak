@@ -30,6 +30,7 @@
 ;;;_ , Requires
 
 (require 'org)
+(require 'org-html)
 ;(require 'org-exp)
 (require 'gblogger)
 
@@ -43,7 +44,7 @@
    "Export the current org buffer to gblogger."
    
    (interactive)
-   (unless (org-mode-p)
+   (unless (eq major-mode 'org-mode)
       (error "Only useful in an org-mode buffer"))
    
    (let*
