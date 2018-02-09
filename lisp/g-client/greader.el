@@ -252,7 +252,7 @@ e.g., starred."
   (declare (special greader-auth-handle
                     g-curl-program g-curl-common-options
                     greader-default-state g-atom-view-xsl))
-  (when  (and state (interactive-p))
+  (when  (and state (g-interactive-p))
     (setq state (greader-read-state "State:")))
   (g-auth-ensure-token greader-auth-handle)
   (g-display-result

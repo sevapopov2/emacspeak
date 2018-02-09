@@ -88,6 +88,7 @@
 (condition-case nil
     (require 'org-exp)
   (error "You need a recent version of org."))
+(require 'org-html)
 
 ;;}}}
 ;;{{{ Forward declarations

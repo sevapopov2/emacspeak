@@ -57,6 +57,7 @@
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'g-utils)
 (require 'json)
+(require 'browse-url)
 
 ;;}}}
 ;;{{{ Forward declarations
@@ -102,7 +103,6 @@ Customize this to point to your Web location."
 ;;;###autoload
 (defsubst gfeeds-feed (feed-url)
   "Return feed structure."
-  (declare (special gfeeds-feeds-url gfeeds-referer))
   (let ((result nil))
     (g-using-scratch
      (call-process g-curl-program nil t nil
@@ -119,7 +119,6 @@ Customize this to point to your Web location."
 ;;;###autoload
 (defsubst gfeeds-lookup (url)
   "Lookup feed for a given Web page."
-  (declare (special gfeeds-lookup-url gfeeds-referer))
   (let ((result nil))
     (g-using-scratch
      (call-process g-curl-program nil t nil
@@ -131,12 +130,11 @@ Customize this to point to your Web location."
      (when (= 200 (g-json-get 'responseStatus result))
        (g-json-get
         'url
-(g-json-get 'responseData result))))))
+        (g-json-get 'responseData result))))))
 
 ;;;###autoload
 (defsubst gfeeds-find (query)
   "Find feeds matching a query."
-  (declare (special gfeeds-find-url gfeeds-referer))
   (let ((result nil))
     (g-using-scratch
      (call-process g-curl-program nil t nil
