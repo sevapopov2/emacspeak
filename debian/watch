@@ -10,4 +10,4 @@ version=3
 # http://sf.net/emacspeak/emacspeak-(.*)\.tar\.bz2 debian uupdate
 # ftp://ftp.sf.net/pub/sourceforge/e/em/emacspeak/emacspeak-(.*)\.tar\.bz2 debian uupdate
 # ftp://heanet.dl.sourceforge.net/e/em/emacspeak/emacspeak-(.*)\.tar\.bz2 debian uupdate
-http://emacspeak.googlecode.com/ files/emacspeak-(.*)\.tar\.bz2 debian uupdate
+https://github.com/tvraman/emacspeak/releases emacspeak-(.*)\.tar\.bz2 debian uupdate
