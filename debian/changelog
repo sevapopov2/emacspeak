@@ -1,3 +1,10 @@
+emacspeak (41.0-9) unstable; urgency=low
+
+  * Emacs versions compatibility fix.
+  * Fixed upstream source reference.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 11 Feb 2018 11:39:27 +0300
+
 emacspeak (41.0-8) unstable; urgency=low
 
   * Fixed w3m support bug introduced in the last package releases.
