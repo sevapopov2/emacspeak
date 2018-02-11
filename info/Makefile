@@ -6,7 +6,7 @@ FILES=*.texi
 MAKEINFO = makeinfo 
 TEX=tex
 PDFTEX=pdftex
-TEXI2HTML=texi2html
+TEXI2HTML=texi2any --set-customization-variable TEXI2HTML=1
 infodir =/usr/share/info#normally supplied by caller
 INSTALL = install
 EMACS=emacs
@@ -43,7 +43,7 @@ uninstall:
 emacspeak.info: emacspeak.texi 
 
 html: emacspeak.texi
-	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
+	$(TEXI2HTML) --split chapter --output $@ $<
 
 introducing-emacspeak.info: introducing-emacspeak.texi
 
@@ -81,10 +81,10 @@ htm: emacspeak.texi
 		done
 
 introducing-emacspeak: introducing-emacspeak.texi
-	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
+	$(TEXI2HTML) --split chapter --output $@ $<
 
 turning-twenty: turning-twenty.texi
-	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
+	$(TEXI2HTML) --split chapter --output $@ $<
 
 
 pub:  html/index.html introducing-emacspeak/index.html
