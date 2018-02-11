@@ -3,7 +3,7 @@ Section: editors
 Priority: extra
 Maintainer: Igor B. Poretsky <poretsky@mlbox.ru>
 Build-Depends: debhelper (>= 5), po-debconf, libespeak-dev, tcl8.4-dev, libasound2-dev, texi2html, texinfo
-Standards-Version: 3.9.3
+Standards-Version: 3.9.7
 Homepage: http://emacspeak.sf.net
 
 Package: emacspeak
