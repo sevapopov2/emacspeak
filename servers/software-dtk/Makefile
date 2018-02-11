@@ -2,11 +2,10 @@
 #
 LABEL=1.1
 DIST=software-dtk-$(LABEL)
-TCL_VERSION=8.4
-CFLAGS+=-O3 -fpic -pedantic -ansi -Wall -I/usr/include/tcl$(TCL_VERSION)
+CFLAGS+=-O3 -fpic -pedantic -ansi -Wall -I/usr/include/tcl
 CPPFLAGS+=-DSTDC_HEADERS=1 -Dclock_t=long -DRETSIGTYPE=void 
 INSTALL=install
-LIBS=-ltts -ltts_us -ltcl$(TCL_VERSION)
+LIBS=-ltts -ltts_us -ltcl
 SERVER_DIR=/usr/share/emacs/site-lisp/emacspeak/servers/software-dtk
 FILES=tcldtk.c tcldtk.so tcldtk.o Makefile
 

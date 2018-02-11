@@ -4,11 +4,10 @@ INSTALL = install
 PREFIX = /usr
 LIBPARENTDIR = ${PREFIX}/share/emacs/site-lisp
 LIBDIR =$(LIBPARENTDIR)/emacspeak/servers/linux-espeak
-TCL_VERSION = 8.4
-TCL_INCLUDE= /usr/include/tcl$(TCL_VERSION)
+TCL_INCLUDE= /usr/include/tcl
 CXXFLAGS+= -g    -O2 -fPIC  -DPIC  -pedantic -ansi -Wall -Wno-long-long -I$(TCL_INCLUDE)
 
-LIBS= -ltcl$(TCL_VERSION) -lespeak
+LIBS= -ltcl -lespeak
 
 TTS=tclespeak.so
 
