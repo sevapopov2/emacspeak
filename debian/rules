@@ -57,7 +57,7 @@ clean:
 install: build-indep
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
+	dh_prep
 
 	# Copy files into the installation tree
 	dh_install -X.elc -X.nosearch -X.tar.bz2 -X.tar.gz -X.diff -X.excludes -X-loaddefs -X-cus-load -X-finder-inf -X.sh.def -X.pyc -X.pyo
