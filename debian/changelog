@@ -1,3 +1,12 @@
+emacspeak (41.0-9xenial1) xenial; urgency=low
+
+  * Per distribution build.
+  * Fixed dependencies.
+  * Fixed package building rules.
+  * Standards version bumped to 3.9.7.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 11 Feb 2018 12:08:06 +0300
+
 emacspeak (41.0-9) unstable; urgency=low
 
   * Emacs versions compatibility fix.
