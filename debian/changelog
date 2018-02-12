@@ -1,3 +1,9 @@
+emacspeak (41.0-10jessie1) jessie; urgency=low
+
+  * Package installation fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 12 Feb 2018 21:54:36 +0300
+
 emacspeak (41.0-9jessie1) jessie; urgency=low
 
   * Per distribution build.
