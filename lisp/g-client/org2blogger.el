@@ -30,7 +30,7 @@
 ;;;_ , Requires
 
 (require 'org)
-(require 'org-html)
+(require 'org-html nil t)
 ;(require 'org-exp)
 (require 'gblogger)
 
