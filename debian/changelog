@@ -1,3 +1,9 @@
+emacspeak (41.0-10xenial1) xenial; urgency=low
+
+  * Package installation fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 12 Feb 2018 21:52:56 +0300
+
 emacspeak (41.0-9xenial1) xenial; urgency=low
 
   * Per distribution build.
