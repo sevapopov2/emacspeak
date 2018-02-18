@@ -1,5 +1,5 @@
 ;;; emacspeak-eudc.el --- Speech enable  directory client 
-;;; $Id: emacspeak-eudc.el 8574 2013-11-24 02:01:07Z tv.raman.tv $
+;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description:   extension to speech enable universal directory client 
 ;;; Keywords: Emacspeak, Audio Desktop
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2011, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2015, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -143,9 +143,11 @@ Summarize the form to welcome the user. "
 
 ;;}}}
 ;;{{{ bind additional commands 
-(declaim (special eudc-mode-map))
-(define-key eudc-mode-map "m" 'emacspeak-eudc-send-mail)
 
+(declaim (special eudc-mode-map))
+(when (boundp 'eudc-mode-map)
+  (define-key eudc-mode-map "m" 'emacspeak-eudc-send-mail)
+  )
 ;;}}}
 ;;{{{ voiceify values in results 
 

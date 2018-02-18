@@ -1,5 +1,5 @@
 ;;; emacspeak-w3m.el --- speech-enables w3m-el
-;;;$Id: emacspeak-w3m.el 8929 2014-03-29 00:00:37Z tv.raman.tv $
+;;;$Id$
 ;;{{{ Copyright
 
 ;;; This file is not part of Emacs, but the same terms and
@@ -38,14 +38,11 @@
 (require 'emacspeak-webutils)
 (require 'emacspeak-we)
 (require 'easymenu)
-(require 'emacspeak-m-player)
 (require 'custom)
-(eval-when-compile
-  (require 'w3m nil 'noerror)
-  (require 'w3m-util nil 'noerror))
-(eval-when (load)
-  (require 'w3m-util)
-  (require 'w3m-form))
+(require 'w3m "w3m" 'noerror)
+(require 'w3m-util "w3m-util" 'noerror)
+
+(require 'w3m-form "w3m-form" 'noerror)
 
 ;;}}}
 ;;{{{ Forward declarations
@@ -80,41 +77,40 @@ This hack helps to deal with some specially designed forms."
 
 ;;}}}
 ;;{{{ keybindings
-
-(declaim (special w3m-mode-map
-                  emacspeak-prefix))
-(define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command)
-
 (add-hook 'w3m-display-hook 'emacspeak-webutils-run-post-process-hook)
-
-(define-key w3m-mode-map "x" 'emacspeak-we-xsl-map)
-(define-key w3m-mode-map [M-tab] 'w3m-previous-anchor)
-(define-key w3m-mode-map [(shift tab)] 'w3m-previous-anchor)
-(define-key w3m-mode-map [tab] 'w3m-next-anchor)
-(define-key w3m-mode-map [down] 'next-line)
-(define-key w3m-mode-map [up] 'previous-line)
-(define-key w3m-mode-map [right] 'emacspeak-forward-char)
-(define-key w3m-mode-map [left] 'emacspeak-backward-char)
-(define-key w3m-mode-map "j" 'emacspeak-webutils-jump-to-title-in-content)
-(define-key w3m-mode-map "l" 'emacspeak-webutils-play-media-at-point)
-(define-key w3m-mode-map "\C-t" 'emacspeak-webutils-transcode-current-url-via-google)
-(define-key w3m-mode-map "\M-t" 'emacspeak-webutils-transcode-via-google)
+(when (boundp 'w3m-mode-map)
+  (declaim (special w3m-mode-map
+                    emacspeak-prefix))
+  (define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command)
+  (define-key w3m-mode-map "x" 'emacspeak-we-xsl-map)
+  (define-key w3m-mode-map (kbd "M-<tab>") 'w3m-previous-anchor)
+  (define-key w3m-mode-map (kbd "S-<tab>") 'w3m-previous-anchor)
+  (define-key w3m-mode-map (kbd "<tab>") 'w3m-next-anchor)
+  (define-key w3m-mode-map [down] 'next-line)
+  (define-key w3m-mode-map [up] 'previous-line)
+  (define-key w3m-mode-map [right] 'emacspeak-forward-char)
+  (define-key w3m-mode-map [left] 'emacspeak-backward-char)
+  (define-key w3m-mode-map "j" 'emacspeak-webutils-jump-to-title-in-content)
+  (define-key w3m-mode-map "l" 'emacspeak-webutils-play-media-at-point)
+  (define-key w3m-mode-map "\C-t" 'emacspeak-webutils-transcode-current-url-via-google)
+  (define-key w3m-mode-map "\M-t" 'emacspeak-webutils-transcode-via-google)
                                         ; Moved keybindings to avoid conflict with emacs org mode
                                         ; Avoid use of C-g on request of Raman due to concerns of misuse/confusion
                                         ; because C-g used for emacs quit 
                                         ; Moved google related operations to C-cg prefix, with exception of 
                                         ; google transcode operations, which are left as they were on C-t 
                                         ; and M-t. TX
-(define-key w3m-mode-map "\C-cgg" 'emacspeak-webutils-google-on-this-site)
-(define-key w3m-mode-map "\C-cgx" 'emacspeak-webutils-google-extract-from-cache)
-(define-key w3m-mode-map "\C-cgl" 'emacspeak-webutils-google-similar-to-this-page)
-(define-key w3m-mode-map (kbd "<C-return>") 'emacspeak-webutils-open-in-other-browser)
+  (define-key w3m-mode-map "\C-cgg" 'emacspeak-webutils-google-on-this-site)
+  (define-key w3m-mode-map "\C-cgx" 'emacspeak-webutils-google-extract-from-cache)
+  (define-key w3m-mode-map "\C-cgl" 'emacspeak-webutils-google-similar-to-this-page)
+  (define-key w3m-mode-map (kbd "<C-return>") 'emacspeak-webutils-open-in-other-browser)
 
-(define-key w3m-mode-map "xa" 'emacspeak-w3m-xslt-apply)
-(define-key w3m-mode-map "xv" 'emacspeak-w3m-xsl-add-submit-button)
-(define-key w3m-mode-map "xh" 'emacspeak-w3m-xsl-google-hits)
-(define-key w3m-mode-map "xl" 'emacspeak-w3m-xsl-linearize-tables)
-(define-key w3m-mode-map "xn" 'emacspeak-w3m-xsl-sort-tables)
+  (define-key w3m-mode-map "xa" 'emacspeak-w3m-xslt-apply)
+  (define-key w3m-mode-map "xv" 'emacspeak-w3m-xsl-add-submit-button)
+  (define-key w3m-mode-map "xh" 'emacspeak-w3m-xsl-google-hits)
+  (define-key w3m-mode-map "xl" 'emacspeak-w3m-xsl-linearize-tables)
+  (define-key w3m-mode-map "xn" 'emacspeak-w3m-xsl-sort-tables)
+  )
 
 ;;}}}
 ;;{{{ helpers
@@ -785,7 +781,9 @@ Indicate change of selection with
                                       emacspeak-w3m-text-input-field-types)
                               nil t)
       (replace-match "text" t t nil 1)))
-  (when (and emacspeak-we-xsl-p emacspeak-we-xsl-transform)
+  (cond
+   (emacspeak-web-pre-process-hook (emacspeak-webutils-run-pre-process-hook))
+   ((and emacspeak-we-xsl-p emacspeak-we-xsl-transform)
     (let* ((content-charset (or (ad-get-arg 1) w3m-current-coding-system))
            (emacspeak-xslt-options
             (if content-charset
@@ -796,10 +794,9 @@ Indicate change of selection with
               emacspeak-xslt-options)))
       (emacspeak-xslt-region
        emacspeak-we-xsl-transform
-       (point-min)
-       (point-max)
+       (point-min) (point-max)
        emacspeak-we-xsl-params))
-    (ad-set-arg 1 'utf-8)))
+    (ad-set-arg 1 'utf-8))))
 
 ;; Helper function for xslt functionality
 ;;;###autoload
