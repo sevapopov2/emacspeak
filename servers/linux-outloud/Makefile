@@ -1,11 +1,12 @@
-#$Id: Makefile 7541 2012-03-04 22:31:26Z tv.raman.tv $
+#$Id$
 
 INSTALL = install
 PREFIX = /usr
 LIBPARENTDIR = ${PREFIX}/share/emacs/site-lisp
 LIBDIR =$(LIBPARENTDIR)/emacspeak/servers/linux-outloud
 
-TCL_INCLUDE=/usr/include/tcl
+TCL_VERSION=8.6
+TCL_INCLUDE=/usr/include/tcl$(TCL_VERSION)
 CFLAGS+= -g    -O2 -fPIC  -DPIC  -pedantic -ansi -Wall  -Wno-long-long -I$(TCL_INCLUDE)
 CXXFLAGS+= $(CFLAGS)
 LIBS= -ltcl -lasound -ldl    
