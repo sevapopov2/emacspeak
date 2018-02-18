@@ -25,7 +25,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'subr-x)
+(require 'subr-x nil t)
 
 (defsubst dom-tag (node)
   "Return the NODE tag."
