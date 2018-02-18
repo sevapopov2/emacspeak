@@ -1,5 +1,5 @@
 ;;; emacspeak-jabber.el --- Speech-Enable jabber
-;;; $Id: emacspeak-jabber.el 9102 2014-04-25 19:14:01Z tv.raman.tv $
+;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description: speech-enable jabber
 ;;; Keywords: Emacspeak, jabber
@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2011, T. V. Raman
+;;; Copyright (c) 1995 -- 2015, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -89,15 +89,10 @@
 ;;}}}
 ;;{{{ Advice interactive commands:
 
-(loop for f in
-      '(jabber-connect
-        jabber-connect-all)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-          "Provide auditory icon if possible."
-          (when (ems-interactive-p)
-            (emacspeak-auditory-icon 'on)))))
+(defadvice jabber-connect (after emacspeak pre act comp)
+  "Provide auditory icon if possible."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'on)))
 
 (defadvice jabber-disconnect (after emacspeak pre act comp)
   "Provide auditory icon if possible."
@@ -124,19 +119,18 @@
 ;;}}}
 ;;{{{ silence keepalive messages and image type errors
 
-(loop for f in
-      '(jabber-keepalive-do
-        jabber-process-roster
-        jabber-keepalive-got-response
-        image-type)
-      do
-      (eval
-       `(defadvice ,f (around emacspeak pre act comp)
-          "Silence messages."
-          (let ((emacspeak-speak-messages nil)
-                (emacspeak-use-auditory-icons nil))
-            ad-do-it
-            ad-return-value))))
+(loop
+ for f in
+ '(
+   image-type jabber-process-roster jabber-keepalive-got-response
+   jabber-keepalive-do jabber-fsm-handle-sentinel jabber-xml-resolve-namespace-prefixes
+   )
+ do
+ (eval
+  `(defadvice ,f (around emacspeak pre act comp)
+     "Silence  messages."
+     (ems-with-messages-silenced ad-do-it
+                                 ad-return-value))))
 
 ;;}}}
 ;;{{{ jabber activity:
@@ -263,6 +257,22 @@
   (forward-line (if jabber-roster-show-bindings 15 4))
   (emacspeak-auditory-icon 'select-object)
   (emacspeak-speak-line))
+(defadvice jabber-connect-all (after emacspeak pre act comp)
+  "switch to roster so we give it a chance to update."
+  (when (ems-interactive-p)
+    (switch-to-buffer jabber-roster-buffer)))
+(defadvice jabber-roster-update (around emacspeak    pre act  comp)
+  "Make this operation a No-Op unless the roster is visible."
+  (when (get-buffer-window-list jabber-roster-buffer)
+    ad-do-it))
+
+(defadvice jabber-display-roster (around emacspeak    pre act  comp)
+  "Make this operation a No-Op unless called interactively."
+  (when (ems-interactive-p) ad-do-it))
+
+(add-hook 'jabber-post-connect-hook 'jabber-switch-to-roster-buffer)
+
+;;}}}
 
 ;;}}}
 ;;{{{ Pronunciations
@@ -328,9 +338,9 @@ session."
 (when (boundp 'jabber-chat-mode-map)
   (loop for k in
         '(
-          ("\M-n" emacspeak-jabber-chat-next-message)
-          ("\M-p" emacspeak-jabber-chat-previous-message)
-          ("\M- " emacspeak-jabber-chat-speak-this-message))
+          ("M-n" emacspeak-jabber-chat-next-message)
+          ("M-p" emacspeak-jabber-chat-previous-message)
+          ("M-SPC " emacspeak-jabber-chat-speak-this-message))
         do
         (emacspeak-keymap-update  jabber-chat-mode-map k)))
 
