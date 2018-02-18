@@ -97,7 +97,7 @@ This hack helps to deal with some specially designed forms."
   (define-key w3m-mode-map "\C-cgl" 'emacspeak-webutils-google-similar-to-this-page)
   (define-key w3m-mode-map (kbd "<C-return>") 'emacspeak-webutils-open-in-other-browser)
 
-  (define-key w3m-mode-map "xa" 'emacspeak-w3m-xslt-apply)
+  (define-key w3m-mode-map "xa" 'emacspeak-we-xslt-apply)
   (define-key w3m-mode-map "xv" 'emacspeak-w3m-xsl-add-submit-button)
   (define-key w3m-mode-map "xh" 'emacspeak-w3m-xsl-google-hits)
   (define-key w3m-mode-map "xl" 'emacspeak-w3m-xsl-linearize-tables)
@@ -723,21 +723,11 @@ Indicate change of selection with
 ;;}}}
 ;;{{{ TVR: applying XSL
 
-(defun emacspeak-w3m-xslt-apply (xsl)
-  "Apply specified transformation to current Web page."
-  (interactive (list (emacspeak-xslt-read)))
-  (emacspeak-webutils-browser-check)
-  (emacspeak-webutils-with-xsl-environment
-   xsl
-   nil
-   emacspeak-xslt-options
-   (w3m-redisplay-this-page)))
-
 (defun emacspeak-w3m-xslt-perform (xsl-name)
   "Perform XSL transformation by name on the current page."
   (let ((xsl (expand-file-name (concat xsl-name ".xsl")
                                emacspeak-xslt-directory)))
-    (emacspeak-w3m-xslt-apply xsl)))
+    (emacspeak-we-xslt-apply xsl)))
 
 (defun emacspeak-w3m-xsl-add-submit-button ()
   "Add regular submit button to the current page if needed."
@@ -830,7 +820,7 @@ Indicate change of selection with
                  ["Select default transformation"
                   emacspeak-we-xslt-select t]
                  ["Apply specified transformation"
-                  emacspeak-w3m-xslt-apply t]
+                  emacspeak-we-xslt-apply t]
                  )))
           t)
 
