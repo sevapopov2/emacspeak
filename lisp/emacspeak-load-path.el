@@ -1,5 +1,5 @@
 ;;; emacspeak-load-path.el -- Setup Emacs load-path for compiling Emacspeak
-;;; $Id: emacspeak-load-path.el 9336 2014-08-18 01:26:04Z tv.raman.tv $
+;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Sets up load-path for emacspeak compilation and installation
 ;;; Keywords: Emacspeak, Speech extension for Emacs
@@ -14,7 +14,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2011, T. V. Raman
+;;;Copyright (C) 1995 -- 2015, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -88,14 +88,67 @@ affect the buffer's content."
 
 ;;; Notes:
 ;;; This implementation below appears to work for 99% of emacspeak.
+;;; Updating  the advice on call-interactively to remember the state of our flag
+;;; catches cases where the minibuffer is called recursively.
 
-(condition-case nil
-    (progn
-      (called-interactively-p nil)
-      (defsubst ems-interactive-p  ()
-        "called-interactively-p 'interactive"
-        (called-interactively-p 'interactive)))
-  (error (defalias 'ems-interactive-p  'interactive-p )))
+(defvar ems-called-interactively-p nil
+  "Flag recording interactive calls.")
+
+;; Record interactive calls:
+
+(defsubst ems-record-interactive-p (f)
+  "Predicate to test if we need to record interactive calls of
+this function. Memoizes result for future use by placing a
+property 'emacspeak on the function."
+  (cond
+   ((not (symbolp f)) nil)
+   ((get f 'emacspeak) t)
+   ((ad-find-some-advice f 'any  "emacspeak")
+    (put f 'emacspeak t))
+   ((string-match "^\\(dt\\|emacspea\\)k" (symbol-name f))
+    (put f 'emacspeak t))
+   (t nil)))
+
+(defadvice call-interactively (around emacspeak  pre act comp)
+  "Set emacspeak  interactive flag if there is an advice."
+  (let ((ems-called-interactively-p ems-called-interactively-p))
+    (when (ems-record-interactive-p (ad-get-arg 0))
+      (setq ems-called-interactively-p (ad-get-arg 0)))
+    ad-do-it))
+
+(defsubst ems-interactive-p ()
+  "Check our interactive flag.
+Return T if set and we are called from the advice for the current
+interactive command. Turn off the flag once used."
+  (when ems-called-interactively-p      ; interactive call
+    (let ((caller (second (backtrace-frame 1)))
+          (caller-advice (ad-get-advice-info-field ems-called-interactively-p  'advicefunname))
+          (result nil))
+      (setq result
+            (or (eq caller caller-advice) ; called from our advice
+                (eq ems-called-interactively-p caller ))) ; called from call-interactively
+      (when result
+        (setq ems-called-interactively-p nil) ; turn off now that we used  it
+        result))))
+
+(defsubst ems-debug-interactive-p ()
+  "Check our interactive flag.
+Return T if set and we are called from the advice for the current
+interactive command. Turn off the flag once used."
+  (message "Debug: %s" ems-called-interactively-p)
+  (when ems-called-interactively-p      ; interactive call
+    (let ((caller (second (backtrace-frame 1)))
+          (caller-advice (ad-get-advice-info-field ems-called-interactively-p  'advicefunname))
+          (result nil))
+      (setq result (or (eq caller caller-advice) ; called from our advice
+                       (eq ems-called-interactively-p caller ) ; call-interactively call
+                       ))
+      (message "this: %s caller: %s caller-advice %s
+  ems-called-interactively-p %s"
+               this-command caller caller-advice ems-called-interactively-p)
+      (when result
+        (setq ems-called-interactively-p nil) ; turn off now that we used  it
+        result))))
 
 ;;}}}
 

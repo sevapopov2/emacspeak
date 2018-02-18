@@ -1,5 +1,5 @@
 ;;; emacspeak-gnus.el --- Speech enable GNUS -- Fluent spoken access to usenet
-;;; $Id: emacspeak-gnus.el 9336 2014-08-18 01:26:04Z tv.raman.tv $
+;;; $Id$
 ;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension to speech enable Gnus
 ;;; Keywords: Emacspeak, Gnus, Advice, Spoken Output, News
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2011, T. V. Raman 
+;;;Copyright (C) 1995 -- 2015, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -39,11 +39,11 @@
 
 ;;{{{  Introduction:
 
-;;; Commentary
+;;; Commentary:
 
-;;; This module advices gnus to speak. 
+;;; This module advises gnus to speak. 
 ;;; Updating support in 2014 (Emacspeak is nearly 20 years old)
-
+;;; Code:
 ;;}}}
 ;;{{{ requires
 (require 'cl)
@@ -572,9 +572,7 @@ indicating the article is being opened."
        (if (gnus-article-hidden-text-p 'headers) 'off 'on)))))
 
 (loop for f in
-      '(gnus-summary-show-article
-        gnus-summary-first-unread-article
-        gnus-summary-goto-last-article)
+      '(gnus-summary-first-unread-article gnus-summary-goto-last-article)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -584,10 +582,7 @@ indicating the article is being opened."
             (emacspeak-gnus-speak-article-body)))))
 
 (loop for f in
-      '(gnus-summary-next-page
-        gnus-summary-prev-page
-        gnus-summary-beginning-of-article
-        gnus-summary-end-of-article)
+      '(gnus-summary-next-page gnus-summary-prev-page)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -595,8 +590,7 @@ indicating the article is being opened."
           (declare (special gnus-article-buffer))
           (dtk-stop)
           (emacspeak-auditory-icon 'scroll)
-          (save-excursion
-            (set-buffer  gnus-article-buffer)
+          (with-current-buffer gnus-article-buffer
             (let ((start  (point ))
                   (window (get-buffer-window (current-buffer ))))
               (with-selected-window window
@@ -604,6 +598,16 @@ indicating the article is being opened."
                   (move-to-window-line -1)
                   (end-of-line)
                   (emacspeak-speak-region start (point )))))))))
+
+(loop for f in
+      '(gnus-summary-beginning-of-article gnus-summary-end-of-article)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Speak the first line. "
+          (declare (special gnus-article-buffer))
+          (with-current-buffer gnus-article-buffer
+            (emacspeak-speak-line )))))
 
 ;;}}}
 ;;{{{  Draft specific commands
@@ -662,6 +666,14 @@ indicating the article is being opened."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
+
+(defadvice gnus-summary-show-article (after emacspeak pre act)
+  "Start speaking the article. "
+  (when (ems-interactive-p )
+    (with-current-buffer gnus-article-buffer
+      (emacspeak-auditory-icon 'open-object)
+      (emacspeak-hide-all-blocks-in-buffer)
+      (emacspeak-gnus-speak-article-body))))
 
 (defadvice gnus-article-show-summary  (after emacspeak pre act comp)
   "Speak the modeline.
