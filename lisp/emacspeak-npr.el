@@ -58,6 +58,7 @@
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'emacspeak-webutils)
+(require 'xml-parse)
 (require 'xml)
 
 ;;}}}
