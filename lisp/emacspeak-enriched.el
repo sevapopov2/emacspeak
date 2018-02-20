@@ -120,6 +120,7 @@ Useful in voiceifying rich text."
 
 (defadvice enriched-mode (after emacspeak pre act comp)
   "Map faces to voices. "
+  (declare (special enriched-mode))
   (cond
    (enriched-mode
     (emacspeak-enriched-voiceify-faces (point-min) (point-max))))

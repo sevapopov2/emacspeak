@@ -95,6 +95,7 @@
 
 (declare-function org-export-get-title-from-subtree "org-exp.el" ())
 (declare-function org-export-grab-title-from-buffer "org-exp.el" ())
+(declare-function org-export-region-as-html "ext:org-html.el" (beg end &optional body-only buffer))
 
 ;;}}}
 ;;{{{ Customizations

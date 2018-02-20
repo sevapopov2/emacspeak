@@ -313,6 +313,7 @@ Produce an auditory icon if possible."
 
 (defadvice gnus-topic-mode (after emacspeak pre act comp)
   "Provide auditory feedback."
+  (declare (special gnus-topic-mode))
   (when (ems-interactive-p )
     (emacspeak-auditory-icon (if gnus-topic-mode 'on 'off))
     (message "Toggled topic mode %s" (if gnus-topic-mode "on" "off"))))

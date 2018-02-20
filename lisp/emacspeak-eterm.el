@@ -200,6 +200,12 @@ Useful when eterm is in review mode.")
 ;;}}}
 ;;{{{  functions
 
+(defvar emacspeak-eterm-pointer nil
+  "Terminal pointer. Can be moved around to listen to the contents of the
+terminal. See commands provided by the emacspeak extension to eterm:
+\\{emacspeak-eterm-keymap}.
+Each term-mode buffer has a buffer local value of this variable. ")
+
 ;;; nuke term cache info 
 (defsubst emacspeak-eterm-nuke-cached-info ()
   (declare (special term-current-row term-current-column ))
@@ -1041,15 +1047,6 @@ available with the prefix emacspeak-eterm-prefix and are listed below:
 (defvar emacspeak-eterm-column nil
   "Record the column last spoken")
 
-(defvar emacspeak-eterm-pointer nil
-  "Terminal pointer. Can be moved around to listen to the contents of the
-terminal. See commands provided by the emacspeak extension to eterm:
-\\{emacspeak-eterm-keymap}.
-Each term-mode buffer has a buffer local value of this variable. ")
-
-(defvar emacspeak-eterm-marker nil
-  "Mark set in an eterm buffer. Used to cut and paste from the terminal.")
-
 (defvar emacspeak-eterm-autospeak t
   "Tells if eterm output is automatically spoken when in line mode.
 Use command emacspeak-toggle-eterm-autospeak bound to
@@ -1100,7 +1097,7 @@ emacspeak-toggle-eterm-autospeak bound to
   (declare (special emacspeak-eterm-row emacspeak-eterm-column
                     eterm-line-mode eterm-char-mode
                     emacspeak-eterm-filter-window emacspeak-eterm-pointer-mode
-                    emacspeak-eterm-autospeak 
+                    emacspeak-eterm-autospeak emacspeak-eterm-pointer
                     term-current-row term-current-column))
   (let ((emacspeak-eterm-window (get-buffer-window (process-buffer (ad-get-arg 0))))
         (emacspeak-eterm-row (term-current-row ))
