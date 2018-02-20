@@ -1,3 +1,12 @@
+emacspeak (41.0-11xenial1) xenial; urgency=low
+
+  * Forward declarations to get rid of compilation warnings.
+  * Added emacsen-compat file to prevent an error message during
+    installation.
+  * Fixed privacy breach reported by lintian.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 21 Feb 2018 01:23:48 +0300
+
 emacspeak (41.0-10xenial1) xenial; urgency=low
 
   * Package installation fix.
