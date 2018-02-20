@@ -45,6 +45,13 @@
 (require 'w3m-form "w3m-form" 'noerror)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function w3m-anchor "ext:w3m-util.el" (&optional position))
+(declare-function w3m-image "ext:w3m-util.el" (&optional position))
+(declare-function w3m-find-file "ext:w3m.el" (file))
+
+;;}}}
 ;;{{{  custom
 
 (defgroup emacspeak-w3m nil
