@@ -37,6 +37,7 @@
 ;;;_. Forward declarations
 
 (declare-function org-infile-export-plist "org-exp.el" ())
+(declare-function org-export-as-html "ext:org-html.el" (arg &optional hidden ext-plist to-buffer body-only pub-dir))
 
 ;;;_. Body
 
