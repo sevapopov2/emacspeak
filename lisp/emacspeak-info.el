@@ -170,9 +170,7 @@ node-spec."
     (let ((completion-ignore-case t))
       (info-initialize)
       (completing-read "Node: "
-                       (Info-build-node-completions
-                        (completing-read "File: " (info--manual-names nil)
-                                         nil t))))))
+                       (Info-build-node-completions) nil t))))
   (Info-goto-node node-spec)
   (emacspeak-info-visit-node))
 
