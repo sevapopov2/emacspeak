@@ -77,10 +77,6 @@
 (defvar emacspeak-websearch-table (make-hash-table)
   "Table holding mapping from search engine names to appropriate searcher functions.")
 
-(defvar emacspeak-websearch-forms-directory
-  (expand-file-name "xml-forms/" emacspeak-lisp-directory)
-  "Directory where xml forms are stored.")
-
 (defsubst emacspeak-websearch-set-searcher  (engine searcher)
   (declare (special emacspeak-websearch-table))
   (setf (gethash engine emacspeak-websearch-table) searcher))
@@ -189,48 +185,6 @@ When using supported browsers,  this interface attempts to speak the most releva
 ;;}}}
 ;;{{{ websearch utilities
 
-;;{{{ display form
-
-(emacspeak-websearch-set-searcher 'display-form
-                                  'emacspeak-websearch-display-form)
-
-(emacspeak-websearch-set-key ?/ 'display-form)
-
-(defun emacspeak-websearch-display-form (form-markup)
-  "Display form specified by form-markup."
-  (interactive
-   (list
-    (let ((emacspeak-speak-messages nil)
-          (insert-default-directory nil))
-      (emacspeak-pronounce-define-local-pronunciation
-       (expand-file-name "xml-forms"
-                         emacspeak-lisp-directory)
-       " xml forms ")
-      (expand-file-name
-       (read-file-name "Display Form: "
-                       emacspeak-websearch-forms-directory nil t nil
-                       '(lambda (name)
-                          (string-match "\\.xml$" name)))))))
-  (declare (special emacspeak-we-xsl-p
-                    emacspeak-web-post-process-hook
-                    emacspeak-lisp-directory))
-  (let ((buffer (get-buffer-create " *search-form*"))
-        (emacspeak-we-xsl-p nil))
-    (save-excursion
-      (set-buffer buffer)
-      (erase-buffer)
-      (kill-all-local-variables)
-      (insert-file-contents  form-markup)
-      (add-hook 'emacspeak-web-post-process-hook
-                #'(lambda ()
-                    (goto-char (point-min))
-                    (widget-forward 1)
-                    (emacspeak-auditory-icon 'open-object)
-                    (emacspeak-widget-summarize (widget-at (point)))))
-      (browse-url-of-buffer)
-      (kill-buffer buffer))))
-
-;;}}}
 ;;{{{ Computer Science Bibliography
 
 (emacspeak-websearch-set-searcher 'biblio
@@ -1010,10 +964,6 @@ Results"
                                   'emacspeak-websearch-exchange-rate-converter)
 
 (emacspeak-websearch-set-key ?X 'exchange-rate-converter)
-
-(defvar emacspeak-websearch-exchange-rate-form
-  (expand-file-name "exchange-rate-convertor.xml" emacspeak-websearch-forms-directory)
-  "Form for performing currency conversion.")
 
 (defvar emacspeak-websearch-exchange-rate-converter-uri
   "http://www.xe.com/ucc/convert.cgi?Amount=1&From=%s&To=%s&submit=Perform+Conversion"

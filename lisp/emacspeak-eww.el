@@ -258,7 +258,7 @@
   "Respect `browse-url-new-window-flag'."
   (interactive
    (list url
-         (or new-window browse-url-new-window-flag))))
+         (or _new-window browse-url-new-window-flag))))
 ;;}}}
 ;;{{{ Map Faces To Voices:
 
