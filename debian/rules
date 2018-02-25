@@ -63,7 +63,7 @@ install: build-indep
 	dh_install -X.elc -X.nosearch -X.tar.bz2 -X.tar.gz -X.diff -X.excludes -X-loaddefs -X-cus-load -X-finder-inf -X.sh.def -X.pyc -X.pyo
 
 	# Clean up the installation tree
-	cd $(deblsp)/lisp/g-client ; rm -rf obsolete patches *.html *.org COPYING
+	cd $(deblsp)/lisp/g-client ; rm -rf obsolete patches *.html *.org COPYING rfc-imap-search
 	cd $(deblsp)/etc ; rm -f Makefile NEWS-* COPYRIGHT remote.txt
 	cd $(deblsp)/xsl ; rm -f Makefile
 	cd $(deblsp)/lisp ; patch -i $(debbase)/emacspeak-tetris.patch
@@ -75,7 +75,6 @@ install: build-indep
 	cd $(deblsp)/servers ; chmod 0755 dtk-exp speech-server ssh-* ; chmod 0644 .servers tts-lib.tcl
 	cd $(debtmp)-espeak/$(eldir)/servers ; chmod 0755 espeak
 	cd $(debtmp)-outloud/$(eldir)/servers ; chmod 0755 outloud
-	chmod 0755 $(deblsp)/lisp/g-client/python/contacts.py
 	chmod 0755 $(debtmp)-cartoon-22k-mono/$(eldir)/sounds/cartoon-22k-mono
 	chmod 0644 $(debtmp)-cartoon-22k-mono/$(eldir)/sounds/cartoon-22k-mono/*
 	chmod 0755 $(debtmp)-chimes-stereo/$(eldir)/sounds/chimes-stereo
@@ -94,7 +93,7 @@ binary-indep: build-indep install
 	dh_installinfo -i
 	dh_installman -i
 	dh_link -i
-	dh_compress -i
+	dh_compress -i -X.csd
 	dh_fixperms -i
 	dh_installdeb -i
 	dh_gencontrol -i
