@@ -1,3 +1,9 @@
+emacspeak (42.0-1trusty1) trusty; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 25 Feb 2018 23:00:39 +0300
+
 emacspeak (41.0-11trusty1) trusty; urgency=low
 
   * Forward declarations to get rid of compilation warnings.
