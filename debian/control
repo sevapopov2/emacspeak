@@ -8,7 +8,7 @@ Homepage: http://emacspeak.sf.net
 
 Package: emacspeak
 Architecture: all
-Depends: emacs24 | emacs23 | emacsen, perl, make, adduser, ${misc:Depends}
+Depends: emacs (>=46.0), perl, make, adduser, ${misc:Depends}
 Conflicts: emacspeak-dt, emacspeak-ss
 Recommends: multispeech, python, tclx8.4, tcl
 Suggests: emacspeak-chimes-stereo, emacspeak-cartoon-22k-mono, emacspeak-espeak, emacspeak-outloud, eflite, psgml, xsltproc, espeak, w3m-el
@@ -85,6 +85,19 @@ Recommends: emacspeak
 Description: Chimes auditory icons theme for Emacspeak
  This theme is made up mostly of different chimes and short notes
  from various instruments. The icons are high-quality 44K-stereo.
+ .
+ When the package is installed, you can switch Emacspeak to use
+ this theme by command emacspeak-sounds-select-theme
+ bound by default to control-e ).
+
+Package: emacspeak-3d
+Section: sound
+Architecture: all
+Depends: ${misc:Depends}
+Recommends: emacspeak
+Description: 3d auditory icons theme for Emacspeak
+ This theme is made up of sound files generated using CSound
+ from its example files and compositions.
  .
  When the package is installed, you can switch Emacspeak to use
  this theme by command emacspeak-sounds-select-theme

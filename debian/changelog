@@ -1,3 +1,9 @@
+emacspeak (42.0-1stretch1) stretch; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 25 Feb 2018 23:19:37 +0300
+
 emacspeak (41.0-11stretch1) stretch; urgency=low
 
   * Forward declarations to get rid of compilation warnings.
