@@ -5,7 +5,7 @@ debian/ssh-dtk-exp.blurb usr/share/emacs/site-lisp/emacspeak/blurbs
 debian/ssh-outloud.blurb usr/share/emacs/site-lisp/emacspeak/blurbs
 etc usr/share/emacs/site-lisp/emacspeak
 lisp usr/share/emacs/site-lisp/emacspeak
-realaudio usr/share/emacs/site-lisp/emacspeak
+media usr/share/emacs/site-lisp/emacspeak
 xsl usr/share/emacs/site-lisp/emacspeak
 Makefile usr/share/emacs/site-lisp/emacspeak
 README usr/share/emacs/site-lisp/emacspeak

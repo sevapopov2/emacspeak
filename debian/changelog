@@ -1,3 +1,9 @@
+emacspeak (42.0-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 25 Feb 2018 22:44:47 +0300
+
 emacspeak (41.0-11) unstable; urgency=low
 
   * Forward declarations to get rid of compilation warnings.
