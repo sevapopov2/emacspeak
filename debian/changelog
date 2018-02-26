@@ -1,3 +1,9 @@
+emacspeak (42.0-3trusty1) trusty; urgency=low
+
+  * Dependency fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 27 Feb 2018 00:08:37 +0300
+
 emacspeak (42.0-2trusty2) trusty; urgency=low
 
   * Emacs version dependency fix.
