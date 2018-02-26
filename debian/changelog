@@ -1,3 +1,9 @@
+emacspeak (42.0-2jessie1) jessie; urgency=low
+
+  * Voicified text speaking fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 26 Feb 2018 22:47:42 +0300
+
 emacspeak (42.0-1jessie1) jessie; urgency=low
 
   * New upstream release.
