@@ -1,3 +1,9 @@
+emacspeak (42.0-2) unstable; urgency=low
+
+  * Voicified text speaking fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 26 Feb 2018 22:43:33 +0300
+
 emacspeak (42.0-1) unstable; urgency=low
 
   * New upstream release.
