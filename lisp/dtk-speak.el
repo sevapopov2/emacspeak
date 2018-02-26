@@ -623,7 +623,7 @@ Argument COMPLEMENT  is the complement of separator."
               (and (listp voice) (memq 'inaudible voice)))
 ;;; ensure text is a  string
     (unless (stringp text) (setq text (format "%s" text)))
-    (dtk-interp-queue-code
+    (dtk-interp-queue
      (format "%s%s %s \n"
              (cond
               ((symbolp voice)
