@@ -11,7 +11,7 @@ Architecture: all
 Depends: emacs (>=46.0), perl, make, adduser, ${misc:Depends}
 Conflicts: emacspeak-dt, emacspeak-ss
 Recommends: multispeech, python, tclx8.4, tcl
-Suggests: emacspeak-chimes-stereo, emacspeak-cartoon-22k-mono, emacspeak-espeak, emacspeak-outloud, eflite, psgml, xsltproc, espeak, w3m-el
+Suggests: emacspeak-3d, emacspeak-chimes-stereo, emacspeak-cartoon-22k-mono, emacspeak-espeak, emacspeak-outloud, eflite, psgml, xsltproc, espeak, w3m-el
 Description: speech output interface to Emacs
  Emacspeak is a speech output system that will allow someone who
  cannot see to work directly on a UNIX system.
