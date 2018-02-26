@@ -1,3 +1,9 @@
+emacspeak (42.0-2xenial1) xenial; urgency=low
+
+  * Voicified text speaking fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 26 Feb 2018 22:46:26 +0300
+
 emacspeak (42.0-1xenial1) xenial; urgency=low
 
   * New upstream release.
