@@ -1,3 +1,9 @@
+emacspeak (42.0-3xenial1) xenial; urgency=low
+
+  * Dependency fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 27 Feb 2018 00:09:59 +0300
+
 emacspeak (42.0-2xenial1) xenial; urgency=low
 
   * Voicified text speaking fix.
