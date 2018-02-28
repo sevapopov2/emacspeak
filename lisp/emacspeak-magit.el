@@ -57,12 +57,23 @@
  '(
    ( magit-header voice-bolden)
    ( magit-section-title voice-annotate)
+   ( magit-section-heading voice-annotate)
    ( magit-branch voice-lighten)
    ( magit-diff-file-header voice-animate)
+   ( magit-diff-file-heading voice-animate)
+   ( magit-diff-file-heading-highlight voice-animate)
+   ( magit-diff-file-heading-selection voice-animate)
    ( magit-diff-hunk-header voice-animate-medium)
+   ( magit-diff-hunk-heading voice-animate-medium)
+   ( magit-diff-hunk-heading-highlight voice-animate-medium)
+   ( magit-diff-hunk-heading-selection voice-animate-medium)
    ( magit-diff-add voice-animate-extra)
+   ( magit-diff-added voice-animate-extra)
+   ( magit-diff-added-highlight voice-animate-extra)
    ( magit-diff-none voice-monotone)
    ( magit-diff-del voice-animate-extra)
+   ( magit-diff-removed voice-animate-extra)
+   ( magit-diff-removed-highlight voice-animate-extra)
    ( magit-log-graph voice-monotone)
    ( magit-log-sha1 voice-monotone)
    ( magit-log-message voice-monotone)
@@ -164,8 +175,8 @@
 ;;}}}
 ;;{{{ Advice hide/show commands:
 (loop for f in
-      '(magit-show magit-show-branches
-                   magit-show-branches-mode
+      '(magit-show magit-show-commit
+                   magit-show-branches magit-show-branches-mode
                    magit-show-item-or-scroll-down magit-show-item-or-scroll-up
                    magit-show-level
                    magit-show-level-1 magit-show-level-1-all
@@ -176,7 +187,7 @@
                    magit-expand-section magit-expand-collapse-section
                    magit-show-section magit-show-stash
                    magit-status
-                   magit-visit-item
+                   magit-visit-item magit-diff-visit-file
                    magit-log
                    magit-log-long
                    magit-reflog
@@ -206,7 +217,9 @@
 (loop for f in
       '(magit-quit-window
         magit-quit-branches-window
-        magit-key-mode-kill-buffer)
+        magit-key-mode-kill-buffer
+        magit-mode-bury-buffer
+        magit-log-bury-buffer)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
