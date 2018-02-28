@@ -159,20 +159,6 @@ and then cue the next selected buffer."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
-;;;###autoload
-(defun emacspeak-info-wizard (node-spec )
-  "Read a node spec from the minibuffer and launch
-Info-goto-node.
-See documentation for command `Info-goto-node' for details on
-node-spec."
-  (interactive
-   (list
-    (let ((completion-ignore-case t))
-      (info-initialize)
-      (completing-read "Node: "
-                       (Info-build-node-completions) nil t))))
-  (Info-goto-node node-spec)
-  (emacspeak-info-visit-node))
 
 ;;}}}
 ;;{{{ Speak header line if hidden
@@ -211,7 +197,21 @@ node-spec."
 (define-key Info-mode-map "'" 'emacspeak-speak-rest-of-buffer)
 ;;}}}
 ;;{{{ info wizard
+
 ;;;###autoload
+(defun emacspeak-info-wizard (node-spec )
+  "Read a node spec from the minibuffer and launch
+Info-goto-node.
+See documentation for command `Info-goto-node' for details on
+node-spec."
+  (interactive
+   (list
+    (let ((completion-ignore-case t))
+      (info-initialize)
+      (completing-read "Node: "
+                       (Info-build-node-completions) nil t))))
+  (Info-goto-node node-spec)
+  (emacspeak-info-visit-node))
 
 ;;}}}
 
