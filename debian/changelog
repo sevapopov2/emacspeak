@@ -1,3 +1,11 @@
+emacspeak (42.0-4stretch1) stretch; urgency=low
+
+  * A bit more advices.
+  * Info mode support fix.
+  * New Magit version support fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 28 Feb 2018 19:51:45 +0300
+
 emacspeak (42.0-3stretch1) stretch; urgency=low
 
   * Dependency fix.
