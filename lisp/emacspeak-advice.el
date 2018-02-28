@@ -1779,7 +1779,7 @@ the newly created blank line."
 
 (loop
  for f in
- '(newline-and-indent electric-newline-and-maybe-indent comment-indent-new-line)
+ '(newline-and-indent electric-newline-and-maybe-indent comment-indent-new-line indent-new-comment-line)
  do
  (eval
   `(defadvice ,f (around emacspeak pre act comp)
