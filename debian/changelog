@@ -1,3 +1,9 @@
+emacspeak (42.0-6stretch1) stretch; urgency=low
+
+  * More fixes and enhancements for modern Magit support.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 01 Mar 2018 23:44:39 +0300
+
 emacspeak (42.0-5stretch1) stretch; urgency=low
 
   * Makefile fix.
