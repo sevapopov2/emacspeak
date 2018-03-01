@@ -1,3 +1,11 @@
+emacspeak (42.0-5xenial1) xenial; urgency=low
+
+  * Makefile fix.
+  * Faces voicification fix.
+  * Modern Magit versions support enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 01 Mar 2018 20:27:38 +0300
+
 emacspeak (42.0-4xenial1) xenial; urgency=low
 
   * A bit more advices.
