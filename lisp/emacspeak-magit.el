@@ -88,6 +88,8 @@
    ( magit-whitespace-warning-face voice-monotone)
    ( magit-log-head-label-local voice-lighten)
    ( magit-log-head-label-default voice-monotone)
+   (magit-popup-key voice-bolden)
+   (magit-popup-argument voice-animate)
    ( magit-menu-selected-option voice-animate)))
 
 ;;}}}
@@ -172,6 +174,42 @@
 (when (locate-library "magit-key-mode")
   (load-library "magit-key-mode"))
 
+(defadvice magit-popup-mode-setup (after emacspeak  pre act comp)
+  "Provide auditory feedback when entering popup buffer."
+  (emacspeak-auditory-icon 'open-object)
+  (emacspeak-speak-line))
+
+(defadvice magit-refresh-popup-buffer (after emacspeak  pre act comp)
+  "Voiceify faces."
+  (voice-lock-voiceify-faces))
+
+(defadvice magit-invoke-popup-action (after emacspeak  pre act comp)
+  "Provide auditory feedback on quit action."
+  (when (and (ems-interactive-p) (eq (ad-get-arg 0) ?q))
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
+
+(defadvice magit-popup-help (after emacspeak  pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'help)
+    (emacspeak-speak-line)))
+
+(defadvice magit-popup-toggle-show-common-commands (after emacspeak  pre act comp)
+  "Provide auditory feedback."
+  (declare (special magit-popup-show-common-commands))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon (if magit-popup-show-common-commands 'on 'off))))
+
+(loop for f in
+      '(magit-popup-set-default-arguments magit-popup-save-default-arguments)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon (if (ad-get-arg 0) 'close-object 'save-object))))))
+
 ;;}}}
 ;;{{{ Advice hide/show commands:
 (loop for f in
@@ -190,8 +228,15 @@
                    magit-visit-item magit-diff-visit-file
                    magit-log
                    magit-log-long
+                   magit-log-current
+                   magit-log-head
+                   magit-log-branches
+                   magit-log-all-branches
+                   magit-log-all
+                   magit-log-buffer-file
                    magit-reflog
                    magit-reflog-head
+                   magit-reflog-current
                    magit-wazzup
                    magit-interactive-resolve-item)
       do
@@ -219,7 +264,8 @@
         magit-quit-branches-window
         magit-key-mode-kill-buffer
         magit-mode-bury-buffer
-        magit-log-bury-buffer)
+        magit-log-bury-buffer
+        magit-popup-quit)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -261,17 +307,35 @@
         magit-diff
         magit-diff-with-mark
         magit-diff-working-tree
+        magit-diff-dwim
+        magit-diff-staged
+        magit-diff-unstaged
+        magit-diff-while-committing
+        magit-diff-paths
+        magit-show-commit
         magit-apply-item
         magit-cherry-pick-item
         magit-stage-all
         magit-unstage-all
+        magit-reset
+        magit-reset-soft
+        magit-reset-hard
         magit-reset-head
         magit-reset-working-tree
         magit-checkout
+        magit-branch
+        magit-branch-and-checkout
+        magit-branch-spinoff
+        magit-branch-reset
+        magit-branch-rename
         magit-create-branch
         magit-merge
         magit-automatic-merge
         magit-manual-merge
+        magit-merge-editmsg
+        magit-merge-nocommit
+        magit-merge-preview
+        magit-merge-abort
         magit-rebase-step
         magit-rewrite-start
         magit-rewrite-stop
@@ -297,6 +361,8 @@
 (loop for f in
       '(magit-remove-branch
         magit-remove-branch-in-remote-repo
+        magit-branch-delete
+        magit-tag-delete
         magit-revert-item
         magit-discard-item)
       do
