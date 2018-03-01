@@ -125,24 +125,42 @@
     (emacspeak-auditory-icon 'mark-object)
     (emacspeak-speak-line)))
 
-(defadvice magit-copy-item-as-kill (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'mark-object)))
-
-(defadvice magit-toggle-section (after emacspeak pre act comp)
+(defadvice magit-pop-revision-stack (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p )
-    (let ((state (magit-section-hidden (magit-current-section))))
-      (cond
-       (state (emacspeak-auditory-icon 'close-object))
-       (t (emacspeak-auditory-icon 'open-object)))
-      (emacspeak-speak-line))))
+    (emacspeak-auditory-icon 'yank-object)))
+
+(loop for f in
+      '(magit-copy-item-as-kill
+        magit-copy-section-value
+        magit-copy-buffer-revision)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'mark-object)))))
+
+(loop for f in
+      '(magit-toggle-section magit-section-toggle)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p )
+            (let ((state (magit-section-hidden (magit-current-section))))
+              (cond
+               (state (emacspeak-auditory-icon 'close-object))
+               (t (emacspeak-auditory-icon 'open-object)))
+              (emacspeak-speak-line))))))
 
 (loop for f in
       '(magit-stash-snapshot
         magit-ignore-file magit-ignore-item
+                          magit-stage magit-unstage
                           magit-stage-item magit-unstage-item
+                          magit-stage-file magit-unstage-file
+                          magit-stage-modified magit-unstage-all
                           magit-stash magit-ignore-item-locally
                           magit-goto-next-section magit-goto-previous-section
                           magit-goto-parent-section magit-goto-line
@@ -312,7 +330,6 @@
         magit-diff-unstaged
         magit-diff-while-committing
         magit-diff-paths
-        magit-show-commit
         magit-apply-item
         magit-cherry-pick-item
         magit-stage-all
