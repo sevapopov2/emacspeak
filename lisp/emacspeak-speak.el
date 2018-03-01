@@ -81,6 +81,7 @@
 (defvar voice-smoothen)
 
 (declare-function operate-on-rectangle(start end coerse-tabs))
+(declare-function ems-get-voice-for-face "emacspeak-personality.el" (face))
 (declare-function emacspeak-play-startup-icon "emacspeak.el" ())
 (declare-function emacspeak-info-speak-header "emacspeak-info.el" ())
 (declare-function which-function "which-func.el" ())
@@ -3096,6 +3097,7 @@ Argument O specifies overlay."
 
 (defun voice-lock-voiceify-faces ()
   "Map faces to personalities."
+  (require 'emacspeak-personality)
   (save-excursion
     (goto-char (point-min))
     (let ((inhibit-read-only t )
@@ -3108,10 +3110,7 @@ Argument O specifies overlay."
              (or (next-single-property-change (point) 'face )
                  (point-max)))
             (put-text-property start  (point)
-                               'personality
-                               (if (listp face)
-                                   (car face)
-                                 face ))
+                               'personality (ems-get-voice-for-face face))
             (setq start (point)))
         (setq inhibit-read-only nil)))))
 
