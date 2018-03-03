@@ -86,6 +86,55 @@
      (t (emacspeak-speak-line )))))
 
 ;;}}}
+;;{{{  labeling fields in the dired buffer:
+
+(defun emacspeak-dired-label-fields-on-current-line ()
+  "Labels the fields on a dired line.
+Assumes that `dired-listing-switches' contains  -l"
+  (let ((start nil)
+        (fields (list "permissions"
+                      "links"
+                      "owner"
+                      "group"
+                      "size"
+                      "modified in"
+                      "modified on"
+                      "modified at"
+                      "name")))
+    (save-excursion
+      (forward-line 0)
+      (skip-syntax-forward " ")
+      (while (and fields
+                  (not (eolp)))
+        (setq start (point))
+        (skip-syntax-forward "^ ")
+        (put-text-property start (point)
+                           'field-name (car fields ))
+        (setq fields (cdr fields ))
+        (skip-syntax-forward " ")))))
+
+(defun emacspeak-dired-label-fields ()
+  "Labels the fields of the listing in the dired buffer.
+Currently is a no-op  unless
+unless `dired-listing-switches' contains -l"
+  (interactive)
+  (declare (special dired-listing-switches))
+  (when
+      (save-match-data
+        (string-match  "l" dired-listing-switches))
+    (let ((read-only buffer-read-only))
+      (unwind-protect
+          (progn
+            (setq buffer-read-only nil)
+            (save-excursion
+              (goto-char (point-min))
+              (dired-goto-next-nontrivial-file)
+              (while (not (eobp))
+                (emacspeak-dired-label-fields-on-current-line )
+                (forward-line 1 ))))
+        (setq buffer-read-only read-only )))))
+
+;;}}}
 ;;{{{  advice:
 
 (defadvice dired-sort-toggle-or-edit (around emacspeak pre act comp)
@@ -345,55 +394,6 @@ Provide auditory icon when finished."
           (when (ems-interactive-p )
             (emacspeak-auditory-icon 'deselect-object )
             (emacspeak-dired-speak-line)))))
-
-;;}}}
-;;{{{  labeling fields in the dired buffer:
-
-(defun emacspeak-dired-label-fields-on-current-line ()
-  "Labels the fields on a dired line.
-Assumes that `dired-listing-switches' contains  -l"
-  (let ((start nil)
-        (fields (list "permissions"
-                      "links"
-                      "owner"
-                      "group"
-                      "size"
-                      "modified in"
-                      "modified on"
-                      "modified at"
-                      "name")))
-    (save-excursion
-      (forward-line 0)
-      (skip-syntax-forward " ")
-      (while (and fields
-                  (not (eolp)))
-        (setq start (point))
-        (skip-syntax-forward "^ ")
-        (put-text-property start (point)
-                           'field-name (car fields ))
-        (setq fields (cdr fields ))
-        (skip-syntax-forward " ")))))
-
-(defun emacspeak-dired-label-fields ()
-  "Labels the fields of the listing in the dired buffer.
-Currently is a no-op  unless
-unless `dired-listing-switches' contains -l"
-  (interactive)
-  (declare (special dired-listing-switches))
-  (when
-      (save-match-data
-        (string-match  "l" dired-listing-switches))
-    (let ((read-only buffer-read-only))
-      (unwind-protect
-          (progn
-            (setq buffer-read-only nil)
-            (save-excursion
-              (goto-char (point-min))
-              (dired-goto-next-nontrivial-file)
-              (while (not (eobp))
-                (emacspeak-dired-label-fields-on-current-line )
-                (forward-line 1 ))))
-        (setq buffer-read-only read-only )))))
 
 ;;}}}
 ;;{{{ Additional status speaking commands
