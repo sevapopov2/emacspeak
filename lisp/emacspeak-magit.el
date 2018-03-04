@@ -160,7 +160,6 @@
                           magit-stage magit-unstage
                           magit-stage-item magit-unstage-item
                           magit-stage-file magit-unstage-file
-                          magit-stage-modified magit-unstage-all
                           magit-stash magit-ignore-item-locally
                           magit-goto-next-section magit-goto-previous-section
                           magit-goto-parent-section magit-goto-line
@@ -192,11 +191,6 @@
 (when (locate-library "magit-key-mode")
   (load-library "magit-key-mode"))
 
-(defadvice magit-popup-mode-setup (after emacspeak  pre act comp)
-  "Provide auditory feedback when entering popup buffer."
-  (emacspeak-auditory-icon 'open-object)
-  (emacspeak-speak-line))
-
 (defadvice magit-refresh-popup-buffer (after emacspeak  pre act comp)
   "Voiceify faces."
   (voice-lock-voiceify-faces))
@@ -227,6 +221,11 @@
           "Provide auditory feedback."
           (when (ems-interactive-p)
             (emacspeak-auditory-icon (if (ad-get-arg 0) 'close-object 'save-object))))))
+
+(defadvice magit-invoke-popup (after emacspeak pre act comp)
+  "Speech-enable  magit-popup."
+  (emacspeak-auditory-icon 'open-object)
+  (emacspeak-speak-buffer))
 
 ;;}}}
 ;;{{{ Advice hide/show commands:
@@ -268,6 +267,7 @@
 (loop for f in
       '(magit-hide-section
         magit-collapse-section
+        magit-invoke-popup-option
         magit-mode-quit-window)
       do
       (eval
@@ -306,10 +306,21 @@
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'open-object)))))
 
-(defadvice magit-log-edit-commit (after emacspeak pre act comp)
+(loop for f in
+      '(magit-log-edit-commit
+        with-editor-finish)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'close-object)))))
+
+(defadvice magit-run-git-with-editor (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'close-object)))
+  (when dtk-stop-immediately
+    (dtk-stop))
+  (emacspeak-auditory-icon 'open-object))
 
 (defadvice magit-display-process (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -332,7 +343,9 @@
         magit-diff-paths
         magit-apply-item
         magit-cherry-pick-item
+        magit-reverse
         magit-stage-all
+        magit-stage-modified
         magit-unstage-all
         magit-reset
         magit-reset-soft
@@ -381,6 +394,7 @@
         magit-branch-delete
         magit-tag-delete
         magit-revert-item
+        magit-discard
         magit-discard-item)
       do
       (eval
