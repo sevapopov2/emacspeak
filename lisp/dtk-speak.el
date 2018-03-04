@@ -798,7 +798,7 @@ Argument OUTPUT is the newly arrived output."
         (setq ,switch (default-value ',switch )))
        (t  (make-local-variable ',switch)
            (setq ,switch (not ,switch ))))
-      (when (ems-interactive-p)
+      (when (called-interactively-p 'interactive)
         (emacspeak-auditory-icon (if ,switch 'on 'off))
         (dtk-speak-and-echo
          (format "Turned %s %s  %s."
