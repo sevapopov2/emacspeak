@@ -1,3 +1,11 @@
+emacspeak (42.0-7xenial1) xenial; urgency=low
+
+  * Fixed interactive switches behaviour.
+  * Signal indentation if any when entering newline.
+  * Modern Magit support fix and enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 04 Mar 2018 22:11:58 +0300
+
 emacspeak (42.0-6xenial1) xenial; urgency=low
 
   * More fixes and enhancements for modern Magit support.
