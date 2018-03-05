@@ -1823,11 +1823,10 @@ Otherwise cue user to the line just created."
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
      "Also speaks the result of evaluation."
-     (when (ems-interactive-p)
-       (let ((dtk-chunk-separator-syntax " .<>()$\"\'"))
-         (tts-with-punctuations 'all
-                                (dtk-speak
-                                 (format "%s" ad-return-value ))))))))
+     (let ((dtk-chunk-separator-syntax " .<>()$\"\'"))
+       (tts-with-punctuations 'all
+                              (dtk-speak
+                               (format "%s" ad-return-value )))))))
 
 (defadvice shell (after emacspeak pre act comp)
   "Announce switching to shell mode.
