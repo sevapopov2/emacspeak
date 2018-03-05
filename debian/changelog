@@ -1,3 +1,9 @@
+emacspeak (42.0-8xenial1) xenial; urgency=low
+
+  * Fixed speech feedback on interactive sexp evaluation.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 05 Mar 2018 03:29:20 +0300
+
 emacspeak (42.0-7xenial1) xenial; urgency=low
 
   * Fixed interactive switches behaviour.
