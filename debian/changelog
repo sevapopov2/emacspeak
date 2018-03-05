@@ -1,3 +1,9 @@
+emacspeak (42.0-8jessie1) jessie; urgency=low
+
+  * Fixed speech feedback on interactive sexp evaluation.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 05 Mar 2018 03:31:06 +0300
+
 emacspeak (42.0-7jessie1) jessie; urgency=low
 
   * Fixed interactive switches behaviour.
