@@ -1,3 +1,9 @@
+emacspeak (42.0-8trusty1) trusty; urgency=low
+
+  * Fixed speech feedback on interactive sexp evaluation.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 05 Mar 2018 03:27:31 +0300
+
 emacspeak (42.0-7trusty1) trusty; urgency=low
 
   * Fixed interactive switches behaviour.
