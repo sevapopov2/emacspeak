@@ -1,3 +1,9 @@
+emacspeak (41.0-8precise2) precise; urgency=low
+
+  * Fixed interactive switches behaviour.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 05 Mar 2018 03:22:20 +0300
+
 emacspeak (41.0-8precise1) precise; urgency=low
 
   * Fixed w3m support bug introduced in the last package releases.
