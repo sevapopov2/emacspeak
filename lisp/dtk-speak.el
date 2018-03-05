@@ -805,7 +805,7 @@ Argument OUTPUT is the newly arrived output."
         (setq ,switch (default-value ',switch )))
        (t  (make-local-variable ',switch)
            (setq ,switch (not ,switch ))))
-      (when (ems-interactive-p)
+      (when (called-interactively-p 'interactive)
         (emacspeak-auditory-icon (if ,switch 'on 'off))
         (let ((state ,switch)
               (dtk-quiet nil)
