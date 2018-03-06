@@ -137,11 +137,41 @@
     ad-return-value))
 
 ;;; Advice navigators:
-(defadvice magit-mark-item (after emacspeak pre act comp)
+(loop for f in
+      '(magit-mark-item
+        git-rebase-reword
+        git-rebase-edit
+        git-rebase-squash
+        git-rebase-fixup
+        git-rebase-kill-line)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p )
+            (emacspeak-auditory-icon 'mark-object)
+            (emacspeak-speak-line)))))
+
+(defadvice git-rebase-pick (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-speak-line)))
+
+(defadvice git-rebase-undo (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon (if (buffer-modified-p) 'modified-object 'unmodified-object))))
+
+(defadvice git-rebase-move-line-up (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon 'left)))
+
+(defadvice git-rebase-move-line-down (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon 'right)))
 
 (defadvice magit-pop-revision-stack (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -247,12 +277,6 @@
   (emacspeak-auditory-icon 'open-object)
   (emacspeak-speak-buffer))
 
-(defadvice magit-invoke-popup-option (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-line)))
-
 ;;}}}
 ;;{{{ Advice hide/show commands:
 (loop for f in
@@ -292,7 +316,10 @@
 
 (loop for f in
       '(magit-hide-section
-        magit-collapse-section)
+        magit-collapse-section
+        magit-invoke-popup-option
+        magit-log-select-quit
+        magit-mode-quit-window)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -322,6 +349,7 @@
 (loop for f in
       '(magit-add-log
         magit-log-edit
+        magit-process-buffer
         magit-annotated-tag)
       do
       (eval
@@ -330,10 +358,21 @@
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'open-object)))))
 
-(defadvice magit-log-edit-commit (after emacspeak pre act comp)
+(loop for f in
+      '(magit-log-edit-commit
+        with-editor-cancel)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'close-object)))))
+
+(defadvice magit-rebase-interactive (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'close-object)))
+  (when (and (ems-interactive-p ) (derived-mode-p 'magit-log-select-mode))
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice magit-display-process (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -354,6 +393,8 @@
         magit-diff-unstaged
         magit-diff-while-committing
         magit-diff-paths
+        magit-reverse
+        magit-apply
         magit-apply-item
         magit-cherry-pick-item
         magit-stage-all
@@ -406,6 +447,7 @@
         magit-branch-delete
         magit-tag-delete
         magit-revert-item
+        magit-discard
         magit-discard-item)
       do
       (eval
@@ -465,13 +507,6 @@
   (setq header-line-format
         '(:eval (emacspeak-magit-key-mode-header-line)))
   (emacspeak-auditory-icon 'open-object))
-
-;;}}}
-;;{{{ Advise process-sentinel:
-
-(defadvice magit-process-finish(after emacspeak pre act comp)
-  "Produce auditory icon."
-  (emacspeak-auditory-icon 'task-done))
 
 ;;}}}
 (provide 'emacspeak-magit)
