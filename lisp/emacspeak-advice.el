@@ -1775,16 +1775,19 @@ Auditory highlight indicates position of point."
             (let ((emacspeak-show-point t))
               (emacspeak-speak-line))))))
 
-(defadvice newline (before emacspeak pre act comp)
+(defadvice newline (around emacspeak pre act comp)
   "Speak the previous line if line echo is on.
 See command \\[emacspeak-toggle-line-echo].  Otherwise cue the user to
 the newly created blank line."
   (declare (special emacspeak-line-echo ))
-  (when (ems-interactive-p )
-    (cond
-     (emacspeak-line-echo (emacspeak-speak-line ))
-     (t(when dtk-stop-immediately (dtk-stop))
-       (dtk-tone 225 120 'force   )))))
+  (if (ems-interactive-p )
+      (cond
+       (emacspeak-line-echo (emacspeak-speak-line) ad-do-it)
+       (t (when dtk-stop-immediately (dtk-stop))
+          ad-do-it
+          (dtk-tone (if (> (current-column) 0) 300 225) 120 'force)))
+    ad-do-it)
+  ad-return-value)
 
 (loop
  for f in
