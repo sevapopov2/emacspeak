@@ -69,6 +69,7 @@ Possible choices at present:
 dtk-exp     For the Dectalk Express.
 dtk-mv      for the Multivoice and older Dectalks.
 outloud     For IBM ViaVoice Outloud
+multispeech For Multilingual speech server
 espeak      For eSpeak
 mac for MAC TTS
 The default is dtk-exp.")
@@ -1501,6 +1502,7 @@ This is setup on a per engine basis.")
    ((string-match "outloud" tts-name) (outloud-configure-tts))
 ;;;all dectalks
    ((string-match "dtk" tts-name) (dectalk-configure-tts))
+   ((string-match "^multispeech$" tts-name) (multispeech-configure-tts))
    ((string-match "mac$" tts-name) (mac-configure-tts))
    ((string-match "espeak$" tts-name) (espeak-configure-tts))
 ;;; generic configure
