@@ -119,11 +119,41 @@
     ad-return-value))
 
 ;;; Advice navigators:
-(defadvice magit-mark-item (after emacspeak pre act comp)
+(loop for f in
+      '(magit-mark-item
+        git-rebase-reword
+        git-rebase-edit
+        git-rebase-squash
+        git-rebase-fixup
+        git-rebase-kill-line)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p )
+            (emacspeak-auditory-icon 'mark-object)
+            (emacspeak-speak-line)))))
+
+(defadvice git-rebase-pick (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-speak-line)))
+
+(defadvice git-rebase-undo (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon (if (buffer-modified-p) 'modified-object 'unmodified-object))))
+
+(defadvice git-rebase-move-line-up (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon 'left)))
+
+(defadvice git-rebase-move-line-down (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p )
+    (emacspeak-auditory-icon 'right)))
 
 (defadvice magit-pop-revision-stack (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -268,6 +298,7 @@
       '(magit-hide-section
         magit-collapse-section
         magit-invoke-popup-option
+        magit-log-select-quit
         magit-mode-quit-window)
       do
       (eval
@@ -298,6 +329,7 @@
 (loop for f in
       '(magit-add-log
         magit-log-edit
+        magit-process-buffer
         magit-annotated-tag)
       do
       (eval
@@ -308,6 +340,7 @@
 
 (loop for f in
       '(magit-log-edit-commit
+        with-editor-cancel
         with-editor-finish)
       do
       (eval
@@ -315,6 +348,18 @@
           "Provide auditory feedback."
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'close-object)))))
+
+(loop for f in
+      '(magit-log-select-pick
+        magit-rebase-interactive)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide auditory feedback."
+          (when (ems-interactive-p)
+            (when dtk-stop-immediately
+              (dtk-stop))
+            (emacspeak-auditory-icon 'open-object)))))
 
 (defadvice magit-run-git-with-editor (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -341,9 +386,10 @@
         magit-diff-unstaged
         magit-diff-while-committing
         magit-diff-paths
+        magit-reverse
+        magit-apply
         magit-apply-item
         magit-cherry-pick-item
-        magit-reverse
         magit-stage-all
         magit-stage-modified
         magit-unstage-all
