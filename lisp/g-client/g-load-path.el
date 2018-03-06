@@ -42,14 +42,6 @@
   (setq load-path
         (cons g-directory load-path )))
 
-(condition-case nil
-    (progn
-      (called-interactively-p nil)
-      (defsubst g-interactive-p  ()
-        "called-interactively-p 'interactive"
-        (called-interactively-p 'interactive)))
-  (error (defalias 'g-interactive-p  'interactive-p )))
-
 (setq byte-compile-warnings
       '(redefine callargs free-vars
                  unresolved obsolete))
