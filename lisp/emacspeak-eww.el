@@ -71,6 +71,9 @@
 (declare-function eww-update-header-line-format "ext:eww.el" ())
 (declare-function shr-insert-document "ext:shr.el" (dom))
 
+(declare-function shr-expand-url "shr.el")
+(declare-function shr-generic "shr.el")
+
 ;;}}}
 ;;{{{ Declare generated functions:
 

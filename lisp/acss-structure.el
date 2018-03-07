@@ -105,6 +105,9 @@
 ;;; may be redefined at runtime when alternative tts engine is
 ;;; configured.
 
+(declare-function tts-voice-defined-p "acss-structure.el" t t)
+(declare-function tts-define-voice-from-speech-style "acss-structure.el" t t)
+
 (declare-function dectalk-voice-defined-p "dectalk-voices.el" (voice))
 (declare-function dectalk-define-voice-from-speech-style "dectalk-voices.el" (name style))
 

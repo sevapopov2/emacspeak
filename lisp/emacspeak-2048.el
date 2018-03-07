@@ -58,6 +58,7 @@
 ;;{{{ Forward declarations
 
 (declare-function 2048-print-board "ext:2048.el" ())
+(declare-function 2048-init-tile "ext:2048.el" (n))
 
 ;;}}}
 ;;{{{ Push And Pop states:

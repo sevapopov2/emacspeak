@@ -52,6 +52,7 @@
 ;;{{{ required modules
 
 (require 'emacspeak-preamble)
+(require 'emacspeak-eww)
 (require 'org "org" 'no-error)
 (require 'org-table "org-table" 'no-error)
 ;;}}}
@@ -647,6 +648,7 @@ and assign  letter `h' to a template that creates the hyperlink on capture."
 
 (defun org-eww-store-link ()
   "Store a link to a EWW buffer."
+  (declare (special eww-current-url eww-current-title))
   (when (eq major-mode 'eww-mode)
     (org-store-link-props
      :type "eww"

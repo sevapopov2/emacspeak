@@ -68,6 +68,9 @@
 (declare-function vm-goto-message "ext:vm-motion.el" (n))
 (declare-function vm-delete-message "ext:vm-delete.el" (count))
 
+(declare-function u-vm-color-fontify-buffer "ext:u-vm-color" ())
+(declare-function u-vm-color-summary-mode "ext:u-vm-color" ())
+
 ;;}}}
 ;;{{{ voice locking:
 

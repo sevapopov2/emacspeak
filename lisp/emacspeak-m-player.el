@@ -65,6 +65,13 @@
 (require 'comint)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function cl-struct-slot-info "cl-lib.el" (struct-type))
+(declare-function cl-struct-slot-offset "cl-lib" (struct-type slot-name))
+(declare-function cl-struct-slot-value "cl-lib.el" (struct-type slot-name inst))
+
+;;}}}
 ;;{{{ Stream Metadata:
 
 (defstruct emacspeak-m-player-metadata

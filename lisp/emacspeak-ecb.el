@@ -61,6 +61,8 @@
 (declare-function ecb-goto-window-sources "ext:ecb-file-browser.el" ())
 (declare-function tree-node-get-all-visible-node-names "ext:tree-buffer.el" (start-node))
 (declare-function tree-buffer-return-pressed "ext:tree-buffer.el" (&optional shift-pressed control-pressed))
+(declare-function tree-node->expandable "ext:tree-buffer.el" (node))
+(declare-function tree-node->expanded "ext:tree-buffer.el" (node))
 
 ;;}}}
 ;;{{{  advice interactive commands

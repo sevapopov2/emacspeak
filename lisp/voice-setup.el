@@ -110,6 +110,7 @@
 
 ;;}}}
 ;;{{{  helper for voice custom items:
+(declare-function tts-list-voices "voice-setup.el" t t)
 (unless (fboundp 'tts-list-voices)
   (fset 'tts-list-voices #'dectalk-list-voices))
 
