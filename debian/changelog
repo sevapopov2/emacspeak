@@ -1,3 +1,10 @@
+emacspeak (42.0-9trusty1) trusty; urgency=low
+
+  * Various Emacs versions compatibility fix.
+  * Magit support enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 08 Mar 2018 10:16:43 +0300
+
 emacspeak (42.0-8trusty1) trusty; urgency=low
 
   * Fixed speech feedback on interactive sexp evaluation.
