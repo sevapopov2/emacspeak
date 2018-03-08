@@ -1,3 +1,10 @@
+emacspeak (42.0-9) unstable; urgency=low
+
+  * Various Emacs versions compatibility fix.
+  * Magit support enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 08 Mar 2018 10:14:32 +0300
+
 emacspeak (42.0-8) unstable; urgency=low
 
   * Fixed speech feedback on interactive sexp evaluation.
