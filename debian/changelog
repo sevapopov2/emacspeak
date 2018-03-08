@@ -1,3 +1,10 @@
+emacspeak (42.0-9jessie1) jessie; urgency=low
+
+  * Various Emacs versions compatibility fix.
+  * Magit support enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 08 Mar 2018 10:19:17 +0300
+
 emacspeak (42.0-8jessie1) jessie; urgency=low
 
   * Fixed speech feedback on interactive sexp evaluation.
