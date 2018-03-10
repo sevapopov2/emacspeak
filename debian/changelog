@@ -1,3 +1,9 @@
+emacspeak (43.0-2) unstable; urgency=low
+
+  * PhantomJS support included.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 10 Mar 2018 15:46:51 +0300
+
 emacspeak (43.0-1) unstable; urgency=low
 
   * New upstream release.
