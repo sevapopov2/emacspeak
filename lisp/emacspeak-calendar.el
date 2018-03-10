@@ -62,8 +62,8 @@
 (voice-setup-add-map
  '(
    (calendar-today voice-lighten)
-   (holiday-face voice-brighten-extra)
-   (diary-face voice-bolden)
+   (holiday voice-brighten-extra)
+   (diary voice-bolden)
    ))
 
 (defcustom emacspeak-calendar-mark-personality voice-bolden

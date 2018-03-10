@@ -1,20 +1,20 @@
 
 Notes On Using Multilingual Speech Server with Emacspeak:
 
-Multispeech is a multilingual speech server. Now it supports English
-and Russian. Natively it uses Mbrola and Freephone for English and
-Ru_tts for Russian speech synthesis, but can be tuned for using other
-TTS engines.
+Multispeech is a multilingual speech server. Now it supports English,
+German, Italian, Spanish, French, Brazilian and Russian. Natively it
+uses Mbrola and Freephone for English, Ru_tts for Russian and Espeak
+for all other languages, but can be tuned for using other TTS
+engines.
 
 * Pre-requisites:
 
 You need to obtain  and install the Multispeech itself and
 accompanying TTS engines. All this stuff is not distributed with this
 package and can be downloaded freely from
-http://www.mr-blind.hopto.org/blinux/ or
-ftp://ftp.rakurs.spb.ru/pub/Goga/.
+http://poretsky.homelinux.net/packages/.
 
- * Installation:
+* Installation:
 
 **  Have You Installed Emacspeak?
 
@@ -28,9 +28,6 @@ At first, note that Multispeech is a stand-alone application and it
 doesn't need TCL. To use this server with Emacspeak you should make
 symlink named "multispeech" pointing to it's executable in the
 directory where Emacspeak's speech servers normally live.
-
-You need not to use elisp stuff shipped with the Multispeech. Now it
-is incorporated in this package.
 
 * Testing:
 
