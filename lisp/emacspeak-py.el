@@ -42,7 +42,7 @@
 
 ;;; Commentary:
 
-;;; This speech-enables python-mode available on sourceforge
+;;; This speech-enables python-mode available on sourceforge and ELPA
 
 ;;; Code:
 
@@ -50,7 +50,8 @@
 ;;{{{  Required modules
 (require 'cl)
 (require 'emacspeak-preamble)
-(require 'python-mode "python-mode" 'no-error)
+(eval-when-compile
+  (require 'python-mode "python-mode" 'no-error))
 ;;}}}
 ;;{{{ Forward declarations
 
@@ -58,9 +59,8 @@
 (declare-function python-end-of-defun "python.el" ())
 
 ;;}}}
-;;{{{ Advice interactive commands:
-
 ;;{{{  electric editing
+
 (unless (and (boundp 'post-self-insert-hook)
              post-self-insert-hook
              (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
@@ -141,16 +141,16 @@
 
 ;;}}}
 ;;{{{  whitespace management and indentation
-(loop for f in
-      (list 'py-fill-paragraph
-            'py-fill-comment
-            'py-fill-string)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-          "Provide auditory feedback."
-          (when (ems-interactive-p )
-            (emacspeak-auditory-icon 'fill-object)))))
+
+(loop
+ for f in
+ (list 'py-fill-paragraph 'py-fill-comment 'py-fill-string)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p )
+       (emacspeak-auditory-icon 'fill-object)))))
 
 (defadvice py-newline-and-indent(after emacspeak pre act comp)
   "Speak line so we know current indentation"
@@ -177,6 +177,7 @@
      (format "Right shifted block  containing %s lines"
              (count-lines  (region-beginning)
                            (region-end))))))
+
 (defadvice py-indent-region (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
   (when (ems-interactive-p )
@@ -196,65 +197,65 @@
 
 ;;}}}
 ;;{{{  buffer navigation
-(defadvice py-previous-statement (after emacspeak pre act comp)
-  "Speak current statement after moving"
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
-(defadvice py-next-statement (after emacspeak pre act comp)
-  "Speak current statement after moving"
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
+(loop
+ for f in
+ '(
+   py-down py-up
+           py-backward-statement py-forward-statement
+           py-goto-block-up  py-go-to-beginning-of-comment
+           py-beginning-of-statement py-end-of-statement
+           py-beginning-of-block py-end-of-block
+           py-beginning-of-clause py-end-of-clause
+           py-next-statement py-previous-statement
+           py-beginning-of-def-or-class py-end-of-def-or-class)
+ do                  
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Speak current statement after moving"
+     (when (ems-interactive-p )
+       (emacspeak-speak-line)
+       (emacspeak-auditory-icon 'large-movement)))))
 
-(defadvice py-goto-block-up (after emacspeak pre act comp)
-  "Speak current statement after moving"
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
+(loop
+ for  f in
+ '(
+   py-mark-class-bol py-mark-clause py-mark-clause-bol py-mark-comment
+                     py-mark-comment-bol py-mark-def py-mark-def-bol
+                     py-mark-def-or-class py-mark-def-or-class-bol py-mark-except-block
+                     py-mark-except-block-bol py-mark-expression py-mark-expression-bol
+                     py-mark-if-block py-mark-if-block-bol py-mark-line py-mark-line-bol
+                     py-mark-minor-block py-mark-minor-block-bol py-mark-paragraph
+                     py-mark-paragraph-bol py-mark-partial-expression
+                     py-mark-partial-expression-bol py-mark-section py-mark-statement
+                     py-mark-statement-bol py-mark-top-level py-mark-top-level-bol
+                     py-mark-try-block py-mark-try-block-bol )                 
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Speak number of lines marked"
+     (when (ems-interactive-p )
+       (dtk-speak
+        (format
+         "Marked block containing %s lines"
+         (count-lines (region-beginning) (region-end))))
+       (emacspeak-auditory-icon 'mark-object)))))
 
-(defadvice py-beginning-of-def-or-class (after emacspeak pre act comp)
-  "Speak current statement after moving"
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
+(loop
+ for f in
+ '(
 
-(defadvice beginning-of-python-def-or-class (after emacspeak pre act comp)
-  "Speak current statement after moving"
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
-
-(defadvice end-of-python-def-or-class (after emacspeak pre act comp)
-  "Speak current statement after moving"
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
-
-(defadvice py-end-of-def-or-class (after emacspeak pre act comp)
-  "Speak current statement after moving"
-  (when (ems-interactive-p )
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'large-movement)))
-
-(defadvice py-mark-block (after emacspeak pre act comp)
-  "Speak number of lines marked"
-  (when (ems-interactive-p )
-    (dtk-speak
-     (format "Marked block containing %s lines"
-             (count-lines (region-beginning)
-                          (region-end))))
-    (emacspeak-auditory-icon 'mark-object)))
-(defadvice py-narrow-to-defun (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p )
-    (message "%s %s lines"
-             (save-excursion
-               (goto-char (point-min))
-               (buffer-substring (line-beginning-position)
-                                 (line-end-position)))
-             (count-lines (point-min)
-                          (point-max)))))
+   Possible completions are:
+            py-narrow-to-block  py-narrow-to-block-or-clause    py-narrow-to-class
+            py-narrow-to-clause         py-narrow-to-def        py-narrow-to-def-or-class
+            py-narrow-to-statement
+            )
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p )
+       (message "Narrowed  %s lines"
+                (count-lines (point-min) (point-max)))))))
 
 (defadvice py-mark-def-or-class (after emacspeak pre act comp)
   "Speak number of lines marked"

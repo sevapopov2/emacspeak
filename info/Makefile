@@ -1,9 +1,13 @@
 #$Id$
-SF_HOME= raman,emacspeak@web.sourceforge.net:/home/groups/e/em/emacspeak/htdocs
-HTML_FILES=$(shell find . -name '*.html' -print)
+#http://emacspeak.sf.net/info
+SF_HOME= raman,emacspeak@web.sourceforge.net:/home/groups/e/em/emacspeak/htdocs/info
+#https://tvraman.github.io/emacspeak/manual
+GH_PAGES=../../gh-pages-emacspeak/manual
+
 TEXINDEX=texindex
 FILES=*.texi
 MAKEINFO = makeinfo 
+CSS=-css-ref="http://www.w3.org/StyleSheets/Core/Modernist"
 TEX=tex
 PDFTEX=pdftex
 TEXI2HTML=texi2html
@@ -11,27 +15,26 @@ infodir =/usr/share/info#normally supplied by caller
 INSTALL = install
 EMACS=emacs
 
-all: emacspeak.info html introducing-emacspeak turning-twenty
+all: info html introducing-emacspeak turning-twenty
 
-info: emacspeak.texi introducing-emacspeak.texi turning-twenty.texi
-	$(MAKEINFO) emacspeak.texi
-	$(MAKEINFO) introducing-emacspeak.texi
-	$(MAKEINFO) turning-twenty.texi
+info: emacspeak.info introducing-emacspeak.info turning-twenty.info
 
-.PHONY: docs.texi 
+#.PHONY: docs.texi 
 
 docs.texi: 
 	$(EMACS) -batch -q -l ../utils/self-document.el -f self-document-all-modules
 
 install: emacspeak.info turning-twenty.info
-	if test  -x /sbin/install-info ; then \
-		install-info *.info /etc/info-dir; \
+	if test  -x /usr/bin/install-info ; then \
+		install-info emacspeak.info ${infodir}/dir ;\
+install-info turning-twenty.info ${infodir}/dir ; \
 	fi
-	$(INSTALL)  -m 644 *.info* $(DESTDIR)$(infodir)
+	$(INSTALL)  -m 644 *.info* $(infodir)
 
 uninstall:
-	if test  -e /sbin/install-info ; then \
-		install-info --delete $(infodir)/emacspeak.info* /etc/info-dir; \
+	if test  -e /usr/bin/install-info ; then \
+		install-info --delete $(infodir)/emacspeak.info* ${infodir}/dir \;
+		install-info --delete $(infodir)/turning-20.info * ${infodir}/dir \;
 	fi
 	rm -f $(infodir)/*.info*
 
@@ -65,13 +68,10 @@ emacspeak.pdf:		emacspeak.texi
 print: emacspeak.dvi
 	dvips emacspeak.dvi
 
-htm: emacspeak.texi 
-	makeinfo -o html  --html  emacspeak.texi
-	perl add-css.pl html/*.html
-	for f in $(HTML_FILES) ; \
-		do \
-		tidy -q -mic -asxml  $$f 2>&1 > /dev/null  || echo tidy; \
-		done
+man: emacspeak.texi 
+	makeinfo -o ${GH_PAGES}  --html  ${CSS} emacspeak.texi
+	tidy -q -utf8 -mic -asxml  ${GH_PAGES}/*.html 2>&1 > /dev/null  || echo tidy
+	echo "Commit and push updated HTML files from gh-pages!"
 
 introducing-emacspeak: introducing-emacspeak.texi
 	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
@@ -79,9 +79,15 @@ introducing-emacspeak: introducing-emacspeak.texi
 turning-twenty: turning-twenty.texi
 	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
 
+publish:
+	cd ../../gh-pages-emacspeak && make
 
-pub:  html/index.html introducing-emacspeak/index.html
-	rsync -avz introducing-emacspeak ${SF_HOME}/info/
+introducing-emacspeak.html: introducing-emacspeak.texi
+	makeinfo --no-split --html  introducing-emacspeak.texi
+	perl add-css.pl introducing-emacspeak.html
+#For publishing to SF
+pub:  html/index.html introducing-emacspeak.html
+	rsync introducing-emacspeak.html ${SF_HOME}
 	rsync -avz  html ${SF_HOME}/info/
 
 %.info: %.texi

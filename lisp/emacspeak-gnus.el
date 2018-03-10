@@ -788,10 +788,7 @@ an auditory icon if possible."
    (gnus-summary-high-ancient voice-smoothen-extra)
    (gnus-summary-low-ancient voice-smoothen-extra)
    (gnus-summary-normal-undownloaded voice-bolden-and-animate)
-   (gnus-summary-high-undownloaded-face voice-bolden-and-animate) ;; emacs 21
-   (gnus-summary-high-undownloaded voice-bolden-and-animate)
-   (gnus-summary-low-undownloaded-face voice-bolden) ;; emacs 21
-   (gnus-summary-low-undownloaded voice-bolden)
+   (gnus-summary-low-undownloaded voice-bolden-and-animate)
    (gnus-summary-low-unread voice-bolden-medium)
    (gnus-summary-high-unread voice-brighten-extra)
    (gnus-summary-selected voice-animate-extra)

@@ -127,7 +127,7 @@ Turn on voice lock temporarily. "
                   emacspeak-replace-start from
                   emacspeak-replace-end  to 
                   emacspeak-replace-saved-personality
-                  (get-text-property  from 'personality))
+                  (dtk-get-style from))
             (and from to 
                  (put-text-property from to 'personality
                                     emacspeak-replace-personality ))
