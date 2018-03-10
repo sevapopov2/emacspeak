@@ -1,6 +1,5 @@
 etc/remote.txt
 etc/NEWS-*
-servers/linux-outloud/VIAVOICE
 servers/software-dtk/DTK
 servers/multispeech-notes
 lisp/g-client/g-client.org
