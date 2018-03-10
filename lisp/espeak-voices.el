@@ -41,6 +41,7 @@
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'acss-structure)
 (require 'dtk-unicode)
+(require 'tts)
 
 ;;}}}
 ;;{{{ Top-Level TTS Call
@@ -474,7 +475,7 @@ and TABLE gives the values along that dimension."
                   when   (string-match "\\(\\[\\*\\]\\)"  entry) do
                   (setf entry (replace-match " " nil nil  entry 1)))
             table))))
-
+;;;###autoload
 (defun espeak-configure-tts ()
   "Configure TTS environment to use eSpeak."
   (declare (special tts-default-speech-rate
@@ -492,6 +493,23 @@ and TABLE gives the values along that dimension."
   (dtk-unicode-update-untouched-charsets '(ascii latin-iso8859-1)))
 
 ;;}}}
+;;{{{ tts-env for Espeak:
+;;;###autoload
+(defun espeak-make-tts-env  ()
+  "Constructs a TTS environment for Espeak."
+  (declare (special espeak-default-speech-rate))
+  (make-tts-env
+   :name :espeak :default-voice 'paul
+   :default-speech-rate espeak-default-speech-rate
+   :list-voices #'espeak-list-voices
+   :acss-voice-defined-p #'espeak-voice-defined-p
+   :get-acss-voice-command #'espeak-get-voice-command
+   :define-voice-from-acss #'espeak-define-voice-from-speech-style
+   :speech-rate-base 100 :speech-rate-step 10))
+
+(tts-env-set :espeak  (espeak-make-tts-env))
+
+;;}}}  
 (provide 'espeak-voices)
 ;;{{{  emacs local variables
 

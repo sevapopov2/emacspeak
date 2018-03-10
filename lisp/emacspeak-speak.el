@@ -62,6 +62,8 @@
 (require 'dtk-unicode)
 (eval-when-compile
   (require 'shell)
+  (require 'calendar)
+  (require 'which-func)
   )
 
 ;;}}}
@@ -275,6 +277,7 @@ Argument BODY specifies forms to execute."
 (defmacro ems-with-messages-silenced  (&rest body)
   "Evaluate body  after temporarily silencing auditory error feedback."
   `(let ((emacspeak-speak-messages nil)
+         (inhibit-message t)
          (emacspeak-use-auditory-icons nil))
      ,@body))
 
@@ -879,11 +882,12 @@ with a long string of gibberish."
 (make-variable-buffer-local 'emacspeak-speak-maximum-line-length)
 
 (defcustom emacspeak-speak-space-regexp
-  (format "^[%c%c%c%c]+$"
+  (format "^[%c%c%c%c%c]+$"
           ?\240                         ; non-break space
           ?\                            ; Ascii 32
           ?\t                           ; tab
           ?\r                           ; CR
+          ?\f ; form-feed
           )
   "Pattern that matches white space."
   :type 'string
@@ -920,7 +924,7 @@ are indicated with auditory icon ellipses."
             (line nil)
             (orig (point))
             (indent nil))
-        (beginning-of-line)
+        (forward-line 0)
         (emacspeak-handle-action-at-point)
         (setq start (point))
         (setq end (line-end-position))
@@ -942,7 +946,7 @@ are indicated with auditory icon ellipses."
                  line emacspeak-speak-line-invert-filter)))
         (when (and emacspeak-audio-indentation (null arg ))
           (let ((limit (line-end-position)))
-            (beginning-of-line)
+            (forward-line 0)
             (skip-syntax-forward " " limit)
             (setq indent  (current-column )))
           (when (eq emacspeak-audio-indentation-method 'tone)
@@ -1964,12 +1968,12 @@ Second interactive prefix sets clock to new timezone."
      (world
       (call-interactively 'emacspeak-speak-world-clock))
      (t
-      (tts-with-punctuations 'some
-                             (dtk-speak
-                              (propertize
-                               (format-time-string
-                                emacspeak-speak-time-format-string)
-                               'personality voice-punctuations-some))))))
+      (tts-with-punctuations
+       'some
+       (dtk-notify-speak
+        (propertize
+         (format-time-string emacspeak-speak-time-format-string)
+         'personality voice-lighten))))))
   (emacspeak-auditory-icon 'progress))
 
 ;;;###autoload
@@ -2156,9 +2160,9 @@ achieved by a change in voice personality."
   "Speak chunk of text around point that has current
 personality."
   (interactive)
-  (let ((personality (get-text-property (point) 'personality))
-        (start (previous-single-property-change (point) 'personality))
-        (end (next-single-property-change  (point) 'personality)))
+  (let ((personality (dtk-get-style))
+        (start (dtk-previous-style-change (point)))
+        (end (dtk-next-style-change (point))))
     (emacspeak-speak-region
      (or start (point-min))
      (or end (point-max)))))
@@ -2168,8 +2172,8 @@ personality."
   "Moves to the front of next chunk having current personality.
 Speak that chunk after moving."
   (interactive)
-  (let ((personality (get-text-property (point) 'personality))
-        (this-end (next-single-property-change (point) 'personality))
+  (let ((personality (dtk-get-style))
+        (this-end (dtk-next-style-change(point) (point-max)))
         (next-start nil))
     (cond
      ((and (< this-end (point-max))
@@ -2211,17 +2215,14 @@ Return buffer position or nil on failure."
   "Moves to the front of previous chunk having current personality.
 Speak that chunk after moving."
   (interactive)
-  (let ((personality (get-text-property (point) 'personality))
-        (this-start (previous-single-property-change (point) 'personality))
+  (let ((personality (dtk-get-style))
+        (this-start (dtk-previous-style-change (point)))
         (next-end nil))
     (cond
      ((and (> this-start (point-min))
-           (setq next-end
-                 (ems-backwards-text-property-any  (1- this-start) (point-min)
-                                                   'personality personality)))
-      (goto-char next-end)
-      (backward-char 1)
-      (emacspeak-speak-this-personality-chunk))
+           (goto-char (dtk-previous-style-change (point)))
+           (backward-char 1)
+           (emacspeak-speak-this-personality-chunk)))
      (t (error "No previous  chunks with current personality.")))))
 
 (defun emacspeak-speak-face-interval-and-move ()
@@ -3268,7 +3269,9 @@ See documentation for command run-at-time for details on time-spec."
                #'(lambda (m)
                    (emacspeak-auditory-icon 'alarm)
                    (message m))
-               message))
+               message)
+  (emacspeak-auditory-icon 'button)
+  (message "Set alarm for %s" time))
 
 ;;}}}
 ;;{{{ Directory specific settings
@@ -3445,6 +3448,10 @@ This function is sensitive to calendar mode when prompting."
   (emacspeak-speak-collect-date "Date:"
                                 "%m/%d") )
 
+(defun emacspeak-speak-year-month-date ()
+  "Return today as yyyy-mm-dd"
+  (emacspeak-speak-collect-date "Date:"
+                                "%Y-%m-%d"))
 ;;}}}
 (provide 'emacspeak-speak )
 ;;{{{ end of file
@@ -3455,7 +3462,15 @@ This function is sensitive to calendar mode when prompting."
 ;;; end:
 
 ;;}}}
+;;{{{ AppLauncher for use in X:
+;;;###autoload
+(defun emacspeak-launch-application (command)
+  "Launch an application. 
+This command  is designed for use in a windowing environment like X."
+  (interactive (list (read-shell-command "$ ")))
+  (start-process-shell-command command nil command))
 
+;;}}}
 (provide 'emacspeak-speak )
 ;;{{{ end of file
 

@@ -99,7 +99,7 @@
         )
       do
       (emacspeak-keymap-update  emacspeak-web-prefix k))
-
+(define-key emacspeak-hyper-keymap "w" 'emacspeak-web-prefix)
 ;;}}}
 ;;{{{ web-pre-process
 
