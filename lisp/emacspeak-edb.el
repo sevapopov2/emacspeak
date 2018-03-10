@@ -181,10 +181,10 @@
       do
       (eval
        `(defadvice ,f (before emacspeak pre act comp)
-	  "Provide auditory feedback. Pause ongoing speech first."
+	  "Provide auditory feedback. Stop ongoing speech first."
 	  (when (ems-interactive-p)
-	    (emacspeak-auditory-icon 'open-object)
-	    (dtk-pause)))))
+	    (dtk-stop)
+	    (emacspeak-auditory-icon 'open-object)))))
 
 (defadvice db-search-field (after emacspeak pre act comp)
   "Provide auditory feedback."

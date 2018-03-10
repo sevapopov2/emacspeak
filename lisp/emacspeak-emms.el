@@ -54,7 +54,7 @@
 ;;{{{ required modules
 
 (require 'emacspeak-preamble)
-
+(require 'emms "emms" 'no-error)
 ;;}}}
 ;;{{{ Forward declarations
 

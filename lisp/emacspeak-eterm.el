@@ -399,7 +399,7 @@ Argument COUNT specifies number of columns by which to move."
   (declare (special emacspeak-eterm-pointer ))
   (save-excursion
     (goto-char emacspeak-eterm-pointer )
-    (beginning-of-line)
+    (forward-line 0)
     (set-marker emacspeak-eterm-pointer (point ))
     (when (ems-interactive-p )
       (dtk-stop)
@@ -506,7 +506,7 @@ Optional argument COUNT specifies how many changes to skip."
   (interactive "p")
   (declare (special emacspeak-eterm-pointer))
   (setq count (or count 1 ))
-  (let ((current (get-text-property emacspeak-eterm-pointer 'personality ))
+  (let ((current (dtk-get-style emacspeak-eterm-pointer))
         (found nil))
     (save-excursion
       (goto-char emacspeak-eterm-pointer)
@@ -525,7 +525,7 @@ Optional argument COUNT specifies how many changes to skip."
   (interactive "p")
   (declare (special emacspeak-eterm-pointer term-home-marker))
   (setq count (or count 1 ))
-  (let ((current (get-text-property emacspeak-eterm-pointer 'personality ))
+  (let ((current (dtk-get-style emacspeak-eterm-pointer))
         (found nil))
     (save-excursion
       (goto-char emacspeak-eterm-pointer)
@@ -756,7 +756,7 @@ Argument ETERM-WINDOW specifies a predefined eterm window."
                      (buffer-substring start (point))
                      lines)
                     (forward-line 1)
-                    (beginning-of-line)
+                    (forward-line 0)
                     (forward-char (car top-left))
                     (setq start (point)))
                   (setq lines (nreverse lines ))
@@ -765,7 +765,7 @@ Argument ETERM-WINDOW specifies a predefined eterm window."
                (left-stretch
                 (let  ((lines nil))
                   (goto-char start )
-                  (beginning-of-line)
+                  (forward-line 0)
                   (setq start (point))
                   (while (< start end )
                     (forward-char (car bottom-right ))
@@ -773,7 +773,8 @@ Argument ETERM-WINDOW specifies a predefined eterm window."
                      (buffer-substring start (point ))
                      lines)
                     (forward-line 1)
-                    (beginning-of-line)
+                    (forward-line 0)
+
                     (setq start (point)))
                   (setq lines (nreverse lines ))
                   (mapconcat 'identity
@@ -948,6 +949,7 @@ non-negative integer ")
   "Window id used to filter screen activity.")
 
 (make-variable-buffer-local 'emacspeak-eterm-filter-window)
+;;;###autoload
 (defun emacspeak-eterm-set-filter-window (flag)
   "Prompt for the id of a predefined window,
 and set the `filter' window to it.
