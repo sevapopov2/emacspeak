@@ -75,9 +75,7 @@ server written in C++ for the IBM ViaVoice speech synthesis software.
 However, it depends on the ViaVoice runtime kit which does not meet
 the Debian Free Software Guidelines.  (It is available only as object
 code, and only under a temporary license.)  Therefore, support for
-ViaVoice is not included in this Debian package.  If you would like to
-try it, you can find some information in
-/usr/share/doc/emacspeak/VIAVOICE.
+ViaVoice is not included in this Debian package.
 
 Starting with version 10.0, Dr. Raman has rewritten the documentation
 files.  Approximately 100 commands are described there, compared to

@@ -75,10 +75,12 @@ install: build-indep
 	cd $(deblsp)/servers ; chmod 0755 dtk-exp speech-server ssh-* ; chmod 0644 .servers tts-lib.tcl
 	cd $(debtmp)-espeak/$(eldir)/servers ; chmod 0755 espeak
 	cd $(debtmp)-outloud/$(eldir)/servers ; chmod 0755 outloud
-	chmod 0755 $(debtmp)-cartoon-22k-mono/$(eldir)/sounds/cartoon-22k-mono
-	chmod 0644 $(debtmp)-cartoon-22k-mono/$(eldir)/sounds/cartoon-22k-mono/*
-	chmod 0755 $(debtmp)-chimes-stereo/$(eldir)/sounds/chimes-stereo
-	chmod 0644 $(debtmp)-chimes-stereo/$(eldir)/sounds/chimes-stereo/*
+	chmod 0755 $(debtmp)/$(eldir)/sounds/3d
+	chmod 0644 $(debtmp)/$(eldir)/sounds/3d/*
+	chmod 0755 $(debtmp)-classic/$(eldir)/sounds/classic
+	chmod 0644 $(debtmp)-classic/$(eldir)/sounds/classic/*
+	chmod 0755 $(debtmp)-chimes/$(eldir)/sounds/chimes
+	chmod 0644 $(debtmp)-chimes/$(eldir)/sounds/chimes/*
 
 
 # Build architecture-independent files here.

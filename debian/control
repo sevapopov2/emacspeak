@@ -8,10 +8,10 @@ Homepage: http://emacspeak.sf.net
 
 Package: emacspeak
 Architecture: all
-Depends: emacs (>=45.0ubuntu1), perl, make, adduser, ${misc:Depends}
-Conflicts: emacspeak-dt, emacspeak-ss
-Recommends: multispeech, python, tclx8.4, tcl
-Suggests: emacspeak-3d, emacspeak-chimes-stereo, emacspeak-cartoon-22k-mono, emacspeak-espeak, emacspeak-outloud, eflite, psgml, xsltproc, espeak, w3m-el
+Depends: emacs (>= 45.0ubuntu1), perl, make, adduser, ${misc:Depends}
+Conflicts: emacspeak-dt, emacspeak-ss, multispeech (<< 2.8)
+Recommends: multispeech (>= 2.8), python, tclx8.4, tcl
+Suggests: emacspeak-classic, emacspeak-chimes, emacspeak-espeak, emacspeak-outloud, psgml, xsltproc, espeak, w3m-el
 Description: speech output interface to Emacs
  Emacspeak is a speech output system that will allow someone who
  cannot see to work directly on a UNIX system.
@@ -63,21 +63,7 @@ Description: IBM ViaVoice Outloud speech server for Emacspeak
  This package allows one to use IBM ViaVoice Outloud speech synthesizer
  for speech output in Emacspeak.
 
-Package: emacspeak-cartoon-22k-mono
-Section: sound
-Architecture: all
-Depends: ${misc:Depends}
-Conflicts: emacspeak-cartoons
-Recommends: emacspeak
-Description: Cartoons auditory icons theme for Emacspeak
- This theme was originally contributed by Bryan Smart
- and is made up of 22K-mono sounds.
- .
- When the package is installed, you can switch Emacspeak to use
- this theme by command emacspeak-sounds-select-theme
- bound by default to control-e ).
-
-Package: emacspeak-chimes-stereo
+Package: emacspeak-chimes
 Section: sound
 Architecture: all
 Depends: ${misc:Depends}
@@ -90,14 +76,14 @@ Description: Chimes auditory icons theme for Emacspeak
  this theme by command emacspeak-sounds-select-theme
  bound by default to control-e ).
 
-Package: emacspeak-3d
+Package: emacspeak-classic
 Section: sound
 Architecture: all
 Depends: ${misc:Depends}
 Recommends: emacspeak
-Description: 3d auditory icons theme for Emacspeak
- This theme is made up of sound files generated using CSound
- from its example files and compositions.
+Description: Classic auditory icons theme for Emacspeak
+ This theme is made up of the original default-8k sounds
+ that have been converted to 44.1k stereo format.
  .
  When the package is installed, you can switch Emacspeak to use
  this theme by command emacspeak-sounds-select-theme
