@@ -1,3 +1,9 @@
+emacspeak (43.0-2jessie1) jessie; urgency=low
+
+  * PhantomJS support included.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 10 Mar 2018 15:52:40 +0300
+
 emacspeak (43.0-1jessie1) jessie; urgency=low
 
   * New upstream release.
