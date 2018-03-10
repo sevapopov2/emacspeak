@@ -1,3 +1,9 @@
+emacspeak (43.0-1jessie1) jessie; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 10 Mar 2018 12:48:31 +0300
+
 emacspeak (42.0-9jessie1) jessie; urgency=low
 
   * Various Emacs versions compatibility fix.
