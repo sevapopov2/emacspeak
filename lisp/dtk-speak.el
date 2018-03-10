@@ -613,25 +613,25 @@ Argument COMPLEMENT  is the complement of separator."
               (and (listp voice) (memq 'inaudible voice)))
 ;;; ensure text is a  string
     (unless (stringp text) (setq text (format "%s" text)))
-    (dtk-interp-queue
-     (format "%s%s %s \n"
-             (cond
-              ((symbolp voice)
-               (tts-get-voice-command
-                (if (boundp  voice )
-                    (symbol-value voice )
-                  voice)))
-              ((listp voice)
-               (mapconcat  #'(lambda (v)
-                               (tts-get-voice-command
-                                (if (boundp  v )
-                                    (symbol-value v )
-                                  v)))
-                           voice
-                           " "))
-              (t       ""))
-             text
-             tts-voice-reset-code))))
+    (dtk-interp-queue-code tts-voice-reset-code)
+    (dtk-interp-queue-code
+     (cond
+      ((symbolp voice)
+       (tts-get-voice-command
+        (if (boundp  voice )
+            (symbol-value voice )
+          voice)))
+      ((listp voice)
+       (mapconcat  #'(lambda (v)
+                       (tts-get-voice-command
+                        (if (boundp  v )
+                            (symbol-value v )
+                          v)))
+                   voice
+                   " "))
+      (t       "")))
+    (dtk-interp-queue text)
+    (dtk-interp-queue-code tts-voice-reset-code)))
 
 ;;;Internal function used by dtk-speak to send text out.
 ;;;Handles voice locking etc.
@@ -710,7 +710,7 @@ Arguments START and END specify region to speak."
   (when (and emacspeak-use-auditory-icons
              (get-text-property start 'auditory-icon))
     (emacspeak-queue-auditory-icon (get-text-property start 'auditory-icon)))
-  (dtk-interp-queue (format "%s\n" tts-voice-reset-code))
+  (dtk-interp-queue-code tts-voice-reset-code)
   (cond
    ((not voice-lock-mode) (dtk-interp-queue (buffer-substring start end  )))
    (t                                   ; voiceify as we go
@@ -1978,10 +1978,9 @@ Optional argument group-count specifies grouping for intonation."
   (declare (special tts-voice-reset-code dtk-quiet))
   (unless dtk-quiet
     (let ((dtk-speaker-process (dtk-notify-process)))
-      (dtk-interp-queue
-       (format "%s%s\n"
-               (tts-get-voice-command voice)
-               text))
+      (dtk-interp-queue-code tts-voice-reset-code)
+      (dtk-interp-queue-code (tts-get-voice-command voice))
+      (dtk-interp-queue text)
       (dtk-interp-speak))))
 
 ;;;###autoload
