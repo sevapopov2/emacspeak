@@ -51,6 +51,7 @@
 ;;{{{  Required modules
 
 (require 'emacspeak-preamble)
+(require 'jabber "jabber" 'no-error)
 
 ;;}}}
 ;;{{{ Forward declarations
@@ -236,7 +237,7 @@
   (when (or jabber-message-alert-same-buffer
             (not (memq (selected-window) (get-buffer-window-list buffer))))
     (emacspeak-auditory-icon 'progress)
-    (dtk-speak
+    (dtk-notify-speak
      (if (jabber-muc-sender-p from)
          (format "Private message from %s in %s"
                  (jabber-jid-resource from)
@@ -329,7 +330,7 @@ session."
   (interactive)
   (unless (eq major-mode 'jabber-chat-mode)
     (error "Not in a Jabber chat buffer."))
-  (beginning-of-line)
+  (forward-line 0)
   (re-search-backward "^\\["nil t)
   (let ((extent (emacspeak-jabber-chat-speak-this-message)))
     (emacspeak-auditory-icon 'large-movement)

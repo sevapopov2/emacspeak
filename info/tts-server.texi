@@ -75,6 +75,13 @@ pre-processed in any way, contrast this with the primary way of
 speaking text which is to queue text before asking the server to
 process the queue.
 
+Note that this command needs to handle the special syntax for morpheme
+boundaries @samp{[*]}.  The @samp{[*]} syntax is specific to the Dectalk
+family of synthesizers; servers for other TTS engines need to map this
+pattern to the engine-specific code for each engine. As an example, see
+@samp{servers/outloud} 
+A morpheme boundary results in synthesizing compound words such as @emph{left bracket} with the right intonation; using a space would result in that phrase being synthesized as two separate words.
+
 @example
 l c
 @end example
@@ -96,21 +103,6 @@ commonly used TTS server commands) to work more effectively over
 slow (9600) dialup lines.
 The effect of calling this command is for the TTS server to start
 processing items that have been queued via earlier requests.
-
-@example
-tts_pause
-@end example
-
-This pauses speech @emph{immediately}.
-It does not affect queued requests; when command
-@emph{tts_resume} is called, the output resumes at the point
-where it was paused. Not all TTS engines provide this capability.
-
-@example
-tts_resume
-@end example
-
-Resume spoken output if it has been paused earlier.
 
 @example
 s
