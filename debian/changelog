@@ -1,3 +1,9 @@
+emacspeak (43.0-2xenial1) xenial; urgency=low
+
+  * PhantomJS support included.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 10 Mar 2018 15:51:16 +0300
+
 emacspeak (43.0-1xenial1) xenial; urgency=low
 
   * New upstream release.
