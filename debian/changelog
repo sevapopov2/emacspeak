@@ -1,3 +1,9 @@
+emacspeak (43.0-2trusty1) trusty; urgency=low
+
+  * PhantomJS support included.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 10 Mar 2018 15:49:01 +0300
+
 emacspeak (43.0-1trusty1) trusty; urgency=low
 
   * New upstream release.
