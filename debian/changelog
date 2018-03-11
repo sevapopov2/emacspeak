@@ -1,3 +1,9 @@
+emacspeak (43.0-3trusty1) trusty; urgency=low
+
+  * Startup warning when current Emacs flavor is not supported.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 11 Mar 2018 07:47:15 +0300
+
 emacspeak (43.0-2trusty1) trusty; urgency=low
 
   * PhantomJS support included.
