@@ -1,3 +1,9 @@
+emacspeak (43.0-3xenial1) xenial; urgency=low
+
+  * Startup warning when current Emacs flavor is not supported.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 11 Mar 2018 07:48:53 +0300
+
 emacspeak (43.0-2xenial1) xenial; urgency=low
 
   * PhantomJS support included.
