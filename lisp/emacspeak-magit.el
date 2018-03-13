@@ -341,7 +341,8 @@
           "Provide auditory feedback."
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'close-object)
-            (emacspeak-speak-mode-line)))))
+            (with-current-buffer (window-buffer)
+              (emacspeak-speak-mode-line))))))
 
 ;;}}}
 ;;{{{ Additional commands to advice:
