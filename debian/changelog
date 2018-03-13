@@ -1,3 +1,10 @@
+emacspeak (43.0-4) unstable; urgency=low
+
+  * Magit support fix.
+  * Dependency fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 13 Mar 2018 22:11:21 +0300
+
 emacspeak (43.0-3) unstable; urgency=low
 
   * Startup warning when current Emacs flavor is not supported.
