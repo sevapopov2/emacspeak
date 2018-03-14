@@ -188,6 +188,7 @@
   "History of Google Search queries.")
 
 (put 'gweb-history 'history-length 100)
+(put 'gweb-history 'history-delete-duplicates t)
 
 ;;; Emacs 23 and beyond:
 ;;; i.e. if complete-with-action is defined
@@ -198,6 +199,7 @@
          (completion-ignore-case t)
          (word (thing-at-point 'word))
          (query nil))
+    (setq gweb-history (remove-duplicates gweb-history :test #'string-equal))
     (setq query
           (completing-read
            (or prompt "Google: ")
@@ -205,7 +207,6 @@
            nil nil                     ; predicate required-match
            word                        ; initial input
            'gweb-history))
-    (pushnew  query gweb-history)
     (g-url-encode query)))
 
 ;;;###autoload
@@ -228,7 +229,6 @@ Uses specified corpus for prompting and suggest selection."
            nil nil                     ; predicate required-match
            word                        ; initial input
            'gweb-history))
-    (pushnew  query gweb-history)
     (g-url-encode query)))
 ;;; For news:
 
@@ -244,7 +244,6 @@ Uses specified corpus for prompting and suggest selection."
            'gweb-news-cc-suggest-completer
            nil nil
            word 'gweb-history))
-    (pushnew  query gweb-history)
     (g-url-encode query)))
 
 ;;}}}

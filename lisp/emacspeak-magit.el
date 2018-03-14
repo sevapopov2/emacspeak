@@ -57,37 +57,35 @@
 ;;{{{ Map voices to faces:
 (voice-setup-add-map
  '(
-   ( magit-header voice-bolden)
-   ( magit-section-title voice-annotate)
-   ( magit-branch voice-lighten)
-   ( magit-diff-add voice-animate-extra)
-   ( magit-diff-del voice-animate-extra)
-   ( magit-diff-file-header voice-animate)
-   ( magit-diff-file-heading voice-animate)
-   ( magit-diff-file-heading-selection voice-animate)
-   ( magit-diff-hunk-header voice-animate-medium)
-   ( magit-diff-hunk-heading-selection voice-animate-medium)
-   ( magit-diff-add voice-animate-extra)
-   ( magit-diff-added voice-animate-extra)
-   ( magit-diff-del voice-animate-extra)
-   ( magit-diff-removed voice-animate-extra)
-   ( magit-diff-none voice-monotone)
-   ( magit-item-highlight voice-brighten)
-   ( magit-item-mark voice-lighten-extra)
-   ( magit-log-graph voice-monotone)
-   ( magit-log-head-label-bisect-bad voice-smoothen)
-   ( magit-log-head-label-bisect-good voice-bolden)
-   ( magit-log-head-label-default voice-monotone)
-   ( magit-log-head-label-local voice-lighten)
-   ( magit-log-head-label-patches voice-bolden)
-   ( magit-log-head-label-remote voice-bolden)
-   ( magit-log-head-label-tags voice-animate)
-   ( magit-whitespace-warning-face voice-monotone)
+   (magit-header voice-bolden)
+   (magit-section-title voice-annotate)
+   (magit-diff-file-heading voice-animate)
+   (magit-diff-file-heading-selection voice-animate)
+   (magit-diff-hunk-heading-selection voice-animate-medium)
+   (magit-diff-added voice-animate-extra)
+   (magit-diff-removed voice-animate-extra)
+   (magit-whitespace-warning-face voice-monotone)
    (magit-popup-argument voice-animate)
-   ( magit-menu-selected-option voice-animate)
-   ( magit-log-message voice-monotone)
-   ( magit-log-sha1 voice-monotone)
-   ( magit-log-tag-label voice-annotate)
+   (magit-menu-selected-option voice-animate)
+   (magit-branch voice-lighten)
+   (magit-diff-add voice-animate-extra)
+   (magit-diff-del voice-animate-extra)
+   (magit-diff-file-header voice-animate)
+   (magit-diff-hunk-header voice-animate-medium)
+   (magit-diff-none voice-monotone)
+   (magit-item-highlight voice-brighten)
+   (magit-item-mark voice-lighten-extra)
+   (magit-log-graph voice-monotone)
+   (magit-log-head-label-bisect-bad voice-smoothen)
+   (magit-log-head-label-bisect-good voice-bolden)
+   (magit-log-head-label-default voice-monotone)
+   (magit-log-head-label-local voice-lighten)
+   (magit-log-head-label-patches voice-bolden)
+   (magit-log-head-label-remote voice-bolden)
+   (magit-log-head-label-tags voice-animate)
+   (magit-log-message voice-monotone)
+   (magit-log-sha1 voice-monotone)
+   (magit-log-tag-label voice-annotate)
    (magit-branch-local voice-brighten)
    (magit-branch-remote voice-lighten)
    (magit-diff-added-highlight voice-animate)
@@ -117,6 +115,8 @@
                                           (cons 're-search-forward
                                                 'emacspeak-pronounce-sha-checksum))
 (emacspeak-pronounce-add-super 'magit-mode 'magit-commit-mode)
+(emacspeak-pronounce-add-super 'magit-mode 'magit-revision-mode)
+(emacspeak-pronounce-add-super 'magit-mode 'magit-log-mod)
 
 (add-hook
  'magit-mode-hook
@@ -154,7 +154,7 @@
 
 (defadvice git-rebase-pick (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-speak-line)))
 
@@ -175,7 +175,7 @@
 
 (defadvice magit-pop-revision-stack (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'yank-object)))
 
 (loop for f in
@@ -195,7 +195,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (ems-interactive-p )
+          (when (ems-interactive-p)
             (let ((state (magit-section-hidden (magit-current-section))))
               (cond
                (state (emacspeak-auditory-icon 'close-object))
@@ -218,7 +218,7 @@
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
      "Provide auditory feedback"
-     (when (ems-interactive-p )
+     (when (ems-interactive-p)
        (emacspeak-auditory-icon 'large-movement)
        (emacspeak-speak-line)))))
 
@@ -376,7 +376,7 @@
 
 (defadvice magit-display-process (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (message "Displayed process buffer in other window.")))
 
@@ -473,7 +473,7 @@
 
 (defadvice magit-key-mode-exec-at-point (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'button)))
 
 (defsubst emacspeak-magit-key-mode-header-line ()

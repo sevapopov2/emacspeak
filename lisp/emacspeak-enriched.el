@@ -61,7 +61,7 @@ Useful in voiceifying rich text."
   (with-silent-modifications
     (save-excursion
       (goto-char start)
-      (let ((face nil )
+      (let ((face nil)
             (orig start)
             (pos nil)
             (justification-type nil))
@@ -90,7 +90,7 @@ Useful in voiceifying rich text."
         (goto-char orig)
         (while (and  (not (eobp))
                      (< start end))
-          (setq face (get-text-property (point) 'face ))
+          (setq face (get-text-property (point) 'face))
           (goto-char
            (or
             (next-single-property-change (point) 'face
@@ -115,7 +115,7 @@ Useful in voiceifying rich text."
   "Map faces to voices. "
   (let ((start (ad-get-arg 0))
         (end (ad-get-arg 1)))
-    (emacspeak-enriched-voiceify-faces start end )
+    (emacspeak-enriched-voiceify-faces start end)
     ad-return-value))
 
 (defadvice enriched-mode (after emacspeak pre act comp)

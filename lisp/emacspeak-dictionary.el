@@ -67,17 +67,14 @@
 
 (defadvice dictionary (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
-(defadvice dictionary-close (around emacspeak pre act comp)
+(defadvice dictionary-close (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (if (not (or (ems-interactive-p) (referenced-p)))
-      ad-do-it
-    ad-do-it
+  (when (or (ems-interactive-p) (referenced-p))
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line))
-  ad-return-value)
+    (emacspeak-speak-mode-line)))
 (defadvice dictionary-restore-state (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (referenced-p)
@@ -124,7 +121,7 @@
     (emacspeak-speak-line)))
 (defadvice dictionary-lookup-definition (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'search-hit)
     (emacspeak-speak-line)))
 
@@ -136,18 +133,18 @@
 
 (defadvice dictionary-previous (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 (defadvice dictionary-prev-link (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-text-range 'link-function)))
 
 (defadvice dictionary-next-link (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-text-range 'link-function)))
 

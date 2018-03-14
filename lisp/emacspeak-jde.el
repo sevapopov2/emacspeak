@@ -103,27 +103,27 @@
 
 (defadvice jde-compile (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (dtk-speak "Compiling current java project")))
 
 (defadvice bsh (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (setq emacspeak-comint-autospeak nil)
     (emacspeak-speak-mode-line)))
 
 (defadvice jde-run (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (setq emacspeak-comint-autospeak nil)
     (emacspeak-speak-mode-line)))
 
 (defadvice jde-db (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-mode-line)))
 
@@ -138,31 +138,31 @@
 
 (defadvice jde-bug-step-over (after emacspeak pre act comp)
   "Speak the line we stepped to "
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
 (defadvice jde-bug-step-into (after emacspeak pre act comp)
   "Speak the line we stepped to "
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
 (defadvice jde-bug-step-out (after emacspeak pre act comp)
   "Speak the line we stepped to "
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
 (defadvice jde-bug-continue (after emacspeak pre act comp)
   "Speak the line we stop  to "
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
 (defadvice jde-bug-exit (after emacspeak pre act comp)
   "Produce auditory icon indicating successful exit "
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-line)))
 
@@ -173,7 +173,7 @@
 (defadvice jde-bug-toggle-breakpoint (after emacspeak pre
                                             act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (message "toggled breakpoint.")))
 
 (defadvice jde-bug-set-breakpoint (after emacspeak pre act comp)
@@ -184,7 +184,7 @@
 
 (defadvice jde-bug-clear-breakpoint (after emacspeak pre act comp)
   "Speak the line we nuked the breakpoint  "
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-speak-line)))
 
@@ -215,13 +215,13 @@
 
 (defadvice jde-bug-up-stack (after emacspeak pre act comp)
   "Speak the line we stepped to "
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
 (defadvice jde-bug-down-stack (after emacspeak pre act comp)
   "Speak the line we stepped to "
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
@@ -245,17 +245,17 @@
 
 (defadvice jde-db-run (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'task-done)))
 
 (defadvice jde-debug-cont (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'task-done)
     (message "Continuing execution.")))
 (defadvice jde-debug-quit (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (message "Quit debugger.")))
 (defadvice jde-debug-set-breakpoint (after emacspeak pre act comp)
@@ -272,7 +272,7 @@
 
 (defadvice jde-debug-clear-breakpoints (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'delete-object)
     (message "Cleared all break points.")))
 
@@ -280,7 +280,7 @@
 ;;{{{ advice jde-xref
 (defadvice jde-xref-first-caller(after emacspeak pre act comp)
   "Speak line we jumped to."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
@@ -288,11 +288,11 @@
   "Speak line we jumped to.
 If we are on the last call, do nothing."
   (cond
-   ( (and (ems-interactive-p )
-          (car jde-xref-stack))
-     ad-do-it
-     (emacspeak-auditory-icon 'large-movement)
-     (emacspeak-speak-line))
+   ((and (ems-interactive-p)
+         (car jde-xref-stack))
+    ad-do-it
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line))
    (t ad-do-it))
   ad-return-value)
 
@@ -308,9 +308,9 @@ If we are on the last call, do nothing."
 ;;}}}
 ;;{{{ camel case deletion
 
-(defadvice jde-kill-camel-tok (before emacspeak pre act )
+(defadvice jde-kill-camel-tok (before emacspeak pre act)
   "Speak word before killing it."
-  (when (ems-interactive-p  )
+  (when (ems-interactive-p)
     (dtk-speak
      (buffer-substring
       (point)
@@ -318,7 +318,7 @@ If we are on the last call, do nothing."
 
 ;;}}}
 
-(provide 'emacspeak-jde )
+(provide 'emacspeak-jde)
 ;;{{{ end of file 
 
 ;;; local variables:
