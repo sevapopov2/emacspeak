@@ -8,11 +8,11 @@ Homepage: http://emacspeak.sf.net
 
 Package: emacspeak
 Architecture: all
-Depends: emacs (>= 46.0), perl, make, adduser, ${misc:Depends}
+Depends: emacs24 | emacs (>= 46.0), perl, make, adduser, ${misc:Depends}
 Conflicts: emacspeak-3d, emacspeak-dt, emacspeak-ss, multispeech (<< 2.8)
 Replaces: emacspeak-3d
 Recommends: multispeech (>= 2.8), python, tclx8.4, tcl
-Suggests: emacspeak-classic, emacspeak-chimes, emacspeak-espeak, emacspeak-outloud, psgml, xsltproc, espeak, w3m-el, phantomjs
+Suggests: emacspeak-classic, emacspeak-pan-chimes, emacspeak-espeak, emacspeak-outloud, psgml, xsltproc, espeak, w3m-el, phantomjs
 Description: speech output interface to Emacs
  Emacspeak is a speech output system that will allow someone who
  cannot see to work directly on a UNIX system.
@@ -64,14 +64,15 @@ Description: IBM ViaVoice Outloud speech server for Emacspeak
  This package allows one to use IBM ViaVoice Outloud speech synthesizer
  for speech output in Emacspeak.
 
-Package: emacspeak-chimes
+Package: emacspeak-pan-chimes
 Section: sound
 Architecture: all
 Depends: ${misc:Depends}
 Recommends: emacspeak
-Description: Chimes auditory icons theme for Emacspeak
+Description: Pan-chimes auditory icons theme for Emacspeak
  This theme is made up mostly of different chimes and short notes
- from various instruments. The icons are high-quality 44K-stereo.
+ from various instruments with autopan effect applied.
+ The icons are high-quality 44K-stereo.
  .
  When the package is installed, you can switch Emacspeak to use
  this theme by command emacspeak-sounds-select-theme

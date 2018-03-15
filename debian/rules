@@ -82,8 +82,8 @@ install: build-indep
 	chmod 0644 $(debtmp)/$(eldir)/sounds/3d/*
 	chmod 0755 $(debtmp)-classic/$(eldir)/sounds/classic
 	chmod 0644 $(debtmp)-classic/$(eldir)/sounds/classic/*
-	chmod 0755 $(debtmp)-chimes/$(eldir)/sounds/chimes
-	chmod 0644 $(debtmp)-chimes/$(eldir)/sounds/chimes/*
+	chmod 0755 $(debtmp)-pan-chimes/$(eldir)/sounds/pan-chimes
+	chmod 0644 $(debtmp)-pan-chimes/$(eldir)/sounds/pan-chimes/*
 
 
 # Build architecture-independent files here.
