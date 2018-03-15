@@ -143,7 +143,7 @@
         git-rebase-edit
         git-rebase-squash
         git-rebase-fixup
-        git-rebase-kill-line)
+        git-rebase-pick)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -152,7 +152,7 @@
             (emacspeak-auditory-icon 'mark-object)
             (emacspeak-speak-line)))))
 
-(defadvice git-rebase-pick (after emacspeak pre act comp)
+(defadvice git-rebase-kill-line (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'deselect-object)
@@ -341,7 +341,8 @@
           "Provide auditory feedback."
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'close-object)
-            (emacspeak-speak-mode-line)))))
+            (with-current-buffer (window-buffer)
+              (emacspeak-speak-mode-line))))))
 
 ;;}}}
 ;;{{{ Additional commands to advice:
@@ -426,6 +427,8 @@
         magit-rewrite-abort
         magit-rewrite-set-used
         magit-rewrite-set-unused
+        magit-format-patch
+        magit-am-abort
         magit-branches-window-checkout)
       do
       (eval
