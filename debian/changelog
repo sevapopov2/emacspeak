@@ -1,3 +1,9 @@
+emacspeak (43.0-5trusty1) trusty; urgency=low
+
+  * Magit support enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 15 Mar 2018 06:45:22 +0300
+
 emacspeak (43.0-4trusty1) trusty; urgency=low
 
   * Magit support fix.
