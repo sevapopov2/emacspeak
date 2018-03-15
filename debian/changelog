@@ -1,3 +1,9 @@
+emacspeak (43.0-5xenial1) xenial; urgency=low
+
+  * Magit support enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 15 Mar 2018 06:46:26 +0300
+
 emacspeak (43.0-4xenial1) xenial; urgency=low
 
   * Magit support fix.
