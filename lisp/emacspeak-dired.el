@@ -53,6 +53,12 @@
 (require 'emacspeak-preamble)
 (require 'desktop)
 (require 'dired)
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function eww-open-file "ext:eww.el" (file))
+
 ;;}}}
 ;;{{{ Define personalities
 

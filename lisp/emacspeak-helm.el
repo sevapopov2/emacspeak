@@ -55,6 +55,11 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Forward declarations
+
+(declare-function emacspeak-minibuffer-setup-hook "emacspeak-advice.el" ())
+
+;;}}}
 ;;{{{ Setup Helm Hooks:
 
 (defadvice helm-mode (after emacspeak pre act comp)

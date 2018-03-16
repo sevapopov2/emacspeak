@@ -159,6 +159,7 @@ Argument `pattern' is of the form:
 `title=pattern' Search by title.
 ^all Browse books.
 Optional arg `page-title' specifies page title."
+  (declare (special emacspeak-we-url-executor))
   (or page-title (setq page-title pattern))
   (let* ((url
           (emacspeak-librivox-audiobooks-uri
