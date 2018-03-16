@@ -108,7 +108,7 @@
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
      "Provide auditory feedback"
-     (when (ems-interactive-p )
+     (when (ems-interactive-p)
        (emacspeak-auditory-icon 'task-done)))))
 
 ;;}}}
@@ -122,12 +122,12 @@
 
 (defadvice python-fill-paragraph (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'fill-object)))
 
 (defadvice python-indent-shift-left (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (dtk-speak
      (format "Left shifted block  containing %s lines"
@@ -135,7 +135,7 @@
                            (region-end))))))
 (defadvice python-indent-shift-right (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (dtk-speak
      (format "Right shifted block  containing %s lines"
              (count-lines  (region-beginning)
@@ -180,7 +180,7 @@
  (eval
   `(defadvice  ,f (after emacspeak pre act comp)
      "Provide auditory feedback."
-     (when (ems-interactive-p )
+     (when (ems-interactive-p)
        (emacspeak-auditory-icon 'large-movement)
        (emacspeak-speak-line)))))
 
@@ -231,19 +231,19 @@
 ;;}}}
 ;;{{{ the process buffer
 
-(defadvice python-process-filter (around emacspeak pre act)
+(defadvice python-process-filter (around emacspeak pre act) comp
   "Make comint in Python speak its output. "
   (declare (special emacspeak-comint-autospeak))
-  (let ((prior (point ))
+  (let ((prior (point))
         (dtk-stop-immediately nil))
     ad-do-it 
     (when (and  emacspeak-comint-autospeak
                 (window-live-p
                  (get-buffer-window (process-buffer (ad-get-arg 0)))))
       (condition-case nil
-          (emacspeak-speak-region prior (point ))
-        (error (emacspeak-auditory-icon 'scroll)
-               (dtk-stop ))))
+          (emacspeak-speak-region prior (point))
+        (error (dtk-stop)
+               (emacspeak-auditory-icon 'scroll))))
     ad-return-value))
 
 ;;}}}
@@ -301,7 +301,7 @@ If already at the beginning then move to previous block."
                         ))))
 
 ;;}}}
-(provide 'emacspeak-python )
+(provide 'emacspeak-python)
 ;;{{{ end of file
 
 ;;; local variables:

@@ -59,7 +59,6 @@
 (require 'g-utils)
 (require 'g-auth)
 (require 'browse-url)
-(require 'thingatpt)
 
 ;;}}}
 ;;{{{ Customizations

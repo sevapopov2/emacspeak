@@ -45,12 +45,9 @@ OBJECTS= g-auth.elc \
 g-app.elc \
 g-utils.elc \
 g.elc \
-gblogger.elc \
-org2blogger.elc \
 gfeeds.elc \
 greader.elc \
 gf.elc \
-gphoto.elc \
 gweb.elc \
 gmaps.elc \
 gm-nnir.elc \
@@ -80,20 +77,17 @@ g-cus-load.el: force
 
 # }}}
 # {{{  Make rules for the various modules
+
 g-utils.elc: g-utils.el
 g-auth.elc: g-auth.el g-utils.elc
 g-app.elc: g-auth.elc g-utils.elc g-app.el
 g.elc: g.el  g-auth.elc
 gfeeds.elc: g-utils.elc gfeeds.el
 greader.elc: greader.el g-app.elc
-gsheet.elc: gsheet.el g-app.elc
 gweb.elc: gweb.el g-utils.elc
 gf.elc: gf.el g-utils.elc
 gmaps.elc: gmaps.el g-utils.elc
 gm-nnir.elc: gm-nnir.el 
-gblogger.elc: gblogger.el g-app.elc 
-org2blogger.elc: org2blogger.el gblogger.elc
-
 # }}}
 # {{{dist
 
@@ -113,7 +107,7 @@ clean:
 # {{{dev targets:
 
 indent:
-	emacs -batch -q -no-site-file -l indent-files.el
+	emacs -batch -q -no-site-file -l ../../utils/indent-files.el
 
 # }}}
 # {{{ end of file

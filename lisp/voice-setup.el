@@ -216,7 +216,7 @@
     (eval
      `(def-voice-font ,personality ,voice  ',face  ,doc))))
 
-(defun voice-setup-add-map (fv-alist )
+(defun voice-setup-add-map (fv-alist)
   "Sets up face to voice mapping given in fv-alist."
   (loop
    for fv in fv-alist
@@ -258,8 +258,8 @@ command \\[customize-variable] on <personality>-settings.. "
      (defvar ,personality nil
        ,(concat
          doc
-         (format "\nCustomize this overlay via %s-settings."
-                 personality )))
+         (format "Customize this overlay via %s-settings."
+                 personality)))
      (defcustom ,(intern (format "%s-settings"  personality))
        ,settings
        ,doc
@@ -299,12 +299,10 @@ command \\[customize-variable] on <personality>-settings.. "
 ;;; these voices are device independent 
 
 (defvoice  voice-punctuations-all (list nil nil nil nil  nil 'all)
-  "Turns current voice into one that  speaks all
-punctuations.")
+  "Turns current voice into one that  speaks all punctuations.")
 
 (defvoice  voice-punctuations-some (list nil nil nil nil  nil 'some)
-  "Turns current voice into one that  speaks some
-punctuations.")
+  "Turns current voice into one that  speaks some punctuations.")
 
 (defvoice  voice-punctuations-none (list nil nil nil nil  nil "none")
   "Turns current voice into one that  speaks no punctuations.")
@@ -321,8 +319,8 @@ punctuations.")
 (defvoice voice-animate-medium (list nil 6 6  5)
   "Adds medium animation  current voice.")
 
-(defvoice voice-animate-extra (list nil 8 8 7 )
-  "Adds extra animation  current voice.")
+(defvoice voice-animate-extra (list nil 8 8 7)
+  "Adds extra animation  to current voice.")
 
 (defvoice voice-smoothen (list nil nil nil 3 4)
   "Smoothen current voice.")
@@ -339,13 +337,13 @@ punctuations.")
 (defvoice voice-brighten (list nil nil nil 6 7)
   "Brighten current voice.")
 
-(defvoice voice-brighten-extra (list nil nil nil 7 8 )
+(defvoice voice-brighten-extra (list nil nil nil 7 8)
   "Extra brighten current voice.")
 
 (defvoice voice-bolden (list nil 1 6 6  nil)
   "Bolden current voice.")
 
-(defvoice voice-bolden-extra (list nil 0 6 7 8 )
+(defvoice voice-bolden-extra (list nil 0 6 7 8)
   "Extra bolden current voice.")
 
 (defvoice voice-bolden-medium (list nil 3 6 6  nil)
@@ -360,7 +358,7 @@ punctuations.")
 (defvoice voice-lighten-extra (list nil 9 8 7   9)
   "Add extra lighten current voice.")
 
-(defvoice voice-bolden-and-animate (list nil 8 8 8 8 )
+(defvoice voice-bolden-and-animate (list nil 8 8 8 8)
   "Bolden and animate  current voice.")
 
 (defvoice voice-womanize-1 (list 'betty 5 nil nil nil nil)
@@ -369,7 +367,7 @@ punctuations.")
 ;;}}}
 ;;{{{  indentation and annotation
 
-(defvoice voice-indent (list nil nil 3 1 3 )
+(defvoice voice-indent (list nil nil 3 1 3)
   "Indicate indentation .")
 
 (defvoice voice-annotate (list nil nil 4 0 4)
@@ -420,7 +418,7 @@ punctuations.")
    (font-lock-constant-face voice-lighten)
    (font-lock-doc-face voice-monotone-medium)
    (font-lock-function-name-face voice-bolden-medium)
-   (font-lock-keyword-face voice-animate-extra)
+   (font-lock-keyword-face voice-animate)
    (font-lock-preprocessor-face voice-monotone-medium)
    (shadow voice-monotone-medium)
    (font-lock-string-face voice-lighten-extra)
@@ -445,9 +443,9 @@ punctuations.")
 (define-minor-mode voice-lock-mode
   "Toggle voice lock mode."
   t nil nil
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (let ((state (if voice-lock-mode 'on 'off)))
-      (when (ems-interactive-p )
+      (when (ems-interactive-p)
         (emacspeak-auditory-icon state)))))
 
 ;;;###autoload
@@ -469,7 +467,7 @@ punctuations.")
   (if voice-lock-mode
       (turn-off-voice-lock)
     (turn-on-voice-lock))
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon (if voice-lock-mode 'on 'off))))
 
 ;;;###autoload
