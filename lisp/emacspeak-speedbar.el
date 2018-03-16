@@ -112,14 +112,14 @@
 
 (defadvice speedbar-close-frame (after emacspeak pre act comp)
   "Cue buffer that becomes active"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice speedbar-next (around emacspeak pre act comp)
   "Provide reasonable spoken feedback"
   (cond
-   ((ems-interactive-p )
+   ((ems-interactive-p)
     (let ((emacspeak-speak-messages nil))
       ad-do-it
       (emacspeak-auditory-icon 'select-object)
@@ -129,7 +129,7 @@
 (defadvice speedbar-prev (around emacspeak pre act comp)
   "Provide reasonable spoken feedback"
   (cond
-   ((ems-interactive-p )
+   ((ems-interactive-p)
     (let ((emacspeak-speak-messages nil))
       ad-do-it
       (emacspeak-auditory-icon 'select-object)
@@ -138,7 +138,7 @@
   ad-return-value)
 (defadvice speedbar-edit-line (after emacspeak pre act comp)
   "Speak line you jumped to"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice speedbar-tag-find (after emacspeak pre act comp)
@@ -167,7 +167,7 @@
   " Auditory icon and speech feedback indicate result of the
 action"
   (cond
-   ((ems-interactive-p )
+   ((ems-interactive-p)
     ad-do-it
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speedbar-speak-line))
@@ -177,14 +177,14 @@ action"
 (defadvice speedbar-restricted-next (after emacspeak pre act
                                            comp)
   "Provide spoken feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speedbar-speak-line)))
 
 (defadvice speedbar-restricted-prev (after emacspeak pre act
                                            comp)
   "Provide spoken feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speedbar-speak-line)))
 
@@ -311,18 +311,18 @@ An automatically updating speedbar consumes resources.")
         (personality nil))
     (setq personality
           (cond
-           ((eq face 'speedbar-button-face )
-            emacspeak-speedbar-button-personality  )
-           ((eq face 'speedbar-selected-face )
-            emacspeak-speedbar-selected-personality  )
-           ((eq face 'speedbar-directory-face )
-            emacspeak-speedbar-directory-personality )
-           ((eq face 'speedbar-file-face )
-            emacspeak-speedbar-file-personality  )
-           ((eq face 'speedbar-highlight-face )
-            emacspeak-speedbar-highlight-personality )
-           ((eq face 'speedbar-tag-face )
-            emacspeak-speedbar-tag-personality )
+           ((eq face 'speedbar-button-face)
+            emacspeak-speedbar-button-personality)
+           ((eq face 'speedbar-selected-face)
+            emacspeak-speedbar-selected-personality)
+           ((eq face 'speedbar-directory-face)
+            emacspeak-speedbar-directory-personality)
+           ((eq face 'speedbar-file-face)
+            emacspeak-speedbar-file-personality)
+           ((eq face 'speedbar-highlight-face)
+            emacspeak-speedbar-highlight-personality)
+           ((eq face 'speedbar-tag-face)
+            emacspeak-speedbar-tag-personality)
            (t 'emacspeak-speedbar-default-personality)))
     (put-text-property start end 'personality personality)
     (save-excursion

@@ -75,7 +75,7 @@
 (defsubst emacspeak-dired-speak-line ()
   "Speak the dired line intelligently."
   (declare (special emacspeak-speak-last-spoken-word-position))
-  (let ((filename (dired-get-filename 'no-dir  t ))
+  (let ((filename (dired-get-filename 'no-dir  t))
         (personality (dtk-get-style)))
     (cond
      (filename
@@ -83,7 +83,7 @@
                               (file-relative-name filename))
                              'personality personality))
       (setq emacspeak-speak-last-spoken-word-position (point)))
-     (t (emacspeak-speak-line )))))
+     (t (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{  labeling fields in the dired buffer:
@@ -140,7 +140,7 @@ unless `dired-listing-switches' contains -l"
 (defadvice dired-sort-toggle-or-edit (around emacspeak pre act comp)
   "Provide auditory feedback."
   (cond
-   ((ems-interactive-p )
+   ((ems-interactive-p)
     (let ((emacspeak-speak-messages nil))
       ad-do-it
       (emacspeak-auditory-icon 'task-done)
@@ -269,7 +269,7 @@ Provide auditory icon when finished."
 
 (defadvice dired-quit (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
@@ -295,7 +295,8 @@ Provide auditory icon when finished."
   `(defadvice ,f (after emacspeak pre act comp)
      "Set up emacspeak."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'open-object )
+       (emacspeak-dired-initialize)
+       (emacspeak-auditory-icon 'open-object)
        (emacspeak-speak-mode-line)))))
 
 (defadvice dired-omit-mode (after emacspeak pre act comp)
@@ -317,7 +318,7 @@ Provide auditory icon when finished."
           "Produce an auditory feedback."
           (cond
            ((ems-interactive-p)
-            (let ((directory-p (file-directory-p (dired-get-filename t t ))))
+            (let ((directory-p (file-directory-p (dired-get-filename t t))))
               ad-do-it
               (when directory-p
                 (emacspeak-dired-label-fields))
@@ -325,17 +326,6 @@ Provide auditory icon when finished."
               (emacspeak-speak-mode-line)))
            (t ad-do-it))
           ad-return-value)))
-
-(loop for f in
-      '(dired-next-line
-        dired-previous-line)
-      do
-      (eval
-       `(defadvice ,f  (after  emacspeak pre act comp)
-          "Speak the filename."
-          (when (ems-interactive-p )
-            (emacspeak-auditory-icon 'select-object)
-            (emacspeak-dired-speak-line)))))
 
 (loop
  for  f in
@@ -350,7 +340,7 @@ Provide auditory icon when finished."
  (eval
   `(defadvice ,f (after emacspeak pre act)
      "Speak the filename."
-     (when (ems-interactive-p  )
+     (when (ems-interactive-p)
        (emacspeak-auditory-icon 'large-movement)
        (emacspeak-dired-speak-line)))))
 
@@ -361,7 +351,7 @@ Provide auditory icon when finished."
  (eval
   `(defadvice ,f  (after emacspeak pre act)
      "Speak the filename name."
-     (when (ems-interactive-p  )
+     (when (ems-interactive-p)
        (emacspeak-auditory-icon 'select-object)
        (emacspeak-dired-speak-line)))))
 
@@ -375,15 +365,15 @@ Provide auditory icon when finished."
 
 (defadvice dired-mark (after emacspeak pre act)
   "Produce an auditory icon."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'mark-object )
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'mark-object)
     (emacspeak-dired-speak-line)))
 
-(defadvice dired-flag-file-deletion (after emacspeak pre act )
+(defadvice dired-flag-file-deletion (after emacspeak pre act)
   "Produce an auditory icon indicating that a file was marked for deletion."
-  (when (ems-interactive-p  )
-    (emacspeak-auditory-icon 'delete-object )
-    (emacspeak-dired-speak-line )))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'delete-object)
+    (emacspeak-dired-speak-line)))
 
 (loop for f in
       '(dired-unmark dired-unmark-backward)
@@ -391,8 +381,8 @@ Provide auditory icon when finished."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Give speech feedback. Also provide an auditory icon."
-          (when (ems-interactive-p )
-            (emacspeak-auditory-icon 'deselect-object )
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'deselect-object)
             (emacspeak-dired-speak-line)))))
 
 ;;}}}
@@ -445,7 +435,7 @@ On a directory line, run du -s on the directory to speak its size."
       (emacspeak-auditory-icon 'progress)
       (emacspeak-shell-command "du" "-s" filename ))
      (filename
-      (setq size (nth 7 (file-attributes filename )))
+      (setq size (nth 7 (file-attributes filename)))
                                         ; check for ange-ftp
       (when (= size -1)
         (setq size
@@ -468,7 +458,7 @@ On a directory line, run du -s on the directory to speak its size."
       (message "Modified on : %s"
                (format-time-string
                 emacspeak-speak-time-format-string
-                (nth 5 (file-attributes filename )))))
+                (nth 5 (file-attributes filename)))))
      (t (message "No file on current line")))))
 
 (defun emacspeak-dired-speak-file-access-time ()
@@ -482,7 +472,7 @@ On a directory line, run du -s on the directory to speak its size."
       (message "Last accessed   on : %s"
                (format-time-string
                 emacspeak-speak-time-format-string
-                (nth 4 (file-attributes filename )))))
+                (nth 4 (file-attributes filename)))))
      (t (message "No file on current line")))))
 (defun emacspeak-dired-speak-symlink-target ()
   "Speaks the target of the symlink on the current line."
@@ -507,7 +497,7 @@ On a directory line, run du -s on the directory to speak its size."
      (filename
       (emacspeak-auditory-icon 'select-object)
       (message "Permissions %s"
-               (let ((permissions (nth 8 (file-attributes filename ))))
+               (let ((permissions (nth 8 (file-attributes filename))))
 		 (if (string-match "^.[?]+$" permissions)
 		     (nth  (if (= (char-after (line-beginning-position)) ?\ )
 			       0 1)
@@ -538,7 +528,7 @@ On a directory line, run du -s on the directory to speak its size."
 
 (defun emacspeak-dired-setup-keys ()
   "Add emacspeak keys to dired."
-  (declare (special dired-mode-map ))
+  (declare (special dired-mode-map))
   (define-key dired-mode-map "E" 'emacspeak-dired-epub-eww)
   (define-key dired-mode-map (kbd "C-RET") 'emacspeak-dired-open-this-file)
   (define-key dired-mode-map [C-return] 'emacspeak-dired-open-this-file)
@@ -575,12 +565,12 @@ On a directory line, run du -s on the directory to speak its size."
 
 (defun emacspeak-dired-play-this-media ()
   "Plays media on current line."
-  (funcall-interactively #'emacspeak-m-player (dired-get-filename)))
+  (emacspeak-m-player (dired-get-filename)))
 
 (defconst emacspeak-dired-opener-table
   `(("\\.epub$"  emacspeak-dired-epub-eww)
-    ("\\.html" emacspeak-dired-eww-open )
-    ("\\.htm" emacspeak-dired-eww-open )
+    ("\\.html" emacspeak-dired-eww-open)
+    ("\\.htm" emacspeak-dired-eww-open)
     ("\\.pdf" emacspeak-dired-pdf-open)
     ("\\.csv" emacspeak-dired-csv-open)
     (,emacspeak-media-extensions emacspeak-dired-play-this-media))
@@ -604,29 +594,29 @@ On a directory line, run du -s on the directory to speak its size."
     (cond
      ((and handler (fboundp handler))
       (emacspeak-auditory-icon 'task-done)
-      (funcall-interactively handler))
+      (funcall handler))
      (t (error  "No known handler")))))
 
 (defun emacspeak-dired-eww-open ()
   "Open HTML file on current dired line."
   (interactive)
-  (funcall-interactively #'eww-open-file (dired-get-filename)))
+  (eww-open-file (dired-get-filename)))
 
 (defun emacspeak-dired-pdf-open ()
   "Open PDF file on current dired line."
   (interactive)
-  (funcall-interactively #'emacspeak-wizards-pdf-open (dired-get-filename current-prefix-arg)))
+  (emacspeak-wizards-pdf-open (dired-get-filename current-prefix-arg)))
+
 (defun emacspeak-dired-epub-eww ()
   "Open epub on current line  in EWW"
   (interactive)
-  (funcall-interactively #'emacspeak-epub-eww (shell-quote-argument(dired-get-filename)))
+  (emacspeak-epub-eww (shell-quote-argument(dired-get-filename)))
   (emacspeak-auditory-icon 'open-object))
 
 (defun emacspeak-dired-csv-open ()
   "Open CSV file on current dired line."
   (interactive)
-  (funcall-interactively #'emacspeak-table-find-csv-file (dired-get-filename current-prefix-arg)))
-
+  (emacspeak-table-find-csv-file (dired-get-filename current-prefix-arg)))
 
 ;;}}}
 

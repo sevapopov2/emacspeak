@@ -260,7 +260,7 @@ document is displayed in a separate buffer. Note that the
 hyperlinks in that display are not active-- this facility is
 present only to help me iron out the remaining problems with
 the table structure extraction code in W3."
-  (interactive )
+  (interactive)
   (unless (eq major-mode 'w3-mode)
     (error
      "This command should be called only in W3 buffers"))
@@ -281,7 +281,7 @@ the table structure extraction code in W3."
 (defun emacspeak-w3-curl-url-under-point ()
   "Display contents of URL under point using Curl and W3.  The
 document is displayed in a separate buffer. "
-  (interactive )
+  (interactive)
   (unless (eq major-mode 'w3-mode)
     (error
      "This command should be called only in W3 buffers"))
@@ -343,7 +343,7 @@ document is displayed in a separate buffer. "
 
 (defsubst emacspeak-w3-html-stack-top-element (&optional stack)
   (or stack (setq stack (emacspeak-w3-html-stack)))
-  (first (first stack )))
+  (first (first stack)))
 
 (defun emacspeak-w3-next-parsed-item ()
   "Move to and speak next parsed item."
@@ -358,7 +358,7 @@ document is displayed in a separate buffer. "
       (setq current (emacspeak-w3-html-stack)))
     (while current
       (goto-char (next-single-property-change (point)
-                                              'html-stack ))
+                                              'html-stack))
       (setq current (emacspeak-w3-html-stack)))
     (setq end (point))
     (emacspeak-auditory-icon 'select-object)
@@ -429,7 +429,7 @@ implemented. ")))
                                               (point-max)))
       (setq end (point))
       (emacspeak-auditory-icon 'select-object)
-      (emacspeak-speak-region start end ))))
+      (emacspeak-speak-region start end))))
 
 (defun emacspeak-w3-speak-next-element ()
   "Speak next document element."
@@ -443,7 +443,7 @@ implemented. ")))
                                               (current-buffer)
                                               (point-max)))
       (setq end (point))
-      (emacspeak-speak-region start end )
+      (emacspeak-speak-region start end)
       (emacspeak-auditory-icon 'select-object))))
 
 ;;}}}
@@ -466,7 +466,7 @@ implemented. ")))
     (message onclick)
     (when (setq start
                 (string-match "http" onclick))
-      (setq url (substring  onclick start ))
+      (setq url (substring  onclick start))
       (when (setq end (string-match "'" url))
         (setq url (substring url 0 end)))
       (w3-fetch url))))
@@ -497,7 +497,7 @@ element. "
   (when (and (eq major-mode 'w3-mode)
              (widget-at (point)))
     (message (mapconcat #'identity
-                        (widget-get (widget-at (point)) :class ) " "))))
+                        (widget-get (widget-at (point)) :class) " "))))
 
 ;;}}}
 ;;{{{ jump to submit button
@@ -577,10 +577,10 @@ element. "
     (when emacspeak-w3-base-uri-pronunciation
       (emacspeak-pronounce-add-buffer-local-dictionary-entry
        base-url
-       emacspeak-w3-base-uri-pronunciation ))))
+       emacspeak-w3-base-uri-pronunciation))))
 (defadvice url-view-url (around emacspeak pre act comp)
   (cond
-   ((ems-interactive-p )
+   ((ems-interactive-p)
     (let ((save-pronunciations emacspeak-pronounce-pronunciation-table))
       (setq emacspeak-pronounce-pronunciation-table nil)
       ad-do-it
@@ -603,7 +603,7 @@ element. "
        (next-single-property-change (point) 'html-stack)))))
   (when (null (emacspeak-w3-html-stack))
     (goto-char (next-single-property-change (point) 'html-stack)))
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-speak-line)
     (emacspeak-auditory-icon 'large-movement)))
 
@@ -627,7 +627,7 @@ and make the redirect available via the minibuffer history.
 If a rewrite rule is defined in the current buffer, we change
   this command to behave as if it were called with an
   interactive prefix."
-  (when (and (ems-interactive-p )
+  (when (and (ems-interactive-p)
              emacspeak-we-url-rewrite-rule)
     (ad-set-arg 0 t)
     (let ((url (w3-view-this-url t))
@@ -742,7 +742,7 @@ HTML."
 ;;}}}
 ;;{{{ fix css bug:
 
-(defadvice css-expand-value (around fix-bug pre act comp )
+(defadvice css-expand-value (around fix-bug pre act comp)
   "Fix problem where bad CSS breaks W3."
   (condition-case nil
       ad-do-it
