@@ -136,7 +136,7 @@ Optional argument `raw-p' returns raw JSON  object."
   "Location address. Setting this updates gweb-my-location coordinates  via geocoding."
   :type '(choice
           (const :tag "None" nil)
-                 (string  :tag "Address"))
+          (string  :tag "Address"))
   :set  #'(lambda (sym val)
             (declare (special gweb-my-location))
             (when val 
@@ -161,7 +161,6 @@ Parameters 'origin' and 'destination' are  be url-encoded."
   (format gmaps-directions-base  origin destination
           mode (float-time)))
 
-
 ;;; Places:
 ;;; https://developers.google.com/places/documentation/
 ;; 
@@ -175,7 +174,6 @@ Parameter `query-type' is one of nearbysearch or textsearch.
 Parameter `key' is the API  key."
   (declare (special gmaps-places-base))
   (format gmaps-places-base  query-type key))
-          
 
 ;;}}}
 ;;{{{ Google Maps API V3
@@ -183,7 +181,6 @@ Parameter `key' is the API  key."
 ;;; See  https://developers.google.com/maps/documentation/directions/
 (defvar gmaps-modes '("driving" "walking" "bicycling" "transit")
   "Supported modes for getting directions.")
-
 
 (defun gmaps-routes (origin destination mode)
   "Return routes as found by Google Maps Directions."
@@ -195,7 +192,6 @@ Parameter `key' is the API  key."
     (cond
      ((string= "OK" (g-json-get 'status result)) (g-json-get 'routes result))
      (t (error "Status %s from Maps" (g-json-get 'status result))))))
-
 
 ;;; https://developers.google.com/places/
 
@@ -209,12 +205,10 @@ Parameter `key' is the API  key."
 ;;}}}
 ;;{{{ Maps UI: 
 
-
-
 (make-variable-buffer-local 'gmaps-current-location)
 
 (define-derived-mode gmaps-mode special-mode
-  "Google Maps Interaction"
+                     "Google Maps Interaction"
   "A Google Maps front-end for the Emacspeak desktop."
   (let ((start (point))
         (inhibit-read-only t))
@@ -241,9 +235,9 @@ Parameter `key' is the API  key."
         ("s" gmaps-places-search)
         (" " gmaps-place-details)
         ("\M-i" backward-button)
-         ("\C-i" forward-button)
-         ("[" backward-page)
-         ("]" forward-page)
+        ("\C-i" forward-button)
+        ("[" backward-page)
+        ("]" forward-page)
         )
       do
       (define-key  gmaps-mode-map (first k) (second k)))
@@ -339,17 +333,16 @@ origin/destination may be returned as a lat,long string."
     (setq origin
           (cond
            (gmaps-current-location (url-hexify-string(get 'gmaps-current-location 'address)))
-          (t (url-hexify-string (read-from-minibuffer "Start Address: ")))))
-  (setq destination
-        (cond
-         (place-location
-          (format "%s,%s"
-                  (g-json-get 'lat place-location)
-                  (g-json-get 'lng place-location)))
-         (t (url-hexify-string (read-from-minibuffer "Destination  Address: ")))))
-  (list origin destination)))
+           (t (url-hexify-string (read-from-minibuffer "Start Address: ")))))
+    (setq destination
+          (cond
+           (place-location
+            (format "%s,%s"
+                    (g-json-get 'lat place-location)
+                    (g-json-get 'lng place-location)))
+           (t (url-hexify-string (read-from-minibuffer "Destination  Address: ")))))
+    (list origin destination)))
 
-            
 (defun gmaps-display-routes (routes)
   "Display routes in Maps interaction buffer."
   (let ((i 1)
@@ -363,7 +356,6 @@ origin/destination may be returned as a lat,long string."
             (insert (format  "\nRoute %d\n" i))
             (incf i)
             (gmaps-display-route route))))))
-
 
 (defun gmaps-driving-directions (origin destination)
   "Driving directions from Google Maps."
@@ -380,13 +372,10 @@ origin/destination may be returned as a lat,long string."
   (interactive (gmaps-read-origin-destination))
   (gmaps-directions origin destination "bicycling"))
 
-
 (defun gmaps-transit-directions (origin destination)
   "Transit directions from Google Maps."
   (interactive (gmaps-read-origin-destination))
   (gmaps-directions origin destination "transit"))
-
-
 
 (defun gmaps-directions (origin destination mode)
   "Display  directions obtained from Google Maps."
@@ -398,8 +387,8 @@ origin/destination may be returned as a lat,long string."
         (routes (gmaps-routes origin destination mode)))
     (goto-char (point-max))
     (insert (format "%s Directions\n" (capitalize mode)))
-        (when routes (gmaps-display-routes routes))
-        (goto-char start)))
+    (when routes (gmaps-display-routes routes))
+    (goto-char start)))
 
 ;;}}}
 ;;{{{ Places:
@@ -446,22 +435,17 @@ origin/destination may be returned as a lat,long string."
     "electrician"
     "electronics_store"
     "embassy"
-    "establishment"
-    "finance"
     "fire_station"
     "floor"
     "florist"
-    "food"
     "funeral_home"
     "furniture_store"
     "gas_station"
-    "general_contractor"
     "geocode"
     "grocery_or_supermarket"
     "gym"
     "hair_care"
     "hardware_store"
-    "health"
     "hindu_temple"
     "home_goods_store"
     "hospital"
@@ -492,7 +476,6 @@ origin/destination may be returned as a lat,long string."
     "pet_store"
     "pharmacy"
     "physiotherapist"
-    "place_of_worship"
     "plumber"
     "point_of_interest"
     "police"
@@ -537,9 +520,8 @@ origin/destination may be returned as a lat,long string."
     )
   "List of supported Place Types.")
 
-
 (defvar gmaps-current-location nil
-      "Current maps location.")
+  "Current maps location.")
 
 (defun gmaps-set-current-location (address)
   " Set current location."
@@ -547,14 +529,16 @@ origin/destination may be returned as a lat,long string."
   (declare (special gmaps-current-location))
   (condition-case nil
       (progn 
-    (setq gmaps-current-location (gmaps-geocode address))
-    (put 'gmaps-current-location 'address address)
-    (message "Moved to %s" address))
+        (setq gmaps-current-location (gmaps-geocode address))
+        (put 'gmaps-current-location 'address address)
+        (message "Moved to %s" address))
     (error (message "Error finding %s" address))))
 
-
 (defstruct gmaps-places-filter
-  types keyword name )
+  type ; singleton as per new API 
+  types ; multiple types (until Feb 2017)
+  keyword name )
+
 (defvar gmaps-current-filter nil
   "Currently active filter. ")
 (make-variable-buffer-local 'gmaps-current-filter)
@@ -563,20 +547,24 @@ origin/destination may be returned as a lat,long string."
   "Convert filter structure into URL  params."
   (let ((keyword (gmaps-places-filter-keyword filter))
         (name (gmaps-places-filter-name filter))
-        (types (gmaps-places-filter-types filter)))
-    (format "%s%s%s"
+        (types (gmaps-places-filter-types filter))
+        (type (gmaps-places-filter-type filter)))
+    (format "%s%s%s %s"
             (if keyword (format "&keyword=%s" keyword) "")
             (if name (format "&name=%s" name) "")
+            (if type (format "&type=%s" type) "")
             (if types (format "&types=%s" (mapconcat #'identity types "|")) ""))))    
 
 (defsubst gmaps-places-filter-as-string (filter)
   "Convert filter structure into display-friendly string."
   (let ((keyword (gmaps-places-filter-keyword filter))
         (name (gmaps-places-filter-name filter))
+        (type (gmaps-places-filter-type filter))
         (types (gmaps-places-filter-types filter)))
-    (format "%s%s%s"
+    (format "%s%s%s %s"
             (if keyword (format "Keyword: %s" keyword) "")
             (if name (format "Name: %s" name) "")
+            (if type (format "Type: %s" type) "")
             (if types (format "Types: %s" (mapconcat #'identity types "|")) ""))))
 (defsubst gmaps-place-read-types ()
   "Returns a list of types."
@@ -587,7 +575,13 @@ origin/destination may be returned as a lat,long string."
       (pushnew type result)
       (setq type (completing-read "Type: Blank to quit " gmaps-place-types)))
     result))
-            
+
+
+(defsubst gmaps-place-read-type ()
+  "Returns a type."
+  (declare (special gmaps-place-types))
+         (completing-read "Type: " gmaps-place-types))
+    
 (defun gmaps-set-current-filter (&optional all)
   "Set up filter in current buffer.
 Optional interactive prefix arg prompts for all filter fields."
@@ -597,21 +591,21 @@ Optional interactive prefix arg prompts for all filter fields."
    (all
     (let ((name (read-string "Name: " ))
           (keyword (read-string "Keyword: "))
-          (types (gmaps-place-read-types)))
+          (type (gmaps-place-read-type)))
       (when (= (length name) 0) (setq name nil))
       (when (= (length keyword) 0) (setq keyword nil))
-      (when (= (length types) 0) (setq types nil))
+      (when (= (length type) 0) (setq type nil))
       (setq gmaps-current-filter
             (make-gmaps-places-filter
              :name name
              :keyword keyword
-             :types types))))
+             :type type))))
    (t
     (setq gmaps-current-filter
           (make-gmaps-places-filter
            :name nil
            :keyword nil
-           :types (gmaps-place-read-types)))))
+           :type (gmaps-place-read-type)))))
   (let ((current-prefix-arg nil))       ;dont clear filter
     (call-interactively 'gmaps-places-nearby)))
 
@@ -627,8 +621,6 @@ Optional interactive prefix arg prompts for all filter fields."
   (setq gmaps-current-radius radius)
   (call-interactively 'gmaps-places-nearby))
 
-    
-    
 (defun gmaps-places-nearby (&optional clear-filter)
   "Find places near current location.
 Uses default radius. optional interactive prefix arg clears any active filters."
@@ -670,8 +662,8 @@ Uses default radius. optional interactive prefix arg clears any active filters."
      ((string= "ZERO_RESULTS"  (g-json-get 'status result))
       (insert
        (format "No places within %sm  matching %s.\n"
-                      gmaps-current-radius
-                      (gmaps-places-filter-as-string gmaps-current-filter))))
+               gmaps-current-radius
+               (gmaps-places-filter-as-string gmaps-current-filter))))
      (t (error "Status %s from Maps" (g-json-get 'status
                                                  result))))))
 
@@ -718,7 +710,6 @@ Optional  prefix arg clears any active filters."
      (t (error "Status %s from Maps" (g-json-get 'status
                                                  result))))))
 
-
 (defun gmaps-display-places (places)
   "Display places in Maps interaction buffer."
   (let ((length (length places))
@@ -753,8 +744,8 @@ Optional  prefix arg clears any active filters."
            #'(lambda (h) (= day (g-json-lookup "close.day" h)) ) hours))
     (format "%s Open: %s, Close: %s"
             weekday 
-             (gmaps-colonize-timestring (g-json-lookup "open.time" open))
-             (gmaps-colonize-timestring (g-json-lookup "close.time" close)))))
+            (gmaps-colonize-timestring (g-json-lookup "open.time" open))
+            (gmaps-colonize-timestring (g-json-lookup "close.time" close)))))
 
 (defun gmaps-display-places-hours (hours)
   "Display opening/closing hours."
@@ -767,8 +758,6 @@ Optional  prefix arg clears any active filters."
     (insert (format "%s\t" day-hours))
     (put-text-property start (point)
                        'open-hours t)))
-    
-      
 
 (defun gmaps-display-place-details (details)
   "Insert place details."
@@ -815,7 +804,6 @@ Optional  prefix arg clears any active filters."
     (put-text-property start (point)
                        'place-details details)
     (goto-char start)))
-      
 
 (defun gmaps-display-place (place)
   "Display place in Maps buffer."
@@ -896,7 +884,7 @@ Place details need to have been expanded first."
     (emacspeak-auditory-icon 'task-done)
     (goto-char start)
     (message (format "Inserted %d reviews"  (length reviews)))))
-    
+
 ;;}}}
 (provide 'gmaps)
 ;;{{{ end of file

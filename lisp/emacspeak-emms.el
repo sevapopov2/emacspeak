@@ -86,7 +86,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory icon."
-          (when (ems-interactive-p )
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'select-object)))))
 
 (loop for f in
@@ -111,7 +111,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (ems-interactive-p )
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'large-movement)
             (emacspeak-speak-line)))))
 
@@ -140,7 +140,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (ems-interactive-p )
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'open-object)
             (emacspeak-speak-mode-line)))))
 
@@ -196,7 +196,7 @@
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (ems-interactive-p )
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'delete-object)
             (emacspeak-speak-line)))))
 
@@ -250,7 +250,7 @@ Produce an auditory icon if possible."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (ems-interactive-p )
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'task-done)
             (emacspeak-speak-mode-line)))))
 
@@ -294,7 +294,7 @@ Produce an auditory icon if possible."
 
 (defadvice emms-stream-save-bookmarks-file (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'save-object)
     (message "Saved stream bookmarks.")))
 
@@ -308,7 +308,7 @@ Produce an auditory icon if possible."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (ems-interactive-p )
+          (when (ems-interactive-p)
             (emacspeak-auditory-icon 'close-object)
             (emacspeak-speak-mode-line)))))
 
@@ -318,8 +318,14 @@ Produce an auditory icon if possible."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
-          (when (ems-interactive-p )
+          (when (ems-interactive-p)
             (emacspeak-speak-line)))))
+
+(defadvice emms-playlist-mode-bury-buffer (after emacspeak pre act)
+  "Announce the buffer that becomes current."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 ;;}}}
 ;;{{{ silence chatter from info

@@ -82,6 +82,7 @@
     (?“ . "\"")                     ;LEFT DOUBLE QUOTATION MARK
     (?” . "\"")                     ; RIGHT DOUBLE QUOTATION MARK
     (?⋆ . "*")                      ; STAR OPERATOR
+    (?­ .  "-") ; soft-hyphen 
     (?‘ . " backquote  ")           ; LEFT SINGLE QUOTATION MARK
     (?’ . "'")                      ; right SINGLE QUOTATION MARK
     (?‐ . "-")                      ; hyphen
