@@ -68,95 +68,95 @@
 ;;}}}
 ;;{{{ Advice:
 
-(defadvice              bbdb-delete-current-field-or-record (after emacspeak pre act )
+(defadvice              bbdb-delete-current-field-or-record (after emacspeak pre act)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'delete-object)
     (save-excursion
       (when (looking-at  "?")
         (forward-line 1))
       (emacspeak-speak-line))))
 
-(defadvice bbdb-edit-current-field (before emacspeak pre act )
+(defadvice bbdb-edit-current-field (before emacspeak pre act)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'open-object )))
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'open-object)))
 
-(defadvice bbdb-send-mail (before emacspeak pre act )
+(defadvice bbdb-send-mail (before emacspeak pre act)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (let ((to (if (consp (ad-get-arg 0))
                   (bbdb-dwim-net-address
                    (car (ad-get-arg 0)))
                 (bbdb-dwim-net-address
-                 (ad-get-arg 0 ))))
+                 (ad-get-arg 0))))
           (subject  (ad-get-arg 1)))
-      (emacspeak-auditory-icon 'open-object )
+      (emacspeak-auditory-icon 'open-object)
       (message "Starting an email message  %s to %s %s "
                (if subject  (format "about %s" subject) "")
                to
                (if  (consp (ad-get-arg 0))
                    " and others " " ")))))
 
-(defadvice bbdb-next-record (after emacspeak pre act )
+(defadvice bbdb-next-record (after emacspeak pre act)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement )
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
     (save-excursion
       (when (looking-at  "?")
         (forward-line 1))
-      (emacspeak-speak-line ))))
+      (emacspeak-speak-line))))
 
-(defadvice bbdb-prev-record (after emacspeak pre act )
+(defadvice bbdb-prev-record (after emacspeak pre act)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'large-movement )
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
     (save-excursion
       (when (looking-at  "?")
         (forward-line 1))
-      (emacspeak-speak-line ))))
+      (emacspeak-speak-line))))
 
-(defadvice bbdb-omit-record (after emacspeak pre act )
+(defadvice bbdb-omit-record (after emacspeak pre act)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-line)))
 
-(defadvice bbdb (after emacspeak pre act )
+(defadvice bbdb (after emacspeak pre act)
   "Provide auditory feedback"
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'search-hit)))
 
-(defadvice bbdb-bury-buffer (after emacspeak pre act )
+(defadvice bbdb-bury-buffer (after emacspeak pre act)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line )))
+    (emacspeak-speak-mode-line)))
 
-(defadvice bbdb-save-db (after emacspeak pre act )
+(defadvice bbdb-save-db (after emacspeak pre act)
   "Produce an auditory icon if possible"
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'save-object)))
 
-(defadvice bbdb-elide-record (after emacspeak pre act )
+(defadvice bbdb-elide-record (after emacspeak pre act)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (message "Toggled  record display")))
 
-(defadvice bbdb-transpose-fields (after emacspeak pre act )
+(defadvice bbdb-transpose-fields (after emacspeak pre act)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line )))
+    (emacspeak-speak-line)))
 
-(defadvice bbdb-complete-name (around emacspeak pre act )
+(defadvice bbdb-complete-name (around emacspeak pre act)
   "Provide spoken feedback"
   (declare (special completion-reference-buffer))
   (cond
-   ((ems-interactive-p )
+   ((ems-interactive-p)
     (let ((prior (point))
           (completion-ignore-case t)
-          (completions nil )
+          (completions nil)
           (window (selected-window))
           (buffer (current-buffer)))
       ad-do-it
@@ -167,28 +167,28 @@
         (setq completion-reference-buffer buffer)
         (unless (get-text-property (point) 'mouse-face)
           (goto-char (next-single-property-change (point)
-                                                  'mouse-face )))
+                                                  'mouse-face)))
         (dtk-speak (emacspeak-get-current-completion)))
-       (t (dtk-speak (buffer-substring prior (point )))))))
-   (t ad-do-it ))
-  ad-return-value )
+       (t (dtk-speak (buffer-substring prior (point)))))))
+   (t ad-do-it))
+  ad-return-value)
 
 ;;}}}
 ;;{{{  Advice mail-ua  specific hooks
 
 (defadvice bbdb/vm-show-sender (after emacspeak pre act comp)
   "Provide spoken feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-speak-other-window 1)))
 
 (defadvice bbdb/rmail-show-sender (after emacspeak pre act comp)
   "Provide spoken feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-speak-other-window 1)))
 
 (defadvice bbdb/mh-show-sender (after emacspeak pre act comp)
   "Provide spoken feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-speak-other-window 1)))
 
 (defadvice bbdb/gnus-show-sender (after emacspeak pre act comp)

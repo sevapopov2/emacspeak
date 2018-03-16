@@ -87,7 +87,7 @@
 (defgroup emacspeak-bookshare nil
   "Bookshare Access on the Complete Audio Desktop."
   :group 'emacspeak)
-;;;###autoload
+
 (defcustom emacspeak-bookshare-api-key nil
   "Web API  key for this application.
 See http://developer.bookshare.org/docs for details on how to get
@@ -188,7 +188,7 @@ with X-password HTTP header for use with Curl."
 (defsubst emacspeak-bookshare-rest-endpoint (operation operand &optional noauth)
   "Return  URL  end point for specified operation.
 Optional argument `noauth' says no user auth needed."
-  (declare (special emacspeak-bookshare-api-base emacspeak-bookshare-user-id))
+  (cl-assert emacspeak-bookshare-api-key nil "API key not set.")
   (format "%s/%s/%s/%s?api_key=%s"
           emacspeak-bookshare-api-base
           operation
@@ -230,7 +230,7 @@ Optional argument `noauth' says no user auth needed."
             (split-string
              (substring url start end) "/" 'no-null))))
 
-(defsubst emacspeak-bookshare-download-url (id fmt )
+(defsubst emacspeak-bookshare-download-url (id fmt)
   "Return  URL  end point for content download.
 Argument id specifies content. Argument fmt = 0 for Braille, 1
   for Daisy."
@@ -347,7 +347,7 @@ Optional argument 'no-auth says we dont need a user auth."
 (defsubst emacspeak-bookshare-isbn-search (query)
   "Perform a Bookshare isbn search."
   (interactive "sISBN: ")
-  (emacspeak-bookshare-api-call "book/isbn" query ))
+  (emacspeak-bookshare-api-call "book/isbn" query))
 
 (defsubst emacspeak-bookshare-id-search (query)
   "Perform a Bookshare id search."
@@ -463,7 +463,7 @@ Optional interactive prefix arg prompts for a category to use as a filter."
                              (emacspeak-bookshare-categories))))
       (emacspeak-bookshare-api-call
        "book/browse/popular"
-       (format "category/%s" filter))))      ))
+       (format "category/%s" filter))))))
 
 ;;}}}
 ;;{{{ Periodical Actions:
@@ -523,7 +523,7 @@ Optional interactive prefix arg prompts for a category to use as a filter."
       (error "No handler defined for action %s" action)))
 
 (define-derived-mode emacspeak-bookshare-mode special-mode
-                     "Bookshare Library Of Accessible Books And Periodicals"
+  "Bookshare Library Of Accessible Books And Periodicals"
   "A Bookshare front-end for the Emacspeak desktop.
 
 The Emacspeak Bookshare front-end is launched by command
@@ -775,7 +775,7 @@ b Browse
            (fill-region-as-paragraph start (point))))
      (sort
       display
-      #'(lambda (a b )
+      #'(lambda (a b)
           (string-lessp (symbol-name (car a)) (symbol-name (car b))))))
                                         ; Show availability:
     (insert
@@ -1116,9 +1116,9 @@ Make sure it's downloaded and unpacked first."
     (save-current-buffer
       (set-buffer result)
       (emacspeak-webutils-autospeak)
-      (browse-url-of-buffer ))))
+      (browse-url-of-buffer))))
 
-(defun emacspeak-bookshare-view-page-range (url )
+(defun emacspeak-bookshare-view-page-range (url)
   "Play pages in specified page range from URL."
   (interactive "sURL:")
   (declare (special emacspeak-bookshare-browser-function))
@@ -1129,8 +1129,8 @@ Make sure it's downloaded and unpacked first."
            (emacspeak-xslt-get "dtb-page-range.xsl")
            (substring url 7)
            (list
-            (cons "start" (format "'%s'" start ))
-            (cons "end" (format "'%s'" end )))))
+            (cons "start" (format "'%s'" start))
+            (cons "end" (format "'%s'" end)))))
          (browse-url-browser-function emacspeak-bookshare-browser-function))
     (save-current-buffer
       (set-buffer result)

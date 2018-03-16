@@ -251,7 +251,7 @@ Returns a string with appropriate personality."
                           :emacspeak-help))))
     (concat label
             help-echo
-            context )))
+            context)))
 
 (widget-put (get 'push-button 'widget-type)
             :emacspeak-help 'emacspeak-widget-help-push-button)
@@ -524,8 +524,8 @@ Returns a string with appropriate personality."
 (defadvice widget-beginning-of-line (after emacspeak pre act comp)
   "Provide auditory feedback"
   (cond
-   ((ems-interactive-p )
-    (let ((widget (widget-at (point ))))
+   ((ems-interactive-p)
+    (let ((widget (widget-at (point))))
       ad-do-it
       (emacspeak-auditory-icon 'select-object)
       (message "Moved to start of text field %s"
@@ -538,8 +538,8 @@ Returns a string with appropriate personality."
 (defadvice widget-end-of-line (around emacspeak pre act comp)
   "Provide auditory feedback"
   (cond
-   ((ems-interactive-p )
-    (let ((widget (widget-at (point ))))
+   ((ems-interactive-p)
+    (let ((widget (widget-at (point))))
       ad-do-it
       (emacspeak-auditory-icon 'select-object)
       (message "Moved to end of text field %s"
@@ -551,22 +551,22 @@ Returns a string with appropriate personality."
 
 (defadvice widget-forward (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-widget-summarize (widget-at  (point )))))
+    (emacspeak-widget-summarize (widget-at  (point)))))
 
 (defadvice widget-backward (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-widget-summarize (widget-at (point)))))
 
 (defadvice widget-kill-line (after emacspeak pre act comp)
   "Provide auditory feedback"
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'delete-object)
     (emacspeak-speak-current-kill 0)
-    (dtk-tone 500 30)))
+    (dtk-tone 500 30 'force)))
 
 ;;}}}
 ;;{{{  activating widgets:
@@ -615,19 +615,19 @@ Returns a string with appropriate personality."
 Optional interactive prefix specifies how many levels to go up from current
 widget before summarizing."
   (interactive "P")
-  (let ((widget (widget-at (point ))))
+  (let ((widget (widget-at (point))))
     (when(and widget  level)
       (loop for i from 1 to level
             do
             (setq widget (widget-get  widget :parent))))
     (cond
-     (widget (emacspeak-widget-summarize widget ))
+     (widget (emacspeak-widget-summarize widget))
      (t (message "No widget under point")))))
 
 (defun emacspeak-widget-browse-widget-interactively ()
   "Allows you to browse a widget"
   (interactive)
-  (let ((level nil )
+  (let ((level nil)
         (key nil)
         (continue t))
     (emacspeak-widget-summarize-widget-under-point)
@@ -656,12 +656,12 @@ widget before summarizing."
   (let ((inhibit-read-only t)
         (start (ad-get-arg 1))
         (end (ad-get-arg 2))
-        (orig nil ))
+        (orig nil))
     (setq orig (get-text-property start 'personality))
     ad-do-it 
     (and orig 
          (put-text-property start end 
-                            'personality orig ))))
+                            'personality orig))))
 
 ;;}}}
 ;;{{{ update widget related keymaps so we dont loose the
@@ -729,7 +729,7 @@ widget before summarizing."
     (widget-put w :args 
                 (loop for key being the hash-keys of dectalk-voice-table 
                       collect
-                      (list 'personality :value key )))
+                      (list 'personality :value key)))
     w))
 
 ;;}}}

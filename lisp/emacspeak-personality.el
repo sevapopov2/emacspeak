@@ -110,7 +110,7 @@
   (when
       (and personality
            (integer-or-marker-p start)
-           (integer-or-marker-p end )
+           (integer-or-marker-p end)
            (not (= start end)))
     (let ((v
            (if (listp personality)
@@ -120,13 +120,13 @@
         (put-text-property start end 'personality v object)))))
 
 ;;;###autoload
-(defun emacspeak-personality-append  (start end personality &optional object )
+(defun emacspeak-personality-append  (start end personality &optional object)
   "Append specified personality to text bounded by start and end.
 Existing personality properties on the text range are preserved."
   (when
       (and personality
            (integer-or-marker-p start)
-           (integer-or-marker-p end )
+           (integer-or-marker-p end)
            (not (= start end)))
     (with-silent-modifications
       (let ((inhibit-read-only t)
@@ -163,7 +163,7 @@ Existing personality properties on the text range are preserved."
   (when
       (and personality
            (integer-or-marker-p start)
-           (integer-or-marker-p end )
+           (integer-or-marker-p end)
            (not (= start end)))
     (with-silent-modifications
       (let ((v (if (listp personality)
@@ -198,7 +198,7 @@ Preserve other existing personality properties on the text range."
   (when
       (and personality
            (integer-or-marker-p start)
-           (integer-or-marker-p end )
+           (integer-or-marker-p end)
            (not (= start end)))
     (with-silent-modifications
       (let ((orig (get-text-property start 'personality object))
@@ -222,7 +222,7 @@ Preserve other existing personality properties on the text range."
                 (put-text-property start extent
                                    'personality new object))
             (remove-text-properties start extent
-                                    (list 'personality )
+                                    (list 'personality)
                                     object))
           (when (< extent end)
             (emacspeak-personality-remove extent end personality object))))))))
@@ -273,10 +273,10 @@ Simple means that voiceification is not cumulative."
            ((symbolp value)
             (setq voice (voice-setup-get-voice-for-face value)))
            ((ems-plain-cons-p value)) ;;pass on plain cons
-           ( (listp value)
-             (setq voice
-                   (delq nil
-                         (mapcar   #'voice-setup-get-voice-for-face value)))))
+           ((listp value)
+            (setq voice
+                  (delq nil
+                        (mapcar   #'voice-setup-get-voice-for-face value)))))
         (error nil))
       voice)))
 
@@ -284,9 +284,9 @@ Simple means that voiceification is not cumulative."
   "Used by emacspeak to augment font lock."
   (when (and voice-lock-mode emacspeak-personality-voiceify-faces)
     (let ((start (ad-get-arg 0))
-          (end (ad-get-arg 1 ))
+          (end (ad-get-arg 1))
           (prop (ad-get-arg 2))
-          (value (ad-get-arg 3 ))
+          (value (ad-get-arg 3))
           (object (ad-get-arg 4))
           (voice nil))
       (when (and (or (eq prop 'face) (eq prop 'font-lock-face))
@@ -299,8 +299,8 @@ Simple means that voiceification is not cumulative."
   "Used by emacspeak to augment font lock."
   (when (and voice-lock-mode emacspeak-personality-voiceify-faces)
     (let ((start (ad-get-arg 0))
-          (end (ad-get-arg 1 ))
-          (value (ad-get-arg 2 ))
+          (end (ad-get-arg 1))
+          (value (ad-get-arg 2))
           (object (ad-get-arg 4))
           (voice nil))
       (unless (= start end)
@@ -312,7 +312,7 @@ Simple means that voiceification is not cumulative."
   "Used by emacspeak to augment font lock."
   (when (and voice-lock-mode    emacspeak-personality-voiceify-faces)
     (let ((start (ad-get-arg 0))
-          (end (ad-get-arg 1 ))
+          (end (ad-get-arg 1))
           (properties (ad-get-arg 2))
           (object (ad-get-arg 3))
           (facep nil)
@@ -328,7 +328,7 @@ Simple means that voiceification is not cumulative."
   "Used by emacspeak to augment font lock."
   (when (and  voice-lock-mode emacspeak-personality-voiceify-faces)
     (let ((start (ad-get-arg 0))
-          (end (ad-get-arg 1 ))
+          (end (ad-get-arg 1))
           (properties (ad-get-arg 2))
           (object (ad-get-arg 3))
           (facep nil)
@@ -370,7 +370,8 @@ Simple means that voiceification is not cumulative."
     (let  ((start (ad-get-arg 0))
            (end (ad-get-arg 1))
            (props (ad-get-arg 2))
-           (object (ad-get-arg 3)))
+           (object (ad-get-arg 3))
+           (inhibit-read-only  t))
       (when (and (not (= start end))
                  (emacspeak-personality-plist-face-p props)) ;;; simple minded for now
         (put-text-property start end 'personality nil object)))))
@@ -381,7 +382,8 @@ Simple means that voiceification is not cumulative."
     (let  ((start (ad-get-arg 0))
            (end (ad-get-arg 1))
            (props (ad-get-arg 2))
-           (object (ad-get-arg 3)))
+           (object (ad-get-arg 3))
+           (inhibit-read-only t))
       (when (and (not (= start end))
                  (emacspeak-personality-plist-face-p props)) ;;; simple minded for now
         (put-text-property start end
@@ -453,7 +455,7 @@ Append means place corresponding personality at the end."
                  beg end voice object)))))
 
 ;;}}}
-(provide 'emacspeak-personality )
+(provide 'emacspeak-personality)
 ;;{{{ end of file
 
 ;;; local variables:

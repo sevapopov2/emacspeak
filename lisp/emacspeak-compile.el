@@ -80,9 +80,9 @@
                    )
       do
       (eval
-       `(defadvice ,f (after  emacspeak pre act )
+       `(defadvice ,f (after  emacspeak pre act)
           "Speak the line containing the error. "
-          (when (ems-interactive-p )
+          (when (ems-interactive-p)
             (dtk-stop)
             (with-current-buffer (window-buffer)
               (emacspeak-compilation-speak-error))))))
@@ -104,18 +104,18 @@
 ;;}}}
 ;;{{{ advise process filter and sentinels
 
-(defadvice compile (after emacspeak pre act )
+(defadvice compile (after emacspeak pre act)
   "provide auditory confirmation"
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (message "Launched compilation")))
 
-(defadvice compilation-sentinel (after emacspeak pre act )
-  "Provide auditory feedback."
+(defadvice  compilation-sentinel (after emacspeak pre act)
+  "Provide auditory feedback"
   (emacspeak-auditory-icon 'task-done)
   (message "process %s %s"
            (process-name  (ad-get-arg 0))
-           (ad-get-arg 1 )))
+           (ad-get-arg 1)))
 
 ;;}}}
 (provide 'emacspeak-compile)

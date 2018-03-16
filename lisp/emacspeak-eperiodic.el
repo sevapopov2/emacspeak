@@ -90,7 +90,7 @@
         (personality (get-text-property (point) 'personality)))
     (add-text-properties  0 (length name)
                           (list 'face face 'personality
-                                personality )
+                                personality)
                           name)
     name))
 
@@ -172,19 +172,20 @@
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (dtk-speak (emacspeak-eperiodic-name-element-at-point))))
+
 (defadvice eperiodic (after emacspeak pre act comp)
   "Provide spoken feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 (defadvice eperiodic-move (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)))
 
 (defadvice eperiodic-show-element-info (after emacspeak pre act comp)
   "Speak displayed info."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (let ((b (get-buffer "*EPeriodic Element*")))
       (unless b
         (error "Cannot find displayed info."))
@@ -194,13 +195,13 @@
 
 (defadvice eperiodic-bury-buffer (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice eperiodic-cycle-view (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (message "View %s"
              eperiodic-colour-element-function)))
