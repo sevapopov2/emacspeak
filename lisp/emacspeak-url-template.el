@@ -63,6 +63,13 @@
 (require 'emacspeak-xslt)
 (eval-when-compile
   (require 'calendar))
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function emacspeak-wizards-mlb-standings "emacspeak-wizards.el" (&optional raw))
+(declare-function emacspeak-wizards-nba-standings "emacspeak-wizards.el" (&optional raw))
+
 ;;}}}
 ;;{{{ structures
 
