@@ -105,12 +105,12 @@
     (emacspeak-auditory-icon 'task-done)
     (message "Rebuilt index")))
 
-(defadvice rpm-proc-sentinel (after emacspeak pre act )
-  "Provide auditory feedback"
+(defadvice rpm-proc-sentinel (after emacspeak pre act comp)
+  "Provide auditory feedback."
   (emacspeak-auditory-icon 'task-done))
 
-(defadvice rpm-do-visit (after emacspeak pre act )
-  "Provide auditory feedback"
+(defadvice rpm-do-visit (after emacspeak pre act comp)
+  "Provide auditory feedback."
   (emacspeak-auditory-icon 'open-object))
 
 ;;}}}

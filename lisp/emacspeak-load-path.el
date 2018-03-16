@@ -46,9 +46,9 @@
   (expand-file-name "lisp/" emacspeak-directory)
   "Directory containing lisp files for  Emacspeak.")
 
-(unless (member emacspeak-lisp-directory load-path )
+(unless (member emacspeak-lisp-directory load-path)
   (setq load-path
-        (cons emacspeak-lisp-directory load-path )))
+        (cons emacspeak-lisp-directory load-path)))
 
 (defvar emacspeak-resource-directory (expand-file-name "~/.emacspeak")
   "Directory where Emacspeak resource files such as pronunciation dictionaries are stored. ")
@@ -115,14 +115,14 @@ property 'emacspeak on the function."
 (if (fboundp 'funcall-interactively)
     (defadvice funcall-interactively (around emacspeak  pre act comp)
       "Set emacspeak  interactive flag if there is an advice."
-      (let ((ems-called-interactively-p ems-called-interactively-p)) ; save state 
+      (let ((ems-called-interactively-p ems-called-interactively-p))
         (when (ems-record-interactive-p (ad-get-arg 0))
           (setq ems-called-interactively-p (ad-get-arg 0)))
         ad-do-it))
   (defun funcall-interactively (f &rest args)
     "Call first argument as a function, passing remaining arguments to it.
 Set emacspeak  interactive flag if there is an advice."
-    (let ((ems-called-interactively-p ems-called-interactively-p)) ; save state 
+    (let ((ems-called-interactively-p ems-called-interactively-p))
       (when (ems-record-interactive-p f)
         (setq ems-called-interactively-p f))
       (funcall f args))))
@@ -144,7 +144,7 @@ interactive command. Turn off the flag once used."
           (result nil))
       (setq result
             (or (eq caller caller-advice) ; called from our advice
-                (eq ems-called-interactively-p caller ))) ; called from call-interactively
+                (eq ems-called-interactively-p caller))) ; called from call-interactively
       (when result
         (setq ems-called-interactively-p nil) ; turn off now that we used  it
         result))))
@@ -159,7 +159,7 @@ interactive command. Turn off the flag once used."
           (caller-advice (ad-get-advice-info-field ems-called-interactively-p  'advicefunname))
           (result nil))
       (setq result (or (eq caller caller-advice) ; called from our advice
-                       (eq ems-called-interactively-p caller ) ; call-interactively call
+                       (eq ems-called-interactively-p caller) ; call-interactively call
                        ))
       (message "this: %s caller: %s caller-advice %s
   ems-called-interactively-p %s"

@@ -75,13 +75,13 @@
 
 (defadvice perl-beginning-of-function (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line )))
+    (emacspeak-speak-line)))
 
 (defadvice perl-end-of-function (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p )
+  (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)))
 
 ;;}}}

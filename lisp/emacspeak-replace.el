@@ -82,7 +82,7 @@ Turn on voice lock temporarily. "
         (progn
           (setq emacspeak-replace-start nil 
                 emacspeak-replace-end nil 
-                emacspeak-replace-highlight-on nil )
+                emacspeak-replace-highlight-on nil)
           (save-match-data ad-do-it))
       (emacspeak-auditory-icon 'task-done))))
 
@@ -98,7 +98,7 @@ Turn on voice lock temporarily. "
         (progn
           (setq emacspeak-replace-start nil 
                 emacspeak-replace-end nil 
-                emacspeak-replace-highlight-on nil )
+                emacspeak-replace-highlight-on nil)
           (save-match-data ad-do-it))
       (emacspeak-auditory-icon 'task-done))))
 
@@ -113,7 +113,7 @@ Turn on voice lock temporarily. "
                     emacspeak-replace-start emacspeak-replace-end))
   (save-match-data
     (let ((from (ad-get-arg 0))
-          (to (ad-get-arg 1 )))
+          (to (ad-get-arg 1)))
       (condition-case nil
           (progn 
             (and emacspeak-replace-highlight-on
@@ -130,10 +130,10 @@ Turn on voice lock temporarily. "
                   (dtk-get-style from))
             (and from to 
                  (put-text-property from to 'personality
-                                    emacspeak-replace-personality ))
+                                    emacspeak-replace-personality))
             (dtk-stop)
             (emacspeak-speak-line))
-        (error nil )))))
+        (error nil)))))
 
 (defadvice replace-dehighlight (after emacspeak pre act)
   "Turn off the replacement highlight. "
@@ -148,12 +148,12 @@ Turn on voice lock temporarily. "
                emacspeak-replace-end
                (put-text-property 
                 (max emacspeak-replace-start  (point-min))
-                (min emacspeak-replace-end (point-max ))
+                (min emacspeak-replace-end (point-max))
                 'personality   emacspeak-replace-saved-personality)
                (setq emacspeak-replace-start nil
                      emacspeak-replace-end nil
                      emacspeak-replace-highlight-on nil)))
-      (error  nil ))))
+      (error  nil))))
 
 ;;}}}
 (provide 'emacspeak-replace)

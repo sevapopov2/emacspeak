@@ -144,9 +144,16 @@ Note that the Web browser should reset this hook after using it.")
 ;;;###autoload 
 (defun emacspeak-webutils-make-xsl-transformer  (xsl &optional params)
   "Return a function that can be attached to emacspeak-web-pre-process-hook to apply required xslt transform."
-  (eval
-   `#'(lambda ()
-        (emacspeak-xslt-region ,xsl (point) (point-max) ',params))))
+  (cond
+   ((null params)
+    (eval
+     `#'(lambda ()
+          (emacspeak-xslt-region ,xsl (point) (point-max)))))
+   (t
+    (eval
+     `#'(lambda ()
+          (emacspeak-xslt-region ,xsl (point) (point-max) ',params))))))
+
 ;;;###autoload
 (defcustom emacspeak-webutils-charent-alist
   '(("&lt;" . "<")
@@ -167,10 +174,10 @@ Note that the Web browser should reset this hook after using it.")
   (loop for entry in emacspeak-webutils-charent-alist
         do
         (let ((entity (car  entry))
-              (replacement (cdr entry )))
+              (replacement (cdr entry)))
           (goto-char start)
           (while (search-forward entity end t)
-            (replace-match replacement )))))
+            (replace-match replacement)))))
 
 (defsubst emacspeak-webutils-supported-p ()
   "Check if this is a supported browser."
@@ -222,7 +229,7 @@ Forward punctuation and rate  settings to resulting buffer."
               (eq major-mode 'eww-mode))
     (error "This command cannot be used outside browser buffers.")))
 
-(defsubst emacspeak-webutils-read-url ( )
+(defsubst emacspeak-webutils-read-url ()
   "Return URL of current page,
 or URL read from minibuffer."
   (declare (special emacspeak-webutils-current-url))
@@ -232,7 +239,7 @@ or URL read from minibuffer."
                           (or (browse-url-url-at-point)
                               "http://"))))
 
-(defsubst emacspeak-webutils-read-this-url ( )
+(defsubst emacspeak-webutils-read-this-url ()
   "Return URL under point
 or URL read from minibuffer."
   (declare (special emacspeak-webutils-url-at-point))
@@ -492,7 +499,7 @@ instances."
   "Play media url under point.
 Optional interactive prefix arg `playlist-p' says to treat the link as a playlist.
  A second interactive prefix arg adds mplayer option -allow-dangerous-playlist-parsing"
-  (interactive "P" )
+  (interactive "P")
   (let ((url
          (if emacspeak-webutils-url-at-point
              (funcall emacspeak-webutils-url-at-point)
