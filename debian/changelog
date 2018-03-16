@@ -1,3 +1,9 @@
+emacspeak (44.0-1trusty1) trusty; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 16 Mar 2018 05:55:27 +0300
+
 emacspeak (43.0-5trusty1) trusty; urgency=low
 
   * Magit support enhancement.
