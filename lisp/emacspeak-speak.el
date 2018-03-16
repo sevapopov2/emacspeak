@@ -1797,6 +1797,8 @@ current coding system, then we return an empty string."
 (defun emacspeak-speak-line-number ()
   "Speak the line number of the current line."
   (interactive)
+  (when (and (ems-interactive-p) dtk-stop-immediately)
+    (dtk-stop))
   (let ((emacspeak-speak-messages t))
     (what-line)))
 
@@ -2528,12 +2530,16 @@ message area.  You can use command
 (defun emacspeak-speak-current-column ()
   "Speak the current column."
   (interactive)
+  (when (and (ems-interactive-p) dtk-stop-immediately)
+    (dtk-stop))
   (let ((emacspeak-speak-messages t))
     (message "Point at column %d" (current-column))))
 
 (defun emacspeak-speak-current-percentage ()
   "Announce the percentage into the current buffer."
   (interactive)
+  (when (and (ems-interactive-p) dtk-stop-immediately)
+    (dtk-stop))
   (let ((emacspeak-speak-messages t))
     (message "Point is  %d%% into  the current buffer"
              (emacspeak-get-current-percentage-into-buffer))))
