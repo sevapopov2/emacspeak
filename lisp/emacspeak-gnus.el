@@ -1,4 +1,4 @@
-;;; emacspeak-gnus.el --- Speech enable GNUS -- Fluent spoken access to usenet
+;;; emacspeak-gnus.el --- Speech enable GNUS -- Fluent spoken access to usenet  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension to speech enable Gnus
@@ -189,8 +189,7 @@ Helps to prevent words from being spelled instead of spoken."
     (cond
      ((and startup (ems-interactive-p))
       (dtk-speak  "Starting gnus")
-      (let ((emacspeak-speak-messages nil))
-	ad-do-it)
+      (ems-with-messages-silenced ad-do-it)
       (emacspeak-auditory-icon 'news)
       (message "Gnus is ready ")
       (emacspeak-speak-line))
@@ -246,16 +245,14 @@ Helps to prevent words from being spelled instead of spoken."
   "Temporarily deactivate advice on message."
   (dtk-speak  "Getting new  gnus")
   (sit-for 2)
-  (let ((emacspeak-speak-messages nil))
-    ad-do-it)
+  (ems-with-messages-silenced ad-do-it)
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'task-done)
     (message "Done ")))
 
 (defadvice nnheader-message-maybe (around emacspeak pre act comp)
   "Silence emacspeak"
-  (let ((emacspeak-speak-messages nil))
-    ad-do-it))
+  (ems-with-messages-silenced ad-do-it))
 
 ;;}}}
 ;;{{{  prompts and queries:

@@ -1,4 +1,4 @@
-;;; emacspeak-calc.el --- Speech enable the Emacs Calculator -- a powerful symbolic algebra system
+;;; emacspeak-calc.el --- Speech enable the Emacs Calculator -- a powerful symbolic algebra system  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: 
@@ -69,11 +69,7 @@
   "Provide spoken feedback."
   (cond
    ((ems-interactive-p)
-    (let ((emacspeak-speak-messages nil)
-          (dtk-quiet t)
-          (emacspeak-use-auditory-icons nil))
-      ad-do-it)
-    (emacspeak-auditory-icon 'task-done)
+    (ems-with-messages-silenced ad-do-it)
     (tts-with-punctuations 'all
                            (emacspeak-read-previous-line)))
    (t ad-do-it))
@@ -81,11 +77,11 @@
 
 (defadvice  calc-do (around emacspeak pre act comp)
   "Speak previous line of output."
-  (let ((emacspeak-speak-messages nil))
-    ad-do-it
-    (emacspeak-auditory-icon 'select-object)
-    (tts-with-punctuations 'all
-                           (emacspeak-read-previous-line)))
+  (ems-with-messages-silenced ad-do-it)
+  (emacspeak-auditory-icon 'select-object)
+  (tts-with-punctuations
+   'all
+   (emacspeak-read-previous-line))
   ad-return-value)
 
 (defadvice  calc-trail-here (after emacspeak pre act comp)

@@ -1,4 +1,4 @@
-;;; emacspeak-python.el --- Speech enable Python development environment
+;;; emacspeak-python.el --- Speech enable Python development environment  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description: Auditory interface to python mode
@@ -81,8 +81,7 @@
         py-electric-delete
         python-electric-backspace
         python-electric-delete
-        python-backspace
-        python-indent-dedent-line-backspace)
+        python-backspace)
       do
       (eval
        `(defadvice ,f (before emacspeak pre act comp)
@@ -117,8 +116,19 @@
 (defadvice python-indent-dedent-line (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'right)
     (emacspeak-speak-line)))
+
+(defadvice  python-indent-dedent-line-backspace (around emacspeak pre act comp)
+  "Speak character you're deleting."
+  (cond
+   ((ems-interactive-p)
+    (let ((ws (= 32 (char-syntax (preceding-char)))))      (dtk-tone 500 30 'force)
+         (unless ws (emacspeak-speak-this-char (preceding-char)))
+         ad-do-it
+         (when ws (dtk-notify-speak (format "Indent %s " (current-column))))))
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice python-fill-paragraph (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -128,7 +138,7 @@
 (defadvice python-indent-shift-left (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-auditory-icon 'left)
     (dtk-speak
      (format "Left shifted block  containing %s lines"
              (count-lines  (region-beginning)
@@ -143,7 +153,7 @@
 (defadvice python-indent-region (after emacspeak pre act comp)
   "Speak number of lines that were shifted"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'fill-object)
+    (emacspeak-auditory-icon 'right)
     (dtk-speak
      (format "Indented region   containing %s lines"
              (count-lines  (region-beginning)
@@ -181,7 +191,7 @@
   `(defadvice  ,f (after emacspeak pre act comp)
      "Provide auditory feedback."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'large-movement)
+       (emacspeak-auditory-icon 'paragraph)
        (emacspeak-speak-line)))))
 
 (loop for f in
