@@ -1,4 +1,4 @@
-;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI  -*- lexical-binding: t; -*-
+;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak table handling module

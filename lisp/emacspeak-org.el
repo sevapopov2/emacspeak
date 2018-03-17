@@ -1,4 +1,4 @@
-;;; emacspeak-org.el --- Speech-enable org  -*- lexical-binding: t; -*-
+;;; emacspeak-org.el --- Speech-enable org
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for ORG

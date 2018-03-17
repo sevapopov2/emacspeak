@@ -1,4 +1,4 @@
-;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak  -*- lexical-binding: t; -*-
+;;; emacspeak-advice.el --- Advice all core Emacs functionality to speak
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description: Core advice forms that make emacspeak work
