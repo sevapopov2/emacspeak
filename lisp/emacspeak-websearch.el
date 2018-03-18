@@ -41,6 +41,7 @@
 ;;{{{ required modules
 
 (require 'emacspeak-preamble)
+(require 'emacspeak-feeds)
 (require 'emacspeak-webutils)
 (require 'eww)
 (require 'emacspeak-eww)
