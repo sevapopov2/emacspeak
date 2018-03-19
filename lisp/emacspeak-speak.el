@@ -835,7 +835,6 @@ Argument START  and END specify region to speak."
         (narrow-to-region start end)
         (emacspeak-speak-voice-annotate-paragraphs)))
     (emacspeak-handle-action-at-point)
-    (dtk-stop)
     (dtk-speak (buffer-substring start end))))
 
 (defsubst emacspeak-speak-string (string personality)
