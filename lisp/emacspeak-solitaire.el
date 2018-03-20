@@ -1,4 +1,4 @@
-;;; emacspeak-solitaire.el --- Speech enable Solitaire game  -*- lexical-binding: t; -*-
+;;; emacspeak-solitaire.el --- Speech enable Solitaire game
 ;;; $Id$
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to solitaire

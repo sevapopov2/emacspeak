@@ -76,8 +76,8 @@
   (cond
    ((ems-interactive-p)
     ad-do-it
-    (emacspeak-auditory-icon 'select-object)
-    (dtk-speak (car  (flyspell-get-word nil))))
+    (dtk-speak (car  (flyspell-get-word nil)))
+    (emacspeak-auditory-icon 'select-object))
    (t ad-do-it))
   ad-return-value)
 

@@ -76,15 +76,15 @@
   "Speak the first line. 
 Also provide an auditory icon. "
   (when (ems-interactive-p) 
-    (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'mark-object)))
 
 (defadvice LaTeX-mark-environment (after emacspeak pre act)
   "Speak the first line. 
 Also provide an auditory icon. "
   (when (ems-interactive-p) 
-    (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'mark-object)))
 
 (defadvice LaTeX-format-paragraph (after emacspeak pre act)
   "Provide auditory feedback"
@@ -176,26 +176,26 @@ the opening line of the newly inserted environment. "
 (defadvice TeX-comment-region (after emacspeak pre act)
   "Provide spoken and auditory feedback. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
 
 (defadvice TeX-un-comment (after emacspeak pre act)
   "Provide spoken and auditory feedback. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
 
 (defadvice TeX-un-comment-region (after emacspeak pre act)
   "Provide spoken and auditory feedback. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
 
 (defadvice TeX-comment-paragraph (after emacspeak pre act)
   "Provide spoken and auditory feedback. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
 
 ;;}}}
 ;;{{{  Debugging tex

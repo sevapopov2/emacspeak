@@ -281,10 +281,10 @@ Provide auditory icon when finished."
 (defadvice dired-up-directory (after emacspeak pre act)
   "Produce an auditory icon."
   (when (ems-interactive-p )
-    (let ((emacspeak-speak-messages nil))
-      (emacspeak-dired-label-fields)
-      (emacspeak-auditory-icon 'open-object )
-      (emacspeak-speak-mode-line))))
+    (ems-with-messages-silenced
+     (emacspeak-dired-label-fields)
+     (emacspeak-auditory-icon 'open-object )
+     (emacspeak-speak-mode-line))))
 
 (defun emacspeak-dired-initialize ()
   "Set up emacspeak dired."
@@ -327,8 +327,8 @@ Provide auditory icon when finished."
               ad-do-it
               (when directory-p
                 (emacspeak-dired-label-fields))
-              (emacspeak-auditory-icon 'open-object)
-              (emacspeak-speak-mode-line)))
+              (emacspeak-speak-mode-line)
+              (emacspeak-auditory-icon 'open-object)))
            (t ad-do-it))
           ad-return-value)))
 

@@ -191,8 +191,8 @@ you are done."
        ((= channel ?q)
         (setq done t)
         (emacspeak-auditory-icon 'close-object))
-       (t (emacspeak-auditory-icon 'warn-user)
-	  (message "Invalid channel %c" channel))))))
+       (t (message "Invalid channel %c" channel)
+          (emacspeak-auditory-icon 'warn-user))))))
 
 ;;;###autoload
 

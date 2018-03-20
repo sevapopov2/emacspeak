@@ -73,25 +73,24 @@
 (defadvice jde-open-class-source (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice jde-open-source-for-symbol (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice jde-open-base-class-source (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
-
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'large-movement)))
 (defadvice jde-complete-popup-message (before emacspeak pre act comp)
   "Provide auditory feedback."
-  (emacspeak-auditory-icon 'help)
-  (message "%s" (ad-get-arg 0)))
+  (message "%s" (ad-get-arg 0))
+  (emacspeak-auditory-icon 'help))
 
 (defadvice jde-complete-at-point (around emacspeak pre act)
   "Say what you completed."
@@ -133,8 +132,8 @@
 (defadvice jde-debug (after emacspeak pre act comp)
   "Speak the line where we eventually stop. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice jde-bug-step-over (after emacspeak pre act comp)
   "Speak the line we stepped to "
@@ -179,8 +178,8 @@
 (defadvice jde-bug-set-breakpoint (after emacspeak pre act comp)
   "Speak the line we set the break point at "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'mark-object)))
 
 (defadvice jde-bug-clear-breakpoint (after emacspeak pre act comp)
   "Speak the line we nuked the breakpoint  "
@@ -240,8 +239,8 @@
        `(defadvice ,command (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (ems-interactive-p)
-            (emacspeak-auditory-icon 'select-object)
-            (emacspeak-speak-line)))))
+            (emacspeak-speak-line)
+            (emacspeak-auditory-icon 'select-object)))))
 
 (defadvice jde-db-run (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -261,15 +260,14 @@
 (defadvice jde-debug-set-breakpoint (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'mark-object)))
 
 (defadvice jde-debug-toggle-breakpoint (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'button)
-    (emacspeak-speak-line)))
-
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'button)))
 (defadvice jde-debug-clear-breakpoints (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)

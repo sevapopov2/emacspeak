@@ -1,4 +1,4 @@
-;;; emacspeak-custom.el --- Speech enable interactive Emacs customization  -*- lexical-binding: t; -*- 
+;;; emacspeak-custom.el --- Speech enable interactive Emacs customization
 ;;; $Id$
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to custom
@@ -179,7 +179,6 @@
 ;;{{{ define voices
 (voice-setup-add-map
  '(
-   ;; New names:
    (custom-button voice-bolden)
    (custom-button-pressed voice-bolden-extra)
    (custom-button-pressed-unraised voice-bolden-extra)
