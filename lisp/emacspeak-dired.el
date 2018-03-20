@@ -1,4 +1,4 @@
-;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager
+;;; emacspeak-dired.el --- Speech enable Dired Mode -- A powerful File Manager  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enable dired
@@ -147,10 +147,9 @@ unless `dired-listing-switches' contains -l"
   "Provide auditory feedback."
   (cond
    ((ems-interactive-p)
-    (let ((emacspeak-speak-messages nil))
-      ad-do-it
-      (emacspeak-auditory-icon 'task-done)
-      (emacspeak-speak-mode-line)))
+    (ems-with-messages-silenced ad-do-it)
+    (emacspeak-auditory-icon 'task-done)
+    (emacspeak-speak-mode-line))
    (t ad-do-it))
   ad-return-value)
 
@@ -422,7 +421,7 @@ options passed to command `file'."
 (defun emacspeak-dired-speak-header-line()
   "Speak the header line of the dired buffer. "
   (interactive)
-  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-auditory-icon 'section)
   (save-excursion (goto-char (point-min))
                   (forward-line 2)
                   (emacspeak-speak-region (point-min) (point))))
@@ -536,6 +535,7 @@ On a directory line, run du -s on the directory to speak its size."
   "Add emacspeak keys to dired."
   (declare (special dired-mode-map))
   (define-key dired-mode-map "E" 'emacspeak-dired-epub-eww)
+  (define-key dired-mode-map (kbd "C-j") 'emacspeak-dired-open-this-file)
   (define-key dired-mode-map (kbd "C-RET") 'emacspeak-dired-open-this-file)
   (define-key dired-mode-map [C-return] 'emacspeak-dired-open-this-file)
   (define-key dired-mode-map "'" 'emacspeak-dired-show-file-type)
@@ -578,6 +578,7 @@ On a directory line, run du -s on the directory to speak its size."
     ("\\.html" emacspeak-dired-eww-open)
     ("\\.htm" emacspeak-dired-eww-open)
     ("\\.pdf" emacspeak-dired-pdf-open)
+    ("\\.md" emacspeak-dired-md-open)
     ("\\.csv" emacspeak-dired-csv-open)
     (,emacspeak-media-extensions emacspeak-dired-play-this-media))
   "Association of filename extension patterns to Emacspeak handlers.")
@@ -601,12 +602,19 @@ On a directory line, run du -s on the directory to speak its size."
      ((and handler (fboundp handler))
       (emacspeak-auditory-icon 'task-done)
       (funcall handler))
-     (t (error  "No known handler")))))
+     (t (call-interactively #'dired-find-file)))))
 
 (defun emacspeak-dired-eww-open ()
   "Open HTML file on current dired line."
   (interactive)
   (eww-open-file (dired-get-filename)))
+(declare-function markdown-preview "markdown-mode" (&optional output))
+(defun emacspeak-dired-md-open ()
+  "Preview markdown  file on current dired line."
+  (interactive)
+  (let ((buffer (find-file-noselect  (dired-get-filename))))
+    (with-current-buffer buffer
+      (markdown-preview))))
 
 (defun emacspeak-dired-pdf-open ()
   "Open PDF file on current dired line."

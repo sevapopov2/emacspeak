@@ -1,4 +1,4 @@
-;;; emacspeak-nxml.el --- Speech enable nxml mode
+;;; emacspeak-nxml.el --- Speech enable nxml mode  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak extension to speech enable nxml mode
@@ -247,7 +247,7 @@
    ((get-text-property (point) 'nxml-outline-state)
     (emacspeak-auditory-icon 'ellipses)
     (let ((o-open nil)
-          (o-end nil)
+          (o-close nil)
 	  (deactivate-mark nil))
       (save-excursion
         (setq o-open (car (overlays-at (point))))

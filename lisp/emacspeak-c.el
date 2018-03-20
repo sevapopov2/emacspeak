@@ -1,4 +1,4 @@
-;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java
+;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak extensions for C and C++ mode
@@ -120,14 +120,12 @@
 ;;}}}
 ;;{{{  Moving across logical chunks
 
+;;; CPP directives:
+
 (loop for f in
       '(c-up-conditional
 	c-forward-conditional
-	c-backward-conditional
-	c-beginning-of-statement
-	c-end-of-statement
-	c-beginning-of-defun
-	c-end-of-defun)
+	c-backward-conditional)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -136,11 +134,40 @@
 	    (emacspeak-auditory-icon 'large-movement)
 	    (emacspeak-speak-line)))))
 
+;;; Statements
+
+(loop for f in
+      '(c-beginning-of-statement
+	c-end-of-statement)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Speak the line moved to."
+	  (when (ems-interactive-p)
+	    (emacspeak-auditory-icon 'item)
+	    (emacspeak-speak-line)))))
+
 (defadvice c-mark-function (after emacspeak pre act)
   "Provide spoken and auditory feedback."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'mark-object)
     (emacspeak-speak-line)))
+
+;;}}}
+
+;;}}}
+;;{{{ advice program navigation
+
+(loop for f in
+      '(c-beginning-of-defun
+	c-end-of-defun)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+	  "Speak the line moved to."
+	  (when (ems-interactive-p)
+	    (emacspeak-auditory-icon 'paragraph)
+	    (emacspeak-speak-line)))))
 
 ;;}}}
 ;;{{{  extensions  provided by c++ mode
@@ -156,7 +183,7 @@
 (defun c-previous-statement (count)
   "Move to the previous  C statement. "
   (interactive "P")
-  (emacspeak-auditory-icon 'large-movement)
+  (emacspeak-auditory-icon 'item)
   (let  ((opoint (point))
          (semantics (c-guess-basic-syntax)))
 ;;; skip across a comment
@@ -186,7 +213,7 @@ this level")
 (defun c-next-statement (count)
   "Move to the next C statement. "
   (interactive "P")
-  (emacspeak-auditory-icon 'large-movement)
+  (emacspeak-auditory-icon 'item)
   (let  ((opoint (point))
          (semantics (c-guess-basic-syntax)))
 ;;; skip across a comment

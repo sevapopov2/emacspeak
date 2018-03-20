@@ -1,4 +1,4 @@
-;;; emacspeak-reftex.el --- speech enable reftex
+;;; emacspeak-reftex.el --- speech enable reftex  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech enable
@@ -60,28 +60,28 @@
                                                  comp)
   "Speech enable  by speaking toc entry."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'section)
     (emacspeak-speak-line)))
 
 (defadvice reftex-select-next-heading (after emacspeak pre act
                                              comp)
   "Speech enable  by speaking toc entry."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'section)
     (emacspeak-speak-line)))
 
 (defadvice reftex-toc-previous (after emacspeak pre act
                                       comp)
   "Speech enable  by speaking toc entry."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'item)
     (emacspeak-speak-line)))
 
 (defadvice reftex-toc-next (after emacspeak pre act
                                   comp)
   "Speech enable  by speaking toc entry."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'item)
     (emacspeak-speak-line)))
 
 (defadvice reftex-toc-goto-line (after emacspeak pre act comp)
@@ -115,14 +115,14 @@
 (defadvice reftex-select-previous (after emacspeak pre act comp)
   "Speech enable  by speaking toc entry."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'item)
     (emacspeak-speak-line)))
 
 (defadvice reftex-select-next (after emacspeak pre act
                                      comp)
   "Speech enable  by speaking toc entry."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'item)
     (emacspeak-speak-line)))
 
 (defadvice reftex-select-accept (after emacspeak pre act
@@ -135,52 +135,48 @@
 (defadvice reftex-toc-toggle-follow (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon
-     (if reftex-toc-follow-mode
-         'on
-       'off))
+    (emacspeak-auditory-icon (if reftex-toc-follow-mode
+                                 'on
+                               'off))
     (message "Turned %s follow mode. "
              (if reftex-toc-follow-mode 'on 'off))))
 (defadvice reftex-toc-toggle-labels (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon
-     (if reftex-toc-include-labels
-         'on
-       'off))
+    (emacspeak-auditory-icon (if reftex-toc-include-labels
+                                 'on
+                               'off))
     (message "Turned %s labels. "
              (if reftex-toc-include-labels 'on 'off))))
 
 (defadvice reftex-toc-toggle-file-boundary (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon
-     (if reftex-toc-include-file-boundaries
-         'on
-       'off))
+    (emacspeak-auditory-icon (if reftex-toc-include-file-boundaries
+                                 'on
+                               'off))
     (message "Turned %s file boundary markers. "
              (if reftex-toc-include-file-boundaries 'on 'off))))
 
 (defadvice reftex-toc-toggle-context (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon
-     (if reftex-toc-include-context
-         'on
-       'off))
+    (emacspeak-auditory-icon (if reftex-toc-include-context
+                                 'on
+                               'off))
     (message "Turned %s context markers. "
              (if reftex-toc-include-context 'on 'off))))
 
 (defadvice reftex-index-next (after emacspeak pre act comp)
   "Speech enable  by speaking  entry."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'item)
     (emacspeak-speak-line)))
 
 (defadvice reftex-index-previous (after emacspeak pre act comp)
   "Speech enable  by speaking  entry."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'item)
     (emacspeak-speak-line)))
 
 (defadvice reftex-index-goto-entry (after emacspeak pre act comp)
@@ -214,40 +210,36 @@
 (defadvice reftex-index-toggle-follow (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon
-     (if reftex-index-follow-mode
-         'on
-       'off))
+    (emacspeak-auditory-icon (if reftex-index-follow-mode
+                                 'on
+                               'off))
     (message "Turned %s follow mode. "
              (if reftex-index-follow-mode 'on 'off))))
 
 (defadvice reftex-index-toggle-labels (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon
-     (if reftex-index-include-labels
-         'on
-       'off))
+    (emacspeak-auditory-icon (if reftex-index-include-labels
+                                 'on
+                               'off))
     (message "Turned %s labels. "
              (if reftex-index-include-labels 'on 'off))))
 
 (defadvice reftex-index-toggle-file-boundary (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon
-     (if reftex-index-include-file-boundaries
-         'on
-       'off))
+    (emacspeak-auditory-icon (if reftex-index-include-file-boundaries
+                                 'on
+                               'off))
     (message "Turned %s file boundary markers. "
              (if reftex-index-include-file-boundaries 'on 'off))))
 
 (defadvice reftex-index-toggle-context (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon
-     (if reftex-index-include-context
-         'on
-       'off))
+    (emacspeak-auditory-icon (if reftex-index-include-context
+                                 'on
+                               'off))
     (message "Turned %s context markers. "
              (if reftex-index-include-context 'on 'off))))
 
