@@ -151,9 +151,8 @@ many available corrections."
     (let ((dtk-stop-immediately t))
       (setq emacspeak-last-message nil)
       (ems-with-messages-silenced ad-do-it)
-      (emacspeak-auditory-icon 'task-done)
-      (when (ems-interactive-p)
-        (emacspeak-speak-message-again))))
+      (emacspeak-speak-message-again)
+      (emacspeak-auditory-icon 'task-done)))
    (t ad-do-it))
   ad-return-value)
 

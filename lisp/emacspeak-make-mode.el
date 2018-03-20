@@ -58,29 +58,29 @@
   "Speak line we moved to"
   (when (ems-interactive-p)
     (let ((emacspeak-show-point t))
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-speak-line))))
+      (emacspeak-speak-line)
+      (emacspeak-auditory-icon 'large-movement))))
 
 (defadvice makefile-browser-next-line (after emacspeak pre act
                                              comp)
   "Speak line we moved to"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
 
 (defadvice makefile-browser-previous-line (after emacspeak pre act
                                                  comp)
   "Speak line we moved to"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
 
 (defadvice makefile-previous-dependency (after emacspeak pre act comp)
   "Speak line we moved to"
   (when (ems-interactive-p)
     (let ((emacspeak-show-point t))
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-speak-line))))
+      (emacspeak-speak-line)
+      (emacspeak-auditory-icon 'large-movement))))
 
 (defadvice makefile-complete (around emacspeak pre act comp)
   "Speak what we completed"
@@ -96,17 +96,17 @@
                                             act comp)
   "Speak how many lines we backslashed"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
     (message "Backslashed region containing %s lines"
              (count-lines (region-beginning)
-                          (region-end)))))
+                          (region-end)))
+    (emacspeak-auditory-icon 'select-object)))
 
 (defadvice makefile-browser-quit (after emacspeak pre act
                                         comp)
   "Provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'close-object)))
 
 (defadvice makefile-switch-to-browser (after emacspeak pre
                                              act comp)

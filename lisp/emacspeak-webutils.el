@@ -86,7 +86,6 @@
 
 ;;}}}
 ;;{{{ keymap: web-prefix
-
 ;;;###autoload
 (define-prefix-command 'emacspeak-web-prefix)
 

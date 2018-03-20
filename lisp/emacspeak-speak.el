@@ -338,8 +338,8 @@ Useful to do this before you listen to an entire buffer."
     (save-excursion
       (goto-char (point-min))
       (condition-case nil
-          (let ((deactivate-mark nil)
-                (start nil)
+          (let ((start nil)
+                (deactivate-mark nil)
                 (blank-line "\n[ \t\n\r]*\n")
                 (inhibit-point-motion-hooks t)
                 (inhibit-modification-hooks t)
@@ -1292,8 +1292,8 @@ Negative prefix arg speaks from start of sentence to point."
   (interactive "P")
   (when (listp arg) (setq arg (car arg)))
   (save-excursion
-    (let ((deactivate-mark nil)
-	  (orig (point))
+    (let ((orig (point))
+          (deactivate-mark nil)
           (inhibit-point-motion-hooks t)
           (inhibit-modification-hooks t)
           (start nil)
@@ -1318,8 +1318,8 @@ If option  `voice-lock-mode' is on, then uses the personality."
   (interactive "P")
   (when (listp arg) (setq arg (car arg)))
   (save-excursion
-    (let ((deactivate-mark nil)
-	  (orig (point))
+    (let ((orig (point))
+          (deactivate-mark nil)
           (inhibit-point-motion-hooks t)
           (inhibit-modification-hooks t)
           (start nil)
@@ -1348,8 +1348,8 @@ If option  `voice-lock-mode' is on, then it will use any defined personality."
   (interactive "P")
   (when (listp arg) (setq arg (car arg)))
   (save-excursion
-    (let ((deactivate-mark nil)
-	  (orig (point))
+    (let ((orig (point))
+          (deactivate-mark nil)
           (inhibit-point-motion-hooks t)
           (start nil)
           (end nil))
@@ -1372,8 +1372,8 @@ If voice-lock-mode is on, then it will use any defined personality. "
   (interactive "P")
   (when (listp arg) (setq arg (car arg)))
   (save-excursion
-    (let ((deactivate-mark nil)
-	  (orig (point))
+    (let ((orig (point))
+          (deactivate-mark nil)
           (inhibit-point-motion-hooks t)
           (start nil)
           (end nil))
@@ -1764,9 +1764,9 @@ Interactive prefix arg speaks buffer info."
            (when vc-mode (propertize vc-mode  'personality voice-smoothen))
            (when vc-state (format "%s" vc-state))
            (when line-number-mode
-             (format "line %d " (emacspeak-get-current-line-number)))
+             (format "line %d" (emacspeak-get-current-line-number)))
            (when column-number-mode
-             (format "Column %d " (current-column)))
+             (format "Column %d" (current-column)))
            (emacspeak-get-voicefied-mode-name mode-name)
            (emacspeak-get-current-percentage-verbously)
            global-info frame-info recursion-info)))))))))
@@ -3274,8 +3274,8 @@ Speak text between point and the char we hit."
                         (point-max)
                         'no-error)
         (setq goal (point))
-        (emacspeak-auditory-icon 'select-object)
-        (emacspeak-speak-region start goal))
+        (emacspeak-speak-region start goal)
+        (emacspeak-auditory-icon 'select-object))
        (t (error "Could not find %c" char))))
     (when goal (goto-char goal))))
 
@@ -3299,11 +3299,11 @@ See documentation for command run-at-time for details on time-spec."
     (read-from-minibuffer "Message: ")))
   (run-at-time time nil
                #'(lambda (m)
-                   (emacspeak-auditory-icon 'alarm)
-                   (message m))
+                   (message m)
+                   (emacspeak-auditory-icon 'alarm))
                message)
-  (emacspeak-auditory-icon 'button)
-  (message "Set alarm for %s" time))
+  (message "Set alarm for %s" time)
+  (emacspeak-auditory-icon 'button))
 
 ;;}}}
 ;;{{{ Directory specific settings

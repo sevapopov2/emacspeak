@@ -50,7 +50,6 @@
 ;;; Code:
 (require 'emacspeak-preamble)
 (require 'ses)
-
 ;;}}}
 ;;{{{ emacspeak ses accessors 
 

@@ -179,7 +179,6 @@
 ;;{{{ define voices
 (voice-setup-add-map
  '(
-   ;; New names:
    (custom-button voice-bolden)
    (custom-button-pressed voice-bolden-extra)
    (custom-button-pressed-unraised voice-bolden-extra)

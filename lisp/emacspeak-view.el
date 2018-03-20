@@ -62,9 +62,9 @@
 (defun emacspeak-view-line-to-top ()
   "Moves current line to top of window"
   (interactive)
-  (emacspeak-auditory-icon 'select-object)
   (recenter 0)
-  (emacspeak-speak-line))
+  (emacspeak-speak-line)
+  (emacspeak-auditory-icon 'select-object))
 
 ;;}}}
 ;;{{{ Advise additional interactive commands:
@@ -106,30 +106,30 @@
 (defadvice View-search-regexp-forward (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'search-hit)
     (let ((emacspeak-show-point t))
-      (emacspeak-speak-line))))
+      (emacspeak-speak-line))
+    (emacspeak-auditory-icon 'search-hit)))
 
 (defadvice View-search-regexp-backward (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'search-hit)
     (let ((emacspeak-show-point t))
-      (emacspeak-speak-line))))
+      (emacspeak-speak-line))
+    (emacspeak-auditory-icon 'search-hit)))
 
 (defadvice View-search-last-regexp-forward (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'search-hit)
     (let ((emacspeak-show-point t))
-      (emacspeak-speak-line))))
+      (emacspeak-speak-line))
+    (emacspeak-auditory-icon 'search-hit)))
 
 (defadvice View-search-last-regexp-backward (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'search-hit)
     (let ((emacspeak-show-point t))
-      (emacspeak-speak-line))))
+      (emacspeak-speak-line))
+    (emacspeak-auditory-icon 'search-hit)))
 
 (defadvice view-exit (after emacspeak pre act comp)
   "Provide auditory feedback"
@@ -249,8 +249,8 @@
 (defadvice View-scroll-to-buffer-end (after emacspeak pre act comp)
   "Provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice View-goto-percent (after emacspeak pre act comp)
   "Provide auditory feedback"
