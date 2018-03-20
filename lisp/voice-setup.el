@@ -147,8 +147,8 @@ means that Voice Lock mode is turned on for buffers in C and C++ modes only."
               (list 'const voice))
           (loop for k being the hash-keys of voice-setup-personality-table
                 collect   k))))
-    (add-to-list 'menu '(const default))
-    (add-to-list 'menu '(const inaudible))
+    (push '(const default) menu)
+    (push '(const inaudible) menu)
     (cons 'choice menu)))
 
 (defun voice-setup-read-personality (&optional prompt)

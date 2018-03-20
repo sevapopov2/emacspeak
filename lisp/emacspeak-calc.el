@@ -86,8 +86,8 @@
 
 (defadvice  calc-trail-here (after emacspeak pre act comp)
   "Speak previous line of output."
-  (emacspeak-auditory-icon 'select-object)
-  (emacspeak-speak-line))
+  (emacspeak-speak-line)
+  (emacspeak-auditory-icon 'select-object))
 
 ;;}}}
 (provide 'emacspeak-calc)

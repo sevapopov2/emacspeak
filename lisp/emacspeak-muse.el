@@ -35,27 +35,52 @@
 ;;; along with GNU Emacs; see the file COPYING.  If not, write to
 ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
-;; You should have received a copy of the GNU General Public License
-;; along with this program; if not, write to the Free Software
-;; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
-;; 02111-1307, USA.
+;;}}}
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;{{{  introduction
 
-;; Commentary:
-
-;; This module provides speech support for the muse publishing and
-;; authoring environment which allows emacs users to create complex
-;; documents using simple markup rules. Muse can be downloaded at ;;
-;; http://www.newartisans.com/johnw/Emacs/muse.tar.gz. Muse is very
-;; similar to emacs-wiki.el. The only difference is that it allows output
-;; in several formats including latex, pdf, texinfo and so on.
-
-;; Code:
-
-;;{{{ required modules
-(require 'emacspeak-preamble)
+;;; Commentary:
+;;; Speech enable Muse
 
 ;;}}}
-;;{{{ Advice interactive commands to speak.
+;;{{{  Required modules
+
+;;; Code:
+
+(require 'emacspeak-preamble)
+(require 'browse-url)
+(require 'emacspeak-outline)
+
+;;}}}
+;;{{{ Voice definitions:
+(voice-setup-add-map
+ '(
+   (muse-bad-link-face voice-bolden-and-animate)
+   (muse-emphasis-1 voice-lighten)
+   (muse-emphasis-2 voice-lighten-medium)
+   (muse-emphasis-3 voice-lighten-extra)
+   (muse-header-1 voice-bolden)
+   (muse-header-2 voice-bolden-medium)
+   (muse-header-3 voice-bolden-extra)
+   (muse-header-4 voice-bolden-extra)
+   (muse-header-5 voice-bolden-extra)
+   (muse-header-6 voice-bolden-extra)
+   (muse-link-face voice-brighten)
+   (muse-verbatim-face voice-monotone)
+   (muse-header-1-face voice-bolden)
+   (muse-header-2-face voice-bolden-medium)
+   (muse-header-3-face voice-bolden-extra)
+   (muse-header-4-face voice-bolden-extra)
+   (muse-header-5-face voice-bolden-extra)
+   (muse-header-6-face voice-bolden-extra)
+   (muse-bad-link voice-bolden-and-animate)
+   (muse-link voice-brighten)
+   (muse-verbatim voice-monotone)
+   ))
+
+;;}}}
+;;{{{ advice interactive commands
 
 (defadvice muse-mode (after emacspeak pre act comp)
   "Setup Emacspeak extensions."
@@ -93,10 +118,11 @@
 
 (loop for f in
       '(muse-follow-name-at-point
+        muse-follow-name-at-point-other-window
         muse-index)
       do
       (eval
-       `(defadvice ,f (after emacspeak pre act comp)
+       `(defadvice   ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'open-object)
@@ -154,39 +180,8 @@
     (emacspeak-auditory-icon (if muse-colors-inline-images 'on 'off))))
 
 ;;}}}
-;;{{{ mapping font faces to personalities 
-
-(voice-setup-add-map
- '(
-   (muse-link-face voice-bolden)
-   (muse-bad-link-face voice-lighten)
-   (muse-header-1-face voice-bolden-and-animate)
-   (muse-header-2-face voice-bolden-and-animate)
-   (muse-header-3-face voice-bolden-and-animate)
-   (muse-header-4-face voice-bolden-and-animate)
-   (muse-header-5-face voice-bolden-and-animate)
-   (muse-header-6-face voice-bolden-and-animate)
-   ))
-
-(voice-setup-add-map
- '(
-   (muse-link voice-bolden)
-   (muse-bad-link voice-lighten)
-   (muse-header-1 voice-bolden-and-animate)
-   (muse-header-2 voice-bolden-and-animate)
-   (muse-header-3 voice-bolden-and-animate)
-   (muse-header-4 voice-bolden-and-animate)
-   (muse-header-5 voice-bolden-and-animate)
-   (muse-header-6 voice-bolden-and-animate)
-   (muse-verbatim voice-monotone)
-   (muse-emphasis-1 voice-animate)
-   (muse-emphasis-2 voice-bolden-medium)
-   (muse-emphasis-3 voice-bolden-extra)
-   ))
-
-;;}}}
 (provide 'emacspeak-muse)
-;;{{{  emacs local variables 
+;;{{{ end of file
 
 ;;; local variables:
 ;;; folded-file: t

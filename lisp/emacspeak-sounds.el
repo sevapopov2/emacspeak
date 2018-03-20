@@ -1,4 +1,4 @@
-;;; emacspeak-sounds.el --- Defines Emacspeak auditory icons  -*- lexical-binding: t; -*-
+;;; emacspeak-sounds.el --- Defines Emacspeak auditory icons
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Module for adding sound cues to emacspeak
@@ -97,7 +97,7 @@ use `emacspeak-toggle-auditory-icons' bound to
 
 (defvar emacspeak-default-sound
   (expand-file-name
-   "classic/button.wav"
+   "3d/button.wav"
    emacspeak-sounds-directory)
   "Default sound to play if requested icon not found.")
 
@@ -130,7 +130,8 @@ use `emacspeak-toggle-auditory-icons' bound to
   (let (themes)
     (dolist (item (directory-files emacspeak-sounds-directory nil "^[^.]") themes)
       (when (emacspeak-sounds-theme-p item)
-        (add-to-list 'themes item t)))))
+        (push item themes)))
+    (nreverse themes)))
 
 (defgroup emacspeak-sounds nil
   "Emacspeak auditory icons."
@@ -141,7 +142,8 @@ use `emacspeak-toggle-auditory-icons' bound to
   "Default theme for auditory icons. "
   :type (let ((menu '(choice)))
           (dolist (item (emacspeak-sounds-get-themes) menu)
-            (add-to-list 'menu (list 'const item) t)))
+            (push (list 'const item) menu))
+          (nreverse menu))
   :set (lambda (symbol value)
 	 (custom-set-default symbol value)
 	 (emacspeak-sounds-select-theme value))

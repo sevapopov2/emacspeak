@@ -60,14 +60,14 @@
 (defadvice rpm (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (message "Welcome to RPM")))
+    (message "Welcome to RPM")
+    (emacspeak-auditory-icon 'open-object)))
 
 (defadvice rpm-invert-sort (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'task-done)
-    (message "Inverted sort order")))
+    (message "Inverted sort order")
+    (emacspeak-auditory-icon 'task-done)))
 (defadvice rpm-toggle-format (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
@@ -75,18 +75,18 @@
 (defadvice rpm-mark (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'mark-object)))
 (defadvice rpm-mark-delete (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'mark-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'mark-object)))
 (defadvice rpm-unmark (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'deselect-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'deselect-object)))
 
 (defadvice rpm-requires (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -96,14 +96,18 @@
 (defadvice rpm-quit (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'close-object)))
 
-(defadvice rpm-rebuild-index (after emacspeak pre act comp)
-  "Provide speech feedback."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'task-done)
-    (message "Rebuilt index")))
+(loop for f in
+      '(rpm-rebuild rpm-rebuild-index)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Provide speech feedback."
+          (when (ems-interactive-p)
+            (message "Rebuilt index")
+            (emacspeak-auditory-icon 'task-done)))))
 
 (defadvice rpm-proc-sentinel (after emacspeak pre act comp)
   "Provide auditory feedback."

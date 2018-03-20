@@ -134,6 +134,7 @@
                                  ad-return-value))))
 
 ;;}}}
+
 ;;{{{ jabber activity:
 
 (defadvice jabber-activity-switch-to (after emacspeak pre act comp)
@@ -195,7 +196,6 @@
 
 ;;}}}
 ;;{{{ alerts
-
 (defcustom emacspeak-jabber-speak-presence-alerts nil
   "Set to T if you want to hear presence alerts."
   :type  'boolean
@@ -279,7 +279,6 @@
 
 ;;}}}
 ;;{{{ Pronunciations
-
 (declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
 (emacspeak-pronounce-augment-pronunciations 'jabber-chat-mode
                                             emacspeak-pronounce-internet-smileys-pronunciations)
