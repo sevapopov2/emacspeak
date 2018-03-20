@@ -3,11 +3,11 @@
 SF_HOME= raman,emacspeak@web.sourceforge.net:/home/groups/e/em/emacspeak/htdocs/info
 #https://tvraman.github.io/emacspeak/manual
 GH_PAGES=../../gh-pages-emacspeak/manual
+FILES=*.texi
 
 TEXINDEX=texindex
-FILES=*.texi
 MAKEINFO = makeinfo 
-CSS=-css-ref="http://www.w3.org/StyleSheets/Core/Modernist"
+CSS=--css-ref="http://www.w3.org/StyleSheets/Core/Modernist"
 TEX=tex
 PDFTEX=pdftex
 TEXI2HTML=texi2any --set-customization-variable TEXI2HTML=1
@@ -21,7 +21,10 @@ info: emacspeak.info introducing-emacspeak.info turning-twenty.info
 
 #.PHONY: docs.texi 
 
-docs.texi: 
+turning-twenty.info: turning-twenty.texi
+	$(MAKEINFO) turning-twenty.texi
+
+docs.texi: ../lisp/*.el
 	$(EMACS) -batch -q -l ../utils/self-document.el -f self-document-all-modules
 
 install: emacspeak.info turning-twenty.info
@@ -55,7 +58,7 @@ emacspeak.dvi:		emacspeak.texi
 		emacspeak.log emacspeak.toc emacspeak.aux
 pdf: emacspeak.pdf
 
-emacspeak.pdf:		emacspeak.texi
+emacspeak.pdf:		emacspeak.texi docs.texi
 	$(PDFTEX) emacspeak.texi
 	$(PDFTEX) emacspeak.texi	
 	$(TEXINDEX) emacspeak.cp  emacspeak.fn  emacspeak.ky emacspeak.pg  emacspeak.tp  emacspeak.vr
@@ -71,7 +74,7 @@ print: emacspeak.dvi
 man: emacspeak.texi 
 	makeinfo -o ${GH_PAGES}  --html  ${CSS} emacspeak.texi
 	tidy -q -utf8 -mic -asxml  ${GH_PAGES}/*.html 2>&1 > /dev/null  || echo tidy
-	echo "Commit and push updated HTML files from gh-pages!"
+	@echo "Commit and push updated HTML files from gh-pages!"
 
 introducing-emacspeak: introducing-emacspeak.texi
 	$(TEXI2HTML) --split chapter --output $@ $<
@@ -108,3 +111,6 @@ spell:
 	@cat ${FILES} | aspell --ignore-case -t --list --add-filter texinfo   \
  | sort | uniq > .spell.words
 	@diff .spell.tex .spell.words
+
+tags:
+	etags *.texi
