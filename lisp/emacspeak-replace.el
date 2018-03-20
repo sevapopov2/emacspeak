@@ -1,4 +1,4 @@
-;;; emacspeak-replace.el --- Speech enable interactive search and replace  -*- lexical-binding: t; -*-
+;;; emacspeak-replace.el --- Speech enable interactive search and replace
 ;;; $Id$
 ;;; $Author: tv.raman.tv $ 
 ;;; Description:  Emacspeak extension for replace.el

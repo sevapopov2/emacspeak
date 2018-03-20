@@ -365,8 +365,8 @@ Then speak the screenful. "
 (defadvice vm-mail-send (after emacspeak pre act comp)
   "Provide auditory context"
   (when  (ems-interactive-p)
-    (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'close-object)))
 
 (defadvice vm-mail-send-and-exit (after emacspeak pre act comp)
   "Provide auditory context"
@@ -400,8 +400,8 @@ Then speak the screenful. "
   (vm-goto-message 1)
   (vm-delete-message
    (read vm-ml-highest-message-number))
-  (emacspeak-auditory-icon 'delete-object)
-  (message "All messages have been marked as deleted."))
+  (message "All messages have been marked as deleted.")
+  (emacspeak-auditory-icon 'delete-object))
 
 ;;}}}
 ;;{{{  Keybindings:

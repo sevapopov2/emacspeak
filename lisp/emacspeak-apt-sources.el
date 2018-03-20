@@ -16,7 +16,7 @@
 
 ;;; Initial version: Author: Igor B. Poretsky
 ;;; <poretsky@mlbox.ru>
-;;; Updated and maintained by $Author: master $
+;;; Updated and maintained by $Author: tv.raman.tv $
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
 ;;;
