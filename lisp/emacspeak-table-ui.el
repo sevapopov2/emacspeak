@@ -1,4 +1,4 @@
-;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI
+;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description: Emacspeak table handling module
@@ -66,6 +66,7 @@
    ("#" emacspeak-table-sort-on-current-column)
    ("." emacspeak-table-speak-coordinates)
    ("," emacspeak-table-find-csv-file)
+   ("v" emacspeak-table-view-csv-buffer)
    ("<down>" emacspeak-table-next-row)
    ("<left>" emacspeak-table-previous-column)
    ("<right>" emacspeak-table-next-column)
@@ -490,8 +491,7 @@ Optional prefix arg prompts for a new filter."
 
 ;;}}}
 
-(defsubst emacspeak-table-prepare-table-buffer (table buffer
-                                                      &optional filename)
+(defun emacspeak-table-prepare-table-buffer (table buffer &optional filename)
   "Prepare tabular data."
   (declare (special emacspeak-table positions))
   (with-current-buffer buffer
@@ -508,10 +508,10 @@ Optional prefix arg prompts for a new filter."
       (set (make-local-variable 'positions) (make-hash-table))
       (when filename (setq buffer-file-name filename))
       (setq count (1-  (emacspeak-table-num-columns table)))
-      (loop
+      (cl-loop
        for row across (emacspeak-table-elements table) do
-       (loop
-        for element across row do
+       (cl-loop
+        for _element across row do
         (puthash
          (intern (format "element:%s:%s" i j))  ; compute key 
          (point) ; insertion point  is the value 
@@ -647,7 +647,6 @@ the documentation on the table browser."
                           (or (buffer-name)
                               "scratch"))))
         (table nil)
-        (data nil)
         (i 0)
         (j 0)
         (count 0)
@@ -676,7 +675,7 @@ the documentation on the table browser."
         (setq count (1-  (emacspeak-table-num-columns table)))
         (loop for row across (emacspeak-table-elements table)
               do
-              (loop for element across row
+              (loop for _element across row
                     do
                     (setf
                      (gethash
@@ -833,7 +832,7 @@ browsing table elements"
    emacspeak-table
    (emacspeak-table-current-row emacspeak-table) 0)
   (emacspeak-table-synchronize-display)
-  (emacspeak-auditory-icon 'large-movement)
+  (emacspeak-auditory-icon 'left)
   (funcall emacspeak-table-speak-element))
 
 (defun emacspeak-table-goto-right ()
@@ -846,7 +845,7 @@ browsing table elements"
    (emacspeak-table-current-row emacspeak-table)
    (1- (emacspeak-table-num-columns emacspeak-table)))
   (emacspeak-table-synchronize-display)
-  (emacspeak-auditory-icon 'large-movement)
+  (emacspeak-auditory-icon 'right)
   (funcall emacspeak-table-speak-element))
 
 ;;}}}
