@@ -311,8 +311,8 @@
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (ems-interactive-p)
-            (emacspeak-auditory-icon 'open-object)
-            (emacspeak-speak-line)))))
+            (emacspeak-speak-line)
+            (emacspeak-auditory-icon 'open-object)))))
 
 (loop for f in
       '(magit-hide-section
@@ -325,8 +325,8 @@
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide auditory feedback."
           (when (ems-interactive-p)
-            (emacspeak-auditory-icon 'close-object)
-            (emacspeak-speak-line)))))
+            (emacspeak-speak-line)
+            (emacspeak-auditory-icon 'close-object)))))
 
 (loop for f in
       '(magit-quit-window

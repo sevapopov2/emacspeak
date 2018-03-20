@@ -139,8 +139,8 @@ Otherwise cue user to the line just created. "
                                          comp)
   "Speak updated line"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
 
 (defadvice cperl-comment-region (after emacspeak pre act)
   "Provide spoken feedback."
@@ -170,8 +170,8 @@ Otherwise cue user to the line just created. "
                                        comp)
   "Provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice cperl-indent-region (after emacspeak pre act
                                       comp)
@@ -193,16 +193,15 @@ Otherwise cue user to the line just created. "
                                              act comp)
   "Provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'open-object)))
 
 (defadvice cperl-find-bad-style (after emacspeak pre act
                                        comp)
   "Provide auditory feedback when done."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'task-done)
-    (emacspeak-speak-mode-line)))
-
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'task-done)))
 ;;}}}
 ;;{{{ set up hooks 
 

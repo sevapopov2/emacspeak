@@ -517,6 +517,7 @@ and TABLE gives the values along that dimension."
 ;;; local variables:
 ;;; folded-file: t
 ;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: nil
 ;;; end:
 
 ;;}}}

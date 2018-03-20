@@ -361,8 +361,8 @@ document is displayed in a separate buffer. "
                                               'html-stack))
       (setq current (emacspeak-w3-html-stack)))
     (setq end (point))
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-region start end)))
+    (emacspeak-speak-region start end)
+    (emacspeak-auditory-icon 'select-object)))
 
 (defun emacspeak-w3-next-doc-element (&optional count)
   "Move forward  to the next document element.
@@ -428,8 +428,8 @@ implemented. ")))
                                               (current-buffer)
                                               (point-max)))
       (setq end (point))
-      (emacspeak-auditory-icon 'select-object)
-      (emacspeak-speak-region start end))))
+      (emacspeak-speak-region start end)
+      (emacspeak-auditory-icon 'select-object))))
 
 (defun emacspeak-w3-speak-next-element ()
   "Speak next document element."
@@ -516,8 +516,8 @@ element. "
       (when
           (eq (aref (widget-get (widget-at (point)) :w3-form-data) 0)
               'submit)
-        (emacspeak-auditory-icon 'large-movement)
         (w3-speak-summarize-form-field)
+        (emacspeak-auditory-icon 'large-movement)
         (setq found t)))
     (message "Could not find submit button.")))
 

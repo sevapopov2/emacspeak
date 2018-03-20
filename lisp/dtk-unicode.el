@@ -1,4 +1,4 @@
-;;; dtk-unicode.el --- Pronounce more characters correctly  -*- lexical-binding: t; -*-
+;;; dtk-unicode.el --- Pronounce more characters correctly
 ;;{{{ Header: Lukas
 
 ;; Copyright 2007, 2011 Lukas Loehrer
@@ -176,7 +176,8 @@ while it is not customized explicitly by user."
   :type (list 'repeat
               (let ((menu '(choice)))
                 (dolist (item charset-list menu)
-                  (add-to-list 'menu (list 'const item) t))))
+                  (push (list 'const item) menu))
+                (nreverse menu)))
   :set (lambda (symbol value)
          (setq dtk-unicode-charset-filter-regexp (dtk-unicode-build-skip-regexp value))
          (custom-set-default symbol value)))

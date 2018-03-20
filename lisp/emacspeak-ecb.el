@@ -102,14 +102,14 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "Provide auditory feedback."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'select-object)
-       (emacspeak-speak-line)))))
+       (emacspeak-speak-line)
+       (emacspeak-auditory-icon 'select-object)))))
 
 (defadvice ecb-select-ecb-frame (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'select-object)))
 
 ;;}}}
 ;;{{{  inform tree browser about emacspeak
@@ -128,8 +128,8 @@
                    0
                    (max 0 (1- (length
                                tree-buffer-incr-searchpattern)))))
-  (emacspeak-auditory-icon 'delete-object)
-  (dtk-speak  tree-buffer-incr-searchpattern))
+  (dtk-speak  tree-buffer-incr-searchpattern)
+  (emacspeak-auditory-icon 'delete-object))
 
 (defun emacspeak-ecb-tree-clear ()
   "Clear search pattern during incremental search in tree buffers."
@@ -175,11 +175,11 @@ available."
             (backward-char 1)
             (search-forward tree-buffer-incr-searchpattern)
             (setq end (point))
-            (emacspeak-auditory-icon 'search-hit)
             (with-silent-modifications
               (ems-set-personality-temporarily
                beg end   voice-bolden
-               (emacspeak-speak-line))))))
+               (emacspeak-speak-line)))
+            (emacspeak-auditory-icon 'search-hit))))
        (t (emacspeak-auditory-icon 'search-miss)))))
    (t ad-do-it))
   ad-return-value)

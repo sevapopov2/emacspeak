@@ -1350,8 +1350,8 @@ See http://www.cbsradio.com/streaming/index.html for a list of CBS stations that
       (fill-region (point-min)
                    (point-max)))
     (ems-print-help-return-message))
-  (emacspeak-auditory-icon 'help)
-  (emacspeak-speak-help))
+  (emacspeak-speak-help)
+  (emacspeak-auditory-icon 'help))
 
 (defun emacspeak-url-template-generate-name-setter (name)
   "Generate a setter that sets emacspeak-eww-url-template

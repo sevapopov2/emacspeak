@@ -833,7 +833,6 @@ Indicate change of selection with
 
 ;;}}}
 ;;{{{ tvr: mapping font faces to personalities
-
 (voice-setup-add-map
  '(
    (w3m-italic voice-animate)

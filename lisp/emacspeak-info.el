@@ -1,4 +1,4 @@
-;;; emacspeak-info.el --- Speech enable Info -- Emacs' online documentation viewer  -*- lexical-binding: t; -*-
+;;; emacspeak-info.el --- Speech enable Info -- Emacs' online documentation viewer
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Speech-enable Emacs Info Reader.
 ;;; Keywords:emacspeak, audio interface to emacs
