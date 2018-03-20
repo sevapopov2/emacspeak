@@ -1,4 +1,4 @@
-;;; emacspeak-bookshare.el --- Speech-enabled  BOOKSHARE client
+;;; emacspeak-bookshare.el --- Speech-enabled  BOOKSHARE client  -*- lexical-binding: t; -*-
 ;;; $Id: emacspeak-bookshare.el 4797 2007-07-16 23:31:22Z tv.raman.tv $
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Speech-enable BOOKSHARE An Emacs Interface to bookshare
@@ -142,7 +142,7 @@ This is used by the various Bookshare view commands to display
   "Curl executable.")
 
 (defvar emacspeak-bookshare-curl-common-options
-  " --insecure "
+  " --insecure --location "
   "Common Curl options for Bookshare. Includes --insecure as per
 Bookshare docs."
   )
@@ -896,7 +896,7 @@ b Browse
 Once retrieved, memoize to avoid multiple retrievals."
   (interactive)
   (emacspeak-bookshare-assert)
-  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-auditory-icon 'open-object)
   (let* ((inhibit-read-only t)
          (id (emacspeak-bookshare-get-id))
          (author (emacspeak-bookshare-get-author))
@@ -983,8 +983,6 @@ Target location is generated from author and title."
   (emacspeak-bookshare-assert)
   (let ((inhibit-read-only t)
         (target (emacspeak-bookshare-get-target))
-        (author (emacspeak-bookshare-get-author))
-        (title (emacspeak-bookshare-get-title))
         (directory nil))
     (when (null target) (error  "No downloaded content here."))
     (unless   (file-exists-p target) (error "First download this content."))
@@ -1040,7 +1038,6 @@ Make sure it's downloaded and unpacked first."
   (interactive)
   (let* ((target (emacspeak-bookshare-get-target))
          (directory (emacspeak-bookshare-get-directory))
-         (title (emacspeak-bookshare-get-title))
          (xsl (emacspeak-bookshare-xslt  directory)))
     (unless (file-exists-p target)
       (error "First download this content."))
@@ -1069,7 +1066,6 @@ Make sure it's downloaded and unpacked first."
   (interactive)
   (let ((target (emacspeak-bookshare-get-target))
         (directory (emacspeak-bookshare-get-directory))
-        (title (emacspeak-bookshare-get-title))
         (xsl (emacspeak-bookshare-toc-xslt)))
     (cond
      ((null target) (call-interactively 'emacspeak-bookshare-toc))

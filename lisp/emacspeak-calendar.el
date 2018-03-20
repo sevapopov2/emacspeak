@@ -1,4 +1,4 @@
-;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -- maintain a diary and appointments
+;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -- maintain a diary and appointments  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extensions to speech enable the calendar.
@@ -135,14 +135,15 @@
 (defadvice view-diary-entries (after emacspeak pre act)
   "Speak the diary entries."
   (when (ems-interactive-p)
-    (let ((emacspeak-speak-messages nil))
-      (cond
-       ((buffer-live-p (get-buffer "*Fancy Diary Entries*"))
-        (save-current-buffer
-          (set-buffer "*Fancy Diary Entries*")
-          (tts-with-punctuations 'some
-                                 (emacspeak-speak-buffer))))
-       (t (dtk-speak "No diary entries."))))))
+    (ems-with-messages-silenced
+     (cond
+      ((buffer-live-p (get-buffer "*Fancy Diary Entries*"))
+       (save-current-buffer
+         (set-buffer "*Fancy Diary Entries*")
+         (tts-with-punctuations
+          "some"
+          (emacspeak-speak-buffer))))
+      (t (dtk-speak "No diary entries."))))))
 
 (defadvice  mark-visible-calendar-date (after emacspeak pre act)
   "Use voice locking to mark date. "
@@ -206,25 +207,25 @@
 (defadvice calendar-backward-week (after emacspeak pre act)
   "Speak the date. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-auditory-icon 'paragraph)
     (emacspeak-calendar-speak-date)))
 
 (defadvice calendar-forward-week (after emacspeak pre act)
   "Speak the date. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-auditory-icon 'paragraph)
     (emacspeak-calendar-speak-date)))
 
 (defadvice calendar-backward-month (after emacspeak pre act)
   "Speak the date. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-auditory-icon 'section)
     (emacspeak-calendar-speak-date)))
 
 (defadvice calendar-forward-month (after emacspeak pre act)
   "Speak the date. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-auditory-icon 'section)
     (emacspeak-calendar-speak-date)))
 
 (defadvice calendar-backward-year (after emacspeak pre act)
@@ -242,13 +243,13 @@
 (defadvice calendar-beginning-of-week (after emacspeak pre act)
   "Speak the date. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-auditory-icon 'paragraph)
     (emacspeak-calendar-speak-date)))
 
 (defadvice calendar-beginning-of-month (after emacspeak pre act)
   "Speak the date. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-auditory-icon 'section)
     (emacspeak-calendar-speak-date)))
 
 (defadvice calendar-beginning-of-year (after emacspeak pre act)
@@ -260,19 +261,19 @@
 (defadvice calendar-end-of-week (after emacspeak pre act)
   "Speak the date. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-auditory-icon 'paragraph)
     (emacspeak-calendar-speak-date)))
 
 (defadvice calendar-end-of-month (after emacspeak pre act)
   "Speak the date. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'section)
     (emacspeak-calendar-speak-date)))
 
 (defadvice calendar-end-of-year (after emacspeak pre act)
   "Speak the date. "
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-calendar-speak-date)))
 
 (loop for f in
@@ -365,9 +366,9 @@
 
 (defadvice mark-diary-entries (around emacspeak pre act comp)
   "Silence messages."
-  (let ((emacspeak-speak-messages nil))
-    ad-do-it
-    ad-return-value))
+  (ems-with-messages-silenced
+   ad-do-it
+   ad-return-value))
 
 ;;}}}
 ;;{{{  keymap
@@ -404,11 +405,10 @@
 
 (defun emacspeak-appt-speak-appointment (minutes-left new-time message)
   "Speak the appointment in addition to  displaying it visually."
-  (let ((emacspeak-speak-messages-pause nil))
-    (emacspeak-auditory-icon 'alarm)
-    (message "You have an appointment in %s minutes. %s"
-             minutes-left message)
-    (appt-disp-window minutes-left new-time  message)))
+  (emacspeak-auditory-icon 'alarm)
+  (message "You have an appointment in %s minutes. %s"
+           minutes-left message)
+  (appt-disp-window minutes-left new-time  message))
 
 (defun emacspeak-appt-delete-display ()
   "Function to delete appointment message"
