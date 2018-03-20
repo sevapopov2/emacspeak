@@ -412,8 +412,8 @@ With prefix arg, opens the phone book for editing."
   (cond
    (edit
     (find-file emacspeak-speak-telephone-directory)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-mode-line))
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'open-object))
    ((file-exists-p emacspeak-speak-telephone-directory)
     (emacspeak-shell-command
      emacspeak-speak-telephone-directory-command
@@ -529,8 +529,8 @@ With optional PREFIX argument, label current frame."
     (call-interactively 'set-frame-name))
    (t (call-interactively 'select-frame-by-name)))
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'select-object)))
 
 ;;;###autoload
 (defun emacspeak-next-frame-or-buffer (&optional frame)
@@ -655,8 +655,8 @@ the display to select."
           (nth (% window (length window-list))
                window-list))
     (select-frame (window-frame win))
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'select-object)))
 ;;;###autoload
 (defun emacspeak-select-this-buffer-previous-display ()
   "Select this buffer as displayed in a `previous' window.
@@ -1769,8 +1769,8 @@ prompts for and sets value of the file local pattern."
          (boundp 'emacspeak-occur-pattern)
          emacspeak-occur-pattern)
     (occur emacspeak-occur-pattern)
-    (emacspeak-auditory-icon 'open-object)
-    (message "Displayed header lines in other window."))
+    (message "Displayed header lines in other window.")
+    (emacspeak-auditory-icon 'open-object))
    (t
     (let ((pattern  (read-from-minibuffer "Regular expression: ")))
       (setq emacspeak-occur-pattern pattern)
@@ -1956,8 +1956,8 @@ On Ubuntu and Debian this is group `tty'."
   (interactive)
   (declare (special last-input-event))
   (emacspeak-wizards-vc-viewer (format "%c" last-input-event))
-  (emacspeak-auditory-icon 'open-object)
-  (emacspeak-speak-line))
+  (emacspeak-speak-line)
+  (emacspeak-auditory-icon 'open-object))
 
 (declaim (special emacspeak-wizards-vc-viewer-mode-map))
 
@@ -2097,8 +2097,8 @@ Interactive  arguments specify filename pattern and search pattern."
     (when (ems-interactive-p)
       (switch-to-buffer output)
       (goto-char (point-min))
-      (emacspeak-auditory-icon 'open-object)
-      (emacspeak-speak-mode-line))))
+      (emacspeak-speak-mode-line)
+      (emacspeak-auditory-icon 'open-object))))
 
 ;;}}}
 ;;{{{ voice sample
@@ -2254,9 +2254,6 @@ dates.")
 ;;}}}
 ;;{{{ rivo
 
-(defvar emacspeak-media-history nil)
-(defvar emacspeak-media-last-url nil)
-
 (defvar emacspeak-wizards-rivo-program
   (expand-file-name "rivo.pl" emacspeak-etc-directory)
   "Rivo script used by emacspeak.")
@@ -2264,10 +2261,10 @@ dates.")
 (defun emacspeak-wizards-rivo (when channel stop-time output directory)
   "Rivo wizard.
 Prompts for relevant information and schedules a rivo job using
-UNIX At scheduling facility.
+  UNIX At scheduling facility.
 RIVO is implemented by rivo.pl ---
-a Perl script  that can be used to launch streaming media and record
-streaming media for  a specified duration."
+ a Perl script  that can be used to launch streaming media and record
+   streaming media for  a specified duration."
   (interactive
    (list
     (read-from-minibuffer "At Time: hh:mm Month Day")

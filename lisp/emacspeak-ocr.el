@@ -639,9 +639,8 @@ correctly by themselves."
       (goto-char (aref emacspeak-ocr-page-positions
                        emacspeak-ocr-current-page-number))
       (emacspeak-ocr-update-mode-line)
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-speak-line))))
-
+      (emacspeak-speak-line)
+      (emacspeak-auditory-icon 'large-movement))))
 ;;;###autoload
 (defun emacspeak-ocr-backward-page (&optional _count-ignored)
   "Like backward page, but tracks page number of current document."
@@ -663,8 +662,8 @@ correctly by themselves."
       (emacspeak-ocr-update-mode-line)
       (goto-char (aref emacspeak-ocr-page-positions
                        emacspeak-ocr-current-page-number))
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-speak-line))))
+      (emacspeak-speak-line)
+      (emacspeak-auditory-icon 'large-movement))))
 
 (defsubst emacspeak-ocr-goto-page (page)
   "Move to specified page."

@@ -1,4 +1,4 @@
-;;; emacspeak-org.el --- Speech-enable org  -*- lexical-binding: t; -*-
+;;; emacspeak-org.el --- Speech-enable org
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for ORG
@@ -52,11 +52,12 @@
 ;;{{{ required modules
 
 (require 'emacspeak-preamble)
-(require 'eww)
-(require 'emacspeak-eww)
 (require 'emacspeak-feeds)
+(require 'eww "eww" 'no-error)
+(require 'emacspeak-eww)
 (require 'org "org" 'no-error)
 (require 'org-table "org-table" 'no-error)
+
 ;;}}}
 ;;{{{ Forward declarations
 
@@ -164,8 +165,8 @@
   `(defadvice ,f(after emacspeak pre act comp)
      "Provide spoken feedback."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'paragraph)
-       (emacspeak-speak-line)))))
+       (emacspeak-speak-line)
+       (emacspeak-auditory-icon 'paragraph)))))
 
 (defadvice org-cycle-list-bullet (after emacspeak pre act comp)
   "Provide spoken feedback."
@@ -227,8 +228,8 @@
   `(defadvice ,f(after emacspeak pre act comp)
      "Provide spoken feedback."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'open-object)
-       (emacspeak-speak-line)))))
+       (emacspeak-speak-line)
+       (emacspeak-auditory-icon 'open-object)))))
 
 ;;}}}
 ;;{{{ cut and paste:
@@ -243,8 +244,8 @@
        `(defadvice ,f(after emacspeak pre act comp)
           "Provide spoken feedback."
           (when (ems-interactive-p)
-            (emacspeak-auditory-icon 'yank-object)
-            (emacspeak-speak-line)))))
+            (emacspeak-speak-line)
+            (emacspeak-auditory-icon 'yank-object)))))
 
 ;;}}}
 ;;{{{ completion:

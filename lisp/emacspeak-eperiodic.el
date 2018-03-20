@@ -122,8 +122,8 @@
    (text-property-any (point) (point-max)
                       'face 'eperiodic-header-face))
   (forward-line 2)
-  (emacspeak-auditory-icon 'large-movement)
-  (emacspeak-speak-line))
+  (emacspeak-speak-line)
+  (emacspeak-auditory-icon 'large-movement))
 (declaim (special eperiodic-mode-map))
 (when (boundp 'eperiodic-mode-map)
   (define-key eperiodic-mode-map " " 'emacspeak-eperiodic-speak-current-element)
@@ -157,22 +157,21 @@
 
 (defadvice eperiodic-find-element (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-eperiodic-speak-current-element)))
+  (when  (ems-interactive-p)
+    (emacspeak-eperiodic-speak-current-element)
+    (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice eperiodic-previous-element (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (dtk-speak (emacspeak-eperiodic-name-element-at-point))))
+    (dtk-speak (emacspeak-eperiodic-name-element-at-point))
+    (emacspeak-auditory-icon 'large-movement)))
 
 (defadvice eperiodic-next-element (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (dtk-speak (emacspeak-eperiodic-name-element-at-point))))
-
+    (dtk-speak (emacspeak-eperiodic-name-element-at-point))
+    (emacspeak-auditory-icon 'large-movement)))
 (defadvice eperiodic (after emacspeak pre act comp)
   "Provide spoken feedback."
   (when (ems-interactive-p)

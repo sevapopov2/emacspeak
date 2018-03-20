@@ -245,7 +245,6 @@
   (declare (special o-close))
   (cond
    ((get-text-property (point) 'nxml-outline-state)
-    (emacspeak-auditory-icon 'ellipses)
     (let ((o-open nil)
           (o-close nil)
 	  (deactivate-mark nil))
@@ -257,7 +256,8 @@
         (setq o-close (car (overlays-at (point))))
         (dtk-speak (concat 
                     (overlay-get  o-open 'display)
-                    (overlay-get o-close 'display))))))
+                    (overlay-get o-close 'display)))))
+    (emacspeak-auditory-icon 'ellipses))
    (t (message "Not on a hidden outline"))))
 
 ;;}}}

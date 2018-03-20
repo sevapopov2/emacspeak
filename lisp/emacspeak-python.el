@@ -112,14 +112,13 @@
 
 ;;}}}
 ;;{{{  whitespace management and indentation
-
 (defadvice python-indent-dedent-line (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'right)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'right)))
 
-(defadvice  python-indent-dedent-line-backspace (around emacspeak pre act comp)
+(defadvice  python-indent-dedent-line-backspace (around emacspeak pre act)
   "Speak character you're deleting."
   (cond
    ((ems-interactive-p)
@@ -191,8 +190,8 @@
   `(defadvice  ,f (after emacspeak pre act comp)
      "Provide auditory feedback."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'paragraph)
-       (emacspeak-speak-line)))))
+       (emacspeak-speak-line)
+       (emacspeak-auditory-icon 'paragraph)))))
 
 (loop for f in
       '(py-mark-block
