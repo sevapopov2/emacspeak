@@ -1,4 +1,4 @@
-;;; dtk-unicode.el --- Pronounce more characters correctly
+;;; dtk-unicode.el --- Pronounce more characters correctly  -*- lexical-binding: t; -*-
 ;;{{{ Header: Lukas
 
 ;; Copyright 2007, 2011 Lukas Loehrer
@@ -88,6 +88,7 @@
     (?‐ . "-")                      ; hyphen
     (?– . "--")                     ; n-dash
     (?— . "---")                    ; m-dash
+    (?  . " ") ; hair space 
     (?― . "----")                   ; horizontal bar 
     (?‖ . "||")                     ; vertical bar
     (?… . "...")                    ; ellipses
@@ -152,8 +153,7 @@ A handler returns a non-nil value if the   replacement was successful, nil other
    ((eq charset 'eight-bit-graphic)
     (list 160 255))
    (t
-    (let* ((dim (charset-dimension charset))
-           (chars (charset-chars charset))
+    (let* ((chars (charset-chars charset))
            min max)
       (if (eq chars 96)
           (setq min 32 max 127)

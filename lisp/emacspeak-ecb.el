@@ -1,4 +1,4 @@
-;;; emacspeak-ecb.el --- speech-enable Emacs Class Browser
+;;; emacspeak-ecb.el --- speech-enable Emacs Class Browser  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak module for speech-enabling Emacs
@@ -85,24 +85,25 @@
     (emacspeak-auditory-icon 'help)
     (emacspeak-speak-mode-line)))
 
-(loop for f in 
-      '(
-        ecb-nav-goto-next
-        ecb-nav-goto-previous
-        ecb-goto-window-compilation
-        ecb-goto-window-directories 
-        ecb-goto-window-sources 
-        ecb-goto-window-methods 
-        ecb-goto-window-history 
-        ecb-goto-window-edit1 
-        ecb-goto-window-edit2)
-      do
-      (eval 
-       `(defadvice ,f (after emacspeak pre act comp)
-          "Provide auditory feedback."
-          (when (ems-interactive-p)
-            (emacspeak-auditory-icon 'select-object)
-            (emacspeak-speak-line)))))
+(loop
+ for f in 
+ '(
+   ecb-nav-goto-next
+   ecb-nav-goto-previous
+   ecb-goto-window-compilation
+   ecb-goto-window-directories 
+   ecb-goto-window-sources 
+   ecb-goto-window-methods 
+   ecb-goto-window-history 
+   ecb-goto-window-edit1 
+   ecb-goto-window-edit2)
+ do
+ (eval 
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'select-object)
+       (emacspeak-speak-line)))))
 
 (defadvice ecb-select-ecb-frame (after emacspeak pre act comp)
   "Provide auditory feedback."
