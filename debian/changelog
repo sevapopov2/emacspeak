@@ -1,3 +1,12 @@
+emacspeak (45.0-2xenial1) xenial; urgency=low
+
+  * Visual line speaking fix.
+  * Speak visual line only when visual line mode is on.
+  * Fixed speech feedback on dictionary close.
+  * Auditory feedback on Magit action failure.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 21 Mar 2018 19:30:26 +0300
+
 emacspeak (45.0-1xenial1) xenial; urgency=low
 
   * New upstream release.
