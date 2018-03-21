@@ -1,3 +1,9 @@
+emacspeak (45.0-1xenial1) xenial; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 21 Mar 2018 05:23:46 +0300
+
 emacspeak (44.0-1xenial1) xenial; urgency=low
 
   * New upstream release.
