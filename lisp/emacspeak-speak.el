@@ -1010,6 +1010,7 @@ are indicated with auditory icon ellipses."
   (declare (special dtk-stop-immediately emacspeak-show-point))
   (when dtk-stop-immediately (dtk-stop))
   (let ((inhibit-field-text-motion t)
+        (deactivate-mark nil)
         (inhibit-read-only t)
         (start  nil)
         (end nil)
@@ -1020,18 +1021,34 @@ are indicated with auditory icon ellipses."
     (cond
      ((looking-at "^ *") (emacspeak-auditory-icon 'left))
      ((looking-at " *$") (emacspeak-auditory-icon 'right)))
+    (setq start (line-beginning-position)
+          end (line-end-position))
     (save-excursion
       (beginning-of-visual-line)
-      (setq start (point))
+      (setq start (max (point) start))
       (end-of-visual-line)
-      (setq end (point))
+      (setq end (min (point) end))
       (setq line
             (if emacspeak-show-point
                 (ems-set-personality-temporarily
                  orig (1+ orig)
                  voice-animate (buffer-substring  start end))
               (buffer-substring start end)))
-      (dtk-speak line))))
+      (cond
+       ((string-equal ""  line)
+        (dtk-tone 130.8   75 'force))
+       ((string-match  emacspeak-speak-space-regexp  line)
+        (dtk-tone 261.6   75 'force))
+       ((and (not (eq 'all dtk-punctuation-mode))
+             (string-match  emacspeak-horizontal-rule line))
+        (dtk-tone 523.3   100 t))
+       ((and (not (eq 'all dtk-punctuation-mode))
+             (string-match  emacspeak-decoration-rule line))
+        (dtk-tone 1047   100 t))
+       ((and (not (eq 'all dtk-punctuation-mode))
+             (string-match  emacspeak-unspeakable-rule line))
+        (dtk-tone 2093   100 t))
+       (t (dtk-speak line))))))
 
 (defvar emacspeak-speak-last-spoken-word-position nil
   "Records position of the last word that was spoken.
