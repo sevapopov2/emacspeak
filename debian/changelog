@@ -1,3 +1,9 @@
+emacspeak (45.0-1jessie1) jessie; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 21 Mar 2018 05:25:03 +0300
+
 emacspeak (44.0-1jessie1) jessie; urgency=low
 
   * New upstream release.
