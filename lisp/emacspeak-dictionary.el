@@ -74,6 +74,15 @@
   "Provide auditory feedback."
   (when (or (ems-interactive-p) (referenced-p))
     (emacspeak-auditory-icon 'close-object)
+    (when (and (boundp 'dictionary-window-configuration)
+               (boundp 'dictionary-selected-window))
+      (let ((window-configuration dictionary-window-configuration)
+            (selected-window dictionary-selected-window))
+        (replace-buffer-in-windows)
+        (when window-configuration
+          (set-window-configuration window-configuration))
+        (when selected-window
+          (select-window selected-window))))
     (emacspeak-speak-mode-line)))
 (defadvice dictionary-restore-state (after emacspeak pre act comp)
   "Provide auditory feedback."
