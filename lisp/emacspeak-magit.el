@@ -437,6 +437,17 @@
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'task-done)))))
 
+;;}}}
+;;{{{ Advise process-sentinel:
+
+(defadvice magit-process-finish (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (let ((arg (ad-get-arg 0)))
+    (unless (integerp arg)
+      (setq arg (process-exit-status arg)))
+    (unless (= arg 0)
+      (emacspeak-auditory-icon 'warn-user))))
+
 (defadvice magit-process-sentinel (after emacspeak pre act comp)
   "Provide auditory feedback."
   (emacspeak-auditory-icon 'task-done))
