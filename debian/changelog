@@ -1,3 +1,9 @@
+emacspeak (45.0-3jessie1) jessie; urgency=low
+
+  * Fixed XSL transformations applying in W3m.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 22 Mar 2018 20:17:34 +0300
+
 emacspeak (45.0-2jessie1) jessie; urgency=low
 
   * Visual line speaking fix.
