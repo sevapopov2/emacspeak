@@ -1,3 +1,9 @@
+emacspeak (45.0-3xenial1) xenial; urgency=low
+
+  * Fixed XSL transformations applying in W3m.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 22 Mar 2018 20:16:02 +0300
+
 emacspeak (45.0-2xenial1) xenial; urgency=low
 
   * Visual line speaking fix.
