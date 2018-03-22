@@ -1,3 +1,9 @@
+emacspeak (45.0-3stretch1) stretch; urgency=low
+
+  * Fixed XSL transformations applying in W3m.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 22 Mar 2018 20:19:00 +0300
+
 emacspeak (45.0-2stretch1) stretch; urgency=low
 
   * Visual line speaking fix.
