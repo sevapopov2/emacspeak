@@ -50,6 +50,7 @@
 (declare-function w3m-anchor "ext:w3m-util.el" (&optional position))
 (declare-function w3m-image "ext:w3m-util.el" (&optional position))
 (declare-function w3m-find-file "ext:w3m.el" (file))
+(declare-function w3m-redisplay-this-page "ext:w3m.el" (&optional arg))
 
 ;;}}}
 ;;{{{  custom
@@ -733,7 +734,10 @@ Indicate change of selection with
 (defun emacspeak-w3m-xslt-perform (xsl-name)
   "Perform XSL transformation by name on the current page."
   (let ((xsl (expand-file-name (concat xsl-name ".xsl")
-                               emacspeak-xslt-directory)))
+                               emacspeak-xslt-directory))
+        (browse-url-browser-function
+         #'(lambda (&rest ignore)
+             (w3m-redisplay-this-page))))
     (emacspeak-we-xslt-apply xsl)))
 
 (defun emacspeak-w3m-xsl-add-submit-button ()
