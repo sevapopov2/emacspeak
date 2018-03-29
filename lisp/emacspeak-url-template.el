@@ -69,6 +69,7 @@
 
 (declare-function emacspeak-wizards-mlb-standings "emacspeak-wizards.el" (&optional raw))
 (declare-function emacspeak-wizards-nba-standings "emacspeak-wizards.el" (&optional raw))
+(declare-function emacspeak-eww-next-h "emacspeak-eww.el" (&optional speak))
 
 ;;}}}
 ;;{{{ structures
