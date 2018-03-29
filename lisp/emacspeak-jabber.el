@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2015, T. V. Raman
+;;; Copyright (c) 1995 -- 2017, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -106,7 +106,7 @@
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
-(loop for f in
+(cl-loop for f in
       '(jabber-roster-mode
 	jabber-chat-mode
 	jabber-browse-mode)
@@ -120,7 +120,7 @@
 ;;}}}
 ;;{{{ silence keepalive messages and image type errors
 
-(loop
+(cl-loop
  for f in
  '(
    image-type jabber-process-roster jabber-keepalive-got-response
@@ -130,11 +130,11 @@
  (eval
   `(defadvice ,f (around emacspeak pre act comp)
      "Silence  messages."
-     (ems-with-messages-silenced ad-do-it
-                                 ad-return-value))))
+     (ems-with-messages-silenced
+      ad-do-it
+      ad-return-value))))
 
 ;;}}}
-
 ;;{{{ jabber activity:
 
 (defadvice jabber-activity-switch-to (after emacspeak pre act comp)
@@ -154,7 +154,7 @@
 ;;}}}
 ;;{{{ roster buffer:
 
-(loop for f in
+(cl-loop for f in
       '(jabber-roster-ret-action-at-point
         jabber-chat-with
         jabber-chat-with-jid-at-point
@@ -168,7 +168,7 @@
             (emacspeak-auditory-icon 'open-object)
             (emacspeak-speak-mode-line)))))
 
-(loop for f in
+(cl-loop for f in
       '(jabber-go-to-next-jid
         jabber-go-to-previous-jid)
       do
@@ -179,7 +179,7 @@
             (emacspeak-auditory-icon 'large-movement)
             (emacspeak-speak-text-range 'jabber-jid)))))
 
-(loop for f in
+(cl-loop for f in
       '(jabber-roster-delete-jid-at-point
         jabber-roster-delete-at-point)
       do
@@ -262,12 +262,11 @@
 
 (defadvice jabber-connect-all (after emacspeak pre act comp)
   "switch to roster so we give it a chance to update."
-  (when (ems-interactive-p)
-    (switch-to-buffer jabber-roster-buffer)))
+  (when (ems-interactive-p) (switch-to-buffer jabber-roster-buffer)))
+
 (defadvice jabber-roster-update (around emacspeak    pre act  comp)
   "Make this operation a No-Op unless the roster is visible."
-  (when (get-buffer-window-list jabber-roster-buffer)
-    ad-do-it))
+  (when (get-buffer-window-list jabber-roster-buffer) ad-do-it))
 
 (defadvice jabber-display-roster (around emacspeak    pre act  comp)
   "Make this operation a No-Op unless called interactively."
@@ -276,7 +275,11 @@
 (add-hook 'jabber-post-connect-hook 'jabber-switch-to-roster-buffer)
 
 ;;}}}
-
+(defun emacspeak-jabber-connected ()
+  "Function to add to jabber-post-connection-hook."
+  (emacspeak-auditory-icon 'task-done)
+  (dtk-notify-say "Connected to jabber."))
+(add-hook 'jabber-post-connect-hook #'emacspeak-jabber-connected)
 ;;}}}
 ;;{{{ Pronunciations
 (declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
@@ -338,7 +341,7 @@ session."
     (goto-char (car extent))))
 
 (when (boundp 'jabber-chat-mode-map)
-  (loop for k in
+  (cl-loop for k in
         '(
           ("M-n" emacspeak-jabber-chat-next-message)
           ("M-p" emacspeak-jabber-chat-previous-message)

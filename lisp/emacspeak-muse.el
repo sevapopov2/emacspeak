@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2015, T. V. Raman 
+;;;Copyright (C) 1995 -- 2017, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -87,7 +87,7 @@
   (voice-lock-mode (if global-voice-lock-mode 1 -1))
   (dtk-set-punctuations 'all))
 
-(loop for f in
+(cl-loop for f in
       '(muse-next-reference muse-previous-reference)
       do
       (eval
@@ -101,7 +101,7 @@
               (emacspeak-auditory-icon 'large-movement)
               (emacspeak-speak-text-range 'keymap))))))
 
-(loop for f in
+(cl-loop for f in
       '(muse-edit-link-at-point
         muse-insert-relative-link-to-file
         muse-insert-url)
@@ -116,7 +116,7 @@
                 (backward-char)
                 (emacspeak-speak-text-range 'keymap)))))))
 
-(loop for f in
+(cl-loop for f in
       '(muse-follow-name-at-point
         muse-follow-name-at-point-other-window
         muse-index)
@@ -138,7 +138,7 @@
     (emacspeak-speak-mode-line))
   ad-return-value)
 
-(loop for f in
+(cl-loop for f in
       '(muse-project-publish
         muse-project-publish-this-file
         muse-publish-this-file)

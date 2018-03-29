@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2015, T. V. Raman
+;;;Copyright (C) 1995 -- 2017, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -73,7 +73,7 @@
 
 ;;; these commands should not be made to talk since that would  interferes
 ;;; with real work.
-(loop for f in
+(cl-loop for f in
       '(emms-start
         emms-stop
         emms-sort
@@ -89,7 +89,7 @@
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'select-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(emms-playlist-first
         emms-playlist-last
         emms-playlist-mode-first
@@ -115,7 +115,7 @@
             (emacspeak-auditory-icon 'large-movement)
             (emacspeak-speak-line)))))
 
-(loop for f in
+(cl-loop for f in
       '(emms
         emms-browser
         emms-browser-next-filter
@@ -154,7 +154,7 @@
   (when (ems-interactive-p )
     (emacspeak-auditory-icon (if emms-repeat-track 'on 'off))))
 
-(loop for f in
+(cl-loop for f in
       '(emms-playlist-save
         emms-tag-editor-submit)
       do
@@ -164,7 +164,7 @@
           (when (ems-interactive-p )
             (emacspeak-auditory-icon 'save-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(emms-playlist-mode-clear
         emms-browser-clear-playlist
         emms-browser-delete-files)
@@ -175,7 +175,7 @@
           (when (ems-interactive-p )
             (emacspeak-auditory-icon 'delete-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(emms-playlist-mode-add-contents
         emms-browser-add-tracks)
       do
@@ -188,7 +188,7 @@
 ;;}}}
 ;;{{{ Interactive playlists:
 
-(loop for f in
+(cl-loop for f in
       '(emms-playlist-mode-kill-track
         emms-playlist-mode-kill-entire-track
         emms-stream-delete-bookmark)
@@ -215,7 +215,7 @@
     ad-do-it)
   ad-return-value)
 
-(loop for f in
+(cl-loop for f in
       '(emms-playlist-mode-yank
         emms-playlist-mode-yank-pop)
       do
@@ -232,7 +232,7 @@ Produce an auditory icon if possible."
   (when (ems-interactive-p )
     (emacspeak-auditory-icon 'unmodified-object)))
 
-(loop for f in
+(cl-loop for f in
       '(emms-playlist-sort-by-info-composer
         emms-playlist-sort-by-list
         emms-playlist-sort-by-name
@@ -274,7 +274,7 @@ Produce an auditory icon if possible."
   (when (ems-interactive-p )
     (emacspeak-auditory-icon 'mark-object )))
 
-(loop for f in
+(cl-loop for f in
       '(emms-mark-kill-marked-tracks
         emms-mark-delete-marked-tracks)
       do
@@ -283,6 +283,12 @@ Produce an auditory icon if possible."
           "Produce an auditory icon if possible."
           (when (ems-interactive-p )
             (emacspeak-auditory-icon 'delete-object)))))
+
+(defadvice emms-browser-bury-buffer (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
+    (emacspeak-speak-mode-line)
+    (emacspeak-auditory-icon 'close-object)))
 
 ;;}}}
 ;;{{{ Module emms-streaming:
@@ -298,7 +304,7 @@ Produce an auditory icon if possible."
     (emacspeak-auditory-icon 'save-object)
     (message "Saved stream bookmarks.")))
 
-(loop for f in
+(cl-loop for f in
       '(emms-stream-quit
         emms-playlist-mode-bury-buffer
         emms-playlist-mode-current-kill
@@ -312,7 +318,7 @@ Produce an auditory icon if possible."
             (emacspeak-auditory-icon 'close-object)
             (emacspeak-speak-mode-line)))))
 
-(loop for f in
+(cl-loop for f in
       '(emms-stream-next-line emms-stream-previous-line)
       do
       (eval

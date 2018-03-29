@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2015, T. V. Raman 
+;;;Copyright (C) 1995 -- 2017, T. V. Raman 
 ;;; Copyright (c) 1995 by T. V. Raman  
 ;;; All Rights Reserved. 
 ;;;
@@ -86,7 +86,7 @@
 ;;}}}
 ;;{{{  helpers 
 
-(defsubst emacspeak-widget-label (w)
+(defun emacspeak-widget-label (w)
   "Construct a label for a widget.
 Returns a string with appropriate personality."
   (let ((inhibit-read-only t)
@@ -99,7 +99,7 @@ Returns a string with appropriate personality."
                        'personality 'emacspeak-widget-button-personality tag)
     tag))
 
-(defsubst emacspeak-widget-help-echo (w)
+(defun emacspeak-widget-help-echo (w)
   "Return help-echo with appropriate personality."
   (declare (special voice-animate))
   (let ((inhibit-read-only t)
@@ -565,7 +565,7 @@ Returns a string with appropriate personality."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'delete-object)
     (emacspeak-speak-current-kill 0)
-    (dtk-tone 500 30 'force)))
+    (dtk-tone-deletion)))
 
 ;;}}}
 ;;{{{  activating widgets:
@@ -616,7 +616,7 @@ widget before summarizing."
   (interactive "P")
   (let ((widget (widget-at (point))))
     (when(and widget  level)
-      (loop for i from 1 to level
+      (cl-loop for i from 1 to level
             do
             (setq widget (widget-get  widget :parent))))
     (cond
@@ -670,7 +670,7 @@ widget before summarizing."
   "Update widget keymaps."
   (declare (special emacspeak-prefix
                     widget-field-keymap widget-text-keymap))
-  (loop
+  (cl-loop
    for map in
    '(widget-keymap  widget-field-keymap widget-text-keymap)
    do
@@ -725,7 +725,7 @@ widget before summarizing."
          (widget-create 'voice
                         :tag "voices")))
     (widget-put w :args 
-                (loop for key being the hash-keys of dectalk-voice-table 
+                (cl-loop for key being the hash-keys of dectalk-voice-table 
                       collect
                       (list 'personality :value key)))
     w))

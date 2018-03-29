@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2015, T. V. Raman 
+;;;Copyright (C) 1995 -- 2017, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -51,7 +51,7 @@
 (unless (and (boundp 'post-self-insert-hook)
              post-self-insert-hook
              (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
-  (loop for f in
+  (cl-loop for f in
         '(electric-perl-terminator perl-electric-terminator)
         do
         (eval
@@ -63,7 +63,7 @@
 ;;}}}
 ;;{{{  Program structure:
 
-(loop for f in
+(cl-loop for f in
       '(mark-perl-function perl-mark-function)
       do
       (eval

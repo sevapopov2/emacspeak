@@ -58,7 +58,7 @@ Otherwise cue user to the line just created."
    (t ad-do-it))
   ad-return-value)
 
-(loop for f in
+(cl-loop for f in
       '(asm-colon asm-comment)
       do
       (eval

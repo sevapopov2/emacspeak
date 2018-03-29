@@ -97,7 +97,7 @@
 (defvar emacspeak-threes-rows-max '(0 0 0 0)
   "Max for each row.")
 
-(defsubst emacspeak-threes-get-rows-max ()
+(defun emacspeak-threes-get-rows-max ()
   "Return max for each row."
   (declare (special threes-cells))
   (mapcar #'(lambda (r) (apply #'max   r)) threes-cells))
@@ -105,7 +105,7 @@
 ;;}}}
 ;;{{{ Helpers:
 
-(loop
+(cl-loop
  for i in'(1 2 3) do
  (eval
   `(defun  ,(intern  (format "emacspeak-threes-%s" i)) ()
@@ -115,16 +115,16 @@
      (setq threes-next-number ,i)
      (emacspeak-threes-speak-board))))
 
-(defsubst emacspeak-threes-sox-gen (number)
+(defun emacspeak-threes-sox-gen (number)
   "Generate a tone  that indicates 1, 2 or 3."
-  (let ((fade "fade h .1 .1 "))
+  (let ((fade "fade h .1 .5 .4 gain -8 "))
     (cond
-     ((= 1 number) (sox-sin .1 "E3"fade))
-     ((= 2 number) (sox-sin .5 "D3" fade))
-     ((= 3 number) (sox-sin .5 "C5"fade)))))
+     ((= 1 number) (sox-sin .5 "%-2:%-1"fade))
+     ((= 2 number) (sox-sin .5 "%1:%2" fade))
+     ((= 3 number) (sox-sin .5 "%4:%5"fade)))))
 
 ;;}}}
-h;;{{{ Advice interactive commands:
+;;{{{ Advice interactive commands:
 
 (defun emacspeak-threes-speak-board ()
   "Speak the board."
@@ -189,7 +189,7 @@ h;;{{{ Advice interactive commands:
   (interactive)
   (message (format "Score: %s" (number-to-string (threes-cells-score)))))
 
-(loop
+(cl-loop
  for f in
  '(threes-up threes-down threes-left threes-right)
  do

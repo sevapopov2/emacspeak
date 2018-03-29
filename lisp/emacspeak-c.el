@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2015, T. V. Raman
+;;;Copyright (C) 1995 -- 2017, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -59,27 +59,31 @@
   "Speak character you're deleting."
   (cond
    ((ems-interactive-p)
-    (dtk-tone 500 30 'force)
+    (dtk-tone-deletion)
     (emacspeak-speak-this-char (following-char))
     ad-do-it)
    (t ad-do-it))
   ad-return-value)
-
-(defadvice c-electric-backspace (around emacspeak pre act)
-  "Speak character you're deleting."
-  (cond
-   ((ems-interactive-p)
-    (dtk-tone 500 30 'force)
-    (emacspeak-speak-this-char (preceding-char))
-    ad-do-it)
-   (t ad-do-it))
-  ad-return-value)
+(cl-loop
+ for f in
+ '(c-hungry-delete-forward c-hungry-delete-backwards c-electric-backspace)
+ do
+ (eval
+  `(defadvice ,f (around emacspeak pre act)
+     "Speak character you're deleting."
+     (cond
+      ((ems-interactive-p)
+       (dtk-tone-deletion)
+       (emacspeak-speak-this-char (preceding-char))
+       ad-do-it)
+      (t ad-do-it))
+     ad-return-value)))
 
 ;;}}}
 ;;{{{  advice things to speak
 ;;{{{  Electric chars speak
 
-(defadvice c-electric-semi&comma (after emacspeak pre act comp)
+(defadvice c-electric-semi&comma (after emacspeak pre act)
   "Speak the line when a statement is completed."
   (declare (special last-input-event))
   (when (ems-interactive-p)
@@ -91,7 +95,7 @@
     (and (boundp 'post-self-insert-hook)
          post-self-insert-hook
          (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
-  (loop for f in
+  (cl-loop for f in
         '(c-electric-star
           c-electric-slash
           c-electric-lt-gt
@@ -115,14 +119,14 @@
   "Speak char before deleting it."
   (when (ems-interactive-p)
     (emacspeak-speak-this-char(preceding-char))
-    (dtk-tone 500 30)))
+    (dtk-tone-deletion)))
 
 ;;}}}
 ;;{{{  Moving across logical chunks
 
 ;;; CPP directives:
 
-(loop for f in
+(cl-loop for f in
       '(c-up-conditional
 	c-forward-conditional
 	c-backward-conditional)
@@ -136,7 +140,7 @@
 
 ;;; Statements
 
-(loop for f in
+(cl-loop for f in
       '(c-beginning-of-statement
 	c-end-of-statement)
       do
@@ -158,7 +162,7 @@
 ;;}}}
 ;;{{{ advice program navigation
 
-(loop for f in
+(cl-loop for f in
       '(c-beginning-of-defun
 	c-end-of-defun)
       do
@@ -369,6 +373,75 @@ and their meanings. ")
   "Provide auditory feedback."
   (when (ems-interactive-p)
     (emacspeak-speak-line)))
+
+;;}}}
+;;{{{ Additional Interactive Commands:
+
+(cl-loop
+ for f in
+ '(
+   c-previous-statement c-next-statement
+                        c-awk-beginning-of-defun c-awk-end-of-defunm)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'large-movement)
+       (emacspeak-speak-line)))))
+(defadvice c-backslash-region (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'task-done)
+    (emacspeak-speak-region (point) (mark))))
+(cl-loop
+ for f in
+ '(c-context-line-break c-context-open-line)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p)
+       (emacspeak-speak-line)
+       (emacspeak-auditory-icon 'open-object)))))
+
+(cl-loop
+ for f in
+ '(c-up-conditional-with-else c-down-conditional-with-else c-down-conditional)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p)
+       (emacspeak-speak-line)
+       (emacspeak-auditory-icon 'large-movement)))))
+(cl-loop
+ for f in
+ '(
+   c-indent-new-comment-line c-indent-line-or-region
+                             c-indent-exp c-fill-paragraph)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'fill-object)
+       (emacspeak-speak-line)))))
+
+(cl-loop
+ for f in
+ '(
+   c-toggle-auto-hungry-state c-toggle-auto-newline
+                              c-toggle-auto-state c-toggle-electric-state
+                              c-toggle-hungry-state c-toggle-parse-state-debug
+                              c-toggle-syntactic-indentation)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'button)
+       (message   "Toggled %s"  ,(symbol-name f))))))
 
 ;;}}}
 ;;{{{ Additional keybindings:
