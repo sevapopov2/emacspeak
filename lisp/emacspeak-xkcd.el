@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2015, T. V. Raman
+;;;Copyright (C) 1995 -- 2017, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -41,9 +41,9 @@
 ;;{{{  introduction
 
 ;;; Commentary:
-;;; XKCD ==  emacs-xkcd
+;;; XKCD ==  XKCD In Emacs
 ;;; View XKCD comics in Emacs.
-;;; Speech enables package emacs-xkcd
+;;; Speech enables package xkcd
 ;;; Augments it by displaying the alt text and the transcript.
 
 ;;}}}
@@ -53,7 +53,7 @@
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'json)
-(require 'emacs-xkcd "emacs-xkcd" 'no-error)
+(require 'xkcd "xkcd" 'no-error)
 ;;}}}
 ;;{{{ Forward declarations
 
@@ -71,19 +71,25 @@
 
 ;;}}}
 
-;;; Eventually move this to the emacs-xkcd package if possible.
+(defadvice xkcd-kill-buffer (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 (defvar xkcd-transcript nil
   "Cache current transcript.")
 ;;; Cache transcript.
 ;;; Content downloaded by the time this is called.
-(defsubst emacspeak-xkcd-get-current-transcript ()
+(defun emacspeak-xkcd-get-current-transcript ()
   "Cache current transcript."
   (declare (special xkcd-cur))
   (setq 
    xkcd-transcript 
    (cdr 
     (assoc 'transcript (json-read-from-string (xkcd-get-json "" xkcd-cur))))))
+
+
 (defadvice xkcd-get (after emacspeak first pre act comp)
   "Insert cached transcript in xkcd-transcript."
   (let ((inhibit-read-only t))

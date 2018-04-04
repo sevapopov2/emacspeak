@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2015, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2017, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -99,7 +99,7 @@
     (emacspeak-speak-mode-line)
     (emacspeak-auditory-icon 'close-object)))
 
-(loop for f in
+(cl-loop for f in
       '(rpm-rebuild rpm-rebuild-index)
       do
       (eval
@@ -149,7 +149,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2015, T. V. Raman<raman@cs.cornell.edu>
+;;; Copyright (C) 1995 -- 2017, T. V. Raman<raman@cs.cornell.edu>
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.

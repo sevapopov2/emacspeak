@@ -143,7 +143,7 @@ This hack helps to deal with some specially designed forms."
       (cdr args)
     args))
 
-(defsubst emacspeak-w3m-personalize-string (string personality)
+(defun emacspeak-w3m-personalize-string (string personality)
   (let ((newstring (copy-sequence string)))
     (put-text-property 0 (length newstring)
                        'personality personality
@@ -183,7 +183,7 @@ This hack helps to deal with some specially designed forms."
              anchor-text)
         (save-excursion
           (goto-char start)
-          (loop do
+          (cl-loop do
                 (when (and (integerp value-at-start) (not value-at-pos))
                   (push (buffer-substring start pos) anchor-text)
                   (push " " anchor-text)
@@ -357,7 +357,7 @@ This hack helps to deal with some specially designed forms."
 ;;}}}
 ;;{{{  advice interactive commands.
 
-(loop for f in
+(cl-loop for f in
       '(w3m-goto-url
         w3m-redisplay-this-page
         w3m-reload-this-page
@@ -375,7 +375,7 @@ This hack helps to deal with some specially designed forms."
            (t ad-do-it))
           ad-return-value)))
 
-(loop for f in
+(cl-loop for f in
       '(w3m-print-current-url
         w3m-print-this-url
         w3m-search)
@@ -386,7 +386,7 @@ This hack helps to deal with some specially designed forms."
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'select-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(w3m-edit-current-url w3m-edit-this-url)
       do
       (eval
@@ -401,13 +401,10 @@ This hack helps to deal with some specially designed forms."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'button)))
 
-(loop for f in
-      '(w3m-previous-buffer
-        w3m-next-buffer
-        w3m-view-next-page
-        w3m-view-previous-page
-        w3m-view-parent-page
-        w3m-gohome)
+(cl-loop for f in
+      '(w3m-previous-buffer w3m-next-buffer
+                            w3m-view-next-page w3m-view-previous-page
+                            w3m-view-parent-page w3m-gohome)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
@@ -419,7 +416,7 @@ This hack helps to deal with some specially designed forms."
                 (dtk-speak w3m-current-title)
               (emacspeak-speak-mode-line))))))
 
-(loop for f in
+(cl-loop for f in
       '(w3m-delete-buffer
         w3m-delete-other-buffers)
       do
@@ -452,7 +449,7 @@ This hack helps to deal with some specially designed forms."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'save-object)))
 
-(loop for f in
+(cl-loop for f in
       '(w3m-next-anchor w3m-previous-anchor
                         w3m-next-image w3m-previous-image
                         w3m-next-form w3m-previous-form)
@@ -508,7 +505,7 @@ This hack helps to deal with some specially designed forms."
       ad-do-it))
    (t ad-do-it))ad-return-value)
 
-(loop for f in
+(cl-loop for f in
       '(w3m-scroll-up-or-next-url
         w3m-scroll-down-or-previous-url w3m-scroll-left
         w3m-shift-left w3m-shift-right

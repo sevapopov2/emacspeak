@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2015, T. V. Raman
+;;; Copyright (c) 1995 -- 2017, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -66,7 +66,7 @@
 (unless (and (boundp 'post-self-insert-hook)
              post-self-insert-hook
              (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
-  (loop for f in
+  (cl-loop for f in
         '(py-electric-colon
           python-electric-colon)
         do
@@ -76,7 +76,7 @@
             (when (ems-interactive-p)
               (dtk-say " colon "))))))
 
-(loop for f in
+(cl-loop for f in
       '(py-electric-backspace
         py-electric-delete
         python-electric-backspace
@@ -97,7 +97,7 @@
   "Provide auditory feedback."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'task-done)))
-(loop
+(cl-loop
  for f in
  '(
    python-shell-send-region python-shell-send-defun
@@ -122,7 +122,8 @@
   "Speak character you're deleting."
   (cond
    ((ems-interactive-p)
-    (let ((ws (= 32 (char-syntax (preceding-char)))))      (dtk-tone 500 30 'force)
+    (let ((ws (= 32 (char-syntax (preceding-char)))))
+      (dtk-tone 500 100 'force)
          (unless ws (emacspeak-speak-this-char (preceding-char)))
          ad-do-it
          (when ws (dtk-notify-speak (format "Indent %s " (current-column))))))
@@ -170,7 +171,7 @@
 ;;}}}
 ;;{{{  buffer navigation
 
-(loop
+(cl-loop
  for f in
  '(
    python-nav-up-list python-nav-if-name-main python-nav-forward-statement
@@ -193,7 +194,7 @@
        (emacspeak-speak-line)
        (emacspeak-auditory-icon 'paragraph)))))
 
-(loop for f in
+(cl-loop for f in
       '(py-mark-block
         py-mark-def-or-class
         python-mark-block
@@ -209,7 +210,7 @@
                      (count-lines (region-beginning)
                                   (region-end))))))))
 
-(loop for f in
+(cl-loop for f in
       '(py-narrow-to-defun
         python-narrow-to-defun)
       do
@@ -225,7 +226,7 @@
                      (count-lines (point-min)
                                   (point-max)))))))
 
-(loop for f in
+(cl-loop for f in
       '(py-forward-into-nomenclature
         py-backward-into-nomenclature
         python-forward-into-nomenclature

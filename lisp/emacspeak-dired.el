@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2015, T. V. Raman
+;;;Copyright (C) 1995 -- 2017, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -78,7 +78,7 @@
 ;;}}}
 ;;{{{  functions:
 
-(defsubst emacspeak-dired-speak-line ()
+(defun emacspeak-dired-speak-line ()
   "Speak the dired line intelligently."
   (declare (special emacspeak-speak-last-spoken-word-position))
   (let ((filename (dired-get-filename 'no-dir  t))
@@ -167,7 +167,7 @@ unless `dired-listing-switches' contains -l"
   (when (ems-interactive-p )
     (emacspeak-auditory-icon 'select-object)))
 
-(loop for f in
+(cl-loop for f in
       '(dired-flag-auto-save-files dired-flag-backup-files)
       do
       (eval
@@ -179,7 +179,7 @@ were marked or unmarked for deletion."
 		(emacspeak-auditory-icon 'deselect-object)
 	      (emacspeak-auditory-icon 'delete-object))))))
 
-(loop for f in
+(cl-loop for f in
       '(dired-mark-symlinks dired-mark-directories dired-mark-executables)
       do
       (eval
@@ -190,7 +190,7 @@ were marked or unmarked for deletion."
 		(emacspeak-auditory-icon 'deselect-object)
 	      (emacspeak-auditory-icon 'mark-object))))))
 
-(loop for f in
+(cl-loop for f in
       '(dired-flag-garbage-files dired-clean-directory)
       do
       (eval
@@ -207,7 +207,7 @@ were marked or unmarked for deletion."
       (emacspeak-auditory-icon 'unmodified-object ))
     (emacspeak-dired-speak-line)))
 
-(loop for f in
+(cl-loop for f in
       '(dired-summary dired-show-file-type)
       do
       (eval
@@ -226,7 +226,7 @@ were marked or unmarked for deletion."
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
-(loop for f in
+(cl-loop for f in
       '(dired-do-byte-compile dired-do-load)
       do
       (eval
@@ -290,8 +290,9 @@ Provide auditory icon when finished."
   "Set up emacspeak dired."
   (declare (special global-voice-lock-mode))
   (voice-lock-mode (if global-voice-lock-mode 1 -1))
-  (emacspeak-dired-label-fields))
-(loop
+  (emacspeak-dired-label-fields)
+  (emacspeak-dired-setup-keys))
+(cl-loop
  for  f in
  '(dired ido-dired
          dired-other-window dired-other-frame)
@@ -312,7 +313,7 @@ Provide auditory icon when finished."
          'on
        'off))))
 
-(loop for f in
+(cl-loop for f in
       '(dired-find-file
 	dired-find-file-other-window
 	dired-display-file
@@ -332,7 +333,7 @@ Provide auditory icon when finished."
            (t ad-do-it))
           ad-return-value)))
 
-(loop
+(cl-loop
  for  f in
  '(
    dired-next-subdir dired-prev-subdir
@@ -349,7 +350,7 @@ Provide auditory icon when finished."
        (emacspeak-auditory-icon 'large-movement)
        (emacspeak-dired-speak-line)))))
 
-(loop
+(cl-loop
  for f in
  '(dired-next-line dired-previous-line)
  do
@@ -380,7 +381,7 @@ Provide auditory icon when finished."
     (emacspeak-auditory-icon 'delete-object)
     (emacspeak-dired-speak-line)))
 
-(loop for f in
+(cl-loop for f in
       '(dired-unmark dired-unmark-backward)
       do
       (eval
@@ -446,7 +447,7 @@ On a directory line, run du -s on the directory to speak its size."
         (setq size
               (nth  (if (= (char-after (line-beginning-position)) ?\ )
 			4 5)
-                    (split-string (thing-at-point 'line)))))
+                    (split-string (ems-this-line)))))
       (emacspeak-auditory-icon 'select-object)
       (message "File size %s"
                size))
@@ -545,7 +546,7 @@ On a directory line, run du -s on the directory to speak its size."
   (define-key  dired-mode-map "a" 'emacspeak-dired-speak-file-access-time)
   (define-key dired-mode-map "c" 'emacspeak-dired-speak-file-modification-time)
   (define-key dired-mode-map "z" 'emacspeak-dired-speak-file-size)
-  (define-key dired-mode-map "\C-t" 'emacspeak-dired-speak-symlink-target)
+  (define-key dired-mode-map "\M-t" 'emacspeak-dired-speak-symlink-target)
   (define-key dired-mode-map "\C-i" 'emacspeak-speak-next-field)
   (define-key dired-mode-map  "," 'emacspeak-speak-previous-field))
 (add-hook 'dired-mode-hook 'emacspeak-dired-initialize 'append)
@@ -553,7 +554,7 @@ On a directory line, run du -s on the directory to speak its size."
 
 ;;}}}
 ;;{{{ Advice locate:
-(loop
+(cl-loop
  for f in
  '(locate locate-with-filter)
  do
@@ -573,6 +574,10 @@ On a directory line, run du -s on the directory to speak its size."
   "Plays media on current line."
   (emacspeak-m-player (dired-get-filename)))
 
+(defun emacspeak-dired-play-this-playlist ()
+  "Plays playlist on current line."
+  (emacspeak-m-player (dired-get-filename) 'playlist))
+
 (defconst emacspeak-dired-opener-table
   `(("\\.epub$"  emacspeak-dired-epub-eww)
     ("\\.html" emacspeak-dired-eww-open)
@@ -580,7 +585,8 @@ On a directory line, run du -s on the directory to speak its size."
     ("\\.pdf" emacspeak-dired-pdf-open)
     ("\\.md" emacspeak-dired-md-open)
     ("\\.csv" emacspeak-dired-csv-open)
-    (,emacspeak-media-extensions emacspeak-dired-play-this-media))
+    (,emacspeak-media-extensions emacspeak-dired-play-this-media)
+    (,emacspeak-m-player-playlist-pattern emacspeak-dired-play-this-playlist))
   "Association of filename extension patterns to Emacspeak handlers.")
 
 (defun emacspeak-dired-open-this-file  ()

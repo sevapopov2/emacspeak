@@ -1,9 +1,9 @@
 #!/bin/sh
 # emacspeak - execute emacs with speech enhancements
-#$Id: emacspeak.sh,v 1.1.2.2 2012/03/02 16:45:38 master Exp $
-# WARNING:
-# This file is not the original one: modified for Debian speech support
 #
+# WARNING:
+# This file is not the original one:
+# it is modified for Debian speech support.
 
 if [ -f /etc/emacspeak.conf ]; then
     . /etc/emacspeak.conf
@@ -18,7 +18,7 @@ for CL in $* ; do
             ;;
         -e) DTK_PROGRAM=espeak
             ;;
-        -d) DTK_PROGRAM=dtk-soft
+        -d) DTK_PROGRAM=dtk-exp
             ;;
         *) CL_ALL="$CL_ALL $CL"
             ;;

@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2015, T. V. Raman
+;;;Copyright (C) 1995 -- 2017, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -137,7 +137,7 @@
     ad-return-value))
 
 ;;; Advice navigators:
-(loop for f in
+(cl-loop for f in
       '(magit-mark-item
         git-rebase-reword
         git-rebase-edit
@@ -178,7 +178,7 @@
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'yank-object)))
 
-(loop for f in
+(cl-loop for f in
       '(magit-copy-item-as-kill
         magit-copy-section-value
         magit-copy-buffer-revision)
@@ -189,7 +189,7 @@
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'mark-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(magit-toggle-section magit-section-toggle)
       do
       (eval
@@ -202,7 +202,7 @@
                (t (emacspeak-auditory-icon 'open-object)))
               (emacspeak-speak-line))))))
 
-(loop
+(cl-loop
  for f in
  '(
    magit-section-forward magit-section-backward
@@ -263,7 +263,7 @@
   (when (ems-interactive-p)
     (emacspeak-auditory-icon (if magit-popup-show-common-commands 'on 'off))))
 
-(loop for f in
+(cl-loop for f in
       '(magit-popup-set-default-arguments magit-popup-save-default-arguments)
       do
       (eval
@@ -279,7 +279,7 @@
 
 ;;}}}
 ;;{{{ Advice hide/show commands:
-(loop for f in
+(cl-loop for f in
       '(magit-show magit-show-commit
                    magit-show-branches magit-show-branches-mode
                    magit-show-item-or-scroll-down magit-show-item-or-scroll-up
@@ -314,7 +314,7 @@
             (emacspeak-speak-line)
             (emacspeak-auditory-icon 'open-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(magit-hide-section
         magit-collapse-section
         magit-invoke-popup-option
@@ -328,7 +328,7 @@
             (emacspeak-speak-line)
             (emacspeak-auditory-icon 'close-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(magit-quit-window
         magit-quit-branches-window
         magit-key-mode-kill-buffer
@@ -347,7 +347,7 @@
 ;;}}}
 ;;{{{ Additional commands to advice:
 
-(loop for f in
+(cl-loop for f in
       '(magit-add-log
         magit-log-edit
         magit-process-buffer
@@ -359,7 +359,7 @@
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'open-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(magit-log-edit-commit
         with-editor-cancel)
       do
@@ -381,7 +381,7 @@
     (emacspeak-auditory-icon 'open-object)
     (message "Displayed process buffer in other window.")))
 
-(loop for f in
+(cl-loop for f in
       '(magit-refresh
         magit-refresh-all
         magit-change-what-branch-tracks
@@ -455,7 +455,7 @@
 ;;}}}
 ;;{{{ Branches:
 
-(loop for f in
+(cl-loop for f in
       '(magit-remove-branch
         magit-remove-branch-in-remote-repo
         magit-branch-delete
@@ -501,7 +501,7 @@
         (args
          (mapconcat
           #'identity
-          (loop for k being the hash-keys of magit-key-mode-current-args
+          (cl-loop for k being the hash-keys of magit-key-mode-current-args
                 collect
                 (format "%s %s"
                         k (gethash k magit-key-mode-current-args)))
