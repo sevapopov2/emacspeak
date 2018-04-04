@@ -75,7 +75,7 @@
 
 (defun emacspeak-xslt-read ()
   "Read XSLT transformation name from minibuffer."
-  (declare (special emacspeak-xslt-directory))
+  (declare (special emacspeak-xslt-directory emacspeak-we-xsl-transform))
   (let ((insert-default-directory nil))
     (expand-file-name
      (read-file-name "XSL Transformation: "
