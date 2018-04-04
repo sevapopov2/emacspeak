@@ -51,6 +51,13 @@
 (declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (eval-when-compile (require 'popup "popup" 'no-error))
+
+;;}}}
+;;{{{ Forward declarations
+
+(declare-function popup-cursor "ext:popup.el" (popup))
+(declare-function popup-list "ext:popup.el" (popup))
+
 ;;}}}
 ;;{{{ Map Faces:
 
@@ -112,6 +119,9 @@
 
 ;;}}}
 ;;{{{ Augment popup keymap:
+
+(unless (boundp 'popup-menu-keymap)
+  (defvar popup-menu-keymap nil))
 
 (eval-after-load
     "popup"
