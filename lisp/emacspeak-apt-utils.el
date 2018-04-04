@@ -84,7 +84,7 @@
 ;;}}}
 ;;{{{ Advice interactive commands to speak.
 
-(loop for f in
+(cl-loop for f in
       '(apt-utils-search
 	apt-utils-search-names-only
 	apt-utils-search-grep-dctrl
@@ -96,7 +96,7 @@
 	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'search-hit)))))
 
-(loop for f in
+(cl-loop for f in
       '(apt-utils-quit
 	apt-utils-kill-buffer)
       do
@@ -107,7 +107,7 @@
 	    (emacspeak-auditory-icon 'close-object)
 	    (emacspeak-speak-mode-line)))))
 
-(loop for f in
+(cl-loop for f in
       '(apt-utils-rebuild-package-lists
 	apt-utils-toggle-package-info)
       do
@@ -117,7 +117,7 @@
 	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'task-done)))))
 
-(loop for f in
+(cl-loop for f in
       '(apt-utils-show-package
 	apt-utils-choose-package-link
 	apt-utils-view-previous-package
@@ -136,7 +136,7 @@
 	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'open-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(apt-utils-previous-package
 	apt-utils-next-package)
       do

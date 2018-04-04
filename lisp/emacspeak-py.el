@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2015, T. V. Raman
+;;; Copyright (c) 1995 -- 2017, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -83,7 +83,7 @@ Provide contextual feedback when closing blocks"
   (cond
    ((ems-interactive-p)
     (let ((ws (= (char-syntax (preceding-char)) 32)))
-      (dtk-tone 500 30 'force)
+      (dtk-tone 500 100 'force)
       (unless ws (emacspeak-speak-this-char (preceding-char)))
       ad-do-it
       (when ws
@@ -100,7 +100,7 @@ Provide contextual feedback when closing blocks"
   "Speak character you're deleting."
   (cond
    ((ems-interactive-p)
-    (dtk-tone 500 30 'force)
+    (dtk-tone 500 100 'force)
     (emacspeak-speak-this-char (preceding-char))
     ad-do-it)
    (t ad-do-it))
@@ -151,7 +151,7 @@ Provide contextual feedback when closing blocks"
 ;;}}}
 ;;{{{  whitespace management and indentation
 
-(loop
+(cl-loop
  for f in
  (list 'py-fill-paragraph 'py-fill-comment 'py-fill-string)
  do
@@ -206,7 +206,7 @@ Provide contextual feedback when closing blocks"
 
 ;;}}}
 ;;{{{  buffer navigation
-(loop
+(cl-loop
  for f in
  '(
    py-goto-block-or-clause-up py-goto-clause-up
@@ -312,7 +312,7 @@ Provide contextual feedback when closing blocks"
        (emacspeak-speak-line)
        (emacspeak-auditory-icon 'paragraph)))))
 
-(loop
+(cl-loop
  for  f in
  '(
    py-mark-class-bol py-mark-clause py-mark-clause-bol py-mark-comment
@@ -336,7 +336,7 @@ Provide contextual feedback when closing blocks"
          (count-lines (region-beginning) (region-end))))
        (emacspeak-auditory-icon 'mark-object)))))
 
-(loop
+(cl-loop
  for f in
  '(
 

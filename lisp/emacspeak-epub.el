@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2015, T. V. Raman
+;;; Copyright (C) 1995 -- 2017, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -119,7 +119,7 @@
           emacspeak-epub-toc-path-pattern)
   "Command that returns location of .ncx file in an epub archive.")
 
-(defsubst emacspeak-epub-do-toc (file)
+(defun emacspeak-epub-do-toc (file)
   "Return location of .ncx file within epub archive."
   (declare (special emacspeak-epub-toc-command))
   (let ((result
@@ -138,7 +138,7 @@
           emacspeak-epub-opf-path-pattern)
   "Command that returns location of .ncx file in an epub archive.")
 
-(defsubst emacspeak-epub-do-opf (file)
+(defun emacspeak-epub-do-opf (file)
   "Return location of .opf file within epub archive."
   (declare (special emacspeak-epub-opf-command))
   (substring
@@ -149,7 +149,7 @@
   (format "%s -1 %%s " emacspeak-epub-zip-info)
   "Shell command that returns list of files in an epub archive.")
 
-(defsubst emacspeak-epub-do-ls (file)
+(defun emacspeak-epub-do-ls (file)
   "Return list of files in an epub archive."
   (declare (special emacspeak-epub-ls-command))
   (split-string
@@ -180,7 +180,7 @@
 (defvar emacspeak-epub-scratch " *epub-scratch*"
   "Scratch buffer used to process epub.")
 
-(defsubst emacspeak-epub-shell-unquote (f)
+(defun emacspeak-epub-shell-unquote (f)
   "Reverse effect of shell-quote-argument."
   (shell-command-to-string (format "echo -n %s" f)))
 
@@ -208,7 +208,7 @@
   (emacspeak-xslt-get "epub-opf.xsl")
   "XSL to extract Author/Title information from content.opf.")
 
-(defsubst emacspeak-epub-get-metadata (epub)
+(defun emacspeak-epub-get-metadata (epub)
   "Return list containing title/author metadata."
   (declare (special emacspeak-epub-zip-extract emacspeak-xslt-program
                     emacspeak-epub-opf-xsl))
@@ -277,7 +277,7 @@ Useful if table of contents in toc.ncx is empty."
     (with-current-buffer (get-buffer-create emacspeak-epub-scratch)
       (erase-buffer)
       (insert  "<ol>\n")
-      (loop for f in files
+      (cl-loop for f in files
             do
             (insert
              (format "<li><a href=\"%s\">%s</a></li>\n" f f)))
@@ -345,7 +345,7 @@ Useful if table of contents in toc.ncx is empty."
                     emacspeak-epub-library-directory))
   (let ((updated nil)
         (filename nil))
-    (loop
+    (cl-loop
      for f in
      (directory-files emacspeak-epub-library-directory  'full "epub")
      do
@@ -363,7 +363,7 @@ Useful if table of contents in toc.ncx is empty."
                (make-emacspeak-epub-metadata
                 :title title
                 :author author)))))
-    (loop for f being the hash-keys of emacspeak-epub-db
+    (cl-loop for f being the hash-keys of emacspeak-epub-db
           do
           (setq filename (emacspeak-epub-shell-unquote f))
           (unless (file-exists-p filename) (remhash f emacspeak-epub-db)))
@@ -405,7 +405,7 @@ Interactive prefix arg searches recursively in directory."
   (declare (special emacspeak-epub-db-file emacspeak-epub-db))
   (let ((updated 0)
         (filename nil))
-    (loop
+    (cl-loop
      for f in
      (if recursive
          (emacspeak-epub-find-epubs-in-directory directory)
@@ -477,7 +477,7 @@ Interactive prefix arg searches recursively in directory."
   (declare (special emacspeak-epub-db-file emacspeak-epub-db))
   (let ((updated 0)
         (filename nil))
-    (loop
+    (cl-loop
      for f in
      (if recursive
          (emacspeak-epub-find-epubs-in-directory directory)
@@ -630,7 +630,7 @@ Suitable for text searches."
     (with-current-buffer buffer
       (erase-buffer)
       (setq buffer-undo-list t)
-      (loop for f in files
+      (cl-loop for f in files
             do
             (setq command
                   (format "unzip -c -qq %s %s | %s"
@@ -654,8 +654,11 @@ Suitable for text searches."
     (or
      (get-text-property (point) 'epub)
      (read-file-name "EPub: " emacspeak-epub-library-directory))))
-  (declare (special emacspeak-epub-files-command))
-  (let ((buffer (get-buffer-create "FullText EPub"))
+  (declare (special emacspeak-epub-files-command
+                    emacspeak-speak-directory-settings))
+  (let* ((directory (file-name-directory epub-file))
+        (locals (locate-dominating-file directory emacspeak-speak-directory-settings))
+        (buffer (get-buffer-create "FullText EPub"))
         (files
          (split-string
           (shell-command-to-string
@@ -663,20 +666,29 @@ Suitable for text searches."
           "\n" 'omit-nulls))
         (inhibit-read-only t)
         (command nil))
+    (when locals 
+    (setq locals (expand-file-name  emacspeak-speak-directory-settings locals)))
     (with-current-buffer buffer
       (erase-buffer)
       (setq buffer-undo-list t)
-      (loop for f in files
-            do
-            (insert (format "<!-- %s -->" f))
-            (setq command
-                  (format "unzip -c -qq %s %s "
-                          epub-file 
-                          (shell-quote-argument f)))
-            (insert (shell-command-to-string command))
-            (goto-char (point-max)))
+      (cl-loop for f in files
+               do
+               (insert (format "<!-- %s -->" f))
+               (setq command
+                     (format "unzip -c -qq %s %s "
+                             epub-file 
+                             (shell-quote-argument f)))
+               (insert (shell-command-to-string command))
+               (goto-char (point-max)))
+      (add-hook
+       'emacspeak-web-post-process-hook
+       #'(lambda ()
+           (setq default-directory directory)
+           (when (file-exists-p locals )(load locals))
+           (emacspeak-auditory-icon 'open-object)
+           (emacspeak-speak-mode-line))
+       'at-end)
       (browse-url-of-buffer))))
-
 (defvar emacspeak-epub-google-search-template
   "http://books.google.com/books/feeds/volumes?min-viewability=full&epub=epub&q=%s"
   "REST  end-point for performing Google Books Search to find Epubs  having full viewability.")
@@ -723,7 +735,7 @@ Suitable for text searches."
 ;;}}}
 ;;{{{ Epub Mode:
 
-(defsubst emacspeak-epub-format-author (name)
+(defun emacspeak-epub-format-author (name)
   "Format author name, abbreviating if needed."
   (let ((len (length name))
         (fields nil))
@@ -736,7 +748,7 @@ Suitable for text searches."
            ((= 1 count))
            (t
             (setq result
-                  (loop for i from 0 to(- count 2)
+                  (cl-loop for i from 0 to(- count 2)
                         collect
                         (upcase (aref  (nth i fields) 0))))
             (setq result
@@ -748,7 +760,7 @@ Suitable for text searches."
                                (nth (1- count) fields))))))))
     (propertize name 'face 'font-lock-type-face)))
 
-(defsubst emacspeak-epub-insert-title-author (key epub)
+(defun emacspeak-epub-insert-title-author (key epub)
   "Insert a formatted line of the bookshelf of the form Title --- Author."
   (let ((start (point)))
     (insert
@@ -758,7 +770,7 @@ Suitable for text searches."
       (emacspeak-epub-format-author (emacspeak-epub-metadata-author epub))))
     (put-text-property start (point) 'epub key)))
 
-(defsubst emacspeak-epub-insert-author-title (key epub)
+(defun emacspeak-epub-insert-author-title (key epub)
   "Insert a formatted line of the bookshelf of the form Author --- Title ."
   (let ((start (point)))
     (insert
@@ -810,7 +822,7 @@ Letters do not insert themselves; instead, they are commands.
   (emacspeak-epub-bookshelf-refresh))
 
 (declaim (special emacspeak-epub-mode-map))
-(loop for k in
+(cl-loop for k in
       '(
         ("/" emacspeak-epub-calibre-results)
         ("A" emacspeak-epub-bookshelf-calibre-author)
@@ -864,7 +876,7 @@ Letters do not insert themselves; instead, they are commands.
   :type 'string
   :group 'emacspeak-epub)
 
-(defsubst emacspeak-epub-gutenberg-download-uri (book-id)
+(defun emacspeak-epub-gutenberg-download-uri (book-id)
   "Return URL  for downloading Gutenberg EBook."
   (declare (special emacspeak-epub-gutenberg-suffix
                     emacspeak-epub-gutenberg-mirror))
@@ -1027,7 +1039,7 @@ Searches for matches in both  Title and Author."
          (emacspeak-epub-calibre-get-results 
           (emacspeak-epub-calibre-query pattern))))
     (when (= 0 (length results)) (error "No results found, check query."))
-    (loop 
+    (cl-loop 
      for r in results 
      do
      (emacspeak-epub-bookshelf-add-directory
@@ -1048,7 +1060,7 @@ Searches for matches in both  Title and Author."
          (emacspeak-epub-calibre-get-results 
           (emacspeak-epub-calibre-author-query pattern))))
     (when (= 0 (length results)) (error "No results found, check query."))
-    (loop 
+    (cl-loop 
      for r in results 
      do
      (emacspeak-epub-bookshelf-add-directory
@@ -1069,7 +1081,7 @@ Searches for matches in both  Title and Author."
          (emacspeak-epub-calibre-get-results 
           (emacspeak-epub-calibre-title-query pattern))))
     (when (= 0 (length results)) (error "No results found, check query."))
-    (loop 
+    (cl-loop 
      for r in results 
      do
      (emacspeak-epub-bookshelf-add-directory
@@ -1116,7 +1128,7 @@ Letters do not insert themselves; instead, they are commands.
       (setq buffer-undo-list t)
       (goto-char (point-min))
       (insert "Calibre Results\n\n")
-      (loop
+      (cl-loop
        for r in emacspeak-epub-calibre-results
        do
        (setq start (point))

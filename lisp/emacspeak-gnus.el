@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2015, T. V. Raman 
+;;;Copyright (C) 1995 -- 2017, T. V. Raman 
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved. 
 ;;;
@@ -135,22 +135,15 @@ reading news."
 ;;}}}
 ;;{{{  helper functions
 
-(defvar emacspeak-gnus-large-article 30 
-  "*Articles having more than
-emacspeak-gnus-large-article lines will be considered to be a large article.
-A large article is not spoken all at once;
-instead you hear only the first screenful.")
-
-(defsubst emacspeak-gnus-summary-speak-subject ()
-  (emacspeak-dtk-sync)
+(defun emacspeak-gnus-summary-speak-subject ()
   (dtk-speak (gnus-summary-article-subject)))
 
-(defsubst emacspeak-gnus-speak-article-body ()
-  (declare (special dtk-punctuation-mode
+(defun emacspeak-gnus-speak-article-body ()
+  (declare (special emacspeak-gnus-large-article
+                    voice-lock-mode dtk-punctuation-mode
                     gnus-article-buffer))
   (with-current-buffer gnus-article-buffer
     (goto-char (point-min))
-    (emacspeak-dtk-sync)
     (cond
      ((< (count-lines (point-min) (point-max))
          emacspeak-gnus-large-article)
@@ -199,7 +192,7 @@ Helps to prevent words from being spelled instead of spoken."
 	(emacspeak-auditory-icon 'select-object)
 	(emacspeak-speak-line))))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-group-suspend
         gnus-group-quit
         gnus-group-exit
@@ -218,7 +211,7 @@ Helps to prevent words from being spelled instead of spoken."
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-group-delete-group gnus-group-kill-group)
       do
       (eval
@@ -231,7 +224,7 @@ Helps to prevent words from being spelled instead of spoken."
 ;;}}}
 ;;{{{  starting up:
 
-(loop for f in
+(cl-loop for f in
       '(gnus-group-post-news gnus-group-mail)
       do
       (eval
@@ -267,7 +260,7 @@ Helps to prevent words from being spelled instead of spoken."
 ;;}}}
 ;;{{{  Newsgroup selection
 
-(loop
+(cl-loop
  for f in
  '(gnus-group-select-group gnus-group-first-unread-group
                            gnus-group-read-group
@@ -364,7 +357,7 @@ Produce an auditory icon if possible."
 ;;}}}
 ;;{{{  summary mode 
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-clear-mark-backward
         gnus-summary-clear-mark-forward
         gnus-summary-unmark-as-processable)
@@ -381,7 +374,7 @@ Produce an auditory icon if possible."
                 (emacspeak-gnus-summary-speak-subject)))
             ad-return-value))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-mark-as-dormant
         gnus-summary-mark-as-expirable
         gnus-summary-mark-as-processable
@@ -412,7 +405,7 @@ Produce an auditory icon if possible."
              (count-lines (region-beginning)
                           (region-end)))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-delete-article
         gnus-summary-kill-same-subject
         gnus-summary-kill-thread)
@@ -424,7 +417,7 @@ Produce an auditory icon if possible."
             (emacspeak-auditory-icon  'delete-object)
             (emacspeak-gnus-summary-speak-subject)))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-catchup-from-here gnus-summary-catchup-to-here)
       do
       (eval
@@ -441,7 +434,7 @@ Indicate change of selection with an auditory icon if possible."
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-prev-article
         gnus-summary-next-article
         gnus-summary-prev-unread-article
@@ -461,7 +454,7 @@ Indicate change of selection with an auditory icon if possible."
                 (emacspeak-gnus-speak-article-body)))
             ad-return-value))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-exit-no-update
         gnus-summary-exit
         gnus-summary-catchup-and-exit)
@@ -478,7 +471,7 @@ Indicate change of selection with an auditory icon if possible."
                 (emacspeak-speak-line)))
             ad-return-value))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-prev-subject
         gnus-summary-next-subject
         gnus-summary-prev-unread-subject
@@ -501,7 +494,7 @@ Indicate change of selection with an auditory icon if possible."
                 (emacspeak-gnus-summary-speak-subject)))
             ad-return-value))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-topic-goto-next-topic
         gnus-topic-goto-previous-topic)
       do
@@ -512,7 +505,7 @@ Indicate change of selection with an auditory icon if possible."
             (emacspeak-auditory-icon 'item)
             (emacspeak-speak-line)))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-mail-forward
         gnus-summary-post-news
         gnus-summary-mail-other-window)
@@ -524,7 +517,7 @@ Indicate change of selection with an auditory icon if possible."
             (emacspeak-auditory-icon 'open-object)
             (emacspeak-speak-line)))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-reply
         gnus-summary-reply-with-original)
       do
@@ -548,7 +541,15 @@ indicating the article is being opened."
     (emacspeak-gnus-summary-speak-subject)
     (sit-for 2)
     (emacspeak-auditory-icon 'open-object)
-    (emacspeak-gnus-speak-article-body)))
+    (with-current-buffer
+        gnus-article-buffer
+      (let ((start  (point))
+            (window (get-buffer-window (current-buffer))))
+        (with-selected-window window
+          (save-excursion
+            (move-to-window-line -1)
+            (end-of-line)
+            (emacspeak-speak-region start (point))))))))
 
 (defadvice gnus-summary-save-article (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
@@ -571,7 +572,7 @@ indicating the article is being opened."
       (emacspeak-auditory-icon
        (if (gnus-article-hidden-text-p 'headers) 'off 'on)))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-first-unread-article gnus-summary-goto-last-article)
       do
       (eval
@@ -581,7 +582,7 @@ indicating the article is being opened."
             (emacspeak-auditory-icon 'open-object)
             (emacspeak-gnus-speak-article-body)))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-next-page gnus-summary-prev-page)
       do
       (eval
@@ -599,7 +600,7 @@ indicating the article is being opened."
                   (end-of-line)
                   (emacspeak-speak-region start (point)))))))))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-summary-beginning-of-article gnus-summary-end-of-article)
       do
       (eval
@@ -650,7 +651,7 @@ indicating the article is being opened."
     (dtk-speak ad-return-value))
   ad-return-value)
 
-(loop for f in
+(cl-loop for f in
       '(gnus-article-edit-exit
         gnus-article-edit-done)
       do
@@ -683,7 +684,7 @@ an auditory icon if possible."
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-mode-line)))
 
-(loop for f in
+(cl-loop for f in
       '(gnus-article-next-page
         gnus-article-prev-page
         gnus-article-goto-next-page
@@ -717,7 +718,7 @@ an auditory icon if possible."
 ;;}}}
 ;;{{{ refreshing the pronunciation  and punctuation mode
 
-(loop
+(cl-loop
  for hook  in 
  '(
    gnus-article-mode-hook gnus-group-mode-hook gnus-summary-mode-hook

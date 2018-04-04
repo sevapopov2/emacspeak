@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2015, T. V. Raman
+;;;Copyright (C) 1995 -- 2017, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -83,7 +83,7 @@
                  #'(lambda (a b)
                      (string-lessp (cadr a) (cadr b)))))))
 
-(defsubst emacspeak-calendar-entry-marked-p()
+(defun emacspeak-calendar-entry-marked-p()
   "Check if diary entry is marked. "
   (member 'diary
           (delq nil
@@ -122,7 +122,7 @@
 (add-hook 'calendar-mode-hook
           'emacspeak-calendar-setup)
 
-(loop for f in
+(cl-loop for f in
       '(fancy-diary-display simple-diary-display
                             diary-list-entries)
       do
@@ -276,7 +276,7 @@
   (when (ems-interactive-p)
     (emacspeak-calendar-speak-date)
     (emacspeak-auditory-icon 'large-movement)))
-(loop for f in
+(cl-loop for f in
       '(exit-calendar calendar-exit calendar-quit)
       do
       (eval
@@ -432,7 +432,6 @@
      (appt-buffer
       (save-current-buffer
         (set-buffer  appt-buffer)
-        (emacspeak-dtk-sync)
         (if (= (point-min) (point-max))
             (message  "No appointments are currently displayed")
           (dtk-speak (buffer-string)))))
@@ -483,7 +482,7 @@ To use, configure variable gweb-my-address via M-x customize-variable."
 ;;}}}
 ;;{{{ Lunar Phases
 
-(loop for f in
+(cl-loop for f in
       '(calendar-lunar-phases lunar-phases phases-of-moon)
       do
       (eval
@@ -494,7 +493,7 @@ To use, configure variable gweb-my-address via M-x customize-variable."
               (emacspeak-auditory-icon 'open-object)
               (emacspeak-speak-buffer))))))
 
-(loop for f in
+(cl-loop for f in
       '(holidays calendar-list-holidays)
       do
       (eval

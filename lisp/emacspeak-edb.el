@@ -72,7 +72,7 @@
       (emacspeak-edb-speak-current-field)
     ad-do-it))
 
-(loop for f in
+(cl-loop for f in
       '(db-find-file db-summary)
       do
       (eval
@@ -82,7 +82,7 @@
 	    (emacspeak-auditory-icon 'open-object)
 	    (emacspeak-speak-mode-line)))))
 
-(loop for f in
+(cl-loop for f in
       '(db-first-field
 	db-last-field
 	db-add-record
@@ -95,7 +95,7 @@
 	    (emacspeak-auditory-icon 'open-object)
 	    (emacspeak-speak-line)))))
 
-(loop for f in
+(cl-loop for f in
       '(db-next-field db-previous-field)
       do
       (eval
@@ -110,7 +110,7 @@
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)))
 
-(loop for f in
+(cl-loop for f in
       '(db-next-record
 	db-previous-record
 	db-first-record
@@ -129,7 +129,7 @@
 		(emacspeak-speak-next-window)
 	      (emacspeak-speak-current-window))))))
 
-(loop for f in
+(cl-loop for f in
       '(db-next-line-or-field db-previous-line-or-field)
       do
       (eval
@@ -150,7 +150,7 @@
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-current-window)))
 
-(loop for f in
+(cl-loop for f in
       '(db-quit db-exit dbs-exit)
       do
       (eval
@@ -160,7 +160,7 @@
 	    (emacspeak-auditory-icon 'close-object)
 	    (emacspeak-speak-mode-line)))))
 
-(loop for f in
+(cl-loop for f in
       '(db-save-database
 	db-write-database-file
 	db-accept-record)
@@ -176,7 +176,7 @@
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'mark-object)))
 
-(loop for f in
+(cl-loop for f in
       '(db-isearch-forward db-isearch-backward)
       do
       (eval
@@ -198,7 +198,7 @@
     (emacspeak-auditory-icon 'delete-object)
     (emacspeak-speak-line)))
 
-(loop for f in
+(cl-loop for f in
       '(db-sort db-report)
       do
       (eval
@@ -313,7 +313,7 @@ Use an auditory icon if possible."
    (t ad-do-it))
   ad-return-value)
 
-(loop for f in
+(cl-loop for f in
       '(db-beginning-of-line-or-field db-end-of-line-or-field)
       do
       (eval
@@ -323,7 +323,7 @@ Use an auditory icon if possible."
 	    (dtk-stop)
 	    (emacspeak-auditory-icon 'select-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(db-forward-char db-backward-char)
       do
       (eval

@@ -44,6 +44,37 @@
 (require 'dtk-unicode)
 
 ;;}}}
+;;{{{ Customizations:
+
+;;;###autoload
+(defcustom multispeech-default-speech-rate 225
+  "Default speech rate for multispeech."
+  :group 'tts
+  :type 'integer
+  :set #'(lambda(sym val)
+           (set-default sym val)
+           (when (and (getenv "DTK_PROGRAM")
+                      (string-match "multispeech" (getenv "DTK_PROGRAM")))
+           (setq-default dtk-speech-rate val))))
+
+;;;###autoload
+(defcustom multispeech-coding-system nil
+  "Coding system for interaction with multispeech.
+The value nil means current locale coding system.
+Don't set this variable manually. Use customization interface."
+  :set '(lambda (sym val)
+          (declare (special dtk-speaker-process
+                            dtk-speak-server-initialized))
+          (and (boundp 'dtk-speak-server-initialized)
+               dtk-speak-server-initialized
+               (if val
+                   (set-process-coding-system dtk-speaker-process val val)
+                 (set-process-coding-system dtk-speaker-process locale-coding-system locale-coding-system)))
+          (set-default sym val))
+  :group 'tts
+  :type '(coding-system :size 0))
+
+;;}}}
 ;;{{{  voice table
 
 (defvar multispeech-default-voice-string ""
@@ -445,7 +476,7 @@ and TABLE gives the values along that dimension."
 (defun multispeech-list-voices ()
   "List defined voices."
   (declare (special multispeech-voice-table))
-  (loop for k being the hash-keys of multispeech-voice-table 
+  (cl-loop for k being the hash-keys of multispeech-voice-table 
 	collect   k))
 
 ;;}}}
