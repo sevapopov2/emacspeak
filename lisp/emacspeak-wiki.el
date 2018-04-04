@@ -1,4 +1,4 @@
-;;; emacspeak-wiki.el --- speech-enable emacs-wiki
+;;; emacspeak-wiki.el --- speech-enable emacs-wiki  -*- lexical-binding: t; -*-
 ;;; Description:  Emacspeak extension to speech-enable emacs-wiki package
 ;;; Keywords: Emacspeak, Emacs wiki, html publishing
 ;;{{{  LCD Archive entry:

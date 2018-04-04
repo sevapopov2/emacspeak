@@ -1,4 +1,4 @@
-;;; multispeech-voices.el --- Define various device independent voices in terms of Multispeech tags
+;;; multispeech-voices.el --- Define various device independent voices in terms of Multispeech tags  -*- lexical-binding: t; -*-
 ;;; Description:  Module to set up Multispeech voices and personalities
 ;;; Keywords: Voice, Personality, Multispeech
 ;;{{{  LCD Archive entry:
@@ -38,8 +38,8 @@
 ;;{{{ Required modules
 
 ;;; Code:
-(require 'cl)
-(declaim  (optimize  (safety 0) (speed 3)))
+(require 'cl-lib)
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'acss-structure)
 (require 'dtk-unicode)
 
@@ -63,7 +63,7 @@
 The value nil means current locale coding system.
 Don't set this variable manually. Use customization interface."
   :set '(lambda (sym val)
-          (declare (special dtk-speaker-process
+          (cl-declare (special dtk-speaker-process
                             dtk-speak-server-initialized))
           (and (boundp 'dtk-speak-server-initialized)
                dtk-speak-server-initialized
@@ -88,12 +88,12 @@ The string can set any voice parameter.")
   "Define a Multispeech  voice named NAME.
 This voice will be set   by sending the string
 COMMAND-STRING to the TTS engine."
-  (declare (special multispeech-voice-table ))
+  (cl-declare (special multispeech-voice-table ))
   (puthash name command-string multispeech-voice-table))
 
 (defsubst multispeech-get-voice-command  (name)
   "Retrieve command string for  voice NAME."
-  (declare (special multispeech-voice-table))
+  (cl-declare (special multispeech-voice-table))
   (cond
    ((listp name)
     (mapconcat #'multispeech-get-voice-command name " "))
@@ -102,7 +102,7 @@ COMMAND-STRING to the TTS engine."
 
 (defsubst multispeech-voice-defined-p (name)
   "Check if there is a voice named NAME defined."
-  (declare (special multispeech-voice-table ))
+  (cl-declare (special multispeech-voice-table ))
   (gethash name multispeech-voice-table ))
 
 ;;}}}
@@ -128,15 +128,6 @@ COMMAND-STRING to the TTS engine."
 (multispeech-define-voice 'inaudible "")
 
 ;;}}}
-;;{{{  Mapping css parameters to tts codes
-
-;;{{{ voice family codes
-
-(defsubst multispeech-get-family-code (name)
-  "Get control code for voice family NAME."
-  "")
-
-;;}}}
 ;;{{{  hash table for mapping families to their dimensions
 
 (defvar multispeech-css-code-tables (make-hash-table)
@@ -148,13 +139,13 @@ Values are vectors holding the control codes for the 10 settings.")
   "Set up voice FAMILY.
 Argument DIMENSION is the dimension being set,
 and TABLE gives the values along that dimension."
-  (declare (special multispeech-css-code-tables))
+  (cl-declare (special multispeech-css-code-tables))
   (let ((key (intern (format "%s-%s" family dimension))))
     (puthash key table multispeech-css-code-tables )))
 
 (defsubst multispeech-css-get-code-table (family dimension)
   "Retrieve table of values for specified FAMILY and DIMENSION."
-  (declare (special multispeech-css-code-tables))
+  (cl-declare (special multispeech-css-code-tables))
   (let ((key (intern (format "%s-%s" family dimension))))
     (gethash key multispeech-css-code-tables)))
 
@@ -182,9 +173,9 @@ and TABLE gives the values along that dimension."
    (function
     (lambda (setting)
       (aset table
-            (first setting)
+            (car setting)
 	    (format " pi:%s "
-		    (second setting)))))
+		    (cadr setting)))))
    '(
      (0 0.5)
      (1 0.6)
@@ -206,9 +197,9 @@ and TABLE gives the values along that dimension."
    (function
     (lambda (setting)
       (aset table
-            (first setting)
+            (car setting)
 	    (format " pi:%s "
-		    (second setting)))))
+		    (cadr setting)))))
    '(
      (0 0.4)
      (1 0.5)
@@ -230,9 +221,9 @@ and TABLE gives the values along that dimension."
    (function
     (lambda (setting)
       (aset table
-	    (first setting)
+	    (car setting)
 	    (format " pi:%s "
-		    (second setting)))))
+		    (cadr setting)))))
    '(
      (0 0.9)
      (1 1)
@@ -273,9 +264,9 @@ and TABLE gives the values along that dimension."
    (function
     (lambda (setting)
       (aset table
-	    (first setting)
+	    (car setting)
 	    (format " fr:%s "
-		    (second setting)))))
+		    (cadr setting)))))
    '(
      (0 15000)
      (1 15200)
@@ -297,9 +288,9 @@ and TABLE gives the values along that dimension."
    (function
     (lambda (setting)
       (aset table
-	    (first setting)
+	    (car setting)
 	    (format " fr:%s "
-		    (second setting)))))
+		    (cadr setting)))))
    '(
      (0 14000)
      (1 14200)
@@ -321,9 +312,9 @@ and TABLE gives the values along that dimension."
    (function
     (lambda (setting)
       (aset table
-            (first setting)
+            (car setting)
 	    (format " fr:%s "
-		    (second setting)))))
+		    (cadr setting)))))
    '(
      (0 17000)
      (1 17200)
@@ -347,15 +338,6 @@ and TABLE gives the values along that dimension."
     ""))
 
 ;;}}}
-;;{{{  stress
-
-;;;  Not implemented fo Multispeech now.
-
-(defsubst multispeech-get-stress-code (value family)
-  "Just a dummy."
-  "")
-
-;;}}}
 ;;{{{  richness
 
 ;;; Smoothness and richness vary inversely.
@@ -367,10 +349,10 @@ and TABLE gives the values along that dimension."
    (function
     (lambda (setting)
       (aset table
-            (first setting)
+            (car setting)
 	    (format " ri:%s sm:%s "
-		    (second setting)
-		    (third setting)))))
+		    (cadr setting)
+		    (cl-caddr setting)))))
    '(
      (0 0 100)
      (1 14 80)
@@ -391,10 +373,10 @@ and TABLE gives the values along that dimension."
   (mapcar
    (function
     (lambda (setting)
-      (aset table (first setting)
+      (aset table (car setting)
 	    (format " ri:%s sm:%s "
-		    (second setting)
-		    (third setting)))))
+		    (cadr setting)
+		    (cl-caddr setting)))))
    '(
      (0 100 0)
      (1 96 3)
@@ -416,10 +398,10 @@ and TABLE gives the values along that dimension."
   (mapcar
    (function
     (lambda (setting)
-      (aset table (first setting)
+      (aset table (car setting)
 	    (format " ri:%s sm:%s "
-		    (second setting)
-		    (third setting)))))
+		    (cadr setting)
+		    (cl-caddr setting)))))
    '(
      (0 0 100)
      (1 8 76)
@@ -459,13 +441,10 @@ and TABLE gives the values along that dimension."
   "Define NAME to be a multispeech voice as specified by settings in STYLE."
   (let* ((family(acss-family style))
 	 (command
-	  (concat "[_:"
-	   (multispeech-get-family-code family)
-	   " "
+	  (concat "[_: "
            (multispeech-get-punctuations-code (acss-punctuations style))
 	   (multispeech-get-average-pitch-code (acss-average-pitch style) family)
 	   (multispeech-get-pitch-range-code (acss-pitch-range style) family)
-	   (multispeech-get-stress-code (acss-stress style ) family)
 	   (multispeech-get-richness-code (acss-richness style) family)
 	   "]")))
     (multispeech-define-voice name command)))
@@ -475,7 +454,7 @@ and TABLE gives the values along that dimension."
 
 (defun multispeech-list-voices ()
   "List defined voices."
-  (declare (special multispeech-voice-table))
+  (cl-declare (special multispeech-voice-table))
   (cl-loop for k being the hash-keys of multispeech-voice-table 
 	collect   k))
 
@@ -485,7 +464,7 @@ and TABLE gives the values along that dimension."
 ;;;###autoload
 (defun multispeech-configure-tts ()
   "Configure TTS environment to use multilingual speech server."
-  (declare (special tts-default-speech-rate
+  (cl-declare (special tts-default-speech-rate
                     multispeech-default-speech-rate
 		    dtk-speaker-process
 		    emacspeak-unspeakable-rule
@@ -518,7 +497,7 @@ and TABLE gives the values along that dimension."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

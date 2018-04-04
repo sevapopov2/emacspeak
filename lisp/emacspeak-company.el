@@ -55,20 +55,33 @@
 ;;}}}
 ;;{{{  Required modules
 
-(require 'cl)
-(declaim  (optimize  (safety 0) (speed 3)))
+(require 'cl-lib)
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (eval-when-compile (require 'company "company" 'no-error))
+
 ;;}}}
 ;;{{{ Forward declarations
 
 (declare-function company-fetch-metadata "company.el" ())
 
 ;;}}}
+;;{{{ map faces:
+
+(voice-setup-add-map
+ '(
+   (company-echo voice-bolden)
+   (company-echo-common voice-bolden-medium)
+   (company-preview voice-lighten)
+   (company-preview-common voice-lighten-medium)
+   (company-preview-search voice-brighten)
+   (company-template-field voice-smoothen)))
+
+;;}}}
 ;;{{{ Helpers:
 (defun ems-company-current ()
   "Helper: Return current selection in company."
-  (declare (special  company-selection company-candidates))
+  (cl-declare (special  company-selection company-candidates))
   (nth company-selection company-candidates))
 
 (defun emacspeak-company-speak-this ()
@@ -81,13 +94,15 @@
 
 ;;}}}
 ;;{{{ Emacspeak Front-End For Company:
+
 (defun emacspeak-company-frontend (command)
   "Emacspeak front-end for Company."
   (ems-with-messages-silenced
-   (case command
-     (pre-command (emacspeak-company-speak-this))
-     (post-command (emacspeak-company-speak-this))
-     (hide nil))))
+   (cl-case command
+         (pre-command nil)
+         (post-command (emacspeak-play-auditory-icon 'help)
+                       (emacspeak-company-speak-this))
+         (hide nil))))
 
 ;;}}}
 ;;{{{ Advice Interactive Commands:
@@ -104,23 +119,23 @@
 
 (defadvice company-show-doc-buffer (before emacspeak pre act comp)
   "Provide spoken feedback."
-  (when (ems-interactive-p)
-    (let* ((selected (nth company-selection company-candidates))
-           (doc-buffer (or (company-call-backend 'doc-buffer selected)
-                           (error "No documentation available"))))
-      (with-current-buffer doc-buffer (dtk-speak (buffer-string)))
-      (emacspeak-auditory-icon 'help))))
+  (let* ((selected (nth company-selection company-candidates))
+         (doc-buffer (or (company-call-backend 'doc-buffer selected)
+                         (error "No documentation available"))))
+    ;(emacspeak-auditory-icon 'help)
+    (with-current-buffer doc-buffer (dtk-speak (buffer-string)))))
 
 ;;}}}
 ;;{{{ Company Setup For Emacspeak:
 (defun emacspeak-company-setup ()
   "Set front-end to our  front-end action."
-  (declare (special company-frontends))
+  (cl-declare (special company-frontends))
   (when (boundp 'company-frontends)
-    (pushnew 'emacspeak-company-frontend company-frontends))
+    (cl-pushnew 'emacspeak-company-frontend company-frontends))
   (add-hook
    'company-completion-started-hook
-   #'(lambda (&rest _ignore) (emacspeak-auditory-icon 'help)))
+   #'(lambda (&rest _ignore) (emacspeak-play-auditory-icon 'open-object)))
+
   (add-hook
    'company-completion-finished-hook
    #'(lambda (&rest _ignore) (emacspeak-auditory-icon 'close-object))))

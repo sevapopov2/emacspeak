@@ -1,4 +1,4 @@
-;;; emacspeak-org.el --- Speech-enable org
+;;; emacspeak-org.el --- Speech-enable org  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak front-end for ORG
@@ -51,6 +51,7 @@
 ;;}}}
 ;;{{{ required modules
 (require 'cl-lib)
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'emacspeak-feeds)
 (require 'eww "eww" 'no-error)
@@ -144,22 +145,22 @@
  for f in
  '(
    org-mark-ring-goto org-mark-ring-push
-                      org-next-visible-heading org-previous-visible-heading
-                      org-forward-heading-same-level org-backward-heading-same-level
-                      org-backward-sentence org-forward-sentence
-                      org-backward-element org-forward-element
-                      org-backward-paragraph org-forward-paragraph
-                      org-next-link org-previous-link org-open-at-point
-                      org-goto  org-goto-ret
-                      org-goto-left org-goto-right
-                      org-goto-quit
-                      org-next-item org-previous-item
-                      org-metaleft org-metaright org-metaup org-metadown
-                      org-meta-return
-                      org-shiftmetaleft org-shiftmetaright org-shiftmetaup org-shiftmetadown
-                      org-mark-element org-mark-subtree
-                      org-agenda-forward-block org-agenda-backward-block
-                      )
+   org-next-visible-heading org-previous-visible-heading
+   org-forward-heading-same-level org-backward-heading-same-level
+   org-backward-sentence org-forward-sentence
+   org-backward-element org-forward-element
+   org-backward-paragraph org-forward-paragraph
+   org-next-link org-previous-link org-open-at-point
+   org-goto  org-goto-ret
+   org-goto-left org-goto-right
+   org-goto-quit
+   org-next-item org-previous-item
+   org-metaleft org-metaright org-metaup org-metadown
+   org-meta-return
+   org-shiftmetaleft org-shiftmetaright org-shiftmetaup org-shiftmetadown
+   org-mark-element org-mark-subtree
+   org-agenda-forward-block org-agenda-backward-block
+   )
  do
  (eval
   `(defadvice ,f(after emacspeak pre act comp)
@@ -173,7 +174,11 @@
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'item)
     (emacspeak-speak-line)))
-
+;;; orgstruct-mode defines structured navigators that in turn call org-cycle.
+;;; Removing itneractive check in advice for org-cycle 
+;;; to speech enable all such nav commands.
+;;; Note that org itself produces the folded state via org-unlogged-message
+;;; Which gets spoken by Emacspeak
 (cl-loop
  for f in
  '(org-cycle org-shifttab)
@@ -181,13 +186,13 @@
  (eval
   `(defadvice ,f(after emacspeak pre act comp)
      "Provide auditory feedback."
-     (when (ems-interactive-p)
-       (cond
-        ((org-at-table-p 'any)
-         (emacspeak-org-table-speak-current-element))
-        (t
-         (emacspeak-speak-line)
-         (emacspeak-auditory-icon 'select-object)))))))
+     (cond
+      ((org-at-table-p 'any)
+       (emacspeak-org-table-speak-current-element))
+      (t
+;;; org produces relevant feedback via org-unlogged-message (folded, children)
+       (let ((dtk-stop-immediately nil))
+         (emacspeak-speak-line)))))))
 
 (defadvice org-overview (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -237,8 +242,8 @@
 (cl-loop for f in
          '(
            org-cut-subtree org-copy-subtree
-                           org-paste-subtree org-archive-subtree
-                           org-narrow-to-subtree)
+           org-paste-subtree org-archive-subtree
+           org-narrow-to-subtree)
          do
          (eval
           `(defadvice ,f(after emacspeak pre act comp)
@@ -308,7 +313,7 @@
 
 (defadvice org-eval-in-calendar (after emacspeak pre act comp)
   "Speak what is returned."
-  (declare (special org-ans2))
+  (cl-declare (special org-ans2))
   (when (and (boundp 'org-ans2) org-ans2)
     (dtk-speak org-ans2)))
 
@@ -321,9 +326,9 @@
  for f in
  '(
    org-agenda-next-date-line org-agenda-previous-date-line
-                             org-agenda-next-line org-agenda-previous-line
-                             org-agenda-goto-today
-                             )
+   org-agenda-next-line org-agenda-previous-line
+   org-agenda-goto-today
+   )
  do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
@@ -368,7 +373,7 @@
 
 (defadvice orgtbl-mode (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (declare (special orgtbl-mode))
+  (cl-declare (special orgtbl-mode))
   (when (ems-interactive-p)
     (emacspeak-auditory-icon (if orgtbl-mode 'on 'off))
     (message "Turned %s org table mode."
@@ -379,7 +384,7 @@
 
 (defun emacspeak-org-update-keys ()
   "Update keys in org mode."
-  (declare (special  org-mode-map))
+  (cl-declare (special  org-mode-map))
   (cl-loop for k in
            '(
              ("C-e" emacspeak-prefix-command)
@@ -405,7 +410,7 @@
            do
            (emacspeak-keymap-update  org-mode-map k)))
 
-(add-hook 'org-mode-hook 'emacspeak-org-update-keys)
+(add-hook 'org-mode-hook #'emacspeak-org-update-keys)
 
 ;;}}}
 ;;{{{ deleting chars:
@@ -445,13 +450,13 @@
 
 (defun emacspeak-org-mode-setup ()
   "Placed on org-mode-hook to do Emacspeak setup."
-  (declare (special org-mode-map))
-  (unless emacspeak-audio-indentation (emacspeak-toggle-audio-indentation))
+  (cl-declare (special org-mode-map))
   (when (fboundp 'org-end-of-line)
-    (define-key org-mode-map emacspeak-prefix  'emacspeak-prefix-command)))
+    (define-key org-mode-map emacspeak-prefix  'emacspeak-prefix-command)
+    (emacspeak-setup-programming-mode)))
 
-(add-hook 'org-mode-hook 'emacspeak-org-mode-setup)
-
+(add-hook 'org-mode-hook #'emacspeak-org-mode-setup)
+(add-hook 'orgstruct-mode-hook #'emacspeak-org-mode-setup)
 ;;; advice end-of-line here to call org specific action
 (defadvice end-of-line (after emacspeak-org pre act comp)
   "Call org specific actions in org mode."
@@ -504,7 +509,7 @@
 (defun emacspeak-org-bookmark (&optional goto)
   "Bookmark from org."
   (interactive "P")
-  (declare (special emacspeak-org-bookmark-key))
+  (cl-declare (special emacspeak-org-bookmark-key))
   (org-capture goto emacspeak-org-bookmark-key))
 
 (defadvice org-capture-goto-last-stored (after emacspeak pre act comp)
@@ -635,7 +640,7 @@ and assign  letter `h' to a template that creates the hyperlink on capture."
   (org-capture nil "h"))
 (defun org-eww-store-link ()
   "Store a link to a EWW buffer."
-  (declare (special eww-current-url eww-current-title))
+  (cl-declare (special eww-current-url eww-current-title))
   (when (eq major-mode 'eww-mode)
     (org-store-link-props
      :type "eww"
@@ -644,10 +649,11 @@ and assign  letter `h' to a template that creates the hyperlink on capture."
      :description (emacspeak-eww-current-title))))
 
 (unless (functionp 'org-store-link-functions)
-  ;;; org-mode 8.x and earlier:
+;;; org-mode 8.x and earlier:
   (add-hook
    'org-load-hook
    #'(lambda nil
+       (cl-declare (special org-store-link-functions))
        (push #'org-eww-store-link org-store-link-functions))))
 
 ;;}}}
@@ -669,7 +675,6 @@ and assign  letter `h' to a template that creates the hyperlink on capture."
           (format "%c: %s\n" (cl-first e) (cl-second e)))
       choices "\n"))
     (sit-for 5)))
-    
 
 ;;}}}
 ;;{{{ Preview HTML With EWW:
@@ -679,12 +684,37 @@ and assign  letter `h' to a template that creates the hyperlink on capture."
   (funcall-interactively #'eww-open-file file))
 
 ;;}}}
+;;{{{ Edit Special Advice:
+
+(cl-loop
+ for f in 
+ '(org-edit-src-exit org-edit-src-abort)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'close-object)
+       (emacspeak-speak-line)))))
+
+(cl-loop
+ for f in
+ '(org-edit-src-code org-edit-special) do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'open-object)
+       (emacspeak-speak-mode-line)))))
+
+;;}}}
+
 (provide 'emacspeak-org)
 ;;{{{ end of file
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

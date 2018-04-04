@@ -39,7 +39,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;{{{ required modules
-(require 'cl)
+(require 'cl-lib)
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'mpg123 "mpg123" 'no-error)
 ;;}}}
@@ -74,7 +75,7 @@
 (defun emacspeak-mpg123-get-music-info (n attr)
   "Return attribute from music alist.
 mpg123 defines this as a macro which causes compile trouble."
-  (declare (special mpg123*music-alist))
+  (cl-declare (special mpg123*music-alist))
   (cdr (assq attr
              (assoc n mpg123*music-alist))))
 
@@ -175,7 +176,7 @@ mpg123 defines this as a macro which causes compile trouble."
 ;;{{{ keys
 (defun emacspeak-mpg123-setup-keys ()
   "Set up key bindings."
-  (declare (special mpg123-mode-map))
+  (cl-declare (special mpg123-mode-map))
   (define-key mpg123-mode-map "t" 'emacspeak-mpg123-speak-title)
   (define-key mpg123-mode-map "l"
     'emacspeak-mpg123-speak-length)
@@ -213,7 +214,7 @@ to skip to the next track. "
    (list
     (read-file-name "Playlist: ")
     current-prefix-arg))
-  (declare (special emacspeak-mp3-playlist-process
+  (cl-declare (special emacspeak-mp3-playlist-process
                     emacspeak-mp3-play-program))
   (setq emacspeak-mp3-playlist-process
         (apply 'start-process
@@ -228,7 +229,7 @@ to skip to the next track. "
 (defun emacspeak-mp3-playlist-skip ()
   "Skip currently playing track. "
   (interactive)
-  (declare (special emacspeak-mp3-playlist-process))
+  (cl-declare (special emacspeak-mp3-playlist-process))
   (process-send-string
    emacspeak-mp3-playlist-process
    (format "%c" 3))
@@ -237,11 +238,11 @@ to skip to the next track. "
 (defun emacspeak-mp3-playlist-stop ()
   "Kill currently playing playlist. "
   (interactive)
-  (declare (special emacspeak-mp3-playlist-process))
+  (cl-declare (special emacspeak-mp3-playlist-process))
   (kill-process emacspeak-mp3-playlist-process)
   (message "Stopped playlist. "))
 
-(declaim (special mpg123-mode-map))
+(cl-declaim (special mpg123-mode-map))
 
 (define-key  mpg123-mode-map "L"
   'emacspeak-mp3-playlist-play)
@@ -271,7 +272,7 @@ to skip to the next track. "
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

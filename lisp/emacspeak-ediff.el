@@ -54,8 +54,8 @@
 
 ;;}}}
 ;;{{{ required:
-(require 'cl)
-(declaim (optimize (safety 0) (speed 3)))
+(require 'cl-lib)
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'voice-setup)
 (require 'ediff)
@@ -93,55 +93,55 @@
   (setq emacspeak-ediff-control-buffer (ad-get-arg 0)))
 
 (defun emacspeak-ediff-control-panel ()
-  (declare (special emacspeak-ediff-control-buffer))
+  (cl-declare (special emacspeak-ediff-control-buffer))
   emacspeak-ediff-control-buffer)
 
 (defun emacspeak-ediff-difference-a-overlay (n)
-  (declare (special ediff-difference-vector-A
+  (cl-declare (special ediff-difference-vector-A
                     ediff-number-of-differences))
-  (assert (< n ediff-number-of-differences) t
+  (cl-assert (< n ediff-number-of-differences) t
           "There are only %s differences"
           ediff-number-of-differences)
   (aref (aref ediff-difference-vector-A n) 0))
 
 (defun emacspeak-ediff-difference-b-overlay (n)
-  (declare (special ediff-difference-vector-B
+  (cl-declare (special ediff-difference-vector-B
                     ediff-number-of-differences))
-  (assert (< n ediff-number-of-differences) t
+  (cl-assert (< n ediff-number-of-differences) t
           "There are only %s differences"
           ediff-number-of-differences)
   (aref (aref ediff-difference-vector-B n) 0))
 
 (defun emacspeak-ediff-difference-c-overlay (n)
-  (declare (special ediff-difference-vector-B
+  (cl-declare (special ediff-difference-vector-B
                     ediff-difference-vector-C
                     ediff-number-of-differences))
-  (assert (< n ediff-number-of-differences) t
+  (cl-assert (< n ediff-number-of-differences) t
           "There are only %s differences"
           ediff-number-of-differences)
   (aref (aref ediff-difference-vector-C n) 0))
 
 (defun emacspeak-ediff-fine-difference-a-overlays (n)
-  (declare (special ediff-difference-vector-A
+  (cl-declare (special ediff-difference-vector-A
                     ediff-number-of-differences))
-  (assert (< n ediff-number-of-differences) t
+  (cl-assert (< n ediff-number-of-differences) t
           "There are only %s differences"
           ediff-number-of-differences)
   (aref (aref ediff-difference-vector-A n) 1))
 
 (defun emacspeak-ediff-fine-difference-b-overlays (n)
-  (declare (special ediff-difference-vector-B
+  (cl-declare (special ediff-difference-vector-B
                     ediff-number-of-differences))
-  (assert (< n ediff-number-of-differences) t
+  (cl-assert (< n ediff-number-of-differences) t
           "There are only %s differences"
           ediff-number-of-differences)
   (aref (aref ediff-difference-vector-B n) 1))
 
 (defun emacspeak-ediff-fine-difference-c-overlays (n)
-  (declare (special ediff-difference-vector-B
+  (cl-declare (special ediff-difference-vector-B
                     ediff-difference-vector-C
                     ediff-number-of-differences))
-  (assert (< n ediff-number-of-differences) t
+  (cl-assert (< n ediff-number-of-differences) t
           "There are only %s differences"
           ediff-number-of-differences)
   (aref (aref ediff-difference-vector-C n) 1))
@@ -164,7 +164,7 @@
 (add-hook
  'ediff-startup-hook
  #'(lambda ()
-     (declare (special ediff-mode-map voice-lock-mode))
+     (cl-declare (special ediff-mode-map voice-lock-mode))
      (setq voice-lock-mode t)
      (define-key ediff-mode-map "." 'emacspeak-ediff-speak-current-difference)))
 
@@ -201,11 +201,11 @@
 (defun emacspeak-ediff-speak-current-difference ()
   "Speak the current difference"
   (interactive)
-  (declare (special ediff-current-difference
+  (cl-declare (special ediff-current-difference
                     ediff-number-of-differences))
   (emacspeak-ediff-speak-difference
    (cond
-    ((minusp ediff-current-difference) 0)
+    ((cl-minusp ediff-current-difference) 0)
     ((>= ediff-current-difference ediff-number-of-differences)
      (1- ediff-number-of-differences))
     (t ediff-current-difference))))
@@ -305,7 +305,7 @@
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}
