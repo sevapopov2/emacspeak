@@ -74,7 +74,7 @@ Otherwise cue user to the line just created."
    (t ad-do-it))
   ad-return-value)
 
-(loop for f in
+(cl-loop for f in
       '(ps-mode-r-brace ps-mode-r-angle ps-mode-r-gt)
       do
       (eval
@@ -107,7 +107,7 @@ Otherwise cue user to the line just created."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)))
 
-(loop for f in
+(cl-loop for f in
       '(ps-run-buffer
 	ps-run-clear
 	ps-run-region
@@ -120,7 +120,7 @@ Otherwise cue user to the line just created."
 	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'task-done)))))
 
-(loop for f in
+(cl-loop for f in
       '(ps-run-kill ps-run-quit)
       do
       (eval
@@ -129,7 +129,7 @@ Otherwise cue user to the line just created."
 	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'close-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(ps-run-goto-error ps-run-mouse-goto-error)
       do
       (eval

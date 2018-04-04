@@ -45,7 +45,7 @@
 ;;}}}
 ;;{{{ Advice interactive commands to speak.
 
-(loop for f in
+(cl-loop for f in
       '(plan
 	planner-goto-today
 	planner-goto-tomorrow
@@ -71,7 +71,7 @@
 	    (with-current-buffer (window-buffer)
 	      (emacspeak-speak-mode-line))))))
 
-(loop for f in
+(cl-loop for f in
       '(planner-task-in-progress
 	planner-task-done
 	planner-task-cancelled
@@ -90,7 +90,7 @@
 	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'mark-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(planner-create-task-from-buffer
 	planner-create-high-priority-task-from-buffer
 	planner-create-medium-priority-task-from-buffer
@@ -107,7 +107,7 @@
 	  (when (ems-interactive-p)
 	    (emacspeak-auditory-icon 'save-object)))))
 
-(loop for f in
+(cl-loop for f in
       '(planner-copy-or-move-task
 	planner-copy-or-move-region
 	planner-update-task

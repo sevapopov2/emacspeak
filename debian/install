@@ -6,7 +6,7 @@ debian/ssh-outloud.blurb usr/share/emacs/site-lisp/emacspeak/blurbs
 etc usr/share/emacs/site-lisp/emacspeak
 lisp usr/share/emacs/site-lisp/emacspeak
 media usr/share/emacs/site-lisp/emacspeak
-phantom usr/share/emacs/site-lisp/emacspeak
+js usr/share/emacs/site-lisp/emacspeak
 xsl usr/share/emacs/site-lisp/emacspeak
 Makefile usr/share/emacs/site-lisp/emacspeak
 README usr/share/emacs/site-lisp/emacspeak
