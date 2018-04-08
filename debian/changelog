@@ -1,3 +1,10 @@
+emacspeak (45.0-3jessie2) jessie; urgency=low
+
+  * Installation paths fixed.
+  * Dead links removed.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 08 Apr 2018 14:30:17 +0300
+
 emacspeak (45.0-3jessie1) jessie; urgency=low
 
   * Fixed XSL transformations applying in W3m.
