@@ -1,3 +1,4 @@
 debian/outloud.blurb usr/share/emacs/site-lisp/emacspeak/blurbs
 servers/linux-outloud/atcleci.so usr/lib/emacspeak/linux-outloud
+servers/linux-outloud/eci.ini usr/lib/emacspeak/linux-outloud
 servers/outloud usr/share/emacs/site-lisp/emacspeak/servers

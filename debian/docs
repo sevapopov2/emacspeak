@@ -1,7 +1,6 @@
-etc/remote.txt
 etc/NEWS-*
-servers/software-dtk/DTK
 servers/multispeech-notes
+lisp/external-code-readme.org
 lisp/g-client/g-client.org
 lisp/g-client/g-client.html
 apocryphal.ChangeLog
