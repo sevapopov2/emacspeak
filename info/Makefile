@@ -19,7 +19,7 @@ infodir =/usr/share/info#normally supplied by caller
 INSTALL = install
 EMACS=emacs
 
-all: info html introducing-emacspeak turning-twenty
+all: info html introducing-emacspeak turning-twenty emacspeak.pdf
 
 info: emacspeak.info introducing-emacspeak.info turning-twenty.info
 
@@ -27,9 +27,6 @@ info: emacspeak.info introducing-emacspeak.info turning-twenty.info
 
 turning-twenty.info: turning-twenty.texi
 	$(MAKEINFO) turning-twenty.texi
-
-docs.texi: ../lisp/*.el
-	$(EMACS) $(BATCH) -l ../utils/self-document.el -f self-document-all-modules
 
 install: emacspeak.info turning-twenty.info
 	if test  -x /usr/bin/install-info ; then \
@@ -54,7 +51,7 @@ introducing-emacspeak.info: introducing-emacspeak.texi
 
 emacspeak.pdf: emacspeak.texi docs.texi
 	makeinfo --pdf emacspeak.texi
-	\rm emacspeak.aux emacspeak.cp emacspeak.cps emacspeak.fn \
+	rm -f emacspeak.aux emacspeak.cp emacspeak.cps emacspeak.fn \
 emacspeak.fns emacspeak.ky emacspeak.kys emacspeak.log \
 emacspeak.pg emacspeak.toc emacspeak.tp emacspeak.vr emacspeak.vrs
 
