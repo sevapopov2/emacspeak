@@ -1,15 +1,19 @@
 #$Id$
+# Note: Building the info pages requires package hydra to be installed.
+# Built info pages are checked into GitHub.
+# You should need to rebuild info files
+#*only* if you change the Emacspeak Lisp sources.
 #http://emacspeak.sf.net/info
 SF_HOME= raman,emacspeak@web.sourceforge.net:/home/groups/e/em/emacspeak/htdocs/info
 #https://tvraman.github.io/emacspeak/manual
 GH_PAGES=../../gh-pages-emacspeak/manual
+BATCH = -batch -q -no-site-file     \
+--eval '(setq file-name-handler-alist nil gc-cons-threshold 128000000)'
 FILES=*.texi
 
-TEXINDEX=texindex
+
 MAKEINFO = makeinfo 
 CSS=--css-ref="http://www.w3.org/StyleSheets/Core/Modernist"
-TEX=tex
-PDFTEX=pdftex
 TEXI2HTML=texi2any --set-customization-variable TEXI2HTML=1
 infodir =/usr/share/info#normally supplied by caller
 INSTALL = install
@@ -25,12 +29,12 @@ turning-twenty.info: turning-twenty.texi
 	$(MAKEINFO) turning-twenty.texi
 
 docs.texi: ../lisp/*.el
-	$(EMACS) -batch -q -l ../utils/self-document.el -f self-document-all-modules
+	$(EMACS) $(BATCH) -l ../utils/self-document.el -f self-document-all-modules
 
 install: emacspeak.info turning-twenty.info
 	if test  -x /usr/bin/install-info ; then \
 		install-info emacspeak.info ${infodir}/dir ;\
-install-info turning-twenty.info ${infodir}/dir ; \
+		install-info turning-twenty.info ${infodir}/dir ; \
 	fi
 	$(INSTALL)  -m 644 *.info* $(infodir)
 
@@ -48,28 +52,11 @@ html: emacspeak.texi
 
 introducing-emacspeak.info: introducing-emacspeak.texi
 
-emacspeak.dvi:		emacspeak.texi
-	$(TEX) emacspeak.texi
-	$(TEX) emacspeak.texi
-	$(TEXINDEX) emacspeak.cp  emacspeak.fn  emacspeak.ky  emacspeak.pg  emacspeak.tp  emacspeak.vr
-	$(TEX) emacspeak.texi
-	rm -f 	emacspeak.cp  emacspeak.fn  emacspeak.ky  emacspeak.pg  emacspeak.tp  emacspeak.vr 	\
-		emacspeak.cps emacspeak.fns emacspeak.kys emacspeak.pgs emacspeak.tps emacspeak.vrs	\
-		emacspeak.log emacspeak.toc emacspeak.aux
-pdf: emacspeak.pdf
-
-emacspeak.pdf:		emacspeak.texi docs.texi
-	$(PDFTEX) emacspeak.texi
-	$(PDFTEX) emacspeak.texi	
-	$(TEXINDEX) emacspeak.cp  emacspeak.fn  emacspeak.ky emacspeak.pg  emacspeak.tp  emacspeak.vr
-	$(PDFTEX) emacspeak.texi
-	$(PDFTEX) emacspeak.texi
-	rm -f 	emacspeak.cp  emacspeak.fn  emacspeak.ky  emacspeak.pg  emacspeak.tp  emacspeak.vr 	\
-		emacspeak.cps emacspeak.fns emacspeak.kys emacspeak.pgs emacspeak.tps emacspeak.vrs	\
-		emacspeak.log emacspeak.toc emacspeak.aux
-
-print: emacspeak.dvi
-	dvips emacspeak.dvi
+emacspeak.pdf: emacspeak.texi docs.texi
+	makeinfo --pdf emacspeak.texi
+	\rm emacspeak.aux emacspeak.cp emacspeak.cps emacspeak.fn \
+emacspeak.fns emacspeak.ky emacspeak.kys emacspeak.log \
+emacspeak.pg emacspeak.toc emacspeak.tp emacspeak.vr emacspeak.vrs
 
 man: emacspeak.texi 
 	makeinfo -o ${GH_PAGES}  --html  ${CSS} emacspeak.texi
@@ -95,12 +82,6 @@ pub:  html/index.html introducing-emacspeak.html
 
 %.info: %.texi
 	$(MAKEINFO) $<
-
-%.pdf: %.ps
-	ps2pdf    $<
-
-%.ps: %.dvi
-	@dvips -q   -Pwww  $< 2>&1  > /dev/null 
 
 clean: 
 	rm -f *.info* *.html *.ps *.dvi *.pdf *.txt

@@ -58,7 +58,7 @@ Is equivalent to:
     (+ (- (/ (+ 5 20) 25)) 40)
 Note how the single `-' got converted into a list before
 threading."
-  (declare (indent 1)
+  (cl-declare (indent 1)
            (debug (form &rest [&or symbolp (sexp &rest form)])))
   `(internal--thread-argument t ,@forms))
 
@@ -75,7 +75,7 @@ Is equivalent to:
     (+ 40 (- (/ 25 (+ 20 5))))
 Note how the single `-' got converted into a list before
 threading."
-  (declare (indent 1) (debug thread-first))
+  (cl-declare (indent 1) (debug thread-first))
   `(internal--thread-argument nil ,@forms))
 
 (defsubst internal--listify (elt)
@@ -119,7 +119,7 @@ Argument BINDINGS is a list of tuples whose car is a symbol to be
 bound and (optionally) used in THEN, and its cadr is a sexp to be
 evalled to set symbol's value.  In the special case you only want
 to bind a single value, BINDINGS can just be a plain tuple."
-  (declare (indent 2)
+  (cl-declare (indent 2)
            (debug ([&or (&rest (symbolp form)) (symbolp form)] form body)))
   (when (and (<= (length bindings) 2)
              (not (listp (car bindings))))
@@ -136,7 +136,7 @@ Argument BINDINGS is a list of tuples whose car is a symbol to be
 bound and (optionally) used in BODY, and its cadr is a sexp to be
 evalled to set symbol's value.  In the special case you only want
 to bind a single value, BINDINGS can just be a plain tuple."
-  (declare (indent 1) (debug if-let))
+  (cl-declare (indent 1) (debug if-let))
   (list 'if-let bindings (macroexp-progn body)))
 
 (defsubst hash-table-empty-p (hash-table)
@@ -184,6 +184,12 @@ to bind a single value, BINDINGS can just be a plain tuple."
 (defsubst string-blank-p (string)
   "Check whether STRING is either empty or only whitespace."
   (string-match-p "\\`[ \t\n\r]*\\'" string))
+
+(defun string> (s1 s2)
+  "Return t if first arg string is greater than second in lexicographic order.
+Case is significant.
+Symbols are also allowed; their print names are used instead."
+  (string-lessp s2 s1))
 
 (defun let-alist--deep-dot-search (data)
   "Return alist of symbols inside DATA that start with a `.'.
@@ -259,7 +265,7 @@ If you nest `let-alist' invocations, the inner one can't access
 the variables of the outer one. You can, however, access alists
 inside the original alist by using dots inside the symbol, as
 displayed in the example above."
-  (declare (indent 1) (debug t))
+  (cl-declare (indent 1) (debug t))
   (let ((var (make-symbol "alist")))
     `(let ((,var ,alist))
        (let ,(mapcar (lambda (x) `(,(car x) ,(let-alist--access-sexp (car x) var)))

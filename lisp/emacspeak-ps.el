@@ -1,4 +1,4 @@
-;;; emacspeak-ps.el --- Speech enable Ps Mode
+;;; emacspeak-ps.el --- Speech enable Ps Mode  -*- lexical-binding: t; -*-
 ;;; Author: Igor B. Poretsky <poretsky@mlbox.ru>
 ;;; Description: Emacspeak extensions for ps-mode
 ;;; Keywords: emacspeak, audio interface to emacs ps mode
@@ -42,7 +42,7 @@
   "Speak the previous line if line echo is on.
 See command \\[emacspeak-toggle-line-echo].
 Otherwise cue user to the line just created."
-  (declare (special emacspeak-line-echo ))
+  (cl-declare (special emacspeak-line-echo ))
   (cond
    ((ems-interactive-p)
     (cond

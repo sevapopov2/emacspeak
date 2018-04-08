@@ -1,13 +1,7 @@
 diff -au emacspeak-tetris.el.orig emacspeak-tetris.el
---- emacspeak-tetris.el.orig	2018-03-20 16:29:07.913143027 +0300
-+++ emacspeak-tetris.el	2018-03-20 16:44:55.905755330 +0300
-@@ -1,4 +1,4 @@
--;;; emacspeak-tetris.el --- Speech enable game of Tetris  -*- lexical-binding: t; -*-
-+;;; emacspeak-tetris.el --- Speech enable game of Tetris
- ;;; $Id$
- ;;; $Author: tv.raman.tv $ 
- ;;; Description: Auditory interface to tetris
-@@ -54,6 +54,15 @@
+--- emacspeak-tetris.el.orig	2018-04-05 09:02:27.563076872 +0300
++++ emacspeak-tetris.el	2018-04-05 09:03:57.729626719 +0300
+@@ -55,6 +55,15 @@
  ;;; Auditory interface to tetris
  
  ;;}}}
@@ -23,12 +17,33 @@ diff -au emacspeak-tetris.el.orig emacspeak-tetris.el
  ;;{{{  Setup speech display table 
  
  (defvar emacspeak-tetris-pronunciations-defined nil
-@@ -328,7 +337,7 @@
+@@ -329,7 +338,7 @@
  interaction.  Despite the clock being slowed down, playing
  Tetris with speech feedback alone requires a lot of
  concentration and the game is a good mental challenge. "
--  (declare (special tetris-tick-period
-+  (declare (special tetris-tick-period tetris-height
+-  (cl-declare (special tetris-tick-period
++  (cl-declare (special tetris-tick-period tetris-height
                      emacspeak-tetris-blank-row))
    (when (ems-interactive-p)
      (setq tetris-tick-period emacspeak-tetris-tick-period)
+@@ -513,16 +522,16 @@
+     (setq diff (- x tetris-pos-x))
+     (tetris-erase-shape)
+     (cond
+-     ((plusp diff)
++     ((cl-plusp diff)
+       (while(and (< tetris-pos-x max)
+                  (> diff 0)
+                  (not hit))
+         (setq tetris-pos-x (1+ tetris-pos-x))
+         (setq hit (tetris-test-shape))
+-        (decf diff)))
+-     ((minusp diff)
++        (cl-decf diff)))
++     ((cl-minusp diff)
+       (while(and (> tetris-pos-x 0)
+-                 (minusp diff)
++                 (cl-minusp diff)
+                  (not hit))
+         (setq tetris-pos-x (1- tetris-pos-x))
+         (setq hit (tetris-test-shape))

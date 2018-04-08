@@ -1,4 +1,4 @@
-;;; emacspeak-wget.el --- speech-enable Wget interface
+;;; emacspeak-wget.el --- speech-enable Wget interface  -*- lexical-binding: t; -*-
 ;;; Description:  Emacspeak extension to speech-enable Wget
 ;;; Keywords: Emacspeak, Wget, www, ftp, download manager
 ;;{{{  LCD Archive entry:

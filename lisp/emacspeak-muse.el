@@ -48,6 +48,7 @@
 
 ;;; Code:
 
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'browse-url)
 (require 'emacspeak-outline)
@@ -175,7 +176,7 @@
 
 (defadvice muse-colors-toggle-inline-images (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
-  (declare (special muse-colors-inline-images))
+  (cl-declare (special muse-colors-inline-images))
   (when (ems-interactive-p)
     (emacspeak-auditory-icon (if muse-colors-inline-images 'on 'off))))
 
@@ -185,7 +186,7 @@
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

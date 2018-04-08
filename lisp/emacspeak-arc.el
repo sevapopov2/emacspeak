@@ -39,6 +39,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;{{{  Required modules
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'arc-mode)
 ;;}}}
@@ -138,7 +139,7 @@
 (defun emacspeak-arc-get-header-line-format ()
   "Return  header line format vector, after
 first initializing it if necessary."
-  (declare (special emacspeak-arc-header-list-format))
+  (cl-declare (special emacspeak-arc-header-list-format))
   (unless emacspeak-arc-header-list-format
     (let ((line nil)
           (fields nil))
@@ -147,27 +148,25 @@ first initializing it if necessary."
         (setq line (ems-this-line)))
       (setq fields (split-string line))
       (cl-loop for f in fields 
-            and i from 0
-            do
-            (setq emacspeak-arc-header-list-format
-                  (cons
-                   (list f i)
-                   emacspeak-arc-header-list-format)))))
+               and i from 0
+               do
+               (setq emacspeak-arc-header-list-format
+                     (cons
+                      (list f i)
+                      emacspeak-arc-header-list-format)))))
   emacspeak-arc-header-list-format)
 (defun emacspeak-arc-get-field-index (field)
-  (let ((marked-p (save-excursion
-                    (beginning-of-line)
-                    (= ?\  (following-char))))
-        (position (cadr (assoc field
-                               (emacspeak-arc-get-header-line-format)))))
-    (if marked-p
-        (1- position)
-      position)))
+  (let ((marked-p
+         (save-excursion
+           (beginning-of-line)
+           (= ?\  (following-char))))
+        (pos (cadr (assoc field (emacspeak-arc-get-header-line-format)))))
+    (if marked-p (1- pos) pos)))
 
 (defun emacspeak-arc-speak-file-name ()
   "Speak the name of the file on current line"
   (interactive)
-  (declare (special emacspeak-speak-messages))
+  (cl-declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
   (let ((entry (archive-get-descr 'no-error))
@@ -184,7 +183,7 @@ first initializing it if necessary."
 (defun emacspeak-arc-speak-file-size ()
   "Speak the size of the file on current line"
   (interactive)
-  (declare (special emacspeak-speak-messages))
+  (cl-declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
   (let ((entry (archive-get-descr 'no-error))
@@ -201,7 +200,7 @@ first initializing it if necessary."
 (defun emacspeak-arc-speak-file-modification-time ()
   "Speak modification time of the file on current line"
   (interactive)
-  (declare (special emacspeak-speak-messages))
+  (cl-declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
   (let ((entry (archive-get-descr 'no-error))
@@ -222,7 +221,7 @@ first initializing it if necessary."
 (defun emacspeak-arc-speak-file-permissions()
   "Speak permissions of file current entry "
   (interactive)
-  (declare (special emacspeak-speak-messages))
+  (cl-declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
   (let ((entry (archive-get-descr 'no-error))
@@ -240,7 +239,7 @@ first initializing it if necessary."
                 mode)))))
 (defun emacspeak-arc-setup-keys ()
   "Setup emacspeak keys for arc mode"
-  (declare (special archive-mode-map))
+  (cl-declare (special archive-mode-map))
   (define-key archive-mode-map "." 'emacspeak-arc-speak-file-name)
   (define-key archive-mode-map "c" 'emacspeak-arc-speak-file-modification-time)
   (define-key archive-mode-map "z" 'emacspeak-arc-speak-file-size)
@@ -248,15 +247,15 @@ first initializing it if necessary."
     'emacspeak-arc-speak-file-permissions)
   )
 
-(eval-when (load)
-  (emacspeak-arc-setup-keys))
+(cl-eval-when (load)
+           (emacspeak-arc-setup-keys))
 ;;}}}
 (provide 'emacspeak-arc)
 ;;{{{ end of file 
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end: 
 
 ;;}}}

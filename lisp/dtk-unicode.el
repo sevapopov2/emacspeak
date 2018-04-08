@@ -1,4 +1,4 @@
-;;; dtk-unicode.el --- Pronounce Unicode characters correctly
+;;; dtk-unicode.el --- Pronounce Unicode characters correctly  -*- lexical-binding: t; -*-
 ;;{{{ Header: Lukas
 
 ;; Copyright 2007, 2011 Lukas Loehrer
@@ -55,9 +55,8 @@
 ;;}}}
 ;;{{{ Preamble
 
-(require 'cl)
-(require 'custom)
-(declaim  (optimize  (safety 0) (speed 3)))
+(require 'cl-lib)
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'descr-text)
 
 ;;}}}
@@ -85,7 +84,7 @@
     (?­ .  "-") ; soft-hyphen 
     (?‘ . " backquote  ")           ; LEFT SINGLE QUOTATION MARK
     (?’ . "'")                      ; right SINGLE QUOTATION MARK
-    (?‐ . "-")                      ; hyphen
+    (?‐ . "hyphen")                      ; hyphenm
     (?– . "--")                     ; n-dash
     (?— . "---")                    ; m-dash
     (?  . " ") ; hair space 
@@ -164,8 +163,8 @@ A handler returns a non-nil value if the   replacement was successful, nil other
   "Construct regexp to match all but the characters in dtk-unicode-untouched-charsets."
   (format "[^%s]"
           (cl-loop for charset in charsets
-                when (charsetp charset)
-                concat (apply 'format "%c-%c" (dtk-unicode-charset-limits charset)))))
+                   when (charsetp charset)
+                   concat (apply 'format "%c-%c" (dtk-unicode-charset-limits charset)))))
 
 (defcustom dtk-unicode-untouched-charsets
   '(ascii latin-iso8859-1)
@@ -243,7 +242,7 @@ nil if CHAR is not in Unicode."
 
 (defun dtk-unicode-char-property (char prop-name)
   "Get character property by name."
-  (second (assoc prop-name (dtk-unicode-char-properties char))))
+  (cl-second (assoc prop-name (dtk-unicode-char-properties char))))
 
 (defun dtk-unicode-char-punctuation-p (char)
   "Use unicode properties to determine whether CHAR is a ppunctuation character."
@@ -266,7 +265,7 @@ When called interactively, CHAR defaults to the character after point."
   (interactive (list (following-char)))
   (setq dtk-unicode-character-replacement-alist
         (cl-loop for elem in dtk-unicode-character-replacement-alist
-              unless (eq (car elem) char) collect elem)))
+                 unless (eq (car elem) char) collect elem)))
 
 (defun dtk-unicode-customize-char (char replacement)
   "Add a custom replacement string for CHAR.
@@ -315,7 +314,7 @@ This is meant to be used in places where the user asks for a short description o
 This is the main entry point for this module.
 The argument MODE specifies the current punctuation mode.
 Does nothing for unibyte buffers."
-  (declare (special dtk-unicode-process-utf8))
+  (cl-declare (special dtk-unicode-process-utf8))
   (when  dtk-unicode-process-utf8
     (let ((inhibit-read-only t))
       (goto-char (point-min))
@@ -341,7 +340,7 @@ Does nothing for unibyte buffers."
 ;;; local variables:
 ;;; coding: utf-8
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}
