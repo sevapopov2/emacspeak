@@ -1,4 +1,4 @@
-;; emacspeak-edb.el --- Speech interface for the EDB package
+;; emacspeak-edb.el --- Speech interface for the EDB package  -*- lexical-binding: t; -*-
 
 ;; Copyright  (C)  2005  Sergei V. Fleytin <fleytin@mail.ru>
 
@@ -34,6 +34,8 @@
 
 ;; Code:
 
+(require 'cl-lib)
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
 (declare-function dbf-this-field-end-pos "ext:db-format.el" ())
@@ -41,7 +43,7 @@
 
 ;; First, let's fix some keybindings.
 
-(declaim (special database-view-mode-map
+(cl-declaim (special database-view-mode-map
 		  database-edit-mode-map
 		  emacspeak-prefix))
 (define-key database-view-mode-map emacspeak-prefix 'emacspeak-prefix-command)
@@ -212,7 +214,7 @@
 See command \\[emacspeak-toggle-line-echo].  Otherwise cue the user to
 the newly created blank line or speak the next field
 if we were moved to."
-  (declare (special emacspeak-line-echo))
+  (cl-declare (special emacspeak-line-echo))
   (if (ems-interactive-p)
       (if (not emacspeak-line-echo)
 	  (let ((prev (edb--S :this-fidx)))

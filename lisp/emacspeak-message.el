@@ -43,6 +43,7 @@
 ;;; Code:
 ;;}}}
 ;;{{{ requires
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
 ;;}}}
@@ -81,6 +82,16 @@
 
 ;;}}}
 ;;{{{  advice interactive commands
+(cl-loop
+ for f in
+ '(message-send message-send-and-exit)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory context"
+     (when  (ems-interactive-p)
+       (emacspeak-speak-mode-line)
+       (emacspeak-auditory-icon 'close-object)))))
 
 (defadvice message-goto-to (after emacspeak pre act comp)
   "Provide auditory feedback"
@@ -243,7 +254,7 @@
 ;;}}}
 ;;{{{ Pronunciation settings
 
-(declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
+(cl-declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
 (emacspeak-pronounce-augment-pronunciations 'message-mode
 					    emacspeak-pronounce-internet-smileys-pronunciations)
 
@@ -262,7 +273,7 @@
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end: 
 
 ;;}}}

@@ -48,7 +48,8 @@
 
 ;;}}}
 ;;{{{  Required modules
-(require 'cl)
+(require 'cl-lib)
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (eval-when-compile
   (require 'python "python" 'no-error))
@@ -101,8 +102,8 @@
  for f in
  '(
    python-shell-send-region python-shell-send-defun
-                            python-shell-send-file   python-shell-send-buffer
-                            python-shell-send-string python-shell-send-string-no-output)
+   python-shell-send-file   python-shell-send-buffer
+   python-shell-send-string python-shell-send-string-no-output)
  do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
@@ -124,9 +125,9 @@
    ((ems-interactive-p)
     (let ((ws (= 32 (char-syntax (preceding-char)))))
       (dtk-tone 500 100 'force)
-         (unless ws (emacspeak-speak-this-char (preceding-char)))
-         ad-do-it
-         (when ws (dtk-notify-speak (format "Indent %s " (current-column))))))
+      (unless ws (emacspeak-speak-this-char (preceding-char)))
+      ad-do-it
+      (when ws (dtk-notify-speak (format "Indent %s " (current-column))))))
    (t ad-do-it))
   ad-return-value)
 
@@ -175,17 +176,17 @@
  for f in
  '(
    python-nav-up-list python-nav-if-name-main python-nav-forward-statement
-                      python-nav-forward-sexp-safe python-nav-forward-sexp python-nav-forward-defun
-                      python-nav-forward-block python-nav-end-of-statement python-nav-end-of-defun
-                      python-nav-end-of-block python-nav-beginning-of-statement python-nav-beginning-of-block
-                      python-nav-backward-up-list python-nav-backward-statement python-nav-backward-sexp-safe
-                      python-nav-backward-sexp python-nav-backward-defun python-nav-backward-block
-                      py-previous-statement py-next-statement py-goto-block-up
-                      py-beginning-of-def-or-class py-end-of-def-or-class
-                      beginning-of-python-def-or-class end-of-python-def-or-class
-                      python-previous-statement python-next-statement python-beginning-of-block
-                      python-beginning-of-def-or-class python-end-of-def-or-class
-                      )
+   python-nav-forward-sexp-safe python-nav-forward-sexp python-nav-forward-defun
+   python-nav-forward-block python-nav-end-of-statement python-nav-end-of-defun
+   python-nav-end-of-block python-nav-beginning-of-statement python-nav-beginning-of-block
+   python-nav-backward-up-list python-nav-backward-statement python-nav-backward-sexp-safe
+   python-nav-backward-sexp python-nav-backward-defun python-nav-backward-block
+   py-previous-statement py-next-statement py-goto-block-up
+   py-beginning-of-def-or-class py-end-of-def-or-class
+   beginning-of-python-def-or-class end-of-python-def-or-class
+   python-previous-statement python-next-statement python-beginning-of-block
+   python-beginning-of-def-or-class python-end-of-def-or-class
+   )
  do
  (eval
   `(defadvice  ,f (after emacspeak pre act comp)
@@ -243,7 +244,7 @@
 
 (defadvice python-process-filter (around emacspeak pre act) comp
   "Make comint in Python speak its output. "
-  (declare (special emacspeak-comint-autospeak))
+  (cl-declare (special emacspeak-comint-autospeak))
   (let ((prior (point))
         (dtk-stop-immediately nil))
     ad-do-it 
@@ -285,7 +286,7 @@ If already at the beginning then move to previous block."
 ;;{{{ keybindings
 
 (progn
-  (declaim (special  python-mode-map))
+  (cl-declaim (special  python-mode-map))
   (define-key python-mode-map "\M-a" 'beginning-of-python-def-or-class)
   (define-key python-mode-map "\M-e" 'end-of-python-def-or-class)
   (define-key python-mode-map "\M-n" 'python-next-statement)
@@ -295,10 +296,10 @@ If already at the beginning then move to previous block."
   (define-key python-mode-map "\C-\M-p" 'emacspeak-python-previous-block)
   )
 
-(declaim (special  py-mode-map))
+(cl-declaim (special  py-mode-map))
 (add-hook 'python-mode-hook
           (function (lambda ()
-                      (declare (special py-mode-map))
+                      (cl-declare (special py-mode-map))
                       (when (and  (boundp 'py-mode-map)
                                   py-mode-map)
                         (define-key py-mode-map "\M-a" 'beginning-of-python-def-or-class)
@@ -316,7 +317,7 @@ If already at the beginning then move to previous block."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

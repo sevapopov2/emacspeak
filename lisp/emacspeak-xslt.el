@@ -48,6 +48,7 @@
 ;;}}}
 ;;{{{  Required modules
 
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'emacspeak-webutils)
 ;;}}}
@@ -75,7 +76,7 @@
 
 (defun emacspeak-xslt-read ()
   "Read XSLT transformation name from minibuffer."
-  (declare (special emacspeak-xslt-directory emacspeak-we-xsl-transform))
+  (cl-declare (special emacspeak-xslt-directory emacspeak-we-xsl-transform))
   (let ((insert-default-directory nil))
     (expand-file-name
      (read-file-name "XSL Transformation: "
@@ -116,7 +117,7 @@ This is useful when handling bad HTML."
   "Apply XSLT transformation to region and replace it with
 the result.  This uses XSLT processor xsltproc available as
 part of the libxslt package."
-  (declare (special emacspeak-xslt-program emacspeak-xslt-options
+  (cl-declare (special emacspeak-xslt-program emacspeak-xslt-options
                     emacspeak-xslt-keep-errors modification-flag))
   (let ((command nil)
         (parameters (when params
@@ -159,7 +160,7 @@ part of the libxslt package."
 (defun emacspeak-xslt-run (xsl &optional start end)
   "Run xslt on region, and return output filtered by sort -u.
 Region defaults to entire buffer."
-  (declare (special emacspeak-xslt-program emacspeak-xslt-options))
+  (cl-declare (special emacspeak-xslt-program emacspeak-xslt-options))
   (or start (setq start (point-min)))
   (or end (setq end (point-max)))
   (let ((coding-system-for-read 'utf-8)
@@ -179,7 +180,7 @@ Region defaults to entire buffer."
 and return the results in a newly created buffer.
   This uses XSLT processor xsltproc available as
 part of the libxslt package."
-  (declare (special emacspeak-xslt-program
+  (cl-declare (special emacspeak-xslt-program
                     emacspeak-xslt-keep-errors))
   (let ((result (get-buffer-create " *xslt result*"))
         (command nil)
@@ -232,7 +233,7 @@ part of the libxslt package."
 and return the results in a newly created buffer.
   This uses XSLT processor xsltproc available as
 part of the libxslt package."
-  (declare (special emacspeak-xslt-program
+  (cl-declare (special emacspeak-xslt-program
                     emacspeak-xslt-keep-errors))
   (let ((result (get-buffer-create " *xslt result*"))
         (command nil)
@@ -282,7 +283,7 @@ part of the libxslt package."
     (read-file-name "Style File: "
                     emacspeak-xslt-directory)
     (read-file-name "File:" default-directory)))
-  (declare (special emacspeak-xslt-directory))
+  (cl-declare (special emacspeak-xslt-directory))
   (with-temp-buffer
     (let ((coding-system-for-read 'utf-8)
           (coding-system-for-write 'utf-8)
@@ -311,7 +312,7 @@ part of the libxslt package."
                           (string-match "\\.xsl$" name)))
        emacspeak-xslt-directory))
     (read-string "URL: " (browse-url-url-at-point))))
-  (declare (special emacspeak-xslt-options))
+  (cl-declare (special emacspeak-xslt-options))
   (add-to-list
    'emacspeak-web-pre-process-hook
    (emacspeak-webutils-make-xsl-transformer style))
@@ -368,7 +369,7 @@ part of the libxslt package."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

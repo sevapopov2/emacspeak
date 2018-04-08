@@ -1,4 +1,4 @@
-;;; russian-spelling.el --- Russian spelling data -*- coding: utf-8 -*-
+;;; russian-spelling.el --- Russian spelling data  -*- lexical-binding: t; coding: utf-8 -*-
 ;;; Description:  Module to set up spelling table for Russian letters
 ;;; Keywords: Voice, Multispeech
 ;;{{{  LCD Archive entry:

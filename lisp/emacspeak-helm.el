@@ -50,9 +50,9 @@
 ;;}}}
 ;;{{{  Required modules
 
-(require 'cl)
-(declaim  (optimize  (safety 0) (speed 3)))
+(require 'cl-lib)
 (require 'emacspeak-google)
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
 ;;}}}
@@ -69,6 +69,7 @@
     (emacspeak-auditory-icon (if helm-mode  'on 'off))
     (message "Turned %s helm-mode"
              (if helm-mode "on" "off"))))
+(declare-function emacspeak-minibuffer-setup-hook nil "emacspeak-advice")
 
 (defun emacspeak-helm-before-initialize-hook ()
   "Remove emacspeak minibuffer setup hook."
@@ -108,6 +109,7 @@
 
 ;;}}}
 ;;{{{ Advice helm-google-suggest to filter results:
+(declare-function eww-display-dom-by-id-list  (id-list) "emacspeak-eww.el")
 
 (defadvice helm-google-suggest (before emacspeak pre act comp)
   "setup emacspeak post-processing-hook"
