@@ -2,7 +2,8 @@ Source: emacspeak
 Section: editors
 Priority: extra
 Maintainer: Igor B. Poretsky <poretsky@mlbox.ru>
-Build-Depends: debhelper (>= 5), po-debconf, libespeak-dev, tcl-dev, libasound2-dev, texinfo
+Build-Depends: debhelper (>= 9), po-debconf, libespeak-dev, tcl-dev, libasound2-dev
+Build-Depends-Indep: texinfo, texlive-latex-base, texlive-fonts-recommended, xsltproc, docbook-xsl, csound
 Standards-Version: 3.9.7
 Homepage: http://emacspeak.sf.net
 
@@ -38,7 +39,8 @@ Description: Emacspeak documentation
  Emacspeak is a speech output system that will allow someone who
  cannot see to work directly on a UNIX system.
  .
- This package contains additional documentation in html form.
+ This package contains additional documentation in html and pdf
+ formats.
 
 Package: emacspeak-espeak
 Section: sound

@@ -3,6 +3,7 @@ debian/emacspeak.conf etc
 debian/dtk-exp.blurb usr/share/emacs/site-lisp/emacspeak/blurbs
 debian/ssh-dtk-exp.blurb usr/share/emacs/site-lisp/emacspeak/blurbs
 debian/ssh-outloud.blurb usr/share/emacs/site-lisp/emacspeak/blurbs
+bash-utils usr/share/emacs/site-lisp/emacspeak
 etc usr/share/emacs/site-lisp/emacspeak
 lisp usr/share/emacs/site-lisp/emacspeak
 media usr/share/emacs/site-lisp/emacspeak
