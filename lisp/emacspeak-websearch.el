@@ -44,9 +44,8 @@
 (require 'emacspeak-preamble)
 (require 'emacspeak-feeds)
 (require 'emacspeak-webutils)
-(require 'eww "eww" 'no-error)
+(require 'eww)
 (require 'emacspeak-eww)
-(require 'emacspeak-feeds)
 (require 'emacspeak-google)
 (require 'gweb)
 (require  'emacspeak-we)
@@ -72,9 +71,6 @@
 (declare-function gweb-google-autocomplete (&optional prompt))
 (declare-function gtu(tag &optional page count))
 (declare-function calendar-astro-date-string (&optional date))
-(declare-function widget-at "wid-edit.el" (&optional pos))
-(declare-function widget-forward "wid-edit.el" (arg))
-
 ;;}}}
 ;;{{{ searcher table
 ;;;###autoload

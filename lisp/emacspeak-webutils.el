@@ -54,15 +54,6 @@
 (require 'emacspeak-preamble)
 (require 'url)
 (require 'browse-url)
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function emacspeak-feeds-feed-display "emacspeak-feeds.el" (feed-url style &optional speak))
-(declare-function shr-render-region "ext:shr.el" (begin end &optional buffer))
-(declare-function w3m-browse-url "ext:w3m.el" (url &optional new-session))
-(declare-function eww-browse-url "ext:eww.el" (url &optional _new-window))
-
 ;;}}}
 ;;{{{ Utility: Render HTML To String
 ;;;###autoload

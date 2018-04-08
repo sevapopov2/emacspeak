@@ -54,17 +54,10 @@
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'emacspeak-feeds)
-(require 'eww "eww" 'no-error)
+(require 'eww)
 (require 'emacspeak-eww)
 (require 'org "org" 'no-error)
 (require 'org-table "org-table" 'no-error)
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function org-capture "ext:org-capture.el" (&optional goto keys))
-(declare-function org-table-get-field "ext:org-table.el" (&optional n replace))
-
 ;;}}}
 ;;{{{ voice locking:
 

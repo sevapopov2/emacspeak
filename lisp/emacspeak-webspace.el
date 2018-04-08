@@ -57,11 +57,6 @@
 (require 'emacspeak-feeds)
 
 ;;}}}
-;;{{{ Forward declarations
-
-(declare-function shr-render-region "ext:shr.el" (begin end &optional buffer))
-
-;;}}}
 ;;{{{ WebSpace Mode:
 
 ;;; Define a derived-mode called WebSpace that is generally useful for hypetext display.

@@ -59,11 +59,6 @@
 (require 'json)
 
 ;;}}}
-;;{{{ Forward declarations
-
-(declare-function shr-render-region "ext:shr.el" (begin end &optional buffer))
-
-;;}}}
 ;;{{{ Customizations:
 
 (defvar g-directory (and load-file-name
