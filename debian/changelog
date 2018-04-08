@@ -1,3 +1,10 @@
+emacspeak (45.0-3trusty2) trusty; urgency=low
+
+  * Installation paths fixed.
+  * Dead links removed.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 08 Apr 2018 14:26:17 +0300
+
 emacspeak (45.0-3trusty1) trusty; urgency=low
 
   * Fixed XSL transformations applying in W3m.
