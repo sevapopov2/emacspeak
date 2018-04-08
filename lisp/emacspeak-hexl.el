@@ -1,4 +1,4 @@
-;;; emacspeak-hexl.el --- speech-enable hexl mode
+;;; emacspeak-hexl.el --- speech-enable hexl mode  -*- lexical-binding: t; -*-
 ;;; Description:  Emacspeak extension to speech-enable hexl mode
 ;;; Keywords: Emacspeak, hexl mode, binary files editing
 ;;{{{  LCD Archive entry:
@@ -40,6 +40,8 @@
 ;;}}}
 ;;{{{ required modules
 
+(require 'cl-lib)
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'emacspeak-speak)
 (require 'emacspeak-redefine)
@@ -55,28 +57,28 @@
 (defun emacspeak-hexl-speak-current-byte-code ()
   "Speak hex code of current byte."
   (interactive)
-  (declare (special dtk-stop-immediately))
+  (cl-declare (special dtk-stop-immediately))
   (and dtk-stop-immediately (dtk-stop))
   (emacspeak-speak-spell-word (buffer-substring (point) (+ (point) 2))))
 
 (defun emacspeak-hexl-speak-current-line-address ()
   "Speak hex address of current line."
   (interactive)
-  (declare (special dtk-stop-immediately))
+  (cl-declare (special dtk-stop-immediately))
   (and dtk-stop-immediately (dtk-stop))
   (emacspeak-speak-spell-word (format "%x0" (/ (hexl-current-address) 16))))
 
 (defun emacspeak-hexl-speak-current-position ()
   "Speak position of current byte in the line."
   (interactive)
-  (declare (special dtk-stop-immediately))
+  (cl-declare (special dtk-stop-immediately))
   (and dtk-stop-immediately (dtk-stop))
   (dtk-speak (format "0 %x" (% (hexl-current-address) 16))))
 
 (defun emacspeak-hexl-speak-current-address ()
   "Speak address of current byte in hex format."
   (interactive)
-  (declare (special dtk-stop-immediately))
+  (cl-declare (special dtk-stop-immediately))
   (dtk-speak "current address is ")
   (let ((dtk-stop-immediately nil))
     (emacspeak-speak-spell-word (format "%x" (hexl-current-address)))))
@@ -216,7 +218,7 @@
 ;;}}}
 ;;{{{ Keymap tweaking:
 
-(declaim (special hexl-mode-map
+(cl-declaim (special hexl-mode-map
 		  emacspeak-prefix))
 (define-key hexl-mode-map emacspeak-prefix (make-sparse-keymap))
 (define-key hexl-mode-map (concat emacspeak-prefix "\C-l")

@@ -41,9 +41,12 @@
 
 ;;{{{ required modules
 
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (eval-when-compile
-  (require 'ecb "ecb" 'no-error)
+  (cl-declaim (special inhibit-message))
+  (let ((inhibit-message  t))
+  (require 'ecb "ecb" 'no-error))
   (require 'tree-buffer "tree-buffer" 'no-error))
 ;;}}}
 ;;{{{  Introduction:
@@ -121,7 +124,7 @@
 (defun emacspeak-ecb-tree-backspace ()
   "Back up during incremental search in tree buffers."
   (interactive)
-  (declare (special tree-buffer-incr-searchpattern))
+  (cl-declare (special tree-buffer-incr-searchpattern))
   ;; reduce by one from the end
   (setq tree-buffer-incr-searchpattern
         (substring tree-buffer-incr-searchpattern
@@ -134,7 +137,7 @@
 (defun emacspeak-ecb-tree-clear ()
   "Clear search pattern during incremental search in tree buffers."
   (interactive)
-  (declare (special tree-buffer-incr-searchpattern))  
+  (cl-declare (special tree-buffer-incr-searchpattern))  
   (setq tree-buffer-incr-searchpattern "")
   (dtk-speak "Cleared search pattern."))
 
@@ -282,7 +285,7 @@ available."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

@@ -49,6 +49,7 @@
 
 ;;; Code:
 
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
 ;;}}}
@@ -56,6 +57,12 @@
 
 (declare-function eperiodic-element-at "ext:eperiodic.el" (&optional posn))
 (declare-function eperiodic-get-element-property "ext:eperiodic.el" (z prop))
+
+;;}}}
+;;{{{ Forward decls:
+(declare-function eperiodic-get-element-property  (e prop) "eperiodic.el")
+(declare-function eperiodic-element-at (&optional pos) "eperiodic.el")
+
 
 ;;}}}
 ;;{{{ faces and voices 
@@ -80,7 +87,7 @@
 
 (defun emacspeak-eperiodic-name-element-at-point ()
   "Returns name of current element."
-  (declare (special eperiodic-element-properties))
+  (cl-declare (special eperiodic-element-properties))
   (let ((name 
          (cdr
           (assoc 'name
@@ -124,7 +131,7 @@
   (forward-line 2)
   (emacspeak-speak-line)
   (emacspeak-auditory-icon 'large-movement))
-(declaim (special eperiodic-mode-map))
+(cl-declaim (special eperiodic-mode-map))
 (when (boundp 'eperiodic-mode-map)
   (define-key eperiodic-mode-map " " 'emacspeak-eperiodic-speak-current-element)
   (define-key  eperiodic-mode-map "x" 'emacspeak-eperiodic-goto-property-section)
@@ -144,7 +151,7 @@
 (defun emacspeak-eperiodic-play-description ()
   "Play audio description from WebElements."
   (interactive)
-  (declare (special emacspeak-eperiodic-media-location))
+  (cl-declare (special emacspeak-eperiodic-media-location))
   (let ((e (eperiodic-element-at)))
     (unless e  (error "No element under point."))
     (funcall emacspeak-media-player 
@@ -211,7 +218,7 @@
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

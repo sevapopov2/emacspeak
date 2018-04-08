@@ -45,6 +45,7 @@
 ;;}}}
 ;;{{{ requires
 
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'info)
 
@@ -91,7 +92,7 @@ node -- speak the entire node."
 
 (defun emacspeak-info-visit-node()
   "Apply requested action upon visiting a node."
-  (declare (special emacspeak-info-select-node-speak-chunk))
+  (cl-declare (special emacspeak-info-select-node-speak-chunk))
   (emacspeak-auditory-icon 'open-object)
   (cond
    ((eq emacspeak-info-select-node-speak-chunk 'screenfull)
@@ -233,7 +234,7 @@ node-spec."
 (defun emacspeak-info-speak-header ()
   "Speak info header line."
   (interactive)
-  (declare (special Info-use-header-line
+  (cl-declare (special Info-use-header-line
                     Info-header-line))
   (if (and (boundp 'Info-use-header-line)
            (boundp 'Info-header-line)
@@ -259,7 +260,7 @@ node-spec."
 ;;}}}
 ;;{{{ keymaps
 
-(declaim (special Info-mode-map))
+(cl-declaim (special Info-mode-map))
 (define-key Info-mode-map "T" 'emacspeak-info-speak-header)
 (define-key Info-mode-map "'" 'emacspeak-speak-rest-of-buffer)
 (define-key Info-mode-map "\M-n" 'emacspeak-info-next-section)
@@ -271,7 +272,7 @@ node-spec."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

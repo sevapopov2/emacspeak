@@ -40,6 +40,7 @@
 
 ;;{{{ required modules
 
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 ;;}}}
 ;;{{{  Introduction:
@@ -52,7 +53,7 @@
 
 (defun referenced-p ()
   "Return t if the call was caused by selecting a link."
-  (declare (special referenced-p))
+  (cl-declare (special referenced-p))
   (when (and (boundp 'referenced-p) referenced-p)
     (setq referenced-p nil)
     t))
@@ -173,7 +174,7 @@
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

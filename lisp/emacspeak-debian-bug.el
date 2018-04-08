@@ -1,4 +1,4 @@
-;;; emacspeak-debian-bug.el --- speech-enable Debian bug reports
+;;; emacspeak-debian-bug.el --- speech-enable Debian bug reports  -*- lexical-binding: t; -*-
 ;;; Description:  Emacspeak extension to speech-enable bug reporting to the Debian bug tracking system
 ;;; Keywords: Emacspeak, apt, Debian bug tracking system
 ;;{{{  LCD Archive entry:

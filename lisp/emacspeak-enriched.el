@@ -43,6 +43,7 @@
 ;;; Code:
 ;;}}}
 ;;{{{ required modules
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
 ;;}}}
@@ -55,7 +56,7 @@
   "Map base fonts to voices.
 Useful in voiceifying rich text."
   (interactive "r")
-  (declare (special global-voice-lock-mode
+  (cl-declare (special global-voice-lock-mode
                     emacspeak-enriched-font-faces-to-voiceify))
   (voice-lock-mode (if global-voice-lock-mode 1 -1))
   (with-silent-modifications
@@ -99,7 +100,7 @@ Useful in voiceifying rich text."
           (when (listp face)
             (setq face 
                   (cl-loop for f in emacspeak-enriched-font-faces-to-voiceify
-                        thereis (find f face))))
+                           thereis (cl-find f face))))
           (when face 
             (put-text-property start  (point)
                                'personality
@@ -136,7 +137,7 @@ Useful in voiceifying rich text."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end: 
 
 ;;}}}

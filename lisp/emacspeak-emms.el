@@ -53,6 +53,7 @@
 ;;}}}
 ;;{{{ required modules
 
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'emms "emms" 'no-error)
 ;;}}}
@@ -292,7 +293,7 @@ Produce an auditory icon if possible."
 
 ;;}}}
 ;;{{{ Module emms-streaming:
-(declaim (special emms-stream-mode-map))
+(cl-declaim (special emms-stream-mode-map))
 (defadvice emms-stream-mode (after emacspeak pre act comp)
   "Update keymaps."
   (define-key emms-stream-mode-map "\C-e"
@@ -359,7 +360,7 @@ Produce an auditory icon if possible."
 (defun emacspeak-emms-pause-or-resume ()
   "Pause/resume if emms is running. For use  in
 emacspeak-silence-hook."
-  (declare (special emms-player-playing-p))
+  (cl-declare (special emms-player-playing-p))
   (when (and (boundp 'emms-player-playing-p)
              (not (null emms-player-playing-p)))
     (emms-player-pause)))
@@ -391,7 +392,7 @@ emacspeak-silence-hook."
 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end:
 
 ;;}}}

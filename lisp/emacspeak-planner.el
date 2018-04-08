@@ -1,4 +1,4 @@
-;;; emacspeak-planner.el --- speech-enable Planner -- a powerful organizer in Emacs
+;;; emacspeak-planner.el --- speech-enable Planner -- a powerful organizer in Emacs  -*- lexical-binding: t; -*-
 ;;; Description: Emacspeak extensions for planner-mode
 ;;; Keywords: Emacspeak, organizer, day planner, daily schedule
 ;;{{{  LCD Archive entry:

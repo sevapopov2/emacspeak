@@ -46,7 +46,8 @@
 ;;; Code:
 ;;}}}
 ;;{{{ requires
-(require 'cl)
+(require 'cl-lib)
+(cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'emacspeak-hide)
 (require 'gnus)
@@ -86,7 +87,7 @@ instead you hear only the first screenful."
 ;;; Keybindings 
 (defun emacspeak-gnus-setup-keys ()
   "Setup Emacspeak keys."
-  (declare (special gnus-summary-mode-map
+  (cl-declare (special gnus-summary-mode-map
                     gnus-group-mmode-map
                     gnus-article-mode-map))
   (define-key gnus-summary-mode-map "\C-t" 'gnus-summary-toggle-header)
@@ -118,7 +119,7 @@ See command \\[emacspeak-gnus-summary-show-some-headers].")
   "Show only the important article headers,
 i.e. sender name, and subject."
   (interactive)
-  (declare (special emacspeak-gnus-ignored-most-headers)) 
+  (cl-declare (special emacspeak-gnus-ignored-most-headers)) 
   (let ((gnus-ignored-headers emacspeak-gnus-ignored-most-headers))
     (gnus-summary-toggle-header 1)
     (gnus-summary-toggle-header -1)))
@@ -139,7 +140,7 @@ reading news."
   (dtk-speak (gnus-summary-article-subject)))
 
 (defun emacspeak-gnus-speak-article-body ()
-  (declare (special emacspeak-gnus-large-article
+  (cl-declare (special emacspeak-gnus-large-article
                     voice-lock-mode dtk-punctuation-mode
                     gnus-article-buffer))
   (with-current-buffer gnus-article-buffer
@@ -176,7 +177,7 @@ Helps to prevent words from being spelled instead of spoken."
 
 ;;; emacs can hang if too many message sfly by as gnus starts
 (defadvice gnus (around emacspeak pre act)
-  "Temporarily deactivate advice on message"
+  "Quieten messages, produce auditory icon."
   (let ((startup (not (gnus-alive-p)))
 	(dtk-stop-immediately nil))
     (cond
@@ -304,7 +305,7 @@ Produce an auditory icon if possible."
 
 (defadvice gnus-topic-mode (after emacspeak pre act comp)
   "Provide auditory feedback."
-  (declare (special gnus-topic-mode))
+  (cl-declare (special gnus-topic-mode))
   (when (ems-interactive-p)
     (emacspeak-auditory-icon (if gnus-topic-mode 'on 'off))
     (message "Toggled topic mode %s" (if gnus-topic-mode "on" "off"))))
@@ -536,6 +537,7 @@ Indicate change of selection with an auditory icon if possible."
   "Speak the subject and speak the first screenful.
 Produce an auditory icon
 indicating the article is being opened."
+  (cl-declare (special gnus-article-buffer))
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'delete-object)
     (emacspeak-gnus-summary-speak-subject)
@@ -588,7 +590,7 @@ indicating the article is being opened."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Speak the article page content."
-          (declare (special gnus-article-buffer))
+          (cl-declare (special gnus-article-buffer))
           (dtk-stop)
           (emacspeak-auditory-icon 'scroll)
           (with-current-buffer gnus-article-buffer
@@ -606,7 +608,7 @@ indicating the article is being opened."
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
           "Speak the first line. "
-          (declare (special gnus-article-buffer))
+          (cl-declare (special gnus-article-buffer))
           (with-current-buffer gnus-article-buffer
             (emacspeak-speak-line)))))
 
@@ -676,7 +678,7 @@ indicating the article is being opened."
       (emacspeak-hide-all-blocks-in-buffer)
       (emacspeak-gnus-speak-article-body))))
 
-(defadvice gnus-article-show-summary  (after emacspeak pre act comp)
+(defadvice gnus-article-show-summary  (after emacspeak pre act)
   "Speak the modeline.
 Indicate change of selection with
 an auditory icon if possible."
@@ -722,9 +724,9 @@ an auditory icon if possible."
  for hook  in 
  '(
    gnus-article-mode-hook gnus-group-mode-hook gnus-summary-mode-hook
-                          gnus-agent-mode-hook  gnus-article-edit-mode-hook
-                          gnus-server-mode-hook gnus-category-mode-hook
-                          )
+   gnus-agent-mode-hook  gnus-article-edit-mode-hook
+   gnus-server-mode-hook gnus-category-mode-hook
+   )
  do
  (add-hook
   hook 
@@ -732,7 +734,7 @@ an auditory icon if possible."
       (dtk-set-punctuations emacspeak-gnus-punctuation-mode)
       (emacspeak-pronounce-refresh-pronunciations))))
 
-(declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
+(cl-declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
 (emacspeak-pronounce-augment-pronunciations 'gnus-article-mode
 					    emacspeak-pronounce-internet-smileys-pronunciations)
 
@@ -831,10 +833,38 @@ an auditory icon if possible."
    (gnus-server-opened voice-lighten)))
 
 ;;}}}
+;;{{{ server mode:
+
+(cl-loop
+ for f in 
+ '(gnus-server-edit-buffer gnus-group-enter-server-mode gnus-browse-exit)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "Provide auditory feedback."
+     (when (ems-interactive-p)
+       (emacspeak-speak-mode-line)))))
+
+;;}}}
+;;{{{ Async Gnus:
+
+;;;###autoload
+(defun emacspeak-gnus-async ()
+  "Run gnus on a separate thread."
+  (interactive)
+  (if (fboundp 'make-thread)
+      (make-thread
+       #'(lambda ()
+           (condition-case err
+               (gnus)
+             (err (message (error-message-string err))))))
+    (error "Asynchronous execution is unavailable")))
+
+;;}}}
 (provide 'emacspeak-gnus)
 ;;{{{  end of file 
 ;;; local variables:
 ;;; folded-file: t
-;;; byte-compile-dynamic: nil
+;;; byte-compile-dynamic: t
 ;;; end: 
 ;;}}}
