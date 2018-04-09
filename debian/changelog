@@ -1,3 +1,9 @@
+emacspeak (47.0-2stretch1) stretch; urgency=low
+
+  * Missed symlink fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 09 Apr 2018 20:21:20 +0300
+
 emacspeak (47.0-1stretch1) stretch; urgency=low
 
   * New upstream release.
