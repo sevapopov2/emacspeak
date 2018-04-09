@@ -49,7 +49,7 @@ do [ -e "${file%.elc}.el" ] || rm -f $file
 done
 
 cd ${ELCDIR}
-for target in blurbs etc Makefile README media js servers sounds xsl
+for target in bash-utils blurbs etc Makefile README media js servers sounds xsl
 do [ -e $target ] || ln -s ${ELDIR_REL}/$target
 done
 find -L . -type l -lname '*' -delete
