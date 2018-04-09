@@ -1,3 +1,9 @@
+emacspeak (47.0-2xenial1) xenial; urgency=low
+
+  * Missed symlink fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 09 Apr 2018 20:19:25 +0300
+
 emacspeak (47.0-1xenial1) xenial; urgency=low
 
   * New upstream release.
