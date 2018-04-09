@@ -1,3 +1,10 @@
+emacspeak (47.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Emacs 24.5 compatibility provided.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 09 Apr 2018 19:00:07 +0300
+
 emacspeak (45.0-3) unstable; urgency=low
 
   * Fixed XSL transformations applying in W3m.
