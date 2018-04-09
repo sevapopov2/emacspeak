@@ -1,3 +1,10 @@
+emacspeak (47.0-1xenial1) xenial; urgency=low
+
+  * New upstream release.
+  * Emacs 24.5 compatibility provided.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 09 Apr 2018 19:01:22 +0300
+
 emacspeak (45.0-3xenial1) xenial; urgency=low
 
   * Fixed XSL transformations applying in W3m.
