@@ -1,3 +1,11 @@
+emacspeak (45.0-3trusty3) trusty; urgency=low
+
+  * Auditory feedback on search regexp commands.
+  * Customization support fixes.
+  * Added an option for minibuffer exit auditory icon.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 10 Apr 2018 23:38:23 +0300
+
 emacspeak (45.0-3trusty2) trusty; urgency=low
 
   * Installation paths fixed.
