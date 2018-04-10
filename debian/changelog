@@ -1,3 +1,12 @@
+emacspeak (47.0-3stretch1) stretch; urgency=low
+
+  * Auditory feedback on search regexp commands.
+  * Customization support fixes.
+  * Added an option for minibuffer exit auditory icon.
+  * When querying user speak prompt immediately.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 10 Apr 2018 23:35:02 +0300
+
 emacspeak (47.0-2stretch1) stretch; urgency=low
 
   * Missed symlink fix.
