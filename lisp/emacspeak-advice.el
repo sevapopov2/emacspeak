@@ -2158,6 +2158,7 @@ Produce an auditory icon if possible."
 (loop
  for f in
  '(search-forward search-backward
+                  search-forward-regexp search-backward-regexp
                   word-search-forward word-search-backward)
  do
  (eval
