@@ -1,3 +1,12 @@
+emacspeak (47.0-3xenial1) xenial; urgency=low
+
+  * Auditory feedback on search regexp commands.
+  * Customization support fixes.
+  * Added an option for minibuffer exit auditory icon.
+  * When querying user speak prompt immediately.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 10 Apr 2018 23:33:20 +0300
+
 emacspeak (47.0-2xenial1) xenial; urgency=low
 
   * Missed symlink fix.
