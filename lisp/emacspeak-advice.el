@@ -2507,6 +2507,11 @@ Produce auditory icons if possible."
 (defvar emacspeak-minibuffer-enter-auditory-icon t
   "Produce auditory icon when entering the minibuffer.")
 
+(defcustom emacspeak-confirm-minibuffer-exit nil
+  "Indicate minibuffer exit by auditory icon."
+  :type 'boolean
+  :group 'emacspeak)
+
 (defun emacspeak-minibuffer-setup-hook ()
   "Actions to take when entering the minibuffer with emacspeak running."
   (declare (special emacspeak-minibuffer-enter-auditory-icon
@@ -2521,7 +2526,9 @@ Produce auditory icons if possible."
 
 (defun emacspeak-minibuffer-exit-hook ()
   "Actions performed when exiting the minibuffer with Emacspeak loaded."
-  (emacspeak-auditory-icon 'close-object))
+  (dtk-stop)
+  (when emacspeak-confirm-minibuffer-exit
+    (emacspeak-auditory-icon 'close-object)))
 
 ;;}}}
 ;;{{{ Advice occur
