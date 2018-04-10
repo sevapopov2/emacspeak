@@ -893,6 +893,7 @@ icon."
  (eval
   `(defadvice ,f (before emacspeak pre act comp)
      "Speak the prompt"
+     (when dtk-stop-immediately (dtk-stop))
      (let ((prompt (ad-get-arg 0))
            (dtk-stop-immediately nil))
        (emacspeak-auditory-icon 'item)
