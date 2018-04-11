@@ -215,7 +215,9 @@ were marked or unmarked for deletion."
        `(defadvice ,f (around emacspeak pre act comp)
 	  "Provide auditory feedback."
 	  (if (ems-interactive-p)
-	      (let ((emacspeak-speak-messages t))
+	      (let ((emacspeak-speak-messages t)
+                    (emacspeak-last-message nil)
+                    (inhibit-message nil))
 		(emacspeak-auditory-icon 'select-object)
 		ad-do-it)
 	    ad-do-it)
@@ -417,8 +419,7 @@ options passed to command `file'."
     (when (bolp)
       (backward-delete-char 1))
     (emacspeak-auditory-icon 'select-object)
-    (let ((emacspeak-speak-messages t))
-      (message (buffer-string)))))
+    (dtk-speak-and-echo (buffer-string))))
 
 (defun emacspeak-dired-speak-header-line()
   "Speak the header line of the dired buffer. "
@@ -434,8 +435,7 @@ On a directory line, run du -s on the directory to speak its size."
   (interactive)
   (dtk-stop)
   (let ((filename (dired-get-filename nil t))
-        (size 0)
-	(emacspeak-speak-messages t))
+        (size 0))
     (cond
      ((and filename
            (file-directory-p filename))
@@ -450,84 +450,87 @@ On a directory line, run du -s on the directory to speak its size."
 			4 5)
                     (split-string (ems-this-line)))))
       (emacspeak-auditory-icon 'select-object)
-      (message "File size %s"
-               size))
-     (t (message "No file on current line")))))
+      (dtk-speak-and-echo
+       (message "File size %s"
+                size)))
+     (t (dtk-speak-and-echo "No file on current line")))))
 
 (defun emacspeak-dired-speak-file-modification-time ()
   "Speak modification time  of the current file."
   (interactive)
-  (let ((filename (dired-get-filename nil t))
-	(emacspeak-speak-messages t))
+  (let ((filename (dired-get-filename nil t)))
     (cond
      (filename
       (emacspeak-auditory-icon 'select-object)
-      (message "Modified on : %s"
+      (dtk-speak-and-echo
+       (format "Modified on : %s"
                (format-time-string
                 emacspeak-speak-time-format-string
-                (nth 5 (file-attributes filename)))))
-     (t (message "No file on current line")))))
+                (nth 5 (file-attributes filename))))))
+     (t (dtk-speak-and-echo "No file on current line")))))
 
 (defun emacspeak-dired-speak-file-access-time ()
   "Speak access time  of the current file."
   (interactive)
-  (let ((filename (dired-get-filename nil t))
-	(emacspeak-speak-messages t))
+  (let ((filename (dired-get-filename nil t)))
     (cond
      (filename
       (emacspeak-auditory-icon 'select-object)
-      (message "Last accessed   on : %s"
+      (dtk-speak-and-echo
+       (format "Last accessed   on : %s"
                (format-time-string
                 emacspeak-speak-time-format-string
-                (nth 4 (file-attributes filename)))))
-     (t (message "No file on current line")))))
+                (nth 4 (file-attributes filename))))))
+     (t (dtk-speak-and-echo "No file on current line")))))
+
 (defun emacspeak-dired-speak-symlink-target ()
   "Speaks the target of the symlink on the current line."
   (interactive)
-  (let ((filename (dired-get-filename nil t))
-	(emacspeak-speak-messages t))
+  (let ((filename (dired-get-filename nil t)))
     (cond
      (filename
       (emacspeak-auditory-icon 'select-object)
       (cond
        ((file-symlink-p filename)
-        (message "Target is %s"
-                 (file-chase-links filename)))
-       (t (message "%s is not a symbolic link" filename))))
-     (t (message "No file on current line")))))
+        (dtk-speak-and-echo
+         (format "Target is %s"
+                 (file-chase-links filename))))
+       (t (dtk-speak-and-echo (format "%s is not a symbolic link" filename)))))
+     (t (dtk-speak-and-echo "No file on current line")))))
+
 (defun emacspeak-dired-speak-file-permissions ()
   "Speak the permissions of the current file."
   (interactive)
-  (let ((filename (dired-get-filename nil t))
-	(emacspeak-speak-messages t))
+  (let ((filename (dired-get-filename nil t)))
     (cond
      (filename
       (emacspeak-auditory-icon 'select-object)
-      (message "Permissions %s"
+      (dtk-speak-and-echo
+       (format "Permissions %s"
                (let ((permissions (nth 8 (file-attributes filename))))
 		 (if (string-match "^.[?]+$" permissions)
 		     (nth  (if (= (char-after (line-beginning-position)) ?\ )
 			       0 1)
 			   (split-string (thing-at-point 'line)))
-		   permissions))))
-     (t (message "No file on current line")))))
+		   permissions)))))
+     (t (dtk-speak-and-echo "No file on current line")))))
 
 (defun emacspeak-dired-speak-file-ownerships ()
   "Speak the ownerships of the current file."
   (interactive)
-  (let ((filename (dired-get-filename nil t))
-	(emacspeak-speak-messages t))
+  (let ((filename (dired-get-filename nil t)))
     (cond
      (filename
       (emacspeak-auditory-icon 'select-object)
-      (message "Owned by %s/%s"
+      (dtk-speak-and-echo
+       (format "Owned by %s/%s"
 	       (nth (if (= (char-after (line-beginning-position)) ?\ )
 			2 3)
 		    (split-string (thing-at-point 'line)))
 	       (nth (if (= (char-after (line-beginning-position)) ?\ )
 			3 4)
-		    (split-string (thing-at-point 'line)))))
-     (t (message "No file on current line")))))
+		    (split-string (thing-at-point 'line))))))
+     (t (dtk-speak-and-echo "No file on current line")))))
 
 ;;}}}
 ;;{{{  keys
