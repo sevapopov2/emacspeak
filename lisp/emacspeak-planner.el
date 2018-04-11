@@ -139,26 +139,27 @@
 (defadvice planner-seek-next-unfinished-task (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (ems-interactive-p)
-    (if (not ad-return-value)
-	(let ((emacspeak-speak-messages t))
-	  (emacspeak-auditory-icon 'warn-user)
-	  (message "No more unfinished tasks"))
-      (emacspeak-auditory-icon 'delete-object)
-      (emacspeak-speak-line))))
+    (if ad-return-value
+        (progn
+          (emacspeak-auditory-icon 'delete-object)
+          (emacspeak-speak-line))
+      (emacspeak-auditory-icon 'warn-user)
+      (dtk-speak-and-echo "No more unfinished tasks"))))
 
 (defadvice planner-calendar-show (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
   (when (ems-interactive-p)
     (if ad-return-value
-	(emacspeak-auditory-icon 'help)
-      (let ((emacspeak-speak-messages t))
-	(emacspeak-auditory-icon 'warn-user)
-	(message "No planner file for this date")))))
+        (emacspeak-auditory-icon 'help)
+      (emacspeak-auditory-icon 'warn-user)
+      (dtk-speak-and-echo "No planner file for this date"))))
 
 (defadvice planner-schedule-show-end-project (around emacspeak pre act comp)
   "Provide speech feedback."
   (if (ems-interactive-p)
-      (let ((emacspeak-speak-messages t))
+      (let ((emacspeak-speak-messages t)
+            (emacspeak-last-message nil)
+            (inhibit-message nil))
 	(emacspeak-auditory-icon 'select-object)
 	ad-do-it)
     ad-do-it)

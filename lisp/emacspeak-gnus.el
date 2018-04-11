@@ -253,8 +253,11 @@ Helps to prevent words from being spelled instead of spoken."
 
 (defadvice gnus-multiple-choice (around emacspeak pre act comp)
   "Provide auditory feedback."
+  (cl-declare (special emacspeak-speak-messages emacspeak-last-message inhibit-message))
   (emacspeak-auditory-icon 'ask-short-question )
-  (let ((emacspeak-speak-messages t))
+  (let ((emacspeak-speak-messages t)
+        (emacspeak-last-message nil)
+        (inhibit-message))
     (tts-with-punctuations 'all ad-do-it)
     ad-return-value))
 

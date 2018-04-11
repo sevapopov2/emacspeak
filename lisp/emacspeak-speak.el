@@ -1602,7 +1602,7 @@ Negative prefix arg speaks from start of buffer to point."
                (previous-single-property-change beg 'mouse-face)
                (point-min)))
     (setq end (or (next-single-property-change end 'mouse-face) (point-max)))
-    (buffer-substring beg end)))
+    (buffer-substring-no-properties beg end)))
 
 ;;}}}
 ;;{{{ mail check
@@ -1818,14 +1818,15 @@ semantic to do the work."
 
 (defun emacspeak-speak-buffer-info ()
   "Speak buffer information."
-  (let ((emacspeak-speak-messages t)
-	(deactivate-mark nil))
-    (message "Buffer has %s lines and %s characters %s "
+  (let ((deactivate-mark nil))
+    (dtk-speak-and-echo
+     (format "Buffer has %s lines and %s characters %s "
              (count-lines (point-min) (point-max))
              (- (point-max) (point-min))
              (if (= 1 (point-min))
                  ""
-               "with narrowing in effect. "))))
+               "with narrowing in effect. ")))))
+
 (voice-setup-map-face 'header-line 'voice-bolden)
 
 (defun emacspeak--sox-multiwindow (corners)
@@ -2003,7 +2004,9 @@ Optional  interactive prefix arg `copy-as-kill' copies spoken info to kill ring.
   (interactive)
   (when (and (ems-interactive-p) dtk-stop-immediately)
     (dtk-stop))
-  (let ((emacspeak-speak-messages t))
+  (let ((emacspeak-speak-messages t)
+        (emacspeak-last-message nil)
+        (inhibit-message nil))
     (what-line)))
 
 ;;;###autoload
@@ -2750,17 +2753,16 @@ set the current local value to the result.")
   (interactive)
   (when (and (ems-interactive-p) dtk-stop-immediately)
     (dtk-stop))
-  (let ((emacspeak-speak-messages t))
-    (message "Point at column %d" (current-column))))
+  (dtk-speak-and-echo (format "Point at column %d" (current-column))))
 
 (defun emacspeak-speak-current-percentage ()
   "Announce the percentage into the current buffer."
   (interactive)
   (when (and (ems-interactive-p) dtk-stop-immediately)
     (dtk-stop))
-  (let ((emacspeak-speak-messages t))
-    (message "Point is  %d%% into  the current buffer"
-             (emacspeak-get-current-percentage-into-buffer))))
+  (dtk-speak-and-echo
+   (message "Point is  %d%% into  the current buffer"
+            (emacspeak-get-current-percentage-into-buffer))))
 
 ;;}}}
 ;;{{{  Speak the last message again:
@@ -2816,12 +2818,12 @@ Otherwise just display a message."
 (defun emacspeak-speak-window-information ()
   "Speaks information about current window."
   (interactive)
-  (let ((emacspeak-speak-messages t))
-    (message "Current window has %s lines and %s columns with top left %s %s "
-             (window-height)
-             (window-width)
-             (cl-first (window-edges))
-             (cl-second (window-edges)))))
+  (dtk-speak-and-echo
+   (message "Current window has %s lines and %s columns with top left %s %s "
+            (window-height)
+            (window-width)
+            (cl-first (window-edges))
+            (cl-second (window-edges)))))
 
 ;;;###autoload
 (defun emacspeak-speak-current-window ()
@@ -3742,9 +3744,8 @@ This command  is designed for use in a windowing environment like X."
 
 (define-key minibuffer-local-completion-map "\C-n" 'emacspeak-minibuffer-next-completion)
 (define-key minibuffer-local-completion-map "\C-p" 'emacspeak-minibuffer-previous-completion)
-(define-key minibuffer-local-completion-map  (kbd "C-@") 'emacspeak-minibuffer-choose-completion)
 (define-key minibuffer-local-completion-map
-  (kbd "C-SPC") 'emacspeak-minibuffer-choose-completion)
+  (kbd "<C-return>") 'emacspeak-minibuffer-choose-completion)
 
 ;;}}}
 ;;{{{ Open Emacspeak Info Pages:

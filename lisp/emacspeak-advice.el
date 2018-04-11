@@ -3087,8 +3087,10 @@ Produce auditory icons if possible."
       (eval
        `(defadvice ,f (around emacspeak pre act)
           "Provide speech feedback unconditionally."
-          (cl-declare (special emacspeak-speak-messages))
-          (let ((emacspeak-speak-messages t))
+          (cl-declare (special emacspeak-speak-messages emacspeak-last-message inhibit-message))
+          (let ((emacspeak-speak-messages t)
+                (emacspeak-last-message nil)
+                (inhibit-message nil))
             ad-do-it)
           ad-return-value)))
 
