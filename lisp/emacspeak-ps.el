@@ -144,7 +144,9 @@ Otherwise cue user to the line just created."
 (defadvice ps-mode-show-version (around emacspeak pre act comp)
   "Provide speech feedback."
   (if (ems-interactive-p)
-      (let ((emacspeak-speak-messages t))
+      (let ((emacspeak-speak-messages t)
+            (emacspeak-last-message nil)
+            (inhibit-message nil))
 	ad-do-it)
     ad-do-it)
   ad-return-value)
