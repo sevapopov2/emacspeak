@@ -35,6 +35,9 @@ case "$FLAVOR" in
         ;;
 esac
 
+# Prevent gnupg to write to /root/.gnupg which leaves files behind on purge
+export GNUPGHOME=`mktemp -d /tmp/gnupg.XXXXXX`
+
 if [ -d ${ELCDIR} ]; then
     rm -rf ${ELCDIR}/lisp ${ELCDIR}/compile.log.gz
 fi
@@ -68,5 +71,7 @@ rm -f Makefile
 gzip compile.log
 
 echo "  Compilation log saved to ${ELCDIR}/compile.log.gz"
+
+rm -rf ${GNUPGHOME}
 
 exit 0
