@@ -95,12 +95,12 @@
        `(defadvice ,f (after emacspeak pre act comp)
           "Provide speech feedback."
           (when (ems-interactive-p)
-            (if (not (muse-link-at-point))
-                (let ((emacspeak-speak-messages t))
-                  (emacspeak-auditory-icon 'warn-user)
-                  (message "No links on this page"))
-              (emacspeak-auditory-icon 'large-movement)
-              (emacspeak-speak-text-range 'keymap))))))
+            (if (muse-link-at-point)
+                (progn
+                  (emacspeak-auditory-icon 'large-movement)
+                  (emacspeak-speak-text-range 'keymap))
+              (emacspeak-auditory-icon 'warn-user)
+              (dtk-speak-and-echo "No links on this page"))))))
 
 (cl-loop for f in
       '(muse-edit-link-at-point

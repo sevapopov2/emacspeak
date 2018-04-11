@@ -247,12 +247,13 @@
     (goto-char (point-min))
     (re-search-forward emacspeak-custom-group-regexp
                        nil t)
+    (forward-line 0)
     (when (called-interactively-p 'interactive)
       (emacspeak-auditory-icon 'large-movement)
       (emacspeak-speak-line))))
 
 (defvar emacspeak-custom-toolbar-regexp
-  "^Operate on everything in this buffer:"
+  "^ *Operate on \\(everything\\|all settings\\) in this buffer"
   "Pattern that identifies toolbar section.")
 
 ;;;###autoload
@@ -264,6 +265,7 @@
     (goto-char (point-min))
     (re-search-forward emacspeak-custom-toolbar-regexp nil
                        t)
+    (forward-line 0)
     (when (called-interactively-p 'interactive)
       (emacspeak-auditory-icon 'large-movement)
       (emacspeak-speak-line))))

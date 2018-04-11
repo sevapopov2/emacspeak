@@ -166,48 +166,44 @@ first initializing it if necessary."
 (defun emacspeak-arc-speak-file-name ()
   "Speak the name of the file on current line"
   (interactive)
-  (cl-declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
-  (let ((entry (archive-get-descr 'no-error))
-	(emacspeak-speak-messages t))
+  (let ((entry (archive-get-descr 'no-error)))
     (cond
      ((null entry)
-      (message "No file on this line"))
+      (dtk-speak-and-echo "No file on this line"))
      (t
       (emacspeak-auditory-icon 'select-object)
-      (message "File: %s"
+      (dtk-speak-and-echo
+       (format "File: %s"
                (nth  (emacspeak-arc-get-field-index "File")
-                     (split-string (ems-this-line))))))))
+                     (split-string (ems-this-line)))))))))
 
 (defun emacspeak-arc-speak-file-size ()
   "Speak the size of the file on current line"
   (interactive)
-  (cl-declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
-  (let ((entry (archive-get-descr 'no-error))
-	(emacspeak-speak-messages t))
+  (let ((entry (archive-get-descr 'no-error)))
     (cond
      ((null entry)
-      (message "No file on this line"))
+      (dtk-speak-and-echo "No file on this line"))
      (t
       (emacspeak-auditory-icon 'select-object)
-      (message "File size %s"
+      (dtk-speak-and-echo
+       (format "File size %s"
                (nth  (emacspeak-arc-get-field-index "Length")
-                     (split-string (ems-this-line))))))))
+                     (split-string (ems-this-line)))))))))
 
 (defun emacspeak-arc-speak-file-modification-time ()
   "Speak modification time of the file on current line"
   (interactive)
-  (cl-declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
-  (let ((entry (archive-get-descr 'no-error))
-	(emacspeak-speak-messages t))
+  (let ((entry (archive-get-descr 'no-error)))
     (cond
      ((null entry)
-      (message "No file on this line"))
+      (dtk-speak-and-echo "No file on this line"))
      (t
       (emacspeak-auditory-icon 'select-object)
       (let* ((fields (split-string (ems-this-line)))
@@ -215,28 +211,29 @@ first initializing it if necessary."
                          fields))
              (time (nth  (emacspeak-arc-get-field-index "Time")
                          fields)))
-        (message "Modified on %s at %s"
-                 date time))))))
+        (dtk-speak-and-echo
+         (format "Modified on %s at %s"
+                 date time)))))))
 
 (defun emacspeak-arc-speak-file-permissions()
   "Speak permissions of file current entry "
   (interactive)
-  (cl-declare (special emacspeak-speak-messages))
   (unless (eq major-mode 'archive-mode)
     (error "This command should be called only in archive mode"))
   (let ((entry (archive-get-descr 'no-error))
-        (mode nil)
-	(emacspeak-speak-messages t))
+        (mode nil))
     (cond
      ((null entry)
-      (message "No file on this line"))
+      (dtk-speak-and-echo "No file on this line"))
      (t
       (emacspeak-auditory-icon 'select-object)
       (setq mode
             (archive-int-to-mode
              (aref entry 3)))
-      (message  "Permissions  %s "
-                mode)))))
+      (dtk-speak-and-echo
+       (format  "Permissions  %s "
+                mode))))))
+
 (defun emacspeak-arc-setup-keys ()
   "Setup emacspeak keys for arc mode"
   (cl-declare (special archive-mode-map))

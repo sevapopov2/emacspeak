@@ -67,22 +67,22 @@
 (defadvice emacs-wiki-next-reference (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (ems-interactive-p)
-    (if (not (emacs-wiki-link-at-point))
-	(let ((emacspeak-speak-messages t))
-	  (emacspeak-auditory-icon 'warn-user)
-	  (message "No links on this page"))
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-speak-text-range 'keymap))))
+    (if (emacs-wiki-link-at-point)
+        (progn
+          (emacspeak-auditory-icon 'large-movement)
+          (emacspeak-speak-text-range 'keymap))
+      (emacspeak-auditory-icon 'warn-user)
+      (dtk-speak-and-echo "No links on this page"))))
 
 (defadvice emacs-wiki-previous-reference (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (ems-interactive-p)
-    (if (not (emacs-wiki-link-at-point))
-	(let ((emacspeak-speak-messages t))
-	  (emacspeak-auditory-icon 'warn-user)
-	  (message "No links on this page"))
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-speak-text-range 'keymap))))
+    (if (emacs-wiki-link-at-point)
+        (progn
+          (emacspeak-auditory-icon 'large-movement)
+          (emacspeak-speak-text-range 'keymap))
+      (emacspeak-auditory-icon 'warn-user)
+      (dtk-speak-and-echo "No links on this page"))))
 
 (defadvice emacs-wiki-publish (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
