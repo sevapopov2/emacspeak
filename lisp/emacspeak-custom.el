@@ -88,7 +88,7 @@
   "Provide auditory feedback."
   (when (ems-interactive-p )
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-mode-line)))
 
 (defadvice customize-save-customized (after emacspeak pre act comp)
   "Provide auditory feedback. "
@@ -172,7 +172,7 @@
 ;;}}}
 ;;{{{ custom hook
 
-(add-hook 'custom-mode-hook
+(add-hook 'Custom-mode-hook
           (function
            (lambda nil
              (emacspeak-pronounce-refresh-pronunciations))))
@@ -241,15 +241,17 @@
   "Jump to custom group when in a customization buffer."
   (interactive)
   (declare (special emacspeak-custom-group-regexp))
-  (when (eq major-mode 'custom-mode)
+  (when (eq major-mode 'Custom-mode)
     (goto-char (point-min))
     (re-search-forward emacspeak-custom-group-regexp
                        nil t)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
+    (beginning-of-line)
+    (when (ems-interactive-p)
+      (emacspeak-auditory-icon 'large-movement)
+      (emacspeak-speak-line))))
 
 (defcustom emacspeak-custom-toolbar-regexp
-  "^Operate on everything in this buffer:"
+  "^ *Operate on \\(everything\\|all settings\\) in this buffer"
   "Pattern that identifies toolbar section."
   :type 'regexp
   :group 'emacspeak-custom)
@@ -258,12 +260,14 @@
   "Jump to custom toolbar when in a customization buffer."
   (interactive)
   (declare (special emacspeak-custom-toolbar-regexp))
-  (when (eq major-mode 'custom-mode)
+  (when (eq major-mode 'Custom-mode)
     (goto-char (point-min))
     (re-search-forward emacspeak-custom-toolbar-regexp nil
                        t)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
+    (beginning-of-line)
+    (when (ems-interactive-p)
+      (emacspeak-auditory-icon 'large-movement)
+      (emacspeak-speak-line))))
 
 ;;}}}
 ;;{{{  bind emacspeak commands 
