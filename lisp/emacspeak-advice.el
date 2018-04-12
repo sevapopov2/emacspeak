@@ -954,7 +954,7 @@ icon."
 
 (defadvice minibuffer-complete-and-exit (before emacspeak pre act comp)
   "Provide an auditory icon."
-  (when (ems-interactive-p)
+  (when (and (ems-interactive-p) emacspeak-confirm-minibuffer-exit)
     (emacspeak-auditory-icon 'close-object)))
 
 (defadvice tmm-menubar (before emacspeak pre act comp)
