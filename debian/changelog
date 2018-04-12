@@ -1,3 +1,12 @@
+emacspeak (45.0-3trusty4) trusty; urgency=low
+
+  * Prevent /root/.gnupg creation during install.
+  * Customization support fix.
+  * Don't override useful keystroke.
+  * Better speech feedback in completions.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 12 Apr 2018 20:40:53 +0300
+
 emacspeak (45.0-3trusty3) trusty; urgency=low
 
   * Auditory feedback on search regexp commands.
