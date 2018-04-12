@@ -952,6 +952,11 @@ icon."
     (emacspeak-auditory-icon 'help)
     (dtk-speak (emacspeak-get-current-completion))))
 
+(defcustom emacspeak-confirm-minibuffer-exit nil
+  "Indicate minibuffer exit by auditory icon."
+  :type 'boolean
+  :group 'emacspeak)
+
 (defadvice minibuffer-complete-and-exit (before emacspeak pre act comp)
   "Provide an auditory icon."
   (when (and (ems-interactive-p) emacspeak-confirm-minibuffer-exit)
@@ -2507,11 +2512,6 @@ Produce auditory icons if possible."
 
 (defvar emacspeak-minibuffer-enter-auditory-icon t
   "Produce auditory icon when entering the minibuffer.")
-
-(defcustom emacspeak-confirm-minibuffer-exit nil
-  "Indicate minibuffer exit by auditory icon."
-  :type 'boolean
-  :group 'emacspeak)
 
 (defun emacspeak-minibuffer-setup-hook ()
   "Actions to take when entering the minibuffer with emacspeak running."
