@@ -1,3 +1,10 @@
+emacspeak (41.0-8precise5) precise; urgency=low
+
+  * Prevent /root/.gnupg creation during install.
+  * Customization support fixes.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 12 Apr 2018 20:47:32 +0300
+
 emacspeak (41.0-8precise4) precise; urgency=low
 
   * Auditory feedback on search regexp commands.
