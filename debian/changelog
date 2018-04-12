@@ -1,3 +1,9 @@
+emacspeak (45.0-3jessie5) jessie; urgency=low
+
+  * Minibuffer exit audio confirmation fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 12 Apr 2018 22:46:16 +0300
+
 emacspeak (45.0-3jessie4) jessie; urgency=low
 
   * Prevent /root/.gnupg creation during install.
