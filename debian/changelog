@@ -1,3 +1,13 @@
+emacspeak (47.0-4xenial1) xenial; urgency=low
+
+  * Prevent /root/.gnupg creation during install.
+  * Customization support fix.
+  * Avoid suppressing speech for explicitly requested info.
+  * Don't override useful keystroke.
+  * Better speech feedback in completions.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 12 Apr 2018 20:35:35 +0300
+
 emacspeak (47.0-3xenial1) xenial; urgency=low
 
   * Auditory feedback on search regexp commands.
