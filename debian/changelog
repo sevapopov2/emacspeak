@@ -1,3 +1,10 @@
+emacspeak (45.0-3trusty6) trusty; urgency=low
+
+  * Compilation warning fix.
+  * Added stumpwm to examples.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 12 Apr 2018 23:40:49 +0300
+
 emacspeak (45.0-3trusty5) trusty; urgency=low
 
   * Minibuffer exit audio confirmation fix.
