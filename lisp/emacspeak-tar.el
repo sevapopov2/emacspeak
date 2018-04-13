@@ -78,33 +78,22 @@
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
-(defadvice tar-next-line (before emacspeak pre act com)
-  "Produce auditory icon  if we cant move."
-  (when (and (ems-interactive-p)
-             (save-excursion
-               (end-of-line)
-               (eobp)))
-    (emacspeak-auditory-icon 'warn-user)))
-
-(defadvice tar-previous-line (before emacspeak pre act com)
-  "Produce auditory icon  if we cant move."
-  (when (and (ems-interactive-p)
-             (save-excursion
-               (beginning-of-line)
-               (bobp)))
-    (emacspeak-auditory-icon 'warn-user)))
-
-(defadvice tar-next-line (after emacspeak pre act comp)
-  "Provide spoken feedback"
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-tar-speak-line)))
-
-(defadvice tar-previous-line (after emacspeak pre act comp)
-  "Provide spoken feedback"
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (emacspeak-tar-speak-line)))
+(loop
+ for f in
+ '(tar-next-line tar-previous-line)
+ do
+ (eval
+  `(defadvice ,f (around emacspeak pre act comp)
+     "Provide spoken feedback. Produce auditory icon  if we cant move."
+     (if (ems-interactive-p)
+         (let ((n (line-number-at-pos)))
+           ad-do-it
+           (if (= (line-number-at-pos) n)
+               (emacspeak-auditory-icon 'warn-user)
+             (emacspeak-auditory-icon 'select-object)
+             (emacspeak-tar-speak-line))
+           ad-return-value)
+       ad-do-it))))
 
 (defadvice tar-flag-deleted (after emacspeak pre act comp)
   "Provide auditory feedback"
