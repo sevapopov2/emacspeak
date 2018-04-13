@@ -150,6 +150,7 @@ that implements the speech-enabling extensions for `package' (a string)."
 (emacspeak-do-package-setup "analog" 'emacspeak-analog)
 (emacspeak-do-package-setup "ansi-color" 'emacspeak-ansi-color)
 (emacspeak-do-package-setup "apt-sources" 'emacspeak-apt-sources)
+(emacspeak-do-package-setup "apt-utils" 'emacspeak-apt-utils)
 (emacspeak-do-package-setup "arc-mode" 'emacspeak-arc)
 (emacspeak-do-package-setup "asm-mode" 'emacspeak-asm)
 (emacspeak-do-package-setup "bbdb" 'emacspeak-bbdb)
