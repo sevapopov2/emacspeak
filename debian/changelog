@@ -1,3 +1,10 @@
+emacspeak (45.0-3trusty7) trusty; urgency=low
+
+  * Signal dired buffer borders when navigating.
+  * Fixed archives viewing support.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 13 Apr 2018 19:39:17 +0300
+
 emacspeak (45.0-3trusty6) trusty; urgency=low
 
   * Compilation warning fix.
