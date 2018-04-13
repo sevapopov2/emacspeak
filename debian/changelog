@@ -1,3 +1,10 @@
+emacspeak (45.0-3jessie7) jessie; urgency=low
+
+  * Signal dired buffer borders when navigating.
+  * Fixed archives viewing support.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 13 Apr 2018 19:41:48 +0300
+
 emacspeak (45.0-3jessie6) jessie; urgency=low
 
   * Compilation warning fix.
