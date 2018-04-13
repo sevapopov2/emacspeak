@@ -1,3 +1,11 @@
+emacspeak (47.0-5stretch1) stretch; urgency=low
+
+  * Signal dired buffer borders when navigating.
+  * Fixed archives viewing support.
+  * Fixed Apt utils support.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 13 Apr 2018 19:14:38 +0300
+
 emacspeak (47.0-4stretch1) stretch; urgency=low
 
   * Prevent /root/.gnupg creation during install.
