@@ -357,11 +357,17 @@ Provide auditory icon when finished."
  '(dired-next-line dired-previous-line)
  do
  (eval
-  `(defadvice ,f  (after emacspeak pre act)
-     "Speak the filename name."
-     (when (ems-interactive-p  )
-       (emacspeak-auditory-icon 'select-object)
-       (emacspeak-dired-speak-line)))))
+  `(defadvice ,f (around emacspeak pre act comp)
+     "Speak the file name. Produce auditory icon  if we cant move."
+     (if (ems-interactive-p)
+         (let ((n (line-number-at-pos)))
+           ad-do-it
+           (if (= (line-number-at-pos) n)
+               (emacspeak-auditory-icon 'warn-user)
+             (emacspeak-auditory-icon 'select-object)
+             (emacspeak-dired-speak-line))
+           ad-return-value)
+       ad-do-it))))
 
 ;;; Producing auditory icons:
 ;;; These dired commands do some action that causes a state change:
