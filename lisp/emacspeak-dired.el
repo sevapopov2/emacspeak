@@ -324,17 +324,6 @@ Provide auditory icon when finished."
            (t ad-do-it))
           ad-return-value)))
 
-(loop for f in
-      '(dired-next-line
-        dired-previous-line)
-      do
-      (eval
-       `(defadvice ,f  (after  emacspeak pre act comp)
-          "Speak the filename."
-          (when (ems-interactive-p )
-            (emacspeak-auditory-icon 'select-object)
-            (emacspeak-dired-speak-line)))))
-
 (loop
  for  f in
  '(
