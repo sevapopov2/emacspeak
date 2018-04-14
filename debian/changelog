@@ -1,3 +1,9 @@
+emacspeak (41.0-8precise7) precise; urgency=low
+
+  * Dired navigation support fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 15 Apr 2018 02:51:14 +0300
+
 emacspeak (41.0-8precise6) precise; urgency=low
 
   * Signal dired buffer borders when navigating.
