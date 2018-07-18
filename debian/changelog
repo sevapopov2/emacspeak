@@ -1,3 +1,9 @@
+emacspeak (47.0-6xenial1) xenial; urgency=low
+
+  * W3m support fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 18 Jul 2018 21:56:01 +0300
+
 emacspeak (47.0-5xenial1) xenial; urgency=low
 
   * Signal dired buffer borders when navigating.
