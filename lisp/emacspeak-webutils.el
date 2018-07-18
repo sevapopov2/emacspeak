@@ -199,6 +199,7 @@ Forward punctuation and rate  settings to resulting buffer."
   "Check to see if functions are called from a browser buffer"
   (cl-declare (special major-mode))
   (unless (or (eq major-mode 'w3-mode)
+              (eq major-mode 'w3m-mode)
               (eq major-mode 'eww-mode))
     (error "This command cannot be used outside browser buffers.")))
 
