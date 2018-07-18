@@ -1,3 +1,9 @@
+emacspeak (47.0-6) unstable; urgency=low
+
+  * W3m support fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 18 Jul 2018 21:51:03 +0300
+
 emacspeak (47.0-5) unstable; urgency=low
 
   * Signal dired buffer borders when navigating.
