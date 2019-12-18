@@ -179,7 +179,7 @@ node-spec."
       (info-initialize)
       (setq f
             (when (fboundp 'info--manual-names)
-              (completing-read "File: " (info--manual-names) nil t)))
+              (completing-read "File: " (info--manual-names nil) nil t)))
       (setq n (completing-read "Node: " (apply 'Info-build-node-completions (and f (list f)))))
       (if f
           (format "(%s)%s" f n)

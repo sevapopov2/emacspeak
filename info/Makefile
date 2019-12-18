@@ -14,7 +14,7 @@ FILES=*.texi
 
 MAKEINFO = makeinfo 
 CSS=--css-ref="http://www.w3.org/StyleSheets/Core/Modernist"
-TEXI2HTML=texi2html
+TEXI2HTML=texi2any --set-customization-variable TEXI2HTML=1
 infodir =/usr/share/info#normally supplied by caller
 INSTALL = install
 EMACS=emacs
@@ -45,7 +45,7 @@ uninstall:
 emacspeak.info: emacspeak.texi 
 
 html: emacspeak.texi
-	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
+	$(TEXI2HTML) --split chapter --output $@ $<
 
 introducing-emacspeak.info: introducing-emacspeak.texi
 
@@ -61,10 +61,10 @@ man: emacspeak.texi
 	@echo "Commit and push updated HTML files from gh-pages!"
 
 introducing-emacspeak: introducing-emacspeak.texi
-	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
+	$(TEXI2HTML) --split chapter --output $@ $<
 
 turning-twenty: turning-twenty.texi
-	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
+	$(TEXI2HTML) --split chapter --output $@ $<
 
 publish:
 	cd ../../gh-pages-emacspeak && make

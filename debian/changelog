@@ -1,3 +1,9 @@
+emacspeak (47.0-6bionic1) bionic; urgency=low
+
+  * Distribution specific build.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 18 Dec 2019 07:05:47 +0300
+
 emacspeak (47.0-6) unstable; urgency=low
 
   * W3m support fix.
