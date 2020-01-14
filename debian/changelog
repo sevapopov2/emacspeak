@@ -1,3 +1,9 @@
+emacspeak (47.0-6buster3) buster; urgency=high
+
+  * Fixed critical error in emacsen install script.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 14 Jan 2020 21:06:33 +0300
+
 emacspeak (47.0-6buster2) buster; urgency=high
 
   * Fixed byte-compilation with flavor emacs with newer emacs version.
