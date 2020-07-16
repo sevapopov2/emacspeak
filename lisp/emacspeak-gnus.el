@@ -204,6 +204,8 @@ Helps to prevent words from being spelled instead of spoken."
       '(gnus-group-suspend
         gnus-group-quit
         gnus-group-exit
+        gnus-browse-exit
+        gnus-server-exit
         gnus-edit-form-done)
       do
       (eval
@@ -277,7 +279,10 @@ Helps to prevent words from being spelled instead of spoken."
                            gnus-group-prev-group gnus-group-next-group
                            gnus-group-prev-unread-group  gnus-group-next-unread-group
                            gnus-group-get-new-news-this-group
-                           gnus-group-best-unread-group gnus-group-jump-to-group)
+                           gnus-group-best-unread-group gnus-group-jump-to-group
+                           gnus-group-enter-server-mode gnus-server-edit-buffer
+                           gnus-server-read-server gnus-server-read-server-in-server-buffer
+                           gnus-browse-select-group)
  do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
@@ -286,11 +291,16 @@ Helps to prevent words from being spelled instead of spoken."
        (emacspeak-auditory-icon 'select-object)
        (emacspeak-speak-line)))))
 
-(defadvice gnus-group-unsubscribe-current-group (after emacspeak pre act comp)
-  "Produce an auditory icon indicating this group is being deselected."
-  (when (ems-interactive-p )
-    (emacspeak-auditory-icon 'deselect-object)
-    (emacspeak-speak-line )))
+(loop for f in
+      '(gnus-group-unsubscribe-current-group
+        gnus-browse-unsubscribe-current-group)
+      do
+      (eval
+       `(defadvice ,f (after emacspeak pre act comp)
+          "Produce an auditory icon indicating this group is being deselected."
+          (when (ems-interactive-p)
+            (emacspeak-auditory-icon 'deselect-object)
+            (emacspeak-speak-line)))))
 
 (defadvice gnus-group-catchup-current (after emacspeak pre act comp)
   "Provide auditory feedback."
