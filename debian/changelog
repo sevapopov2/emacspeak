@@ -1,3 +1,9 @@
+emacspeak (47.0-7stretch1) stretch; urgency=low
+
+  * Gnus auditory feedback enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 16 Jul 2020 23:59:42 +0300
+
 emacspeak (47.0-6stretch1) stretch; urgency=low
 
   * W3m support fix.
