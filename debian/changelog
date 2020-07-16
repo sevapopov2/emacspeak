@@ -1,3 +1,9 @@
+emacspeak (41.0-8precise8) precise; urgency=low
+
+  * Gnus auditory feedback enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 17 Jul 2020 00:15:19 +0300
+
 emacspeak (41.0-8precise7) precise; urgency=low
 
   * Dired navigation support fix.
