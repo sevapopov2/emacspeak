@@ -1,3 +1,9 @@
+emacspeak (41.0-8precise9) precise; urgency=low
+
+  * Gnus auditory feedback enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 20 Jul 2020 19:37:15 +0300
+
 emacspeak (41.0-8precise8) precise; urgency=low
 
   * Gnus auditory feedback enhancement.
