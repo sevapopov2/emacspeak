@@ -536,7 +536,11 @@ Indicate change of selection with an auditory icon if possible."
 
 (loop for f in
       '(gnus-summary-reply
-        gnus-summary-reply-with-original)
+        gnus-summary-reply-with-original
+        gnus-summary-wide-reply
+        gnus-summary-wide-reply-with-original
+        gnus-summary-very-wide-reply
+        gnus-summary-very-wide-reply-with-original)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
