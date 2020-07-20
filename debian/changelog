@@ -1,3 +1,9 @@
+emacspeak (47.0-8buster1) buster; urgency=low
+
+  * Gnus auditory feedback enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 20 Jul 2020 19:34:11 +0300
+
 emacspeak (47.0-7buster1) buster; urgency=low
 
   * Gnus auditory feedback enhancement.
