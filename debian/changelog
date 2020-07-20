@@ -1,3 +1,9 @@
+emacspeak (47.0-8bionic1) bionic; urgency=low
+
+  * Gnus auditory feedback enhancement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 20 Jul 2020 19:30:50 +0300
+
 emacspeak (47.0-7bionic1) bionic; urgency=low
 
   * Gnus auditory feedback enhancement.
