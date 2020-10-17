@@ -1,3 +1,9 @@
+emacspeak (47.0-9) unstable; urgency=low
+
+  * Wget progress audio indication improvement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 17 Oct 2020 09:21:11 +0300
+
 emacspeak (47.0-8) unstable; urgency=low
 
   * Gnus auditory feedback enhancement.
