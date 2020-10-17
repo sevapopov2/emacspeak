@@ -72,10 +72,17 @@
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
+(defconst emacspeak-wget-progress-notification-interval 0.5)
+(defvar emacspeak-wget-last-progress-notification-time (current-time))
+
 (defadvice wget-progress-update (before emacspeak pre act comp)
   "provide auditory confirmation"
-  (when (numberp (ad-get-arg 1))
-    (emacspeak-auditory-icon 'progress)))
+  (when (and (numberp (ad-get-arg 1))
+             (>= (time-to-seconds (time-subtract (current-time)
+                                                 emacspeak-wget-last-progress-notification-time))
+                 emacspeak-wget-progress-notification-interval))
+    (emacspeak-auditory-icon 'progress)
+    (setq emacspeak-wget-last-progress-notification-time (current-time))))
 
 (defadvice wget-quit (after emacspeak pre act comp)
   "provide auditory confirmation"
