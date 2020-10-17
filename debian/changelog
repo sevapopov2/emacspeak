@@ -1,3 +1,9 @@
+emacspeak (41.0-8precise10) precise; urgency=low
+
+  * Wget progress audio indication improvement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 17 Oct 2020 09:36:49 +0300
+
 emacspeak (41.0-8precise9) precise; urgency=low
 
   * Gnus auditory feedback enhancement.
