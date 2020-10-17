@@ -1,3 +1,9 @@
+emacspeak (47.0-9buster1) buster; urgency=low
+
+  * Wget progress audio indication improvement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 17 Oct 2020 09:32:37 +0300
+
 emacspeak (47.0-8buster1) buster; urgency=low
 
   * Gnus auditory feedback enhancement.
