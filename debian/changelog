@@ -1,3 +1,9 @@
+emacspeak (47.0-9focal1) focal; urgency=low
+
+  * Distribution specific build.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 22 Oct 2020 06:47:11 +0300
+
 emacspeak (47.0-9) unstable; urgency=low
 
   * Wget progress audio indication improvement.

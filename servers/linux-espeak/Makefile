@@ -9,7 +9,7 @@ TCL_VERSION =
 TCL_INCLUDE= /usr/include/tcl$(TCL_VERSION)
 CXXFLAGS+= -g    -O2 -fPIC  -DPIC  -pedantic -ansi -Wall -Wno-long-long -I$(TCL_INCLUDE)
 
-LIBS= -ltcl$(TCL_VERSION) -lespeak
+LIBS= -ltcl -lespeak
 
 TTS=tclespeak.so
 

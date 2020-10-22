@@ -1,15 +1,15 @@
 Source: emacspeak
 Section: editors
-Priority: extra
+Priority: optional
 Maintainer: Igor B. Poretsky <poretsky@mlbox.ru>
-Build-Depends: debhelper (>= 9), po-debconf, libespeak-dev, tcl-dev, libasound2-dev
-Build-Depends-Indep: texi2html, texinfo, texlive-latex-base, texlive-fonts-recommended, xsltproc, docbook-xsl, csound
-Standards-Version: 3.9.3
+Build-Depends: debhelper (>= 10), po-debconf, libespeak-dev, tcl-dev, libasound2-dev
+Build-Depends-Indep: texinfo, texlive-latex-base, texlive-fonts-recommended, xsltproc, docbook-xsl, csound
+Standards-Version: 4.1.4
 Homepage: http://emacspeak.sf.net
 
 Package: emacspeak
 Architecture: all
-Depends: emacs24 | emacs (>= 46.0), perl, make, adduser, ${misc:Depends}
+Depends: emacs (>= 1:26.1~), perl, make, adduser, ${misc:Depends}
 Conflicts: emacspeak-3d, emacspeak-dt, emacspeak-ss, multispeech (<< 2.8)
 Replaces: emacspeak-3d
 Recommends: multispeech (>= 2.8), python, tclx8.4, tcl
