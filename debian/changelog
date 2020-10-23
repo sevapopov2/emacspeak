@@ -1,3 +1,9 @@
+emacspeak (47.0-9focal2) focal; urgency=low
+
+  * Modern emacsen compatibility fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 23 Oct 2020 06:27:02 +0300
+
 emacspeak (47.0-9focal1) focal; urgency=low
 
   * Distribution specific build.
