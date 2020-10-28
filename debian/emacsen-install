@@ -32,20 +32,27 @@ esac
 export GNUPGHOME=`mktemp -d /tmp/gnupg.XXXXXX`
 
 if [ -d ${ELCDIR} ]; then
-    [ ${FLAVOR} = emacs ] || rm -rf ${ELCDIR}/lisp
+    if [ ${FLAVOR} = emacs ]
+    then find ${ELCDIR}/lisp \( -name '*.elc' -o -name '*-cus-load.el' -o -name '*-loaddefs.el' \) -delete
+    else rm -rf ${ELCDIR}/lisp
+    fi
     rm -f ${ELCDIR}/compile.log.gz
 fi
 
 install -m 755 -d ${ELCDIR}/lisp/g-client
 
 cd ${ELCDIR}/lisp
-[ ${FLAVOR} = emacs ] || find ../${ELDIR_REL}/lisp \( -name "*.el" -o -name Makefile \) -maxdepth 1 -exec ln -s {} \; 2>/dev/null
+if [ ${FLAVOR} != emacs ]; then
+    find ../${ELDIR_REL}/lisp \( -name '*.el' -o -name Makefile \) -maxdepth 1 -exec ln -s {} \; 2>/dev/null
+fi
 for file in *.elc
 do [ -e "${file%.elc}.el" ] || rm -f $file
 done
 
 cd g-client
-[ ${FLAVOR} = emacs ] || find ../../${ELDIR_REL}/lisp/g-client -maxdepth 1 -mindepth 1 -not -name "*.in" -not -name indent-files.el -exec ln -s {} \; 2>/dev/null
+if [ ${FLAVOR} != emacs ]; then
+    find ../../${ELDIR_REL}/lisp/g-client -maxdepth 1 -mindepth 1 -not -name '*.in' -not -name indent-files.el -exec ln -s {} \; 2>/dev/null
+fi
 for file in *.elc
 do [ -e "${file%.elc}.el" ] || rm -f $file
 done
@@ -55,15 +62,15 @@ if [ ${FLAVOR} != emacs ]; then
     for target in bash-utils blurbs etc Makefile README media js servers sounds xsl
     do [ -e $target ] || ln -s ${ELDIR_REL}/$target
     done
-    find -L . -type l -lname '*' -delete
 fi
+find -L . -type l -lname '*' -delete
 touch .nosearch
 
 make -ks EMACS=${FLAVOR} >compile.log 2>&1
 
-if [ ${FLAVOR} != emacs ]; then
-    find lisp \( -name "*~" -o -name Makefile \) -delete >/dev/null 2>&1
-        rm -f Makefile
+find lisp -name '*~' -delete
+if [ ${FLAVOR} != emacs ]
+then rm -f Makefile lisp/Makefile
 fi
 
 gzip compile.log
