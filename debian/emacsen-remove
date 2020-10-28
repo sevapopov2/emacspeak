@@ -3,8 +3,14 @@
 
 FLAVOR=$1
 PACKAGE=emacspeak
+ELCDIR=/usr/share/${FLAVOR}/site-lisp/${PACKAGE}
+
+echo remove/${PACKAGE}: purging byte-compiled files for ${FLAVOR}
 
 if [ ${FLAVOR} != emacs ]; then
-    echo remove/${PACKAGE}: purging byte-compiled files for ${FLAVOR}
-    rm -rf /usr/share/${FLAVOR}/site-lisp/${PACKAGE}
+    rm -rf ${ELCDIR}
+else
+    cd ${ELCDIR}
+    find lisp \( -name \*.elc -o -name \*-cus-load.el -o -name \*-loaddefs.el -o -name \*~ \) -delete
+    rm -f .nosearch compile.log.gz
 fi
