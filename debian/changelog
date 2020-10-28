@@ -1,3 +1,10 @@
+emacspeak (47.0-10bionic1) bionic; urgency=low
+
+  * Prevented empty symbol reference warning.
+  * Modern emacsen compatibility fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 28 Oct 2020 23:01:59 +0300
+
 emacspeak (47.0-9bionic1) bionic; urgency=low
 
   * Wget progress audio indication improvement.
