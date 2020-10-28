@@ -1,3 +1,10 @@
+emacspeak (47.0-10focal1) focal; urgency=low
+
+  * Prevented empty symbol reference warning.
+  * Emacsen scripts fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 28 Oct 2020 23:10:42 +0300
+
 emacspeak (47.0-9focal2) focal; urgency=low
 
   * Modern emacsen compatibility fix.
