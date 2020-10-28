@@ -1,3 +1,10 @@
+emacspeak (47.0-10buster1) buster; urgency=low
+
+  * Prevented empty symbol reference warning.
+  * More thorough cleanup on package removal.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 28 Oct 2020 22:59:43 +0300
+
 emacspeak (47.0-9buster1) buster; urgency=low
 
   * Wget progress audio indication improvement.
