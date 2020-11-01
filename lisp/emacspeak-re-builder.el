@@ -79,24 +79,21 @@
 (defadvice reb-next-match (after emacspeak pre act comp)
   "Speak matched line."
   (when (ems-interactive-p)
-    (save-excursion
-      (set-buffer reb-target-buffer)
+    (with-current-buffer reb-target-buffer
       (emacspeak-speak-line)
       (emacspeak-auditory-icon 'large-movement))))
 
 (defadvice reb-prev-match (after emacspeak pre act comp)
   "Speak matched line."
   (when (ems-interactive-p)
-    (save-excursion
-      (set-buffer reb-target-buffer)
+    (with-current-buffer reb-target-buffer
       (emacspeak-speak-line)
       (emacspeak-auditory-icon 'large-movement))))
 
 (defadvice reb-toggle-case (after emacspeak pre act comp)
   "Provide spoken feedback."
   (when (ems-interactive-p)
-    (save-excursion
-      (set-buffer reb-target-buffer)
+    (with-current-buffer reb-target-buffer
       (emacspeak-auditory-icon (if case-fold-search 'on 'off)))))
 
 (defadvice reb-copy (after emacspeak pre act comp)
