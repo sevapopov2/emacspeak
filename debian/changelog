@@ -1,3 +1,9 @@
+emacspeak (47.0-11focal1) focal; urgency=low
+
+  * Get rid of deprecated construction.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 01 Nov 2020 14:39:20 +0300
+
 emacspeak (47.0-10focal1) focal; urgency=low
 
   * Prevented empty symbol reference warning.
