@@ -585,9 +585,10 @@ indicating the article is being opened."
 
 (defadvice gnus-summary-toggle-header (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
+  (cl-declare (special gnus-article-buffer))
   (when (ems-interactive-p)
     (save-excursion
-      (set-buffer  "*Article*")
+      (set-buffer gnus-article-buffer)
       (emacspeak-auditory-icon
        (if (gnus-article-hidden-text-p 'headers) 'off 'on)))))
 
