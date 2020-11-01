@@ -1,3 +1,9 @@
+emacspeak (47.0-11buster1) buster; urgency=low
+
+  * Get rid of deprecated construction.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 01 Nov 2020 14:36:34 +0300
+
 emacspeak (47.0-10buster1) buster; urgency=low
 
   * Prevented empty symbol reference warning.
