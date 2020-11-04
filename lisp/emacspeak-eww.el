@@ -1645,7 +1645,7 @@ Otherwise, prompts if content at point is enclosed by multiple elements."
     (or (car emacspeak-eww-element-navigation-history)
         (emacspeak-eww-read-tags-like-this "Read: "))))
   (let ((start (point)))
-    (save-excursion
+    (save-mark-and-excursion
       (emacspeak-eww-next-element  element)
       (emacspeak-auditory-icon 'select-object)
       (emacspeak-speak-region start (point)))))
@@ -1663,7 +1663,7 @@ Optional interactive prefix arg speaks the structural unit." f)
      (when speak
        (let ((start  (point)))
          (condition-case nil 
-             (save-excursion
+             (save-mark-and-excursion
                (funcall #'emacspeak-eww-next-element (intern ,(format "%s" f)))
                (emacspeak-speak-region start (point)))
            (error nil))))))
@@ -1676,7 +1676,7 @@ Optional interactive prefix arg speaks the structural unit." f)
      (when speak
        (let ((start  (point)))
          (condition-case nil 
-             (save-excursion
+             (save-mark-and-excursion
                (funcall #'emacspeak-eww-next-element (intern ,(format "%s" f)))
                (emacspeak-speak-region start (point)))
            (error nil)))))))

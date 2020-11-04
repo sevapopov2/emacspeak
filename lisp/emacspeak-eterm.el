@@ -264,7 +264,7 @@ the Emacspeak pointer to be spoken."
   "Speak the line the pointer is on."
   (interactive)
   (cl-declare (special emacspeak-eterm-pointer))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char emacspeak-eterm-pointer)
     (emacspeak-speak-line)))
 
@@ -272,7 +272,7 @@ the Emacspeak pointer to be spoken."
   "Speak the word  the pointer is on."
   (interactive)
   (cl-declare (special emacspeak-eterm-pointer))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char emacspeak-eterm-pointer)
     (emacspeak-speak-word nil)))
 
@@ -281,7 +281,7 @@ the Emacspeak pointer to be spoken."
 Pronounces character phonetically unless  called with a PREFIX arg."
   (interactive "P")
   (cl-declare (special emacspeak-eterm-pointer))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char emacspeak-eterm-pointer)
     (emacspeak-speak-char prefix)))
 
@@ -301,7 +301,7 @@ Pronounces character phonetically unless  called with a PREFIX arg."
   "Move the pointer to the top of the screen."
   (interactive)
   (cl-declare (special term-home-marker emacspeak-eterm-pointer))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char term-home-marker)  
     (set-marker emacspeak-eterm-pointer (point))
     (when (ems-interactive-p)
@@ -312,7 +312,7 @@ Pronounces character phonetically unless  called with a PREFIX arg."
   "Move the pointer to the bottom  of the screen."
   (interactive)
   (cl-declare (special  emacspeak-eterm-pointer))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char (point-max))
     (set-marker emacspeak-eterm-pointer (point))
     (when (ems-interactive-p)
@@ -326,7 +326,7 @@ Argument COUNT .specifies number of lines by which to move."
   (cl-declare (special emacspeak-eterm-pointer 
                     term-home-marker))
   (setq count (or count 1))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char emacspeak-eterm-pointer)
     (forward-line (- count))
     (beginning-of-line)
@@ -342,7 +342,7 @@ Argument COUNT specifies number of lines by which to move."
   (interactive "P")
   (cl-declare (special emacspeak-eterm-pointer))
   (setq count (or count 1))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char emacspeak-eterm-pointer)
     (forward-line count)
     (beginning-of-line)
@@ -358,7 +358,7 @@ Argument COUNT specifies number of columns by which to move."
   (interactive "P")
   (cl-declare (special emacspeak-eterm-pointer))
   (setq count (or count 1))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char emacspeak-eterm-pointer)
     (backward-char count)
     (set-marker emacspeak-eterm-pointer (point))
@@ -372,7 +372,7 @@ Argument COUNT specifies number of columns by which to move."
   (interactive "P")
   (cl-declare (special emacspeak-eterm-pointer))
   (setq count (or count 1))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char emacspeak-eterm-pointer)
     (forward-char  count)
     (set-marker emacspeak-eterm-pointer (point))
@@ -384,7 +384,7 @@ Argument COUNT specifies number of columns by which to move."
   "Move the pointer to the right edge."
   (interactive)
   (cl-declare (special emacspeak-eterm-pointer))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char emacspeak-eterm-pointer)
     (end-of-line)
     (set-marker emacspeak-eterm-pointer (point))
@@ -397,7 +397,7 @@ Argument COUNT specifies number of columns by which to move."
   "Move the pointer to the right edge."
   (interactive)
   (cl-declare (special emacspeak-eterm-pointer))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char emacspeak-eterm-pointer)
     (forward-line 0)
     (set-marker emacspeak-eterm-pointer (point))
@@ -413,7 +413,7 @@ Argument COUNT specifies number of words by which to move."
   (interactive "P")
   (cl-declare (special emacspeak-eterm-pointer))
   (setq count (or count 1))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char emacspeak-eterm-pointer)
     (condition-case nil 
         (forward-word  (- count))
@@ -429,7 +429,7 @@ Argument COUNT specifies number of words by which to move."
   (interactive "P")
   (cl-declare (special emacspeak-eterm-pointer))
   (setq count (or count 1))
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char emacspeak-eterm-pointer)
     (condition-case nil 
         (forward-word  count)
@@ -444,7 +444,7 @@ Argument COUNT specifies number of words by which to move."
   (interactive "nGo to line:")
   (cl-declare (special emacspeak-eterm-pointer
                     term-home-marker))
-  (save-excursion 
+  (save-mark-and-excursion 
     (goto-char term-home-marker)
     (forward-line line)
     (set-marker emacspeak-eterm-pointer (point))
@@ -479,7 +479,7 @@ If found, the Emacspeak pointer is left at the hit. "
                                         ; backward search 
       (setq start (marker-position emacspeak-eterm-pointer)
             end (marker-position term-home-marker)))
-    (save-excursion
+    (save-mark-and-excursion
       (goto-char start)
       (save-restriction
         (narrow-to-region start end)
@@ -508,7 +508,7 @@ Optional argument COUNT specifies how many changes to skip."
   (setq count (or count 1))
   (let ((current (dtk-get-style emacspeak-eterm-pointer))
         (found nil))
-    (save-excursion
+    (save-mark-and-excursion
       (goto-char emacspeak-eterm-pointer)
       (setq found (text-property-not-all (point) (point-max)
                                          'personality current))
@@ -527,7 +527,7 @@ Optional argument COUNT specifies how many changes to skip."
   (setq count (or count 1))
   (let ((current (dtk-get-style emacspeak-eterm-pointer))
         (found nil))
-    (save-excursion
+    (save-mark-and-excursion
       (goto-char emacspeak-eterm-pointer)
       (setq found (text-property-not-all (point)  term-home-marker
                                          'personality current))
@@ -698,7 +698,7 @@ as a cons cell (column .  row) to a buffer position in the eterm buffer"
   (cl-declare (special term-home-marker))
   (let ((column (car coordinates))
         (row (cdr coordinates)))
-    (save-excursion
+    (save-mark-and-excursion
       (save-restriction
         (emacspeak-eterm-nuke-cached-info)
         (narrow-to-region term-home-marker (point-max))
@@ -711,7 +711,7 @@ as a cons cell (column .  row) to a buffer position in the eterm buffer"
 (defun emacspeak-eterm-position-to-coordinates (pos)
   "Translate a buffer POS in the eterm buffer to screen coordinates."
   (cl-declare (special term-home-marker))
-  (save-excursion
+  (save-mark-and-excursion
     (save-restriction
       (narrow-to-region term-home-marker (point-max))
       (goto-char pos)
@@ -737,7 +737,7 @@ Argument ETERM-WINDOW specifies a predefined eterm window."
          (emacspeak-eterm-window-top-left eterm-window))
         (bottom-right
          (emacspeak-eterm-window-bottom-right eterm-window)))
-    (save-excursion
+    (save-mark-and-excursion
       (save-restriction
         (narrow-to-region term-home-marker (point-max))
         (setq start (emacspeak-eterm-coordinates-to-position top-left)
@@ -871,7 +871,7 @@ Argument ID specifies the window."
   (cl-assert (<  id emacspeak-eterm-maximum-windows)  t
           "Your installation of Emacspeak only supports %d windows"
           emacspeak-eterm-maximum-windows)
-  (save-excursion
+  (save-mark-and-excursion
     (save-restriction
       (narrow-to-region term-home-marker (point-max))
       (dtk-speak
@@ -887,7 +887,7 @@ Argument ID specifies the window."
           "Your installation of Emacspeak only supports %d windows"
           emacspeak-eterm-maximum-windows)
   (insert 
-   (save-excursion
+   (save-mark-and-excursion
      (save-restriction
        (narrow-to-region term-home-marker (point-max))
        (emacspeak-eterm-return-window-contents
@@ -1146,7 +1146,7 @@ emacspeak-toggle-eterm-autospeak bound to
        ((and (= new-row emacspeak-eterm-row)
              (= 1 (- new-column emacspeak-eterm-column))) ;you inserted a character:
         (if (eq 32 last-command-event)
-            (save-excursion
+            (save-mark-and-excursion
               (backward-char 2)
               (emacspeak-speak-word nil))
           (emacspeak-speak-this-char (preceding-char))))
@@ -1155,7 +1155,7 @@ emacspeak-toggle-eterm-autospeak bound to
         (emacspeak-speak-this-char (following-char)))
        ((= emacspeak-eterm-row new-row)
         (if (= 32 (following-char))
-            (save-excursion (forward-char 1)
+            (save-mark-and-excursion (forward-char 1)
                             (emacspeak-speak-word))        
           (emacspeak-speak-word)))
        (t (emacspeak-speak-line)))
