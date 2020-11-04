@@ -1,3 +1,9 @@
+emacspeak (47.0-13buster1) buster; urgency=low
+
+  * Better emacs25 cooperation.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 04 Nov 2020 22:51:33 +0300
+
 emacspeak (47.0-12buster1) buster; urgency=low
 
   * Gnus auditory feedback minor fix.
