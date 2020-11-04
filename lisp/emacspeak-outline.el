@@ -185,7 +185,7 @@ commands. "
         (end nil))
     (funcall what  direction)
     (setq start (point))
-    (save-excursion
+    (save-mark-and-excursion
       (condition-case nil
           (progn
             (forward-line 1)
@@ -234,7 +234,7 @@ except that the outline section is  spoken"
   (interactive)
   (let ((start (point))
         (end nil))
-    (save-excursion
+    (save-mark-and-excursion
       (condition-case nil
           (progn
             (outline-next-visible-heading 1)

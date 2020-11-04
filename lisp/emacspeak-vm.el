@@ -109,7 +109,7 @@ Note that some badly formed mime messages  cause trouble."
 
 (defadvice vm-minibuffer-complete-word (around emacspeak pre act)
   "Say what you completed."
-  (let ((prior (save-excursion (skip-syntax-backward "^ >") (point)))
+  (let ((prior (save-mark-and-excursion (skip-syntax-backward "^ >") (point)))
         (dtk-stop-immediately t))
     (emacspeak-kill-buffer-carefully "*Completions*")
     ad-do-it
@@ -124,7 +124,7 @@ Note that some badly formed mime messages  cause trouble."
 
 (defadvice vm-minibuffer-complete-word-and-exit (around emacspeak pre act)
   "Say what you completed."
-  (let ((prior (save-excursion (skip-syntax-backward "^ >") (point)))
+  (let ((prior (save-mark-and-excursion (skip-syntax-backward "^ >") (point)))
         (dtk-stop-immediately t))
     (emacspeak-kill-buffer-carefully "*Completions*")
     ad-do-it
@@ -288,7 +288,7 @@ that has been forwarded multiple times."
 Then speak the screenful. "
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'scroll)
-    (save-excursion
+    (save-mark-and-excursion
       (let ((start  (point))
             (window (get-buffer-window (current-buffer))))
         (forward-line (window-height window))
@@ -299,7 +299,7 @@ Then speak the screenful. "
 Then speak the screenful. "
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'scroll)
-    (save-excursion
+    (save-mark-and-excursion
       (let ((start  (point))
             (window (get-buffer-window (current-buffer))))
         (forward-line(-  (window-height window)))

@@ -418,7 +418,7 @@ implemented. ")))
   (interactive)
   (let ((start nil)
         (end nil))
-    (save-excursion
+    (save-mark-and-excursion
       (goto-char (previous-single-property-change (point)
                                                   'html-stack
                                                   (current-buffer)
@@ -437,7 +437,7 @@ implemented. ")))
   (interactive)
   (let ((start (point))
         (end nil))
-    (save-excursion
+    (save-mark-and-excursion
 
       (goto-char (next-single-property-change (point)
                                               'html-stack
@@ -613,7 +613,7 @@ element. "
   (interactive)
   (let ((start nil))
     (emacspeak-w3-next-block)
-    (save-excursion
+    (save-mark-and-excursion
       (setq start (point))
       (emacspeak-w3-next-block)
       (emacspeak-auditory-icon 'select-object)
@@ -681,7 +681,7 @@ If a rewrite rule is defined in the current buffer, we change
   (cl-declare (special emacspeak-w3-tidy-html
                     emacspeak-w3-tidy-program emacspeak-w3-tidy-options))
   (when emacspeak-w3-tidy-html
-    (save-excursion
+    (save-mark-and-excursion
       (if buff
           (set-buffer buff)
         (setq buff (current-buffer)))
