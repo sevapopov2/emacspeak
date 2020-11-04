@@ -1,3 +1,9 @@
+emacspeak (47.0-9xenial2) xenial; urgency=low
+
+  * Gnus auditory feedback minor fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 04 Nov 2020 20:22:06 +0300
+
 emacspeak (47.0-9xenial1) xenial; urgency=low
 
   * Wget progress audio indication improvement.
