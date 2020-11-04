@@ -1,3 +1,9 @@
+emacspeak (47.0-13focal1) focal; urgency=low
+
+  * Better emacs25 cooperation.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 04 Nov 2020 22:49:48 +0300
+
 emacspeak (47.0-12focal1) focal; urgency=low
 
   * Gnus auditory feedback minor fix.
