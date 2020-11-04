@@ -1,3 +1,9 @@
+emacspeak (47.0-9stretch2) stretch; urgency=low
+
+  * Gnus auditory feedback minor fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 04 Nov 2020 20:24:33 +0300
+
 emacspeak (47.0-9stretch1) stretch; urgency=low
 
   * Wget progress audio indication improvement.
