@@ -153,7 +153,7 @@ reading news."
         (let ((start (point))
               (window (get-buffer-window (current-buffer))))
           (with-selected-window window
-            (save-excursion
+            (save-mark-and-excursion
               (move-to-window-line -1)
               (end-of-line)
               (emacspeak-speak-region start (point)))))))))
@@ -565,7 +565,7 @@ indicating the article is being opened."
       (let ((start  (point))
             (window (get-buffer-window (current-buffer))))
         (with-selected-window window
-          (save-excursion
+          (save-mark-and-excursion
             (move-to-window-line -1)
             (end-of-line)
             (emacspeak-speak-region start (point))))))))
@@ -614,7 +614,7 @@ indicating the article is being opened."
             (let ((start  (point))
                   (window (get-buffer-window (current-buffer))))
               (with-selected-window window
-                (save-excursion
+                (save-mark-and-excursion
                   (move-to-window-line -1)
                   (end-of-line)
                   (emacspeak-speak-region start (point)))))))))
