@@ -108,7 +108,7 @@ Assumes that `dired-listing-switches' contains  -l"
                       "modified on"
                       "modified at"
                       "name")))
-    (save-excursion
+    (save-mark-and-excursion
       (forward-line 0)
       (skip-syntax-forward " ")
       (while (and fields
@@ -133,7 +133,7 @@ unless `dired-listing-switches' contains -l"
       (unwind-protect
           (progn
             (setq buffer-read-only nil)
-            (save-excursion
+            (save-mark-and-excursion
               (goto-char (point-min))
               (dired-goto-next-nontrivial-file)
               (while (not (eobp))
@@ -431,7 +431,7 @@ options passed to command `file'."
   "Speak the header line of the dired buffer. "
   (interactive)
   (emacspeak-auditory-icon 'section)
-  (save-excursion (goto-char (point-min))
+  (save-mark-and-excursion (goto-char (point-min))
                   (forward-line 2)
                   (emacspeak-speak-region (point-min) (point))))
 

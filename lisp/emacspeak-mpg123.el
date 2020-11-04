@@ -64,7 +64,7 @@
   "Return current rtrack number if on a valid line."
   (when (mpg123:in-music-list-p)
     (let ((start nil))
-      (save-excursion
+      (save-mark-and-excursion
         (beginning-of-line)
         (skip-chars-forward " ")
         (setq start (point))
@@ -165,7 +165,7 @@ mpg123 defines this as a macro which causes compile trouble."
   (unless (mpg123:in-music-list-p)
     (error "Not on a valid MP3 song"))
   (let ((start nil))
-    (save-excursion
+    (save-mark-and-excursion
       (beginning-of-line)
       (skip-chars-forward "^:")
       (skip-chars-backward "^ ")
