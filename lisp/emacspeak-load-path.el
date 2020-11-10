@@ -131,6 +131,9 @@ interactive command. Turn off the flag once used."
         (setq ems-called-interactively-p nil) ; turn off now that we used  it
         result))))
 
+(unless (fboundp 'save-mark-and-excursion)
+  (defalias 'save-mark-and-excursion 'save-excursion))
+
 ;;}}}
 
 (provide 'emacspeak-load-path)
