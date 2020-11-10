@@ -57,4 +57,7 @@
       '(redefine callargs free-vars
                  unresolved obsolete))
 
+(unless (fboundp 'save-mark-and-excursion)
+  (defalias 'save-mark-and-excursion 'save-excursion))
+
 (provide 'g-load-path)
