@@ -454,7 +454,7 @@ On a directory line, run du -s on the directory to speak its size."
         (setq size
               (nth  (if (= (char-after (line-beginning-position)) ?\ )
 			4 5)
-                    (split-string (ems-this-line)))))
+                    (split-string (ems--this-line)))))
       (emacspeak-auditory-icon 'select-object)
       (dtk-speak-and-echo
        (message "File size %s"
