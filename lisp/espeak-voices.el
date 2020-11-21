@@ -47,7 +47,7 @@
 
 ;;}}}
 ;;{{{ Customizations:
-;;;###autoload
+
 (defcustom espeak-default-speech-rate 175
   "Default speech rate for eSpeak."
   :group 'tts

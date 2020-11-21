@@ -82,7 +82,7 @@
   "Provides emacspeak help for eudc widgets. "
   (cond
    ((eq (widget-type widget) 'editable-field)
-    (concat (ems-this-line) "Edit "))
+    (concat (ems--this-line) "Edit "))
    ((eq (widget-type widget) 'push-button)
     (concat "Push button "
             (widget-value widget)))
