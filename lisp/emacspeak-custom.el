@@ -256,7 +256,7 @@
   "^ *Operate on \\(everything\\|all settings\\) in this buffer"
   "Pattern that identifies toolbar section.")
 
-;;;###autoload
+
 (defun emacspeak-custom-goto-toolbar ()
   "Jump to custom toolbar when in a customization buffer."
   (interactive)
