@@ -134,7 +134,7 @@ first initializing it if necessary."
           (fields nil))
       (save-mark-and-excursion
         (goto-char (point-min))
-        (setq line (ems-this-line)))
+        (setq line (ems--this-line)))
       (setq fields (split-string line))
       (cl-loop for f in fields 
                and i from 0
@@ -166,7 +166,7 @@ first initializing it if necessary."
       (dtk-speak-and-echo
        (format "File: %s"
                (nth  (emacspeak-arc-get-field-index "File")
-                     (split-string (ems-this-line)))))))))
+                     (split-string (ems--this-line)))))))))
 
 (defun emacspeak-arc-speak-file-size ()
   "Speak the size of the file on current line"
@@ -182,7 +182,7 @@ first initializing it if necessary."
       (dtk-speak-and-echo
        (format "File size %s"
                (nth  (emacspeak-arc-get-field-index "Length")
-                     (split-string (ems-this-line)))))))))
+                     (split-string (ems--this-line)))))))))
 
 (defun emacspeak-arc-speak-file-modification-time ()
   "Speak modification time of the file on current line"
@@ -195,7 +195,7 @@ first initializing it if necessary."
       (dtk-speak-and-echo "No file on this line"))
      (t
       (emacspeak-auditory-icon 'select-object)
-      (let* ((fields (split-string (ems-this-line)))
+      (let* ((fields (split-string (ems--this-line)))
              (date (nth  (emacspeak-arc-get-field-index "Date")
                          fields))
              (time (nth  (emacspeak-arc-get-field-index "Time")

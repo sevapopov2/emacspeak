@@ -246,7 +246,7 @@ region of text to process."
       (erase-buffer))
     (with-current-buffer (process-buffer emacspeak-xml-shell-process)
       (goto-char (process-mark emacspeak-xml-shell-process))
-      (setq terminator (ems-this-line))
+      (setq terminator (ems--this-line))
       (setq accumulator (emacspeak-xml-shell-create-accumulator
                          accumulate  terminator 
                          display-function))
