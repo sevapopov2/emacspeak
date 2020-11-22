@@ -1563,7 +1563,8 @@ available TTS servers.")
        (string-match "^cloud" tts-name) ; cloud
        (string-match "^log" tts-name))
     (setq emacspeak-auditory-icon-function 'emacspeak-serve-auditory-icon))
-  (let ((file-name-handler-alist  nil))
+  (let ((file-name-handler-alist  nil)
+        (load-source-file-function  nil))
   (load-library "voice-setup")))
 
 (defvar tts-device "default"
@@ -1658,7 +1659,7 @@ Optional interactive prefix arg restarts current TTS server."
 ;;;###autoload
 (defcustom dtk-speech-server-program "speech-server"
   "Local speech server script."
-  :type '(choice :tag "Local Server: "
+  :type '(choice :tag "Local Server"
                  (const :tag "32 Bit" "32-speech-server")
                  (const :tag "Default" "speech-server"))
   :group 'dtk)
@@ -1735,7 +1736,16 @@ program. Port defaults to dtk-local-server-port"
         (delete-process dtk-speaker-process))
       (setq dtk-speaker-process new-process)
       (run-hooks 'dtk-startup-hook)))))
+;;;###autoload 
+(defun tts-shutdown ()
+  "Shutdown TTS servers."
+  (cl-declare (special dtk-speaker-process dtk-notify-process))
+  (when (processp dtk-speaker-process)
+    (delete-process dtk-speaker-process))
+  (when (processp dtk-notify-process)
+    (delete-process dtk-notify-process)))
 
+  
 ;;;###autoload
 (defun tts-restart ()
   "Use this to nuke the currently running TTS server and restart it."
