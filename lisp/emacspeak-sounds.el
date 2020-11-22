@@ -137,7 +137,7 @@ use `emacspeak-toggle-auditory-icons' bound to
   :group 'emacspeak)
 
 ;;;###autoload
-(defcustom emacspeak-sounds-default-theme "pan-chimes"
+(defcustom emacspeak-sounds-default-theme "3d"
   "Default theme for auditory icons. "
   :type (let ((menu '(choice)))
           (dolist (item (emacspeak-sounds-get-themes) menu)
