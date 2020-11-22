@@ -178,8 +178,13 @@ Do not set this by hand;
 
 (defun emacspeak-sounds-define-theme-if-necessary (theme-name)
   "Define selected theme if necessary."
-  (unless (emacspeak-sounds-theme-get-extension theme-name)
-    (load-file (emacspeak-sounds-theme-definition theme-name))))
+  (let ((file-name-handler-alist nil)
+        (load-source-file-function  nil))
+    (cond
+     ((emacspeak-sounds-theme-get-extension theme-name) t)
+     ((emacspeak-sounds-theme-p theme-name)
+      (load-file (emacspeak-sounds-theme-definition theme-name)))
+     (t (error "Theme %s is missing its configuration file. " theme-name)))))
 
 ;;;###autoload
 (defun emacspeak-sounds-select-theme  (theme)
@@ -210,7 +215,8 @@ Do not set this by hand;
     (cond
      ((file-exists-p f) f)
      (t
-      (message "Icon %s not defined." sound-name)
+      (let ((emacspeak-use-auditory-icons nil))
+        (message "Icon %s not defined." sound-name))
       emacspeak-default-sound))))
 
 ;;}}}
@@ -406,7 +412,7 @@ audio player."
 (defcustom emacspeak-sounds-reset-snd-module-command nil
   "Command to reset sound module."
   :type '(choice
-          :tag "Command to reset sound modules: "
+          :tag "Command to reset sound modules"
           (const nil :tag "None")
           (string :tag "Command "))
   :group 'emacspeak-sounds)

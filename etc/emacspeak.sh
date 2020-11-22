@@ -5,8 +5,8 @@
 # This file is not the original one:
 # it is modified for Debian speech support.
 
-if [ -f /etc/emacspeak.conf ]; then
-    . /etc/emacspeak.conf
+if [ -f /etc/emacspeak.conf ]
+then . /etc/emacspeak.conf
 fi
 
 CL_ALL=""
