@@ -51,17 +51,10 @@
 
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function eperiodic-element-at "ext:eperiodic.el" (&optional posn))
-(declare-function eperiodic-get-element-property "ext:eperiodic.el" (z prop))
-
 ;;}}}
 ;;{{{ Forward decls:
-(declare-function eperiodic-get-element-property  (e prop) "eperiodic.el")
-(declare-function eperiodic-element-at (&optional pos) "eperiodic.el")
+(declare-function eperiodic-get-element-property  "ext:eperiodic.el" (e prop))
+(declare-function eperiodic-element-at "ext:eperiodic.el" (&optional pos))
 
 
 ;;}}}

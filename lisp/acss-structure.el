@@ -46,18 +46,17 @@
 ;;; A setting conforming to the CSS speech specification can be
 ;;; represented in elisp as a structure.
 
-;;; We will refer to this structure as a "speech style".
-;;; This structure needs to be mapped to device dependent codes to
-;;; produce the desired effect.
-;;; This module forms a bridge between User Agents e.g. Emacs-w3 that
-;;; wish to implement a speech style sheet
-;;; and Emacspeak's dectalk-voices module.
-;;; Emacspeak produces voice change effects by examining the value of
-;;; text-property 'personality.
+;;; We will refer to this structure as a "speech style".  This
+;;; structure needs to be mapped to device dependent codes to produce
+;;; the desired effect.  This module forms a bridge between emacs
+;;; packages    that wish to implement audio formatting 
+;;; and Emacspeak's TTS module.  Emacspeak produces voice
+;;; change effects by examining the value of text-property
+;;; 'personality.
 
 ;;; Think of a buffer of formatted text along with the text-property
 ;;; 'personality appropriately set as a "aural display list".
-;;; Applications like W3 that produce such formatted buffers  call function
+;;; Applications like EWW that produce such formatted buffers  call function
 ;;; acss-personality-from-speech-style  with a  "speech-style"
 ;;; --a structure as defined in this module and get back a symbol that
 ;;; they then assign to the value of property 'personality.
@@ -112,9 +111,6 @@
 ;;; may be redefined at runtime when alternative tts engine is
 ;;; configured.
 
-(declare-function tts-voice-defined-p "acss-structure.el" t t)
-(declare-function tts-define-voice-from-speech-style "acss-structure.el" t t)
-
 (declare-function dectalk-voice-defined-p "dectalk-voices.el" (voice))
 (declare-function dectalk-define-voice-from-speech-style "dectalk-voices.el" (name style))
 
@@ -154,7 +150,6 @@ Finally return the symbol"
 
 ;;}}}
 (provide  'acss-structure)
-(provide 'dtk-css-speech) ; for legacy: W3
 ;;{{{  emacs local variables
 
 ;;; local variables:

@@ -38,7 +38,14 @@
 
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;{{{  Introduction:
+
+;;; Commentary:
+;;; The ECB is an Emacs Class Browser.
+;;; This module speech-enables ECB
+;;; Code:
+
+;;}}}
 ;;{{{ required modules
 
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -49,23 +56,14 @@
   (require 'ecb "ecb" 'no-error))
   (require 'tree-buffer "tree-buffer" 'no-error))
 ;;}}}
-;;{{{  Introduction:
-;;; Commentary:
-;;; The ECB is an Emacs Class Browser.
-;;; This module speech-enables ECB
-;;; Code:
-;;}}}
-;;{{{ Forward declarations
+;;{{{ Forward Declarations:
 
-(declare-function tree-buffer-find-common-substring "ext:tree-buffer.el" (lis subs &optional only-prefix))
-(declare-function ecb-goto-window-methods "ext:ecb-method-browser.el" ())
-(declare-function ecb-goto-window-directories "ext:ecb-file-browser.el" ())
-(declare-function ecb-goto-window-history "ext:ecb-file-browser.el" ())
-(declare-function ecb-goto-window-sources "ext:ecb-file-browser.el" ())
-(declare-function tree-node-get-all-visible-node-names "ext:tree-buffer.el" (start-node))
-(declare-function tree-buffer-return-pressed "ext:tree-buffer.el" (&optional shift-pressed control-pressed))
-(declare-function tree-node->expandable "ext:tree-buffer.el" (node))
-(declare-function tree-node->expanded "ext:tree-buffer.el" (node))
+(declare-function tree-node->expandable "tree-buffer" (cl-x))
+(declare-function tree-node->expanded "tree-buffer" (cl-x))
+(declare-function ecb-goto-window-methods "ecb-method-browser" nil)
+(declare-function ecb-goto-window-directories "ecb-file-browser" nil)
+(declare-function ecb-goto-window-history "ecb-file-browser" nil)
+(declare-function ecb-goto-window-sources "ecb-file-browser" nil)
 
 ;;}}}
 ;;{{{  advice interactive commands
