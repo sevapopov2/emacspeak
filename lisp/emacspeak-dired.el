@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2017, T. V. Raman
+;;;Copyright (C) 1995 -- 2018, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -658,11 +658,10 @@ On a directory line, run du -s on the directory to speak its size."
 (defun emacspeak-locate-play-results-as-playlist (&optional shuffle)
   "Treat locate results as a play-list.
 Optional interactive prefix arg shuffles playlist."
-  (interactive "P" )
-  (cl-declare (special emacspeak-locate-media-pattern
-                       emacspeak-m-player-options))
+  (interactive "P")
+  (cl-declare (special emacspeak-m-player-options))
   (cl-assert (eq major-mode 'locate-mode) t "Not in a locate buffer")
-  (save-excursion
+  (save-mark-and-excursion
     (goto-char (point-min))
     (dired-next-line 3)
     (let* ((m3u (make-temp-file "locate-playlist" nil ".m3u"))
@@ -674,8 +673,7 @@ Optional interactive prefix arg shuffles playlist."
         (dired-next-line 1)
         (setq file  (dired-file-name-at-point)))
       (setq results (nreverse results))
-      (message "%s tracks matching %s"
-               (length results) emacspeak-locate-media-pattern)
+      (message "%s tracks matching " (length results))
       (with-current-buffer buff
         (cl-loop
          for f in results do
@@ -687,8 +685,15 @@ Optional interactive prefix arg shuffles playlist."
                emacspeak-m-player-options)))
         (emacspeak-m-player  m3u 'play-list)))))
 
-    ;;}}}
+;;}}}
+;;{{{ Open Downloads:
+;;;###autoload
+(defun emacspeak-dired-downloads ()
+  "Open Downloads directory."
+  (interactive)
+  (funcall-interactively 'dired (expand-file-name "~/Downloads") "-alt"))
 
+;;}}}
 (provide 'emacspeak-dired)
 ;;{{{ emacs local variables
 

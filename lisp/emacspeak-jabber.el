@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2017, T. V. Raman
+;;; Copyright (c) 1995 -- 2018, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -62,6 +62,7 @@
 (declare-function jabber-jid-displayname "ext:jabber-util.el" (string))
 (declare-function jabber-jid-user "ext:jabber-util.el" (string))
 (declare-function jabber-display-roster "ext:jabber-roster.el" ())
+(declare-function jabber-activity-switch-to "ext:jabber-activity.el" (&optional jid-param))
 
 ;;}}}
 ;;{{{ map voices
@@ -238,7 +239,7 @@
   (cl-declare (special jabber-message-alert-same-buffer))
   (when (or jabber-message-alert-same-buffer
             (not (memq (selected-window) (get-buffer-window-list buffer))))
-    (emacspeak-auditory-icon 'progress)
+    (emacspeak-auditory-icon 'item)
     (dtk-notify-speak
      (if (jabber-muc-sender-p from)
          (format "Private message from %s in %s"
@@ -292,7 +293,7 @@
 
 ;;}}}
 ;;{{{ Browse chat buffers:
-(defun emacspeak-jabber-chat-speak-this-message(&optional copy-as-kill )
+(defun emacspeak-jabber-chat-speak-this-message(&optional copy-as-kill)
   "Speak chat message under point.
 With optional interactive prefix arg `copy-as-kill', copy it to
 the kill ring as well."
@@ -306,17 +307,17 @@ the kill ring as well."
   (interactive)
   (cl-assert  (eq major-mode 'jabber-chat-mode) nil  "Not in a Jabber chat buffer.")
   (end-of-line)
-    (goto-char (next-single-property-change (point) 'face nil(point-max)))
-    (while (and (not (eobp))
-                (or (null (get-text-property (point) 'face))
-                 (get-text-property (point) 'field)))
-      (goto-char (next-single-property-change (point) 'face  nil  (point-max))))
-    (cond
-     ((eobp)
-        (message "On last message")
-        (emacspeak-auditory-icon 'warn-user))
-      (t(emacspeak-auditory-icon 'select-object)
-       (emacspeak-speak-text-range 'face))))
+  (goto-char (next-single-property-change (point) 'face nil(point-max)))
+  (while (and (not (eobp))
+              (or (null (get-text-property (point) 'face))
+                  (get-text-property (point) 'field)))
+    (goto-char (next-single-property-change (point) 'face  nil  (point-max))))
+  (cond
+   ((eobp)
+    (message "On last message")
+    (emacspeak-auditory-icon 'warn-user))
+   (t(emacspeak-auditory-icon 'select-object)
+     (emacspeak-speak-text-range 'face))))
 
 (defun emacspeak-jabber-chat-previous-message ()
   "Move backward to and speak the previous message in this chat session."
@@ -333,7 +334,7 @@ the kill ring as well."
     (message "On first message")
     (emacspeak-auditory-icon 'warn-user))
    (t(emacspeak-auditory-icon 'select-object)
-    (emacspeak-speak-text-range 'face))))
+     (emacspeak-speak-text-range 'face))))
 
 (when (boundp 'jabber-chat-mode-map)
   (cl-loop
@@ -344,6 +345,21 @@ the kill ring as well."
      ("M-SPC " emacspeak-jabber-chat-speak-this-message))
    do
    (emacspeak-keymap-update  jabber-chat-mode-map k)))
+
+;;}}}
+;;{{{ Speak recent message:
+;;;###autoload
+(defun emacspeak-jabber-speak-recent-message ()
+  "Speak most recent message if one exists."
+  (interactive)
+  (cl-declare (special jabber-activity-jids))
+  (cond
+   (jabber-activity-jids
+    (save-mark-and-excursion
+      (jabber-activity-switch-to)
+      (goto-char (point-max))
+      (emacspeak-jabber-chat-previous-message)))
+   (t (message "No recent message."))))
 
 ;;}}}
 (provide 'emacspeak-jabber)
