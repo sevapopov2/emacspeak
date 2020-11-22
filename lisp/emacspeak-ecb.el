@@ -53,8 +53,8 @@
 (eval-when-compile
   (cl-declaim (special inhibit-message))
   (let ((inhibit-message  t))
-    (require 'ecb "ecb" 'no-error))
-  (require 'tree-buffer "tree-buffer" 'no-error))
+  (require 'ecb () 'no-error))
+  (require 'tree-buffer () 'no-error))
 ;;}}}
 ;;{{{ Forward Declarations:
 
