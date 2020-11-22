@@ -17,7 +17,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (C) 1995 -- 2017, T. V. Raman
+;;; Copyright (C) 1995 -- 2018, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -53,7 +53,7 @@
 (eval-when-compile
   (cl-declaim (special inhibit-message))
   (let ((inhibit-message  t))
-  (require 'ecb "ecb" 'no-error))
+    (require 'ecb "ecb" 'no-error))
   (require 'tree-buffer "tree-buffer" 'no-error))
 ;;}}}
 ;;{{{ Forward Declarations:
