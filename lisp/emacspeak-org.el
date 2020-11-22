@@ -56,8 +56,8 @@
 (require 'emacspeak-feeds)
 (require 'eww)
 (require 'emacspeak-eww)
-(require 'org "org" 'no-error)
-(require 'org-table "org-table" 'no-error)
+(require 'org () 'no-error)
+(require 'org-table () 'no-error)
 ;;}}}
 ;;{{{ voice locking:
 

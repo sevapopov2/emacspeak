@@ -39,10 +39,9 @@
 (require 'emacspeak-we)
 (require 'easymenu)
 (require 'custom)
-(require 'w3m "w3m" 'noerror)
-(require 'w3m-util "w3m-util" 'noerror)
-
-(require 'w3m-form "w3m-form" 'noerror)
+(require 'w3m () 'noerror)
+(require 'w3m-util () 'noerror)
+(require 'w3m-form () 'noerror)
 
 ;;}}}
 ;;{{{ Forward declarations
