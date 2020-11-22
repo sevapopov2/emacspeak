@@ -50,30 +50,25 @@
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require  'vm "vm" 'no-error)
-
+(require 'browse-url)
 ;;}}}
-;;{{{ Forward declarations
+;;{{{ Forward Decls:
 
-(declare-function browse-url-url-at-point "browse-url.el" ())
-
-(declare-function vm-from-of "ext:vm-message.el" (message))
-(declare-function vm-subject-of "ext:vm-message.el" (message))
-(declare-function vm-to-of "ext:vm-message.el" (message))
-(declare-function vm-labels-of "ext:vm-message.el" (message))
-
-(declare-function vm-su-full-name "ext:vm-summary.el" (m))
-(declare-function vm-su-from "ext:vm-summary.el" (m))
-(declare-function vm-su-subject "ext:vm-summary.el" (m))
-(declare-function vm-su-to-names "ext:vm-summary.el" (m))
-(declare-function vm-su-to "ext:vm-summary.el" (m))
-(declare-function vm-su-line-count "ext:vm-summary.el" (m))
-
-(declare-function vm-decode-mime-encoded-words-in-string "ext:vm-mime.el" (string))
-(declare-function vm-goto-message "ext:vm-motion.el" (n))
-(declare-function vm-delete-message "ext:vm-delete.el" (count))
-
-(declare-function u-vm-color-fontify-buffer "ext:u-vm-color" ())
-(declare-function u-vm-color-summary-mode "ext:u-vm-color" ())
+(declare-function vm-from-of "vm-message" (msg))
+(declare-function  vm-subject-of "vm-message" (msg))
+(declare-function  vm-to-of "vm-message" (msg))
+(declare-function  vm-su-full-name "vm-summary" (msg))
+(declare-function  vm-su-from "vm-summary" (msg))
+(declare-function vm-su-subject "vm-summary" (msg))
+(declare-function  vm-su-to-names "vm-summary" (msg))
+(declare-function  vm-su-to "vm-summary" (msg))
+(declare-function  vm-su-line-count "vm-summary" (msg))
+(declare-function vm-decode-mime-encoded-words-in-string "vm-mime" (s))
+(declare-function  vm-labels-of "vm-message" (msg))
+(declare-function  vm-goto-message "vm-message" (msg))
+(declare-function vm-delete-message "vm-message" (msg))
+(declare-function  u-vm-color-fontify-buffer "u-vm-color" nil)
+(declare-function  u-vm-color-summary-mode "u-vm-color" (&optional arg))
 
 ;;}}}
 ;;{{{ voice locking:
@@ -412,7 +407,6 @@ Then speak the screenful. "
              global-map emacspeak-prefix emacspeak-keymap))
   (define-key vm-mode-map "\M-\C-m" 'widget-button-press)
   (define-key vm-mode-map "y" 'emacspeak-vm-yank-header)
-  (define-key vm-mode-map "\M-\t" 'emacspeak-vm-next-button)
   (define-key vm-mode-map  "j" 'emacspeak-hide-or-expose-all-blocks)
   (define-key vm-mode-map  "\M-g" 'vm-goto-message)
   (define-key vm-mode-map "J" 'vm-discard-cached-data)
@@ -538,56 +532,11 @@ Leave point at front of decoded attachment."
   (cons #'re-search-forward #'emacspeak-speak-decode-iso-datetime)))
 
 ;;}}}
-;;{{{ advice button motion
-(defadvice vm-next-button (after emacspeak pre act comp)
-  "Provide auditory feedback"
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-text-range  'w3-hyperlink-info)))
-
-;;}}}
 ;;{{{  misc
 
 (defadvice vm-count-messages-in-file (around emacspeak-fix pre act comp)
   (ad-set-arg 1 'quiet)
   ad-do-it)
-
-;;}}}
-;;{{{  button motion in vm
-
-(defun emacspeak-vm-next-button (n)
-  "Move point to N buttons forward.
-If N is negative, move backward instead."
-  (interactive "p")
-  (let ((function (if (< n 0) 'previous-single-property-change
-                    'next-single-property-change))
-        (inhibit-point-motion-hooks t)
-        (inhibit-modification-hooks t)
-        (backward (< n 0))
-        (limit (if (< n 0) (point-min) (point-max))))
-    (setq n (abs n))
-    (while (and (not (= limit (point)))
-                (> n 0))
-      ;; Skip past the current button.
-      (when (get-text-property (point) 'w3-hyperlink-info)
-        (goto-char (funcall function (point) 'w3-hyperlink-info nil limit)))
-      ;; Go to the next (or previous) button.
-      (goto-char (funcall function (point) 'w3-hyperlink-info nil limit))
-      ;; Put point at the start of the button.
-      (when (and backward (not (get-text-property (point) 'w3-hyperlink-info)))
-        (goto-char (funcall function (point) 'w3-hyperlink-info nil limit)))
-      ;; Skip past intangible buttons.
-      (when
-          (or (get-text-property (point) 'intangible)
-              (get-text-property (point) 'cursorintangible))
-        (cl-incf n))
-      (cl-decf n))
-    (unless (zerop n)
-      (message  "No more buttons"))
-    n))
-
-;;}}}
-;;{{{ saving mime attachment under point
 
 ;;}}}
 ;;{{{ Voice Lock:

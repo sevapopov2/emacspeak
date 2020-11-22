@@ -62,12 +62,6 @@
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'json)
 (require 'g-utils)
-(require 'json)
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function emacspeak-calendar-setup-sunrise-sunset "emacspeak-calendar.el" ())
 
 ;;}}}
 ;;{{{ Customizations

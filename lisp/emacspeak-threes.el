@@ -85,13 +85,6 @@
 (require 'sox-gen)
 
 ;;}}}
-;;{{{ Forward declarations
-
-(declare-function threes-cells-score "threes" nil)
-(declare-function threes-cells-transpose "threes" (cells))
-(declare-function threes-print-board "threes.el" nil)
-
-;;}}}
 ;;{{{ Variables:
 
 (defvar emacspeak-threes-rows-max '(0 0 0 0)
@@ -147,6 +140,8 @@
   (emacspeak-threes-sox-gen threes-next-number)
   (dtk-speak (format "%s" threes-next-number)))
 
+(declare-function threes-cells-transpose "threes" (cells))
+
 (defun emacspeak-threes-speak-transposed-board ()
   "Speak the board by columns."
   (interactive)
@@ -181,6 +176,8 @@
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-threes-speak-board)))
+
+(declare-function threes-cells-score "threes" nil)
 
 (defun emacspeak-threes-score ()
   "Speak the score."
@@ -222,7 +219,7 @@
    emacspeak-threes-game-stack)
   (emacspeak-auditory-icon 'mark-object)
   (message "Saved state."))
-
+(declare-function threes-print-board "threes.el" nil)
 (defun emacspeak-threes-pop-state ()
   "Reset state from stack."
   (interactive)

@@ -53,9 +53,9 @@
 (eval-when-compile (require 'shx "shx" 'no-error))
 
 ;;}}}
-;;{{{ Forward declarations
+;;{{{ Forward Declaration 
+(declare-function shx-insert "shx" (&rest args))
 
-(declare-function shx-insert "ext:shx.el" (&rest args))
 
 ;;}}}
 ;;{{{ Interactive Commands:
