@@ -49,7 +49,7 @@
 ;;{{{ required modules
 
 (require 'emacspeak-preamble)
-(require 'apt-utils "apt-utils"  'no-error)
+(require 'apt-utils ()  'no-error)
 ;;}}}
 ;;{{{ Forward declarations
 
