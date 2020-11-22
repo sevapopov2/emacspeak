@@ -60,12 +60,6 @@
 (require 'subr-x)
 
 ;;}}}
-;;{{{ Forward declarations
-
-(declare-function emacspeak-calendar-setup-sunrise-sunset "ext:emacspeak-calendar.el" ())
-(declare-function emacspeak-auditory-icon "ext:emacspeak-sounds.el" (icon))
-
-;;}}}
 ;;{{{ Customizations
 
 (defgroup gmaps nil
@@ -130,7 +124,7 @@
 (defvar gmaps-locations-file
   (expand-file-name "gmaps-locations" emacspeak-resource-directory)
   "File where we save Locations.")
-(declare-function emacspeak-auditory-icon (icon) "emacspeak-sounds")
+(declare-function emacspeak-auditory-icon "emacspeak-sounds" (icon))
 
 (defun gmaps-locations-save ()
   "Save GMaps Locations."
@@ -225,7 +219,7 @@ Optional argument `raw-p' returns raw JSON  object."
   nil
   "Postal Code --- automatically set by reverse geocoding gweb-my-address")
 
-(declare-function  emacspeak-calendar-setup-sunrise-sunset  nil "emacspeak-calendar")
+(declare-function  emacspeak-calendar-setup-sunrise-sunset  "emacspeak-calendar" nil)
 ;;;###autoload
 (defcustom gweb-my-address
   nil

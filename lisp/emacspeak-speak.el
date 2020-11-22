@@ -341,6 +341,7 @@ Argument START   specifies the start of the region to operate on.
 Argument END specifies the end of the region.
 Argument VALUE is the personality to set temporarily
 Argument BODY specifies forms to execute."
+  (declare (indent 1) (debug t))
   `(let ((saved-personality (get-text-property ,start 'personality)))
      (with-silent-modifications
        (unwind-protect
@@ -356,6 +357,7 @@ Argument BODY specifies forms to execute."
 
 (defmacro ems-with-errors-silenced  (&rest body)
   "Evaluate body  after temporarily silencing auditory error feedback."
+  (declare (indent 1) (debug t))
   `(let ((emacspeak-speak-errors nil)
          (emacspeak-use-auditory-icons nil)
          (emacspeak-speak-messages nil))
@@ -2230,7 +2232,7 @@ Seconds value is also placed in the kill-ring."
     result))
 
 (defvar emacspeak-codename
-  (propertize "GentleDog" 'face 'bold)
+  (propertize "ServiceDog" 'face 'bold)
   "Code name of present release.")
 
 (defun emacspeak-setup-get-revision ()
@@ -2244,7 +2246,7 @@ Seconds value is also placed in the kill-ring."
       "")))
 
 (defvar emacspeak-version
-  (concat "47.0  " emacspeak-codename)
+  (concat "48.0  " emacspeak-codename)
   "Version number for Emacspeak.")
 
 ;;;###autoload
@@ -2339,6 +2341,22 @@ Argument STRING specifies the alphanumeric phone number."
     (dtk-dispatch (format "[:dial %s]"
                           (emacspeak-speak-string-to-phone-number number)))
     (sit-for 4)))
+
+;;}}}
+;;{{{ Ordinal Numbers:
+(defun emacspeak-speak-ordinal (n)  
+  "Return ordinal number for n"  
+  (format  
+   (concat  
+    "%d"  
+    (if (memq n '(11 12 13)) "th"  
+      (let ((last-digit (% n 10)))  
+        (cl-case last-digit  
+          (1 "st")  
+          (2 "nd")  
+          (3 "rd")  
+          (otherwise "th")))))
+   n))
 
 ;;}}}
 ;;{{{ speaking marks
