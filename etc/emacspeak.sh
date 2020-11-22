@@ -9,6 +9,10 @@ if [ -f /etc/emacspeak.conf ]
 then . /etc/emacspeak.conf
 fi
 
+if [ -f $HOME/.emacs ]
+then INITSTR="-l $HOME/.emacs"
+fi
+
 CL_ALL=""
 for CL in $* ; do
 	if [ "$CL" = "-o" ]; then
@@ -23,6 +27,8 @@ for CL in $* ; do
 	elif [ "$CL" = "-d" ]; then
 		DTK_PROGRAM=dtk-soft
 		export DTK_PROGRAM
+	elif [ "$CL" = "-q" ]; then
+		INITSTR=""
 	else
 		CL_ALL="$CL_ALL $CL"
 	fi

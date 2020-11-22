@@ -77,7 +77,6 @@
   "Provide auditory feedback."
   (emacspeak-auditory-icon 'item))
 
-
 (defadvice sp-wrap--initialize (after emacspeak pre act comp)
   "Provide auditory feedback."
   (emacspeak-auditory-icon 'select-object))
@@ -111,7 +110,7 @@
     (when dtk-stop-immediately (dtk-stop))
     (let ((start (point))
           (dtk-stop-immediately nil))
-      (save-excursion
+      (save-mark-and-excursion
         (forward-word -1)
         (emacspeak-auditory-icon 'delete-object)
         (emacspeak-speak-region (point) start)))))

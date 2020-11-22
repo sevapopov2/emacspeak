@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2017, T. V. Raman
+;;;Copyright (C) 1995 -- 2018, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -74,7 +74,7 @@
   "Push current game state on stack."
   (interactive)
   (cl-declare (special emacspeak-2048-game-stack
-                    *2048-board* *2048-score* *2048-rows* *2048-columns*))
+                       *2048-board* *2048-score* *2048-rows* *2048-columns*))
   (push
    (make-emacspeak-2048-game-state
     :board (copy-sequence *2048-board*)
@@ -89,7 +89,7 @@
   "Reset state from stack."
   (interactive)
   (cl-declare (special emacspeak-2048-game-stack
-                    *2048-board* *2048-score* *2048-rows* *2048-columns*))
+                       *2048-board* *2048-score* *2048-rows* *2048-columns*))
   (cond
    ((null emacspeak-2048-game-stack) (error "No saved  states."))
    (t
