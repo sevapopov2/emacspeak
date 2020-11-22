@@ -9,10 +9,6 @@ if [ -f /etc/emacspeak.conf ]
 then . /etc/emacspeak.conf
 fi
 
-if [ -f $HOME/.emacs ]
-then INITSTR="-l $HOME/.emacs"
-fi
-
 CL_ALL=""
 for CL in $* ; do
 	if [ "$CL" = "-o" ]; then

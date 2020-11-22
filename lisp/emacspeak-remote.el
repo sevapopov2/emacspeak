@@ -49,11 +49,6 @@
 ;;;after prompting for host and port
 ;;; Code:
 ;;}}}
-;;{{{ Forward declarations
-
-(declare-function ssh "ext:ssh.el" (input-args &optional buffer))
-
-;;}}}
 ;;{{{  User customizations
 ;;;###autoload
 (defgroup emacspeak-remote nil
