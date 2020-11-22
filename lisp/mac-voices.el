@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;;Copyright (C) 1995 -- 2017, T. V. Raman 
+;;;Copyright (C) 1995 -- 2018, T. V. Raman 
 ;;; All Rights Reserved.
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -227,10 +227,10 @@ and TABLE gives the values along that dimension."
 (let ((table (make-vector 10 "")))
   (mapc
    #'(lambda (setting)
-      (aset table
-            (cl-first setting)
-            (format " [[pbas %s]] "
-                    (cl-second setting))))
+       (aset table
+             (cl-first setting)
+             (format " [[pbas %s]] "
+                     (cl-second setting))))
    '(
      (0 5)
      (1 17)
@@ -267,10 +267,10 @@ and TABLE gives the values along that dimension."
 (let ((table (make-vector 10 "")))
   (mapc
    #'(lambda (setting)
-      (aset table
-            (cl-first setting)
-            (format " [[pmod %s]] "
-                    (cl-second setting))))
+       (aset table
+             (cl-first setting)
+             (format " [[pmod %s]] "
+                     (cl-second setting))))
    '(
      (0 0)
      (1 14.1)
@@ -305,14 +305,14 @@ and TABLE gives the values along that dimension."
 (let ((table (make-vector 10 "")))
   (mapc
    #'(lambda (setting)
-      (aset table
-            (cl-first setting)
-            (format " [{echo %s %s %s %s}] "
-                    (cl-second setting)
-                    (cl-third setting)
-                    (cl-fourth setting)
-                    (cl-fifth setting)
-                    )))
+       (aset table
+             (cl-first setting)
+             (format " [{echo %s %s %s %s}] "
+                     (cl-second setting)
+                     (cl-third setting)
+                     (cl-fourth setting)
+                     (cl-fifth setting)
+                     )))
    '(
      (0 1 1 0.1 0.1)
      (1 1 1 10 .1)

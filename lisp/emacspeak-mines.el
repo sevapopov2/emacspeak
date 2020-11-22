@@ -99,7 +99,6 @@
    (format "%d mines with %d uncovered cells remaining."
            mines-number-mines (cl-count-if #'null mines-state))))
 
-
 (defun emacspeak-mines-jump-to-uncovered-cell (from-beginning)
   "Jump to next uncovered cell. With interactive prefix-arg, jump
 to beginning of board before searching."
@@ -118,16 +117,15 @@ to beginning of board before searching."
   (mines-goto index)
   (emacspeak-mines-speak-cell))
 
-
 (defun emacspeak-mines-speak-mark-count  ()
   "Count and speak number of marks."
-  (interactive )
+  (interactive)
   (cl-declare (special mines-flagged-cell-char))
   (let ((count 0) ;;; fix over-counting 
         (m (format "%c" mines-flagged-cell-char)))
     (save-mark-and-excursion
-    (goto-char (point-min))
-    (while (search-forward  m nil t) (cl-incf count) (forward-char 1)))
+      (goto-char (point-min))
+      (while (search-forward  m nil t) (cl-incf count) (forward-char 1)))
     (message "%d marks" count)))
 (defun emacspeak-mines-speak-board ()
   "Speak the board."
@@ -146,8 +144,8 @@ to beginning of board before searching."
                   ((and (null v)(get-text-property (point) 'flag))
                    " M")
                   ((null v) "dot")
-                  ((and v (numberp n) )  (format "%d" n))
-                  ((eq '@ v)  "at" )
+                  ((and v (numberp n))  (format "%d" n))
+                  ((eq '@ v)  "at")
                   (t (message "Should not  get here"))))))))
     (dtk-speak-list cells mines-number-cols)))
 
@@ -172,8 +170,6 @@ to beginning of board before searching."
 (eval-after-load  "mines"
   `(progn (emacspeak-mines-init)))
 
-
-
 (defun emacspeak-mines-cell-flagged-p (c)
   "Predicate to check if cell at index c is flagged."
   (save-mark-and-excursion
@@ -182,7 +178,7 @@ to beginning of board before searching."
 
 (defun emacspeak-mines-speak-neighbors ()
   "Speak neighboring cells in sorted order."
-  (interactive )
+  (interactive)
   (cl-declare (special mines-state mines-grid))
   (let* ((current (mines-current-pos))
          (cells (sort (mines-get-neighbours current) #'<))
@@ -201,7 +197,7 @@ to beginning of board before searching."
       ((and (null v) (emacspeak-mines-cell-flagged-p c))
        (push "M" result))
       ((null v) (push "dot" result))
-      ((and v (numberp n) ) (push (format "%d" n) result))
+      ((and v (numberp n)) (push (format "%d" n) result))
       ((eq '@ v) (push "at" result))
       (t (message "Should not  get here"))))
     (setq
@@ -221,15 +217,14 @@ to beginning of board before searching."
     (dtk-speak-list (nreverse result) group)))
 (defun emacspeak-mines-beginning-of-row  ()
   "Move to beginning of row"
-  (interactive )
+  (interactive)
   (let ((row (cl-first (mines-index-2-matrix (mines-current-pos)))))
     (mines-goto (* row mines-number-cols))
     (emacspeak-mines-speak-cell)))
 
-
 (defun emacspeak-mines-end-of-row  ()
   "Move to end of row"
-  (interactive )
+  (interactive)
   (let ((row (cl-first (mines-index-2-matrix (mines-current-pos)))))
     (mines-goto (+ (1- mines-number-cols)(* row mines-number-cols)))
     (emacspeak-mines-speak-cell)))
