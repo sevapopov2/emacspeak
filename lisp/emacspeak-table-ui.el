@@ -1,10 +1,7 @@
-;;; emacspeak-table-ui.el --- Emacspeak's current notion of an ideal table UI  -*- lexical-binding: t; -*-
-;;; $Id$
+;;; emacspeak-table-ui.el --- Table Navigation UI  -*- lexical-binding: t; -*-
 ;;; $Author: tv.raman.tv $
-;;; Description: Emacspeak table handling module
-;;; Keywords:emacspeak, audio interface to emacs tables are structured
-;;{{{  LCD Archive entry:
-
+;;; Description:  Emacspeak Table Navigation UI
+;;; Keywords: Emacspeak, Table UI ,  Visual layout gives structure
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
@@ -357,11 +354,11 @@ Full List Of Keybindings:
              (cl-first token) (cl-second token)))
       (put-text-property 0 (length value) 'face 'bold value)
       value)
-     ((and (symbolp (cl-first token)) (fboundp  (car token)))
+     ((and (symbolp (cl-first token)) (fboundp  (cl-first token)))
 ;;; applying a function:
       (setq value
             (funcall
-             (cl-first token) ;;; get args 
+             (cl-first token) ;;; get args
              (cond
               ((and
                 (= 2 (length token)) (numberp (cl-second token)))
@@ -422,11 +419,11 @@ Optional prefix arg prompts for a new filter."
            (numberp (cl-first token))
            (numberp (cl-second token)))
       (emacspeak-table-get-entry-with-headers (cl-first token) (cl-second token)))
-     ((and (symbolp (cl-first token)) (fboundp  (car token)))
+     ((and (symbolp (cl-first token)) (fboundp  (cl-first token)))
 ;;; applying a function:
       (setq value
             (funcall
-             (cl-first token) ;;; get args 
+             (cl-first token) ;;; get args
              (cond
               ((and
                 (= 2 (length token)) (numberp (cl-second token)))
@@ -440,14 +437,14 @@ Optional prefix arg prompts for a new filter."
                (emacspeak-table-get-entry-with-headers
                 (cl-second token) (cl-third token))))))
       (put-text-property 0 (length value) 'face 'bold  value)
-      value)   
+      value)
      (t  (format "%s" token)))))
 (defun emacspeak-table-speak-column-filtered  (&optional prefix)
   "Speaks a table column after applying a specified column filter.
 Optional prefix arg prompts for a new filter."
   (interactive "P")
   (cl-declare (special emacspeak-table-speak-column-filter
-                    emacspeak-table))
+                       emacspeak-table))
   (unless (and  emacspeak-table-speak-column-filter
                 (listp emacspeak-table-speak-column-filter)
                 (not prefix))
@@ -514,8 +511,8 @@ Optional prefix arg prompts for a new filter."
        (cl-loop
         for _element across row do
         (puthash
-         (intern (format "element:%s:%s" i j))  ; compute key 
-         (point) ; insertion point  is the value 
+         (intern (format "element:%s:%s" i j))  ; compute key
+         (point) ; insertion point  is the value
          positions)
         (insert
          (format "%s%s"
@@ -618,29 +615,43 @@ The processed  data is  presented using emacspeak table navigation. "
                (setq fields (ems-csv-get-fields))
                (aset elements i (apply 'vector fields))
                (forward-line 1))
-      (setq table (emacspeak-table-make-table elements))  
+      (setq table (emacspeak-table-make-table elements))
       )
     (kill-buffer scratch)
     (emacspeak-table-prepare-table-buffer table buffer)
     (emacspeak-auditory-icon 'open-object)))
 
-(defun emacspeak-table-view-csv-url  (url)
+(defun emacspeak-table-render-csv-url  (_status result-buffer )
+  "Render the result of asynchronously retrieving CSV data from url."
+  (let ((inhibit-read-only t)
+        (data-buffer (current-buffer))
+        (coding-system-for-read 'utf-8)
+        (coding-system-for-write 'utf-8))
+    (with-current-buffer data-buffer
+      (goto-char (point-min))
+      (search-forward "\n\n")
+      (delete-region (point-min) (point))
+      (decode-coding-region (point-min) (point-max) 'utf-8)
+      (emacspeak-table-view-csv-buffer)
+      (rename-buffer result-buffer 'unique)
+      (emacspeak-speak-mode-line)
+      (emacspeak-auditory-icon 'open-object))))
+
+;;;###autoload
+(defun emacspeak-table-view-csv-url  (url &optional buffer-name)
   "Process a csv (comma separated values) data at  `URL'.
 The processed  data is  presented using emacspeak table navigation. "
-  (interactive "sURL:")
+  (interactive "sURL:\nP")
+  (unless (or buffer-name (stringp buffer-name))
+    (setq buffer-name "CSV Data Table"))
   (cl-declare (special g-curl-program g-curl-common-options))
-  (let ((data (get-buffer-create " *csv-data*")))
-    (with-current-buffer data
-      (erase-buffer)
-      (setq buffer-undo-list t)
-      (insert
-       (shell-command-to-string
-       (format "%s %s '%s'"
-               g-curl-program"--silent" url)))
-      (goto-char (point-min))
-      (emacspeak-table-view-csv-buffer))))
-    
-  
+  (url-retrieve url #'emacspeak-table-render-csv-url  (list buffer-name)))
+
+
+
+
+
+
 ;;}}}
 ;;{{{ Processing a region of tabular data
 ;;;###autoload
@@ -738,15 +749,15 @@ browsing table elements"
   (let ((key (read-char)))
     (setq emacspeak-table-speak-element
           (cl-case  key
-                 (?b 'emacspeak-table-speak-both-headers-and-element)
-                 (?c 'emacspeak-table-speak-column-header-and-element)
-                 (?r 'emacspeak-table-speak-row-header-and-element)
-                 (?d 'emacspeak-table-speak-current-element)
-                 (?f 'emacspeak-table-speak-row-filtered)
-                 (?g 'emacspeak-table-speak-column-filtered)
-                 (?. 'emacspeak-table-speak-coordinates)
-                 (otherwise (message "Invalid method specified")
-                            emacspeak-table-speak-element)))
+            (?b 'emacspeak-table-speak-both-headers-and-element)
+            (?c 'emacspeak-table-speak-column-header-and-element)
+            (?r 'emacspeak-table-speak-row-header-and-element)
+            (?d 'emacspeak-table-speak-current-element)
+            (?f 'emacspeak-table-speak-row-filtered)
+            (?g 'emacspeak-table-speak-column-filtered)
+            (?. 'emacspeak-table-speak-coordinates)
+            (otherwise (message "Invalid method specified")
+                       emacspeak-table-speak-element)))
     (emacspeak-auditory-icon 'button)))
 
 ;;}}}
@@ -831,7 +842,7 @@ browsing table elements"
   (cl-assert  (boundp 'emacspeak-table) nil "No table here")
   (emacspeak-table-goto-cell
    emacspeak-table
-   
+
    (1- (emacspeak-table-num-rows emacspeak-table))
    (emacspeak-table-current-column
     emacspeak-table))
@@ -882,9 +893,9 @@ the matching cell current. When called from a program, `what' can
          (slice
           (or what
               (cl-case (read-char)
-                    (?r 'row)
-                    (?c 'column)
-                    (otherwise (error "Can only search in either row or column")))))
+                (?r 'row)
+                (?c 'column)
+                (otherwise (error "Can only search in either row or column")))))
          (pattern
           (read-string
            (format "Search in current  %s for: " slice))))
@@ -934,9 +945,9 @@ match, makes the matching row or column current."
          (found nil)
          (slice
           (cl-case (read-char)
-                (?r 'row)
-                (?c 'column)
-                (otherwise (error "Can only search in either row or column"))))
+            (?r 'row)
+            (?c 'column)
+            (otherwise (error "Can only search in either row or column"))))
          (pattern
           (read-string
            (format "Search %s headers for: " slice))))
@@ -997,8 +1008,8 @@ match, makes the matching row or column current."
 ;;{{{  define table markup structure and accessors
 
 (cl-defstruct (emacspeak-table-markup
-            (:constructor
-             emacspeak-table-make-markup))
+               (:constructor
+                emacspeak-table-make-markup))
   table-start
   table-end
   row-start
@@ -1044,7 +1055,6 @@ table markup.")
                                    :col-start ""
                                    :col-end ""
                                    :col-separator " & "))
-
 
 (emacspeak-table-markup-set-table
  'org-mode
@@ -1167,7 +1177,7 @@ markup to use."
   "Sort table on current column. "
   (interactive)
   (cl-declare (special major-mode emacspeak-table
-                    emacspeak-table-speak-row-filter))
+                       emacspeak-table-speak-row-filter))
   (cl-assert (eq major-mode  'emacspeak-table-mode) nil "Not in table mode.")
   (let* ((column  (emacspeak-table-current-column emacspeak-table))
          (row-head   nil)
