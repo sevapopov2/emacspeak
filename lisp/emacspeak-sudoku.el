@@ -15,7 +15,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;;; Copyright (c) 1995 -- 2017, T. V. Raman
+;;; Copyright (c) 1995 -- 2018, T. V. Raman
 ;;; All Rights Reserved. 
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -55,18 +55,18 @@
 (require 'stack-f)
 (require 'sudoku "sudoku" 'no-error)
 ;;}}}
-;;{{{ Forward declarations
+;;{{{Forward Decl:
 
-(declare-function sudoku-column "ext:sudoku.el" (board n))
-(declare-function sudoku-subsquare "ext:sudoku.el" (board n))
-(declare-function sudoku-get-cell-from-point "ext:sudoku.el" (num))
-(declare-function sudoku-row "ext:sudoku.el" (board n))
-(declare-function sudoku-cell "ext:sudoku.el" (board x y))
-(declare-function sudoku-cell-possibles "ext:sudoku.el" (board x y))
-(declare-function sudoku-remaining-cells "ext:sudoku.el" (board))
-(declare-function sudoku-goto-cell "ext:sudoku.el" (coords))
-(declare-function sudoku-change-cell "ext:sudoku.el" (board x y input))
-(declare-function sudoku-board-print "ext:sudoku.el" (board message))
+(declare-function sudoku-column "sudoku" (board n))
+(declare-function sudoku-subsquare "sudoku" (board n))
+(declare-function sudoku-get-cell-from-point "sudoku" (num))
+(declare-function sudoku-row "sudoku" (board n))
+(declare-function sudoku-cell "sudoku" (board x y))
+(declare-function sudoku-cell-possibles "sudoku" (board x y))
+(declare-function sudoku-remaining-cells "sudoku" (board))
+(declare-function sudoku-goto-cell "sudoku" (coords))
+(declare-function sudoku-change-cell "sudoku" (board x y input))
+(declare-function sudoku-board-print "sudoku" (board message))
 
 ;;}}}
 ;;{{{ Define additional speak commands:
@@ -82,13 +82,13 @@ s   Sub-square Distribution.
   (interactive)
   (let ((c (read-char "Summary: ")))
     (cl-case c
-          (?d (call-interactively 'emacspeak-sudoku-board-distribution-summarize))
-          (?r (call-interactively 'emacspeak-sudoku-board-rows-summarize))
-          (?c (call-interactively
-               'emacspeak-sudoku-board-columns-summarize))
-          (?s (call-interactively
-               'emacspeak-sudoku-board-sub-squares-summarize))
-          (otherwise (message "Unknown summary type?")))))
+      (?d (call-interactively 'emacspeak-sudoku-board-distribution-summarize))
+      (?r (call-interactively 'emacspeak-sudoku-board-rows-summarize))
+      (?c (call-interactively
+           'emacspeak-sudoku-board-columns-summarize))
+      (?s (call-interactively
+           'emacspeak-sudoku-board-sub-squares-summarize))
+      (otherwise (message "Unknown summary type?")))))
 
 (defun emacspeak-sudoku-board-distribution-summarize ()
   "Shows distribution of filled numbers."
@@ -277,7 +277,7 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-erase-these-cells (cell-list)
   "Erase cells in cell-list taking account of original values."
   (cl-declare (special start-board current-board
-                    sudoku-onscreen-instructions))
+                       sudoku-onscreen-instructions))
   (let ((original (sudoku-get-cell-from-point (point))))
     (cl-loop for cell in cell-list
              do
@@ -393,7 +393,7 @@ See
   "Push current state on to history stack."
   (interactive)
   (cl-declare (special emacspeak-sudoku-history-stack
-                    current-board))
+                       current-board))
   (unless emacspeak-sudoku-history-stack
     (setq emacspeak-sudoku-history-stack
           (stack-create)))
@@ -406,9 +406,9 @@ See
   "Pop saved state off stack and redraw board."
   (interactive)
   (cl-declare (special emacspeak-sudoku-history-stack
-                    sudoku-onscreen-instructions
-                    start-board
-                    current-board))
+                       sudoku-onscreen-instructions
+                       start-board
+                       current-board))
   (let ((original (sudoku-get-cell-from-point (point))))
     (cond
      ((stack-empty emacspeak-sudoku-history-stack) ;start board

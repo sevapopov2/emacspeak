@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2017, T. V. Raman
+;;;Copyright (C) 1995 -- 2018, T. V. Raman
 ;;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;;; All Rights Reserved.
 ;;;
@@ -97,12 +97,11 @@
 
 (defun emacspeak-company-frontend (command)
   "Emacspeak front-end for Company."
-  (ems-with-messages-silenced
-   (cl-case command
-         (pre-command nil)
-         (post-command (emacspeak-play-auditory-icon 'help)
-                       (emacspeak-company-speak-this))
-         (hide nil))))
+  (cl-case command
+    (pre-command nil)
+    (post-command (emacspeak-auditory-icon 'help)
+                  (emacspeak-company-speak-this))
+    (hide nil)))
 
 ;;}}}
 ;;{{{ Advice Interactive Commands:
@@ -122,7 +121,7 @@
   (let* ((selected (nth company-selection company-candidates))
          (doc-buffer (or (company-call-backend 'doc-buffer selected)
                          (error "No documentation available"))))
-    ;(emacspeak-auditory-icon 'help)
+                                        ;(emacspeak-auditory-icon 'help)
     (with-current-buffer doc-buffer (dtk-speak (buffer-string)))))
 
 ;;}}}
@@ -135,10 +134,9 @@
   (add-hook
    'company-completion-started-hook
    #'(lambda (&rest _ignore) (emacspeak-play-auditory-icon 'open-object)))
-
   (add-hook
    'company-completion-finished-hook
-   #'(lambda (&rest _ignore) (emacspeak-auditory-icon 'close-object))))
+   #'(lambda (&rest _ignore) (emacspeak-play-auditory-icon 'close-object))))
 
 ;;}}}
 ;;{{{ Silence YCMD Chatter:
