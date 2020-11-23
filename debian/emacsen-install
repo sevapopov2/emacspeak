@@ -59,7 +59,7 @@ done
 
 cd ${ELCDIR}
 if [ ${FLAVOR} != emacs ]; then
-    for target in bash-utils blurbs etc Makefile README media js servers sounds xsl
+    for target in blurbs etc Makefile README media js servers sounds xsl
     do [ -e $target ] || ln -s ${ELDIR_REL}/$target
     done
 fi
