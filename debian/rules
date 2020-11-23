@@ -24,7 +24,7 @@ override_dh_auto_build-arch:
 	cd debian ; ln -s templates emacspeak-espeak.templates
 	cd debian ; ln -s templates emacspeak-outloud.templates
 
-	$(MAKE) -C servers/linux-espeak
+	$(MAKE) -C servers/native-espeak
 	$(MAKE) -C servers/linux-outloud
 
 
@@ -42,12 +42,13 @@ override_dh_auto_build-indep:
 
 	$(MAKE) -C etc tips.html applications.html
 	$(MAKE) -C info
+	$(MAKE) -C blog-archive
 
 
 override_dh_auto_clean:
 
 	$(MAKE) -C info clean
-	$(MAKE) -C servers/linux-espeak clean
+	$(MAKE) -C servers/native-espeak clean
 	$(MAKE) -C servers/linux-outloud clean
 
 
@@ -79,7 +80,7 @@ override_dh_fixperms-indep:
 	find $(deblsp) -type d -exec chmod 0755 {} \;
 	find $(deblsp) -type f -exec chmod 0644 {} \;
 	cd $(deblsp)/bash-utils ; chmod 0755 e*
-	cd $(deblsp)/etc ; chmod 0755 *.sh *.pl *.py *2* cbox* fmradio-rtl remote-tts-setup
+	cd $(deblsp)/etc ; chmod 0755 *.sh *.pl *.py *2text cbox* fm*rtl remote-tts-setup
 	cd $(deblsp)/servers ; chmod 0755 dtk-exp speech-server ssh-* ; chmod 0644 .servers tts-lib.tcl
 	cd $(debtmp)-espeak/$(eldir)/servers ; chmod 0755 espeak
 	cd $(debtmp)-outloud/$(eldir)/servers ; chmod 0755 outloud
@@ -89,5 +90,7 @@ override_dh_fixperms-indep:
 	chmod 0644 $(debtmp)-classic/$(eldir)/sounds/classic/*
 	chmod 0755 $(debtmp)-pan-chimes/$(eldir)/sounds/pan-chimes
 	chmod 0644 $(debtmp)-pan-chimes/$(eldir)/sounds/pan-chimes/*
+	chmod 0755 $(debtmp)/$(eldir)/sounds/prompts
+	chmod 0644 $(debtmp)/$(eldir)/sounds/prompts/*
 
 	dh_fixperms

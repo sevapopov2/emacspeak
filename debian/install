@@ -3,7 +3,6 @@ debian/emacspeak.conf etc
 debian/dtk-exp.blurb usr/share/emacs/site-lisp/emacspeak/blurbs
 debian/ssh-dtk-exp.blurb usr/share/emacs/site-lisp/emacspeak/blurbs
 debian/ssh-outloud.blurb usr/share/emacs/site-lisp/emacspeak/blurbs
-bash-utils usr/share/emacs/site-lisp/emacspeak
 etc usr/share/emacs/site-lisp/emacspeak
 lisp usr/share/emacs/site-lisp/emacspeak
 media usr/share/emacs/site-lisp/emacspeak
@@ -14,6 +13,7 @@ README usr/share/emacs/site-lisp/emacspeak
 sounds/emacspeak.mp3 usr/share/emacs/site-lisp/emacspeak/sounds
 sounds/3d/*.wav usr/share/emacs/site-lisp/emacspeak/sounds/3d
 sounds/3d/define-theme.el usr/share/emacs/site-lisp/emacspeak/sounds/3d
+sounds/prompts usr/share/emacs/site-lisp/emacspeak/sounds
 servers/dtk-exp usr/share/emacs/site-lisp/emacspeak/servers
 servers/speech-server usr/share/emacs/site-lisp/emacspeak/servers
 servers/ssh-dtk-exp usr/share/emacs/site-lisp/emacspeak/servers
