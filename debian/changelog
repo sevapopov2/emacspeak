@@ -1,3 +1,9 @@
+emacspeak (50.0-1xenial1) xenial; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 23 Nov 2020 07:42:58 +0300
+
 emacspeak (47.0-9xenial2) xenial; urgency=low
 
   * Gnus auditory feedback minor fix.
