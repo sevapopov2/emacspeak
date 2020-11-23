@@ -1,3 +1,9 @@
+emacspeak (50.0-1bionic1) bionic; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 23 Nov 2020 07:44:57 +0300
+
 emacspeak (47.0-13bionic1) bionic; urgency=low
 
   * Better emacs25 cooperation.
