@@ -1,3 +1,9 @@
+emacspeak (50.0-1stretch1) stretch; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 23 Nov 2020 07:38:48 +0300
+
 emacspeak (47.0-9stretch2) stretch; urgency=low
 
   * Gnus auditory feedback minor fix.
