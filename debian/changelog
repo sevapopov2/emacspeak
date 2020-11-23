@@ -1,3 +1,9 @@
+emacspeak (50.0-1buster1) buster; urgency=low
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 23 Nov 2020 07:40:46 +0300
+
 emacspeak (47.0-13buster1) buster; urgency=low
 
   * Better emacs25 cooperation.
