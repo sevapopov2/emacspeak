@@ -100,8 +100,6 @@ instead you hear only the first screenful."
   (define-key gnus-group-mode-map ";" 'emacspeak-gnus-personal-gmail-recent)
   (define-key gnus-group-mode-map ":" 'emacspeak-gnus-personal-gmail-last-week)
   (define-key gnus-group-mode-map "\C-n" 'gnus-group-next-group)
-  (define-key gnus-group-mode-map [down] 'gnus-group-next-group)
-  (define-key gnus-group-mode-map [up] 'gnus-group-prev-group)
   (define-key gnus-group-mode-map "\C-p" 'gnus-group-prev-group)
   (define-key gnus-summary-wash-map "D" 'gnus-summary-downcase-article))
 
