@@ -118,8 +118,7 @@
 over-writing any current personality settings."
   (when
       (and
-       (integer-or-marker-p start)
-       (integer-or-marker-p end)
+       (integerp start) (integerp end)
        (not (= start end)))
     (with-current-buffer
         (if (bufferp object) object (current-buffer))
@@ -132,8 +131,7 @@ end in object. "
   (when
       (and
        voice
-       (integer-or-marker-p start)
-       (integer-or-marker-p end)
+       (integerp start) (integerp end)
        (not (= start end))
        (eq voice (get-text-property start 'personality object)))
       (with-current-buffer
