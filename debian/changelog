@@ -1,3 +1,11 @@
+emacspeak (1:50.0-2) unstable; urgency=low
+
+  * Don't redefine conventional navigation keys in Gnus group buffer.
+  * Voice lock fix.
+  * Added epoch to avoid mess-up with other package versions.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 25 Nov 2020 18:11:53 +0300
+
 emacspeak (50.0-1) unstable; urgency=low
 
   * New upstream release.

@@ -10,8 +10,8 @@ Homepage: http://emacspeak.sf.net
 Package: emacspeak
 Architecture: all
 Depends: emacs24 | emacs (>= 46.0), perl, make, adduser, ${misc:Depends}
-Conflicts: emacspeak-3d, emacspeak-dt, emacspeak-ss, multispeech (<< 2.8)
-Replaces: emacspeak-3d
+Conflicts: emacspeak (<< 1:50.0), emacspeak-3d, emacspeak-dt, emacspeak-ss, multispeech (<< 2.8)
+Replaces: emacspeak (<< 1:50.0), emacspeak-3d
 Recommends: multispeech (>= 2.8), python, tclx8.4, tcl
 Suggests: emacspeak-classic, emacspeak-pan-chimes, emacspeak-espeak, emacspeak-outloud, psgml, xsltproc, espeak, w3m-el, phantomjs
 Description: speech output interface to Emacs
