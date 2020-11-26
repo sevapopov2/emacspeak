@@ -34,7 +34,7 @@ esac
 export GNUPGHOME=`mktemp -d /tmp/gnupg.XXXXXX`
 
 if [ -d ${ELCDIR} ]; then
-    rm -rf ${ELCDIR}/lisp ${ELCDIR}/compile.log.gz
+    rm -rf ${ELCDIR}
 fi
 
 install -m 755 -d ${ELCDIR}/lisp/g-client
