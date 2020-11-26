@@ -32,11 +32,12 @@ esac
 export GNUPGHOME=`mktemp -d /tmp/gnupg.XXXXXX`
 
 if [ -d ${ELCDIR} ]; then
-    if [ ${FLAVOR} = emacs ]
-    then find ${ELCDIR}/lisp \( -name '*.elc' -o -name '*-cus-load.el' -o -name '*-loaddefs.el' \) -delete
-    else rm -rf ${ELCDIR}/lisp
+    if [ ${FLAVOR} = emacs ]; then
+        find ${ELCDIR}/lisp \( -name '*.elc' -o -name '*-cus-load.el' -o -name '*-loaddefs.el' \) -delete
+        rm -f ${ELCDIR}/compile.log.gz
+    else
+        rm -rf ${ELCDIR}
     fi
-    rm -f ${ELCDIR}/compile.log.gz
 fi
 
 install -m 755 -d ${ELCDIR}/lisp/g-client
