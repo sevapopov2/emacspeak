@@ -1,3 +1,9 @@
+emacspeak (1:50.0-3focal1) focal; urgency=low
+
+  * Package upgrade fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 26 Nov 2020 08:16:33 +0300
+
 emacspeak (1:50.0-2focal1) focal; urgency=low
 
   * Don't redefine conventional navigation keys in Gnus group buffer.
