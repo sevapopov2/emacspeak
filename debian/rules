@@ -79,18 +79,18 @@ override_dh_fixperms-indep:
 	# Fix permissions
 	find $(deblsp) -type d -exec chmod 0755 {} \;
 	find $(deblsp) -type f -exec chmod 0644 {} \;
-	cd $(deblsp)/bash-utils ; chmod 0755 e*
 	cd $(deblsp)/etc ; chmod 0755 *.sh *.pl *.py *2text cbox* fm*rtl remote-tts-setup
 	cd $(deblsp)/servers ; chmod 0755 dtk-exp speech-server ssh-* ; chmod 0644 .servers tts-lib.tcl
 	cd $(debtmp)-espeak/$(eldir)/servers ; chmod 0755 espeak
 	cd $(debtmp)-outloud/$(eldir)/servers ; chmod 0755 outloud
-	chmod 0755 $(debtmp)/$(eldir)/sounds/3d
-	chmod 0644 $(debtmp)/$(eldir)/sounds/3d/*
+	chmod 0755 $(deblsp)/sounds/3d
+	chmod 0644 $(deblsp)/sounds/3d/*
+	chmod 0755 $(deblsp)/sounds/prompts
+	chmod 0644 $(deblsp)/sounds/prompts/*
+	chmod 0644 $(debtmp)/usr/share/doc/$(package)/examples/bash-utils/remote
 	chmod 0755 $(debtmp)-classic/$(eldir)/sounds/classic
 	chmod 0644 $(debtmp)-classic/$(eldir)/sounds/classic/*
 	chmod 0755 $(debtmp)-pan-chimes/$(eldir)/sounds/pan-chimes
 	chmod 0644 $(debtmp)-pan-chimes/$(eldir)/sounds/pan-chimes/*
-	chmod 0755 $(debtmp)/$(eldir)/sounds/prompts
-	chmod 0644 $(debtmp)/$(eldir)/sounds/prompts/*
 
 	dh_fixperms
