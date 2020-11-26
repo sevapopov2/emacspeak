@@ -1,3 +1,9 @@
+emacspeak (1:50.0-3) unstable; urgency=low
+
+  * Package upgrade fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 26 Nov 2020 08:03:21 +0300
+
 emacspeak (1:50.0-2) unstable; urgency=low
 
   * Don't redefine conventional navigation keys in Gnus group buffer.
