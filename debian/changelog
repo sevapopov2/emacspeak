@@ -1,3 +1,9 @@
+emacspeak (1:50.0-3buster1) buster; urgency=low
+
+  * Package upgrade fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 26 Nov 2020 08:08:48 +0300
+
 emacspeak (1:50.0-2buster1) buster; urgency=low
 
   * Don't redefine conventional navigation keys in Gnus group buffer.
