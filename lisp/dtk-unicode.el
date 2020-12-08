@@ -331,7 +331,8 @@ Does nothing for unibyte buffers."
                          (dtk-unicode-char-punctuation-p char))
                         " "
                       (run-hook-with-args-until-success 'dtk-unicode-handlers char)))))
-            (replace-match replacement t t nil)
+            (when replacement
+              (replace-match replacement t t nil))
             (when props
               (set-text-properties pos (point) props))))))))
 
