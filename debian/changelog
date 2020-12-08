@@ -1,3 +1,9 @@
+emacspeak (1:50.0-4xenial1) xenial; urgency=low
+
+  * Avoid errors when text preprocessing.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 08 Dec 2020 09:08:47 +0300
+
 emacspeak (1:50.0-3xenial1) xenial; urgency=low
 
   * Package upgrade fix.
