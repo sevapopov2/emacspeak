@@ -1,3 +1,9 @@
+emacspeak (1:50.0-4focal1) focal; urgency=low
+
+  * Avoid errors when text preprocessing.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 08 Dec 2020 09:12:38 +0300
+
 emacspeak (1:50.0-3focal1) focal; urgency=low
 
   * Package upgrade fix.
