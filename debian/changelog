@@ -1,3 +1,9 @@
+emacspeak (1:50.0-5) unstable; urgency=low
+
+  * W3m voicification fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 31 Dec 2020 12:03:51 +0300
+
 emacspeak (1:50.0-4) unstable; urgency=low
 
   * Avoid errors when text preprocessing.
