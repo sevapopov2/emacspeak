@@ -1,3 +1,9 @@
+emacspeak (1:50.0-5buster1) buster; urgency=low
+
+  * W3m voicification fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 31 Dec 2020 12:07:55 +0300
+
 emacspeak (1:50.0-4buster1) buster; urgency=low
 
   * Avoid errors when text preprocessing.
