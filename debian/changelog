@@ -1,3 +1,9 @@
+emacspeak (1:50.0-5focal1) focal; urgency=low
+
+  * W3m voicification fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 31 Dec 2020 12:13:30 +0300
+
 emacspeak (1:50.0-4focal1) focal; urgency=low
 
   * Avoid errors when text preprocessing.
