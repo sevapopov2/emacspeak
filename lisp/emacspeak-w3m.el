@@ -219,7 +219,7 @@ This hack helps to deal with some specially designed forms."
 
 (defun emacspeak-w3m-speak-form-input (form &rest args)
   "Speak form input"
-  (cl-declare (special emacspeak-w3m-form-voice))
+  (cl-declare (special w3m-form-personality))
   (let* ((id (car args))
          (arglist (emacspeak-w3m-form-arglist args))
          (name (car arglist))
@@ -231,11 +231,11 @@ This hack helps to deal with some specially designed forms."
              name
              (emacspeak-w3m-personalize-string
               (or (emacspeak-w3m-form-get form id) value)
-              emacspeak-w3m-form-voice)))))
+              w3m-form-personality)))))
 
 (defun emacspeak-w3m-speak-form-input-checkbox (form &rest args)
   "Speak checkbox"
-  (cl-declare (special emacspeak-w3m-form-voice))
+  (cl-declare (special w3m-form-personality))
   (let* ((id (car args))
          (arglist (emacspeak-w3m-form-arglist args))
          (name (car arglist))
@@ -247,21 +247,21 @@ This hack helps to deal with some specially designed forms."
               (if (member value (emacspeak-w3m-form-get form id))
                   "on"
                 "off")
-              emacspeak-w3m-form-voice)))))
+              w3m-form-personality)))))
 
 (defun emacspeak-w3m-speak-form-input-password (form &rest args)
   "Speech-enable password form element."
-  (cl-declare (special emacspeak-w3m-form-voice))
+  (cl-declare (special w3m-form-personality))
   (dtk-speak
    (format "password input %s  %s"
            (car (emacspeak-w3m-form-arglist args))
            (emacspeak-w3m-personalize-string
             (emacspeak-w3m-anchor-text)
-            emacspeak-w3m-form-voice))))
+            w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-submit (form &rest args)
   "Speak submit button."
-  (cl-declare (special emacspeak-w3m-form-button-voice))
+  (cl-declare (special w3m-form-button-personality))
   (let* ((text (emacspeak-w3m-anchor-text))
          (arglist (emacspeak-w3m-form-arglist args))
          (name (car arglist))
@@ -274,17 +274,17 @@ This hack helps to deal with some specially designed forms."
        (format "button %s"
                (emacspeak-w3m-personalize-string
                 value
-                emacspeak-w3m-form-button-voice)))
+                w3m-form-button-personality)))
       ((and name (not (string-match "^[[:blank:]]*$" name)))
        (format "button %s"
                (emacspeak-w3m-personalize-string
                 name
-                emacspeak-w3m-form-button-voice)))
+                w3m-form-button-personality)))
       (t "submit button")))))
 
 (defun emacspeak-w3m-speak-form-input-radio (form &rest args)
   "speech enable radio buttons."
-  (cl-declare (special emacspeak-w3m-form-voice))
+  (cl-declare (special w3m-form-personality))
   (and dtk-stop-immediately (dtk-stop))
   (let* ((id (car args))
          (arglist (emacspeak-w3m-form-arglist args))
@@ -292,7 +292,7 @@ This hack helps to deal with some specially designed forms."
          (value (cadr arglist))
          (active (equal value (emacspeak-w3m-form-get form id)))
          (personality (if active
-                          emacspeak-w3m-form-voice))
+                          w3m-form-personality))
          (dtk-stop-immediately nil))
     (emacspeak-auditory-icon (if active 'on 'off))
     (dtk-speak
@@ -308,27 +308,27 @@ This hack helps to deal with some specially designed forms."
 
 (defun emacspeak-w3m-speak-form-input-select (form &rest args)
   "speech enable select control."
-  (cl-declare (special emacspeak-w3m-form-voice))
+  (cl-declare (special w3m-form-personality))
   (dtk-speak
    (format "select %s  %s"
            (car (emacspeak-w3m-form-arglist args))
            (emacspeak-w3m-personalize-string
             (emacspeak-w3m-anchor-text)
-            emacspeak-w3m-form-voice))))
+            w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-input-textarea (&rest ignore)
   "speech enable text area."
-  (cl-declare (special emacspeak-w3m-form-voice))
+  (cl-declare (special w3m-form-personality))
   (dtk-speak
    (format "text area %s  %s"
            (or (get-text-property (point) 'w3m-form-name) "")
            (emacspeak-w3m-personalize-string
             (emacspeak-w3m-anchor-text)
-            emacspeak-w3m-form-voice))))
+            w3m-form-personality))))
 
 (defun emacspeak-w3m-speak-form-reset (&rest ignore)
   "Reset button."
-  (cl-declare (special emacspeak-w3m-form-button-voice))
+  (cl-declare (special w3m-form-button-personality))
   (let ((text (emacspeak-w3m-anchor-text)))
     (dtk-speak
      (format "button %s"
@@ -336,7 +336,7 @@ This hack helps to deal with some specially designed forms."
                  text
                (emacspeak-w3m-personalize-string
                 "reset"
-                emacspeak-w3m-form-button-voice))))))
+                w3m-form-button-personality))))))
 
 ;;}}}
 ;;{{{  forms fix
