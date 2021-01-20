@@ -1,3 +1,10 @@
+emacspeak (1:50.0-6buster1) buster; urgency=low
+
+  * Removed redundant and wrong voicification used in magit popup
+    buffers.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 20 Jan 2021 20:17:02 +0300
+
 emacspeak (1:50.0-5buster1) buster; urgency=low
 
   * W3m voicification fix.
