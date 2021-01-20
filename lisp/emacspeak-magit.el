@@ -329,10 +329,6 @@
 (when (locate-library "magit-key-mode")
   (load-library "magit-key-mode"))
 
-(defadvice magit-refresh-popup-buffer (after emacspeak  pre act comp)
-  "Voiceify faces."
-  (voice-lock-voiceify-faces))
-
 (defadvice magit-invoke-popup-action (after emacspeak  pre act comp)
   "Provide auditory feedback on quit action."
   (when (and (ems-interactive-p) (eq (ad-get-arg 0) ?q))
