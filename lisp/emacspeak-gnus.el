@@ -562,8 +562,7 @@ indicating the article is being opened."
   "Produce an auditory icon if possible."
   (cl-declare (special gnus-article-buffer))
   (when (ems-interactive-p)
-    (save-excursion
-      (set-buffer gnus-article-buffer)
+    (with-current-buffer gnus-article-buffer
       (emacspeak-auditory-icon
        (if (gnus-article-hidden-text-p 'headers) 'off 'on)))))
 
