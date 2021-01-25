@@ -1,3 +1,9 @@
+emacspeak (1:50.0-6stretch2) stretch; urgency=low
+
+  * Get rid of deprecated lisp construction.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 25 Jan 2021 23:23:00 +0300
+
 emacspeak (1:50.0-6stretch1) stretch; urgency=low
 
   * Removed redundant and wrong voicification used in magit popup
