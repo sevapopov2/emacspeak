@@ -364,10 +364,6 @@ Searches recursively if `directory-files-recursively' is available (Emacs 25)."
   "Read resource from minibuffer with contextual smarts."
   (cl-declare (special ido-work-directory-list emacspeak-m-player-url-p))
   (let ((completion-ignore-case t)
-        (read-file-name-function
-         (if (eq major-mode 'locate-mode)
-             #'read-file-name-default
-           #'ido-read-file-name))
         (read-file-name-completion-ignore-case t)
         (default
           (when (or (eq major-mode 'dired-mode) (eq major-mode 'locate-mode))
