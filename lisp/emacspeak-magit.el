@@ -243,19 +243,6 @@
           (when (ems-interactive-p)
             (emacspeak-auditory-icon 'mark-object)))))
 
-(cl-loop for f in
-      '(magit-toggle-section magit-section-toggle)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-          "Provide auditory feedback."
-          (when (ems-interactive-p)
-            (let ((state (magit-section-hidden (magit-current-section))))
-              (cond
-               (state (emacspeak-auditory-icon 'close-object))
-               (t (emacspeak-auditory-icon 'open-object)))
-              (emacspeak-speak-line))))))
-
 (cl-loop
  for f in
  '(
@@ -306,9 +293,20 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "Provide auditory feedback."
      (when (ems-interactive-p)
-       (emacspeak-speak-line)
        (emacspeak-auditory-icon
-        (if   (magit-section-hidden-body (ad-get-arg 0)) 'close-object 'open-object))))))
+        (if   (magit-section-hidden (ad-get-arg 0))
+            'close-object
+          'open-object))
+       (emacspeak-speak-line)))))
+
+(defadvice magit-toggle-section (after emacspeak pre act comp)
+  "Provide auditory feedback."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon
+     (if (magit-section-hidden (magit-current-section))
+         'close-object
+       'open-object))
+    (emacspeak-speak-line)))
 
 ;;}}}
 ;;{{{ Advice generator to advice generated  commands:
