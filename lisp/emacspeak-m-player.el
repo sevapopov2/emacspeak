@@ -403,6 +403,7 @@ Searches recursively if `directory-files-recursively' is available (Emacs 25)."
   "Filter function that captures metadata.
 Also cleanup ANSI escape sequences."
   (cl-declare (special emacspeak-m-player-cue-info
+                       ansi-color-drop-regexp
                        ansi-color-control-seq-regexp))
   (when (process-live-p process)
     (with-current-buffer (process-buffer process)
@@ -416,11 +417,14 @@ Also cleanup ANSI escape sequences."
           (emacspeak-auditory-icon 'progress)
           (emacspeak-m-player-stream-info)))
       (goto-char (process-mark process))
-      (let ((start (point)))
+      (let ((start (point))
+            (ignore-seq-regexp
+             (or (and (boundp 'ansi-color-control-seq-regexp) ansi-color-control-seq-regexp)
+                 (and (boundp 'ansi-color-drop-regexp) ansi-color-drop-regexp))))
         (insert output)
         (save-excursion
           (goto-char start)
-          (while (re-search-forward ansi-color-control-seq-regexp  (point-max) 'no-error)
+          (while (and ignore-seq-regexp (re-search-forward ignore-seq-regexp  (point-max) 'no-error))
             (delete-region (match-beginning 0) (match-end 0))))))))
 
 ;;;###autoload
