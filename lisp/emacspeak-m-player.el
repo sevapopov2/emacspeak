@@ -626,10 +626,12 @@ necessary."
 
 (defun emacspeak-m-player-current-filename ()
   "Return filename of currently playing track."
-  (cl-second
-   (split-string
-    (emacspeak-m-player-dispatch "get_file_name\n")
-    "=")))
+  (substring
+   (cl-second
+    (split-string
+     (emacspeak-m-player-dispatch "get_file_name\n")
+     "="))
+   1 -1))
 
 (defun emacspeak-m-player-scale-speed (factor)
   "Scale speed by specified factor."
@@ -1799,7 +1801,7 @@ Check first if current buffer is in emacspeak-m-player-mode."
     (emacspeak-auditory-icon 'mark-object)))
 
 (defun emacspeak-m-player-write-clip ()
-  "Invoke mp3splt to clip selected range in current file."
+  "Invoke sox to clip selected range in current file."
   (interactive)
   (cl-declare (special emacspeak-sox
                        emacspeak-m-player-clip-end emacspeak-m-player-clip-start))
@@ -1807,13 +1809,22 @@ Check first if current buffer is in emacspeak-m-player-mode."
   (cl-assert (eq major-mode 'emacspeak-m-player-mode) nil "Not in an MPlayer buffer.")
   (cl-assert (numberp emacspeak-m-player-clip-start) nil "Set start of clip with M-[")
   (cl-assert (numberp emacspeak-m-player-clip-end) nil "Set end of clip with M-]")
-  (let ((file (cl-second (emacspeak-m-player-get-position))))
-    (shell-command
-     (format "%s '%s' 'clip-%s'  trim %s %s"
-             emacspeak-sox file file 
-             emacspeak-m-player-clip-start
-             (- emacspeak-m-player-clip-end emacspeak-m-player-clip-start)))
-    (message "Wrote clip to clip-%s" file)))
+  (let* ((file (emacspeak-m-player-current-filename))
+         (clip (format "clip-%s" file))
+         (clip-start emacspeak-m-player-clip-start)
+         (clip-end emacspeak-m-player-clip-end))
+    (when (or (not (file-exists-p clip))
+              (y-or-n-p (format "File `%s' already exists. Overwrite? " clip)))
+      (with-temp-buffer
+        (unless (zerop (call-process emacspeak-sox nil t nil
+                                     file
+                                     clip
+                                     "trim"
+                                     (number-to-string clip-start)
+                                     (number-to-string (- clip-end clip-start))))
+          (error "Cannot write clip: %s" (buffer-string))))
+      (emacspeak-auditory-icon 'save-object)
+      (message "Wrote clip to clip-%s" file))))
 
 ;;}}}
 (provide 'emacspeak-m-player)
