@@ -1,3 +1,12 @@
+emacspeak (1:50.0-7bionic1) bionic; urgency=low
+
+  * Preserved sound icon that cannot be regenerated.
+  * Magit audio feedback fix.
+  * Better compatibility with various Emacs versions.
+  * Clip selection improvement in MPlayer frontend.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 29 Jan 2021 19:23:21 +0300
+
 emacspeak (1:50.0-6bionic1) bionic; urgency=low
 
   * Removed redundant and wrong voicification used in magit popup
