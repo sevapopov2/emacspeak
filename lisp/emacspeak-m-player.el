@@ -1787,7 +1787,7 @@ Check first if current buffer is in emacspeak-m-player-mode."
   (setq emacspeak-m-player-clip-start
         (read (cl-first (emacspeak-m-player-get-position))))
   (when  (called-interactively-p 'interactive)
-    (message "mark set at %s" emacspeak-m-player-clip-start)
+    (message "Clip start set at %s" emacspeak-m-player-clip-start)
     (emacspeak-auditory-icon 'mark-object)))
 
 (defun emacspeak-m-player-set-clip-end    ()
@@ -1797,7 +1797,7 @@ Check first if current buffer is in emacspeak-m-player-mode."
   (setq emacspeak-m-player-clip-end
         (read (cl-first (emacspeak-m-player-get-position))))
   (when  (called-interactively-p 'interactive)
-    (message "mark set at %s" emacspeak-m-player-clip-end)
+    (message "Clip end set at %s" emacspeak-m-player-clip-end)
     (emacspeak-auditory-icon 'mark-object)))
 
 (defun emacspeak-m-player-write-clip ()
