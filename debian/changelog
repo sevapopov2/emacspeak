@@ -1,3 +1,9 @@
+emacspeak (1:50.0-8focal1) focal; urgency=low
+
+  * MPlayer responses parsing stability fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 05 Feb 2021 18:03:16 +0300
+
 emacspeak (1:50.0-7focal1) focal; urgency=low
 
   * Preserved sound icon that cannot be regenerated.
