@@ -605,24 +605,42 @@ necessary."
 ;;}}}
 ;;{{{ commands
 
+(defconst emacspeak-m-player-info-order
+  '("TIME_POSITION"
+    "PERCENT_POSITION"
+    "LENGTH"
+    "FILENAME")
+  "MPlayer info items sorting order.")
+
+(defun emacspeak-m-player-info-priority (item)
+  "Returns sorting priority for specified item."
+  (let ((order emacspeak-m-player-info-order)
+        (result 0))
+    (while (and order (not (string-match (car order) (car item))))
+      (setq result (1+ result)
+            order (cdr order)))
+    result))
+
+(defun emacspeak-m-player-info-item-precedes-p (first second)
+  "Indicates that the first item should precede the second one."
+  (<= (emacspeak-m-player-info-priority first)
+      (emacspeak-m-player-info-priority second)))
+
 (defun emacspeak-m-player-get-position ()
   "Return list suitable to use as an amark. --- see emacspeak-amark.el."
-  (cl-declare (special emacspeak-m-player-process))
-  (with-current-buffer (process-buffer emacspeak-m-player-process)
-    ;;; dispatch command twice to avoid flakiness in mplayer
-    (emacspeak-m-player-dispatch "get_time_pos\nget_file_name\n")
-    (emacspeak-m-player-dispatch "get_time_pos\nget_file_name\n")
-    (let* ((output  (buffer-substring-no-properties (point-min) (point-max)))
-           (lines (split-string output "\n" 'omit-nulls))
-           (fields
-            (cl-loop
-             for l in lines
-             collect (cl-second (split-string l "=")))))
-      (list
-       (format "%s" (cl-first fields))     ; position
-       (if (cl-second fields)
-           (substring (cl-second  fields) 1 -1)
-         "")))))
+  (let* ((output (emacspeak-m-player-dispatch "get_time_pos\nget_file_name\n"))
+         (lines (split-string output "\n" 'omit-nulls))
+         (fields
+          (sort
+           (cl-loop
+            for l in lines
+            collect (split-string l "="))
+           'emacspeak-m-player-info-item-precedes-p)))
+    (list
+     (format "%s" (cl-second (cl-first fields)))     ; position
+     (if (cl-second fields)
+         (substring (cl-second (cl-second fields)) 1 -1)
+       ""))))
 
 (defun emacspeak-m-player-current-filename ()
   "Return filename of currently playing track."
@@ -907,9 +925,11 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
     (when result
       (setq result (replace-regexp-in-string  "^ans_" "" result))
       (setq fields
-            (mapcar
-             #'(lambda (s) (split-string s "="))
-             (split-string  result "\n"))))
+            (sort
+             (mapcar
+              #'(lambda (s) (split-string s "="))
+              (split-string  result "\n"))
+             'emacspeak-m-player-info-item-precedes-p)))
     (cond
      (fields                       ; speak them after audio formatting
       (cl-loop
