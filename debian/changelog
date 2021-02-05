@@ -1,3 +1,9 @@
+emacspeak (1:50.0-8stretch1) stretch; urgency=low
+
+  * MPlayer responses parsing stability fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 05 Feb 2021 17:56:33 +0300
+
 emacspeak (1:50.0-7stretch1) stretch; urgency=low
 
   * Preserved sound icon that cannot be regenerated.
