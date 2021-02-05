@@ -1,3 +1,9 @@
+emacspeak (1:50.0-8bionic1) bionic; urgency=low
+
+  * MPlayer responses parsing stability fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 05 Feb 2021 18:01:42 +0300
+
 emacspeak (1:50.0-7bionic1) bionic; urgency=low
 
   * Preserved sound icon that cannot be regenerated.
