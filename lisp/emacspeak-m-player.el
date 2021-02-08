@@ -906,11 +906,20 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
                      (if emacspeak-m-player-cue-info "on" "off")))
         (message"%s" (format "%s" (or info  "No Stream Info")))))))
 
-;;;###autoload
 (defun emacspeak-m-player-get-length ()
+  "Get length of track in seconds."
+  (cl-second
+   (split-string
+    (emacspeak-m-player-dispatch "get_time_length")
+    "=")))
+
+;;;###autoload
+(defun emacspeak-m-player-display-length ()
   "Display length of track in seconds."
   (interactive)
-  (dtk-speak-and-echo (emacspeak-m-player-dispatch "get_time_length")))
+  (dtk-speak-and-echo
+   (format "Total track length is %s seconds"
+           (emacspeak-m-player-get-length))))
 
 (defconst emacspeak-m-player-display-cmd
   "get_time_pos\nget_percent_pos\nget_time_length\nget_file_name\n"
@@ -1269,7 +1278,7 @@ flat classical club dance full-bass full-bass-and-treble
     ("i" emacspeak-m-player-stream-info)
     ("j" emacspeak-m-player-amark-jump)
     ("k" emacspeak-m-player-quit)
-    ("l" emacspeak-m-player-get-length)
+    ("l" emacspeak-m-player-display-length)
     ("m" emacspeak-m-player-speak-mode-line)
     ("n" emacspeak-m-player-next-track)
     ("o" emacspeak-m-player-customize-options)
