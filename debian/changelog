@@ -1,3 +1,11 @@
+emacspeak (1:50.0-9stretch1) stretch; urgency=low
+
+  * Magit buffers killing auditory feedback.
+  * MPlayer frontend fixes.
+  * Mediatrack splitting functionality in MPlayer frontend.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 09 Feb 2021 00:36:07 +0300
+
 emacspeak (1:50.0-8stretch1) stretch; urgency=low
 
   * MPlayer responses parsing stability fix.
