@@ -1262,6 +1262,7 @@ flat classical club dance full-bass full-bass-and-treble
     ("Q" emacspeak-m-player-quit)
     ("R" emacspeak-m-player-edit-reverb)
     ("S" emacspeak-amark-save)
+    ("X" emacspeak-m-player-export-track-list)
     ("x" emacspeak-m-player-pan)
     ("w" emacspeak-m-player-write-clip)
     ("SPC" emacspeak-m-player-pause)
@@ -1395,6 +1396,42 @@ As the default, use current position."
 (defun ems-file-index (name file-list)
   "Return index of name in file-list."
   (cl-position (expand-file-name name) file-list :test #'string=))
+
+(defun emacspeak-m-player-amark-precedes-p (first second)
+  "Indicates that the first amark precedes the second one."
+  (<= (string-to-number (emacspeak-amark-position first))
+      (string-to-number (emacspeak-amark-position second))))
+
+(defun emacspeak-m-player-export-track-list ()
+  "Save track split data in Audacity labels file using amarks as split points."
+  (interactive)
+  (cl-declare (special buffer-undo-list emacspeak-amark-list))
+  (let* ((file (emacspeak-m-player-current-filename))
+         (amarks
+          (sort
+           (cl-loop for amark in emacspeak-amark-list
+                    when (string-equal (emacspeak-amark-path amark) file)
+                    collect amark)
+           'emacspeak-m-player-amark-precedes-p)))
+    (if amarks
+        (let ((buf (find-file-noselect (expand-file-name (format "%s.tracks" file)))))
+          (with-current-buffer buf
+            (setq buffer-undo-list t)
+            (erase-buffer)
+            (while amarks
+              (insert
+               (format "%s\t%s\t%s\n"
+                       (emacspeak-amark-position (car amarks))
+                       (if (cdr amarks)
+                           (emacspeak-amark-position (cadr amarks))
+                         (emacspeak-m-player-get-length))
+                       (emacspeak-amark-name (car amarks))))
+              (setq amarks (cdr amarks)))
+            (goto-char (point-min))
+            (save-buffer)
+            (kill-buffer buf)
+            (emacspeak-auditory-icon 'save-object)))
+      (error "No amarks to export."))))
 
 ;;;###autoload
 (defun emacspeak-m-player-amark-jump ()
