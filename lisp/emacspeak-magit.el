@@ -414,6 +414,7 @@
 (cl-loop for f in
       '(magit-quit-window
         magit-quit-branches-window
+        magit-kill-this-buffer
         magit-key-mode-kill-buffer
         magit-mode-bury-buffer
         magit-log-bury-buffer
