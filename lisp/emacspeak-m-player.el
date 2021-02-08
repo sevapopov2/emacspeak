@@ -1853,7 +1853,7 @@ Check first if current buffer is in emacspeak-m-player-mode."
                                      (number-to-string (- clip-end clip-start))))
           (error "Cannot write clip: %s" (buffer-string))))
       (emacspeak-auditory-icon 'save-object)
-      (message "Wrote clip to clip-%s" file))))
+      (message "Wrote clip to %s" clip))))
 
 ;;}}}
 (provide 'emacspeak-m-player)
