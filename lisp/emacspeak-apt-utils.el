@@ -128,6 +128,7 @@
 	apt-utils-view-debian-news
 	apt-utils-view-changelog
 	apt-utils-view-debian-changelog
+        apt-utils-list-package-files
 	apt-utils-follow-link)
       do
       (eval
