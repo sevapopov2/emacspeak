@@ -82,7 +82,7 @@
 (defun emacspeak-dired-speak-line ()
   "Speak the dired line intelligently."
   (cl-declare (special emacspeak-speak-last-spoken-word-position))
-  (let ((filename (dired-get-filename 'no-dir  t))
+  (let ((filename (dired-get-filename 'verbatim  t))
         (personality (dtk-get-style)))
     (cond
      (filename
