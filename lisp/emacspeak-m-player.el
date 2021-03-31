@@ -1407,14 +1407,17 @@ As the default, use current position."
   (interactive)
   (cl-declare (special buffer-undo-list emacspeak-amark-list))
   (let* ((file (emacspeak-m-player-current-filename))
+         (tracklist (expand-file-name (format "%s.tracks" file)))
          (amarks
           (sort
            (cl-loop for amark in emacspeak-amark-list
                     when (string-equal (emacspeak-amark-path amark) file)
                     collect amark)
            'emacspeak-m-player-amark-precedes-p)))
-    (if amarks
-        (let ((buf (find-file-noselect (expand-file-name (format "%s.tracks" file)))))
+    (if (and amarks
+             (or (not (file-exists-p tracklist))
+                 (y-or-n-p (format "File `%s' already exists. Overwrite? " tracklist))))
+        (let ((buf (find-file-noselect tracklist)))
           (with-current-buffer buf
             (setq buffer-undo-list t)
             (erase-buffer)
