@@ -1,3 +1,10 @@
+emacspeak (1:50.0-10buster1) buster; urgency=medium
+
+  * Ask for overwrite when exporting track list in MPlayer frontend.
+  * Debian package file list support improvement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 31 Mar 2021 21:02:42 +0300
+
 emacspeak (1:50.0-9buster1) buster; urgency=low
 
   * Magit buffers killing auditory feedback.
