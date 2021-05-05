@@ -94,8 +94,3 @@ override_dh_fixperms-indep:
 	chmod 0644 $(debtmp)-pan-chimes/$(eldir)/sounds/pan-chimes/*
 
 	dh_fixperms
-
-
-override_dh_clean:
-
-	dh_clean -Xtick-tick.wav
