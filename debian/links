@@ -4,3 +4,4 @@ usr/share/emacs/site-lisp/emacspeak/etc/tips.html usr/share/doc/emacspeak/tips.h
 usr/share/emacs/site-lisp/emacspeak/etc/remote.txt usr/share/doc/emacspeak/remote.txt
 usr/share/emacs/site-lisp/emacspeak/etc/install.org usr/share/doc/emacspeak/install.org
 usr/share/emacs/site-lisp/emacspeak/etc/emacspeak.sh usr/bin/emacspeak
+usr/share/emacs/site-lisp/emacspeak/sounds/3d/time.wav usr/share/emacs/site-lisp/emacspeak/sounds/3d/tick-tick.wav
