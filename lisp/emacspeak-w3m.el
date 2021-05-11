@@ -83,9 +83,6 @@ This hack helps to deal with some specially designed forms."
                     emacspeak-prefix))
   (define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command)
   (define-key w3m-mode-map "x" 'emacspeak-we-xsl-map)
-  (define-key w3m-mode-map (kbd "M-<tab>") 'w3m-previous-anchor)
-  (define-key w3m-mode-map (kbd "S-<tab>") 'w3m-previous-anchor)
-  (define-key w3m-mode-map (kbd "<tab>") 'w3m-next-anchor)
   (define-key w3m-mode-map [down] 'next-line)
   (define-key w3m-mode-map [up] 'previous-line)
   (define-key w3m-mode-map [right] 'emacspeak-forward-char)
@@ -105,11 +102,10 @@ This hack helps to deal with some specially designed forms."
   (define-key w3m-mode-map "\C-cgl" 'emacspeak-webutils-google-similar-to-this-page)
   (define-key w3m-mode-map (kbd "<C-return>") 'emacspeak-webutils-open-in-other-browser)
 
-  (define-key w3m-mode-map "xa" 'emacspeak-we-xslt-apply)
-  (define-key w3m-mode-map "xv" 'emacspeak-w3m-xsl-add-submit-button)
-  (define-key w3m-mode-map "xh" 'emacspeak-w3m-xsl-google-hits)
-  (define-key w3m-mode-map "xl" 'emacspeak-w3m-xsl-linearize-tables)
-  (define-key w3m-mode-map "xn" 'emacspeak-w3m-xsl-sort-tables)
+  (define-key emacspeak-we-xsl-map "B" 'emacspeak-w3m-xsl-add-submit-button)
+  (define-key emacspeak-we-xsl-map "h" 'emacspeak-w3m-xsl-google-hits)
+  (define-key emacspeak-we-xsl-map "l" 'emacspeak-w3m-xsl-linearize-tables)
+  (define-key emacspeak-we-xsl-map "n" 'emacspeak-w3m-xsl-sort-tables)
   )
 
 ;;}}}
@@ -879,8 +875,7 @@ Indicate change of selection with
 (defadvice w3m-mode (after emacspeak pre act comp)
   "Set punctuation mode and refresh punctuations."
   (dtk-set-punctuations 'some)
-  (emacspeak-pronounce-refresh-pronunciations)
-  (define-key w3m-mode-map emacspeak-prefix 'emacspeak-prefix-command))
+  (emacspeak-pronounce-refresh-pronunciations))
 
 ;;}}}
 (provide 'emacspeak-w3m)
