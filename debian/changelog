@@ -1,3 +1,13 @@
+emacspeak (1:50.0-11bionic1) bionic; urgency=medium
+
+  * Symlink instead of binary copy.
+  * Sound icons generation fix.
+  * General advices of common links navigation functions.
+  * Eww keymap fix.
+  * W3m keymap consistency fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 11 May 2021 20:14:04 +0300
+
 emacspeak (1:50.0-10bionic1) bionic; urgency=medium
 
   * Ask for overwrite when exporting track list in MPlayer frontend.
