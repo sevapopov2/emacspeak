@@ -1,3 +1,9 @@
+emacspeak (1:50.0-12stretch1) stretch; urgency=medium
+
+  * Handling repeating patterns fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 30 May 2021 21:17:00 +0300
+
 emacspeak (1:50.0-11stretch1) stretch; urgency=medium
 
   * Symlink instead of binary copy.
