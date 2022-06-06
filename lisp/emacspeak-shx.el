@@ -101,20 +101,19 @@ Provide an auditory icon if possible."
   "Speak word or completion."
   (cond
    ((ems-interactive-p)
-    (ems-with-messages-silenced
-     (let ((orig (point))
-           (count (ad-get-arg 0)))
-       (setq count (or count 1))
-       ad-do-it
-       (cond
-        ((= (point) (+ count orig))
-         (save-mark-and-excursion
-           (forward-word -1)
-           (emacspeak-speak-word)))
-        (t
-         (emacspeak-auditory-icon 'complete)
-         (emacspeak-speak-region
-          (comint-line-beginning-position) (point)))))))
+    (let ((orig (point))
+          (count (ad-get-arg 0)))
+      (setq count (or count 1))
+      (ems-with-messages-silenced ad-do-it)
+      (cond
+       ((= (point) (+ count orig))
+        (save-mark-and-excursion
+         (forward-word -1)
+         (emacspeak-speak-word)))
+       (t
+        (emacspeak-auditory-icon 'complete)
+        (emacspeak-speak-region
+         (comint-line-beginning-position) (point))))))
    (t ad-do-it))
   ad-return-value)
 ;;}}}

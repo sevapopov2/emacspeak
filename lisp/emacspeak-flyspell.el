@@ -94,8 +94,11 @@ fly spell checking."
      (dtk-speak (car (flyspell-get-word nil)))
      (when (sit-for 1)
        (dtk-notify-speak (cl-second flyspell-auto-correct-ring)))
-     (when (sit-for 1) (emacspeak-speak-message-again))
-     (emacspeak-auditory-icon 'select-object))) (t ad-do-it)) ad-return-value)
+     (when (sit-for 1)
+       (emacspeak-speak-message-again)))
+    (emacspeak-auditory-icon 'select-object))
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice flyspell-unhighlight-at (before debug pre act comp)
   "handle highlight/unhighlight."
