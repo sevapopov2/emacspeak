@@ -196,11 +196,11 @@
       ((ems-interactive-p)
        (let ((orig (save-excursion (skip-syntax-backward "^ >") (point))))
          (ems-with-messages-silenced
-          ad-do-it
-          (emacspeak-auditory-icon 'complete)
-          (if (< orig (point))
-              (dtk-speak (buffer-substring orig (point)))
-            (dtk-speak (word-at-point))))))
+          ad-do-it)
+         (emacspeak-auditory-icon 'complete)
+         (if (< orig (point))
+             (dtk-speak (buffer-substring orig (point)))
+           (dtk-speak (word-at-point)))))
       (t ad-do-it))
      ad-return-value)))
 
