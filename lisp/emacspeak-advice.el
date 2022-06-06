@@ -237,14 +237,14 @@ beginning or end of a physical line produces an appropriate auditory icon."
      (cond
       ((ems-interactive-p)
        (ems-with-messages-silenced
-        ad-do-it
-        (condition-case nil
-            (let* ((button (button-at (point)))
-                   (start (button-start button))
-                   (end (button-end button)))
-              (dtk-speak (buffer-substring start end))
-              (emacspeak-auditory-icon 'large-movement))
-          (error nil))))
+        ad-do-it)
+       (emacspeak-auditory-icon 'large-movement)
+       (condition-case nil
+           (let* ((button (button-at (point)))
+                  (start (button-start button))
+                  (end (button-end button)))
+             (dtk-speak (buffer-substring start end)))
+         (error nil)))
       (t ad-do-it))
      ad-return-value)))
 
@@ -657,11 +657,11 @@ see option emacspeak-untabify-fixes-non-breaking-space."
    ((ems-interactive-p)
     (let ((orig (save-excursion (skip-syntax-backward "^ >" ) (point))))
       (ems-with-messages-silenced
-       ad-do-it
-       (emacspeak-auditory-icon 'complete)
-       (if (< orig (point))
-           (dtk-speak (buffer-substring orig (point)))
-         (dtk-speak (word-at-point))))))
+       ad-do-it)
+      (emacspeak-auditory-icon 'complete)
+      (if (< orig (point))
+          (dtk-speak (buffer-substring orig (point)))
+        (dtk-speak (word-at-point)))))
    (t ad-do-it))
   ad-return-value)
 
@@ -817,15 +817,15 @@ icon."
   (cl-declare (special emacspeak-ange-ftp-last-percent
                        ange-ftp-last-percent))
   (ems-with-messages-silenced
-   ad-do-it
-   (when (or
-          (null emacspeak-ange-ftp-last-percent)
-          (>= (abs (- ange-ftp-last-percent emacspeak-ange-ftp-last-percent))
-              5))
-     (setq emacspeak-ange-ftp-last-percent ange-ftp-last-percent)
-     (emacspeak-auditory-icon 'progress)
-     (dtk-speak
-      (format " %s percent" ange-ftp-last-percent)))))
+   ad-do-it)
+  (when (or
+         (null emacspeak-ange-ftp-last-percent)
+         (>= (abs (- ange-ftp-last-percent emacspeak-ange-ftp-last-percent))
+             5))
+    (setq emacspeak-ange-ftp-last-percent ange-ftp-last-percent)
+    (emacspeak-auditory-icon 'progress)
+    (dtk-speak
+     (format " %s percent" ange-ftp-last-percent))))
 
 ;;{{{ advising signal
 
@@ -1097,20 +1097,19 @@ icon."
   "Speak word or completion."
   (cond
    ((ems-interactive-p)
-    (ems-with-messages-silenced
-     (let ((orig (point))
-           (count (ad-get-arg 0)))
-       (setq count (or count 1))
-       ad-do-it
-       (cond
-        ((= (point) (+ count orig))
-         (save-excursion
-           (forward-word -1)
-           (emacspeak-speak-word)))
-        (t
-         (emacspeak-auditory-icon 'complete)
-         (emacspeak-speak-region
-          (comint-line-beginning-position) (point)))))))
+    (let ((orig (point))
+          (count (ad-get-arg 0)))
+      (setq count (or count 1))
+      (ems-with-messages-silenced ad-do-it)
+      (cond
+       ((= (point) (+ count orig))
+        (save-excursion
+         (forward-word -1)
+         (emacspeak-speak-word)))
+       (t
+        (emacspeak-auditory-icon 'complete)
+        (emacspeak-speak-region
+         (comint-line-beginning-position) (point))))))
    (t ad-do-it))
   ad-return-value)
 
@@ -1288,15 +1287,14 @@ icon."
   "Say what you completed."
   (cond
    ((ems-interactive-p)
-    (ems-with-messages-silenced
-     (let ((prior (save-excursion (skip-syntax-backward "^ >") (point))))
-       ad-do-it
-       (if (> (point) prior)
-           (tts-with-punctuations
-            'all
+    (let ((prior (save-excursion (skip-syntax-backward "^ >") (point))))
+      (ems-with-messages-silenced ad-do-it)
+      (if (> (point) prior)
+          (tts-with-punctuations
+              'all
             (emacspeak-auditory-icon 'complete)
             (dtk-speak (buffer-substring prior (point))))
-         (emacspeak-speak-completions-if-available)))))
+        (emacspeak-speak-completions-if-available))))
    (t ad-do-it))
   ad-return-value)
 
@@ -2069,8 +2067,7 @@ Provide an auditory icon if possible."
   (cond
    ((ems-interactive-p)
     (ems-with-messages-silenced
-     (let ((dtk-quiet t)
-           (emacspeak-use-auditory-icons nil))
+     (let ((dtk-quiet t))
        ad-do-it))
     (message "Executed macro. ")
     (emacspeak-auditory-icon 'task-done))
@@ -2332,9 +2329,9 @@ Produce an auditory icon if possible."
    ((ems-interactive-p)
     (ems-with-messages-silenced
      (dtk-speak "Byte compiling ")
-     ad-do-it
-     (emacspeak-auditory-icon 'task-done)
-     (dtk-speak "Done byte compiling ")))
+     ad-do-it)
+    (emacspeak-auditory-icon 'task-done)
+    (dtk-speak "Done byte compiling "))
    (t ad-do-it))
   ad-return-value)
 
@@ -2912,9 +2909,9 @@ Produce auditory icons if possible."
      (cond
       ((ems-interactive-p)
        (ems-with-messages-silenced
-        ad-do-it
-        (emacspeak-auditory-icon 'task-done)
-        (message "Displayed lint results in other window. ")))
+        ad-do-it)
+       (emacspeak-auditory-icon 'task-done)
+       (message "Displayed lint results in other window. "))
       (t ad-do-it))
      ad-return-value)))
 

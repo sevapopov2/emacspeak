@@ -285,9 +285,9 @@ Provide auditory icon when finished."
   "Produce an auditory icon."
   (when (ems-interactive-p )
     (ems-with-messages-silenced
-     (emacspeak-dired-label-fields)
-     (emacspeak-auditory-icon 'open-object )
-     (emacspeak-speak-mode-line))))
+     (emacspeak-dired-label-fields))
+    (emacspeak-auditory-icon 'open-object )
+    (emacspeak-speak-mode-line)))
 
 (defun emacspeak-dired-initialize ()
   "Set up emacspeak dired."
