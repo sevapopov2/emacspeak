@@ -81,9 +81,10 @@
   `(defadvice ,f (around emacspeak pre act comp)
      "Silence minibuffer message that echoes command."
      (ems-with-messages-silenced
-      ad-do-it
-      (emacspeak-auditory-icon 'select-object)
-      ad-return-value))))
+      ad-do-it)
+     (emacspeak-auditory-icon 'select-object)
+     ad-return-value)))
+
 ;;}}}
 ;;{{{ Advise interactive commands:
 
