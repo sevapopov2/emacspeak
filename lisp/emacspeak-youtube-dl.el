@@ -86,6 +86,7 @@
  for f in
  '(youtube-dl
    youtube-dl-audio
+   youtube-dl-w3m-view
    youtube-dl-w3m-dispatch)
  do
  (eval
