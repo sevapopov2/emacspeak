@@ -110,6 +110,7 @@
 (cl-loop
  for f in
  '(youtube-dl-list-kill-log
+   youtube-dl-view-quit
    youtube-dl-quit)
  do
  (eval
@@ -157,6 +158,11 @@
         (emacspeak-auditory-icon 'open-object)
         (emacspeak-speak-mode-line)))
     ad-return-value))
+
+(defadvice youtube-dl-view-add-w3m-bookmark (after emacspeak pre act comp)
+  "Produce auditory icon."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'save-object)))
 
 (defadvice youtube-dl-list-yank (after emacspeak pre act comp)
   "provide auditory confirmation."
