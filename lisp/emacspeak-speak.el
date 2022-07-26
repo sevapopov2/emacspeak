@@ -968,7 +968,6 @@ with auditory icon `more'.  These can then be spoken using command
         (inhibit-point-motion-hooks t)
         (inhibit-modification-hooks t)
         (deactivate-mark nil)
-        (icon (get-char-property (point) 'auditory-icon))
         (before (get-char-property (point) 'before-string))
         (after (get-char-property (point) 'after-string))
         (display (get-char-property (point) 'display))
@@ -989,7 +988,6 @@ with auditory icon `more'.  These can then be spoken using command
      ((null arg))
      ((> arg 0) (setq start orig))
      (t (setq end orig)))
-    (when icon (emacspeak-auditory-icon icon))
     (when emacspeak-show-point
       (emacspeak-auditory-icon
        (cond
