@@ -1,3 +1,12 @@
+emacspeak (1:50.0-15stretch1) stretch; urgency=medium
+
+  * Youtube-dl support enhancement.
+  * Get rid of unrelated speech feedback in alternative input mode.
+  * Auditory icon function customization fix.
+  * Fixed auditory icon duplication when reading lines.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 26 Jul 2022 19:52:19 +0300
+
 emacspeak (1:50.0-14stretch1) stretch; urgency=medium
 
   * Fixed auditory feedback for youtube-dl actions in w3m.
