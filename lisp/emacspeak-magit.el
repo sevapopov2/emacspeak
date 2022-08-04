@@ -388,7 +388,8 @@
                    magit-reflog-head
                    magit-reflog-current
                    magit-wazzup
-                   magit-interactive-resolve-item)
+                   magit-interactive-resolve-item
+                   git-rebase-show-commit)
       do
       (eval
        `(defadvice ,f (after emacspeak pre act comp)
