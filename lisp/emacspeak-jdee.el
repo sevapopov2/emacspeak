@@ -191,7 +191,7 @@
 (defadvice jdee-bug-highlight-breakpoint (after emacspeak pre act comp)
   "Annotate line with an auditory icon. "
   (let ((start nil))
-    (save-mark-and-excursion
+    (save-excursion
       (if (ad-get-arg 0)
           (goto-line (ad-get-arg 0)))
       (beginning-of-line)
@@ -204,7 +204,7 @@
 (defadvice jdee-bug-remove-breakpoint-highlight (after emacspeak pre act comp)
   "Clear auditory annotation"
   (let ((start nil))
-    (save-mark-and-excursion
+    (save-excursion
       (beginning-of-line)
       (setq  start (point))
       (end-of-line)
@@ -314,7 +314,7 @@ If we are on the last call, do nothing."
     (dtk-speak
      (buffer-substring
       (point)
-      (save-mark-and-excursion (jdee-end-of-camel-tok))))))
+      (save-excursion (jdee-end-of-camel-tok))))))
 
 ;;}}}
 

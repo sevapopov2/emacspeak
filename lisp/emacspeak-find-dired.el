@@ -51,10 +51,6 @@
 
 ;;; Code:
 
-(defadvice  find-dired-sentinel (after emacspeak pre act )
-  "Provide auditory feedback"
-  (emacspeak-auditory-icon 'task-done))
-
 ;;}}}
 (provide 'emacspeak-find-dired)
 ;;{{{ end of file

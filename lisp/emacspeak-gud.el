@@ -1,8 +1,8 @@
 ;;; emacspeak-gud.el --- Speech enable Emacs' debugger interface --covers GDB, JDB, and PerlDB  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
-;;; Description: Emacspeak extensions for gud interaction
-;;; Keywords: emacspeak, audio interface to emacs debuggers
+;;; DescriptionEmacspeak extensions for gud interaction
+;;; Keywords:emacspeak, audio interface to emacs debuggers
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
@@ -81,10 +81,9 @@
   `(defadvice ,f (around emacspeak pre act comp)
      "Silence minibuffer message that echoes command."
      (ems-with-messages-silenced
-      ad-do-it)
-     (emacspeak-auditory-icon 'select-object)
-     ad-return-value)))
-
+      ad-do-it
+      (emacspeak-auditory-icon 'select-object)
+      ad-return-value))))
 ;;}}}
 ;;{{{ Advise interactive commands:
 

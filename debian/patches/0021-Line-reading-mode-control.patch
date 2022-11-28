@@ -1,0 +1,73 @@
+From: "Igor B. Poretsky" <poretsky@mlbox.ru>
+Date: Tue, 8 Nov 2022 19:42:39 +0300
+Subject: Line reading mode control
+
+---
+ lisp/emacspeak-advice.el |  2 +-
+ lisp/emacspeak-keymap.el |  1 +
+ lisp/emacspeak-speak.el  | 27 +++++++++++++++++++++++++++
+ 3 files changed, 29 insertions(+), 1 deletion(-)
+
+diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
+index 85efc30..795fdfa 100644
+--- a/lisp/emacspeak-advice.el
++++ b/lisp/emacspeak-advice.el
+@@ -195,7 +195,7 @@ beginning or end of a physical line produces an appropriate auditory icon."
+      (when (ems-interactive-p)
+        (cond
+         ((or line-move-visual visual-line-mode) (emacspeak-speak-visual-line))
+-        (t (emacspeak-speak-line)))))))
++        (t (emacspeak-speak-line emacspeak-speak-line-reading-mode)))))))
+ 
+ (defadvice kill-visual-line (before emacspeak pre act comp)
+   "Speak line we're about to delete."
+diff --git a/lisp/emacspeak-keymap.el b/lisp/emacspeak-keymap.el
+index 5c3d259..f7d2d52 100644
+--- a/lisp/emacspeak-keymap.el
++++ b/lisp/emacspeak-keymap.el
+@@ -329,6 +329,7 @@
+    ("v" voice-lock-toggle)
+    ("w" emacspeak-toggle-word-echo)
+    ("z" emacspeak-zap-tts)
++   ("C-l" emacspeak-speak-set-line-reading-mode)
+    ("C-n" dtk-notify-initialize)
+    ("C-s" dtk-notify-shutdown)
+    )
+diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
+index ebfc3b6..c707ba2 100644
+--- a/lisp/emacspeak-speak.el
++++ b/lisp/emacspeak-speak.el
+@@ -109,6 +109,33 @@
+   (puthash mode value emacspeak-speak-mode-punctuation-table))
+ 
+ ;;}}}
++;;{{{ Line reading mode:
++
++(defvar emacspeak-speak-line-reading-mode nil
++  "Current line reading mode when moving up and down.")
++(make-variable-buffer-local 'emacspeak-speak-line-reading-mode)
++
++;;;###autoload
++(defun emacspeak-speak-set-line-reading-mode (setting)
++  "Set how lines are to be read when moving up and down.
++
++There are three modes:
++`full' - lines are read normally from the beginning up to the end,
++`head' - lines are read from the beginning up to the cursor position,
++`tail' - lines are read from the cursor position up to the end."
++  (interactive
++   (list
++    (intern (completing-read "Line Reading Mode: " '("full" "head" "tail") nil t))))
++  (setq emacspeak-speak-line-reading-mode
++        (cond
++         ((string-equal setting "head") -1)
++         ((string-equal setting "tail") 1)
++         (t (setq setting "full") nil)))
++  (when (ems-interactive-p)
++    (message "Set line reading mode to %s in current buffer" setting)
++    (emacspeak-auditory-icon 'select-object)))
++
++;;}}}
+ ;;{{{  line, Word and Character echo
+ 
+ (defcustom emacspeak-line-echo nil

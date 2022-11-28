@@ -99,7 +99,7 @@ Speech flushes as you type."
        ((stringp display) (dtk-say display))
        ((and emacspeak-word-echo
              (= (char-syntax last-command-event)32))
-        (save-mark-and-excursion
+        (save-excursion
           (condition-case nil
               (forward-word -1)
             (error nil))
@@ -129,7 +129,7 @@ Speech flushes as you type."
        ((stringp display) (dtk-say display))
        ((and emacspeak-word-echo
              (= (char-syntax last-command-event)32))
-        (save-mark-and-excursion
+        (save-excursion
           (condition-case nil
               (forward-word -1)
             (error nil))

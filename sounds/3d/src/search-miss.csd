@@ -1,5 +1,5 @@
 <CsoundSynthesizer>
-<CsOptions>
+<C  sOptions>
 -o search-miss.wav
 </CsOptions>
 <CsInstruments>
