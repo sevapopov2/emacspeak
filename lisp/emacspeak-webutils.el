@@ -54,14 +54,6 @@
 (require 'url)
 (require 'browse-url)
 (require 'shr)
-(require 'w3m-util "w3m-util" 'noerror)
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function shr-url-at-point "shr.el")
-(declare-function w3m-anchor "ext:w3m-util.el" (&optional position))
-(declare-function w3m-image "ext:w3m-util.el" (&optional position))
 
 ;;}}}
 ;;{{{ Utility: Render HTML To String
@@ -218,30 +210,15 @@ Forward punctuation and rate  settings to resulting buffer."
 (defun emacspeak-webutils-browser-check ()
   "Check to see if functions are called from a browser buffer"
   (cl-declare (special major-mode))
-  (unless (or (eq major-mode 'w3m-mode)
-              (eq major-mode 'eww-mode))
+  (unless (eq major-mode 'eww-mode)
     (error "This command cannot be used outside browser buffers.")))
-
-(defun emacspeak-webutils-url-at-point (image-url)
-  "Return the URL under point as a string.
-If IMAGE-URL is non-nil, or there is no link under point, but
-there is an image under point then copy the URL of the image
-under point instead."
-  (if (eq major-mode 'w3m-mode)
-      (if image-url
-          (w3m-image (point))
-        (w3m-anchor (point)))
-    (if (fboundp 'shr-url-at-point)
-        (shr-url-at-point image-url)
-      (unless image-url
-        (browse-url-url-at-point)))))
 
 (defalias 'emacspeak-webutils-read-url 'emacspeak-webutils-read-this-url)
 
 (defun emacspeak-webutils-read-this-url ()
   "Return URL under point
 or URL read from minibuffer."
-  (let ((url (emacspeak-webutils-url-at-point nil)))
+  (let ((url (shr-url-at-point nil)))
     (if url
         url 
       (car (browse-url-interactive-arg "URL: ")))))
@@ -331,7 +308,7 @@ and xsl environment specified by style, params and options."
   "Function variable returning the current document title.")
 
 (defvar emacspeak-webutils-url-at-point
-  #'(lambda nil (emacspeak-webutils-url-at-point nil))
+  #'(lambda nil (shr-url-at-point nil))
   "Function variable returning the value of the url under point
   in a Web page.")
 
@@ -537,24 +514,6 @@ Useful in handling double-redirect from TuneIn."
     (cl-loop
      for p being the hash-values of url-http-open-connections
      when p do (delete-process (car p)))))
-
-;;}}}
-;;{{{ Common links navigation:
-
-(cl-loop
- for f in
- '(shr-next-link shr-previous-link)
- do
- (eval
-  `(defadvice ,f (around emacspeak pre act comp)
-     "Provide auditory feedback."
-     (ems-with-messages-silenced ad-do-it)
-     (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'button)
-       (emacspeak-speak-region
-        (point)
-        (next-single-property-change (point) 'help-echo
-                                     nil (point-max)))))))
 
 ;;}}}
 (provide 'emacspeak-webutils)

@@ -196,12 +196,6 @@ Useful when eterm is in review mode.")
 ;;}}}
 ;;{{{  functions
 
-(defvar emacspeak-eterm-pointer nil
-  "Terminal pointer. Can be moved around to listen to the contents of the
-terminal. See commands provided by the emacspeak extension to eterm:
-\\{emacspeak-eterm-keymap}.
-Each term-mode buffer has a buffer local value of this variable. ")
-
 ;;; nuke term cache info 
 (defun emacspeak-eterm-nuke-cached-info ()
   (cl-declare (special term-current-row term-current-column))
@@ -578,8 +572,8 @@ without sending input to the terminal itself."
 ;;}}}
 ;;{{{  Cut and paste while reviewing:
 
-(defvar emacspeak-eterm-marker nil
-  "Mark set in an eterm buffer. Used to cut and paste from the terminal.")
+(defvar emacspeak-eterm-marker nil 
+  "Marker used by emacspeak to yank when in eterm review mode.")
 
 (defun emacspeak-eterm-set-marker ()
   "Set Emacspeak eterm marker.
@@ -1046,6 +1040,9 @@ available with the prefix emacspeak-eterm-prefix and are listed below:
 
 (defvar emacspeak-eterm-column nil
   "Record the column last spoken")
+
+(defvar emacspeak-eterm-marker nil
+  "Mark set in an eterm buffer. Used to cut and paste from the terminal.")
 
 (defvar emacspeak-eterm-autospeak t
   "Tells if eterm output is automatically spoken when in line mode.

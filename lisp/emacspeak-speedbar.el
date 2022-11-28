@@ -1,4 +1,4 @@
-;;; emacspeak-speedbar.el --- Speech enable speedbar -- Tool for context-sensitive navigation
+;;; emacspeak-speedbar.el --- Speech enable speedbar -- Tool for context-sensitive navigation  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $ 
 ;;; Description: Auditory interface to speedbar
@@ -58,14 +58,7 @@
 
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(require 'speedbar () 'no-error)
-
-;;}}}
-;;{{{ compatibility workaround
-
-(unless (boundp 'speedbar-mode-map)
-  (defvaralias 'speedbar-mode-map 'speedbar-key-map))
-
+(require 'speedbar "speedbar" 'no-error)
 ;;}}}
 ;;{{{ custom
 
@@ -82,7 +75,7 @@
                                         ;"Wrapper to force speedbar to work outside a windowing system. "
                                         ;(let ((spoofing-p (not window-system)))
                                         ;ad-do-it
-                                        ;     (voice-lock-mode (if global-voice-lock-mode 1 -1)))
+                                        ;     (setq voice-lock-mode t))
                                         ;   ad-return-value)
 
 ;;}}}
@@ -198,13 +191,12 @@ An automatically updating speedbar consumes resources.")
 (defun emacspeak-speedbar-goto-speedbar ()
   "Switch to the speedbar"
   (interactive)
-  (cl-declare (special emacspeak-speedbar-disable-updates
-                    global-voice-lock-mode))
+  (cl-declare (special emacspeak-speedbar-disable-updates))
   (unless (get-buffer " SPEEDBAR")
     (speedbar-frame-mode))
   (pop-to-buffer (get-buffer " SPEEDBAR"))
   (set-window-dedicated-p (selected-window) nil)
-  (voice-lock-mode (if global-voice-lock-mode 1 -1))
+  (setq voice-lock-mode t)
   (when emacspeak-speedbar-disable-updates 
     (speedbar-stealthy-updates)
     (speedbar-disable-update))

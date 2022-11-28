@@ -217,10 +217,7 @@ The default value of 12 is too high for using ido effectively with speech. "
     (define-key ido-common-completion-map emacspeak-prefix 'emacspeak-prefix-command)
     (define-key ido-common-completion-map (kbd "M-e")  'ido-edit-input)))
 
-(when (and (boundp 'ido-completion-map)
-           (keymapp 'ido-completion-map))
-  (emacspeak-ido-keys))
-
+(emacspeak-ido-keys)
 ;;}}}
 (provide 'emacspeak-ido)
 ;;{{{ end of file

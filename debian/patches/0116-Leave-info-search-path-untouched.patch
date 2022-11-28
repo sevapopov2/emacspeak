@@ -1,0 +1,29 @@
+From: "Igor B. Poretsky" <poretsky@rakurs.com>
+Date: Wed, 30 Nov 2022 11:40:26 +0300
+Subject: Leave info search path untouched
+
+---
+ lisp/emacspeak.el | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/lisp/emacspeak.el b/lisp/emacspeak.el
+index df7d9c9..e70db22 100644
+--- a/lisp/emacspeak.el
++++ b/lisp/emacspeak.el
+@@ -506,7 +506,6 @@ commands and options for details."
+   (cl-declare (special
+                ad-redefinition-action
+                emacspeak-pronounce-load-pronunciations-on-startup line-move-visual
+-               emacspeak-info-directory
+                use-dialog-box emacspeak-pronounce-dictionaries-file
+                emacspeak-play-program emacspeak-sounds-directory))
+   (let ((ad-redefinition-action 'accept)
+@@ -515,8 +514,6 @@ commands and options for details."
+     (emacspeak-export-environment)
+     (setq-default line-move-visual nil)
+     (setq use-dialog-box nil)
+-    (when (boundp 'Info-directory-list)
+-      (push emacspeak-info-directory Info-directory-list))
+     (require 'emacspeak-personality)
+     (dtk-initialize)
+     (tts-configure-synthesis-setup)

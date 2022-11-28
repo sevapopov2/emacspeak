@@ -13,8 +13,7 @@ ifeq ($(shell uname -s), Darwin)
   LIBS= -framework tcl -lespeak-ng
   TTS=tclespeak.dylib
 else
-  #TCL_VERSION = 8.6
-  TCL_VERSION = 
+  TCL_VERSION = 8.6
   TCL_INCLUDE= /usr/include/tcl$(TCL_VERSION)
   LIBS= -ltcl$(TCL_VERSION) -lespeak
   TTS=tclespeak.so

@@ -1,4 +1,4 @@
-;;; emacspeak-info.el --- Speech enable Info -- Emacs' online documentation viewer
+;;; emacspeak-info.el --- Speech enable Info -- Emacs' online documentation viewer  -*- lexical-binding: t; -*-
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Speech-enable Emacs Info Reader.
 ;;; Keywords:emacspeak, audio interface to emacs
@@ -152,18 +152,19 @@ and then cue the next selected buffer."
   (when (ems-interactive-p)
     (dtk-stop)
     (emacspeak-auditory-icon 'close-object)
-    (with-current-buffer (window-buffer)
-      (emacspeak-speak-mode-line))))
+    (emacspeak-speak-mode-line)))
 
-(cl-loop for f in
-      '(Info-next-reference Info-prev-reference)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act)
-          "Play an auditory icon and speak the line. "
-          (when (ems-interactive-p)
-            (emacspeak-auditory-icon 'large-movement)
-            (emacspeak-speak-line)))))
+(defadvice Info-next-reference (after emacspeak pre act)
+  "Speak the line. "
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
+
+(defadvice Info-prev-reference (after emacspeak pre act)
+  "Speak the line. "
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
 
 ;;;###autoload
 (defun emacspeak-info-wizard (node-spec)
@@ -177,13 +178,9 @@ node-spec."
           (f nil)
           (n nil))
       (info-initialize)
-      (setq f
-            (when (fboundp 'info--manual-names)
-              (completing-read "File: " (info--manual-names) nil t)))
-      (setq n (completing-read "Node: " (apply 'Info-build-node-completions (and f (list f)))))
-      (if f
-          (format "(%s)%s" f n)
-        n))))
+      (setq f (completing-read "File: " (info--manual-names nil) nil t))
+      (setq n (completing-read "Node: " (Info-build-node-completions f)))
+      (format "(%s)%s" f n))))
   (Info-goto-node node-spec)
   (emacspeak-info-visit-node))
 

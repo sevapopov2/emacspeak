@@ -80,7 +80,8 @@
   "Speak matched line."
   (when (ems-interactive-p)
     (let ((emacspeak-show-point t))
-      (with-current-buffer reb-target-buffer
+      (save-excursion
+        (set-buffer reb-target-buffer)
         (emacspeak-speak-line)
         (emacspeak-auditory-icon 'large-movement)))))
 
@@ -88,7 +89,8 @@
   "Speak matched line."
   (when (ems-interactive-p)
     (let ((emacspeak-show-point t))
-      (with-current-buffer reb-target-buffer
+      (save-excursion
+        (set-buffer reb-target-buffer)
         (emacspeak-speak-line)
         (emacspeak-auditory-icon 'large-movement)))))
 

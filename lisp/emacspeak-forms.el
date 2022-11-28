@@ -1,8 +1,8 @@
 ;;; emacspeak-forms.el --- Speech enable Emacs' forms mode  -- provides  a convenient database interface  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $ 
-;;; Description: Emacspeak extensions for forms-mode 
-;;; Keywords: emacspeak, audio interface to emacs forms 
+;;; DescriptionEmacspeak extensions for forms-mode 
+;;; Keywords:emacspeak, audio interface to emacs forms 
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
@@ -57,10 +57,6 @@
 
 ;;}}}
 ;;{{{ Helper functions
-
-(defvar emacspeak-forms-directory
-  (expand-file-name "forms/" emacspeak-etc-directory)
-  "Directory where forms are stored.")
 
 (defvar emacspeak-forms-current-record-summarizer
   'emacspeak-forms-speak-field
@@ -252,13 +248,8 @@ Assumes that point is at the front of a field value."
   "Visit a forms file"
   (interactive
    (list
-    (let ((insert-default-directory nil))
-      (expand-file-name
-       (read-file-name "Forms file: "
-                       emacspeak-forms-directory nil t nil
-                       '(lambda (name)
-                          (string-match "\\.el$" name)))
-       emacspeak-forms-directory))))
+    (read-file-name "Forms file: "
+                    (expand-file-name "forms/" emacspeak-etc-directory))))
   (forms-find-file filename))
 
 ;;}}}

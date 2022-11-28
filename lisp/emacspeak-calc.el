@@ -72,17 +72,18 @@
    ((ems-interactive-p)
     (ems-with-messages-silenced ad-do-it)
     (tts-with-punctuations 'all
-                           (emacspeak-read-previous-line)))
+                           (emacspeak-read-previous-line))
+    (emacspeak-auditory-icon 'task-done))
    (t ad-do-it))
   ad-return-value)
 
 (defadvice  calc-do (around emacspeak pre act comp)
   "Speak previous line of output."
   (ems-with-messages-silenced ad-do-it)
-  (emacspeak-auditory-icon 'select-object)
   (tts-with-punctuations
    'all
-   (emacspeak-read-previous-line))
+   (emacspeak-read-previous-line)
+   (emacspeak-auditory-icon 'select-object))
   ad-return-value)
 
 (defadvice  calc-trail-here (after emacspeak pre act comp)

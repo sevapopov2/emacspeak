@@ -51,17 +51,7 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(require 'elfeed () 'no-match)
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function elfeed-entry-title "ext:elfeed.el" (entry))
-(declare-function elfeed-entry-tags "ext:elfeed.el" (entry))
-(declare-function elfeed-entry-link "ext:elfeed.el" (entry))
-(declare-function elfeed-tag "ext:elfeed-db.el" (entry-or-entry-list &rest tags))
-(declare-function elfeed-untag "ext:elfeed-db.el" (entry-or-entry-list &rest tags))
-(declare-function eww "ext:eww.el" (URL))
-
+(require 'elfeed "elfeed" 'no-match)
 ;;}}}
 ;;{{{ Map Faces to voices
 

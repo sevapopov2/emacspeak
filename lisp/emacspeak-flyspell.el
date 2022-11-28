@@ -62,7 +62,7 @@
 
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
-(require 'emacspeak-preamble) (require 'flyspell () 'no-error)
+(require 'emacspeak-preamble) (require 'flyspell "flyspell" 'no-error)
 
 ;;}}}
 ;;{{{ define personalities
@@ -94,11 +94,8 @@ fly spell checking."
      (dtk-speak (car (flyspell-get-word nil)))
      (when (sit-for 1)
        (dtk-notify-speak (cl-second flyspell-auto-correct-ring)))
-     (when (sit-for 1)
-       (emacspeak-speak-message-again)))
-    (emacspeak-auditory-icon 'select-object))
-   (t ad-do-it))
-  ad-return-value)
+     (when (sit-for 1) (emacspeak-speak-message-again))
+     (emacspeak-auditory-icon 'select-object))) (t ad-do-it)) ad-return-value)
 
 (defadvice flyspell-unhighlight-at (before debug pre act comp)
   "handle highlight/unhighlight."

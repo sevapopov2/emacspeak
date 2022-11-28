@@ -53,11 +53,11 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(require 'emacspeak-feeds)
 (require 'eww)
 (require 'emacspeak-eww)
-(require 'org () 'no-error)
-(require 'org-table () 'no-error)
+(require 'emacspeak-feeds)
+(require 'org "org" 'no-error)
+(require 'org-table "org-table" 'no-error)
 ;;}}}
 ;;{{{ voice locking:
 
@@ -215,7 +215,6 @@
  '(
    org-delete-indentation
    org-insert-heading org-insert-todo-heading
-   org-insert-subheading org-insert-todo-subheading
    org-promote-subtree org-demote-subtree
    org-do-promote org-do-demote
    org-move-subtree-up org-move-subtree-down
@@ -307,8 +306,7 @@
 (defadvice org-eval-in-calendar (after emacspeak pre act comp)
   "Speak what is returned."
   (cl-declare (special org-ans2))
-  (when (and (boundp 'org-ans2) org-ans2)
-    (dtk-speak org-ans2)))
+  (dtk-speak org-ans2))
 
 ;;}}}
 ;;{{{ Agenda:
@@ -471,7 +469,6 @@
  for f in
  '(
    org-occur
-   org-back-to-heading
    org-beginning-of-line org-end-of-line
    org-beginning-of-item org-beginning-of-item-list)
  do
@@ -633,12 +630,11 @@ and assign  letter `h' to a template that creates the hyperlink on capture."
   (org-capture nil "h"))
 (defun org-eww-store-link ()
   "Store a link to a EWW buffer."
-  (cl-declare (special eww-current-url eww-current-title))
   (when (eq major-mode 'eww-mode)
     (org-store-link-props
      :type "eww"
      :link   (emacspeak-eww-current-url)
-     :url (emacspeak-eww-current-url)
+     :url (eww-current-url)
      :description (emacspeak-eww-current-title))))
 
 ;;}}}
