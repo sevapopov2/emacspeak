@@ -17,6 +17,7 @@ Subject: Emacs24 compatibility
  lisp/emacspeak-flyspell.el  |   3 +
  lisp/emacspeak-gnus.el      |   3 +
  lisp/emacspeak-hide.el      |   4 +
+ lisp/emacspeak-ido.el       |   5 +-
  lisp/emacspeak-info.el      |  10 +-
  lisp/emacspeak-ispell.el    |   3 +
  lisp/emacspeak-load-path.el |  20 +++-
@@ -32,7 +33,7 @@ Subject: Emacs24 compatibility
  lisp/emacspeak.el           |   3 +
  lisp/subr-x.el              | 277 ++++++++++++++++++++++++++++++++++++++++++++
  lisp/xbacklight.el          |   2 +
- 29 files changed, 643 insertions(+), 23 deletions(-)
+ 30 files changed, 647 insertions(+), 24 deletions(-)
  create mode 100644 lisp/dom.el
  create mode 100644 lisp/subr-x.el
 
@@ -518,6 +519,22 @@ index 00bc8f9..4f3b8d3 100644
  ;;;###autoload
  (defun emacspeak-hide-all-blocks-in-buffer ()
    "Hide all blocks in current buffer."
+diff --git a/lisp/emacspeak-ido.el b/lisp/emacspeak-ido.el
+index f57840a..1fdf19c 100644
+--- a/lisp/emacspeak-ido.el
++++ b/lisp/emacspeak-ido.el
+@@ -217,7 +217,10 @@ The default value of 12 is too high for using ido effectively with speech. "
+     (define-key ido-common-completion-map emacspeak-prefix 'emacspeak-prefix-command)
+     (define-key ido-common-completion-map (kbd "M-e")  'ido-edit-input)))
+ 
+-(emacspeak-ido-keys)
++(when (and (boundp 'ido-completion-map)
++           (keymapp 'ido-completion-map))
++  (emacspeak-ido-keys))
++
+ ;;}}}
+ (provide 'emacspeak-ido)
+ ;;{{{ end of file
 diff --git a/lisp/emacspeak-info.el b/lisp/emacspeak-info.el
 index e2949e3..66dcceb 100644
 --- a/lisp/emacspeak-info.el
