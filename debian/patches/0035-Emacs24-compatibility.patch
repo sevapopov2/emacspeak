@@ -1,0 +1,1078 @@
+From: "Igor B. Poretsky" <poretsky@rakurs.com>
+Date: Tue, 22 Nov 2022 14:10:53 +0300
+Subject: Emacs24 compatibility
+
+---
+ lisp/Makefile               |   8 +-
+ lisp/dom-addons.el          |  16 +++
+ lisp/dom.el                 | 241 ++++++++++++++++++++++++++++++++++++++
+ lisp/dtk-speak.el           |   1 +
+ lisp/emacspeak-advice.el    |  13 ++-
+ lisp/emacspeak-calendar.el  |   3 +
+ lisp/emacspeak-company.el   |   3 +
+ lisp/emacspeak-dbus.el      |   3 +
+ lisp/emacspeak-dired.el     |   3 +
+ lisp/emacspeak-ecb.el       |   1 +
+ lisp/emacspeak-feeds.el     |   3 +
+ lisp/emacspeak-flyspell.el  |   3 +
+ lisp/emacspeak-gnus.el      |   3 +
+ lisp/emacspeak-hide.el      |   4 +
+ lisp/emacspeak-info.el      |  10 +-
+ lisp/emacspeak-ispell.el    |   3 +
+ lisp/emacspeak-load-path.el |  20 +++-
+ lisp/emacspeak-m-player.el  |   3 +
+ lisp/emacspeak-org.el       |   2 +-
+ lisp/emacspeak-package.el   |   3 +
+ lisp/emacspeak-speak.el     |   1 +
+ lisp/emacspeak-tar.el       |   5 +
+ lisp/emacspeak-tetris.el    |   3 +
+ lisp/emacspeak-vlc.el       |   4 +
+ lisp/emacspeak-widget.el    |   3 +
+ lisp/emacspeak-wizards.el   |  22 +++-
+ lisp/emacspeak.el           |   3 +
+ lisp/subr-x.el              | 277 ++++++++++++++++++++++++++++++++++++++++++++
+ lisp/xbacklight.el          |   2 +
+ 29 files changed, 643 insertions(+), 23 deletions(-)
+ create mode 100644 lisp/dom.el
+ create mode 100644 lisp/subr-x.el
+
+diff --git a/lisp/Makefile b/lisp/Makefile
+index 9f52b5d..50654d9 100644
+--- a/lisp/Makefile
++++ b/lisp/Makefile
+@@ -292,7 +292,7 @@ emacspeak-yasnippet.elc
+ ADDON_OBJECTS = \
+ nm.elc \
+ tapestry.elc   stack-f.elc  \
+-dom-addons.elc \
++subr-x.elc dom.elc dom-addons.elc \
+ xbacklight.elc  toy-braille.elc tetris.elc cd-tool.elc 
+ 
+ OBJECTS = $(TTS_OBJECTS) $(SPEAK_OBJECTS) $(CORE_OBJECTS)  $(ADDON_OBJECTS)
+@@ -421,8 +421,10 @@ emacspeak-ess.elc: emacspeak-ess.el dtk-speak.elc voice-setup.elc
+ emacspeak-evil.elc: emacspeak-evil.el dtk-speak.elc voice-setup.elc
+ emacspeak-eterm.elc: emacspeak-eterm.el dtk-speak.elc voice-setup.elc
+ emacspeak-eudc.elc: emacspeak-eudc.el dtk-speak.elc voice-setup.elc
+-dom-addons.elc: dom-addons.el 
+-emacspeak-eww.elc: emacspeak-eww.el  dom-addons.elc dtk-speak.elc voice-setup.elc
++subr-x.elc: subr-x.el
++dom.elc: dom.el subr-x.elc
++dom-addons.elc: dom-addons.el dom.elc
++emacspeak-eww.elc: emacspeak-eww.el dom.elc dom-addons.elc dtk-speak.elc voice-setup.elc
+ emacspeak-facemenu.elc: emacspeak-facemenu.el dtk-speak.elc voice-setup.elc
+ emacspeak-feeds.elc: emacspeak-feeds.el emacspeak-webutils.elc dtk-speak.elc
+ emacspeak-filtertext.elc: emacspeak-filtertext.el dtk-speak.elc voice-setup.elc
+diff --git a/lisp/dom-addons.el b/lisp/dom-addons.el
+index 41f6377..56120fe 100644
+--- a/lisp/dom-addons.el
++++ b/lisp/dom-addons.el
+@@ -49,6 +49,7 @@
+ 
+ (require 'cl-lib)
+ (cl-declaim  (optimize  (safety 0) (speed 3)))
++(require 'xml)
+ (require 'dom)
+ (require 'g-utils)
+ ;;}}}
+@@ -148,6 +149,21 @@ ATTRIBUTE would typically be `class', `id' or the like."
+ 
+ ;;}}}
+ ;;{{{DOM From URL:
++
++(eval-and-compile
++  (unless (fboundp 'xml-remove-comments)
++    (defun xml-remove-comments (beg end)                                         
++      "Remove XML/HTML comments in the region between BEG and END.
++All text between the <!-- ... --> markers will be removed."
++      (save-excursion
++        (save-restriction
++          (narrow-to-region beg end)
++          (goto-char beg)
++          (while (search-forward "<!--" nil t)
++            (let ((start (match-beginning 0)))
++              (when (search-forward "-->" nil t)
++                (delete-region start (point))))))))))
++
+ (defun dom-from-url (url)
+   "Return DOM for HTML content at URL."
+   (cl-declare (special g-curl-program g-curl-common-options))
+diff --git a/lisp/dom.el b/lisp/dom.el
+new file mode 100644
+index 0000000..d71a047
+--- /dev/null
++++ b/lisp/dom.el
+@@ -0,0 +1,241 @@
++;;; dom.el --- XML/HTML (etc.) DOM manipulation and searching functions  -*- lexical-binding: t; -*-
++
++;; Copyright (C) 2014-2016 Free Software Foundation, Inc.
++
++;; Author: Lars Magne Ingebrigtsen <larsi@gnus.org>
++;; Keywords: xml, html
++
++;; This file is part of GNU Emacs.
++
++;; GNU Emacs is free software: you can redistribute it and/or modify
++;; it under the terms of the GNU General Public License as published by
++;; the Free Software Foundation, either version 3 of the License, or
++;; (at your option) any later version.
++
++;; GNU Emacs is distributed in the hope that it will be useful,
++;; but WITHOUT ANY WARRANTY; without even the implied warranty of
++;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++;; GNU General Public License for more details.
++
++;; You should have received a copy of the GNU General Public License
++;; along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
++
++;;; Commentary:
++
++;;; Code:
++
++(require 'cl-lib)
++(eval-when-compile (require 'subr-x))
++
++(defsubst dom-tag (node)
++  "Return the NODE tag."
++  ;; Called on a list of nodes.  Use the first.
++  (if (consp (car node))
++      (caar node)
++    (car node)))
++
++(defsubst dom-attributes (node)
++  "Return the NODE attributes."
++  ;; Called on a list of nodes.  Use the first.
++  (if (consp (car node))
++      (cadr (car node))
++    (cadr node)))
++
++(defsubst dom-children (node)
++  "Return the NODE children."
++  ;; Called on a list of nodes.  Use the first.
++  (if (consp (car node))
++      (cddr (car node))
++    (cddr node)))
++
++(defun dom-non-text-children (node)
++  "Return all non-text-node children of NODE."
++  (cl-loop for child in (dom-children node)
++           unless (stringp child)
++           collect child))
++
++(defun dom-set-attributes (node attributes)
++  "Set the attributes of NODE to ATTRIBUTES."
++  (setq node (dom-ensure-node node))
++  (setcar (cdr node) attributes))
++
++(defun dom-set-attribute (node attribute value)
++  "Set ATTRIBUTE in NODE to VALUE."
++  (setq node (dom-ensure-node node))
++  (let ((old (assoc attribute (cadr node))))
++    (if old
++        (setcdr old value)
++      (setcar (cdr node) (nconc (cadr node) (list (cons attribute value)))))))
++
++(defmacro dom-attr (node attr)
++  "Return the attribute ATTR from NODE.
++A typical attribute is `href'."
++  `(cdr (assq ,attr (dom-attributes ,node))))
++
++(defun dom-text (node)
++  "Return all the text bits in the current node concatenated."
++  (mapconcat 'identity (cl-remove-if-not 'stringp (dom-children node)) " "))
++
++(defun dom-texts (node &optional separator)
++  "Return all textual data under NODE concatenated with SEPARATOR in-between."
++  (mapconcat
++   'identity
++   (mapcar
++    (lambda (elem)
++      (if (stringp elem)
++          elem
++        (dom-texts elem separator)))
++    (dom-children node))
++   (or separator " ")))
++
++(defun dom-child-by-tag (dom tag)
++  "Return the first child of DOM that is of type TAG."
++  (assoc tag (dom-children dom)))
++
++(defun dom-by-tag (dom tag)
++  "Return elements in DOM that is of type TAG.
++A name is a symbol like `td'."
++  (let ((matches (cl-loop for child in (dom-children dom)
++                          for matches = (and (not (stringp child))
++                                             (dom-by-tag child tag))
++                          when matches
++                          append matches)))
++    (if (equal (dom-tag dom) tag)
++        (cons dom matches)
++      matches)))
++
++(defun dom-strings (dom)
++  "Return elements in DOM that are strings."
++  (cl-loop for child in (dom-children dom)
++           if (stringp child)
++           collect child
++           else
++           append (dom-strings child)))
++
++(defun dom-by-class (dom match)
++  "Return elements in DOM that have a class name that matches regexp MATCH."
++  (dom-elements dom 'class match))
++
++(defun dom-by-style (dom match)
++  "Return elements in DOM that have a style that matches regexp MATCH."
++  (dom-elements dom 'style match))
++
++(defun dom-by-id (dom match)
++  "Return elements in DOM that have an ID that matches regexp MATCH."
++  (dom-elements dom 'id match))
++
++(defun dom-elements (dom attribute match)
++  "Find elements matching MATCH (a regexp) in ATTRIBUTE.
++ATTRIBUTE would typically be `class', `id' or the like."
++  (let ((matches (cl-loop for child in (dom-children dom)
++                          for matches = (and (not (stringp child))
++                                             (dom-elements child attribute
++                                                           match))
++                          when matches
++                          append matches))
++        (attr (dom-attr dom attribute)))
++    (if (and attr
++             (string-match match attr))
++        (cons dom matches)
++      matches)))
++
++(defun dom-parent (dom node)
++  "Return the parent of NODE in DOM."
++  (if (memq node (dom-children dom))
++      dom
++    (let ((result nil))
++      (dolist (elem (dom-children dom))
++        (when (and (not result)
++                   (not (stringp elem)))
++          (setq result (dom-parent elem node))))
++      result)))
++
++(defun dom-previous-sibling (dom node)
++  (when-let (parent (dom-parent dom node))
++            (let ((siblings (dom-children parent))
++                  (previous nil))
++              (while siblings
++                (when (eq (cadr siblings) node)
++                  (setq previous (car siblings)))
++                (pop siblings))
++              previous)))
++
++(defun dom-node (tag &optional attributes &rest children)
++  "Return a DOM node with TAG and ATTRIBUTES."
++  (if children
++      `(,tag ,attributes ,@children)
++    (list tag attributes)))
++
++(defun dom-append-child (node child)
++  "Append CHILD to the end of NODE's children."
++  (setq node (dom-ensure-node node))
++  (nconc node (list child)))
++
++(defun dom-add-child-before (node child &optional before)
++  "Add CHILD to NODE's children before child BEFORE.
++If BEFORE is nil, make CHILD NODE's first child."
++  (setq node (dom-ensure-node node))
++  (let ((children (dom-children node)))
++    (when (and before
++               (not (memq before children)))
++      (error "%s does not exist as a child" before))
++    (let ((pos (if before
++                   (cl-position before children)
++                 0)))
++      (if (zerop pos)
++          ;; First child.
++          (setcdr (cdr node) (cons child (cddr node)))
++        (setcdr (nthcdr (1- pos) children)
++                (cons child (nthcdr pos children))))))
++  node)
++
++(defun dom-ensure-node (node)
++  "Ensure that NODE is a proper DOM node."
++  ;; Add empty attributes, if none.
++  (when (consp (car node))
++    (setq node (car node)))
++  (when (= (length node) 1)
++    (setcdr node (list nil)))
++  node)
++
++(defun dom-pp (dom &optional remove-empty)
++  "Pretty-print DOM at point.
++If REMOVE-EMPTY, ignore textual nodes that contain just
++white-space."
++  (let ((column (current-column)))
++    (insert (format "(%S " (dom-tag dom)))
++    (let* ((attr (dom-attributes dom))
++           (times (length attr))
++           (column (1+ (current-column))))
++      (if (null attr)
++          (insert "nil")
++        (insert "(")
++        (dolist (elem attr)
++          (insert (format "(%S . %S)" (car elem) (cdr elem)))
++          (if (zerop (cl-decf times))
++              (insert ")")
++            (insert "\n" (make-string column ? ))))))
++    (let* ((children (if remove-empty
++                         (cl-remove-if
++                          (lambda (child)
++                            (and (stringp child)
++                                 (string-match "\\`[\n\r\t  ]*\\'" child)))
++                          (dom-children dom))
++                       (dom-children dom)))
++           (times (length children)))
++      (if (null children)
++          (insert ")")
++        (insert "\n" (make-string (1+ column) ? ))
++        (dolist (child children)
++          (if (stringp child)
++              (if (or (not remove-empty)
++                      (not (string-match "\\`[\n\r\t  ]*\\'" child)))
++                  (insert (format "%S" child)))
++            (dom-pp child remove-empty))
++          (if (zerop (cl-decf times))
++              (insert ")")
++            (insert "\n" (make-string (1+ column) ? ))))))))
++
++(provide 'dom)
++
++;;; dom.el ends here
+diff --git a/lisp/dtk-speak.el b/lisp/dtk-speak.el
+index c1d9450..70ebde9 100644
+--- a/lisp/dtk-speak.el
++++ b/lisp/dtk-speak.el
+@@ -1906,6 +1906,7 @@ only speak upto the first ctrl-m."
+ 
+ ;;; forward Declaration:
+ (defvar emacspeak-speak-messages)
++(defvar inhibit-message)
+ 
+ (defmacro ems-with-messages-silenced (&rest body)
+   "Evaluate body  after temporarily silencing auditory error feedback."
+diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
+index c065f0a..97c7261 100644
+--- a/lisp/emacspeak-advice.el
++++ b/lisp/emacspeak-advice.el
+@@ -82,6 +82,10 @@
+ ;;{{{ Forward Declarations:
+ (defvar emacspeak-prefix)
+ 
++(unless (boundp 'inhibit-message)
++  (defvar inhibit-message nil
++    "In Emacs 25, this  will  inhibit messages in echo area. "))
++
+ ;;}}}
+ ;;{{{ Silence advice chatter:
+ 
+@@ -731,7 +735,6 @@ icon."
+   (when emacspeak-advice-progress-reporter
+     (emacspeak-auditory-icon 'progress)))
+ 
+-(defvar inhibit-message)
+ (cl-loop
+  for f in '(minibuffer-message message display-message-or-buffer) do
+  (eval
+@@ -765,9 +768,11 @@ icon."
+ 
+ (eval-after-load "eldoc"
+   `(progn
+-     (global-eldoc-mode -1)
+-     (setq eldoc-idle-delay 3)
+-     (message "Turning off global-eldoc-mode")))
++     (cl-declaim (special eldoc-idle-delay))
++     (when (fboundp 'global-eldoc-mode)
++       (global-eldoc-mode -1)
++       (message "Turning off global-eldoc-mode"))
++     (setq eldoc-idle-delay 3)))
+ 
+ (defvar emacspeak-eldoc-speak-explicitly
+   (not (emacspeak-tts-use-notify-stream-p))
+diff --git a/lisp/emacspeak-calendar.el b/lisp/emacspeak-calendar.el
+index 619d3cc..e774225 100644
+--- a/lisp/emacspeak-calendar.el
++++ b/lisp/emacspeak-calendar.el
+@@ -358,6 +358,9 @@
+   (when (ems-interactive-p)
+     (emacspeak-speak-message-again)))
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ (defadvice mark-diary-entries (around emacspeak pre act comp)
+   "Silence messages."
+   (ems-with-messages-silenced
+diff --git a/lisp/emacspeak-company.el b/lisp/emacspeak-company.el
+index 2263211..c460f75 100644
+--- a/lisp/emacspeak-company.el
++++ b/lisp/emacspeak-company.el
+@@ -84,6 +84,9 @@
+   (cl-declare (special  company-selection company-candidates))
+   (nth company-selection company-candidates))
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ (defun emacspeak-company-speak-this ()
+   "Formatting rule for speaking company selection."
+   (ems-with-messages-silenced
+diff --git a/lisp/emacspeak-dbus.el b/lisp/emacspeak-dbus.el
+index 8619fcf..7c7b19a 100644
+--- a/lisp/emacspeak-dbus.el
++++ b/lisp/emacspeak-dbus.el
+@@ -227,6 +227,9 @@ already disabled."
+ 
+ (add-hook  'emacspeak-dbus-sleep-hook#'emacspeak-dbus-sleep)
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ (defun emacspeak-dbus-screensaver-check ()
+   "Check  and fix Emacs DBus Binding to gnome-screensaver"
+   (ems-with-messages-silenced
+diff --git a/lisp/emacspeak-dired.el b/lisp/emacspeak-dired.el
+index 35be1a9..ce300e3 100644
+--- a/lisp/emacspeak-dired.el
++++ b/lisp/emacspeak-dired.el
+@@ -87,6 +87,9 @@
+ ;;}}}
+ ;;{{{  advice:
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ (defadvice dired-sort-toggle-or-edit (around emacspeak pre act comp)
+   "Provide auditory feedback."
+   (cond
+diff --git a/lisp/emacspeak-ecb.el b/lisp/emacspeak-ecb.el
+index 6698343..7e963b5 100644
+--- a/lisp/emacspeak-ecb.el
++++ b/lisp/emacspeak-ecb.el
+@@ -51,6 +51,7 @@
+ (cl-declaim  (optimize  (safety 0) (speed 3)))
+ (require 'emacspeak-preamble)
+ (eval-when-compile
++  (cl-declaim (special inhibit-message))
+   (let ((inhibit-message  t))
+   (require 'ecb () 'no-error))
+   (require 'tree-buffer () 'no-error))
+diff --git a/lisp/emacspeak-feeds.el b/lisp/emacspeak-feeds.el
+index a42a6d5..f985ca5 100644
+--- a/lisp/emacspeak-feeds.el
++++ b/lisp/emacspeak-feeds.el
+@@ -166,6 +166,9 @@ The feed list is persisted to file saved-feeds on exit."
+   (expand-file-name "feeds.el" emacspeak-resource-directory)
+   "Feed archive.")
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ ;;;###autoload
+ (defun emacspeak-feeds-archive-feeds ()
+   "Archive list of subscribed fees to personal resource directory.
+diff --git a/lisp/emacspeak-flyspell.el b/lisp/emacspeak-flyspell.el
+index ba57730..3f516e6 100644
+--- a/lisp/emacspeak-flyspell.el
++++ b/lisp/emacspeak-flyspell.el
+@@ -85,6 +85,9 @@ fly spell checking."
+ (when (fboundp 'emacspeak-self-insert-command)
+   (push 'emacspeak-self-insert-command flyspell-delayed-commands))
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ (defadvice flyspell-auto-correct-word (around emacspeak pre act comp)
+   "Speak the correction we inserted."
+   (cond
+diff --git a/lisp/emacspeak-gnus.el b/lisp/emacspeak-gnus.el
+index a333fba..edc083e 100644
+--- a/lisp/emacspeak-gnus.el
++++ b/lisp/emacspeak-gnus.el
+@@ -140,6 +140,9 @@ instead you hear only the first screenful."
+ ;;}}}
+ ;;{{{ Advise top-level gnus command
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ ;;; emacs can hang if too many message sfly by as gnus starts
+ (defadvice gnus (around emacspeak pre act)
+   "Silence messages, produce auditory icon."
+diff --git a/lisp/emacspeak-hide.el b/lisp/emacspeak-hide.el
+index 00bc8f9..4f3b8d3 100644
+--- a/lisp/emacspeak-hide.el
++++ b/lisp/emacspeak-hide.el
+@@ -259,6 +259,10 @@ Returns t if a block was found and hidden."
+ 
+ ;;}}}
+ ;;{{{  Hiding and exposing  all blocks in a buffer
++
++;;; forward declaration:
++(defvar inhibit-message)
++
+ ;;;###autoload
+ (defun emacspeak-hide-all-blocks-in-buffer ()
+   "Hide all blocks in current buffer."
+diff --git a/lisp/emacspeak-info.el b/lisp/emacspeak-info.el
+index e2949e3..66dcceb 100644
+--- a/lisp/emacspeak-info.el
++++ b/lisp/emacspeak-info.el
+@@ -178,9 +178,13 @@ node-spec."
+           (f nil)
+           (n nil))
+       (info-initialize)
+-      (setq f (completing-read "File: " (info--manual-names nil) nil t))
+-      (setq n (completing-read "Node: " (Info-build-node-completions f)))
+-      (format "(%s)%s" f n))))
++      (setq f
++            (when (fboundp 'info--manual-names)
++              (completing-read "File: " (info--manual-names) nil t)))
++      (setq n (completing-read "Node: " (apply 'Info-build-node-completions (and f (list f)))))
++      (if f
++          (format "(%s)%s" f n)
++        n))))
+   (Info-goto-node node-spec)
+   (emacspeak-info-visit-node))
+ 
+diff --git a/lisp/emacspeak-ispell.el b/lisp/emacspeak-ispell.el
+index 1159a91..3682c5a 100644
+--- a/lisp/emacspeak-ispell.el
++++ b/lisp/emacspeak-ispell.el
+@@ -108,6 +108,9 @@ many available corrections."
+       (modify-syntax-entry 10 ">")
+       (dtk-speak (buffer-string)))))
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ (defadvice ispell-comments-and-strings (around emacspeak pre act comp)
+   "Stop chatter by turning off messages"
+   (cond
+diff --git a/lisp/emacspeak-load-path.el b/lisp/emacspeak-load-path.el
+index 84fa2d0..94d220d 100644
+--- a/lisp/emacspeak-load-path.el
++++ b/lisp/emacspeak-load-path.el
+@@ -76,12 +76,20 @@ property 'emacspeak on the function."
+     (put f 'emacspeak t)); memoize and return t
+    (t nil)))
+ 
+-(defadvice funcall-interactively (around emacspeak  pre act comp)
+-  "Set emacspeak  interactive flag if there is an advice."
+-  (let ((ems-called-interactively-p ems-called-interactively-p)) ; save state 
+-    (when (ems-record-interactive-p (ad-get-arg 0))
+-      (setq ems-called-interactively-p (ad-get-arg 0)))
+-    ad-do-it))
++(if (fboundp 'funcall-interactively)
++    (defadvice funcall-interactively (around emacspeak  pre act comp)
++      "Set emacspeak  interactive flag if there is an advice."
++      (let ((ems-called-interactively-p ems-called-interactively-p))
++        (when (ems-record-interactive-p (ad-get-arg 0))
++          (setq ems-called-interactively-p (ad-get-arg 0)))
++        ad-do-it))
++  (defun funcall-interactively (f &rest args)
++    "Call first argument as a function, passing remaining arguments to it.
++Set emacspeak  interactive flag if there is an advice."
++    (let ((ems-called-interactively-p ems-called-interactively-p))
++      (when (ems-record-interactive-p f)
++        (setq ems-called-interactively-p f))
++      (funcall f args))))
+ 
+ (defadvice call-interactively (around emacspeak  pre act comp)
+   "Set emacspeak  interactive flag if there is an advice."
+diff --git a/lisp/emacspeak-m-player.el b/lisp/emacspeak-m-player.el
+index d29c2f9..5cba5f5 100644
+--- a/lisp/emacspeak-m-player.el
++++ b/lisp/emacspeak-m-player.el
+@@ -330,6 +330,9 @@ etc to be ignored when guessing directory.")
+     default-directory)
+    (t (expand-file-name  emacspeak-media-shortcuts-directory))))
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ ;;;###autoload
+ (defun emacspeak-m-player-url (url &optional playlist-p)
+   "Call emacspeak-m-player with specified URL."
+diff --git a/lisp/emacspeak-org.el b/lisp/emacspeak-org.el
+index 9b77e9f..12c32bd 100644
+--- a/lisp/emacspeak-org.el
++++ b/lisp/emacspeak-org.el
+@@ -634,7 +634,7 @@ and assign  letter `h' to a template that creates the hyperlink on capture."
+     (org-store-link-props
+      :type "eww"
+      :link   (emacspeak-eww-current-url)
+-     :url (eww-current-url)
++     :url (emacspeak-eww-current-url)
+      :description (emacspeak-eww-current-title))))
+ 
+ ;;}}}
+diff --git a/lisp/emacspeak-package.el b/lisp/emacspeak-package.el
+index 426a3ea..3ab405b 100644
+--- a/lisp/emacspeak-package.el
++++ b/lisp/emacspeak-package.el
+@@ -131,6 +131,9 @@
+     (emacspeak-auditory-icon 'help)
+     (emacspeak-speak-help)))
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ (defadvice package-menu-execute(around emacspeak pre act comp)
+   "Silence messages while installing packages. "
+   (ems-with-messages-silenced ad-do-it)
+diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
+index 9caf68f..ada19db 100644
+--- a/lisp/emacspeak-speak.el
++++ b/lisp/emacspeak-speak.el
+@@ -73,6 +73,7 @@
+ ;;}}}
+ ;;{{{ forward declarations:
+ 
++(defvar inhibit-message)
+ (defvar emacspeak-last-message)
+ 
+ (declare-function emacspeak-play-startup-icon "emacspeak.el" ())
+diff --git a/lisp/emacspeak-tar.el b/lisp/emacspeak-tar.el
+index 8fbe774..7c9a8c9 100644
+--- a/lisp/emacspeak-tar.el
++++ b/lisp/emacspeak-tar.el
+@@ -51,6 +51,11 @@
+ ;;}}}
+ ;;{{{ Helpers
+ 
++(declare-function tar-desc-tokens (x))
++
++(unless (fboundp 'tar-desc-tokens)
++  (defun tar-desc-tokens (x) x))
++
+ (defun emacspeak-tar-speak-line ()
+   "Speak line in tar mode intelligently"
+   (cond
+diff --git a/lisp/emacspeak-tetris.el b/lisp/emacspeak-tetris.el
+index bc3da82..56ec954 100644
+--- a/lisp/emacspeak-tetris.el
++++ b/lisp/emacspeak-tetris.el
+@@ -458,6 +458,9 @@ concentration and the game is a good mental challenge. "
+ ;;}}}
+ ;;{{{ Additional navigation commands
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ (defun emacspeak-tetris-goto-bottom-row ()
+   "Move to and speak bottom row"
+   (interactive)
+diff --git a/lisp/emacspeak-vlc.el b/lisp/emacspeak-vlc.el
+index f591e64..7fa78f5 100644
+--- a/lisp/emacspeak-vlc.el
++++ b/lisp/emacspeak-vlc.el
+@@ -147,6 +147,10 @@ Controls media playback when already playing a stream.
+     (emacspeak-vlc))
+   (call-interactively
+    (or (lookup-key emacspeak-vlc-mode-map key) 'undefined)))
++
++;;; forward declaration:
++(defvar inhibit-message)
++
+ ;;;###autoload
+ (defun emacspeak-vlc-url (url)
+   "Call emacspeak-vlc with specified URL."
+diff --git a/lisp/emacspeak-widget.el b/lisp/emacspeak-widget.el
+index 323abb8..5256895 100644
+--- a/lisp/emacspeak-widget.el
++++ b/lisp/emacspeak-widget.el
+@@ -145,6 +145,9 @@ Returns a string with appropriate personality."
+      (p (emacspeak-widget-summarize p))
+      (t (message "Widget at point has no parent")))))
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ ;;; Find summarizer for a specific widget type and dispatch.
+ ;;;###autoload
+ (defun emacspeak-widget-summarize(widget)
+diff --git a/lisp/emacspeak-wizards.el b/lisp/emacspeak-wizards.el
+index 7a46d8e..5ffc82e 100644
+--- a/lisp/emacspeak-wizards.el
++++ b/lisp/emacspeak-wizards.el
+@@ -50,7 +50,6 @@
+ ;;{{{  Required modules
+ 
+ (require 'cl-lib)
+-(require 'let-alist)
+ (require 'lisp-mnt)
+ (require 'subr-x)
+ (require 'desktop)
+@@ -108,7 +107,9 @@
+     emacspeak-etc-directory))
+   (emacspeak-auditory-icon 'news)
+   (org-mode)
+-  (org-next-visible-heading 1)
++  (if (fboundp 'org-next-visible-heading)
++      (org-next-visible-heading 1)
++    (outline-next-visible-heading 1))
+   (emacspeak-speak-line))
+ 
+ ;;;###autoload
+@@ -627,6 +628,10 @@ The emacspeak clipboard provides a convenient mechanism for exchanging
+ information between different Emacs sessions."
+   :group 'emacspeak-speak
+   :type 'string)
++
++;;; forward declaration:
++(defvar inhibit-message)
++
+ ;;;###autoload
+ (defun emacspeak-clipboard-copy (start end &optional prompt)
+   "Copy contents of the region to the emacspeak clipboard. Previous
+@@ -3355,7 +3360,7 @@ access to the various functions provided by alpha-vantage."
+     (with-current-buffer (find-file-noselect filename)
+       (goto-char (point-min))
+       (prog1
+-          (json-parse-buffer :object-type 'alist)
++          (json-parse-string (buffer-string) :object-type 'alist)
+         (kill-buffer ))))
+    (t (json-read-file filename))))
+ 
+@@ -4247,9 +4252,12 @@ external package."
+ ;;{{{ Use Threads To Call Command Asynchronously:
+ ;;;Experimental: Handle with care.
+ 
++(declare-function make-thread (command))
++
+ ;;;###autoload
+ (defun emacspeak-wizards-execute-asynchronously (key)
+-  "Read key-sequence, then execute its command on a new thread."
++  "Read key-sequence, then execute its command on a new thread.
++If threads are not supported, command is executed synchronously."
+   (interactive (list (read-key-sequence "Key Sequence: ")))
+   (let ((l (local-key-binding key))
+         (g (global-key-binding key))
+@@ -4258,8 +4266,10 @@ external package."
+                    (lookup-key map key))))
+     (cl-flet
+         ((do-it (command)
+-                (make-thread command)
+-                (message "Running %s on a new thread." command)))
++                (if (not (fboundp 'make-thread))
++                    (funcall command)
++                  (make-thread command)
++                  (message "Running %s on a new thread." command))))
+       (cond
+        ((commandp k) (do-it k))
+        ((commandp l) (do-it l))
+diff --git a/lisp/emacspeak.el b/lisp/emacspeak.el
+index 4339b36..60d9f43 100644
+--- a/lisp/emacspeak.el
++++ b/lisp/emacspeak.el
+@@ -380,6 +380,9 @@ so it can be passed to subprocesses."
+ ;;}}}
+ ;;{{{ setup programming modes
+ 
++;;; forward declaration:
++(defvar inhibit-message)
++
+ ;;; turn on automatic voice locking , split caps and punctuations in
+ ;;; programming  modes
+ 
+diff --git a/lisp/subr-x.el b/lisp/subr-x.el
+new file mode 100644
+index 0000000..b5a0c8c
+--- /dev/null
++++ b/lisp/subr-x.el
+@@ -0,0 +1,277 @@
++;;; subr-x.el --- extra Lisp functions  -*- lexical-binding: t; -*-
++
++;; Copyright (C) 2013-2016 Free Software Foundation, Inc.
++
++;; Maintainer: emacs-devel@gnu.org
++;; Keywords: convenience
++;; Package: emacs
++
++;; This file is part of GNU Emacs.
++
++;; GNU Emacs is free software: you can redistribute it and/or modify
++;; it under the terms of the GNU General Public License as published by
++;; the Free Software Foundation, either version 3 of the License, or
++;; (at your option) any later version.
++
++;; GNU Emacs is distributed in the hope that it will be useful,
++;; but WITHOUT ANY WARRANTY; without even the implied warranty of
++;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++;; GNU General Public License for more details.
++
++;; You should have received a copy of the GNU General Public License
++;; along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
++
++;;; Commentary:
++
++;; Less commonly used functions that complement basic APIs, often implemented in
++;; C code (like hash-tables and strings), and are not eligible for inclusion
++;; in subr.el.
++
++;; Do not document these functions in the lispref.
++;; http://lists.gnu.org/archive/html/emacs-devel/2014-01/msg01006.html
++
++;;; Code:
++
++(require 'pcase)
++
++(defmacro internal--thread-argument (first? &rest forms)
++  "Internal implementation for `thread-first' and `thread-last'.
++When Argument FIRST? is non-nil argument is threaded first, else
++last.  FORMS are the expressions to be threaded."
++  (pcase forms
++    (`(,x (,f . ,args) . ,rest)
++     `(internal--thread-argument
++       ,first? ,(if first? `(,f ,x ,@args) `(,f ,@args ,x)) ,@rest))
++    (`(,x ,f . ,rest) `(internal--thread-argument ,first? (,f ,x) ,@rest))
++    (_ (car forms))))
++
++(defmacro thread-first (&rest forms)
++  "Thread FORMS elements as the first argument of their successor.
++Example:
++    (thread-first
++      5
++      (+ 20)
++      (/ 25)
++      -
++      (+ 40))
++Is equivalent to:
++    (+ (- (/ (+ 5 20) 25)) 40)
++Note how the single `-' got converted into a list before
++threading."
++  (cl-declare (indent 1)
++           (debug (form &rest [&or symbolp (sexp &rest form)])))
++  `(internal--thread-argument t ,@forms))
++
++(defmacro thread-last (&rest forms)
++  "Thread FORMS elements as the last argument of their successor.
++Example:
++    (thread-last
++      5
++      (+ 20)
++      (/ 25)
++      -
++      (+ 40))
++Is equivalent to:
++    (+ 40 (- (/ 25 (+ 20 5))))
++Note how the single `-' got converted into a list before
++threading."
++  (cl-declare (indent 1) (debug thread-first))
++  `(internal--thread-argument nil ,@forms))
++
++(defsubst internal--listify (elt)
++  "Wrap ELT in a list if it is not one."
++  (if (not (listp elt))
++      (list elt)
++    elt))
++
++(defsubst internal--check-binding (binding)
++  "Check BINDING is properly formed."
++  (when (> (length binding) 2)
++    (signal
++     'error
++     (cons "`let' bindings can have only one value-form" binding)))
++  binding)
++
++(defsubst internal--build-binding-value-form (binding prev-var)
++  "Build the conditional value form for BINDING using PREV-VAR."
++  `(,(car binding) (and ,prev-var ,(cadr binding))))
++
++(defun internal--build-binding (binding prev-var)
++  "Check and build a single BINDING with PREV-VAR."
++  (thread-first
++   binding
++   internal--listify
++   internal--check-binding
++   (internal--build-binding-value-form prev-var)))
++
++(defun internal--build-bindings (bindings)
++  "Check and build conditional value forms for BINDINGS."
++  (let ((prev-var t))
++    (mapcar (lambda (binding)
++              (let ((binding (internal--build-binding binding prev-var)))
++                (setq prev-var (car binding))
++                binding))
++            bindings)))
++
++(defmacro if-let (bindings then &rest else)
++  "Process BINDINGS and if all values are non-nil eval THEN, else ELSE.
++Argument BINDINGS is a list of tuples whose car is a symbol to be
++bound and (optionally) used in THEN, and its cadr is a sexp to be
++evalled to set symbol's value.  In the special case you only want
++to bind a single value, BINDINGS can just be a plain tuple."
++  (cl-declare (indent 2)
++           (debug ([&or (&rest (symbolp form)) (symbolp form)] form body)))
++  (when (and (<= (length bindings) 2)
++             (not (listp (car bindings))))
++    ;; Adjust the single binding case
++    (setq bindings (list bindings)))
++  `(let* ,(internal--build-bindings bindings)
++     (if ,(car (internal--listify (car (last bindings))))
++         ,then
++       ,@else)))
++
++(defmacro when-let (bindings &rest body)
++  "Process BINDINGS and if all values are non-nil eval BODY.
++Argument BINDINGS is a list of tuples whose car is a symbol to be
++bound and (optionally) used in BODY, and its cadr is a sexp to be
++evalled to set symbol's value.  In the special case you only want
++to bind a single value, BINDINGS can just be a plain tuple."
++  (cl-declare (indent 1) (debug if-let))
++  (list 'if-let bindings (macroexp-progn body)))
++
++(defsubst hash-table-empty-p (hash-table)
++  "Check whether HASH-TABLE is empty (has 0 elements)."
++  (zerop (hash-table-count hash-table)))
++
++(defsubst hash-table-keys (hash-table)
++  "Return a list of keys in HASH-TABLE."
++  (let ((keys '()))
++    (maphash (lambda (k _v) (push k keys)) hash-table)
++    keys))
++
++(defsubst hash-table-values (hash-table)
++  "Return a list of values in HASH-TABLE."
++  (let ((values '()))
++    (maphash (lambda (_k v) (push v values)) hash-table)
++    values))
++
++(defsubst string-empty-p (string)
++  "Check whether STRING is empty."
++  (string= string ""))
++
++(defsubst string-join (strings &optional separator)
++  "Join all STRINGS using SEPARATOR."
++  (mapconcat 'identity strings separator))
++
++(define-obsolete-function-alias 'string-reverse 'reverse "25.1")
++
++(defsubst string-trim-left (string)
++  "Remove leading whitespace from STRING."
++  (if (string-match "\\`[ \t\n\r]+" string)
++      (replace-match "" t t string)
++    string))
++
++(defsubst string-trim-right (string)
++  "Remove trailing whitespace from STRING."
++  (if (string-match "[ \t\n\r]+\\'" string)
++      (replace-match "" t t string)
++    string))
++
++(defsubst string-trim (string)
++  "Remove leading and trailing whitespace from STRING."
++  (string-trim-left (string-trim-right string)))
++
++(defsubst string-blank-p (string)
++  "Check whether STRING is either empty or only whitespace."
++  (string-match-p "\\`[ \t\n\r]*\\'" string))
++
++(defun string> (s1 s2)
++  "Return t if first arg string is greater than second in lexicographic order.
++Case is significant.
++Symbols are also allowed; their print names are used instead."
++  (string-lessp s2 s1))
++
++(defun let-alist--deep-dot-search (data)
++  "Return alist of symbols inside DATA that start with a `.'.
++Perform a deep search and return an alist where each car is the
++symbol, and each cdr is the same symbol without the `.'."
++  (cond
++   ((symbolp data)
++    (let ((name (symbol-name data)))
++      (when (string-match "\\`\\." name)
++        ;; Return the cons cell inside a list, so it can be appended
++        ;; with other results in the clause below.
++        (list (cons data (intern (replace-match "" nil nil name)))))))
++   ((not (consp data)) nil)
++   ((eq (car data) 'let-alist)
++    ;; For nested ‘let-alist’ forms, ignore symbols appearing in the
++    ;; inner body because they don’t refer to the alist currently
++    ;; being processed.  See Bug#24641.
++    (let-alist--deep-dot-search (cadr data)))
++   (t (append (let-alist--deep-dot-search (car data))
++              (let-alist--deep-dot-search (cdr data))))))
++
++(defun let-alist--access-sexp (symbol variable)
++  "Return a sexp used to access SYMBOL inside VARIABLE."
++  (let* ((clean (let-alist--remove-dot symbol))
++         (name (symbol-name clean)))
++    (if (string-match "\\`\\." name)
++        clean
++      (let-alist--list-to-sexp
++       (mapcar #'intern (nreverse (split-string name "\\.")))
++       variable))))
++
++(defun let-alist--list-to-sexp (list var)
++  "Turn symbols LIST into recursive calls to `cdr' `assq' on VAR."
++  `(cdr (assq ',(car list)
++              ,(if (cdr list) (let-alist--list-to-sexp (cdr list) var)
++                 var))))
++
++(defun let-alist--remove-dot (symbol)
++  "Return SYMBOL, sans an initial dot."
++  (let ((name (symbol-name symbol)))
++    (if (string-match "\\`\\." name)
++        (intern (replace-match "" nil nil name))
++      symbol)))
++
++
++;;; The actual macro.
++;;;###autoload
++(defmacro let-alist (alist &rest body)
++  "Let-bind dotted symbols to their cdrs in ALIST and execute BODY.
++Dotted symbol is any symbol starting with a `.'.  Only those present
++in BODY are let-bound and this search is done at compile time.
++
++For instance, the following code
++
++  (let-alist alist
++    (if (and .title .body)
++        .body
++      .site
++      .site.contents))
++
++essentially expands to
++
++  (let ((.title (cdr (assq \\='title alist)))
++        (.body  (cdr (assq \\='body alist)))
++        (.site  (cdr (assq \\='site alist)))
++        (.site.contents (cdr (assq \\='contents (cdr (assq \\='site alist))))))
++    (if (and .title .body)
++        .body
++      .site
++      .site.contents))
++
++If you nest `let-alist' invocations, the inner one can't access
++the variables of the outer one. You can, however, access alists
++inside the original alist by using dots inside the symbol, as
++displayed in the example above."
++  (cl-declare (indent 1) (debug t))
++  (let ((var (make-symbol "alist")))
++    `(let ((,var ,alist))
++       (let ,(mapcar (lambda (x) `(,(car x) ,(let-alist--access-sexp (car x) var)))
++                     (delete-dups (let-alist--deep-dot-search body)))
++         ,@body))))
++
++(provide 'subr-x)
++
++;;; subr-x.el ends here
+diff --git a/lisp/xbacklight.el b/lisp/xbacklight.el
+index bb18632..bdc082f 100644
+--- a/lisp/xbacklight.el
++++ b/lisp/xbacklight.el
+@@ -65,6 +65,8 @@
+ ;;; forward declaration:
+ (defvar emacspeak-speak-messages)
+ (defvar emacspeak-use-auditory-icons)
++(defvar inhibit-message)
++
+ ;;;###autoload
+ (defun xbacklight-set (brightness)
+   "Set brightness to  specified level.

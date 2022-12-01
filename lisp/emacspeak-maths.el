@@ -94,14 +94,7 @@
 (require 'cl-lib)
 (require 'comint)
 (require 'derived)
-(require 'nvm () 'no-error)
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function nvm--installed-versions "ext:nvm" ())
-(declare-function nvm-use "ext:nvm" (version &optional callback))
-(declare-function texmathp "ext:texmathp.el" ())
+(require 'nvm "nvm" 'no-error)
 
 ;;}}}
 ;;{{{ Customizations And Variables:

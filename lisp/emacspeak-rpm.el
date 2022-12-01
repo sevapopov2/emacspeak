@@ -69,30 +69,16 @@
   (when (ems-interactive-p)
     (message "Inverted sort order")
     (emacspeak-auditory-icon 'task-done)))
-(defadvice rpm-toggle-format (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'task-done)))
 (defadvice rpm-mark (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (ems-interactive-p)
-    (emacspeak-speak-line)
+    (message "marked")
     (emacspeak-auditory-icon 'mark-object)))
 (defadvice rpm-mark-delete (after emacspeak pre act comp)
   "Provide speech feedback."
   (when (ems-interactive-p)
-    (emacspeak-speak-line)
+    (message "marked for deletion")
     (emacspeak-auditory-icon 'mark-object)))
-(defadvice rpm-unmark (after emacspeak pre act comp)
-  "Provide speech feedback."
-  (when (ems-interactive-p)
-    (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'deselect-object)))
-
-(defadvice rpm-requires (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
 
 (defadvice rpm-quit (after emacspeak pre act comp)
   "Provide speech feedback."
@@ -100,23 +86,11 @@
     (emacspeak-speak-mode-line)
     (emacspeak-auditory-icon 'close-object)))
 
-(cl-loop for f in
-      '(rpm-rebuild rpm-rebuild-index)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-          "Provide speech feedback."
-          (when (ems-interactive-p)
-            (message "Rebuilt index")
-            (emacspeak-auditory-icon 'task-done)))))
-
-(defadvice rpm-proc-sentinel (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (emacspeak-auditory-icon 'task-done))
-
-(defadvice rpm-do-visit (after emacspeak pre act comp)
-  "Provide auditory feedback."
-  (emacspeak-auditory-icon 'open-object))
+(defadvice rpm-rebuild- (after emacspeak pre act comp)
+  "Provide speech feedback."
+  (when (ems-interactive-p)
+    (message "Rebuilt index")
+    (emacspeak-auditory-icon 'task-done)))
 
 ;;}}}
 ;;{{{ fix interactive commands 

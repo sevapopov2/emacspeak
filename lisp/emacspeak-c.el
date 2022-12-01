@@ -1,7 +1,7 @@
 ;;; emacspeak-c.el --- Speech enable CC-mode and friends -- supports C, C++, Java  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
-;;; Description: Emacspeak extensions for C and C++ mode
+;;; DescriptionEmacspeak extensions for C and C++ mode
 ;;; Keywords:emacspeak, audio interface to emacs C, C++
 ;;{{{  LCD Archive entry:
 
@@ -86,35 +86,10 @@
 
 (defadvice c-electric-semi&comma (after emacspeak pre act)
   "Speak the line when a statement is completed."
-  (cl-declare (special last-input-event))
   (when (ems-interactive-p)
     (cond
-     ((= last-input-event ?,) (emacspeak-speak-this-char last-input-event))
+     ((= last-input-event ?,) (dtk-speak " comma "))
      (t (emacspeak-speak-line)))))
-
-(unless
-    (and (boundp 'post-self-insert-hook)
-         post-self-insert-hook
-         (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
-  (cl-loop for f in
-        '(c-electric-star
-          c-electric-slash
-          c-electric-lt-gt
-          electric-c-terminator
-          c-electric-pound
-          c-electric-brace
-          electric-c-semi
-          electric-c-sharp-sign
-          electric-c-brace
-          c-electric-colon
-          c-electric-paren)
-        do
-        (eval
-         `(defadvice ,f (after emacspeak pre act comp)
-            "Speak what you typed."
-            (cl-declare (special last-input-event))
-            (when (ems-interactive-p)
-              (emacspeak-speak-this-char last-input-event))))))
 
 (defadvice c-electric-delete (before emacspeak pre act)
   "Speak char before deleting it."
@@ -127,30 +102,37 @@
 
 ;;; CPP directives:
 
-(cl-loop for f in
-      '(c-up-conditional
-	c-forward-conditional
-	c-backward-conditional)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-	  "Speak the line moved to."
-	  (when (ems-interactive-p)
-	    (emacspeak-auditory-icon 'large-movement)
-	    (emacspeak-speak-line)))))
+(defadvice c-up-conditional (after emacspeak pre act)
+  "Speak the line moved to."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
+
+(defadvice c-forward-conditional (after emacspeak pre act)
+  "Speak the line moved to."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
+
+(defadvice c-backward-conditional (after emacspeak pre act)
+  "Speak the line moved to."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
 
 ;;; Statements
 
-(cl-loop for f in
-      '(c-beginning-of-statement
-	c-end-of-statement)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-	  "Speak the line moved to."
-	  (when (ems-interactive-p)
-	    (emacspeak-auditory-icon 'item)
-	    (emacspeak-speak-line)))))
+(defadvice c-beginning-of-statement (after emacspeak pre act)
+  "Speak the line moved to."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'item)
+    (emacspeak-speak-line)))
+
+(defadvice c-end-of-statement (after emacspeak pre act)
+  "Speak the line moved to."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'item)
+    (emacspeak-speak-line)))
 
 (defadvice c-mark-function (after emacspeak pre act)
   "Provide spoken and auditory feedback."
@@ -163,16 +145,17 @@
 ;;}}}
 ;;{{{ advice program navigation
 
-(cl-loop for f in
-      '(c-beginning-of-defun
-	c-end-of-defun)
-      do
-      (eval
-       `(defadvice ,f (after emacspeak pre act comp)
-	  "Speak the line moved to."
-	  (when (ems-interactive-p)
-	    (emacspeak-auditory-icon 'paragraph)
-	    (emacspeak-speak-line)))))
+(defadvice  c-beginning-of-defun (after emacspeak pre act)
+  "Speak the line."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'paragraph)
+    (emacspeak-speak-line)))
+
+(defadvice  c-end-of-defun (after emacspeak pre act)
+  "Speak the line."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'paragraph)
+    (emacspeak-speak-line)))
 
 ;;}}}
 ;;{{{  extensions  provided by c++ mode

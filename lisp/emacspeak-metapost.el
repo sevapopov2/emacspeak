@@ -73,7 +73,6 @@
 (defadvice meta-indent-line (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
     (emacspeak-speak-line)))
 
 (defadvice meta-fill-paragraph (after emacspeak pre act)
@@ -103,7 +102,6 @@
   "Provide spoken feedback."
   (when (ems-interactive-p)
     (let ((prefix-arg (ad-get-arg 2)))
-      (emacspeak-auditory-icon 'section)
       (message "%s region containing %s lines"
                (if (and prefix-arg
                         (< prefix-arg 0))
@@ -115,7 +113,6 @@
   "Provide spoken feedback."
   (when (ems-interactive-p)
     (let ((prefix-arg (ad-get-arg 2)))
-      (emacspeak-auditory-icon 'section)
       (message "%s environment containing %s lines"
                (if  prefix-arg
                    "Uncommented"
@@ -125,14 +122,12 @@
 (defadvice meta-uncomment-defun (after emacspeak pre act)
   "Provide spoken feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'section)
     (message "Uncommented environment containing %s lines"
              (count-lines (point) (mark 'force)))))
 
 (defadvice meta-uncomment-region (after emacspeak pre act)
   "Provide spoken feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'section)
     (message "Uncommented  region containing %s lines"
              (count-lines (point) (mark 'force)))))
 

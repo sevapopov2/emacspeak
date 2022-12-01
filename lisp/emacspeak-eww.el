@@ -402,24 +402,12 @@
 (require 'eww  )
 (require 'dom)
 (require 'dom-addons)
-(eval-when-compile (require 'emacspeak-feeds () 'no-error))
+(eval-when-compile (require 'emacspeak-feeds "emacspeak-feeds" 'no-error))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'emacspeak-we)
 (require 'emacspeak-webutils)
 (require 'emacspeak-google)
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function eww "ext:eww.el" (URL))
-(declare-function eww-save-history "ext:eww.el" ())
-(declare-function eww-restore-history "ext:eww.el" (elem))
-(declare-function eww-update-header-line-format "ext:eww.el" ())
-
-(declare-function shr-insert-document "ext:shr.el" (dom))
-(declare-function shr-expand-url "shr.el")
-(declare-function shr-generic "shr.el")
 
 ;;}}}
 ;;{{{ Helpers:
@@ -521,7 +509,7 @@ are available are cued by an auditory icon on the header line."
       emacspeak-webutils-document-title #'emacspeak-eww-current-title
       emacspeak-webutils-url-at-point
       #'(lambda ()
-          (let ((url (emacspeak-webutils-url-at-point nil)))
+          (let ((url (shr-url-at-point nil)))
             (cond
              ((and url
                    (stringp url)
@@ -566,7 +554,6 @@ are available are cued by an auditory icon on the header line."
 (defun emacspeak-eww-setup ()
   "Setup keymaps etc."
   (cl-declare (special eww-mode-map eww-link-keymap
-                       eww-text-map
                        shr-inhibit-images
                        emacspeak-pronounce-common-xml-namespace-uri-pronunciations
                        emacspeak-eww-masquerade
@@ -595,13 +582,6 @@ are available are cued by an auditory icon on the header line."
   (define-key eww-link-keymap "\C-r" 'emacspeak-feeds-rss-display)
   (define-key eww-link-keymap "\C-a" 'emacspeak-feeds-atom-display)
   (define-key eww-link-keymap  "y" 'emacspeak-m-player-youtube-player)
-  (define-key eww-text-map emacspeak-prefix 'emacspeak-prefix-command)
-  (define-key eww-text-map "\C-ce" 'eww-end-of-text)
-  (define-key eww-text-map "\C-c\C-e" 'eww-end-of-text)
-  (define-key eww-text-map [(shift tab)] 'shr-previous-link)
-  (define-key eww-text-map [(shift iso-lefttab)] 'shr-previous-link)
-  (define-key eww-text-map [backtab] 'shr-previous-link)
-  (define-key eww-text-map "\M-\t" 'shr-previous-link)
   (cl-loop
    for binding  in
    '(
@@ -649,10 +629,6 @@ are available are cued by an auditory icon on the header line."
      ("DEL" emacspeak-eww-restore)
      ("]" emacspeak-eww-next-p)
      ("b" shr-previous-link)
-     ("S-<tab>" shr-previous-link)
-     ("M-<tab>" shr-previous-link)
-     ("S-<iso-lefttab>" shr-previous-link)
-     ("<backtab>" shr-previous-link)
      ("e" emacspeak-we-xsl-map)
      ("f" shr-next-link)
      ("k" eww-copy-page-url)
@@ -667,8 +643,7 @@ are available are cued by an auditory icon on the header line."
    do
    (emacspeak-keymap-update eww-mode-map binding)))
 
-(when (boundp 'eww-mode-map)
-  (emacspeak-eww-setup))
+(emacspeak-eww-setup)
 
 ;;}}}
 ;;{{{ Map Faces To Voices:
@@ -846,6 +821,21 @@ Retain previously set punctuations  mode."
      "Provide auditory feedback."
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'button)))))
+
+(cl-loop
+ for f in
+ '(shr-next-link shr-previous-link)
+ do
+ (eval
+  `(defadvice ,f (around emacspeak pre act comp)
+     "Provide auditory feedback."
+     (ems-with-messages-silenced ad-do-it)
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'button)
+       (emacspeak-speak-region
+        (point)
+        (next-single-property-change (point) 'help-echo
+                                     nil (point-max)))))))
 
 ;;; Handle emacspeak-we-url-executor
 
@@ -1878,7 +1868,7 @@ Warning, this is fragile, and depends on a stable id for the
 (defun  emacspeak-eww-update-title  (title)
   "Interactively set title --- renames buffer, and sets header-line."
   (interactive "sTitle:")
-  (cl-declare (special header-line-format eww-data))
+  (cl-declare (special header-line-format))
   (rename-buffer title  'unique)
   (setq header-line-format title)
   (plist-put eww-data :title title)
@@ -2064,8 +2054,8 @@ interactive prefix arg `delete', delete that mark instead."
 Warning: Running shell script cbox through this fails mysteriously."
   (interactive "P")
   (cl-declare (special emacspeak-eww-url-shell-commands))
-  (cl-assert (emacspeak-webutils-url-at-point prefix) t "No URL at point.")
-  (let ((url (emacspeak-webutils-url-at-point prefix))
+  (cl-assert (shr-url-at-point prefix) t "No URL at point.")
+  (let ((url (shr-url-at-point prefix))
         (cmd (completing-read "Shell Command: " emacspeak-eww-url-shell-commands)))
     (shell-command (format "%s '%s'" cmd url))
     (emacspeak-auditory-icon 'task-done)))

@@ -88,8 +88,7 @@
              (when (ems-interactive-p)
                (dtk-stop)
                (emacspeak-auditory-icon 'large-movement)
-               (with-current-buffer (window-buffer)
-                 (emacspeak-compilation-speak-error))))))
+               (emacspeak-compilation-speak-error)))))
 
 (cl-loop for f in 
          '(
@@ -111,7 +110,7 @@
   "provide auditory confirmation"
   (when (ems-interactive-p)
     (message "Launched compilation")
-    (emacspeak-auditory-icon 'select-object)))
+    (emacspeak-auditory-icon 'task-done)))
 
 (defadvice  compilation-sentinel (after emacspeak pre act)
   "Provide auditory feedback"

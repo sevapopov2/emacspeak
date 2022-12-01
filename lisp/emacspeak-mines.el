@@ -66,16 +66,7 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(eval-when-compile (require 'mines () 'no-error))
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function mines-current-pos "ext:mines.el" ())
-(declare-function mines-index-2-matrix "ext:mines.el" (idx))
-(declare-function mines-goto "ext:mines.el" (idx))
-(declare-function mines-get-neighbours "ext:mines.el" (idx))
-
+(eval-when-compile (require 'mines "mines" 'no-error))
 ;;}}}
 ;;{{{ Interactive Commands:
 
@@ -93,8 +84,8 @@
 
 (defun emacspeak-mines-speak-uncovered-count ()
   "Speak number of uncovered cells."
-  (interactive )
-  (cl-declare (special mines-state mines-number-mines))
+  (interactive)
+  (cl-declare (special mines-state))
   (dtk-speak
    (format "%d mines with %d uncovered cells remaining."
            mines-number-mines (cl-count-if #'null mines-state))))
@@ -130,7 +121,7 @@ to beginning of board before searching."
 (defun emacspeak-mines-speak-board ()
   "Speak the board."
   (interactive)
-  (cl-declare (special  mines-number-cols mines-grid))
+  (cl-declare (special  mines-number-cols))
   (let ((cells nil))
     (save-excursion
       (setq cells

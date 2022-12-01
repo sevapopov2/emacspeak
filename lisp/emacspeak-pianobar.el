@@ -223,7 +223,6 @@ If electric mode is on, keystrokes invoke pianobar commands directly."
 
 (defun emacspeak-pianobar-hide-or-show ()
   "Hide or show pianobar."
-  (cl-declare (special pianobar-buffer))
   (cond
    ((eq (current-buffer) (get-buffer pianobar-buffer))
     (bury-buffer)

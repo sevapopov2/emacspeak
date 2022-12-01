@@ -90,7 +90,7 @@
   "Provide auditory feedback."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-speak-line)))
 
 (defadvice customize-save-customized (after emacspeak pre act comp)
   "Provide auditory feedback. "
@@ -206,36 +206,13 @@
    (custom-set voice-smoothen-medium)
    (custom-state voice-smoothen)
    (custom-variable-button voice-animate)
-   (custom-variable-tag voice-bolden-medium)
-   ;; Old names:
-   (custom-button-face voice-bolden)
-   (custom-button-pressed-face voice-bolden-extra)
-   (custom-button-pressed-unraised-face voice-bolden-extra)
-   (custom-button-mouse-face voice-bolden-medium)
-   (custom-button-unraised-face voice-smoothen)
-   (custom-changed-face voice-smoothen)
-   (custom-comment-face voice-monotone-medium)
-   (custom-comment-tag-face voice-monotone)
-   (custom-documentation-face voice-brighten-medium)
-   (custom-face-tag-face voice-lighten)
-   (custom-group-tag-face-1 voice-lighten-medium)
-   (custom-group-tag-face voice-bolden)
-   (custom-invalid-face voice-animate-extra)
-   (custom-link-face voice-bolden)
-   (custom-modified-face voice-lighten-medium)
-   (custom-rogue-face voice-bolden-and-animate)
-   (custom-modified-face voice-lighten-medium)
-   (custom-saved-face voice-smoothen-extra)
-   (custom-set-face voice-smoothen-medium)
-   (custom-state-face voice-smoothen)
-   (custom-variable-button-face voice-animate)
-   (custom-variable-tag-face voice-bolden-medium)))
+   (custom-variable-tag voice-bolden-medium)))
 
 ;;}}}
 ;;{{{  custom navigation
 
 (defvar emacspeak-custom-group-regexp
-  "^[^:]+ group:"
+  "^/-"
   "Pattern identifying start of custom group.")
 
 ;;;###autoload
@@ -243,17 +220,15 @@
   "Jump to custom group when in a customization buffer."
   (interactive)
   (cl-declare (special emacspeak-custom-group-regexp))
-  (when (eq major-mode 'Custom-mode)
+  (when (eq major-mode 'custom-mode)
     (goto-char (point-min))
     (re-search-forward emacspeak-custom-group-regexp
                        nil t)
-    (forward-line 0)
-    (when (called-interactively-p 'interactive)
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-speak-line))))
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
 
 (defvar emacspeak-custom-toolbar-regexp
-  "^ *Operate on \\(everything\\|all settings\\) in this buffer"
+  "^Operate on everything in this buffer:"
   "Pattern that identifies toolbar section.")
 
 
@@ -261,14 +236,12 @@
   "Jump to custom toolbar when in a customization buffer."
   (interactive)
   (cl-declare (special emacspeak-custom-toolbar-regexp))
-  (when (eq major-mode 'Custom-mode)
+  (when (eq major-mode 'custom-mode)
     (goto-char (point-min))
     (re-search-forward emacspeak-custom-toolbar-regexp nil
                        t)
-    (forward-line 0)
-    (when (called-interactively-p 'interactive)
-      (emacspeak-auditory-icon 'large-movement)
-      (emacspeak-speak-line))))
+    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-speak-line)))
 
 ;;}}}
 ;;{{{  bind emacspeak commands 

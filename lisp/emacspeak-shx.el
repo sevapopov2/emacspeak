@@ -50,7 +50,7 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(eval-when-compile (require 'shx () 'no-error))
+(eval-when-compile (require 'shx "shx" 'no-error))
 
 ;;}}}
 ;;{{{ Forward Declaration 
@@ -101,19 +101,20 @@ Provide an auditory icon if possible."
   "Speak word or completion."
   (cond
    ((ems-interactive-p)
-    (let ((orig (point))
-          (count (ad-get-arg 0)))
-      (setq count (or count 1))
-      (ems-with-messages-silenced ad-do-it)
-      (cond
-       ((= (point) (+ count orig))
-        (save-excursion
-         (forward-word -1)
-         (emacspeak-speak-word)))
-       (t
-        (emacspeak-auditory-icon 'complete)
-        (emacspeak-speak-region
-         (comint-line-beginning-position) (point))))))
+    (ems-with-messages-silenced
+     (let ((orig (point))
+           (count (ad-get-arg 0)))
+       (setq count (or count 1))
+       ad-do-it
+       (cond
+        ((= (point) (+ count orig))
+         (save-excursion
+           (forward-word -1)
+           (emacspeak-speak-word)))
+        (t
+         (emacspeak-auditory-icon 'complete)
+         (emacspeak-speak-region
+          (comint-line-beginning-position) (point)))))))
    (t ad-do-it))
   ad-return-value)
 ;;}}}

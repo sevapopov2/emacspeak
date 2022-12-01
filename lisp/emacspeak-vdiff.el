@@ -60,14 +60,7 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(eval-when-compile (require 'vdiff () 'no-error))
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function vdiff--overlay-at-pos "ext:vdiff.el" (&optional pos noerror))
-(declare-function vdiff-switch-buffer "ext:vdiff.el" (line))
-
+(eval-when-compile (require 'vdiff "vdiff" 'no-error))
 ;;}}}
 ;;{{{ Map Faces:
 
@@ -202,7 +195,6 @@
 (eval-after-load
     "vdiff"
   `(progn
-     (cl-declaim (special vdiff-mode-prefix-map))
      (define-key vdiff-mode-prefix-map   " " 'emacspeak-vdiff-speak-this-hunk)
      (define-key vdiff-mode-prefix-map   (kbd "C-SPC") 'emacspeak-vdiff-speak-other-hunk)
      (define-key vdiff-mode-prefix-map   (kbd "l") 'emacspeak-vdiff-speak-other-line)))

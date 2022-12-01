@@ -3,7 +3,7 @@
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Emacspeak extension to speech-enable
 ;;; gnuplot mode
-;;; Keywords: Emacspeak, mathematics, Gnuplot interaction
+;;; Keywords: Emacspeak, WWW interaction
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:

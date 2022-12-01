@@ -1,8 +1,8 @@
 ;;; emacspeak-nxml.el --- Speech enable nxml mode  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
-;;; Description: Emacspeak extension to speech enable nxml mode
-;;; Keywords: Emacspeak, nxml
+;;; Description: Controlling mplayer from emacs 
+;;; Keywords: Emacspeak, nxml streaming media 
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
@@ -246,9 +246,7 @@
   (cl-declare (special o-close))
   (cond
    ((get-text-property (point) 'nxml-outline-state)
-    (let ((o-open nil)
-          (o-close nil)
-	  (deactivate-mark nil))
+    (let ((o-open nil))
       (save-excursion
         (setq o-open (car (overlays-at (point))))
         (next-line 1)

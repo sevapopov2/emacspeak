@@ -1,8 +1,8 @@
 ;;; emacspeak-view.el --- Speech enable View mode -- Efficient browsing of read-only content  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $ 
-;;; Description: Emacspeak extensions for view
-;;; Keywords: emacspeak, audio interface to emacs, view-mode
+;;; DescriptionEmacspeak extensions for view
+;;; Keywords:emacspeak, audio interface to emacs, view-mode
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
@@ -338,6 +338,7 @@ keybindings for view mode")
   (define-key view-mode-map "\M-p" 'outline-previous-visible-heading)
   (define-key view-mode-map " " 'scroll-up)
   (define-key view-mode-map "\d" 'scroll-down)
+  (define-key view-mode-map "R" 'dtk-resume)
   (define-key view-mode-map "S" 'dtk-stop)
   (define-key view-mode-map "t" 'emacspeak-view-line-to-top)
   (define-key view-mode-map ","
