@@ -48,7 +48,7 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(eval-when-compile (require 'hydra () 'no-error))
+(eval-when-compile (require 'hydra "hydra" 'no-error))
 
 ;;}}}
 ;;{{{ Map Hydra Colors To Voices:
@@ -95,7 +95,6 @@ Also turn on hydra-is-helpful if it was turned off."
 
 ;;; We use plain messages:
 
-(cl-declaim (special hydra-head-format hydra-lv hydra-hint-display-type))
 (setq hydra-head-format "%s "
       hydra-hint-display-type nil
       hydra-hint-display-type #'message)

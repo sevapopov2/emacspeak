@@ -82,7 +82,7 @@
   (require 'sox-gen)
   (require 'derived)
   (require 'dbus))
-(require 'nm () 'no-error)
+(require 'nm "nm" 'no-error)
 
 ;;}}}
 ;;{{{ Forward Declarations:

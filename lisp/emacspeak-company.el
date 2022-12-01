@@ -58,16 +58,9 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(eval-when-compile (require 'company () 'no-error))
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function company-fetch-metadata "company.el" ())
-
+(eval-when-compile (require 'company "company" 'no-error))
 ;;}}}
 ;;{{{ map faces:
-
 (voice-setup-add-map
  '(
    (company-echo voice-bolden)

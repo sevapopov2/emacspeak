@@ -90,7 +90,7 @@ many available corrections."
            start end voice-bolden
            (buffer-substring (line-beginning-position) (line-end-position))))
     (with-temp-buffer
-      (voice-lock-mode (if global-voice-lock-mode 1 -1))
+      (setq voice-lock-mode t)
       (setq buffer-undo-list t)
       (dtk-set-punctuations 'all)
       (insert line)

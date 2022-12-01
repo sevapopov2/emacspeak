@@ -42,7 +42,6 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'acss-structure)
-(require 'dtk-unicode)
 (require 'tts)
 
 ;;}}}

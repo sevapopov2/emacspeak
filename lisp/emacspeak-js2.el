@@ -51,12 +51,7 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(require 'js2-mode () 'no-error)
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function js2-imenu-extras-setup "ext:js2-imenu-extras.el" ())
-
+(require 'js2-mode "js2-mode" 'no-error)
 ;;}}}
 ;;{{{  map faces to voices:
 

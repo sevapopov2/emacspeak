@@ -132,7 +132,7 @@
   (let ((field (emacspeak-proced-position-to-field position))
         (start nil)
         (end nil))
-    (save-mark-and-excursion
+    (save-excursion
       (goto-char
        (+ (line-beginning-position)
           (emacspeak-proced-field-start field)))
@@ -251,7 +251,7 @@
   "Update cache of processes we are displaying."
   (cl-declare (special emacspeak-proced-process-cache))
   (let ((cache nil))
-    (save-mark-and-excursion
+    (save-excursion
       (goto-char (point-min))
       (while (not (eobp))
         (goto-char (+ (line-beginning-position)

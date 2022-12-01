@@ -152,8 +152,6 @@
   (emacspeak-threes-sox-gen threes-next-number)
   (dtk-speak (format "%s" threes-next-number)))
 
-(declare-function threes-cells-transpose "threes" (cells))
-
 (defun emacspeak-threes-speak-transposed-board ()
   "Speak the board by columns."
   (interactive)
@@ -191,6 +189,7 @@
     (emacspeak-threes-speak-board)))
 
 (declare-function threes-cells-score "threes" nil)
+(declare-function threes-cells-transpose "threes" (cells))
 
 (defun emacspeak-threes-score ()
   "Speak the score."

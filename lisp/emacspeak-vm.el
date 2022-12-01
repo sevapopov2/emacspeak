@@ -49,7 +49,7 @@
 ;;{{{ requires
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(with-demoted-errors "Error loading VM: %s" (require 'vm () 'no-error))
+(require  'vm "vm" 'no-error)
 (require 'browse-url)
 ;;}}}
 ;;{{{ Forward Decls:
@@ -104,7 +104,7 @@ Note that some badly formed mime messages  cause trouble."
 
 (defadvice vm-minibuffer-complete-word (around emacspeak pre act)
   "Say what you completed."
-  (let ((prior (save-mark-and-excursion (skip-syntax-backward "^ >") (point)))
+  (let ((prior (save-excursion (skip-syntax-backward "^ >") (point)))
         (dtk-stop-immediately t))
     (emacspeak-kill-buffer-carefully "*Completions*")
     ad-do-it
@@ -119,7 +119,7 @@ Note that some badly formed mime messages  cause trouble."
 
 (defadvice vm-minibuffer-complete-word-and-exit (around emacspeak pre act)
   "Say what you completed."
-  (let ((prior (save-mark-and-excursion (skip-syntax-backward "^ >") (point)))
+  (let ((prior (save-excursion (skip-syntax-backward "^ >") (point)))
         (dtk-stop-immediately t))
     (emacspeak-kill-buffer-carefully "*Completions*")
     ad-do-it
@@ -195,14 +195,6 @@ Note that some badly formed mime messages  cause trouble."
                  (string-match (user-full-name) to)
                  (string-match  (user-login-name) to)))
             (lines (vm-su-line-count message)))
-      (cond
-       ((and self-p
-             (= 0 self-p)) ;mail to me and others
-        (emacspeak-auditory-icon 'select-object))
-       (self-p                          ;mail to others including me
-        (emacspeak-auditory-icon 'mark-object))
-       (t                            ;got it because of a mailing list
-        (emacspeak-auditory-icon 'item)))
       (with-current-buffer vm-presentation-buffer
         (dtk-speak
          (vm-decode-mime-encoded-words-in-string
@@ -221,7 +213,15 @@ Note that some badly formed mime messages  cause trouble."
              "")
            (if lines (format "%s lines" lines) "")))))
       (goto-char (point-min))
-      (search-forward  (format "%c%c" 10 10) nil))))
+      (search-forward  (format "%c%c" 10 10) nil)
+      (cond
+       ((and self-p
+             (= 0 self-p)) ;mail to me and others
+        (emacspeak-auditory-icon 'select-object))
+       (self-p                          ;mail to others including me
+        (emacspeak-auditory-icon 'mark-object))
+       (t                            ;got it because of a mailing list
+        (emacspeak-auditory-icon 'item))))))
 
 (defun emacspeak-vm-speak-labels ()
   "Speak a message's labels"
@@ -283,7 +283,7 @@ that has been forwarded multiple times."
 Then speak the screenful. "
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'scroll)
-    (save-mark-and-excursion
+    (save-excursion
       (let ((start  (point))
             (window (get-buffer-window (current-buffer))))
         (forward-line (window-height window))
@@ -294,7 +294,7 @@ Then speak the screenful. "
 Then speak the screenful. "
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'scroll)
-    (save-mark-and-excursion
+    (save-excursion
       (let ((start  (point))
             (window (get-buffer-window (current-buffer))))
         (forward-line(-  (window-height window)))
@@ -532,6 +532,9 @@ Leave point at front of decoded attachment."
   (cons #'re-search-forward #'emacspeak-speak-decode-iso-datetime)))
 
 ;;}}}
+;;{{{ advice button motion
+
+;;}}}
 ;;{{{  misc
 
 (defadvice vm (around emacspeak pre act comp)
@@ -543,6 +546,12 @@ Leave point at front of decoded attachment."
 (defadvice vm-count-messages-in-file (around emacspeak-fix pre act comp)
   (ad-set-arg 1 'quiet)
   ad-do-it)
+
+;;}}}
+;;{{{  button motion in vm
+
+;;}}}
+;;{{{ saving mime attachment under point
 
 ;;}}}
 ;;{{{ Voice Lock:

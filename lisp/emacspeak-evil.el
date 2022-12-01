@@ -52,11 +52,6 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
-;;{{{ Forward declarations
-
-(declare-function evil-mode "ext:evil.el" (&optional arg))
-
-;;}}}
 ;;{{{ Map Faces:
 
 (voice-setup-add-map
@@ -194,13 +189,13 @@
      "Speak what was completed."
      (cond
       ((ems-interactive-p)
-       (let ((orig (save-mark-and-excursion (skip-syntax-backward "^ >") (point))))
+       (let ((orig (save-excursion (skip-syntax-backward "^ >") (point))))
          (ems-with-messages-silenced
-          ad-do-it)
-         (emacspeak-auditory-icon 'complete)
-         (if (< orig (point))
-             (dtk-speak (buffer-substring orig (point)))
-           (dtk-speak (word-at-point)))))
+          ad-do-it
+          (emacspeak-auditory-icon 'complete)
+          (if (< orig (point))
+              (dtk-speak (buffer-substring orig (point)))
+            (dtk-speak (word-at-point))))))
       (t ad-do-it))
      ad-return-value)))
 

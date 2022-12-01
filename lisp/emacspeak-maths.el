@@ -94,14 +94,7 @@
 (require 'cl-lib)
 (require 'comint)
 (require 'derived)
-(require 'nvm () 'no-error)
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function nvm--installed-versions "ext:nvm" ())
-(declare-function nvm-use "ext:nvm" (version &optional callback))
-(declare-function texmathp "ext:texmathp.el" ())
+(require 'nvm "nvm" 'no-error)
 
 ;;}}}
 ;;{{{ Customizations And Variables:
@@ -221,7 +214,7 @@ Otherwise, Examine head of sexp, and applies associated handler to the tail."
   (cl-declare (special emacspeak-maths))
   (let ((pause (emacspeak-maths-pause emacspeak-maths)))
     (when pause
-      (save-mark-and-excursion
+      (save-excursion
         (goto-char start)
         (skip-syntax-forward " ")
         (put-text-property
@@ -295,13 +288,13 @@ left for next run."
   (cl-declare (special emacspeak-maths))
   (with-current-buffer (process-buffer proc)
     (let ((moving (= (point) (process-mark proc))))
-      (save-mark-and-excursion
+      (save-excursion
 ;;; Insert the text, advancing the process marker.
         (goto-char (process-mark proc))
         (insert string)
         (set-marker (process-mark proc) (point)))
 ;;; Consume process output
-      (save-mark-and-excursion
+      (save-excursion
         (goto-char (point-min))
         (flush-lines "^ *$")
         (goto-char (point-min))
@@ -420,7 +413,7 @@ Set calc-language to tex to use this feature."
 ;;; $ and $$
        ((or (string= "$" delimiter)
             (string= "$$" delimiter))
-        (save-mark-and-excursion
+        (save-excursion
           (goto-char start)
           (forward-char (length delimiter))
           (setq begin (point))
