@@ -1,3 +1,9 @@
+emacspeak (1:50.0-17bionic1) bionic; urgency=high
+
+  * Startup error fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 02 Dec 2022 00:17:58 +0300
+
 emacspeak (1:50.0-16bionic1) bionic; urgency=medium
 
   * Switch to dpkg-source 3.0 format.
