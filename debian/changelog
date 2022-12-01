@@ -1,3 +1,9 @@
+emacspeak (1:50.0-16focal1) focal; urgency=medium
+
+  * Switch to dpkg-source 3.0 format.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 01 Dec 2022 19:27:22 +0300
+
 emacspeak (1:50.0-15focal1) focal; urgency=medium
 
   * Youtube-dl support enhancement.
