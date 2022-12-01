@@ -4,11 +4,12 @@ Subject: Emacs25 compatibility
 
 ---
  lisp/dom-addons.el        | 16 ++++++++++++++++
+ lisp/emacspeak-ido.el     |  5 ++++-
  lisp/emacspeak-info.el    | 10 +++++++---
  lisp/emacspeak-org.el     |  2 +-
  lisp/emacspeak-tar.el     |  5 +++++
  lisp/emacspeak-wizards.el | 17 ++++++++++++-----
- 5 files changed, 41 insertions(+), 9 deletions(-)
+ 6 files changed, 45 insertions(+), 10 deletions(-)
 
 diff --git a/lisp/dom-addons.el b/lisp/dom-addons.el
 index 41f6377..56120fe 100644
@@ -44,6 +45,22 @@ index 41f6377..56120fe 100644
  (defun dom-from-url (url)
    "Return DOM for HTML content at URL."
    (cl-declare (special g-curl-program g-curl-common-options))
+diff --git a/lisp/emacspeak-ido.el b/lisp/emacspeak-ido.el
+index f57840a..1fdf19c 100644
+--- a/lisp/emacspeak-ido.el
++++ b/lisp/emacspeak-ido.el
+@@ -217,7 +217,10 @@ The default value of 12 is too high for using ido effectively with speech. "
+     (define-key ido-common-completion-map emacspeak-prefix 'emacspeak-prefix-command)
+     (define-key ido-common-completion-map (kbd "M-e")  'ido-edit-input)))
+ 
+-(emacspeak-ido-keys)
++(when (and (boundp 'ido-completion-map)
++           (keymapp 'ido-completion-map))
++  (emacspeak-ido-keys))
++
+ ;;}}}
+ (provide 'emacspeak-ido)
+ ;;{{{ end of file
 diff --git a/lisp/emacspeak-info.el b/lisp/emacspeak-info.el
 index e2949e3..9cefd8c 100644
 --- a/lisp/emacspeak-info.el
