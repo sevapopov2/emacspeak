@@ -1,8 +1,8 @@
 ;;; emacspeak-tcl.el --- Speech enable TCL development environment  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $ 
-;;; Description: Emacspeak extensions for tcl-mode
-;;; Keywords: emacspeak, audio interface to emacs tcl
+;;; DescriptionEmacspeak extensions for tcl-mode
+;;; Keywords:emacspeak, audio interface to emacs tcl
 ;;{{{  LCD Archive entry: 
 
 ;;; LCD Archive Entry:
@@ -154,7 +154,7 @@ is a Tcl expression, and the last argument is Tcl commands.")
   (when (ems-interactive-p)
     (let* ((start nil)
            (proc-line
-            (save-mark-and-excursion
+            (save-excursion
               (tcl-beginning-of-defun)
               (setq start (point))
               (end-of-line)
@@ -195,9 +195,7 @@ is a Tcl expression, and the last argument is Tcl commands.")
 (defadvice tcl-indent-line (after emacspeak pre act)
   "Speak the line"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'fill-object)
     (emacspeak-speak-line)))
-
 ;;}}}
 
 (provide  'emacspeak-tcl)

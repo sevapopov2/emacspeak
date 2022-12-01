@@ -27,6 +27,9 @@
 
   <xsl:template match="preamble">
     <head>
+      <link rel="stylesheet"
+            href= "http://www.w3.org/StyleSheets/Core/Chocolate" type="text/css">
+      </link>
       <title>
         <xsl:value-of select="@title"/>
       </title>

@@ -96,7 +96,7 @@ use `emacspeak-toggle-auditory-icons' bound to
 
 (defvar emacspeak-default-sound
   (expand-file-name
-   "3d/button.wav"
+   "classic/button.wav"
    emacspeak-sounds-directory)
   "Default sound to play if requested icon not found.")
 
@@ -112,41 +112,15 @@ use `emacspeak-toggle-auditory-icons' bound to
   (setf (gethash  theme-name emacspeak-sounds-themes-table)
         file-ext))
 
-(defun emacspeak-sounds-theme-directory (theme)
-  "Get directory path for specified sounds theme."
-  (file-name-as-directory (expand-file-name theme emacspeak-sounds-directory)))
-
-(defun emacspeak-sounds-theme-definition (theme)
-  "Get sounds theme definition file path."
-  (expand-file-name "define-theme.el" (emacspeak-sounds-theme-directory theme)))
-
-(defun emacspeak-sounds-theme-p  (theme)
-  "Predicate to test if theme is available."
-  (file-exists-p (emacspeak-sounds-theme-definition theme)))
-
-(defun emacspeak-sounds-get-themes ()
-  "Get list of available sound themes."
-  (let (themes)
-    (dolist (item (directory-files emacspeak-sounds-directory nil "^[^.]") themes)
-      (when (emacspeak-sounds-theme-p item)
-        (push item themes)))
-    (nreverse themes)))
-
 (defgroup emacspeak-sounds nil
   "Emacspeak auditory icons."
   :group 'emacspeak)
 
-;;;###autoload
-(defcustom emacspeak-sounds-default-theme "3d"
+
+(defcustom emacspeak-sounds-default-theme
+  (expand-file-name "pan-chimes/" emacspeak-sounds-directory)
   "Default theme for auditory icons. "
-  :type (let ((menu '(choice)))
-          (dolist (item (emacspeak-sounds-get-themes) menu)
-            (push (list 'const item) menu))
-          (nreverse menu))
-  :set (lambda (symbol value)
-	 (custom-set-default symbol value)
-	 (emacspeak-sounds-select-theme value))
-  :initialize 'custom-initialize-default
+  :type '(directory :tag "Sound Theme Directory")
   :group 'emacspeak-sounds)
 
 
@@ -164,8 +138,8 @@ use `emacspeak-toggle-auditory-icons' bound to
   :type 'string)
 
 (defvar emacspeak-sounds-current-theme
-  (emacspeak-sounds-theme-directory emacspeak-sounds-default-theme)
-  "Directory path of current theme for auditory icons.
+  emacspeak-sounds-default-theme
+  "Name of current theme for auditory icons.
 Do not set this by hand;
 --use command \\[emacspeak-sounds-select-theme].")
 
@@ -182,20 +156,26 @@ Do not set this by hand;
         (load-source-file-function  nil))
     (cond
      ((emacspeak-sounds-theme-get-extension theme-name) t)
-     ((emacspeak-sounds-theme-p theme-name)
-      (load-file (emacspeak-sounds-theme-definition theme-name)))
+     ((file-exists-p (expand-file-name "define-theme.el" theme-name))
+      (load-file (expand-file-name "define-theme.el" theme-name)))
      (t (error "Theme %s is missing its configuration file. " theme-name)))))
+
+(defun emacspeak-sounds-theme-p  (theme)
+  "Predicate to test if theme is available."
+  (file-exists-p
+   (expand-file-name theme emacspeak-sounds-directory)))
 
 ;;;###autoload
 (defun emacspeak-sounds-select-theme  (theme)
   "Select theme for auditory icons."
   (interactive
    (list
-    (completing-read "Theme: " (emacspeak-sounds-get-themes)
-                     nil t nil nil
-                     emacspeak-sounds-default-theme)))
+    (expand-file-name
+     (read-directory-name "Theme: " emacspeak-sounds-directory))))
   (cl-declare (special emacspeak-sounds-current-theme emacspeak-sounds-themes-table))
-  (setq theme (emacspeak-sounds-theme-directory theme))
+  (setq theme (expand-file-name theme emacspeak-sounds-directory))
+  (unless (file-directory-p theme)
+    (setq theme  (file-name-directory theme)))
   (unless (file-exists-p theme)
     (error "Theme %s is not installed" theme))
   (setq emacspeak-sounds-current-theme theme)
@@ -252,35 +232,32 @@ Do not set this by hand;
 ;;}}}
 ;;{{{  Play an icon
 
-;;;###autoload
-(defcustom emacspeak-play-args nil
-  "Set this to -i  if using the play program that ships on sunos/solaris.
-Note: on sparc20's there is a sunos bug that causes the machine to crash if
-you attempt to play sound when /dev/audio is busy.
-It's imperative that you use the -i flag to play on
-sparc20's."
-  :type '(repeat string)
+
+(defcustom emacspeak-play-args "-q"
+  "Set this to nil if using paplay from pulseaudio."
+  :type '(choice (string :tag "Arguments" "-q")
+                 (const :tag "None" nil))
   :group 'emacspeak-sounds)
 
 (defun emacspeak-play-auditory-icon (sound-name)
   "Produce auditory icon SOUND-NAME."
-  (cl-declare (special emacspeak-play-program emacspeak-play-args))
+  (cl-declare (special emacspeak-play-program emacspeak-play-args
+                       emacspeak-sounds-directory))
   (let ((process-connection-type nil)
         (default-directory emacspeak-sounds-directory))
-    (condition-case err
-        (apply 'start-process
-               emacspeak-play-program nil emacspeak-play-program
-               (append emacspeak-play-args
-                       (list (emacspeak-get-sound-filename sound-name))))
-      (error
-       (message (error-message-string err))))))
-
+    (if emacspeak-play-args
+        (start-process
+         emacspeak-play-program nil emacspeak-play-program
+         emacspeak-play-args
+         (emacspeak-get-sound-filename sound-name))
+      (start-process
+       emacspeak-play-program nil emacspeak-play-program
+       (emacspeak-get-sound-filename sound-name)))))
 ;;;###autoload
 (defvar emacspeak-sox (executable-find "sox")
   "Name of SoX executable.")
 
 
-;;;###autoload
 (defcustom emacspeak-soxplay-command 
   (when(executable-find "play")
     (format "%s -v 1.2 %%s  earwax &" (executable-find "play")))
@@ -323,11 +300,11 @@ Native : Use Emacs' builtin sound support.
 Use Serve when working with remote speech servers."
   :group 'emacspeak-sounds
   :type '(choice
-          (const :tag "Native" emacspeak-native-auditory-icon)
-          (const :tag "Serve" emacspeak-serve-auditory-icon)
-          (const :tag "play" emacspeak-play-auditory-icon)
-          (const :tag "soxplay" emacspeak-soxplay-auditory-icon)
-          (const :tag "Queue" emacspeak-queue-auditory-icon)))
+          (const emacspeak-play-auditory-icon)
+          (const emacspeak-serve-auditory-icon)
+          (const emacspeak-play-auditory-icon)
+          (const emacspeak-soxplay-auditory-icon)
+          (const emacspeak-queue-auditory-icon)))
 
 ;;;###autoload
 (defun emacspeak-auditory-icon (icon)
@@ -364,10 +341,8 @@ Optional interactive PREFIX arg toggles global value."
 
 (defvar emacspeak-sounds-auditory-icon-players
   '("emacspeak-serve-auditory-icon"
-    "emacspeak-queue-auditory-icon"
-    "emacspeak-native-auditory-icon"
     "emacspeak-play-auditory-icon"
-    "emacspeak-soxplay-auditory-icon")
+    "emacspeak-play-auditory-icon")
   "Table of auditory icon players used  when selecting a player.")
 
 (defun emacspeak-select-auditory-icon-player ()

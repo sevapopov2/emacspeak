@@ -57,11 +57,8 @@
 (require 'cl-lib)
 (eval-when-compile (require 'subr-x))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
-(require 'dom)
 (require 'emacspeak-preamble)
-(require 'emacspeak-feeds)
 (require 'emacspeak-webutils)
-(require 'emacspeak-eww)
 (require 'gweb)
 (require 'g-utils)
 (require 'emacspeak-we)
@@ -1562,6 +1559,7 @@ template."
 ;;}}}
 ;;{{{Reddit At Point:
 
+(declare-function shr-url-at-point "shr" (image-url))
 (declare-function emacspeak-google-canonicalize-result-url "emacspeak-google" (url))
 (declare-function emacspeak-google-result-url-prefix "emacspeak-google" nil)
 
@@ -1572,7 +1570,8 @@ template."
  #'(lambda (_url)
      (let* ((u
              (or
-              (emacspeak-webutils-url-at-point nil)
+              (shr-url-at-point nil)
+              (browse-url-url-at-point)
               (read-from-minibuffer "URL:")))
             (url
              (if (string-prefix-p (emacspeak-google-result-url-prefix) u)

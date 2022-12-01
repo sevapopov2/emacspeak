@@ -17,8 +17,8 @@
 ;;; emacspeak-outline.el --- Speech enable Outline --   Browsing  Structured Documents  -*- lexical-binding: t; -*-
 ;;; $Id$
 ;;; $Author: tv.raman.tv $
-;;; Description: Emacspeak extensions for outline-mode
-;;; Keywords: emacspeak, audio interface to emacs Outlines
+;;; DescriptionEmacspeak extensions for outline-mode
+;;; Keywords:emacspeak, audio interface to emacs Outlines
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
@@ -201,7 +201,7 @@ commands. "
         (end nil))
     (funcall what  direction)
     (setq start (point))
-    (save-mark-and-excursion
+    (save-excursion
       (condition-case nil
           (progn
             (forward-line 1)
@@ -249,7 +249,7 @@ except that the outline section is  spoken"
   (interactive)
   (let ((start (point))
         (end nil))
-    (save-mark-and-excursion
+    (save-excursion
       (condition-case nil
           (progn
             (outline-next-visible-heading 1)

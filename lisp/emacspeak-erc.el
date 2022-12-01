@@ -81,7 +81,7 @@ server."
    (erc-inverse-face voice-lighten-extra)
    (erc-underline-face voice-brighten-medium)
    (erc-prompt-face voice-bolden)
-   (erc-notice-face voice-lighten)
+   (erc-notice-face (quote inaudible))
    (erc-action-face voice-monotone)
    (erc-error-face voice-bolden-and-animate)
    (erc-dangerous-host-face voice-brighten-extra)
@@ -100,8 +100,9 @@ server."
 
 (defadvice erc-mode (after emacspeak pre act comp)
   "Turn on voice lock mode."
+  (cl-declare (special voice-lock-mode))
   (emacspeak-pronounce-refresh-pronunciations)
-  (voice-lock-mode (if global-voice-lock-mode 1 -1)))
+  (setq voice-lock-mode t))
 
 (defadvice erc-select (after emacspeak pre act comp)
   "Provide auditory feedback."
@@ -148,7 +149,7 @@ spoken.")
   "Helper to prompt for and read person in ERC."
   (read-from-minibuffer
    (format "%s person" action)
-   (save-mark-and-excursion
+   (save-excursion
      (let ((start (point)))
        (search-backward  "<" (point-min) t)
        (when (not (= start (point)))
@@ -160,7 +161,7 @@ spoken.")
                                                quiten-pronunciation)
   "Add people to monitor in this room.
 Optional interactive prefix  arg defines a pronunciation that
-silences speaking of this person's name."
+  silences speaking of this perso's name."
   (interactive
    (list
     (emacspeak-erc-read-person "Add ")
@@ -297,7 +298,7 @@ set the current local value to the result.")
     ad-return-value))
 
 (defadvice erc-make-notice (around emacspeak  pre act comp)
-  "Ignore notices from server if emacspeak-erc-ignore-notices is set."
+  "Ignore notices from server is emacspeak-erc-ignore-notices it set."
   ad-do-it
   (cond
    ((not emacspeak-erc-ignore-notices) ad-return-value)

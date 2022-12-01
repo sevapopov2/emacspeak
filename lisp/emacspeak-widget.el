@@ -58,9 +58,7 @@
 (require 'wid-edit)
 (require 'emacspeak-speak)
 (require 'emacspeak-sounds)
-(require 'emacspeak-we)
 (require 'emacspeak-webutils)
-
 ;;}}}
 ;;{{{  Customize global behavior
 
@@ -171,11 +169,11 @@ Returns a string with appropriate personality."
   (let* ((inhibit-read-only t)
          (label (emacspeak-widget-label widget))
          (help-echo (emacspeak-widget-help-echo widget))
-         (v
-          (condition-case nil
-              (widget-value widget )
-            (error nil)))
-         (value (and v (prin1-to-string v 'no-escape))))
+         (v  (widget-value widget))
+         (value
+          (cond
+           ((null v) nil)
+           (t (prin1-to-string v 'no-escape)))))
     (when  value
       (put-text-property 0 (length value)
                          'personality voice-bolden value))
@@ -580,9 +578,7 @@ Returns a string with appropriate personality."
     (cond
      (widget                           ; First record some state:
       (let ((pos (ad-get-arg 0))
-            (old-position (point))
-            (old-buffer (current-buffer))
-            (inhibit-read-only t))
+            (old-position (point)))
         (cond
          ((and (eq major-mode 'eww-mode)
                emacspeak-webutils-url-at-point
@@ -594,10 +590,7 @@ Returns a string with appropriate personality."
           (call-interactively 'emacspeak-we-url-expand-and-execute))
          (t ad-do-it
             (cond
-             ((not (eq (current-buffer) old-buffer))
-              (emacspeak-auditory-icon 'large-movement)
-              (emacspeak-speak-mode-line))
-             ((= old-position (point )) ;did not move
+             ((= old-position (point)) ;did not move
               (emacspeak-auditory-icon 'button)
               (emacspeak-widget-summarize (widget-at pos)))
              (t  (emacspeak-auditory-icon 'large-movement)

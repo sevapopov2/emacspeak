@@ -64,7 +64,7 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(eval-when-compile (require 'lispy () 'no-error))
+(eval-when-compile (require 'lispy "lispy" 'no-error))
 
 ;;}}}
 ;;{{{ Map Faces:
@@ -181,7 +181,7 @@ Indicate  no movement if we did not move."
      "Provide auditory feedback."
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'item)
-       (save-mark-and-excursion
+       (save-excursion
          (forward-char 1)
          (emacspeak-speak-sexp))))))
 

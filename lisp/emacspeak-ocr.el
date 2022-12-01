@@ -347,7 +347,8 @@ For detailed help, invoke command emacspeak-ocr bound to
                        emacspeak-ocr-document-name
                        buffer-read-only))
   (let  ((buffer (emacspeak-ocr-get-buffer)))
-    (with-current-buffer buffer
+    (save-excursion
+      (set-buffer buffer)
       (emacspeak-ocr-mode)
       (when (file-exists-p emacspeak-ocr-working-directory)
         (cd emacspeak-ocr-working-directory))
@@ -453,7 +454,7 @@ The scanned image is converted to JPEG."
                (ems-interactive-p))
       (setq metadata
             (read-from-minibuffer "Enter picture description: "))
-      (let ((tempfile (format "temp%s.jpg" (cl-gensym))))
+      (let ((tempfile (format "temp%s.jpg" (gensym))))
         (shell-command
          (format  "mv %s %s; %s -c '%s' %s > %s; rm -f %s"
                   jpg  tempfile

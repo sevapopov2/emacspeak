@@ -110,7 +110,8 @@ Interactive XML browser.
                                    (list "--html")
                                  nil)
                                (list system-id)))))
-    (with-current-buffer buffer
+    (save-excursion
+      (set-buffer buffer)
       (emacspeak-xml-shell-mode)
       (run-hooks 'emacspeak-xml-shell-hooks)
       (setq emacspeak-xml-shell-process
@@ -156,7 +157,8 @@ Interactive XML browser.
 (defun emacspeak-xml-shell-navigate (xpath)
   "Navigate to the node specified by xpath."
   (cl-declare (special emacspeak-xml-shell-process))
-  (with-current-buffer (process-buffer emacspeak-xml-shell-process)
+  (save-excursion
+    (set-buffer (process-buffer emacspeak-xml-shell-process))
     (goto-char (point-max))
     (insert
      (format "cd %s"
@@ -205,7 +207,8 @@ and end."
      (let ((stream  ,accumulate)
            (processor (function ,post-processor))
            (done  ,terminator))
-       (with-current-buffer stream
+       (save-excursion
+         (set-buffer stream)
          (goto-char (point-max))
          (cond
           ((string-match done output)
@@ -219,7 +222,8 @@ and end."
            (funcall processor
                     (point-min) (point-max))
            (kill-buffer stream)
-           (with-current-buffer (process-buffer process)
+           (save-excursion
+             (set-buffer (process-buffer process))
              (goto-char (point-max))
              (comint-send-input)))
           (t (insert output)))))))
@@ -242,9 +246,11 @@ region of text to process."
   (let ((accumulator nil)
         (terminator nil)
         (accumulate (get-buffer-create "*xml-shell-accumulator*")))
-    (with-current-buffer accumulate
+    (save-excursion
+      (set-buffer accumulate)
       (erase-buffer))
-    (with-current-buffer (process-buffer emacspeak-xml-shell-process)
+    (save-excursion
+      (set-buffer (process-buffer emacspeak-xml-shell-process))
       (goto-char (process-mark emacspeak-xml-shell-process))
       (setq terminator (ems--this-line))
       (setq accumulator (emacspeak-xml-shell-create-accumulator
@@ -283,7 +289,7 @@ HTML head if none found."
      start end))
   (emacspeak-xml-shell-setup-html-base
    emacspeak-xml-shell-document)
-  (save-mark-and-excursion
+  (save-excursion
     (goto-char (point-min))
     (while (search-forward "-------" nil t)
       (replace-match "<br>")))

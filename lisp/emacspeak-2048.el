@@ -53,13 +53,7 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(require '2048-game () 'no-error)
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function 2048-print-board "ext:2048.el" ())
-(declare-function 2048-init-tile "ext:2048.el" (n))
-
+(require '2048-game "2048-game" 'no-error)
 ;;}}}
 ;;{{{ Push And Pop states:
 

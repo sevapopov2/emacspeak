@@ -15,7 +15,7 @@
 ;;{{{  Copyright:
 
 ;;; Initial version: Author: Igor B. Poretsky
-;;; <poretsky@mlbox.ru>
+;;; <master@goga.energo.ru>
 ;;; Updated and maintained by $Author: tv.raman.tv $
 ;;;
 ;;; This file is not part of GNU Emacs, but the same permissions apply.

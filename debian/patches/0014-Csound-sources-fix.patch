@@ -1,0 +1,40 @@
+From: "Igor B. Poretsky" <poretsky@rakurs.com>
+Date: Tue, 22 Nov 2022 17:25:37 +0300
+Subject: Csound sources fix
+
+---
+ sounds/3d/src/button.csd      | 4 ++--
+ sounds/3d/src/search-miss.csd | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/sounds/3d/src/button.csd b/sounds/3d/src/button.csd
+index b243ba5..bf038e6 100644
+--- a/sounds/3d/src/button.csd
++++ b/sounds/3d/src/button.csd
+@@ -1,5 +1,5 @@
+ <CsoundSynthesizer>
+-<C  sOptions>
++<CsOptions>
+   -o button.wav
+ </CsOptions>
+ <CsInstruments>
+@@ -9,7 +9,7 @@ nchnls	=		2
+ 
+ 		instr 2
+ kelev line 30, p3, 10
+-kampenv 	expseg 	.0001, .01, p4, .04, p3, .0001
++kampenv 	expseg 	.0001, .01, p4, .04, .01
+ asig 	rand 	kampenv
+ afilt 	reson 	asig, 1000, 5
+ aout 	balance 	afilt, asig
+diff --git a/sounds/3d/src/search-miss.csd b/sounds/3d/src/search-miss.csd
+index 7c1301d..47f96a8 100644
+--- a/sounds/3d/src/search-miss.csd
++++ b/sounds/3d/src/search-miss.csd
+@@ -1,5 +1,5 @@
+ <CsoundSynthesizer>
+-<C  sOptions>
++<CsOptions>
+ -o search-miss.wav
+ </CsOptions>
+ <CsInstruments>

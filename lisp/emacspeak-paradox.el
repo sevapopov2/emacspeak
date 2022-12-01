@@ -51,7 +51,7 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(eval-when-compile (require 'paradox () 'no-error))
+(eval-when-compile (require 'paradox "paradox" 'no-error))
 (require 'calendar)
 
 ;;}}}
@@ -96,7 +96,6 @@
 
 (defun emacspeak-paradox-mode-hook ()
   "Emacspeak setup hook for paradox-mode."
-  (cl-declare (special paradox-menu-mode-map))
   (define-key paradox-menu-mode-map " " 'emacspeak-paradox-summarize-line)
   (emacspeak-pronounce-add-buffer-local-dictionary-entry
    emacspeak-pronounce-date-yyyymmdd-pattern
