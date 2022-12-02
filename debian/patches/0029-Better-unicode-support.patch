@@ -102,10 +102,10 @@ index 389eefa..6ed9179 100644
                (set-text-properties pos (point) props))))))))
  
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 795fdfa..8eda5f2 100644
+index 545f017..05c6585 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -903,16 +903,18 @@ icon."
+@@ -904,16 +904,18 @@ icon."
   (eval
    `(defadvice ,f (before emacspeak pre act comp)
       "Speak the prompt"
@@ -135,10 +135,10 @@ index 795fdfa..8eda5f2 100644
  (defadvice read-char-choice (before emacspeak pre act comp)
    "Speak the prompt"
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 87eae41..07e2311 100644
+index 5a684a3..87e9856 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -1164,8 +1164,7 @@ spelled out  instead of being spoken."
+@@ -1186,8 +1186,7 @@ spelled out  instead of being spoken."
  
  (defun emacspeak-is-alpha-p (c)
    "Check if argument C is an alphabetic character."
@@ -148,7 +148,7 @@ index 87eae41..07e2311 100644
  
  ;;{{{  phonemic table
  
-@@ -1239,11 +1238,15 @@ spelled out  instead of being spoken."
+@@ -1261,11 +1260,15 @@ spelled out  instead of being spoken."
    "Return the phonetic string for this CHAR or its upper case equivalent.
  char is assumed to be one of a--z."
    (cl-declare (special emacspeak-char-to-phonetic-table))
@@ -169,7 +169,7 @@ index 87eae41..07e2311 100644
  
  ;;}}}
  ;;{{{ Speak Chars:
-@@ -1253,8 +1256,8 @@ char is assumed to be one of a--z."
+@@ -1275,8 +1278,8 @@ char is assumed to be one of a--z."
    (when char
      (cond
       ((emacspeak-is-alpha-p char) (dtk-letter (char-to-string char)))
@@ -179,7 +179,7 @@ index 87eae41..07e2311 100644
  ;;;###autoload
  (defun emacspeak-speak-char (&optional prefix)
    "Speak character under point.
-@@ -1270,7 +1273,6 @@ Pronounces character phonetically unless  called with a PREFIX arg."
+@@ -1292,7 +1295,6 @@ Pronounces character phonetically unless  called with a PREFIX arg."
      (when char
        (cond
         ((stringp display) (dtk-speak display))
