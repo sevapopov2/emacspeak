@@ -24,10 +24,10 @@ index 3f8739f..b75e2d4 100644
    "Directory where Emacspeak resource files
  such as pronunciation dictionaries are stored. ")
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 85c3d58..ebd0b16 100644
+index e28e3ce..ff42d23 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -3717,8 +3717,7 @@ This command  is designed for use in a windowing environment like X."
+@@ -3719,8 +3719,7 @@ This command  is designed for use in a windowing environment like X."
  (defun emacspeak-open-info ()
    "Open Emacspeak Info Manual."
    (interactive)

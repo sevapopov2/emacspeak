@@ -23,7 +23,7 @@ index 686daa9..d1afd6e 100644
        (setq size (nth 7 (file-attributes filename)))
                                          ; check for ange-ftp
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index ebd0b16..819ac41 100644
+index ff42d23..527b934 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -204,8 +204,8 @@ message area.  You can use command
