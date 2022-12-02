@@ -84,7 +84,7 @@ index 6ed9179..50d663c 100644
          (while (re-search-forward dtk-unicode-charset-filter-regexp nil t)
            (let* ((pos (match-beginning 0))
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 29a1d98..7a9c94c 100644
+index c0bb627..5aed21c 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
 @@ -266,7 +266,7 @@ When on a close delimiter, speaking matching open delimiter after a small delay.
@@ -255,7 +255,7 @@ index 29a1d98..7a9c94c 100644
           (goto-char (comint-line-beginning-position))
           (emacspeak-speak-line 1))
         (emacspeak-auditory-icon 'select-object)))))
-@@ -1283,7 +1283,7 @@ icon."
+@@ -1284,7 +1284,7 @@ icon."
    (cond
     ((ems-interactive-p)
      (ems-with-messages-silenced
@@ -264,7 +264,7 @@ index 29a1d98..7a9c94c 100644
         ad-do-it
         (if (> (point) prior)
             (tts-with-punctuations
-@@ -1335,7 +1335,7 @@ icon."
+@@ -1336,7 +1336,7 @@ icon."
    "Provide auditory feedback."
    (when (ems-interactive-p)
      (emacspeak-auditory-icon 'item)
@@ -273,7 +273,7 @@ index 29a1d98..7a9c94c 100644
        (comint-bol)
        (emacspeak-speak-line 1))))
  
-@@ -1641,7 +1641,7 @@ Shell-Dirtrack mode; turning it off does not re-enable it."
+@@ -1642,7 +1642,7 @@ Shell-Dirtrack mode; turning it off does not re-enable it."
    `(defadvice ,f (after emacspeak pre act comp)
       "Give some auditory feedback."
       (emacspeak-auditory-icon 'open-object)
@@ -282,7 +282,7 @@ index 29a1d98..7a9c94c 100644
         (goto-char (point-min))
         (emacspeak-speak-line)))))
  (cl-loop
-@@ -2426,8 +2426,8 @@ Produce an auditory icon if possible."
+@@ -2427,8 +2427,8 @@ Produce an auditory icon if possible."
     ((null isearch-success) (emacspeak-auditory-icon 'search-miss))
     (t
      (emacspeak-auditory-icon 'search-hit)
@@ -293,7 +293,7 @@ index 29a1d98..7a9c94c 100644
          (ems-set-personality-temporarily
           (point) isearch-other-end voice-bolden
           (dtk-speak
-@@ -2738,7 +2738,7 @@ Produce auditory icons if possible."
+@@ -2739,7 +2739,7 @@ Produce auditory icons if possible."
    (when buffer-read-only (dtk-speak "Buffer is read-only. "))
    (cond
     ((ems-interactive-p)
