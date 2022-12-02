@@ -3,20 +3,23 @@ Date: Tue, 8 Nov 2022 19:42:39 +0300
 Subject: Line reading mode control
 
 ---
- lisp/emacspeak-advice.el |  2 +-
+ lisp/emacspeak-advice.el |  5 +++--
  lisp/emacspeak-keymap.el |  1 +
- lisp/emacspeak-speak.el  | 27 +++++++++++++++++++++++++++
- 3 files changed, 29 insertions(+), 1 deletion(-)
+ lisp/emacspeak-speak.el  | 41 ++++++++++++++++++++++++++++++++++++++---
+ 3 files changed, 42 insertions(+), 5 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 85efc30..795fdfa 100644
+index 85efc30..545f017 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -195,7 +195,7 @@ beginning or end of a physical line produces an appropriate auditory icon."
+@@ -194,8 +194,9 @@ position of point is indicated via an aural highlight. Landing on the
+ beginning or end of a physical line produces an appropriate auditory icon."
       (when (ems-interactive-p)
         (cond
-         ((or line-move-visual visual-line-mode) (emacspeak-speak-visual-line))
+-        ((or line-move-visual visual-line-mode) (emacspeak-speak-visual-line))
 -        (t (emacspeak-speak-line)))))))
++        ((or line-move-visual visual-line-mode)
++         (emacspeak-speak-visual-line emacspeak-speak-line-reading-mode))
 +        (t (emacspeak-speak-line emacspeak-speak-line-reading-mode)))))))
  
  (defadvice kill-visual-line (before emacspeak pre act comp)
@@ -34,7 +37,7 @@ index 5c3d259..f7d2d52 100644
     ("C-s" dtk-notify-shutdown)
     )
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index ebfc3b6..c707ba2 100644
+index 8530add..766da7a 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -109,6 +109,33 @@
@@ -71,3 +74,33 @@ index ebfc3b6..c707ba2 100644
  ;;{{{  line, Word and Character echo
  
  (defcustom emacspeak-line-echo nil
+@@ -1041,9 +1068,13 @@ with auditory icon `more'.  These can then be spoken using command
+ ;;;###autoload
+ (defun emacspeak-speak-visual-line ()
+   "Speaks current visual line.
+-Cues the start of a physical line with auditory icon `left'."
+-  (interactive)
++Cues the start of a physical line with auditory icon `left'.
++With prefix ARG, speaks the rest of the visual line
++from point.  Negative prefix optional arg speaks from start
++of line to point."
++  (interactive "P")
+   (cl-declare (special dtk-stop-immediately emacspeak-show-point))
++  (when (listp arg) (setq arg (car arg)))
+   (when dtk-stop-immediately (dtk-stop))
+   (let ((inhibit-field-text-motion t)
+         (inhibit-read-only t)
+@@ -1061,8 +1092,12 @@ Cues the start of a physical line with auditory icon `left'."
+       (setq start (max (point) start))
+       (end-of-visual-line)
+       (setq end (min (point) end))
++      (cond
++       ((null arg))
++       ((> arg 0) (setq start orig))
++       (t (setq end orig)))
+       (setq line
+-            (if emacspeak-show-point
++            (if (and (null arg) emacspeak-show-point)
+                 (ems-set-personality-temporarily
+                  orig (1+ orig)
+                  voice-animate (buffer-substring start end))

@@ -240,7 +240,7 @@ index fb69b73..3d60da4 100644
  
  (defadvice python-check (after emacspeak pre act comp)
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 07e2311..9caf68f 100644
+index 87e9856..04418de 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -71,6 +71,14 @@

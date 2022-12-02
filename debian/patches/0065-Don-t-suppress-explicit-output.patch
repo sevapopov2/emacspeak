@@ -8,10 +8,10 @@ Subject: Don't suppress explicit output
  2 files changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 4506cc2..09fb0fe 100644
+index 265ffb6..ccd3f00 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -2825,9 +2825,9 @@ Produce auditory icons if possible."
+@@ -2826,9 +2826,9 @@ Produce auditory icons if possible."
       (cond
        ((ems-interactive-p)
         (ems-with-messages-silenced
