@@ -4,28 +4,26 @@ Subject: Line reading enhancement
 
 Distinguishable tones for various decorations.
 ---
- lisp/emacspeak-speak.el | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ lisp/emacspeak-speak.el | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 3bd4b6e..aa05a23 100644
+index 3bd4b6e..d668fb1 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -1082,7 +1082,7 @@ with auditory icon `more'.  These can then be spoken using command
-   "Speaks current visual line.
- Cues the start of a physical line with auditory icon `left'."
-   (interactive)
--  (cl-declare (special dtk-stop-immediately emacspeak-show-point))
-+  (cl-declare (special dtk-stop-immediately emacspeak-show-point emacspeak-speak-space-regexp))
-   (when dtk-stop-immediately (dtk-stop))
+@@ -1087,8 +1087,8 @@ Cues the start of a physical line with auditory icon `left'."
    (let ((inhibit-field-text-motion t)
          (deactivate-mark nil)
-@@ -1096,18 +1096,34 @@ Cues the start of a physical line with auditory icon `left'."
-     (cond
-      ((looking-at "^ *") (emacspeak-auditory-icon 'left))
+         (inhibit-read-only t)
+-        (start nil)
+-        (end nil)
++        (start (line-beginning-position))
++        (end (line-end-position))
+         (inhibit-point-motion-hooks t)
+         (inhibit-modification-hooks t)
+         (line nil)
+@@ -1098,16 +1098,30 @@ Cues the start of a physical line with auditory icon `left'."
       ((looking-at " *$") (emacspeak-auditory-icon 'right)))
-+    (setq start (line-beginning-position)
-+          end (line-end-position))
      (save-excursion
        (beginning-of-visual-line)
 -      (setq start (point))
@@ -43,7 +41,7 @@ index 3bd4b6e..aa05a23 100644
 +      (cond
 +       ((string-equal ""  line)
 +        (dtk-tone 130.8   75 'force))
-+       ((string-match  emacspeak-speak-space-regexp  line)
++       ((string-match  emacspeak-speak-blank-line-regexp  line)
 +        (dtk-tone 261.6   75 'force))
 +       ((and (not (eq 'all dtk-punctuation-mode))
 +             (string-match  emacspeak-horizontal-rule line))
