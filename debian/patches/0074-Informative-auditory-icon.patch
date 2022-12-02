@@ -7,10 +7,10 @@ Subject: Informative auditory icon
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index cfae2d9..c61ac34 100644
+index da24fdb..12e0d24 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -2830,7 +2830,9 @@ Produce auditory icons if possible."
+@@ -2831,7 +2831,9 @@ Produce auditory icons if possible."
  (defadvice overwrite-mode (after emacspeak pre act comp)
    "Provide auditory indication that overwrite mode has changed."
    (when (ems-interactive-p)
