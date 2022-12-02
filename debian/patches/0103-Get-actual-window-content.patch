@@ -8,10 +8,10 @@ Subject: Get actual window content
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 74aea46..31c2e81 100644
+index c1fe01e..24d590b 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -2797,7 +2797,7 @@ Otherwise just display a message."
+@@ -2795,7 +2795,7 @@ Otherwise just display a message."
    "Speak contents of current window.
  Speaks entire window irrespective of point."
    (interactive)
@@ -20,7 +20,7 @@ index 74aea46..31c2e81 100644
  
  ;;;###autoload
  (defun emacspeak-speak-other-window (&optional arg)
-@@ -2814,7 +2814,7 @@ Optional argument ARG  specifies `other' window to speak."
+@@ -2812,7 +2812,7 @@ Optional argument ARG  specifies `other' window to speak."
          (set-buffer (window-buffer))
          (emacspeak-speak-region
           (max (point-min) (window-start))
@@ -29,7 +29,7 @@ index 74aea46..31c2e81 100644
  
  ;;;###autoload
  (defun emacspeak-speak-next-window ()
-@@ -2917,7 +2917,7 @@ Semantics  of `other' is the same as for the builtin Emacs command
+@@ -2915,7 +2915,7 @@ Semantics  of `other' is the same as for the builtin Emacs command
      (save-excursion
        (save-window-excursion
          (other-window window)
