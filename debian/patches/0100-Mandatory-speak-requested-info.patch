@@ -7,10 +7,10 @@ Subject: Mandatory speak requested info
  1 file changed, 23 insertions(+), 10 deletions(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 819ac41..6e04d74 100644
+index 527b934..819915b 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -1983,7 +1983,15 @@ Optional  interactive prefix arg `copy-as-kill' copies spoken info to kill ring.
+@@ -1985,7 +1985,15 @@ Optional  interactive prefix arg `copy-as-kill' copies spoken info to kill ring.
      (when copy-as-kill (kill-new info))
      (dtk-speak (concat info cs))))
  
@@ -27,7 +27,7 @@ index 819ac41..6e04d74 100644
  
  ;;;###autoload
  (defun emacspeak-speak-buffer-filename (&optional filename)
-@@ -2716,13 +2724,18 @@ set the current local value to the result.")
+@@ -2718,13 +2726,18 @@ set the current local value to the result.")
  (defun emacspeak-speak-current-column ()
    "Speak the current column."
    (interactive)
@@ -49,7 +49,7 @@ index 819ac41..6e04d74 100644
  
  ;;}}}
  ;;{{{  Speak the last message again:
-@@ -2778,12 +2791,12 @@ Otherwise just display a message."
+@@ -2780,12 +2793,12 @@ Otherwise just display a message."
  (defun emacspeak-speak-window-information ()
    "Speaks information about current window."
    (interactive)

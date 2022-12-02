@@ -124,7 +124,7 @@ index 16de865..c25bf3c 100644
          (setq o-open (car (overlays-at (point))))
          (next-line 1)
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 842995d..371d573 100644
+index 8627350..576adf9 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -320,7 +320,8 @@ normally bound to \\[emacspeak-table-display-table-in-region]."
@@ -183,7 +183,7 @@ index 842995d..371d573 100644
          (inhibit-read-only t)
          (start (line-beginning-position))
          (end (line-end-position))
-@@ -1388,6 +1393,7 @@ Negative prefix arg speaks from start of sentence to point."
+@@ -1390,6 +1395,7 @@ Negative prefix arg speaks from start of sentence to point."
    (when (listp arg) (setq arg (car arg)))
    (save-excursion
      (let ((orig (point))
@@ -191,7 +191,7 @@ index 842995d..371d573 100644
            (inhibit-point-motion-hooks t)
            (inhibit-modification-hooks t)
            (start nil)
-@@ -1412,6 +1418,7 @@ Negative prefix arg speaks from start of sexp to point. "
+@@ -1414,6 +1420,7 @@ Negative prefix arg speaks from start of sexp to point. "
    (when (listp arg) (setq arg (car arg)))
    (save-excursion
      (let ((orig (point))
@@ -199,7 +199,7 @@ index 842995d..371d573 100644
            (inhibit-point-motion-hooks t)
            (inhibit-modification-hooks t)
            (start nil)
-@@ -1441,6 +1448,7 @@ If option  `voice-lock-mode' is on, then it will use any defined personality."
+@@ -1443,6 +1450,7 @@ If option  `voice-lock-mode' is on, then it will use any defined personality."
    (when (listp arg) (setq arg (car arg)))
    (save-excursion
      (let ((orig (point))
@@ -207,7 +207,7 @@ index 842995d..371d573 100644
            (inhibit-point-motion-hooks t)
            (start nil)
            (end nil))
-@@ -1464,6 +1472,7 @@ If voice-lock-mode is on, then it will use any defined personality. "
+@@ -1466,6 +1474,7 @@ If voice-lock-mode is on, then it will use any defined personality. "
    (when (listp arg) (setq arg (car arg)))
    (save-excursion
      (let ((orig (point))
@@ -215,7 +215,7 @@ index 842995d..371d573 100644
            (inhibit-point-motion-hooks t)
            (start nil)
            (end nil))
-@@ -1540,7 +1549,8 @@ Useful to listen to a buffer without switching  contexts."
+@@ -1542,7 +1551,8 @@ Useful to listen to a buffer without switching  contexts."
  With prefix arg, speaks the rest of the buffer from point.
  Negative prefix arg speaks from start of buffer to point."
    (interactive "P")
@@ -225,7 +225,7 @@ index 842995d..371d573 100644
      (cond
       (help-buffer
        (emacspeak-auditory-icon 'help)
-@@ -1558,7 +1568,8 @@ Negative prefix arg speaks from start of buffer to point."
+@@ -1560,7 +1570,8 @@ Negative prefix arg speaks from start of buffer to point."
   With prefix arg, speaks the rest of the buffer from point.
  Negative prefix arg speaks from start of buffer to point."
    (interactive "P")
@@ -235,7 +235,7 @@ index 842995d..371d573 100644
      (save-current-buffer
        (set-buffer minibuff)
        (emacspeak-speak-buffer arg))))
-@@ -1566,7 +1577,7 @@ Negative prefix arg speaks from start of buffer to point."
+@@ -1568,7 +1579,7 @@ Negative prefix arg speaks from start of buffer to point."
  ;;;###autoload
  (defun emacspeak-get-current-completion ()
    "Return the completion string under point in the *Completions* buffer."
@@ -244,7 +244,7 @@ index 842995d..371d573 100644
      (if (and (not (eobp)) (get-text-property (point) 'mouse-face))
          (setq end (point) beg (1+ (point))))
      (if (and (not (bobp)) (get-text-property (1- (point)) 'mouse-face))
-@@ -1793,12 +1804,15 @@ semantic to do the work."
+@@ -1795,12 +1806,15 @@ semantic to do the work."
  
  (defun emacspeak-speak-buffer-info ()
    "Speak buffer information."
@@ -266,7 +266,7 @@ index 842995d..371d573 100644
  (voice-setup-map-face 'header-line 'voice-bolden)
  
  (defun emacspeak--sox-multiwindow (corners)
-@@ -1878,6 +1892,7 @@ Interactive prefix arg speaks buffer info."
+@@ -1880,6 +1894,7 @@ Interactive prefix arg speaks buffer info."
       (buffer-info (emacspeak-speak-buffer-info))
       (t                                 ; main branch
        (let ((global-info (downcase (format-mode-line global-mode-string)))
@@ -274,7 +274,7 @@ index 842995d..371d573 100644
              (window-count (length (window-list)))
              (vc-state (when vc-mode (vc-state (buffer-file-name))))
              (frame-info (emacspeak-get-voicefied-frame-info (selected-frame)))
-@@ -1953,16 +1968,18 @@ Optional  interactive prefix arg `copy-as-kill' copies spoken info to kill ring.
+@@ -1955,16 +1970,18 @@ Optional  interactive prefix arg `copy-as-kill' copies spoken info to kill ring.
    (interactive "P")
    (cl-declare (special minor-mode-alist))
    (force-mode-line-update)
@@ -303,7 +303,7 @@ index 842995d..371d573 100644
      (when copy-as-kill (kill-new info))
      (dtk-speak (concat info cs))))
  
-@@ -1977,7 +1994,8 @@ Interactive prefix arg `filename' speaks only the final path
+@@ -1979,7 +1996,8 @@ Interactive prefix arg `filename' speaks only the final path
  component.
  The result is put in the kill ring for convenience."
    (interactive "P")
@@ -313,7 +313,7 @@ index 842995d..371d573 100644
                        default-directory)))
      (when filename
        (setq location
-@@ -2136,14 +2154,15 @@ Second interactive prefix sets clock to new timezone."
+@@ -2138,14 +2156,15 @@ Second interactive prefix sets clock to new timezone."
    (interactive "P")
    (cl-declare (special emacspeak-speak-time-format-string))
    (emacspeak-auditory-icon 'time)
@@ -337,7 +337,7 @@ index 842995d..371d573 100644
  
  ;;;###autoload
  (defun emacspeak-speak-seconds-since-epoch (seconds)
-@@ -2235,7 +2254,8 @@ text that will be yanked as a result of a \\[yank] followed by count-1
+@@ -2237,7 +2256,8 @@ text that will be yanked as a result of a \\[yank] followed by count-1
  \\[yank-pop] be spoken. The kill number that is spoken says what
  numeric prefix arg to give to command yank."
    (interactive "p")
@@ -347,7 +347,7 @@ index 842995d..371d573 100644
           (format "kill %s "
                   (if current-prefix-arg (+ 1 count) 1))))
      (put-text-property 0 (length context)
-@@ -2338,6 +2358,7 @@ by a change in voice personality."
+@@ -2340,6 +2360,7 @@ by a change in voice personality."
      (error "Not that many marks in this buffer"))
    (let ((line nil)
          (pos nil)
@@ -355,7 +355,7 @@ index 842995d..371d573 100644
          (context
           (format "mark %s "
                   (if current-prefix-arg count 0))))
-@@ -2744,7 +2765,8 @@ Otherwise just display a message."
+@@ -2746,7 +2767,8 @@ Otherwise just display a message."
  ;;Return current window contents
  (defun emacspeak-get-window-contents ()
    "Return window contents."
