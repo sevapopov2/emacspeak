@@ -3,15 +3,16 @@ Date: Fri, 25 Nov 2022 14:57:05 +0300
 Subject: Visual line reading enhancement
 
 Distinguishable tones for various decorations.
+More reliable auditory icon indication.
 ---
- lisp/emacspeak-speak.el | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ lisp/emacspeak-speak.el | 32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index ebfc3b6..8530add 100644
+index ebfc3b6..16f314d 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -1047,8 +1047,8 @@ Cues the start of a physical line with auditory icon `left'."
+@@ -1047,27 +1047,43 @@ Cues the start of a physical line with auditory icon `left'."
    (when dtk-stop-immediately (dtk-stop))
    (let ((inhibit-field-text-motion t)
          (inhibit-read-only t)
@@ -22,8 +23,10 @@ index ebfc3b6..8530add 100644
          (inhibit-point-motion-hooks t)
          (inhibit-modification-hooks t)
          (line nil)
-@@ -1058,16 +1058,30 @@ Cues the start of a physical line with auditory icon `left'."
-      ((looking-at " *$") (emacspeak-auditory-icon 'right)))
+         (orig (point)))
+-    (cond
+-     ((looking-at "^ *") (emacspeak-auditory-icon 'left))
+-     ((looking-at " *$") (emacspeak-auditory-icon 'right)))
      (save-excursion
        (beginning-of-visual-line)
 -      (setq start (point))
@@ -31,6 +34,11 @@ index ebfc3b6..8530add 100644
        (end-of-visual-line)
 -      (setq end (point))
 +      (setq end (min (point) end))
++      (cond
++       ((and (= start (line-beginning-position)) (< end (line-end-position)))
++        (emacspeak-auditory-icon 'left))
++       ((and (> start (line-beginning-position)) (= end (line-end-position)))
++        (emacspeak-auditory-icon 'right)))
        (setq line
              (if emacspeak-show-point
                  (ems-set-personality-temporarily
