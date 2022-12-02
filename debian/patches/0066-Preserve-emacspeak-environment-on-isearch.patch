@@ -7,7 +7,7 @@ Subject: Preserve emacspeak environment on isearch
  1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index a30555f..2937dd3 100644
+index ed75909..4c0794c 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
 @@ -71,6 +71,7 @@
@@ -18,7 +18,7 @@ index a30555f..2937dd3 100644
  (require 'voice-setup)
  (require 'dtk-speak)
  (require 'emacspeak-pronounce)
-@@ -2352,16 +2353,22 @@ Produce an auditory icon if possible."
+@@ -2353,16 +2354,22 @@ Produce an auditory icon if possible."
  ;;; ISearch setup/teardown
  
  ;;; Produce auditory icon

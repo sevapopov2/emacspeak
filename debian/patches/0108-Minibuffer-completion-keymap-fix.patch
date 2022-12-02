@@ -7,10 +7,10 @@ Subject: Minibuffer completion keymap fix
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 22e854b..f49169b 100644
+index 04b972c..a776f96 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -3688,7 +3688,7 @@ This command  is designed for use in a windowing environment like X."
+@@ -3696,7 +3696,7 @@ This command  is designed for use in a windowing environment like X."
  (define-key minibuffer-local-completion-map "\C-p" 'emacspeak-minibuffer-previous-completion)
  (define-key minibuffer-local-completion-map (kbd "C-@") 'emacspeak-minibuffer-choose-completion)
  (define-key minibuffer-local-completion-map
