@@ -357,7 +357,7 @@ index c1d9450..70ebde9 100644
  (defmacro ems-with-messages-silenced (&rest body)
    "Evaluate body  after temporarily silencing auditory error feedback."
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index c065f0a..97c7261 100644
+index 3097c95..a81afdb 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
 @@ -82,6 +82,10 @@
@@ -371,7 +371,7 @@ index c065f0a..97c7261 100644
  ;;}}}
  ;;{{{ Silence advice chatter:
  
-@@ -731,7 +735,6 @@ icon."
+@@ -732,7 +736,6 @@ icon."
    (when emacspeak-advice-progress-reporter
      (emacspeak-auditory-icon 'progress)))
  
@@ -379,7 +379,7 @@ index c065f0a..97c7261 100644
  (cl-loop
   for f in '(minibuffer-message message display-message-or-buffer) do
   (eval
-@@ -765,9 +768,11 @@ icon."
+@@ -766,9 +769,11 @@ icon."
  
  (eval-after-load "eldoc"
    `(progn
@@ -643,7 +643,7 @@ index 426a3ea..3ab405b 100644
    "Silence messages while installing packages. "
    (ems-with-messages-silenced ad-do-it)
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 9caf68f..ada19db 100644
+index 09db9ce..842995d 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -73,6 +73,7 @@

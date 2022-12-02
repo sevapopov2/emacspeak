@@ -39,7 +39,7 @@ index a63bb26..02dd44d 100644
  
  ;;}}}
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 50c1f49..3659d18 100644
+index d10f76f..85c3d58 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -472,7 +472,7 @@ Useful to do this before you listen to an entire buffer."

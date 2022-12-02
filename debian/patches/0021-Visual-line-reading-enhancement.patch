@@ -1,6 +1,6 @@
 From: "Igor B. Poretsky" <poretsky@rakurs.com>
 Date: Fri, 25 Nov 2022 14:57:05 +0300
-Subject: Line reading enhancement
+Subject: Visual line reading enhancement
 
 Distinguishable tones for various decorations.
 ---
@@ -8,12 +8,12 @@ Distinguishable tones for various decorations.
  1 file changed, 19 insertions(+), 5 deletions(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index a80fbfa..9a4841b 100644
+index ebfc3b6..8530add 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -1088,8 +1088,8 @@ Cues the start of a physical line with auditory icon `left'."
+@@ -1047,8 +1047,8 @@ Cues the start of a physical line with auditory icon `left'."
+   (when dtk-stop-immediately (dtk-stop))
    (let ((inhibit-field-text-motion t)
-         (deactivate-mark nil)
          (inhibit-read-only t)
 -        (start nil)
 -        (end nil)
@@ -22,7 +22,7 @@ index a80fbfa..9a4841b 100644
          (inhibit-point-motion-hooks t)
          (inhibit-modification-hooks t)
          (line nil)
-@@ -1099,16 +1099,30 @@ Cues the start of a physical line with auditory icon `left'."
+@@ -1058,16 +1058,30 @@ Cues the start of a physical line with auditory icon `left'."
       ((looking-at " *$") (emacspeak-auditory-icon 'right)))
      (save-excursion
        (beginning-of-visual-line)

@@ -7,10 +7,10 @@ Subject: Completions feedback enhancement
  1 file changed, 47 insertions(+), 33 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 29ca1e1..99c4f68 100644
+index d2ed010..45b733b 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -649,24 +649,20 @@ see option emacspeak-untabify-fixes-non-breaking-space."
+@@ -650,24 +650,20 @@ see option emacspeak-untabify-fixes-non-breaking-space."
  
  ;;}}}
  ;;{{{ Advice hippie expand:
@@ -49,7 +49,7 @@ index 29ca1e1..99c4f68 100644
  
  ;;}}}
  ;;{{{ advice minibuffer to speak
-@@ -936,6 +932,39 @@ icon."
+@@ -937,6 +933,39 @@ icon."
  
  ;;}}}
  ;;{{{ advice completion functions to speak:
@@ -89,7 +89,7 @@ index 29ca1e1..99c4f68 100644
  (cl-loop
   for f in
   '(dabbrev-expand dabbrev-completion)
-@@ -998,21 +1027,6 @@ icon."
+@@ -999,21 +1028,6 @@ icon."
    (emacspeak-auditory-icon 'select-object)
    (dtk-speak (emacspeak-get-current-completion)))
  
