@@ -7,10 +7,10 @@ Subject: More questions support
  1 file changed, 15 insertions(+)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 816a656..3bae929 100644
+index e1caa6f..41afc59 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -3009,6 +3009,21 @@ Produce auditory icons if possible."
+@@ -3010,6 +3010,21 @@ Produce auditory icons if possible."
      (emacspeak-auditory-icon 'yes-answer))
     (t (emacspeak-auditory-icon 'no-answer))))
  
