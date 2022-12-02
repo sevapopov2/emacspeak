@@ -1,3 +1,13 @@
+emacspeak (1:50.0-18buster1) buster; urgency=medium
+
+  * Visual line reading fix.
+  * Line reading mode control has been made available for visual lines
+    as well.
+  * improved visual line position indication with auditory icons.
+  * Respect output filters when speaking comint buffer.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 02 Dec 2022 20:01:16 +0300
+
 emacspeak (1:50.0-17buster1) buster; urgency=high
 
   * Startup error fix.
