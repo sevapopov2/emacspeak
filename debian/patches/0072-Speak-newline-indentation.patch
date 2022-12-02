@@ -7,10 +7,10 @@ Subject: Speak newline indentation
  1 file changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 0691008..00a5187 100644
+index 516e6ec..7571376 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -2007,11 +2007,15 @@ the newly created  line."
+@@ -2008,11 +2008,15 @@ the newly created  line."
       (cond
        ((ems-interactive-p)
         (cond
