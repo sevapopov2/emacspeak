@@ -7,7 +7,7 @@ Subject: Don't speak messages by default
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index c707ba2..87eae41 100644
+index 766da7a..5a684a3 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -181,7 +181,7 @@ current local  value to the result.")

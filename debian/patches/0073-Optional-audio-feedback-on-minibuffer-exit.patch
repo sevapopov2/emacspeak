@@ -7,10 +7,10 @@ Subject: Optional audio feedback on minibuffer exit
  1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index d444503..bb8dcb5 100644
+index 00a5187..7f7aa3c 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -2651,6 +2651,12 @@ Produce auditory icons if possible."
+@@ -2652,6 +2652,12 @@ Produce auditory icons if possible."
  ;;}}}
  ;;{{{ setup minibuffer hooks:
  
@@ -23,7 +23,7 @@ index d444503..bb8dcb5 100644
  (defun emacspeak-minibuffer-setup-hook ()
    "Actions to take when entering the minibuffer with emacspeak running."
    (cl-declare (special minibuffer-exit-hook minibuffer-default))
-@@ -2673,7 +2679,8 @@ Produce auditory icons if possible."
+@@ -2674,7 +2680,8 @@ Produce auditory icons if possible."
  (defun emacspeak-minibuffer-exit-hook ()
    "Actions performed when exiting the minibuffer with Emacspeak loaded."
    (dtk-stop)

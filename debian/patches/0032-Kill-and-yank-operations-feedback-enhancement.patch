@@ -7,10 +7,10 @@ Subject: Kill and yank operations feedback enhancement
  1 file changed, 30 insertions(+), 18 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index e457b31..29ca1e1 100644
+index cddd4d9..d2ed010 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -546,16 +546,31 @@ the words that were capitalized."
+@@ -547,16 +547,31 @@ the words that were capitalized."
          (dtk-tone-deletion)
          (emacspeak-speak-region (point) start)))))
  
@@ -50,7 +50,7 @@ index e457b31..29ca1e1 100644
  
  (defadvice kill-sexp (before emacspeak pre act comp)
    "Speak the sexp you killed."
-@@ -566,15 +581,6 @@ the words that were capitalized."
+@@ -567,15 +582,6 @@ the words that were capitalized."
        (dtk-tone-deletion)
        (emacspeak-speak-sexp 1))))
  
@@ -66,7 +66,7 @@ index e457b31..29ca1e1 100644
  (defadvice delete-blank-lines (before emacspeak pre act comp)
    "Provide auditory feedback."
    (when (ems-interactive-p)
-@@ -2308,7 +2314,8 @@ Produce an auditory icon if possible."
+@@ -2309,7 +2315,8 @@ Produce an auditory icon if possible."
  
  (cl-loop
   for f in
@@ -76,7 +76,7 @@ index e457b31..29ca1e1 100644
   do
   (eval
    `(defadvice ,f (after emacspeak pre act comp)
-@@ -2318,6 +2325,11 @@ Produce an auditory icon if possible."
+@@ -2319,6 +2326,11 @@ Produce an auditory icon if possible."
         (emacspeak-auditory-icon 'yank-object)
         (emacspeak-speak-region (mark 'force) (point))))))
  

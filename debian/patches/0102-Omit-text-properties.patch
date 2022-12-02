@@ -7,10 +7,10 @@ Subject: Omit text properties
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 24bf1cb..aa08831 100644
+index 9b45261..052e826 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -1579,7 +1579,7 @@ Negative prefix arg speaks from start of buffer to point."
+@@ -1587,7 +1587,7 @@ Negative prefix arg speaks from start of buffer to point."
                 (previous-single-property-change beg 'mouse-face)
                 (point-min)))
      (setq end (or (next-single-property-change end 'mouse-face) (point-max)))
