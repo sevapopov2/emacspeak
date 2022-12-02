@@ -7,10 +7,10 @@ Subject: Removed redundant function
  1 file changed, 24 deletions(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 8c372ee..9b45261 100644
+index 1e0e3ba..bc84f2f 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -3294,30 +3294,6 @@ Argument O specifies overlay."
+@@ -3296,30 +3296,6 @@ Argument O specifies overlay."
                 (1+ (- orig start)) (- end start))))))
  
  ;;}}}

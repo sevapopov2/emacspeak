@@ -7,10 +7,10 @@ Subject: Info buffer header speaking fix
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 0d722b4..6e6aed2 100644
+index d58a643..02ad8b4 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -1885,7 +1885,9 @@ Interactive prefix arg speaks buffer info."
+@@ -1887,7 +1887,9 @@ Interactive prefix arg speaks buffer info."
      (when emacspeak-mail-alert (emacspeak-mail-alert-user))
      (cond
       ((and header-line-format (not (called-interactively-p 'interactive)))
