@@ -9,7 +9,7 @@ Subject: Preserve text marks
  3 files changed, 94 insertions(+), 62 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 59a95c5..4b96833 100644
+index a12dea4..32c2ec2 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
 @@ -742,6 +742,7 @@ icon."
@@ -52,7 +52,7 @@ index 59a95c5..4b96833 100644
          ad-do-it
          (if (> (point) prior)
              (tts-with-punctuations
-@@ -3000,16 +3004,14 @@ Produce auditory icons if possible."
+@@ -3001,16 +3005,14 @@ Produce auditory icons if possible."
  ;;}}}
  ;;{{{ Asking Questions:
  
@@ -77,7 +77,7 @@ index 59a95c5..4b96833 100644
  
  (cl-loop for f in
        '(map-y-or-n-p
-@@ -3040,15 +3042,21 @@ Produce auditory icons if possible."
+@@ -3041,15 +3043,21 @@ Produce auditory icons if possible."
    "Play auditory icon."
    (emacspeak-auditory-icon 'help))
  

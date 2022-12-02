@@ -3,11 +3,11 @@ Date: Wed, 9 Nov 2022 17:04:20 +0300
 Subject: Comint support enhancement
 
 ---
- lisp/emacspeak-advice.el | 89 ++++++++++++++++--------------------------------
- 1 file changed, 30 insertions(+), 59 deletions(-)
+ lisp/emacspeak-advice.el | 98 +++++++++++++++++-------------------------------
+ 1 file changed, 35 insertions(+), 63 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 45b733b..3097c95 100644
+index 45b733b..ac08d46 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
 @@ -1200,21 +1200,24 @@ icon."
@@ -48,7 +48,7 @@ index 45b733b..3097c95 100644
  
  (defadvice comint-show-output (after emacspeak pre act comp)
    "Speak the line showing where point is."
-@@ -1239,13 +1242,6 @@ icon."
+@@ -1239,25 +1242,19 @@ icon."
        (emacspeak-speak-line)
        (emacspeak-auditory-icon 'select-object))))
  
@@ -61,8 +61,25 @@ index 45b733b..3097c95 100644
 -
  (defadvice comint-output-filter (around emacspeak pre act comp)
    "Make comint speak its output."
-   (let ((monitor emacspeak-comint-output-monitor)
-@@ -1290,45 +1286,20 @@ icon."
+-  (let ((monitor emacspeak-comint-output-monitor)
+-        (buffer (process-buffer (ad-get-arg 0)))
+-        (dtk-stop-immediately nil))
++  (let* ((monitor emacspeak-comint-output-monitor)
++         (process (ad-get-arg 0))
++         (buffer (process-buffer process))
++         (dtk-stop-immediately nil))
+     (with-current-buffer buffer
+       ad-do-it
+       (when
+           (and comint-last-output-start
+                emacspeak-comint-autospeak
+                (or monitor (eq (window-buffer) buffer)))
+-        (dtk-speak (ad-get-arg 1)))
++        (dtk-speak (buffer-substring comint-last-output-start (process-mark process))))
+       ad-return-value)))
+ 
+ (defadvice comint-dynamic-list-completions (around emacspeak pre act comp)
+@@ -1290,45 +1287,20 @@ icon."
     (t ad-do-it))
    ad-return-value)
  
