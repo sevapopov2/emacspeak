@@ -1572,7 +1572,7 @@ index d1af791..aaf5f9a 100644
            (column (emacspeak-solitaire-current-column))
            (cells nil))
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index f202812..ca64574 100644
+index 3389f6d..6c81652 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -408,7 +408,7 @@ Argument BODY specifies forms to execute."
@@ -1593,16 +1593,16 @@ index f202812..ca64574 100644
        (goto-char (point-min))
        (condition-case nil
            (let ((start nil)
-@@ -1098,7 +1098,7 @@ Cues the start of a physical line with auditory icon `left'."
+@@ -1096,7 +1096,7 @@ Cues the start of a physical line with auditory icon `left'."
+     (cond
+      ((looking-at "^ *") (emacspeak-auditory-icon 'left))
       ((looking-at " *$") (emacspeak-auditory-icon 'right)))
-     (setq start (line-beginning-position)
-           end (line-end-position))
 -    (save-excursion
 +    (save-mark-and-excursion
        (beginning-of-visual-line)
        (setq start (max (point) start))
        (end-of-visual-line)
-@@ -1167,7 +1167,7 @@ spelled out  instead of being spoken."
+@@ -1165,7 +1165,7 @@ spelled out  instead of being spoken."
    (cl-declare (special emacspeak-speak-last-spoken-word-position))
    (when (listp arg) (setq arg (car arg)))
    (emacspeak-handle-action-at-point)
@@ -1611,7 +1611,7 @@ index f202812..ca64574 100644
      (let ((orig (point))
            (inhibit-point-motion-hooks t)
            (inhibit-modification-hooks t)
-@@ -1384,7 +1384,7 @@ With prefix ARG, speaks the rest of the sentence  from point.
+@@ -1382,7 +1382,7 @@ With prefix ARG, speaks the rest of the sentence  from point.
  Negative prefix arg speaks from start of sentence to point."
    (interactive "P")
    (when (listp arg) (setq arg (car arg)))
@@ -1620,7 +1620,7 @@ index f202812..ca64574 100644
      (let ((orig (point))
            (deactivate-mark nil)
            (inhibit-point-motion-hooks t)
-@@ -1409,7 +1409,7 @@ With prefix ARG, speaks the rest of the sexp  from point.
+@@ -1407,7 +1407,7 @@ With prefix ARG, speaks the rest of the sexp  from point.
  Negative prefix arg speaks from start of sexp to point. "
    (interactive "P")
    (when (listp arg) (setq arg (car arg)))
@@ -1629,7 +1629,7 @@ index f202812..ca64574 100644
      (let ((orig (point))
            (deactivate-mark nil)
            (inhibit-point-motion-hooks t)
-@@ -1439,7 +1439,7 @@ Negative prefix arg will read from start of current page to point.
+@@ -1437,7 +1437,7 @@ Negative prefix arg will read from start of current page to point.
  If option  `voice-lock-mode' is on, then it will use any defined personality."
    (interactive "P")
    (when (listp arg) (setq arg (car arg)))
@@ -1638,7 +1638,7 @@ index f202812..ca64574 100644
      (let ((orig (point))
            (deactivate-mark nil)
            (inhibit-point-motion-hooks t)
-@@ -1463,7 +1463,7 @@ Negative prefix arg will read from start of current paragraph to point.
+@@ -1461,7 +1461,7 @@ Negative prefix arg will read from start of current paragraph to point.
  If voice-lock-mode is on, then it will use any defined personality. "
    (interactive "P")
    (when (listp arg) (setq arg (car arg)))
@@ -1647,7 +1647,7 @@ index f202812..ca64574 100644
      (let ((orig (point))
            (deactivate-mark nil)
            (inhibit-point-motion-hooks t)
-@@ -1764,7 +1764,7 @@ indicating the arrival  of new mail when displaying the mode line.")
+@@ -1762,7 +1762,7 @@ indicating the arrival  of new mail when displaying the mode line.")
  ;;;compute current line number
  (defun emacspeak-get-current-line-number ()
    (let ((start (point)))
@@ -1656,7 +1656,7 @@ index f202812..ca64574 100644
        (save-restriction
          (widen)
          (goto-char (point-min))
-@@ -2053,7 +2053,7 @@ Displays name of current buffer.")
+@@ -2051,7 +2051,7 @@ Displays name of current buffer.")
    "Read a line without moving.
  Line to read is specified relative to the current line, prefix args gives the
  offset. Default  is to speak the previous line. "
@@ -1665,7 +1665,7 @@ index f202812..ca64574 100644
      (cond
       ((zerop arg) (emacspeak-speak-line))
       ((zerop (forward-line arg))
-@@ -2078,7 +2078,7 @@ Default is to read the next line. "
+@@ -2076,7 +2076,7 @@ Default is to read the next line. "
    "Read a word without moving.
  word  to read is specified relative to the current word, prefix args gives the
  offset. Default  is to speak the previous word. "
@@ -1674,7 +1674,7 @@ index f202812..ca64574 100644
      (cond
       ((= arg 0) (emacspeak-speak-word))
       ((forward-word arg)
-@@ -2365,7 +2365,7 @@ by a change in voice personality."
+@@ -2363,7 +2363,7 @@ by a change in voice personality."
            (if current-prefix-arg
                (elt mark-ring (1- count))
              (mark)))
@@ -1683,7 +1683,7 @@ index f202812..ca64574 100644
        (goto-char pos)
        (ems-set-personality-temporarily
         pos (1+ pos) voice-animate
-@@ -2414,7 +2414,7 @@ Return buffer position or nil on failure."
+@@ -2412,7 +2412,7 @@ Return buffer position or nil on failure."
    (let ((result nil)
          (start max)
          (continue t))
@@ -1692,7 +1692,7 @@ index f202812..ca64574 100644
        (while (and continue
                    (not
                     (or (< (point) min)
-@@ -2694,7 +2694,7 @@ set the current local value to the result.")
+@@ -2692,7 +2692,7 @@ set the current local value to the result.")
      (skip-syntax-forward "^ ")
      (skip-syntax-forward " ")
      (setq start (point))
@@ -1701,7 +1701,7 @@ index f202812..ca64574 100644
        (skip-syntax-forward "^ ")
        (emacspeak-speak-field start (point)))))
  
-@@ -2769,7 +2769,7 @@ Otherwise just display a message."
+@@ -2767,7 +2767,7 @@ Otherwise just display a message."
    "Return window contents."
    (let ((deactivate-mark nil)
          (start nil))
@@ -1710,7 +1710,7 @@ index f202812..ca64574 100644
        (move-to-window-line 0)
        (setq start (point))
        (move-to-window-line -1)
-@@ -2802,7 +2802,7 @@ Semantics  of `other' is the same as for the builtin Emacs command
+@@ -2800,7 +2800,7 @@ Semantics  of `other' is the same as for the builtin Emacs command
  `other-window'.
  Optional argument ARG  specifies `other' window to speak."
    (interactive "nSpeak window")
@@ -1719,7 +1719,7 @@ index f202812..ca64574 100644
      (save-window-excursion
        (other-window arg)
        (save-current-buffer
-@@ -2909,7 +2909,7 @@ Semantics  of `other' is the same as for the builtin Emacs command
+@@ -2907,7 +2907,7 @@ Semantics  of `other' is the same as for the builtin Emacs command
          (setq window
                (read-number "Window   between 1 and 9 to speak" 1)))
      (setq window (1- window))
@@ -1728,7 +1728,7 @@ index f202812..ca64574 100644
        (save-window-excursion
          (other-window window)
          (emacspeak-speak-region (window-start) (window-end nil t))))))
-@@ -3112,12 +3112,12 @@ value to apply."
+@@ -3110,12 +3110,12 @@ value to apply."
         "Matches "
         (cond
  ;;; Show what precedes the open in its line, if anything.
@@ -1743,7 +1743,7 @@ index f202812..ca64574 100644
             (forward-char 1)
             (skip-chars-forward " \t")
             (not (eolp)))
-@@ -3149,7 +3149,7 @@ Also display match context in minibuffer."
+@@ -3147,7 +3147,7 @@ Also display match context in minibuffer."
               blink-matching-paren
               ;; Verify an even number of quoting characters precede the close.
               (= 1 (logand 1 (- (point)
@@ -1752,7 +1752,7 @@ index f202812..ca64574 100644
                                   (forward-char -1)
                                   (skip-syntax-backward "/\\")
                                   (point))))))
-@@ -3159,7 +3159,7 @@ Also display match context in minibuffer."
+@@ -3157,7 +3157,7 @@ Also display match context in minibuffer."
             message-log-max  ; Don't log messages about paren matching.
             matching-paren
             open-paren-line-string)
@@ -1761,7 +1761,7 @@ index f202812..ca64574 100644
          (save-restriction
            (if blink-matching-paren-distance
                (narrow-to-region (max (minibuffer-prompt-end)
-@@ -3193,22 +3193,22 @@ Also display match context in minibuffer."
+@@ -3191,22 +3191,22 @@ Also display match context in minibuffer."
            ;; Matching open within window, temporarily move to blinkpos but only
            ;; if `blink-matching-paren-on-screen' is non-nil.
            (and blink-matching-paren-on-screen
@@ -1788,7 +1788,7 @@ index f202812..ca64574 100644
                            (forward-char 1)
                            (skip-chars-forward " \t")
                            (not (eolp)))
-@@ -3216,7 +3216,7 @@ Also display match context in minibuffer."
+@@ -3214,7 +3214,7 @@ Also display match context in minibuffer."
                                            (line-end-position))
                        ;; Otherwise show the previous nonblank line,
                        ;; if there is one.
@@ -1797,7 +1797,7 @@ index f202812..ca64574 100644
                              (skip-chars-backward "\n \t")
                              (not (bobp)))
                            (concat
-@@ -3274,10 +3274,10 @@ Argument O specifies overlay."
+@@ -3272,10 +3272,10 @@ Argument O specifies overlay."
      (message "Not on white space"))
     (t
      (let ((orig (point))
@@ -1810,7 +1810,7 @@ index f202812..ca64574 100644
                   (skip-syntax-forward " ")
                   (point))))
        (message "Space %s of %s"
-@@ -3298,7 +3298,7 @@ Argument O specifies overlay."
+@@ -3296,7 +3296,7 @@ Argument O specifies overlay."
  (defun emacspeak-make-string-inaudible (string)
    (unless (string-match "^ *$" string)
      (with-silent-modifications
@@ -1819,7 +1819,7 @@ index f202812..ca64574 100644
          (goto-char (point-min))
          (save-match-data
            (with-silent-modifications
-@@ -3404,7 +3404,7 @@ Speak text between point and the char we hit."
+@@ -3402,7 +3402,7 @@ Speak text between point and the char we hit."
    (interactive (list (read-char "Char: ")))
    (let ((start (point))
          (goal nil))
@@ -1828,7 +1828,7 @@ index f202812..ca64574 100644
        (cond
         ((search-forward (format "%c" char)
                          (point-max)
-@@ -3660,7 +3660,7 @@ This command  is designed for use in a windowing environment like X."
+@@ -3658,7 +3658,7 @@ This command  is designed for use in a windowing environment like X."
          (base-position completion-base-position)
          (insert-function completion-list-insert-choice-function)
          (choice

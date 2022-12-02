@@ -8,10 +8,10 @@ Subject: Startup sound playing fix
  2 files changed, 8 insertions(+), 10 deletions(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index a1ed671..3bd88f4 100644
+index 21bd361..83b8b5f 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -2229,15 +2229,10 @@ Seconds value is also placed in the kill-ring."
+@@ -2227,15 +2227,10 @@ Seconds value is also placed in the kill-ring."
    "Announce version information for running emacspeak.
  Optional interactive prefix arg `speak-rev' speaks only the Git revision number."
    (interactive "P")
