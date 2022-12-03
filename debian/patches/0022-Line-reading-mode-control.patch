@@ -5,8 +5,8 @@ Subject: Line reading mode control
 ---
  lisp/emacspeak-advice.el |  5 +++--
  lisp/emacspeak-keymap.el |  1 +
- lisp/emacspeak-speak.el  | 41 ++++++++++++++++++++++++++++++++++++++---
- 3 files changed, 42 insertions(+), 5 deletions(-)
+ lisp/emacspeak-speak.el  | 43 +++++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 43 insertions(+), 6 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
 index 85efc30..545f017 100644
@@ -37,7 +37,7 @@ index 5c3d259..f7d2d52 100644
     ("C-s" dtk-notify-shutdown)
     )
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 16f314d..747cc1c 100644
+index 16f314d..f8bad06 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -109,6 +109,33 @@
@@ -74,9 +74,12 @@ index 16f314d..747cc1c 100644
  ;;{{{  line, Word and Character echo
  
  (defcustom emacspeak-line-echo nil
-@@ -1041,9 +1068,13 @@ with auditory icon `more'.  These can then be spoken using command
+@@ -1039,11 +1066,15 @@ with auditory icon `more'.  These can then be spoken using command
+       (dtk-speak result)))))
+ 
  ;;;###autoload
- (defun emacspeak-speak-visual-line ()
+-(defun emacspeak-speak-visual-line ()
++(defun emacspeak-speak-visual-line (&optional arg)
    "Speaks current visual line.
 -Cues the start of a physical line with auditory icon `left'."
 -  (interactive)
