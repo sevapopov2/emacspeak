@@ -1,3 +1,9 @@
+emacspeak (1:50.0-18bionic2) bionic; urgency=medium
+
+  * Visual line speaking fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 03 Dec 2022 10:17:52 +0300
+
 emacspeak (1:50.0-18bionic1) bionic; urgency=medium
 
   * Visual line reading fix.
