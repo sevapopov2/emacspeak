@@ -124,7 +124,7 @@ index 16de865..c25bf3c 100644
          (setq o-open (car (overlays-at (point))))
          (next-line 1)
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 6d89819..cdf0e9f 100644
+index 443e35f..c61c642 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -319,7 +319,8 @@ normally bound to \\[emacspeak-table-display-table-in-region]."
