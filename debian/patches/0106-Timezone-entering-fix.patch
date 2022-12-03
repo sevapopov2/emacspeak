@@ -7,7 +7,7 @@ Subject: Timezone entering fix
  1 file changed, 1 insertion(+)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 02ad8b4..d3ce028 100644
+index 87da8ee..f5d02db 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -2133,6 +2133,7 @@ Optional second arg `set' sets the TZ environment variable as well."
