@@ -7,10 +7,10 @@ Subject: Formatting operations feedback enhancement
  1 file changed, 41 insertions(+), 3 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 1461c02..cddd4d9 100644
+index f8d759e..31dfc0c 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -313,9 +313,7 @@ When on a close delimiter, speaking matching open delimiter after a small delay.
+@@ -314,9 +314,7 @@ When on a close delimiter, speaking matching open delimiter after a small delay.
  
  (cl-loop
   for f in
@@ -21,7 +21,7 @@ index 1461c02..cddd4d9 100644
   do
   (eval
    `(defadvice ,f (after emacspeak pre act comp)
-@@ -1483,6 +1481,46 @@ Shell-Dirtrack mode; turning it off does not re-enable it."
+@@ -1484,6 +1482,46 @@ Shell-Dirtrack mode; turning it off does not re-enable it."
               (count-lines (region-beginning)
                            (region-end)))))
  

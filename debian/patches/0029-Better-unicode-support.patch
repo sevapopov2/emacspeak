@@ -102,10 +102,10 @@ index 389eefa..6ed9179 100644
                (set-text-properties pos (point) props))))))))
  
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 545f017..05c6585 100644
+index f205e0b..fbd03bd 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -904,16 +904,18 @@ icon."
+@@ -905,16 +905,18 @@ icon."
   (eval
    `(defadvice ,f (before emacspeak pre act comp)
       "Speak the prompt"
