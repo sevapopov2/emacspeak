@@ -7,7 +7,7 @@ Subject: Minibuffer completion keymap fix
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index ba7dabe..b2e8df7 100644
+index ff8758a..5b55cdd 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -3698,7 +3698,7 @@ This command  is designed for use in a windowing environment like X."

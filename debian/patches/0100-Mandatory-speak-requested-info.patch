@@ -7,7 +7,7 @@ Subject: Mandatory speak requested info
  1 file changed, 23 insertions(+), 10 deletions(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 527b934..819915b 100644
+index cd4ed3d..bbd93cd 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -1985,7 +1985,15 @@ Optional  interactive prefix arg `copy-as-kill' copies spoken info to kill ring.

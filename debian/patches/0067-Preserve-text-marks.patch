@@ -124,7 +124,7 @@ index 16de865..c25bf3c 100644
          (setq o-open (car (overlays-at (point))))
          (next-line 1)
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 8627350..576adf9 100644
+index cfaeff6..00a4097 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -320,7 +320,8 @@ normally bound to \\[emacspeak-table-display-table-in-region]."
@@ -175,14 +175,14 @@ index 8627350..576adf9 100644
          (icon (get-char-property (point) 'auditory-icon))
          (before (get-char-property (point) 'before-string))
          (after (get-char-property (point) 'after-string))
-@@ -1086,6 +1090,7 @@ of line to point."
-   (when (listp arg) (setq arg (car arg)))
-   (when dtk-stop-immediately (dtk-stop))
-   (let ((inhibit-field-text-motion t)
-+        (deactivate-mark nil)
-         (inhibit-read-only t)
-         (start (line-beginning-position))
-         (end (line-end-position))
+@@ -1089,6 +1093,7 @@ of line to point."
+          (inhibit-read-only t)
+          (inhibit-point-motion-hooks t)
+          (inhibit-modification-hooks t)
++         (deactivate-mark nil)
+          (start (line-beginning-position))
+          (end (line-end-position))
+          (line nil)
 @@ -1390,6 +1395,7 @@ Negative prefix arg speaks from start of sentence to point."
    (when (listp arg) (setq arg (car arg)))
    (save-excursion
