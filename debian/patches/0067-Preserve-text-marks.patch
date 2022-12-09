@@ -9,10 +9,10 @@ Subject: Preserve text marks
  3 files changed, 94 insertions(+), 62 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 12d82ab..b59c837 100644
+index 3083f34..8b73f96 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -745,6 +745,7 @@ icon."
+@@ -746,6 +746,7 @@ icon."
       (cl-declare (special emacspeak-last-message inhibit-message
                            emacspeak-speak-messages emacspeak-lazy-message-time))
       (let ((inhibit-read-only t)
@@ -20,7 +20,7 @@ index 12d82ab..b59c837 100644
             (m nil))
         ad-do-it
         (setq m (current-message))
-@@ -980,8 +981,9 @@ icon."
+@@ -981,8 +982,9 @@ icon."
    `(defadvice ,f (after emacspeak pre act comp)
       "Say what you completed."
       (when (ems-interactive-p)
@@ -32,7 +32,7 @@ index 12d82ab..b59c837 100644
  
  (voice-setup-add-map
   '(
-@@ -1000,7 +1002,8 @@ icon."
+@@ -1001,7 +1003,8 @@ icon."
       (cond
        ((ems-interactive-p)
         (ems-with-messages-silenced
@@ -42,7 +42,7 @@ index 12d82ab..b59c837 100644
            (emacspeak-kill-buffer-carefully "*Completions*")
            ad-do-it
            (if (> (point) prior)
-@@ -1019,7 +1022,8 @@ icon."
+@@ -1020,7 +1023,8 @@ icon."
    `(defadvice ,f (around emacspeak pre act comp)
       "Say what you completed."
       (ems-with-messages-silenced
@@ -52,7 +52,7 @@ index 12d82ab..b59c837 100644
          ad-do-it
          (if (> (point) prior)
              (tts-with-punctuations
-@@ -3006,16 +3010,14 @@ Produce auditory icons if possible."
+@@ -3007,16 +3011,14 @@ Produce auditory icons if possible."
  ;;}}}
  ;;{{{ Asking Questions:
  
@@ -77,7 +77,7 @@ index 12d82ab..b59c837 100644
  
  (cl-loop for f in
        '(map-y-or-n-p
-@@ -3046,15 +3048,21 @@ Produce auditory icons if possible."
+@@ -3047,15 +3049,21 @@ Produce auditory icons if possible."
    "Play auditory icon."
    (emacspeak-auditory-icon 'help))
  
