@@ -1572,7 +1572,7 @@ index d1af791..aaf5f9a 100644
            (column (emacspeak-solitaire-current-column))
            (cells nil))
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 74ea7a2..fdd6478 100644
+index 5a06dea..df56d98 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -408,7 +408,7 @@ Argument BODY specifies forms to execute."
@@ -1594,9 +1594,9 @@ index 74ea7a2..fdd6478 100644
        (condition-case nil
            (let ((start nil)
 @@ -1097,7 +1097,7 @@ of line to point."
-         (inhibit-modification-hooks t)
-         (line nil)
-         (orig (point)))
+          (end (line-end-position))
+          (line nil)
+          (orig (point)))
 -    (save-excursion
 +    (save-mark-and-excursion
        (beginning-of-visual-line)

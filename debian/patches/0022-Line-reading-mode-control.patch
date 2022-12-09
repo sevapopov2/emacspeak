@@ -37,7 +37,7 @@ index 5c3d259..f7d2d52 100644
     ("C-s" dtk-notify-shutdown)
     )
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 16f314d..f8bad06 100644
+index 890537e..6c25a24 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -109,6 +109,33 @@
@@ -91,8 +91,8 @@ index 16f314d..f8bad06 100644
    (cl-declare (special dtk-stop-immediately emacspeak-show-point))
 +  (when (listp arg) (setq arg (car arg)))
    (when dtk-stop-immediately (dtk-stop))
-   (let ((inhibit-field-text-motion t)
-         (inhibit-read-only t)
+   (let* ((inhibit-field-text-motion t)
+          (inhibit-read-only t)
 @@ -1063,8 +1094,12 @@ Cues the start of a physical line with auditory icon `left'."
          (emacspeak-auditory-icon 'left))
         ((and (> start (line-beginning-position)) (= end (line-end-position)))
