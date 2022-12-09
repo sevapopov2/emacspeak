@@ -7,10 +7,10 @@ Subject: General close operation feedback
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 05c6585..1461c02 100644
+index fbd03bd..f8d759e 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -291,7 +291,7 @@ When on a close delimiter, speaking matching open delimiter after a small delay.
+@@ -292,7 +292,7 @@ When on a close delimiter, speaking matching open delimiter after a small delay.
  
  (cl-loop
   for f in
@@ -19,7 +19,7 @@ index 05c6585..1461c02 100644
   do
   (eval
    `(defadvice ,f (after emacspeak pre act comp)
-@@ -1729,7 +1729,11 @@ Produce an auditory icon if possible."
+@@ -1730,7 +1730,11 @@ Produce an auditory icon if possible."
      (emacspeak-speak-mode-line)))
  (cl-loop
   for f in
