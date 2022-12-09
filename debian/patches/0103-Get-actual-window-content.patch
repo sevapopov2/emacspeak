@@ -8,7 +8,7 @@ Subject: Get actual window content
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index b2d7745..aeeab26 100644
+index 129d508..87256a4 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -2804,7 +2804,7 @@ Otherwise just display a message."
