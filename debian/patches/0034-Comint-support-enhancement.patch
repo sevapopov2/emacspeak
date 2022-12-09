@@ -7,10 +7,10 @@ Subject: Comint support enhancement
  1 file changed, 35 insertions(+), 63 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 45b733b..ac08d46 100644
+index 15726d1..6c8b92c 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -1200,21 +1200,24 @@ icon."
+@@ -1201,21 +1201,24 @@ icon."
           (emacspeak-speak-line 1))
         (emacspeak-auditory-icon 'select-object)))))
  
@@ -48,7 +48,7 @@ index 45b733b..ac08d46 100644
  
  (defadvice comint-show-output (after emacspeak pre act comp)
    "Speak the line showing where point is."
-@@ -1239,25 +1242,19 @@ icon."
+@@ -1240,25 +1243,19 @@ icon."
        (emacspeak-speak-line)
        (emacspeak-auditory-icon 'select-object))))
  
@@ -79,7 +79,7 @@ index 45b733b..ac08d46 100644
        ad-return-value)))
  
  (defadvice comint-dynamic-list-completions (around emacspeak pre act comp)
-@@ -1290,45 +1287,20 @@ icon."
+@@ -1291,45 +1288,20 @@ icon."
     (t ad-do-it))
    ad-return-value)
  
