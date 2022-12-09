@@ -84,10 +84,10 @@ index 6ed9179..50d663c 100644
          (while (re-search-forward dtk-unicode-charset-filter-regexp nil t)
            (let* ((pos (match-beginning 0))
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index c0bb627..5aed21c 100644
+index 3400a16..6777270 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -266,7 +266,7 @@ When on a close delimiter, speaking matching open delimiter after a small delay.
+@@ -267,7 +267,7 @@ When on a close delimiter, speaking matching open delimiter after a small delay.
              (= ?\) (char-syntax (following-char)))
              (sit-for 0.25))
           (emacspeak-auditory-icon 'item)
@@ -96,7 +96,7 @@ index c0bb627..5aed21c 100644
             (forward-char 1)
             (emacspeak-blink-matching-open)))))))
  
-@@ -418,11 +418,11 @@ that were upper cased."
+@@ -419,11 +419,11 @@ that were upper cased."
             (cl-minusp current-prefix-arg))
        ad-do-it
        (let ((start (point)))
@@ -110,7 +110,7 @@ index c0bb627..5aed21c 100644
            (skip-syntax-forward " ")
            (if (eobp)
                (message "Upper cased final word in buffer")
-@@ -444,11 +444,11 @@ the words that were down cased."
+@@ -445,11 +445,11 @@ the words that were down cased."
             (cl-minusp current-prefix-arg))
        ad-do-it
        (let ((start (point)))
@@ -124,7 +124,7 @@ index c0bb627..5aed21c 100644
            (skip-syntax-forward " ")
            (if (eobp)
                (message "Lower cased final word in buffer")
-@@ -470,11 +470,11 @@ the words that were capitalized."
+@@ -471,11 +471,11 @@ the words that were capitalized."
             (cl-minusp current-prefix-arg))
        ad-do-it
        (let ((start (point)))
@@ -138,7 +138,7 @@ index c0bb627..5aed21c 100644
            (skip-syntax-forward " ")
            (if (eobp)
                (message "Capitalized final word in buffer")
-@@ -530,7 +530,7 @@ the words that were capitalized."
+@@ -531,7 +531,7 @@ the words that were capitalized."
  (defadvice kill-word (before emacspeak pre act comp)
    "Speak word before killing it."
    (when (ems-interactive-p)
@@ -147,7 +147,7 @@ index c0bb627..5aed21c 100644
        (skip-syntax-forward " ")
        (when dtk-stop-immediately (dtk-stop))
        (let ((dtk-stop-immediately nil))
-@@ -543,7 +543,7 @@ the words that were capitalized."
+@@ -544,7 +544,7 @@ the words that were capitalized."
      (when dtk-stop-immediately (dtk-stop))
      (let ((start (point))
            (dtk-stop-immediately nil))
@@ -156,7 +156,7 @@ index c0bb627..5aed21c 100644
          (forward-word -1)
          (dtk-tone-deletion)
          (emacspeak-speak-region (point) start)))))
-@@ -588,7 +588,7 @@ the words that were capitalized."
+@@ -589,7 +589,7 @@ the words that were capitalized."
    (when (ems-interactive-p)
      (let (thisblank singleblank)
        (save-match-data
@@ -165,7 +165,7 @@ index c0bb627..5aed21c 100644
            (forward-line 0)
            (setq thisblank (looking-at "[ \t]*$"))
            ;; Set singleblank if there is just one blank line here.
-@@ -620,7 +620,7 @@ see option emacspeak-untabify-fixes-non-breaking-space."
+@@ -621,7 +621,7 @@ see option emacspeak-untabify-fixes-non-breaking-space."
    (when emacspeak-untabify-fixes-non-breaking-space
      (let ((start (ad-get-arg 0))
            (end (ad-get-arg 1)))
@@ -174,7 +174,7 @@ index c0bb627..5aed21c 100644
          (save-restriction
            (narrow-to-region start end)
            (goto-char start)
-@@ -642,7 +642,7 @@ see option emacspeak-untabify-fixes-non-breaking-space."
+@@ -643,7 +643,7 @@ see option emacspeak-untabify-fixes-non-breaking-space."
  
  (defadvice pcomplete (around emacspeak pre act comp)
    "Say what you completed."
@@ -183,7 +183,7 @@ index c0bb627..5aed21c 100644
      ad-do-it
      (when (ems-interactive-p)
        (emacspeak-speak-region orig (point))
-@@ -656,7 +656,7 @@ see option emacspeak-untabify-fixes-non-breaking-space."
+@@ -657,7 +657,7 @@ see option emacspeak-untabify-fixes-non-breaking-space."
    "Speak what was completed."
    (cond
     ((ems-interactive-p)
@@ -192,7 +192,7 @@ index c0bb627..5aed21c 100644
        (ems-with-messages-silenced
         ad-do-it)
        (emacspeak-auditory-icon 'complete)
-@@ -883,7 +883,7 @@ icon."
+@@ -884,7 +884,7 @@ icon."
  ;;{{{ Advice completion-at-point:
  (defadvice completion-at-point (around emacspeak pre act comp)
    "Say what you completed."
@@ -201,7 +201,7 @@ index c0bb627..5aed21c 100644
      ad-do-it
      (when (ems-interactive-p)
        (dtk-speak (buffer-substring orig (point)))
-@@ -953,7 +953,7 @@ icon."
+@@ -954,7 +954,7 @@ icon."
          (when (ems-interactive-p)
            (dtk-speak
             (format "%s %s"
@@ -210,7 +210,7 @@ index c0bb627..5aed21c 100644
                                     (sexp-at-point))
                     (or emacspeak-last-message ""))))
          ad-return-value)))))
-@@ -1021,7 +1021,7 @@ icon."
+@@ -1022,7 +1022,7 @@ icon."
       "Say what you completed."
       (ems-with-messages-silenced
        (let* ((deactivate-mark nil)
@@ -219,7 +219,7 @@ index c0bb627..5aed21c 100644
          ad-do-it
          (if (> (point) prior)
              (tts-with-punctuations
-@@ -1074,7 +1074,7 @@ icon."
+@@ -1075,7 +1075,7 @@ icon."
    `(defadvice ,f (after emacspeak pre act comp)
       "Provide auditory feedback."
       (when (ems-interactive-p)
@@ -228,7 +228,7 @@ index c0bb627..5aed21c 100644
           (comint-bol-or-process-mark)
           (emacspeak-auditory-icon 'select-object)
           (emacspeak-speak-line 1))))))
-@@ -1096,7 +1096,7 @@ icon."
+@@ -1097,7 +1097,7 @@ icon."
         ad-do-it
         (cond
          ((= (point) (+ count orig))
@@ -237,7 +237,7 @@ index c0bb627..5aed21c 100644
             (forward-word -1)
             (emacspeak-speak-word)))
          (t
-@@ -1188,7 +1188,7 @@ icon."
+@@ -1189,7 +1189,7 @@ icon."
  (defadvice comint-accumulate (before emacspeak pre act comp)
    "Speak the line we are accumulating."
    (when (ems-interactive-p)
@@ -246,7 +246,7 @@ index c0bb627..5aed21c 100644
        (comint-bol)
        (emacspeak-auditory-icon 'select-object)
        (emacspeak-speak-line 1))))
-@@ -1203,7 +1203,7 @@ icon."
+@@ -1204,7 +1204,7 @@ icon."
                    emacspeak pre act comp)
       "Speak the matched input."
       (when (ems-interactive-p)
@@ -255,7 +255,7 @@ index c0bb627..5aed21c 100644
           (goto-char (comint-line-beginning-position))
           (emacspeak-speak-line 1))
         (emacspeak-auditory-icon 'select-object)))))
-@@ -1284,7 +1284,7 @@ icon."
+@@ -1285,7 +1285,7 @@ icon."
    (cond
     ((ems-interactive-p)
      (ems-with-messages-silenced
@@ -264,7 +264,7 @@ index c0bb627..5aed21c 100644
         ad-do-it
         (if (> (point) prior)
             (tts-with-punctuations
-@@ -1336,7 +1336,7 @@ icon."
+@@ -1337,7 +1337,7 @@ icon."
    "Provide auditory feedback."
    (when (ems-interactive-p)
      (emacspeak-auditory-icon 'item)
@@ -273,7 +273,7 @@ index c0bb627..5aed21c 100644
        (comint-bol)
        (emacspeak-speak-line 1))))
  
-@@ -1642,7 +1642,7 @@ Shell-Dirtrack mode; turning it off does not re-enable it."
+@@ -1643,7 +1643,7 @@ Shell-Dirtrack mode; turning it off does not re-enable it."
    `(defadvice ,f (after emacspeak pre act comp)
       "Give some auditory feedback."
       (emacspeak-auditory-icon 'open-object)
@@ -282,7 +282,7 @@ index c0bb627..5aed21c 100644
         (goto-char (point-min))
         (emacspeak-speak-line)))))
  (cl-loop
-@@ -2427,8 +2427,8 @@ Produce an auditory icon if possible."
+@@ -2428,8 +2428,8 @@ Produce an auditory icon if possible."
     ((null isearch-success) (emacspeak-auditory-icon 'search-miss))
     (t
      (emacspeak-auditory-icon 'search-hit)
@@ -293,7 +293,7 @@ index c0bb627..5aed21c 100644
          (ems-set-personality-temporarily
           (point) isearch-other-end voice-bolden
           (dtk-speak
-@@ -2739,7 +2739,7 @@ Produce auditory icons if possible."
+@@ -2740,7 +2740,7 @@ Produce auditory icons if possible."
    (when buffer-read-only (dtk-speak "Buffer is read-only. "))
    (cond
     ((ems-interactive-p)

@@ -3,22 +3,23 @@ Date: Tue, 8 Nov 2022 19:42:39 +0300
 Subject: Line reading mode control
 
 ---
- lisp/emacspeak-advice.el |  5 +++--
+ lisp/emacspeak-advice.el |  6 ++++--
  lisp/emacspeak-keymap.el |  1 +
  lisp/emacspeak-speak.el  | 43 +++++++++++++++++++++++++++++++++++++++----
- 3 files changed, 43 insertions(+), 6 deletions(-)
+ 3 files changed, 44 insertions(+), 6 deletions(-)
 
 diff --git a/lisp/emacspeak-advice.el b/lisp/emacspeak-advice.el
-index 85efc30..545f017 100644
+index 85efc30..f205e0b 100644
 --- a/lisp/emacspeak-advice.el
 +++ b/lisp/emacspeak-advice.el
-@@ -194,8 +194,9 @@ position of point is indicated via an aural highlight. Landing on the
+@@ -194,8 +194,10 @@ position of point is indicated via an aural highlight. Landing on the
  beginning or end of a physical line produces an appropriate auditory icon."
       (when (ems-interactive-p)
         (cond
 -        ((or line-move-visual visual-line-mode) (emacspeak-speak-visual-line))
 -        (t (emacspeak-speak-line)))))))
-+        ((or line-move-visual visual-line-mode)
++        ((and (or line-move-visual visual-line-mode)
++              (null truncate-lines))
 +         (emacspeak-speak-visual-line emacspeak-speak-line-reading-mode))
 +        (t (emacspeak-speak-line emacspeak-speak-line-reading-mode)))))))
  
