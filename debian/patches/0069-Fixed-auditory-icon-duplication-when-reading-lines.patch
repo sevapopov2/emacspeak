@@ -7,7 +7,7 @@ Subject: Fixed auditory icon duplication when reading lines
  1 file changed, 2 deletions(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 576adf9..d07ff6f 100644
+index 00a4097..de2b908 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -968,7 +968,6 @@ with auditory icon `more'.  These can then be spoken using command

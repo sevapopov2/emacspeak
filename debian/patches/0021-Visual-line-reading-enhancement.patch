@@ -5,28 +5,36 @@ Subject: Visual line reading enhancement
 Distinguishable tones for various decorations.
 More reliable auditory icon indication.
 ---
- lisp/emacspeak-speak.el | 32 ++++++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 8 deletions(-)
+ lisp/emacspeak-speak.el | 44 ++++++++++++++++++++++++++++++--------------
+ 1 file changed, 30 insertions(+), 14 deletions(-)
 
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index ebfc3b6..16f314d 100644
+index ebfc3b6..890537e 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
-@@ -1047,27 +1047,43 @@ Cues the start of a physical line with auditory icon `left'."
+@@ -1045,29 +1045,45 @@ Cues the start of a physical line with auditory icon `left'."
+   (interactive)
+   (cl-declare (special dtk-stop-immediately emacspeak-show-point))
    (when dtk-stop-immediately (dtk-stop))
-   (let ((inhibit-field-text-motion t)
-         (inhibit-read-only t)
+-  (let ((inhibit-field-text-motion t)
+-        (inhibit-read-only t)
 -        (start nil)
 -        (end nil)
-+        (start (line-beginning-position))
-+        (end (line-end-position))
-         (inhibit-point-motion-hooks t)
-         (inhibit-modification-hooks t)
-         (line nil)
-         (orig (point)))
+-        (inhibit-point-motion-hooks t)
+-        (inhibit-modification-hooks t)
+-        (line nil)
+-        (orig (point)))
 -    (cond
 -     ((looking-at "^ *") (emacspeak-auditory-icon 'left))
 -     ((looking-at " *$") (emacspeak-auditory-icon 'right)))
++  (let* ((inhibit-field-text-motion t)
++         (inhibit-read-only t)
++         (inhibit-point-motion-hooks t)
++         (inhibit-modification-hooks t)
++         (start (line-beginning-position))
++         (end (line-end-position))
++         (line nil)
++         (orig (point)))
      (save-excursion
        (beginning-of-visual-line)
 -      (setq start (point))

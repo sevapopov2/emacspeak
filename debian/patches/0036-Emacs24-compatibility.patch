@@ -643,7 +643,7 @@ index 426a3ea..3ab405b 100644
    "Silence messages while installing packages. "
    (ems-with-messages-silenced ad-do-it)
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 443e35f..8627350 100644
+index 85370ef..cfaeff6 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -73,6 +73,7 @@

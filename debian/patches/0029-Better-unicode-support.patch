@@ -135,7 +135,7 @@ index 545f017..05c6585 100644
  (defadvice read-char-choice (before emacspeak pre act comp)
    "Speak the prompt"
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
-index 60135a3..5f687fd 100644
+index dbe0066..0c90ce7 100644
 --- a/lisp/emacspeak-speak.el
 +++ b/lisp/emacspeak-speak.el
 @@ -1188,8 +1188,7 @@ spelled out  instead of being spoken."
