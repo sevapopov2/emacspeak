@@ -10,7 +10,7 @@ Subject: Wget downloader support
  create mode 100644 lisp/emacspeak-wget.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index 3b0152c..4cb4294 100644
+index 83c63fc..aaf5ba2 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -288,6 +288,7 @@ emacspeak-we.elc \

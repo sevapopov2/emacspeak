@@ -9,7 +9,7 @@ Subject: Universal url-at-point function
  3 files changed, 28 insertions(+), 8 deletions(-)
 
 diff --git a/lisp/emacspeak-eww.el b/lisp/emacspeak-eww.el
-index 1f31d85..90241ff 100644
+index 4be4520..3408664 100644
 --- a/lisp/emacspeak-eww.el
 +++ b/lisp/emacspeak-eww.el
 @@ -509,7 +509,7 @@ are available are cued by an auditory icon on the header line."

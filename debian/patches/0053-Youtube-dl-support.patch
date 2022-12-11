@@ -10,7 +10,7 @@ Subject: Youtube-dl support
  create mode 100644 lisp/emacspeak-youtube-dl.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index 4cb4294..f5d81d1 100644
+index aaf5ba2..442a935 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -283,6 +283,7 @@ emacspeak-view.elc \

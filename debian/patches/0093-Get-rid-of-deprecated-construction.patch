@@ -123,10 +123,10 @@ index 2db6f14..bb67f96 100644
          (cl-loop for m in map
                   do
 diff --git a/lisp/emacspeak-wizards.el b/lisp/emacspeak-wizards.el
-index 5ffc82e..6d7a4eb 100644
+index f8acfd3..8e7afa9 100644
 --- a/lisp/emacspeak-wizards.el
 +++ b/lisp/emacspeak-wizards.el
-@@ -2430,9 +2430,7 @@ buffer keyed by `key'gets the key of buffer `buffer'."
+@@ -2431,9 +2431,7 @@ buffer keyed by `key'gets the key of buffer `buffer'."
  ;;{{{ show commentary:
  (defun ems-cleanup-commentary (commentary)
    "Cleanup commentary."

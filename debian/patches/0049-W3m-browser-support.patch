@@ -11,7 +11,7 @@ Subject: W3m browser support
  create mode 100644 lisp/emacspeak-w3m.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index 65daca4..3b0152c 100644
+index 6cda63d..83c63fc 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -282,6 +282,7 @@ emacspeak-vdiff.elc \

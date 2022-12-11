@@ -9,7 +9,7 @@ Subject: Common navigation functions feedback
  3 files changed, 19 insertions(+), 15 deletions(-)
 
 diff --git a/lisp/emacspeak-eww.el b/lisp/emacspeak-eww.el
-index 90241ff..b56804e 100644
+index 3408664..c9fc6b1 100644
 --- a/lisp/emacspeak-eww.el
 +++ b/lisp/emacspeak-eww.el
 @@ -822,21 +822,6 @@ Retain previously set punctuations  mode."

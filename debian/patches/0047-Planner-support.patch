@@ -10,7 +10,7 @@ Subject: Planner support
  create mode 100644 lisp/emacspeak-planner.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index 0aab0ba..ef91532 100644
+index ca3bfec..4fba72a 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -225,6 +225,7 @@ emacspeak-pcl-cvs.elc \

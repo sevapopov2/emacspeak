@@ -10,7 +10,7 @@ Subject: Ps mode support
  create mode 100644 lisp/emacspeak-ps.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index 2db0aee..0fd69f8 100644
+index 4d2a9fd..402aba6 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -226,6 +226,7 @@ emacspeak-php-mode.elc \

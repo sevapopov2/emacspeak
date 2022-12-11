@@ -9,7 +9,7 @@ Homepage: http://emacspeak.sf.net
 
 Package: emacspeak
 Architecture: all
-Depends: emacs24 | emacs (>= 46.0), perl, make, adduser, ${misc:Depends}
+Depends: emacs24 | emacs (>= 46.0), elpa-let-alist, perl, make, adduser, ${misc:Depends}
 Conflicts: emacspeak (<< 1:50.0), emacspeak-3d, emacspeak-dt, emacspeak-ss, multispeech (<< 2.8)
 Replaces: emacspeak (<< 1:50.0), emacspeak-3d
 Recommends: multispeech (>= 2.8), python, tclx8.4, tcl

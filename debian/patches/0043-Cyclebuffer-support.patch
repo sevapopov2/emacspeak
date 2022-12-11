@@ -10,7 +10,7 @@ Subject: Cyclebuffer support
  create mode 100644 lisp/emacspeak-cyclebuffer.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index 101b59c..107ae4d 100644
+index 3288ce6..3dc341d 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -123,6 +123,7 @@ emacspeak-compile.elc \

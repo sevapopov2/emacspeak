@@ -39,10 +39,10 @@ index 7a474bb..8cdf7ad 100644
  ;;}}}
  ;;{{{  Intelligent interactive commands for reading:
 diff --git a/lisp/emacspeak-wizards.el b/lisp/emacspeak-wizards.el
-index 69a4497..c86caa9 100644
+index 5ae1a0c..b5bc68e 100644
 --- a/lisp/emacspeak-wizards.el
 +++ b/lisp/emacspeak-wizards.el
-@@ -538,7 +538,7 @@ the display to speak."
+@@ -539,7 +539,7 @@ the display to speak."
        (save-window-excursion
          (emacspeak-speak-region
           (window-point win)

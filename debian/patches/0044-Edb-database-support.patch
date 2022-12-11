@@ -10,7 +10,7 @@ Subject: Edb database support
  create mode 100644 lisp/emacspeak-edb.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index 107ae4d..2db0aee 100644
+index 3dc341d..4d2a9fd 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -124,6 +124,7 @@ emacspeak-company.elc \

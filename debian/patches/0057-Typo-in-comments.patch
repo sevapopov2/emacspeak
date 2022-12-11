@@ -231,7 +231,7 @@ index 232ee5a..476b47e 100644
  
  ;;; LCD Archive Entry:
 diff --git a/lisp/emacspeak-preamble.el b/lisp/emacspeak-preamble.el
-index e31edfa..2c73c0f 100644
+index 77dc71a..cd7e6c1 100644
 --- a/lisp/emacspeak-preamble.el
 +++ b/lisp/emacspeak-preamble.el
 @@ -1,8 +1,8 @@
