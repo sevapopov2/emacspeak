@@ -9,7 +9,7 @@ Subject: Pcvs support
  create mode 100644 lisp/emacspeak-pcl-cvs.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index 0fd69f8..0aab0ba 100644
+index 402aba6..ca3bfec 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -221,6 +221,7 @@ emacspeak-nxml.elc \

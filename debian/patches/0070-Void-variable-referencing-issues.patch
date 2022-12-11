@@ -13,7 +13,7 @@ Subject: Void variable referencing issues
  7 files changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/lisp/emacspeak-eww.el b/lisp/emacspeak-eww.el
-index b56804e..c4dab2f 100644
+index c9fc6b1..83686b5 100644
 --- a/lisp/emacspeak-eww.el
 +++ b/lisp/emacspeak-eww.el
 @@ -1853,7 +1853,7 @@ Warning, this is fragile, and depends on a stable id for the

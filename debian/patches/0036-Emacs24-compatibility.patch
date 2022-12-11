@@ -5,7 +5,7 @@ Subject: Emacs24 compatibility
 ---
  lisp/Makefile               |   8 +-
  lisp/dom-addons.el          |  16 +++
- lisp/dom.el                 | 241 ++++++++++++++++++++++++++++++++++++++
+ lisp/dom.el                 | 241 ++++++++++++++++++++++++++++++++++++++++++++
  lisp/dtk-speak.el           |   1 +
  lisp/emacspeak-advice.el    |  13 ++-
  lisp/emacspeak-calendar.el  |   3 +
@@ -13,6 +13,7 @@ Subject: Emacs24 compatibility
  lisp/emacspeak-dbus.el      |   3 +
  lisp/emacspeak-dired.el     |   3 +
  lisp/emacspeak-ecb.el       |   1 +
+ lisp/emacspeak-eww.el       |   2 +-
  lisp/emacspeak-feeds.el     |   3 +
  lisp/emacspeak-flyspell.el  |   3 +
  lisp/emacspeak-gnus.el      |   3 +
@@ -20,25 +21,27 @@ Subject: Emacs24 compatibility
  lisp/emacspeak-ido.el       |   5 +-
  lisp/emacspeak-info.el      |  10 +-
  lisp/emacspeak-ispell.el    |   3 +
- lisp/emacspeak-load-path.el |  20 +++-
+ lisp/emacspeak-load-path.el |  20 ++--
  lisp/emacspeak-m-player.el  |   3 +
  lisp/emacspeak-org.el       |   2 +-
  lisp/emacspeak-package.el   |   3 +
+ lisp/emacspeak-preamble.el  |   2 +-
  lisp/emacspeak-speak.el     |   1 +
  lisp/emacspeak-tar.el       |   5 +
  lisp/emacspeak-tetris.el    |   3 +
  lisp/emacspeak-vlc.el       |   4 +
  lisp/emacspeak-widget.el    |   3 +
- lisp/emacspeak-wizards.el   |  22 +++-
+ lisp/emacspeak-wizards.el   |  23 +++--
  lisp/emacspeak.el           |   3 +
- lisp/subr-x.el              | 277 ++++++++++++++++++++++++++++++++++++++++++++
+ lisp/g-client/gmaps.el      |   1 +
+ lisp/subr-xx.el             | 154 ++++++++++++++++++++++++++++
  lisp/xbacklight.el          |   2 +
- 30 files changed, 647 insertions(+), 24 deletions(-)
+ 33 files changed, 528 insertions(+), 26 deletions(-)
  create mode 100644 lisp/dom.el
- create mode 100644 lisp/subr-x.el
+ create mode 100644 lisp/subr-xx.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index 9f52b5d..50654d9 100644
+index 9f52b5d..7ef4582 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -292,7 +292,7 @@ emacspeak-yasnippet.elc
@@ -46,7 +49,7 @@ index 9f52b5d..50654d9 100644
  nm.elc \
  tapestry.elc   stack-f.elc  \
 -dom-addons.elc \
-+subr-x.elc dom.elc dom-addons.elc \
++subr-xx.elc dom.elc dom-addons.elc \
  xbacklight.elc  toy-braille.elc tetris.elc cd-tool.elc 
  
  OBJECTS = $(TTS_OBJECTS) $(SPEAK_OBJECTS) $(CORE_OBJECTS)  $(ADDON_OBJECTS)
@@ -56,8 +59,8 @@ index 9f52b5d..50654d9 100644
  emacspeak-eudc.elc: emacspeak-eudc.el dtk-speak.elc voice-setup.elc
 -dom-addons.elc: dom-addons.el 
 -emacspeak-eww.elc: emacspeak-eww.el  dom-addons.elc dtk-speak.elc voice-setup.elc
-+subr-x.elc: subr-x.el
-+dom.elc: dom.el subr-x.elc
++subr-xx.elc: subr-xx.el
++dom.elc: dom.el
 +dom-addons.elc: dom-addons.el dom.elc
 +emacspeak-eww.elc: emacspeak-eww.el dom.elc dom-addons.elc dtk-speak.elc voice-setup.elc
  emacspeak-facemenu.elc: emacspeak-facemenu.el dtk-speak.elc voice-setup.elc
@@ -99,7 +102,7 @@ index 41f6377..56120fe 100644
    (cl-declare (special g-curl-program g-curl-common-options))
 diff --git a/lisp/dom.el b/lisp/dom.el
 new file mode 100644
-index 0000000..d71a047
+index 0000000..ae83841
 --- /dev/null
 +++ b/lisp/dom.el
 @@ -0,0 +1,241 @@
@@ -130,7 +133,7 @@ index 0000000..d71a047
 +;;; Code:
 +
 +(require 'cl-lib)
-+(eval-when-compile (require 'subr-x))
++(eval-when-compile (require 'subr-xx))
 +
 +(defsubst dom-tag (node)
 +  "Return the NODE tag."
@@ -462,6 +465,19 @@ index 6698343..7e963b5 100644
    (let ((inhibit-message  t))
    (require 'ecb () 'no-error))
    (require 'tree-buffer () 'no-error))
+diff --git a/lisp/emacspeak-eww.el b/lisp/emacspeak-eww.el
+index 1f31d85..4be4520 100644
+--- a/lisp/emacspeak-eww.el
++++ b/lisp/emacspeak-eww.el
+@@ -398,7 +398,7 @@
+ 
+ (require 'cl-lib)
+ (require 'pp)
+-(eval-when-compile(require 'subr-x))
++(eval-when-compile(require 'subr-xx))
+ (require 'eww  )
+ (require 'dom)
+ (require 'dom-addons)
 diff --git a/lisp/emacspeak-feeds.el b/lisp/emacspeak-feeds.el
 index a42a6d5..f985ca5 100644
 --- a/lisp/emacspeak-feeds.el
@@ -642,6 +658,19 @@ index 426a3ea..3ab405b 100644
  (defadvice package-menu-execute(around emacspeak pre act comp)
    "Silence messages while installing packages. "
    (ems-with-messages-silenced ad-do-it)
+diff --git a/lisp/emacspeak-preamble.el b/lisp/emacspeak-preamble.el
+index e31edfa..77dc71a 100644
+--- a/lisp/emacspeak-preamble.el
++++ b/lisp/emacspeak-preamble.el
+@@ -40,7 +40,7 @@
+ ;;{{{ Required modules 
+ 
+ (require 'cl-lib)
+-(eval-when-compile (require 'subr-x))
++(eval-when-compile (require 'subr-xx))
+ ;(require 'auth-source)
+ ;(require 'url-parse)
+ (require 'advice)
 diff --git a/lisp/emacspeak-speak.el b/lisp/emacspeak-speak.el
 index 85370ef..cfaeff6 100644
 --- a/lisp/emacspeak-speak.el
@@ -714,18 +743,19 @@ index 323abb8..5256895 100644
  ;;;###autoload
  (defun emacspeak-widget-summarize(widget)
 diff --git a/lisp/emacspeak-wizards.el b/lisp/emacspeak-wizards.el
-index 7a46d8e..5ffc82e 100644
+index 7a46d8e..f8acfd3 100644
 --- a/lisp/emacspeak-wizards.el
 +++ b/lisp/emacspeak-wizards.el
-@@ -50,7 +50,6 @@
- ;;{{{  Required modules
- 
+@@ -52,7 +52,7 @@
  (require 'cl-lib)
--(require 'let-alist)
+ (require 'let-alist)
  (require 'lisp-mnt)
- (require 'subr-x)
+-(require 'subr-x)
++(require 'subr-xx)
  (require 'desktop)
-@@ -108,7 +107,9 @@
+ (require 'dired)
+ (require 'derived)
+@@ -108,7 +108,9 @@
      emacspeak-etc-directory))
    (emacspeak-auditory-icon 'news)
    (org-mode)
@@ -736,7 +766,7 @@ index 7a46d8e..5ffc82e 100644
    (emacspeak-speak-line))
  
  ;;;###autoload
-@@ -627,6 +628,10 @@ The emacspeak clipboard provides a convenient mechanism for exchanging
+@@ -627,6 +629,10 @@ The emacspeak clipboard provides a convenient mechanism for exchanging
  information between different Emacs sessions."
    :group 'emacspeak-speak
    :type 'string)
@@ -747,7 +777,7 @@ index 7a46d8e..5ffc82e 100644
  ;;;###autoload
  (defun emacspeak-clipboard-copy (start end &optional prompt)
    "Copy contents of the region to the emacspeak clipboard. Previous
-@@ -3355,7 +3360,7 @@ access to the various functions provided by alpha-vantage."
+@@ -3355,7 +3361,7 @@ access to the various functions provided by alpha-vantage."
      (with-current-buffer (find-file-noselect filename)
        (goto-char (point-min))
        (prog1
@@ -756,7 +786,7 @@ index 7a46d8e..5ffc82e 100644
          (kill-buffer ))))
     (t (json-read-file filename))))
  
-@@ -4247,9 +4252,12 @@ external package."
+@@ -4247,9 +4253,12 @@ external package."
  ;;{{{ Use Threads To Call Command Asynchronously:
  ;;;Experimental: Handle with care.
  
@@ -770,7 +800,7 @@ index 7a46d8e..5ffc82e 100644
    (interactive (list (read-key-sequence "Key Sequence: ")))
    (let ((l (local-key-binding key))
          (g (global-key-binding key))
-@@ -4258,8 +4266,10 @@ external package."
+@@ -4258,8 +4267,10 @@ external package."
                     (lookup-key map key))))
      (cl-flet
          ((do-it (command)
@@ -797,21 +827,32 @@ index 4339b36..60d9f43 100644
  ;;; turn on automatic voice locking , split caps and punctuations in
  ;;; programming  modes
  
-diff --git a/lisp/subr-x.el b/lisp/subr-x.el
+diff --git a/lisp/g-client/gmaps.el b/lisp/g-client/gmaps.el
+index 5ea4f07..f52877c 100644
+--- a/lisp/g-client/gmaps.el
++++ b/lisp/g-client/gmaps.el
+@@ -55,6 +55,7 @@
+ 
+ (require 'cl-lib)
+ (cl-declaim  (optimize  (safety 0) (speed 3)))
++(require 'let-alist)
+ (require 'g-utils)
+ (require 'pp)
+ ;;}}}
+diff --git a/lisp/subr-xx.el b/lisp/subr-xx.el
 new file mode 100644
-index 0000000..b5a0c8c
+index 0000000..8e7b8a7
 --- /dev/null
-+++ b/lisp/subr-x.el
-@@ -0,0 +1,277 @@
-+;;; subr-x.el --- extra Lisp functions  -*- lexical-binding: t; -*-
++++ b/lisp/subr-xx.el
+@@ -0,0 +1,154 @@
++;;; subr-xx.el --- extra Lisp functions  -*- lexical-binding: t; -*-
 +
-+;; Copyright (C) 2013-2016 Free Software Foundation, Inc.
++;; Copyright (C) 2022 Igor B. Poretsky <poretsky@mlbox.ru>
 +
-+;; Maintainer: emacs-devel@gnu.org
 +;; Keywords: convenience
-+;; Package: emacs
++;; Package: emacspeak
 +
-+;; This file is part of GNU Emacs.
++;; This file is not part of GNU Emacs, but the same permissions apply.
 +
 +;; GNU Emacs is free software: you can redistribute it and/or modify
 +;; it under the terms of the GNU General Public License as published by
@@ -838,6 +879,7 @@ index 0000000..b5a0c8c
 +;;; Code:
 +
 +(require 'pcase)
++(require 'subr-x)
 +
 +(defmacro internal--thread-argument (first? &rest forms)
 +  "Internal implementation for `thread-first' and `thread-last'.
@@ -948,136 +990,13 @@ index 0000000..b5a0c8c
 +  "Check whether HASH-TABLE is empty (has 0 elements)."
 +  (zerop (hash-table-count hash-table)))
 +
-+(defsubst hash-table-keys (hash-table)
-+  "Return a list of keys in HASH-TABLE."
-+  (let ((keys '()))
-+    (maphash (lambda (k _v) (push k keys)) hash-table)
-+    keys))
-+
-+(defsubst hash-table-values (hash-table)
-+  "Return a list of values in HASH-TABLE."
-+  (let ((values '()))
-+    (maphash (lambda (_k v) (push v values)) hash-table)
-+    values))
-+
-+(defsubst string-empty-p (string)
-+  "Check whether STRING is empty."
-+  (string= string ""))
-+
-+(defsubst string-join (strings &optional separator)
-+  "Join all STRINGS using SEPARATOR."
-+  (mapconcat 'identity strings separator))
-+
-+(define-obsolete-function-alias 'string-reverse 'reverse "25.1")
-+
-+(defsubst string-trim-left (string)
-+  "Remove leading whitespace from STRING."
-+  (if (string-match "\\`[ \t\n\r]+" string)
-+      (replace-match "" t t string)
-+    string))
-+
-+(defsubst string-trim-right (string)
-+  "Remove trailing whitespace from STRING."
-+  (if (string-match "[ \t\n\r]+\\'" string)
-+      (replace-match "" t t string)
-+    string))
-+
-+(defsubst string-trim (string)
-+  "Remove leading and trailing whitespace from STRING."
-+  (string-trim-left (string-trim-right string)))
-+
-+(defsubst string-blank-p (string)
-+  "Check whether STRING is either empty or only whitespace."
-+  (string-match-p "\\`[ \t\n\r]*\\'" string))
-+
 +(defun string> (s1 s2)
 +  "Return t if first arg string is greater than second in lexicographic order.
 +Case is significant.
 +Symbols are also allowed; their print names are used instead."
 +  (string-lessp s2 s1))
 +
-+(defun let-alist--deep-dot-search (data)
-+  "Return alist of symbols inside DATA that start with a `.'.
-+Perform a deep search and return an alist where each car is the
-+symbol, and each cdr is the same symbol without the `.'."
-+  (cond
-+   ((symbolp data)
-+    (let ((name (symbol-name data)))
-+      (when (string-match "\\`\\." name)
-+        ;; Return the cons cell inside a list, so it can be appended
-+        ;; with other results in the clause below.
-+        (list (cons data (intern (replace-match "" nil nil name)))))))
-+   ((not (consp data)) nil)
-+   ((eq (car data) 'let-alist)
-+    ;; For nested ‘let-alist’ forms, ignore symbols appearing in the
-+    ;; inner body because they don’t refer to the alist currently
-+    ;; being processed.  See Bug#24641.
-+    (let-alist--deep-dot-search (cadr data)))
-+   (t (append (let-alist--deep-dot-search (car data))
-+              (let-alist--deep-dot-search (cdr data))))))
-+
-+(defun let-alist--access-sexp (symbol variable)
-+  "Return a sexp used to access SYMBOL inside VARIABLE."
-+  (let* ((clean (let-alist--remove-dot symbol))
-+         (name (symbol-name clean)))
-+    (if (string-match "\\`\\." name)
-+        clean
-+      (let-alist--list-to-sexp
-+       (mapcar #'intern (nreverse (split-string name "\\.")))
-+       variable))))
-+
-+(defun let-alist--list-to-sexp (list var)
-+  "Turn symbols LIST into recursive calls to `cdr' `assq' on VAR."
-+  `(cdr (assq ',(car list)
-+              ,(if (cdr list) (let-alist--list-to-sexp (cdr list) var)
-+                 var))))
-+
-+(defun let-alist--remove-dot (symbol)
-+  "Return SYMBOL, sans an initial dot."
-+  (let ((name (symbol-name symbol)))
-+    (if (string-match "\\`\\." name)
-+        (intern (replace-match "" nil nil name))
-+      symbol)))
-+
-+
-+;;; The actual macro.
-+;;;###autoload
-+(defmacro let-alist (alist &rest body)
-+  "Let-bind dotted symbols to their cdrs in ALIST and execute BODY.
-+Dotted symbol is any symbol starting with a `.'.  Only those present
-+in BODY are let-bound and this search is done at compile time.
-+
-+For instance, the following code
-+
-+  (let-alist alist
-+    (if (and .title .body)
-+        .body
-+      .site
-+      .site.contents))
-+
-+essentially expands to
-+
-+  (let ((.title (cdr (assq \\='title alist)))
-+        (.body  (cdr (assq \\='body alist)))
-+        (.site  (cdr (assq \\='site alist)))
-+        (.site.contents (cdr (assq \\='contents (cdr (assq \\='site alist))))))
-+    (if (and .title .body)
-+        .body
-+      .site
-+      .site.contents))
-+
-+If you nest `let-alist' invocations, the inner one can't access
-+the variables of the outer one. You can, however, access alists
-+inside the original alist by using dots inside the symbol, as
-+displayed in the example above."
-+  (cl-declare (indent 1) (debug t))
-+  (let ((var (make-symbol "alist")))
-+    `(let ((,var ,alist))
-+       (let ,(mapcar (lambda (x) `(,(car x) ,(let-alist--access-sexp (car x) var)))
-+                     (delete-dups (let-alist--deep-dot-search body)))
-+         ,@body))))
-+
-+(provide 'subr-x)
++(provide 'subr-xx)
 +
 +;;; subr-x.el ends here
 diff --git a/lisp/xbacklight.el b/lisp/xbacklight.el

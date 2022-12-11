@@ -49,10 +49,10 @@ index 92ca530..cd4ed3d 100644
        (dtk-speak (buffer-string)))))
  
 diff --git a/lisp/emacspeak-wizards.el b/lisp/emacspeak-wizards.el
-index 6d7a4eb..69a4497 100644
+index 8e7afa9..5ae1a0c 100644
 --- a/lisp/emacspeak-wizards.el
 +++ b/lisp/emacspeak-wizards.el
-@@ -363,10 +363,9 @@ With prefix arg, opens the phone book for editing."
+@@ -364,10 +364,9 @@ With prefix arg, opens the phone book for editing."
      (emacspeak-auditory-icon 'open-object))
     ((file-exists-p emacspeak-speak-telephone-directory)
      (emacspeak-shell-command

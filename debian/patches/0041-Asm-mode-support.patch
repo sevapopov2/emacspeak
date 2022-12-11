@@ -10,7 +10,7 @@ Subject: Asm mode support
  create mode 100644 lisp/emacspeak-asm.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index aaefbc7..a0a6cb2 100644
+index 415e33a..289c8e7 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -98,6 +98,7 @@ emacspeak-ansi-color.elc \

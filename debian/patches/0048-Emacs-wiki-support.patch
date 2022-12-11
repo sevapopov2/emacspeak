@@ -10,7 +10,7 @@ Subject: Emacs wiki support
  create mode 100644 lisp/emacspeak-wiki.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index ef91532..65daca4 100644
+index 4fba72a..6cda63d 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -288,6 +288,7 @@ emacspeak-webspace.elc \

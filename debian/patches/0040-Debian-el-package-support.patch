@@ -13,7 +13,7 @@ Subject: Debian-el package support
  create mode 100644 lisp/emacspeak-debian-bug.el
 
 diff --git a/lisp/Makefile b/lisp/Makefile
-index 50654d9..aaefbc7 100644
+index 7ef4582..415e33a 100644
 --- a/lisp/Makefile
 +++ b/lisp/Makefile
 @@ -96,6 +96,7 @@ emacspeak-amark.elc \
