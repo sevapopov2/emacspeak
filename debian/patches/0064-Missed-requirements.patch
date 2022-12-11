@@ -6,9 +6,8 @@ Subject: Missed requirements
  lisp/emacspeak-url-template.el | 3 +++
  lisp/emacspeak-widget.el       | 2 ++
  lisp/espeak-voices.el          | 1 +
- lisp/g-client/gmaps.el         | 2 ++
  lisp/mac-voices.el             | 1 +
- 5 files changed, 9 insertions(+)
+ 4 files changed, 7 insertions(+)
 
 diff --git a/lisp/emacspeak-url-template.el b/lisp/emacspeak-url-template.el
 index cb026fe..5bd7e30 100644
@@ -52,19 +51,6 @@ index e98a7e4..cb862af 100644
  (require 'tts)
  
  ;;}}}
-diff --git a/lisp/g-client/gmaps.el b/lisp/g-client/gmaps.el
-index 5ea4f07..f51579d 100644
---- a/lisp/g-client/gmaps.el
-+++ b/lisp/g-client/gmaps.el
-@@ -57,6 +57,8 @@
- (cl-declaim  (optimize  (safety 0) (speed 3)))
- (require 'g-utils)
- (require 'pp)
-+(require 'subr-x)
-+
- ;;}}}
- ;;{{{ Customizations
- 
 diff --git a/lisp/mac-voices.el b/lisp/mac-voices.el
 index 01f5f23..ab9ec48 100644
 --- a/lisp/mac-voices.el
