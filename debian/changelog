@@ -1,3 +1,12 @@
+emacspeak (1:50.0-19stretch1) stretch; urgency=medium
+
+  * Visual line speaking fix: effectively ignore field boundaries if
+    any.
+  * Don't speak line as visual when truncation is on.
+  * Utilized elpa-let-alist package.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 11 Dec 2022 20:13:07 +0300
+
 emacspeak (1:50.0-18stretch1) stretch; urgency=medium
 
   * Visual line reading fix.
