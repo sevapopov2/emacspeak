@@ -1,3 +1,12 @@
+emacspeak (1:50.0-19bionic1) bionic; urgency=medium
+
+  * Visual line speaking fix: effectively ignore field boundaries if
+    any.
+  * Don't speak line as visual when truncation is on.
+  * Removed unnecessary modification.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 11 Dec 2022 20:29:54 +0300
+
 emacspeak (1:50.0-18bionic2) bionic; urgency=medium
 
   * Visual line speaking fix.
