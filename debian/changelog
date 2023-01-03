@@ -1,3 +1,9 @@
+emacspeak (1:50.0-20buster1) buster; urgency=medium
+
+  * Transmission support added.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 03 Jan 2023 11:50:12 +0300
+
 emacspeak (1:50.0-19buster1) buster; urgency=medium
 
   * Visual line speaking fix: effectively ignore field boundaries if
