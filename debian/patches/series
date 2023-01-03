@@ -116,3 +116,4 @@
 0116-Leave-info-search-path-untouched.patch
 0117-Save-mark-along-with-excursion.patch
 0118-Startup-script-refactoring.patch
+0119-Transmission-support.patch
