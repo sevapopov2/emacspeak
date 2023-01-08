@@ -76,20 +76,12 @@ property 'emacspeak on the function."
     (put f 'emacspeak t)); memoize and return t
    (t nil)))
 
-(if (fboundp 'funcall-interactively)
-    (defadvice funcall-interactively (around emacspeak  pre act comp)
-      "Set emacspeak  interactive flag if there is an advice."
-      (let ((ems-called-interactively-p ems-called-interactively-p))
-        (when (ems-record-interactive-p (ad-get-arg 0))
-          (setq ems-called-interactively-p (ad-get-arg 0)))
-        ad-do-it))
-  (defun funcall-interactively (f &rest args)
-    "Call first argument as a function, passing remaining arguments to it.
-Set emacspeak  interactive flag if there is an advice."
-    (let ((ems-called-interactively-p ems-called-interactively-p))
-      (when (ems-record-interactive-p f)
-        (setq ems-called-interactively-p f))
-      (funcall f args))))
+(defadvice funcall-interactively (around emacspeak  pre act comp)
+  "Set emacspeak  interactive flag if there is an advice."
+  (let ((ems-called-interactively-p ems-called-interactively-p)) ; save state 
+    (when (ems-record-interactive-p (ad-get-arg 0))
+      (setq ems-called-interactively-p (ad-get-arg 0)))
+    ad-do-it))
 
 (defadvice call-interactively (around emacspeak  pre act comp)
   "Set emacspeak  interactive flag if there is an advice."
@@ -131,9 +123,6 @@ interactive command. Turn off the flag once used."
       (when result
         (setq ems-called-interactively-p nil) ; turn off now that we used  it
         result))))
-
-(unless (fboundp 'save-mark-and-excursion)
-  (defalias 'save-mark-and-excursion 'save-excursion))
 
 ;;}}}
 

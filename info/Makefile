@@ -14,44 +14,27 @@ FILES=*.texi
 
 MAKEINFO = makeinfo 
 CSS=--css-ref="http://www.w3.org/StyleSheets/Core/Modernist"
-TEXI2HTML=texi2html
-infodir =/usr/share/info#normally supplied by caller
-INSTALL = install
 EMACS=emacs
 
-all: info html introducing-emacspeak turning-twenty emacspeak.pdf
+all: info  introducing-emacspeak.info turning-twenty.info emacspeak.pdf
 
-info: emacspeak.info introducing-emacspeak.info turning-twenty.info
+info: emacspeak.info
 
-#.PHONY: docs.texi 
+emacspeak.info: *.texi
+	$(MAKEINFO) emacspeak.texi
+
+introducing-emacspeak.info: introducing-emacspeak.texi
+	$(MAKEINFO) introducing-emacspeak.texi	
 
 turning-twenty.info: turning-twenty.texi
 	$(MAKEINFO) turning-twenty.texi
 
-install: emacspeak.info turning-twenty.info
-	if test  -x /usr/bin/install-info ; then \
-		install-info emacspeak.info ${infodir}/dir ;\
-		install-info turning-twenty.info ${infodir}/dir ; \
-	fi
-	$(INSTALL)  -m 644 *.info* $(infodir)
-
-uninstall:
-	if test  -e /usr/bin/install-info ; then \
-		install-info --delete $(infodir)/emacspeak.info* ${infodir}/dir \;
-		install-info --delete $(infodir)/turning-20.info * ${infodir}/dir \;
-	fi
-	rm -f $(infodir)/*.info*
-
-emacspeak.info: emacspeak.texi 
-
-html: emacspeak.texi
-	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
-
-introducing-emacspeak.info: introducing-emacspeak.texi
+docs.texi: ../lisp/*.el
+	$(EMACS) $(BATCH) -l ../utils/self-document.el -f self-document-all-modules
 
 emacspeak.pdf: emacspeak.texi docs.texi
 	makeinfo --pdf emacspeak.texi
-	rm -f emacspeak.aux emacspeak.cp emacspeak.cps emacspeak.fn \
+	\rm emacspeak.aux emacspeak.cp emacspeak.cps emacspeak.fn \
 emacspeak.fns emacspeak.ky emacspeak.kys emacspeak.log \
 emacspeak.toc  emacspeak.vr emacspeak.vrs
 
@@ -59,12 +42,6 @@ man: emacspeak.texi
 	makeinfo -o ${GH_PAGES}  --html  ${CSS} emacspeak.texi
 	tidy -q -utf8 -mic -asxml  ${GH_PAGES}/*.html 2>&1 > /dev/null  || echo tidy
 	@echo "Commit and push updated HTML files from gh-pages!"
-
-introducing-emacspeak: introducing-emacspeak.texi
-	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
-
-turning-twenty: turning-twenty.texi
-	$(TEXI2HTML) --split chapter --top-file index.html --output $@ $<
 
 publish:
 	cd ../../gh-pages-emacspeak && make
@@ -77,12 +54,9 @@ pub:  html/index.html introducing-emacspeak.html
 	rsync introducing-emacspeak.html ${SF_HOME}
 	rsync -avz  html ${SF_HOME}/info/
 
-%.info: %.texi
-	$(MAKEINFO) $<
 
 clean: 
-	rm -f *.info* *.html *.ps *.dvi *.pdf *.txt
-	rm -rf html introducing-emacspeak
+	\rm *.info *.pdf || echo "all clean"
 
 spell:
 	@mv .spell.words .spell.tex

@@ -546,7 +546,8 @@ Tables are specified by containing  match pattern
   "Build class cache and forward it to rendered page."
   (let ((values nil)
         (content (clone-buffer)))
-    (with-current-buffer content
+    (save-excursion
+      (set-buffer content)
       (setq buffer-undo-list t)
       (emacspeak-xslt-run
        (emacspeak-xslt-get "class-values.xsl")
@@ -573,7 +574,8 @@ Tables are specified by containing  match pattern
   "Build id cache and forward it to rendered page."
   (let ((values nil)
         (content (clone-buffer)))
-    (with-current-buffer content
+    (save-excursion
+      (set-buffer content)
       (setq buffer-undo-list t)
       (emacspeak-xslt-run
        (emacspeak-xslt-get "id-values.xsl")
@@ -597,7 +599,8 @@ Tables are specified by containing  match pattern
   "Build role cache and forward it to rendered page."
   (let ((values nil)
         (content (clone-buffer)))
-    (with-current-buffer content
+    (save-excursion
+      (set-buffer content)
       (setq buffer-undo-list t)
       (emacspeak-xslt-run
        (emacspeak-xslt-get "role-values.xsl")

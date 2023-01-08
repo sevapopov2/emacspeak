@@ -66,16 +66,7 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(eval-when-compile (require 'mines () 'no-error))
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function mines-current-pos "ext:mines.el" ())
-(declare-function mines-index-2-matrix "ext:mines.el" (idx))
-(declare-function mines-goto "ext:mines.el" (idx))
-(declare-function mines-get-neighbours "ext:mines.el" (idx))
-
+(eval-when-compile (require 'mines "mines" 'no-error))
 ;;}}}
 ;;{{{ Interactive Commands:
 
@@ -93,8 +84,8 @@
 
 (defun emacspeak-mines-speak-uncovered-count ()
   "Speak number of uncovered cells."
-  (interactive )
-  (cl-declare (special mines-state mines-number-mines))
+  (interactive)
+  (cl-declare (special mines-state))
   (dtk-speak
    (format "%d mines with %d uncovered cells remaining."
            mines-number-mines (cl-count-if #'null mines-state))))
@@ -123,16 +114,16 @@ to beginning of board before searching."
   (cl-declare (special mines-flagged-cell-char))
   (let ((count 0) ;;; fix over-counting 
         (m (format "%c" mines-flagged-cell-char)))
-    (save-mark-and-excursion
+    (save-excursion
       (goto-char (point-min))
       (while (search-forward  m nil t) (cl-incf count) (forward-char 1)))
     (message "%d marks" count)))
 (defun emacspeak-mines-speak-board ()
   "Speak the board."
   (interactive)
-  (cl-declare (special  mines-number-cols mines-grid))
+  (cl-declare (special  mines-number-cols))
   (let ((cells nil))
-    (save-mark-and-excursion
+    (save-excursion
       (setq cells
             (cl-loop
              for i from 0 to (1- (length mines-state)) collect
@@ -172,7 +163,7 @@ to beginning of board before searching."
 
 (defun emacspeak-mines-cell-flagged-p (c)
   "Predicate to check if cell at index c is flagged."
-  (save-mark-and-excursion
+  (save-excursion
     (mines-goto c)
     (get-text-property (point) 'flag)))
 

@@ -6,8 +6,6 @@ Zandt <jrv@debian.org> and all debianization stuff was stolen by me
 from there and then revised. Besides that, I've included in this
 package all my fixes and improvements that were grown from my own
 experience of using this excellent software every day for several years.
-All this history is reflected in file apocryphal.ChangeLog
-in this directory. Also see changelog.Debian for package related changes.
 
 I pretty like Emacspeak itself, but the official Debian package could
 not satisfy my needs, because of lacking some extra functionality that
@@ -15,6 +13,37 @@ I've added, especially, concerning multilingual speech environment
 provided by Multispeech speech server. So, I decided to make this
 alternative package that is based on the latest upstream version and
 includes all my additions and improvements.
+
+In brief, the main additions are as follows:
+
+* Improved unicode support.
+* Enhanced support of several modes and packages:
+  - muse package,
+  - rpm frontend,
+  - archive mode,
+  - bbdb package,
+  - dictionary frontend,
+  - dired mode,
+  - emms frontend,
+  - mplayer frontend,
+  - magit package,
+  - emacs-gnus,
+  - emacs-jabber.
+* Provided comprehensive speech feedback for several modes and
+  packages not supported in the upstream Emacspeak version:
+  - debian-el package,
+  - asm mode,
+  - hexl mode,
+  - cyclebuffer package,
+  - edb database,
+  - ps mode,
+  - pcvs package
+  - planner package,
+  - emacs-wiki package,
+  - emacs-w3m browser,
+  - emacs wget frontend,
+  - youtube-dl emacs frontend,
+  - diff mode.
 
 All original comments from James R. Van Zandt are placed below.
 

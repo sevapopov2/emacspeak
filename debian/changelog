@@ -1,3 +1,16 @@
+emacspeak (1:50.0-20bullseye1) bullseye; urgency=medium
+
+  * Switch to dpkg-source 3.0 format.
+  * Respect output filters when speaking comint buffer.
+  * improved visual line position indication with auditory icons.
+  * Line reading mode control has been made available for visual lines
+    as well.
+  * Transmission support added.
+  * Emacs-27 compatibility fixes.
+  * Release for Debian Bullseye.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 11 Jan 2023 06:49:43 +0300
+
 emacspeak (1:50.0-15) unstable; urgency=medium
 
   * Youtube-dl support enhancement.

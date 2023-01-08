@@ -166,7 +166,7 @@ Customize this to live on your local disk."
 ;;; this helper returns number of bytes.
 (defun g-buffer-bytes (&optional buffer)
   "Return number of bytes in a buffer."
-  (save-mark-and-excursion
+  (save-excursion
     (and buffer (set-buffer buffer))
     (1- (position-bytes (point-max)))))
 
@@ -221,7 +221,7 @@ Customize this to live on your local disk."
 (defun g-html-unescape-region (start end)
   "Unescape HTML entities."
   (cl-declare (special g-html-charent-alist))
-  (save-mark-and-excursion
+  (save-excursion
     (cl-loop for entry in g-html-charent-alist
              do
              (let ((entity (car  entry))
@@ -233,7 +233,7 @@ Customize this to live on your local disk."
 (defun g-html-escape-region (start end)
   "Escape HTML entities."
   (cl-declare (special g-html-charent-alist))
-  (save-mark-and-excursion
+  (save-excursion
     (cl-loop for entry in g-html-charent-alist
              do
              (let ((entity (cdr  entry))
@@ -306,7 +306,8 @@ references, poor-man's xpath."
          (coding-system-for-read 'binary)
          (coding-system-for-write 'binary)
          (buffer-undo-list t))
-     (with-current-buffer  buffer
+     (save-excursion
+       (set-buffer  buffer)
        (kill-all-local-variables)
        (erase-buffer)
        (progn ,@body))))
@@ -362,7 +363,8 @@ XML string is transformed via style
 XML  is transformed via style
   and previewed via `g-html-handler'."
   (cl-declare (special g-xslt-program g-html-handler))
-  (with-current-buffer buffer
+  (save-excursion
+    (set-buffer buffer)
     (when style
       (g-xsl-transform-region (point-min) (point-max) style))
     (funcall g-html-handler (current-buffer))))

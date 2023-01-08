@@ -53,13 +53,7 @@
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'json)
-(require 'xkcd () 'no-error)
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function json-read-from-string "json.el" (STRING))
-(declare-function xkcd-get-json "ext:xkcd.el" (url &optional num))
-
+(require 'xkcd "xkcd" 'no-error)
 ;;}}}
 ;;{{{ Fix error when loading images on the console:
 

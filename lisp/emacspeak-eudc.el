@@ -54,12 +54,6 @@
 ;;; Code:
 
 ;;}}}
-;;{{{ Forward declarations
-
-(declare-function widget-type "wid-edit.el" (widget))
-(declare-function widget-at "wid-edit.el" (&optional pos))
-
-;;}}}
 ;;{{{ speech enable interactive commands 
 
 (defadvice eudc-move-to-next-record (after emacspeak pre act comp)
@@ -90,7 +84,7 @@
 
 (defun emacspeak-eudc-widgets-add-emacspeak-help ()
   "Adds emacspeak widget help to all EUDC widgets. "
-  (save-mark-and-excursion 
+  (save-excursion 
     (goto-char (point-min))
     (while  (not (eobp))
       (goto-char (next-overlay-change (point)))
