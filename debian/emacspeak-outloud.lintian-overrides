@@ -1,0 +1,2 @@
+# Don't care
+emacspeak-outloud: possible-bashism-in-maintainer-script '(($port eq "none") || (-c $port))' [prerm:173]

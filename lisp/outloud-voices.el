@@ -70,7 +70,7 @@
 ;;}}}
 ;;{{{ Forward declarations:
 
-;;; From dtk-speak.el:
+;;; From dtkk-speak.el:
 (defvar dtk-speech-rate)
 (defvar tts-default-speech-rate)
 (defvar dtk-speech-rate-step)
@@ -147,9 +147,8 @@ COMMAND-STRING to the TTS engine."
 
 ;;}}}
 ;;{{{  the inaudible voice
-;;; no special code needed --handled by Emacspeak engine.
 
-(outloud-define-voice 'inaudible "")
+(outloud-define-voice 'inaudible " `vv0 ")
 
 ;;}}}
 ;;{{{  Mapping css parameters to tts codes
@@ -490,14 +489,12 @@ and TABLE gives the values along that dimension."
   (setq tts-default-voice 'paul)
   (setq tts-default-speech-rate outloud-default-speech-rate)
   (set-default 'tts-default-speech-rate outloud-default-speech-rate)
-  (unless (or (get 'dtk-speech-rate-step 'customized-value)
-              (get 'dtk-speech-rate-step 'saved-value))
-    (setq dtk-speech-rate-step 10))
-  (unless (or (get 'dtk-speech-rate-base 'customized-value)
-              (get 'dtk-speech-rate-base 'saved-value))
-    (setq dtk-speech-rate-base 50))
-  (setq dtk-speech-rate outloud-default-speech-rate)
-  (setq-default dtk-speech-rate outloud-default-speech-rate)
+  (setq dtk-speech-rate-step 10
+        dtk-speech-rate-base 50
+        dtk-speech-rate outloud-default-speech-rate)
+  (setq-default dtk-speech-rate-step 10
+                dtk-speech-rate outloud-default-speech-rate
+                dtk-speech-rate-base 50)
   (dtk-unicode-update-untouched-charsets
    '(ascii latin-iso8859-1 latin-iso8859-15 latin-iso8859-9 eight-bit-graphic)))
 

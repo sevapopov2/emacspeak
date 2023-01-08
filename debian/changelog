@@ -1,3 +1,16 @@
+emacspeak (1:50.0-20jammy1) jammy; urgency=medium
+
+  * Switch to dpkg-source 3.0 format.
+  * Respect output filters when speaking comint buffer.
+  * improved visual line position indication with auditory icons.
+  * Line reading mode control has been made available for visual lines
+    as well.
+  * Transmission support added.
+  * Emacs-27 compatibility fixes.
+  * Release for Ubuntu Jammy.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 08 Jan 2023 08:05:00 +0300
+
 emacspeak (1:50.0-15) unstable; urgency=medium
 
   * Youtube-dl support enhancement.

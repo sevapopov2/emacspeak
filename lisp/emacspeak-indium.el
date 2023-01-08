@@ -128,7 +128,7 @@
 (defadvice indium-repl-return (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (save-mark-and-excursion
+    (save-excursion
       (forward-line -1)
       (emacspeak-speak-line)
       (emacspeak-auditory-icon 'close-object))))

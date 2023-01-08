@@ -150,9 +150,7 @@ that implements the speech-enabling extensions for `package' (a string)."
 (emacspeak-do-package-setup "analog" 'emacspeak-analog)
 (emacspeak-do-package-setup "ansi-color" 'emacspeak-ansi-color)
 (emacspeak-do-package-setup "apt-sources" 'emacspeak-apt-sources)
-(emacspeak-do-package-setup "apt-utils" 'emacspeak-apt-utils)
 (emacspeak-do-package-setup "arc-mode" 'emacspeak-arc)
-(emacspeak-do-package-setup "asm-mode" 'emacspeak-asm)
 (emacspeak-do-package-setup "bbdb" 'emacspeak-bbdb)
 (emacspeak-do-package-setup "bibtex" 'emacspeak-bibtex)
 (emacspeak-do-package-setup "bookmark" 'emacspeak-bookmark)
@@ -174,8 +172,6 @@ that implements the speech-enabling extensions for `package' (a string)."
 (emacspeak-do-package-setup "company" 'emacspeak-company)
 (emacspeak-do-package-setup "compile" 'emacspeak-compile)
 (emacspeak-do-package-setup "cperl-mode" 'emacspeak-cperl)
-(emacspeak-do-package-setup "cyclebuffer" 'emacspeak-cyclebuffer)
-(emacspeak-do-package-setup "database" 'emacspeak-edb)
 (emacspeak-do-package-setup "pianobar" 'emacspeak-pianobar)
 (emacspeak-do-package-setup "proced" 'emacspeak-proced)
 (emacspeak-do-package-setup "popup" 'emacspeak-popup)
@@ -183,9 +179,7 @@ that implements the speech-enabling extensions for `package' (a string)."
 (emacspeak-do-package-setup "ecb" 'emacspeak-ecb)
 (emacspeak-do-package-setup "ein" 'emacspeak-ein)
 (emacspeak-do-package-setup "cus-edit" 'emacspeak-custom)
-(emacspeak-do-package-setup "debian-bug" 'emacspeak-debian-bug )
 (emacspeak-do-package-setup "desktop" 'emacspeak-desktop)
-(emacspeak-do-package-setup "diff" 'emacspeak-diff-mode)
 (emacspeak-do-package-setup "diff-mode" 'emacspeak-diff-mode)
 (emacspeak-do-package-setup "dired" 'emacspeak-dired)
 (emacspeak-do-package-setup "dismal" 'emacspeak-dismal)
@@ -230,7 +224,6 @@ that implements the speech-enabling extensions for `package' (a string)."
 (emacspeak-do-package-setup "helm" 'emacspeak-helm)
 (emacspeak-do-package-setup "go-mode" 'emacspeak-go-mode)
 (emacspeak-do-package-setup "hangman" 'emacspeak-entertain)
-(emacspeak-do-package-setup "hexl" 'emacspeak-hexl)
 (emacspeak-do-package-setup "hideshow" 'emacspeak-hideshow)
 (emacspeak-do-package-setup "hydra" 'emacspeak-hydra)
 (emacspeak-do-package-setup "imenu" 'emacspeak-imenu)
@@ -261,7 +254,6 @@ that implements the speech-enabling extensions for `package' (a string)."
 (emacspeak-do-package-setup "mines" 'emacspeak-mines)
 (emacspeak-do-package-setup "mpuz" 'emacspeak-entertain)
 (emacspeak-do-package-setup "mspools" 'emacspeak-mspools)
-(emacspeak-do-package-setup "muse" 'emacspeak-muse)
 (emacspeak-do-package-setup "nero" 'emacspeak-nero)
 (emacspeak-do-package-setup "navi-mode" 'emacspeak-navi-mode)
 (emacspeak-do-package-setup "net-utils" 'emacspeak-net-utils)
@@ -275,9 +267,7 @@ that implements the speech-enabling extensions for `package' (a string)."
 (emacspeak-do-package-setup "package"'emacspeak-package)
 (emacspeak-do-package-setup "paradox"'emacspeak-paradox)
 (emacspeak-do-package-setup "pcvs" 'emacspeak-pcl-cvs)
-(emacspeak-do-package-setup "planner" 'emacspeak-planner)
-(emacspeak-do-package-setup "planner-tasks-overview" 'emacspeak-planner)
-(emacspeak-do-package-setup "ps-mode" 'emacspeak-ps)
+(emacspeak-do-package-setup "elpy" 'emacspeak-elpy)
 (emacspeak-do-package-setup "elpy" 'emacspeak-elpy)
 (emacspeak-do-package-setup "pydoc" 'emacspeak-pydoc)
 (emacspeak-do-package-setup "python" 'emacspeak-python)
@@ -289,7 +279,6 @@ that implements the speech-enabling extensions for `package' (a string)."
 (emacspeak-do-package-setup "rst" 'emacspeak-rst)
 (emacspeak-do-package-setup "related" 'emacspeak-related)
 (emacspeak-do-package-setup "rmail" 'emacspeak-rmail)
-(emacspeak-do-package-setup "rpm" 'emacspeak-rpm)
 (emacspeak-do-package-setup "rpm-spec-mode" 'emacspeak-rpm-spec)
 (emacspeak-do-package-setup "ruby-mode" 'emacspeak-ruby)
 (emacspeak-do-package-setup "sgml-mode" 'emacspeak-sgml-mode)
@@ -330,13 +319,9 @@ that implements the speech-enabling extensions for `package' (a string)."
 (emacspeak-do-package-setup "view" 'emacspeak-view)
 (emacspeak-do-package-setup "view-pr" 'emacspeak-view-process)
 (emacspeak-do-package-setup "vm" 'emacspeak-vm)
-(emacspeak-do-package-setup "w3m" 'emacspeak-w3m)
-(emacspeak-do-package-setup "youtube-dl" 'emacspeak-youtube-dl)
-(emacspeak-do-package-setup "wget" 'emacspeak-wget)
 (emacspeak-do-package-setup "wdired" 'emacspeak-wdired)
 (emacspeak-do-package-setup "cus-edit" 'emacspeak-custom)
 (emacspeak-do-package-setup "wid-edit" 'emacspeak-widget)
-(emacspeak-do-package-setup "emacs-wiki" 'emacspeak-wiki)
 (emacspeak-do-package-setup "widget" 'emacspeak-widget)
 (emacspeak-do-package-setup "windmove" 'emacspeak-windmove)
 (emacspeak-do-package-setup "winring" 'emacspeak-winring)
@@ -421,7 +406,6 @@ caps."
    #'(lambda (hook)
        (add-hook hook #'emacspeak-setup-programming-mode))
    '(
-     asm-mode-hook ps-mode-hook
      conf-unix-mode-hook html-helper-mode-hook
      markdown-mode-hook muse-mode-hook
      sgml-mode-hook xml-mode-hook nxml-mode-hook xsl-mode-hook
@@ -446,19 +430,16 @@ caps."
   "If set to T, emacspeak plays its icon as it launches."
   :type 'boolean
   :group 'emacspeak)
-
 (defsubst emacspeak-play-startup-icon ()
   "Play startup icon if requested."
   (cl-declare (special emacspeak-play-emacspeak-startup-icon))
-  (let ((player  (or (executable-find "mpg123")
-                     (executable-find "mpg321")
-                     (executable-find "mplayer"))))
+  (let ((player  (or (executable-find "mplayer")
+                     (executable-find "play"))))
     (when (and  emacspeak-play-emacspeak-startup-icon player)
       (start-process
        "mp3" nil
        player
        (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)))))
-
 ;;;###autoload
 (defun emacspeak()
   "Start the Emacspeak Audio Desktop.
@@ -503,6 +484,7 @@ commands and options for details."
   (cl-declare (special
                ad-redefinition-action
                emacspeak-pronounce-load-pronunciations-on-startup line-move-visual
+               emacspeak-info-directory
                use-dialog-box emacspeak-pronounce-dictionaries-file
                emacspeak-play-program emacspeak-sounds-directory))
   (let ((ad-redefinition-action 'accept)
@@ -511,6 +493,8 @@ commands and options for details."
     (emacspeak-export-environment)
     (setq-default line-move-visual nil)
     (setq use-dialog-box nil)
+    (when (boundp 'Info-directory-list)
+      (push emacspeak-info-directory Info-directory-list))
     (require 'emacspeak-personality)
     (dtk-initialize)
     (tts-configure-synthesis-setup)

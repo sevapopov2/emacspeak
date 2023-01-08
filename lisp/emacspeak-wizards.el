@@ -50,6 +50,7 @@
 ;;{{{  Required modules
 
 (require 'cl-lib)
+(require 'let-alist)
 (require 'lisp-mnt)
 (require 'subr-x)
 (require 'desktop)
@@ -64,7 +65,7 @@
 (require 'emacspeak-webutils)
 (require 'emacspeak-we)
 (require 'emacspeak-xslt)
-(require 'name-this-color () 'no-error)
+(require 'name-this-color "name-this-color" 'no-error)
 (eval-when-compile
   (require 'gweb)
   (require 'shell)
@@ -72,18 +73,6 @@
   (require 'cus-edit)
   (require 'org)
   (require 'solar))
-
-;;}}}
-;;{{{ Forward declarations
-
-(declare-function color-cie-de2000 "color.el" (color1 color2 &optional kL kC kH))
-(declare-function color-srgb-to-lab "color.el" (red green blue))
-(declare-function color-rgb-to-hex "color.el" (red green blue))
-(declare-function faces--attribute-at-point "faces.el" (attribute &optional attribute-unnamed))
-
-(declare-function ntc-name-this-color "ext:name-this-color.el" (color-code))
-(declare-function ntc-shade-this-color "ext:name-this-color.el" (color-code))
-
 ;;}}}
 ;;{{{ custom
 
@@ -107,9 +96,7 @@
     emacspeak-etc-directory))
   (emacspeak-auditory-icon 'news)
   (org-mode)
-  (if (fboundp 'org-next-visible-heading)
-      (org-next-visible-heading 1)
-    (outline-next-visible-heading 1))
+  (org-next-visible-heading 1)
   (emacspeak-speak-line))
 
 ;;;###autoload
@@ -363,9 +350,10 @@ With prefix arg, opens the phone book for editing."
     (emacspeak-auditory-icon 'open-object))
    ((file-exists-p emacspeak-speak-telephone-directory)
     (emacspeak-shell-command
-     emacspeak-speak-telephone-directory-command
-     (read-from-minibuffer "Lookup number for: ")
-     emacspeak-speak-telephone-directory)
+     (format "%s %s %s"
+             emacspeak-speak-telephone-directory-command
+             (read-from-minibuffer "Lookup number for: ")
+             emacspeak-speak-telephone-directory))
     (emacspeak-speak-message-again))
    (t (error "First create your phone directory in %s"
              emacspeak-speak-telephone-directory))))
@@ -534,11 +522,11 @@ the display to speak."
     (setq win
           (nth (% window (length window-list))
                window-list))
-    (save-mark-and-excursion
+    (save-excursion
       (save-window-excursion
         (emacspeak-speak-region
          (window-point win)
-         (window-end win t))))))
+         (window-end win))))))
 ;;;###autoload
 (defun emacspeak-speak-this-buffer-previous-display ()
   "Speak this buffer as displayed in a `previous' window.
@@ -1870,7 +1858,7 @@ Moves to the longest line when called interactively."
   (interactive "r")
   (let ((max 0)
         (where nil))
-    (save-mark-and-excursion
+    (save-excursion
       (goto-char start)
       (while (and (not (eobp))
                   (< (point) end))
@@ -1894,7 +1882,7 @@ Moves to the shortest line when called interactively."
   (interactive "r")
   (let ((min 1)
         (where (point)))
-    (save-mark-and-excursion
+    (save-excursion
       (goto-char start)
       (while (and (not (eobp))
                   (< (point) end))
@@ -1922,7 +1910,7 @@ Moves to the longest paragraph when called interactively."
   (let ((max 0)
         (where nil)
         (para-start start))
-    (save-mark-and-excursion
+    (save-excursion
       (goto-char start)
       (while (and (not (eobp))
                   (< (point) end))
@@ -2425,7 +2413,9 @@ buffer keyed by `key'gets the key of buffer `buffer'."
 ;;{{{ show commentary:
 (defun ems-cleanup-commentary (commentary)
   "Cleanup commentary."
-  (with-current-buffer (get-buffer-create " *doc-temp*")
+  (save-excursion
+    (set-buffer
+     (get-buffer-create " *doc-temp*"))
     (erase-buffer)
     (insert commentary)
     (goto-char (point-min))
@@ -2694,7 +2684,7 @@ Lang is obtained from property `lang' on string, or  via an interactive prompt."
 (defun emacspeak-wizards-espeak-region (start end)
   "Speak region using ESpeak polyglot wizard."
   (interactive "r")
-  (save-mark-and-excursion
+  (save-excursion
     (goto-char start)
     (while (< start end)
       (goto-char
@@ -3353,7 +3343,7 @@ access to the various functions provided by alpha-vantage."
     (with-current-buffer (find-file-noselect filename)
       (goto-char (point-min))
       (prog1
-          (json-parse-string (buffer-string) :object-type 'alist)
+          (json-parse-buffer :object-type 'alist)
         (kill-buffer ))))
    (t (json-read-file filename))))
 
@@ -4245,12 +4235,9 @@ external package."
 ;;{{{ Use Threads To Call Command Asynchronously:
 ;;;Experimental: Handle with care.
 
-(declare-function make-thread (command))
-
 ;;;###autoload
 (defun emacspeak-wizards-execute-asynchronously (key)
-  "Read key-sequence, then execute its command on a new thread.
-If threads are not supported, command is executed synchronously."
+  "Read key-sequence, then execute its command on a new thread."
   (interactive (list (read-key-sequence "Key Sequence: ")))
   (let ((l (local-key-binding key))
         (g (global-key-binding key))
@@ -4259,10 +4246,8 @@ If threads are not supported, command is executed synchronously."
                    (lookup-key map key))))
     (cl-flet
         ((do-it (command)
-                (if (not (fboundp 'make-thread))
-                    (funcall command)
-                  (make-thread command)
-                  (message "Running %s on a new thread." command))))
+                (make-thread command)
+                (message "Running %s on a new thread." command)))
       (cond
        ((commandp k) (do-it k))
        ((commandp l) (do-it l))

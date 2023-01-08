@@ -111,7 +111,8 @@ Value is persisted for use with ssh servers."
   (when (file-exists-p   emacspeak-remote-hostname)
     (let ((buffer (find-file-noselect emacspeak-remote-hostname))
           (result nil))
-      (with-current-buffer buffer
+      (save-excursion
+        (set-buffer buffer)
         (setq result (buffer-substring (point-min) (1- (point-max)))))
       (kill-buffer buffer)
       result)))

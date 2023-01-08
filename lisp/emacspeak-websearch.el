@@ -42,10 +42,10 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(require 'emacspeak-feeds)
 (require 'emacspeak-webutils)
 (require 'eww)
 (require 'emacspeak-eww)
+(require 'emacspeak-feeds)
 (require 'emacspeak-google)
 (require 'gweb)
 (require  'emacspeak-we)
@@ -116,7 +116,8 @@
                         (< (car a)
                            (car b)))))
     (with-output-to-temp-buffer "*Help*"
-      (with-current-buffer "*Help*"
+      (save-excursion
+        (set-buffer "*Help*")
         (princ "Websearch Keys:\n\n")
         (cl-loop for m in map
                  do

@@ -73,7 +73,6 @@ Possible choices at present:
 dtk-exp     For the Dectalk Express.
 dtk-mv      for the Multivoice and older Dectalks.
 outloud     For IBM ViaVoice Outloud
-multispeech For Multilingual speech server Multispeech
 espeak      For eSpeak (default on Linux)
 mac for MAC TTS (default on Mac)")
 
@@ -108,9 +107,7 @@ Particularly useful for web browsing."
 
 (defcustom dtk-speech-rate-base
   (if (string-match "dtk" dtk-program) 180 50)
-  "*Value of lowest tolerable speech rate.
-Speech server automatically initializes this option
-with reasonable value if it is not customized explicitly."
+  "*Value of lowest tolerable speech rate."
   :type 'integer
   :group 'tts)
 
@@ -119,9 +116,7 @@ with reasonable value if it is not customized explicitly."
   "*Value of speech rate increment.
 This determines step size used when setting speech rate via command
 `dtk-set-predefined-speech-rate'.  Formula used is
-dtk-speech-rate-base  +  dtk-speech-rate-step*level.
-Active speech server initializes this option with a reasonable value
-if it is not explicitly customized by user."
+dtk-speech-rate-base  +  dtk-speech-rate-step*level."
   :type 'integer
   :group 'tts)
 (defvar dtk-startup-hook)
@@ -178,13 +173,16 @@ split caps Do not set this variable by hand, use command
   "Alist of valid punctuation modes.")
 
 (defvar dtk-speech-rate
-  (if (string-match "dtk\\|multispeech" dtk-program)
+  (if (string-match "dtk" dtk-program)
       225 100)
   "Rate at which tts talks.
 Do not modify this variable directly; use command  `dtk-set-rate'
  bound to \\[dtk-set-rate].")
 
 (make-variable-buffer-local 'dtk-speech-rate)
+
+;;;declared here to help compilation
+(defvar voice-lock-mode nil)
 
 ;;}}}
 ;;{{{Style Helper:
@@ -221,9 +219,7 @@ has higher precedence than `face'."
   (or pos (setq pos (point)))
   (or
    (get-text-property pos 'personality)
-   (dtk-get-voice-for-face
-    (or (get-text-property pos 'face)
-        (get-text-property pos 'font-lock-face)))))
+   (dtk-get-voice-for-face (get-text-property pos 'face))))
 
 ;;}}}
 ;;{{{ Tone Helpers:
@@ -420,7 +416,7 @@ will set \"en_GB\".
 ;;; This is necessary because
 ;;;  [] marks dtk commands; {} is special to tcl
 ;;; Optionally post-process the text with cleanup function if one is specified.
-(defvar dtk-bracket-regexp
+(defconst dtk-bracket-regexp
   "[][{}<>\\|`#\n]"
   "Brackets and other chars  that are special to dtk and tcl.
 Newlines  become spaces so each server request is a single line.
@@ -540,10 +536,7 @@ Argument MODE  specifies the current pronunciation mode."
                         (/ (- (match-end 0) (match-beginning 0)) len)
                         (if (string-equal " " pattern)
                             " space " string))
-              (if (and (= len 1)
-                       (not (string-equal "\\" string)))
-                  (concat string string string)
-                string)))
+              ""))
       (replace-match replacement nil t)
       (setq start (- (point) (length replacement)))
       (when personality
@@ -553,12 +546,11 @@ Argument MODE  specifies the current pronunciation mode."
 
 (defun dtk-handle-repeating-patterns (mode)
   (cl-declare (special dtk-cleanup-repeats))
-  (when (sequencep dtk-cleanup-repeats)
-    (goto-char (point-min))
-    (mapc
-     #'(lambda (str)
-         (dtk-replace-duplicates str mode))
-     dtk-cleanup-repeats)))
+  (goto-char (point-min))
+  (mapc
+   #'(lambda (str)
+       (dtk-replace-duplicates str mode))
+   dtk-cleanup-repeats))
 
 (defvar dtk-null-char (format "%c" 0)
   "Null char.")
@@ -1538,23 +1530,17 @@ available TTS servers.")
 ;;;###autoload
 (defun tts-configure-synthesis-setup (&optional tts-name)
   "Setup synthesis environment. "
-  (cl-declare (special dtk-program emacspeak-auditory-icon-function
-                    dtk-bracket-regexp))
+  (cl-declare (special dtk-program emacspeak-auditory-icon-function))
   (unless tts-name (setq tts-name dtk-program))
   (cond
                                         ;viavoice outloud family
    ((string-match "outloud" tts-name) (outloud-configure-tts))
 ;;;all dectalks
    ((string-match "dtk" tts-name) (dectalk-configure-tts))
-   ((string-match "^multispeech$" tts-name) (multispeech-configure-tts))
    ((string-match "mac$" tts-name) (mac-configure-tts))
    ((string-match "espeak$" tts-name) (espeak-configure-tts))
 ;;; generic configure
    (t (plain-configure-tts)))
-  (setq dtk-bracket-regexp
-        (if (string-match "^multispeech$" tts-name)
-            "[][{}\n]"
-          "[][{}<>\\|`#\n]"))
   (dtk-set-rate tts-default-speech-rate t)
   (dtk-interp-sync)
   (when
@@ -1714,9 +1700,7 @@ program. Port defaults to dtk-local-server-port"
   (let ((process-connection-type nil)
         (program (expand-file-name dtk-program emacspeak-servers-directory))
         (process nil))
-    (with-temp-buffer
-      (cd "~")
-      (setq process (apply #'start-process name nil program dtk-program-args)))
+    (setq process (apply #'start-process name nil program dtk-program-args))
     (set-process-coding-system process 'utf-8 'utf-8)
     (tts-env-set-process-env process
                              (tts-env-get (tts-env-key dtk-program)))
@@ -1858,32 +1842,31 @@ only speak upto the first ctrl-m."
           (voice-lock voice-lock-mode))
       (with-current-buffer dtk-scratch-buffer
         (setq buffer-undo-list t)
-        (let ((inhibit-read-only t))
-          (erase-buffer)
+        (erase-buffer)
 ;;; inherit environment
-          (setq
-           buffer-invisibility-spec invisibility-spec
-           dtk-chunk-separator-syntax inherit-chunk-separator-syntax
-           dtk-speaker-process inherit-speaker-process
-           dtk-speech-rate speech-rate
-           emacspeak-use-auditory-icons use-auditory-icons
-           dtk-punctuation-mode mode
-           dtk-split-caps split-caps
-           dtk-capitalize capitalize
-           dtk-allcaps-beep all-caps
-           dtk-speak-nonprinting-chars inherit-speak-nonprinting-chars
-           tts-strip-octals inherit-strip-octals
-           voice-lock-mode voice-lock)
-          (set-syntax-table syntax-table)
-          (set-buffer-multibyte inherit-enable-multibyte-characters)
-          (dtk-interp-sync)
-          (insert text)
-          (dtk--delete-invisible-text)
-          (when pronunciation-table
-            (tts-apply-pronunciations pronunciation-table))
-          (dtk-unicode-replace-chars mode)
-          (dtk-handle-repeating-patterns mode)
-          (dtk-quote mode))
+        (setq
+         buffer-invisibility-spec invisibility-spec
+         dtk-chunk-separator-syntax inherit-chunk-separator-syntax
+         dtk-speaker-process inherit-speaker-process
+         dtk-speech-rate speech-rate
+         emacspeak-use-auditory-icons use-auditory-icons
+         dtk-punctuation-mode mode
+         dtk-split-caps split-caps
+         dtk-capitalize capitalize
+         dtk-allcaps-beep all-caps
+         dtk-speak-nonprinting-chars inherit-speak-nonprinting-chars
+         tts-strip-octals inherit-strip-octals
+         voice-lock-mode voice-lock)
+        (set-syntax-table syntax-table)
+        (set-buffer-multibyte inherit-enable-multibyte-characters)
+        (dtk-interp-sync)
+        (insert text)
+        (dtk--delete-invisible-text)
+        (when pronunciation-table
+          (tts-apply-pronunciations pronunciation-table))
+        (dtk-unicode-replace-chars mode)
+        (dtk-handle-repeating-patterns mode)
+        (dtk-quote mode)
         (goto-char (point-min))
         (skip-syntax-forward " ")       ;skip leading whitespace
         (setq start (point))
@@ -1910,12 +1893,10 @@ only speak upto the first ctrl-m."
 
 (defmacro ems-with-messages-silenced (&rest body)
   "Evaluate body  after temporarily silencing auditory error feedback."
-  `(progn
-     (cl-declare (special inhibit-message))
-     (let ((emacspeak-speak-messages nil)
-           (inhibit-message t)
-           (emacspeak-use-auditory-icons nil))
-       ,@body)))
+  (declare (indent 1) (debug t))
+  `(let ((emacspeak-speak-messages nil)
+         (inhibit-message t))
+     ,@body))
 
 (defun dtk-speak-and-echo (message)
   "Speak message and echo it to the message area."

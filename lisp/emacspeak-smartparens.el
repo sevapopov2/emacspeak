@@ -110,7 +110,7 @@
     (when dtk-stop-immediately (dtk-stop))
     (let ((start (point))
           (dtk-stop-immediately nil))
-      (save-mark-and-excursion
+      (save-excursion
         (forward-word -1)
         (emacspeak-auditory-icon 'delete-object)
         (emacspeak-speak-region (point) start)))))

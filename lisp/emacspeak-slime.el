@@ -159,7 +159,7 @@
   `(defadvice  ,f (after emacspeak pre act comp)
      "Provide auditory feedback."
      (when (ems-interactive-p)
-       (save-mark-and-excursion
+       (save-excursion
          (goto-char
           (previous-single-property-change (point)   'face nil (point-min)))
          (emacspeak-speak-this-personality-chunk))
@@ -173,7 +173,7 @@
   `(defadvice ,f (around emacspeak pre act comp)
      "Say what you completed."
      (ems-with-messages-silenced
-      (let ((prior (save-mark-and-excursion (skip-syntax-backward "^ >") (point))))
+      (let ((prior (save-excursion (skip-syntax-backward "^ >") (point))))
         ad-do-it
         (if (> (point) prior)
             (tts-with-punctuations

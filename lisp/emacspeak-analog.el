@@ -74,7 +74,7 @@
 (defadvice analog-bury-buffer (after emacspeak pre act comp)
   "Provide auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-mode-line)))
 
 (cl-loop for command in
@@ -109,7 +109,7 @@
 (defun emacspeak-analog-get-field-spec ()
   "Returns field specification if one defined for current entry.
 Nil means no field specified."
-  (save-mark-and-excursion
+  (save-excursion
     (let ((start (previous-single-property-change (point)
                                                   'analog-entry-start)))
       (when start
@@ -145,7 +145,7 @@ Speak field or char moved to."
 
 (defun emacspeak-analog-speak-field (fields)
   "Speak field containing point."
-  (save-mark-and-excursion
+  (save-excursion
     (let ((col (current-column))
           (start nil)
           (end nil)
