@@ -116,3 +116,4 @@
 0116-Leave-info-search-path-untouched.patch
 0117-Startup-script-refactoring.patch
 0118-Transmission-support.patch
+0119-Eliminate-query-on-exit.patch
