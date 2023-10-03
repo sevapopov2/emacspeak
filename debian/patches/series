@@ -117,3 +117,4 @@
 0117-Save-mark-along-with-excursion.patch
 0118-Startup-script-refactoring.patch
 0119-Transmission-support.patch
+0120-Eliminate-query-on-exit.patch
