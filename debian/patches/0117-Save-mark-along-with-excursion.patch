@@ -950,10 +950,10 @@ index 71709c3..96b320c 100644
      (when dtk-stop-immediately (dtk-stop))
      ad-do-it
 diff --git a/lisp/emacspeak-gnus.el b/lisp/emacspeak-gnus.el
-index c8131b2..1b62cc9 100644
+index ffcb0a8..5fe15d9 100644
 --- a/lisp/emacspeak-gnus.el
 +++ b/lisp/emacspeak-gnus.el
-@@ -127,7 +127,7 @@ instead you hear only the first screenful."
+@@ -133,7 +133,7 @@ instead you hear only the first screenful."
          (let ((start (point))
                (window (get-buffer-window (current-buffer))))
            (with-selected-window window
@@ -962,7 +962,7 @@ index c8131b2..1b62cc9 100644
                (move-to-window-line -1)
                (end-of-line)
                (emacspeak-speak-region start (point)))))))))
-@@ -529,7 +529,7 @@ indicating the article is being opened."
+@@ -658,7 +658,7 @@ indicating the article is being opened."
        (let ((start  (point))
              (window (get-buffer-window (current-buffer))))
          (with-selected-window window
@@ -971,15 +971,15 @@ index c8131b2..1b62cc9 100644
              (move-to-window-line -1)
              (end-of-line)
              (emacspeak-speak-region start (point))))))))
-@@ -578,7 +578,7 @@ indicating the article is being opened."
-             (let ((start  (point))
-                   (window (get-buffer-window (current-buffer))))
-               (with-selected-window window
--                (save-excursion
-+                (save-mark-and-excursion
-                   (move-to-window-line -1)
-                   (end-of-line)
-                   (emacspeak-speak-region start (point)))))))))
+@@ -709,7 +709,7 @@ indicating the article is being opened."
+        (let ((start  (point))
+              (window (get-buffer-window (current-buffer))))
+          (with-selected-window window
+-           (save-excursion
++           (save-mark-and-excursion
+              (move-to-window-line -1)
+              (end-of-line)
+              (emacspeak-speak-region start (point)))))))))
 diff --git a/lisp/emacspeak-gridtext.el b/lisp/emacspeak-gridtext.el
 index 6d3722b..a5f5dd5 100644
 --- a/lisp/emacspeak-gridtext.el
