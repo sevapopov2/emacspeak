@@ -7,10 +7,10 @@ Subject: Do not redefine navigation keys in gnus buffers
  1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/lisp/emacspeak-gnus.el b/lisp/emacspeak-gnus.el
-index 4857ed6..c8131b2 100644
+index 7b99e20..ffcb0a8 100644
 --- a/lisp/emacspeak-gnus.el
 +++ b/lisp/emacspeak-gnus.el
-@@ -96,19 +96,13 @@ instead you hear only the first screenful."
+@@ -102,19 +102,13 @@ instead you hear only the first screenful."
                         gnus-article-mode-map))
    (define-key gnus-summary-mode-map "\C-t" 'gnus-summary-toggle-header)
    (define-key gnus-summary-mode-map "t" 'gnus-summary-toggle-header)
