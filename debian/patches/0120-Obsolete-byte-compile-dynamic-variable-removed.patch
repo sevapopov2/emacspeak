@@ -1289,10 +1289,10 @@ index 96b320c..62f9923 100644
  
  ;;}}}
 diff --git a/lisp/emacspeak-gnus.el b/lisp/emacspeak-gnus.el
-index 1b62cc9..b7b941e 100644
+index 5fe15d9..f5e5ca3 100644
 --- a/lisp/emacspeak-gnus.el
 +++ b/lisp/emacspeak-gnus.el
-@@ -855,6 +855,5 @@ Helps to prevent words from being spelled instead of spoken."
+@@ -989,6 +989,5 @@ Helps to prevent words from being spelled instead of spoken."
  ;;{{{  end of file 
  ;;; local variables:
  ;;; folded-file: t
