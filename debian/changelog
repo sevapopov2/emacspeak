@@ -1,3 +1,12 @@
+emacspeak (1:50.0-21buster1) buster; urgency=medium
+
+  * Eliminated query on exit.
+  * Gnus support enhancement: auditory feedback for group buffer
+    ordering functions.
+  * Gnus support enhancement: topic mode backing.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 08 Oct 2023 06:43:06 +0300
+
 emacspeak (1:50.0-20buster1) buster; urgency=medium
 
   * Transmission support added.
