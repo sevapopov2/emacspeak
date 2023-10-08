@@ -1,3 +1,12 @@
+emacspeak (1:50.0-21jammy1) jammy; urgency=medium
+
+  * Eliminated query on exit.
+  * Gnus support enhancement: auditory feedback for group buffer
+    ordering functions.
+  * Gnus support enhancement: topic mode backing.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 08 Oct 2023 06:43:06 +0300
+
 emacspeak (1:50.0-20jammy1) jammy; urgency=medium
 
   * Switch to dpkg-source 3.0 format.
