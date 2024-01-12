@@ -1,3 +1,9 @@
+emacspeak (1:50.0-22focal1) focal; urgency=medium
+
+  * Jabber support fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 12 Jan 2024 15:47:13 +0300
+
 emacspeak (1:50.0-21focal1) focal; urgency=medium
 
   * Eliminated query on exit.
