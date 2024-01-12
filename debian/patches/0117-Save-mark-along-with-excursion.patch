@@ -1145,10 +1145,10 @@ index 94b20a2..f294a2f 100644
          (emacspeak-speak-line)))))
  
 diff --git a/lisp/emacspeak-jabber.el b/lisp/emacspeak-jabber.el
-index 9c142e2..d60deb3 100644
+index 25da060..8aa0b88 100644
 --- a/lisp/emacspeak-jabber.el
 +++ b/lisp/emacspeak-jabber.el
-@@ -363,7 +363,7 @@ the kill ring as well."
+@@ -350,7 +350,7 @@ the kill ring as well."
    (cl-declare (special jabber-activity-jids))
    (cond
     (jabber-activity-jids
