@@ -1516,10 +1516,10 @@ index ec3b04a..646dddf 100644
  
  ;;}}}
 diff --git a/lisp/emacspeak-jabber.el b/lisp/emacspeak-jabber.el
-index d60deb3..715524f 100644
+index 8aa0b88..07fba6c 100644
 --- a/lisp/emacspeak-jabber.el
 +++ b/lisp/emacspeak-jabber.el
-@@ -375,7 +375,6 @@ the kill ring as well."
+@@ -362,7 +362,6 @@ the kill ring as well."
  
  ;;; local variables:
  ;;; folded-file: t

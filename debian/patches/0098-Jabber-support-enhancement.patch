@@ -3,11 +3,11 @@ Date: Fri, 25 Nov 2022 14:13:44 +0300
 Subject: Jabber support enhancement
 
 ---
- lisp/emacspeak-jabber.el | 108 ++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 87 insertions(+), 21 deletions(-)
+ lisp/emacspeak-jabber.el | 137 ++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 95 insertions(+), 42 deletions(-)
 
 diff --git a/lisp/emacspeak-jabber.el b/lisp/emacspeak-jabber.el
-index 1b4a25b..9c142e2 100644
+index 1b4a25b..25da060 100644
 --- a/lisp/emacspeak-jabber.el
 +++ b/lisp/emacspeak-jabber.el
 @@ -90,11 +90,32 @@
@@ -52,12 +52,27 @@ index 1b4a25b..9c142e2 100644
 -   image-type jabber-chat-with jabber-chat-with-jid-at-point
 -   jabber-keepalive-do jabber-fsm-handle-sentinel jabber-xml-resolve-namespace-prefixes
 -   jabber-process-roster jabber-keepalive-got-response)
-+   image-type jabber-process-roster jabber-keepalive-got-response
++   image-type jabber-keepalive-got-response
 +   jabber-keepalive-do jabber-fsm-handle-sentinel jabber-xml-resolve-namespace-prefixes)
   do
   (eval
    `(defadvice ,f (around emacspeak pre act comp)
-@@ -131,6 +151,49 @@
+@@ -113,6 +133,14 @@
+       ad-do-it
+       ad-return-value))))
+ 
++(defadvice jabber-process-roster (around emacspeak pre act comp)
++  "Silence  messages, but provide auditory feedback."
++  (ems-with-messages-silenced
++      ad-do-it
++    (when (eq (ad-get-arg 2) 'initial)
++      (emacspeak-auditory-icon 'on))
++    ad-return-value))
++
+ ;;}}}
+ ;;{{{ jabber activity:
+ 
+@@ -131,6 +159,49 @@
      (emacspeak-auditory-icon 'close-object)))
  
  ;;}}}
@@ -107,7 +122,7 @@ index 1b4a25b..9c142e2 100644
  ;;{{{ alerts
  
  (defcustom emacspeak-jabber-speak-presence-alerts nil
-@@ -156,25 +219,27 @@
+@@ -156,25 +227,27 @@
      (emacspeak-auditory-icon 'close-object)
      (message "Set extended  away.")))
  
@@ -149,7 +164,7 @@ index 1b4a25b..9c142e2 100644
  
  ;;;this is what I use as my jabber alert function:
  (defun emacspeak-jabber-message-default-message (from buffer text)
-@@ -190,17 +255,18 @@ Silently drops alerts on the floor --- Google Talk is too chatty otherwise."
+@@ -190,41 +263,21 @@ Silently drops alerts on the floor --- Google Talk is too chatty otherwise."
                   (jabber-jid-displayname (jabber-jid-user from)))
         (format "%s: %s" (jabber-jid-displayname from) text)))))
  
@@ -170,3 +185,27 @@ index 1b4a25b..9c142e2 100644
    (emacspeak-auditory-icon 'select-object)
    (emacspeak-speak-line))
  
+-(defadvice jabber-connect-all (after emacspeak pre act comp)
+-  "switch to roster so we give it a chance to update."
+-  (when (ems-interactive-p) (switch-to-buffer jabber-roster-buffer)))
+-
+-(defadvice jabber-roster-update (around emacspeak    pre act  comp)
+-  "Make this operation a No-Op unless the roster is visible."
+-  (when (get-buffer-window-list jabber-roster-buffer) ad-do-it))
+-
+-(defadvice jabber-display-roster (around emacspeak    pre act  comp)
+-  "Make this operation a No-Op unless called interactively."
+-  (when (ems-interactive-p) ad-do-it))
+-
+-(add-hook 'jabber-post-connect-hook 'jabber-switch-to-roster-buffer)
+-
+-;;}}}
+-(defun emacspeak-jabber-connected ()
+-  "Function to add to jabber-post-connection-hook."
+-  (emacspeak-auditory-icon 'task-done)
+-  (dtk-notify-say "Connected to jabber."))
+-(add-hook 'jabber-post-connect-hook #'emacspeak-jabber-connected)
+-
+ ;;}}}
+ ;;{{{ Pronunciations
+ (cl-declaim (special emacspeak-pronounce-internet-smileys-pronunciations))
